@@ -1,0 +1,61 @@
+@namespace WcgWeb.Components.Common
+<section class="hand-dock" aria-label="我的手牌">
+    <div class="dock-heading"><strong>手牌 @Engine.Player.Hand.Count</strong><span>點選或拖曳卡片</span><label><input type="checkbox" @bind="ConfirmEnergy" /> 填能量確認</label></div>
+    @if (Selected is { } card && Engine.Player.Hand.Contains(card))
+    {
+        var problem = Engine.GetPlayProblem(Engine.Player, card);
+        <section class="hand-selection" aria-label="選取的手牌" aria-live="polite">
+            <div><strong>@card.Card.Name · @card.Card.TotalCost 費</strong><button class="btn btn-sm btn-outline-secondary" @onclick="Clear">取消選牌</button></div>
+            <p>@card.Card.Text</p>
+            <div class="hand-selection-actions">
+                <button class="btn btn-success" disabled="@(Busy || problem != "")" @onclick="() => Use(card)">@(card.Card.IsMonster ? "召喚" : "施放") · @card.Card.TotalCost 費</button>
+                <button class="btn btn-outline-info" disabled="@(Busy || !Engine.CanPlayEnergy(Engine.Player, card))" @onclick="() => Fill(card)">填能量</button>
+                <button class="btn btn-outline-secondary" @onclick="() => OnInspect.InvokeAsync(card.Card)">查看詳情</button>
+            </div>
+            @if (problem != "") { <small class="disabled-reason">@problem</small> }
+        </section>
+    }
+    <div class="hand-tray" style="--hand-count:@Math.Max(1, Engine.Player.Hand.Count);--hand-gaps:@Math.Max(1, Engine.Player.Hand.Count - 1)">
+        @foreach (var c in Engine.Player.Hand)
+        {
+            bool playable = !Busy && Engine.CanPlayCard(Engine.Player, c);
+            <article @key="c.InstanceId" class="hand-fan-card @(playable ? "playable" : "unplayable") @(Selected == c ? "chosen" : "")" data-drag-kind="hand" data-drag-id="@c.InstanceId" role="button" tabindex="0" aria-label="@($"選取手牌：{c.Card.Name}，{c.Card.TotalCost} 費")" aria-pressed="@(Selected == c)" @onclick="() => Select(c)" @onkeydown="e => KeyDown(e, c)">
+                <CardItem Card="c.Card" IsPlayable="playable" IsSelected="@(Selected == c)" />
+            </article>
+        }
+        @if (Engine.Player.Hand.Count == 0) { <p>手牌已空</p> }
+    </div>
+</section>
+@if (EnergyCandidate is { } energy)
+{
+    <div class="card-detail-backdrop" @onclick="() => EnergyCandidate = null">
+        <section class="card-detail" role="dialog" aria-modal="true" aria-label="確認填能量" @onclick:stopPropagation="true">
+            <h2>將「@energy.Card.Name」填為能量？</h2><p>這張牌會背面放入能量區，不能再當手牌使用；不抽牌。</p>
+            <button class="btn btn-info" disabled="@(Busy || !Engine.CanPlayEnergy(Engine.Player, energy))" @onclick="() => CommitEnergy(energy)">確認填能量</button>
+            <button class="btn btn-outline-secondary" @onclick="() => EnergyCandidate = null">取消</button>
+        </section>
+    </div>
+}
+@code {
+    [Parameter, EditorRequired] public GameEngine Engine { get; set; } = null!;
+    [Parameter] public bool Busy { get; set; }
+    [Parameter] public EventCallback<CardInstance> OnPlay { get; set; }
+    [Parameter] public EventCallback<CardInstance> OnEnergy { get; set; }
+    [Parameter] public EventCallback<CardDefinition> OnInspect { get; set; }
+    [Parameter] public EventCallback OnSelect { get; set; }
+    private CardInstance? Selected, EnergyCandidate;
+    private bool ConfirmEnergy = true;
+    protected override void OnParametersSet()
+    {
+        if (Selected != null && (!Engine.Player.Hand.Contains(Selected) || Engine.IsWaiting || Engine.ActivePlayer.Id != "player")) Clear();
+        if (EnergyCandidate != null && !Engine.CanPlayEnergy(Engine.Player, EnergyCandidate)) EnergyCandidate = null;
+    }
+    private void KeyDown(KeyboardEventArgs e, CardInstance c) { if (e.Key is "Enter" or " ") _ = Select(c); }
+    public async Task FillDragged(CardInstance card) { Selected = card; await Fill(card); StateHasChanged(); }
+    public void ClearSelection() { Clear(); StateHasChanged(); }
+    private void Clear() { Selected = null; EnergyCandidate = null; }
+    private async Task Select(CardInstance card) { Selected = Selected == card ? null : card; await OnSelect.InvokeAsync(); }
+    private async Task Use(CardInstance card) { if (Busy) return; Clear(); await OnPlay.InvokeAsync(card); }
+    private async Task Fill(CardInstance card) { if (ConfirmEnergy) EnergyCandidate = card; else await CommitEnergy(card); }
+    private async Task CommitEnergy(CardInstance card) { if (Busy) return; Clear(); await OnEnergy.InvokeAsync(card); }
+}

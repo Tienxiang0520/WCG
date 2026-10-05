@@ -1,7 +1,7 @@
 from pathlib import Path
 from PIL import Image
 root = Path(__file__).resolve().parents[2]
-source = root / 'LcgWeb/wwwroot/card-art'
+source = root / 'WcgWeb/wwwroot/card-art'
 target = root / 'SoulOath.Static/wwwroot/card-art'
 target.mkdir(parents=True, exist_ok=True)
 for path in sorted(source.glob('*.png')):

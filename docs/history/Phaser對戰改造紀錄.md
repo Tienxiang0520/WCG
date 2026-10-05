@@ -7,20 +7,20 @@
 - 對戰：[http://localhost:5169/](http://localhost:5169/)，亦可使用 `/battle`。
 - 固定測試場景：`/battle-lab`，使用獨立引擎，不修改正式對局或牌組。
 - 原版回復入口：`/legacy`；同一 circuit 內共用規則、命令橋接與 AI 協調器。
-- `LcgWeb/appsettings.json` 的 `BattlePresentation:Mode` 預設為 `phaser`；改為 `legacy` 並重啟，首頁會導向原版。
+- `WcgWeb/appsettings.json` 的 `BattlePresentation:Mode` 預設為 `phaser`；改為 `legacy` 並重啟，首頁會導向原版。
 - 改造前原始碼備份：`備份/2026-10-01-Phaser改造前/source.tar.gz`。專案當時沒有 Git 儲存庫，因此保存檔案快照。
 
 平常在專案根目錄執行：
 
 ```bash
-dotnet run --project LcgWeb
+dotnet run --project WcgWeb
 ```
 
 `dotnet build/test/publish` 會建置前端；首次缺少套件時執行 `npm ci`。開發啟動使用原本的 launch profile（Development），才能載入未發布專案的框架靜態資產。正式部署則啟動發布目錄的 DLL：
 
 ```bash
-dotnet publish LcgWeb -c Release -o /tmp/lcg-publish
-dotnet /tmp/lcg-publish/LcgWeb.dll --urls http://localhost:5169 --contentRoot /tmp/lcg-publish
+dotnet publish WcgWeb -c Release -o /tmp/wcg-publish
+dotnet /tmp/wcg-publish/WcgWeb.dll --urls http://localhost:5169 --contentRoot /tmp/wcg-publish
 ```
 
 已有服務占用 5169 時，先停止該服務再啟動。完整重新整理／服務重啟會建立新 circuit，對局不持久化；同一 circuit 的頁面切換可保留對局。
@@ -36,7 +36,7 @@ dotnet /tmp/lcg-publish/LcgWeb.dll --urls http://localhost:5169 --contentRoot /t
 | `Services/BattleCoordinator.cs` | 單一呈現者、玩家與 AI 步驟、動畫批次確認、8–35 秒逾時、取消與錯誤回復 |
 | `Services/GameEngine.PresentationEvents.cs` 與引擎結算節點 | 抽牌、能量、支付、出牌、召喚、攻擊、傷害、狀態、死亡、離場觸發、回合及勝負事件 |
 | `Client/battle/index.ts`、`contracts.ts` | Phaser 場景、瀏覽器內拖曳、高亮、箭頭、詳情、HTML／鍵盤／觸控操作、動畫、音效與同步 |
-| `Client/package.json`、lockfile、`LcgWeb.csproj` | Phaser 4.2.1、TypeScript 5.9.3、esbuild 0.25.12 固定版本，前端自動納入 .NET 發布 |
+| `Client/package.json`、lockfile、`WcgWeb.csproj` | Phaser 4.2.1、TypeScript 5.9.3、esbuild 0.25.12 固定版本，前端自動納入 .NET 發布 |
 | `wwwroot/battle/battle.css` | 手機、橫向、全螢幕、長文字、焦點及詳情圖布局 |
 | `Components/Pages/Home.razor` | 原版僅在 `/legacy`，命令和 AI 已改用共同橋接／協調器 |
 
@@ -46,7 +46,7 @@ dotnet /tmp/lcg-publish/LcgWeb.dll --urls http://localhost:5169 --contentRoot /t
 
 ## 規則、發布與完整對局證據
 
-`dotnet test LcgTests`：94 項通過、0 失敗、0 略過。改造前本次基線為 82 項，新增 12 項涵蓋重複命令、錯局／過期／非法命令、資訊遮蔽、取消、事件次序、獨立快照、確認與呈現者、遺失確認逾時、AI 例外及合法揭露。見 `tests.log` 與 `LcgTests/BattleBridgeTests.cs`。
+`dotnet test WcgTests`：94 項通過、0 失敗、0 略過。改造前本次基線為 82 項，新增 12 項涵蓋重複命令、錯局／過期／非法命令、資訊遮蔽、取消、事件次序、獨立快照、確認與呈現者、遺失確認逾時、AI 例外及合法揭露。見 `tests.log` 與 `WcgTests/BattleBridgeTests.cs`。
 
 Release 發布成功。Phaser bundle 約 1.4 MiB，Brotli 約 300 KiB；正式發布排除 node_modules、TypeScript 原始碼與 sourcemap。靜態資產在本機發布目錄，不依賴浮動 CDN 或前端開發伺服器。見 `publish.log`。
 

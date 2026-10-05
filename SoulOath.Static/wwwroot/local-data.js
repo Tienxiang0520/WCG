@@ -1,7 +1,19 @@
 (() => {
     'use strict';
     const key = 'soul-oath.player.v1';
-    const preferenceKeys = ['lcg.confirmEnergy', 'soul-oath.sidebar-width'];
+    const preferenceKeys = ['wcg.confirmEnergy', 'soul-oath.sidebar-width'];
+    const legacyEnergyKey = 'lcg.confirmEnergy';
+    const legacyCardPrefix = 'LCG-';
+    function canonicalData(data) {
+        return Object.fromEntries(Object.entries(data).map(([name, value]) => [name,
+            JSON.stringify(JSON.parse(value), (field, item) => field === 'CardIds' && Array.isArray(item)
+                ? item.map(id => typeof id === 'string' && id.startsWith(legacyCardPrefix) ? 'WCG-' + id.slice(legacyCardPrefix.length) : id)
+                : item)
+        ]));
+    }
+    function preference(name) {
+        return localStorage.getItem(name) ?? (name === 'wcg.confirmEnergy' ? localStorage.getItem(legacyEnergyKey) : null);
+    }
     const allowed = new Set(['decks', 'ranked']);
     let canWrite = false;
     let release;
@@ -37,11 +49,17 @@
             if (!allowed.has(name) || typeof value !== 'string') throw new Error('備份項目不正確。');
             JSON.parse(value);
         }
-        for (const [name, value] of Object.entries(backup.preferences)) {
+        const normalizedPreferences = {};
+        for (const [originalName, value] of Object.entries(backup.preferences)) {
+            const name = originalName === legacyEnergyKey ? 'wcg.confirmEnergy' : originalName;
             if (!preferenceKeys.includes(name) || typeof value !== 'string') throw new Error('備份設定不正確。');
-            if (name === 'lcg.confirmEnergy' && !['true', 'false'].includes(value)) throw new Error('能量確認設定不正確。');
+            if (name === 'wcg.confirmEnergy' && !['true', 'false'].includes(value)) throw new Error('能量確認設定不正確。');
             if (name === 'soul-oath.sidebar-width' && (!Number.isFinite(Number(value)) || Number(value) < 200 || Number(value) > 360)) throw new Error('側邊欄寬度不正確。');
+            if (normalizedPreferences[name] !== undefined && normalizedPreferences[name] !== value) throw new Error('備份設定互相衝突。');
+            normalizedPreferences[name] = value;
         }
+        backup.preferences = normalizedPreferences;
+        backup.data = canonicalData(backup.data);
         return backup;
     }
     window.soulOathStorage = {
@@ -61,10 +79,10 @@
         exportBackup() {
             const root = readRoot();
             const preferences = Object.fromEntries(preferenceKeys.flatMap(name => {
-                const value = localStorage.getItem(name);
+                const value = preference(name);
                 return value === null ? [] : [[name, value]];
             }));
-            const backup = { format: 'soul-oath-local', version: 1, exportedAt: new Date().toISOString(), data: root.data, preferences };
+            const backup = { format: 'soul-oath-local', version: 1, exportedAt: new Date().toISOString(), data: canonicalData(root.data), preferences };
             const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
             const a = document.createElement('a');
             a.href = url; a.download = `魂誓存檔-${new Date().toISOString().slice(0, 10)}.json`;
@@ -80,12 +98,13 @@
         importBackup(text) {
             requireWriter();
             const backup = parseBackup(text);
-            const before = new Map([key, ...preferenceKeys].map(name => [name, localStorage.getItem(name)]));
+            const before = new Map([key, ...preferenceKeys, legacyEnergyKey].map(name => [name, localStorage.getItem(name)]));
             try {
                 for (const name of preferenceKeys) {
                     if (backup.preferences[name] === undefined) localStorage.removeItem(name);
                     else localStorage.setItem(name, backup.preferences[name]);
                 }
+                localStorage.removeItem(legacyEnergyKey);
                 localStorage.setItem(key, JSON.stringify({ version: 1, data: backup.data }));
             } catch (error) {
                 for (const [name, value] of before) {

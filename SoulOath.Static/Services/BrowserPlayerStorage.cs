@@ -1,5 +1,5 @@
 using Microsoft.JSInterop;
-namespace LcgWeb.Services;
+namespace WcgWeb.Services;
 
 public sealed class BrowserPlayerStorage(IJSRuntime runtime) : IPlayerStorage
 {

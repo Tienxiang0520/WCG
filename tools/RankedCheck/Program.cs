@@ -1,7 +1,7 @@
 using System.Text.Json;
-using LcgWeb.Services;
+using WcgWeb.Services;
 using Microsoft.AspNetCore.Builder;
-var builder=WebApplication.CreateBuilder(new WebApplicationOptions{ContentRootPath=Path.GetFullPath(args.Length>0?args[0]:"LcgWeb")});
+var builder=WebApplication.CreateBuilder(new WebApplicationOptions{ContentRootPath=Path.GetFullPath(args.Length>0?args[0]:"WcgWeb")});
 var db=new CardDatabase(builder.Environment);var pool=new RankedDecks(db,builder.Environment);int seeds=args.Length>1?int.Parse(args[1]):6;
 var output=new List<object>();
 foreach(var entry in pool.All)

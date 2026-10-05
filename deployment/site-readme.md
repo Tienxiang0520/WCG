@@ -16,4 +16,4 @@
 
 `.openai/hosting.json` 保存 Sites 註冊後取得的 `project_id`，`static.directory` 設為 `dist`。不使用遊戲後端、資料庫或物件儲存。Sites 的分享與存取範圍由網站設定管理，與遊戲存檔分開。
 
-上層原始碼位於 WCG 專案中的 `SoulOath.Static` 與 `LcgWeb`。在上層執行 `node SoulOath.Static/tools/build-site.mjs` 可重建本目錄的 `dist`。正式網址與部署狀態以 Sites 回傳結果為準。
+上層原始碼位於 WCG 專案中的 `SoulOath.Static` 與 `WcgWeb`。在上層執行 `node SoulOath.Static/tools/build-site.mjs` 可重建本目錄的 `dist`。正式網址與部署狀態以 Sites 回傳結果為準。

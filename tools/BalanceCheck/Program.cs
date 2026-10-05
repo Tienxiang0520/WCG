@@ -1,7 +1,7 @@
 using System.Text.Json;
-using LcgWeb.Services;
+using WcgWeb.Services;
 using Microsoft.AspNetCore.Builder;
-var root = args.Length > 0 ? Path.GetFullPath(args[0]) : Path.GetFullPath("LcgWeb");
+var root = args.Length > 0 ? Path.GetFullPath(args[0]) : Path.GetFullPath("WcgWeb");
 var builder = WebApplication.CreateBuilder(new WebApplicationOptions { ContentRootPath = root });
 var db = new CardDatabase(builder.Environment);
 int seeds = args.Length > 1 ? int.Parse(args[1]) : 30;

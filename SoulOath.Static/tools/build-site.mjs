@@ -10,7 +10,7 @@ function run(command,args,cwd=project){
     const result=spawnSync(command,args,{cwd,stdio:'inherit'});
     if(result.status!==0)process.exit(result.status??1);
 }
-const client=resolve(root,'LcgWeb/Client');
+const client=resolve(root,'WcgWeb/Client');
 if(!existsSync(resolve(client,'node_modules/phaser/package.json'))
     ||!existsSync(resolve(client,'node_modules/typescript/package.json'))
     ||!existsSync(resolve(client,'node_modules/esbuild/package.json')))

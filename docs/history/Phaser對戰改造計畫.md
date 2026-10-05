@@ -16,7 +16,7 @@
 
 | 現有部分 | 狀況與改造方式 |
 | --- | --- |
-| `LcgWeb/Program.cs` | .NET 10、Blazor InteractiveServer；繼續作為網站與對局宿主 |
+| `WcgWeb/Program.cs` | .NET 10、Blazor InteractiveServer；繼續作為網站與對局宿主 |
 | `Services/GameEngine*.cs` | C# 規則與效果結算；保留，補對外命令及呈現事件介面 |
 | `GameEngine.ExecuteCommand` | 已檢查 MatchId、Revision 及操作者；橋接層沿用這些防護 |
 | `Models/GameState.cs` | 執行中的牌與怪物有實例資料；場上物件以 InstanceId 對應 |
@@ -131,15 +131,15 @@ Phaser 管理 canvas 內的顯示物件，Blazor 管理周邊 HTML，兩者不�
 
 | 位置 | 職責 |
 | --- | --- |
-| `LcgWeb/Components/Battle/BattleBoard.razor` | canvas 容器、初始化、卸載及 JS interop |
-| `LcgWeb/Components/Pages/BattleLab.razor` | 階段驗證入口 |
-| `LcgWeb/Models/Battle/` | 命令、可見狀態、合法行動及事件 DTO |
-| `LcgWeb/Services/BattleBridge.cs` | 驗證／轉譯命令、去重及產生一致性快照 |
-| `LcgWeb/Services/BattleCoordinator.cs` | AI 節奏、動畫批次確認、逾時與取消 |
-| `LcgWeb/Services/GameEngine.PresentationEvents.cs` | 收集規則提交產生的呈現事件 |
-| `LcgWeb/Client/battle/` | TypeScript 場景、卡牌物件、輸入、動畫與狀態同步 |
-| `LcgWeb/wwwroot/battle/` | 前端建置產物 |
-| `LcgTests/` | 命令邊界、事件順序、資訊遮蔽及生命週期的必要測試 |
+| `WcgWeb/Components/Battle/BattleBoard.razor` | canvas 容器、初始化、卸載及 JS interop |
+| `WcgWeb/Components/Pages/BattleLab.razor` | 階段驗證入口 |
+| `WcgWeb/Models/Battle/` | 命令、可見狀態、合法行動及事件 DTO |
+| `WcgWeb/Services/BattleBridge.cs` | 驗證／轉譯命令、去重及產生一致性快照 |
+| `WcgWeb/Services/BattleCoordinator.cs` | AI 節奏、動畫批次確認、逾時與取消 |
+| `WcgWeb/Services/GameEngine.PresentationEvents.cs` | 收集規則提交產生的呈現事件 |
+| `WcgWeb/Client/battle/` | TypeScript 場景、卡牌物件、輸入、動畫與狀態同步 |
+| `WcgWeb/wwwroot/battle/` | 前端建置產物 |
+| `WcgTests/` | 命令邊界、事件順序、資訊遮蔽及生命週期的必要測試 |
 | `驗證/Phaser改造/` | 各階段瀏覽器證據、量測與待辦 |
 
 ## 最終驗收標準

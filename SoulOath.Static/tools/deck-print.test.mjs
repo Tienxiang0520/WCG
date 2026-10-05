@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { printDeck } from '../../LcgWeb/wwwroot/deck-print.js';
+import { printDeck } from '../../WcgWeb/wwwroot/deck-print.js';
 
 function fixture(context, images = [], text = []) {
     const oldDocument = globalThis.document, oldWindow = globalThis.window;

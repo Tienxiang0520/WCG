@@ -1,17 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>LcgWeb</RootNamespace><PublishTrimmed>false</PublishTrimmed><JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault><OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <RootNamespace>WcgWeb</RootNamespace><PublishTrimmed>false</PublishTrimmed><JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault><OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.12" PrivateAssets="all" />
-    <Compile Include="../LcgWeb/Models/**/*.cs" Link="Models/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="../LcgWeb/Services/**/*.cs" Exclude="../LcgWeb/Services/Hosting/**/*.cs" Link="Services/Shared/%(RecursiveDir)%(Filename)%(Extension)" />
-    <RazorComponent Include="../LcgWeb/Components/**/*.razor"
-      Exclude="../LcgWeb/Components/App.razor;../LcgWeb/Components/Routes.razor;../LcgWeb/Components/Common/CardArt.razor;../LcgWeb/Components/Layout/ReconnectModal.razor;../LcgWeb/Components/Pages/Error.razor;../LcgWeb/Components/Pages/Settings.razor;../LcgWeb/Components/Pages/BattleLab.razor"
+    <Compile Include="../WcgWeb/Models/**/*.cs" Link="Models/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../WcgWeb/Services/**/*.cs" Exclude="../WcgWeb/Services/Hosting/**/*.cs" Link="Services/Shared/%(RecursiveDir)%(Filename)%(Extension)" />
+    <RazorComponent Include="../WcgWeb/Components/**/*.razor"
+      Exclude="../WcgWeb/Components/App.razor;../WcgWeb/Components/Routes.razor;../WcgWeb/Components/Common/CardArt.razor;../WcgWeb/Components/Layout/ReconnectModal.razor;../WcgWeb/Components/Pages/Error.razor;../WcgWeb/Components/Pages/Settings.razor;../WcgWeb/Components/Pages/BattleLab.razor"
       Link="Components/%(RecursiveDir)%(Filename)%(Extension)" />
-    <Content Include="../LcgWeb/Components/**/*.razor.css" Exclude="../LcgWeb/Components/Layout/ReconnectModal.razor.css;../LcgWeb/Components/Pages/Settings.razor.css" Link="Components/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="../WcgWeb/Components/**/*.razor.css" Exclude="../WcgWeb/Components/Layout/ReconnectModal.razor.css;../WcgWeb/Components/Pages/Settings.razor.css" Link="Components/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
   <Target Name="PreparePublicGameAssets" BeforeTargets="PrepareForBuild">
     <Exec Command="node tools/prepare-assets.mjs" WorkingDirectory="$(MSBuildProjectDirectory)" />

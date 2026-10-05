@@ -1,7 +1,7 @@
 using System.Text.Json;
-using LcgWeb.Models;
+using WcgWeb.Models;
 using Microsoft.Extensions.Logging.Abstractions;
-namespace LcgWeb.Services;
+namespace WcgWeb.Services;
 
 public static class PlayerBackupValidator
 {
