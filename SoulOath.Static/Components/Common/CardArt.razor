@@ -1,0 +1,7 @@
+@namespace LcgWeb.Components.Common
+<img class="card-illustration @CssClass" src="@($"card-art/{Card.Id}.webp")"
+     alt="@Card.Name" loading="lazy" decoding="async" draggable="false" />
+@code {
+    [Parameter, EditorRequired] public CardDefinition Card { get; set; } = null!;
+    [Parameter] public string CssClass { get; set; } = "";
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Client/**" />
+    <None Remove="Client/node_modules/**" />
+    <Content Update="wwwroot/battle/**/*.map" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  <Target Name="PreparePrintArtwork" BeforeTargets="PrepareForBuild" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command="python3 tools/prepare-print-art.py" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <ItemGroup>
+      <Content Include="wwwroot/print-art/**/*.jpg" Exclude="@(Content)" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+  <Target Name="BuildBattleClient" BeforeTargets="BeforeBuild" Condition="'$(DesignTimeBuild)' != 'true' and '$(SkipBattleClientBuild)' != 'true'">
+    <Exec Command="npm ci" WorkingDirectory="$(MSBuildProjectDirectory)/Client" Condition="!Exists('$(MSBuildProjectDirectory)/Client/node_modules/phaser/package.json')" />
+    <Exec Command="npm run build" WorkingDirectory="$(MSBuildProjectDirectory)/Client" />
+  </Target>
+</Project>

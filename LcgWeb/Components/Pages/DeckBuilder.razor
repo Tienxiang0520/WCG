@@ -1,0 +1,588 @@
+@page "/deckbuilder"
+@inject CardDatabase CardDb
+@inject DeckService DeckSvc
+@inject NavigationManager Nav
+
+<PageTitle>牌組構築 - 魂誓</PageTitle>
+@if (DeckSvc.LastStorageError != null) { <div class="alert alert-warning m-3" role="alert">@DeckSvc.LastStorageError</div> }
+
+<div class="container-fluid py-3">
+    <div class="row">
+        <!-- Left Column: Card Catalog & Search -->
+        <div class="col-lg-8">
+            <div class="card bg-dark text-white border-secondary mb-3 shadow">
+                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h5 class="mb-0">@(ShowDeckCards ? $"🃏 目前牌組：{CurrentDeck.CardIds.Count} 張／共 {CurrentDeck.CardIds.Distinct().Count()} 種" : $"📦 卡牌庫 ({CardDb.AllCards.Count} 張卡牌)")</h5>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="text" class="form-control form-control-sm bg-dark text-white border-secondary"
+                               placeholder="🔍 搜尋名稱或能力關鍵字..."
+                               style="width: 220px;"
+                               @bind="SearchText" @bind:event="oninput" />
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="card-body py-2 border-bottom border-secondary">
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3" role="group" aria-label="卡片顯示範圍">
+                        <button class="btn btn-sm @(ShowDeckCards ? "btn-outline-light" : "btn-info")" aria-pressed="@(!ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = false">全部卡片</button>
+                        <button class="btn btn-sm @(ShowDeckCards ? "btn-info" : "btn-outline-light")" aria-pressed="@(ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = true">目前牌組</button>
+                        <span class="small text-white-50">顯示 @FilteredCards.Count 種卡片 · 點卡面查看，使用 ＋／－ 調整張數</span>
+                    </div>
+                    <!-- Will Filters -->
+                    <div class="d-flex flex-wrap gap-1 align-items-center mb-2">
+                        <span class="text-muted small me-2">意志:</span>
+                        <button class="btn btn-sm @(SelectedWill == "" ? "btn-light" : "btn-outline-secondary")"
+                                @onclick='() => SetWillFilter("")'>全部</button>
+                        <button class="btn btn-sm @(SelectedWill == "狂怒" ? "btn-danger" : "btn-outline-danger")"
+                                @onclick='() => SetWillFilter("狂怒")'>🔴 狂怒</button>
+                        <button class="btn btn-sm @(SelectedWill == "理智" ? "btn-primary" : "btn-outline-primary")"
+                                @onclick='() => SetWillFilter("理智")'>🔵 理智</button>
+                        <button class="btn btn-sm @(SelectedWill == "生機" ? "btn-success" : "btn-outline-success")"
+                                @onclick='() => SetWillFilter("生機")'>🟢 生機</button>
+                        <button class="btn btn-sm @(SelectedWill == "秩序" ? "btn-warning" : "btn-outline-warning")"
+                                @onclick='() => SetWillFilter("秩序")'>🟡 秩序</button>
+                        <button class="btn btn-sm @(SelectedWill == "深淵" ? "btn-secondary text-info" : "btn-outline-info")"
+                                @onclick='() => SetWillFilter("深淵")'>🟣 深淵</button>
+                        <button class="btn btn-sm @(SelectedWill == "中立" ? "btn-secondary" : "btn-outline-secondary")"
+                                @onclick='() => SetWillFilter("中立")'>⚪ 中立</button>
+                    </div>
+
+                    <!-- Type & Cost Filters -->
+                    <div class="d-flex flex-wrap gap-1 align-items-center">
+                        <span class="text-muted small me-2">類型:</span>
+                        <button class="btn btn-sm @(SelectedType == "" ? "btn-light" : "btn-outline-secondary")"
+                                @onclick='() => SetTypeFilter("")'>全部</button>
+                        <button class="btn btn-sm @(SelectedType == "怪物" ? "btn-info" : "btn-outline-info")"
+                                @onclick='() => SetTypeFilter("怪物")'>⚔️ 怪物</button>
+                        <button class="btn btn-sm @(SelectedType == "法術" ? "btn-warning" : "btn-outline-warning")"
+                                @onclick='() => SetTypeFilter("法術")'>✨ 法術</button>
+
+                        <div class="vr mx-2 text-secondary"></div>
+                        <span class="text-muted small me-2">費用:</span>
+                        <button class="btn btn-sm @(SelectedCost == -1 ? "btn-light" : "btn-outline-secondary")"
+                                @onclick='() => SelectedCost = -1'>全部</button>
+                        @for (int c = 0; c <= 7; c++)
+                        {
+                            int costVal = c;
+                            <button class="btn btn-sm @(SelectedCost == costVal ? "btn-primary" : "btn-outline-secondary")"
+                                    @onclick='() => SelectedCost = costVal'>@(costVal == 7 ? "7+" : costVal.ToString())</button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Cards Grid -->
+                <div class="card-body p-3" style="max-height: 75vh; overflow-y: auto;">
+                    @if (FilteredCards.Count == 0)
+                    {
+                        <div class="text-center py-5 text-muted">
+                            <h5>@(ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "目前牌組沒有卡片" : "找不到符合條件的卡牌")</h5>
+                            <p class="small">@(ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "切換到全部卡片，使用 ＋ 加入牌組。" : "可清除篩選以查看其他卡片。")</p>
+                            <button class="btn btn-sm btn-outline-light" @onclick="ResetFilters">清除篩選</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-wrap gap-3 justify-content-start">
+                            @foreach (var card in FilteredCards)
+                            {
+                                int inDeck = CurrentDeck.CardIds.Count(id => id == card.Id);
+                                <div class="position-relative deck-catalog-entry" @key="card.Id">
+                                    <LcgWeb.Components.Common.CardItem
+                                        Card="@card"
+                                        QuantityInDeck="@inDeck"
+                                        OnCardClicked="@(() => Inspect = card)" />
+                                    <div class="d-flex flex-wrap gap-1 justify-content-center align-items-center mt-2">
+                                        <span class="badge bg-secondary" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
+                                        <button class="btn btn-sm btn-outline-light" aria-label="@("查看卡片：" + card.Name)" @onclick="() => Inspect = card">查看</button>
+                                        <button class="btn btn-sm btn-outline-danger" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
+                                        <button class="btn btn-xs btn-outline-light py-0 px-2 small"
+                                                style="font-size:0.75rem;"
+                                                title="@(CurrentDeck.IsOffColor(card) && ColorCounts.OffColor >= Deck.MaxOffColorCards ? "混色額度已滿（12 張）" : "加入牌組")"
+                                                aria-label="@("加入一張：" + card.Name)"
+                                                disabled="@(!CanAddCard(card))"
+                                                @onclick="@(() => AddCardToDeck(card))">
+                                            ＋ 加入
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Current Deck Builder & Stats -->
+        <div class="col-lg-4">
+            <div class="card bg-dark text-white border-secondary shadow sticky-top" style="top: 15px;">
+                <div class="card-header bg-dark border-secondary">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0">🃏 編輯牌組</h5>
+                        <button class="btn btn-sm btn-info fw-bold shadow-sm" type="button" @onclick="() => ShowDeckSelectModal = true">
+                            🗃️ 選擇 / 載入其他牌組
+                        </button>
+                    </div>
+
+                    <!-- Deck Name & Description Input -->
+                    <div class="input-group input-group-sm mb-2">
+                        <span class="input-group-text bg-secondary text-white border-secondary">名稱</span>
+                        <input type="text" class="form-control bg-dark text-white border-secondary"
+                               @bind="CurrentDeck.Name" @bind:event="oninput" placeholder="輸入自訂牌組名稱..." />
+                    </div>
+
+                    <label for="main-will" class="small mb-1">主色</label>
+                    <select id="main-will" class="form-select form-select-sm bg-dark text-white border-secondary mb-2" @bind="CurrentDeck.MainWill" @bind:after="MainWillChanged">
+                        <option value="">請選擇主色</option>
+                        @foreach (var will in Deck.Wills) { <option value="@will">@will</option> }
+                    </select>
+                    <div class="d-flex flex-wrap gap-1 small mb-2" aria-live="polite">
+                        <span class="badge bg-secondary">主色 @ColorCounts.Main 張</span>
+                        <span class="badge @(ColorCounts.OffColor > Deck.MaxOffColorCards ? "bg-danger" : "bg-info text-dark")">混色 @ColorCounts.OffColor / @Deck.MaxOffColorCards 張</span>
+                        <span class="badge bg-secondary">中立 @ColorCounts.Neutral 張</span>
+                    </div>
+                    <!-- 50-Card Progress Bar -->
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>牌組張數進度</span>
+                            <span class="fw-bold @(CurrentDeck.CardIds.Count == 50 ? "text-success" : (CurrentDeck.CardIds.Count > 50 ? "text-danger" : "text-warning"))">
+                                @CurrentDeck.CardIds.Count / 50 張
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar @(CurrentDeck.CardIds.Count == 50 ? "bg-success" : (CurrentDeck.CardIds.Count > 50 ? "bg-danger" : "bg-warning"))"
+                                 role="progressbar"
+                                 style="width: @Math.Min(100, (CurrentDeck.CardIds.Count / 50.0) * 100)%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Composition Statistics Badges -->
+                    <div class="d-flex flex-wrap gap-1 small">
+                        <span class="badge bg-secondary">怪物: @MonsterCount</span>
+                        <span class="badge bg-secondary">法術: @SpellCount</span>
+                    </div>
+
+                    <p class="small text-muted mt-2 mb-0">50 張牌組，每張最多 4 張。任意手牌可背面填能量。選定主色；主色與中立不限張數，其他四種意志合計最多 12 張，可任意混搭。費用維持通用。</p>
+                    <button class="btn btn-outline-info w-100 mt-3" @onclick="OpenPrintPreview">列印實體牌組</button>
+                    @if (UnknownCardIds.Count > 0)
+                    {
+                        <div class="alert alert-warning small mt-2">
+                            舊牌組含已取消或找不到的卡牌：@string.Join("、", UnknownCardIds)。原存檔保留，請移除後重新補足 50 張。
+                            <button class="btn btn-sm btn-outline-dark mt-1" @onclick="RemoveLegacyCards">從目前編輯副本移除無效卡牌</button>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(ValidationErrorMessage))
+                    {
+                        <div class="alert alert-danger py-1 px-2 small mt-2 mb-0">
+                            ⚠️ @ValidationErrorMessage
+                        </div>
+                    }
+                    @if (SavedMessage != null)
+                    {
+                        <div class="alert alert-success py-1 px-2 small mt-2 mb-0">
+                            ✅ @SavedMessage
+                        </div>
+                    }
+                </div>
+
+                <!-- Deck Card List -->
+                <div class="card-body p-2" style="max-height: 48vh; overflow-y: auto;">
+                    @if (CurrentDeck.CardIds.Count == 0)
+                    {
+                        <div class="text-center py-4 text-muted">
+                            <p>牌組是空的</p>
+                            <p class="small">點選左側卡牌或右上角載入預設牌組！</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var group in GroupedDeckCards)
+                            {
+                                var card = group.Card;
+                                int count = group.Count;
+                                <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2">
+                                    <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                        <span class="badge @(card.IsEnergy ? "bg-success" : (card.IsMonster ? "bg-info" : "bg-warning text-dark"))" style="font-size:0.68rem;">
+                                            @(card.IsEnergy ? "能" : $"{card.TotalCost}費")
+                                        </span>
+                                        <span class="text-truncate small" style="max-width: 140px;" title="@card.Name">
+                                            @card.Name
+                                        </span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <button class="btn btn-sm btn-outline-danger py-0 px-2"
+                                                @onclick="() => RemoveCardFromDeck(card)">-</button>
+                                        <span class="fw-bold px-1 small" style="min-width: 20px; text-align: center;">
+                                            @count
+                                        </span>
+                                        <button class="btn btn-sm btn-outline-success py-0 px-2"
+                                                disabled="@(!CanAddCard(card))"
+                                                @onclick="() => AddCardToDeck(card)">+</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Footer Operations -->
+                <div class="card-footer bg-dark border-secondary d-flex justify-content-between align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="CreateNewDeck">
+                        ✨ 新建
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" @onclick="ClearDeck" disabled="@(CurrentDeck.CardIds.Count == 0)">
+                        🗑️ 清空
+                    </button>
+                    @if (DeckSvc.GetCustomDecks().Any(d => d.Id == CurrentDeck.Id))
+                    {
+                        <button class="btn btn-sm btn-danger" @onclick="DeleteCurrentDeck">
+                            刪除此牌組
+                        </button>
+                    }
+                    <button class="btn btn-sm btn-success fw-bold px-3" @onclick="SaveDeck">
+                        💾 儲存牌組
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Deck Selection Modal -->
+    @if (ShowDeckSelectModal)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.8); z-index: 1060;">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content bg-dark text-white border-secondary shadow-lg">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title">🗃️ 選擇要編輯或載入的牌組</h5>
+                        <button type="button" class="btn-close btn-close-white" @onclick="() => ShowDeckSelectModal = false"></button>
+                    </div>
+                    <div class="modal-body p-4" style="max-height: 70vh; overflow-y: auto;">
+                        <!-- 1. Official Presets -->
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="fs-5">⭐</span>
+                            <h5 class="text-warning fw-bold mb-0">官方 5 大主題預設牌組</h5>
+                            <span class="badge bg-secondary">直接複製並編輯</span>
+                        </div>
+                        <div class="row g-3 mb-4">
+                            @foreach (var p in CardDb.PresetDecks)
+                            {
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="fw-bold text-light fs-6 mb-1">@p.Name</div>
+                                            <p class="text-white-50 small mb-2">@p.Description</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-secondary">
+                                            <span class="badge bg-dark text-info border border-secondary">50 張完備</span>
+                                            <button class="btn btn-sm btn-outline-info fw-bold" @onclick="() => { ClonePreset(p); ShowDeckSelectModal = false; }">
+                                                📋 複製並載入編輯
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <hr class="border-secondary my-4" />
+
+                        <!-- 2. Custom Decks -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="fs-5">🃏</span>
+                                <h5 class="text-info fw-bold mb-0">我的自訂牌組</h5>
+                                <span class="badge bg-info text-dark">@DeckSvc.GetCustomDecks().Count 套</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-success fw-bold" @onclick="() => { CreateNewDeck(); ShowDeckSelectModal = false; }">
+                                ✨ 建立全新空白牌組
+                            </button>
+                        </div>
+
+                        @if (DeckSvc.GetCustomDecks().Count == 0)
+                        {
+                            <div class="p-4 text-center text-muted bg-secondary bg-opacity-10 rounded border border-secondary">
+                                <h6>尚無儲存的自訂牌組</h6>
+                                <p class="small mb-0">你可以點擊上方「複製並載入編輯」官方牌組，進行自訂調整並儲存！</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row g-3">
+                                @foreach (var cd in DeckSvc.GetCustomDecks())
+                                {
+                                    <div class="col-md-6">
+                                        <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
+                                            <div>
+                                                <div class="fw-bold text-light fs-6 mb-1">@cd.Name</div>
+                                                <div class="text-white-50 small mb-1">
+                                                    包含 @cd.CardIds.Count 張卡牌
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end gap-2 mt-2 pt-2 border-top border-secondary">
+                                                <button class="btn btn-sm btn-outline-danger px-2" title="刪除此牌組" @onclick="() => DeleteCustomDeck(cd.Id, cd.Version)">
+                                                    🗑️ 刪除
+                                                </button>
+                                                <button class="btn btn-sm btn-primary fw-bold px-3" @onclick="() => { LoadCustomDeck(cd); ShowDeckSelectModal = false; }">
+                                                    ✏️ 載入編輯
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer border-secondary">
+                        <button type="button" class="btn btn-secondary px-4" @onclick="() => ShowDeckSelectModal = false">關閉</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@if (Inspect is { } inspected)
+{
+    <div class="card-detail-backdrop" @onclick="() => Inspect = null">
+        <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+            <h2>@inspected.Name</h2>
+            <LcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
+            <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
+            @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
+            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
+            <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+        </section>
+    </div>
+}
+
+@if (PrintPlan != null)
+{
+    <LcgWeb.Components.Common.DeckPrintPreview Plan="PrintPlan" OnClose="() => PrintPlan = null" />
+}
+
+@code {
+    private DeckPrintPlan? PrintPlan;
+    private void OpenPrintPreview()
+    {
+        if (!ValidateDeck()) return;
+        Inspect = null;
+        PrintPlan = DeckPrintPlan.Create(CurrentDeck, CardDb);
+    }
+    private bool ShowDeckCards;
+    private CardDefinition? Inspect;
+    private void ResetFilters() { SearchText = ""; SelectedWill = ""; SelectedType = ""; SelectedCost = -1; }
+    private Deck CurrentDeck { get; set; } = new Deck { Name = "我的自訂牌組" };
+    private bool ShowDeckSelectModal { get; set; } = false;
+    private string SearchText { get; set; } = "";
+    private string SelectedWill { get; set; } = "";
+    private string SelectedType { get; set; } = "";
+    private int SelectedCost { get; set; } = -1;
+
+    private string? ValidationErrorMessage { get; set; }
+    private string? SavedMessage { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Default to cloning the first preset deck so user immediately has a functional 50-card deck
+        if (CardDb.PresetDecks.Count > 0)
+        {
+            ClonePreset(CardDb.PresetDecks[0]);
+        }
+    }
+
+    private void SetWillFilter(string will) => SelectedWill = will;
+    private void SetTypeFilter(string type) => SelectedType = type;
+
+    private List<CardDefinition> FilteredCards
+    {
+        get
+        {
+            var list = CardDb.AllCards.AsEnumerable();
+            if (ShowDeckCards)
+            {
+                var ids = CurrentDeck.CardIds.ToHashSet();
+                list = list.Where(c => ids.Contains(c.Id));
+            }
+
+            if (!string.IsNullOrEmpty(SelectedWill))
+                list = list.Where(c => c.Will == SelectedWill);
+
+            if (!string.IsNullOrEmpty(SelectedType))
+                list = list.Where(c => c.Type == SelectedType);
+
+            if (SelectedCost >= 0)
+            {
+                if (SelectedCost >= 7)
+                    list = list.Where(c => c.TotalCost >= 7);
+                else
+                    list = list.Where(c => c.TotalCost == SelectedCost);
+            }
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var q = SearchText.Trim();
+                list = list.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       c.Text.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return list.OrderBy(c => c.IsEnergy ? 0 : 1)
+                       .ThenBy(c => c.TotalCost)
+                       .ThenBy(c => c.Id)
+                       .ToList();
+        }
+    }
+
+    private class DeckCardGroup
+    {
+        public CardDefinition Card { get; set; } = null!;
+        public int Count { get; set; }
+    }
+
+    private List<DeckCardGroup> GroupedDeckCards
+    {
+        get
+        {
+            return CurrentDeck.CardIds
+                .GroupBy(id => id)
+                .Select(g => new DeckCardGroup
+                {
+                    Card = CardDb.GetCard(g.Key)!,
+                    Count = g.Count()
+                })
+                .Where(g => g.Card != null)
+                .OrderBy(g => g.Card.IsEnergy ? 0 : 1)
+                .ThenBy(g => g.Card.TotalCost)
+                .ThenBy(g => g.Card.Name)
+                .ToList();
+        }
+    }
+
+    private (int Main, int OffColor, int Neutral) ColorCounts => CurrentDeck.GetColorCounts(CardDb.GetCard);
+    private void MainWillChanged() { SavedMessage = null; ValidateDeck(); }
+
+    private int MonsterCount => CurrentDeck.CardIds.Count(id => CardDb.GetCard(id)?.IsMonster == true);
+    private int SpellCount => CurrentDeck.CardIds.Count(id => CardDb.GetCard(id)?.IsSpell == true);
+    private List<string> UnknownCardIds => CurrentDeck.CardIds.Where(id => CardDb.GetCard(id) == null).Distinct().ToList();
+
+    private void RemoveLegacyCards()
+    {
+        CurrentDeck.CardIds.RemoveAll(id => CardDb.GetCard(id) == null);
+        SavedMessage = null;
+        ValidateDeck();
+    }
+
+    private bool CanAddCard(CardDefinition card)
+    {
+        if (CurrentDeck.CardIds.Count >= 50 || !Deck.Wills.Contains(CurrentDeck.MainWill)) return false;
+        if (CurrentDeck.IsOffColor(card) && ColorCounts.OffColor >= Deck.MaxOffColorCards) return false;
+        int count = CurrentDeck.CardIds.Count(id => id == card.Id);
+        return count < 4;
+    }
+
+    private void AddCardToDeck(CardDefinition card)
+    {
+        SavedMessage = null;
+        if (!CanAddCard(card)) return;
+
+        CurrentDeck.CardIds.Add(card.Id);
+        ValidateDeck();
+    }
+
+    private void RemoveCardFromDeck(CardDefinition card)
+    {
+        SavedMessage = null;
+        CurrentDeck.CardIds.Remove(card.Id);
+        ValidateDeck();
+    }
+
+    private void ClearDeck()
+    {
+        SavedMessage = null;
+        CurrentDeck.CardIds.Clear();
+        ValidateDeck();
+    }
+
+    private void CreateNewDeck()
+    {
+        SavedMessage = null;
+        CurrentDeck = new Deck
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = "新自訂牌組",
+            CardIds = new List<string>()
+        };
+        ValidateDeck();
+    }
+
+    private void ClonePreset(Deck preset)
+    {
+        SavedMessage = null;
+        CurrentDeck = new Deck
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = $"{preset.Name} (副本)",
+            Description = preset.Description,
+            MainWill = preset.MainWill,
+            CardIds = new List<string>(preset.CardIds)
+        };
+        ValidateDeck();
+    }
+
+    private void LoadCustomDeck(Deck custom)
+    {
+        SavedMessage = null;
+        CurrentDeck = new Deck
+        {
+            Id = custom.Id,
+            Version = custom.Version,
+            Name = custom.Name,
+            Description = custom.Description,
+            MainWill = custom.MainWill,
+            CardIds = new List<string>(custom.CardIds)
+        };
+        ValidateDeck();
+    }
+
+    private bool ValidateDeck()
+    {
+        var valid = CurrentDeck.IsValid(CardDb.GetCard, out var error);
+        ValidationErrorMessage = error;
+        return valid;
+    }
+
+    private void SaveDeck()
+    {
+        if (string.IsNullOrWhiteSpace(CurrentDeck.Name))
+        {
+            CurrentDeck.Name = "未命名自訂牌組";
+        }
+
+        if (!ValidateDeck())
+        {
+            return;
+        }
+
+        try
+        {
+            DeckSvc.SaveDeck(CurrentDeck);
+            SavedMessage = $"牌組【{CurrentDeck.Name}】已成功儲存並驗證 50 張。";
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+        { SavedMessage = null; ValidationErrorMessage = $"儲存失敗：{ex.Message}"; }
+    }
+
+    private void DeleteCurrentDeck() => DeleteCustomDeck(CurrentDeck.Id, CurrentDeck.Version);
+
+    private void DeleteCustomDeck(string id, long version)
+    {
+        try
+        {
+            DeckSvc.DeleteDeck(id, version);
+            if (CurrentDeck.Id == id) CreateNewDeck();
+            SavedMessage = "牌組已刪除。";
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        { SavedMessage = null; ValidationErrorMessage = $"刪除失敗：{ex.Message}"; }
+    }
+}

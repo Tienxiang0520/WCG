@@ -1,0 +1,73 @@
+.deck-print-overlay {
+    position: fixed; inset: 0; z-index: 2200; overflow: auto;
+    background: #1a202b; color: #eef3fb; font-family: "Noto Sans CJK TC", "Noto Sans TC", sans-serif;
+}
+.print-controls { padding: 1.4rem; max-width: 1100px; margin: auto; }
+.print-control-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.print-control-heading h1 { font-size: 1.6rem; margin: 0; }
+.print-controls p { margin: .8rem 0; line-height: 1.6; }
+.print-options { display: flex; gap: .8rem 1.4rem; flex-wrap: wrap; align-items: center; }
+.print-options fieldset { border: 1px solid #5a6c81; border-radius: 8px; padding: .5rem .8rem; }
+.print-options legend { float: none; width: auto; font-size: .85rem; padding: 0 .4rem; margin: 0; }
+.print-options label { display: inline-flex; align-items: center; gap: .4rem; margin-right: .7rem; cursor: pointer; }
+.print-control-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+.print-screen-note { color: #bccbe0; font-size: .85rem; }
+.print-pages { overflow-x: auto; padding: 0 1rem 2rem; }
+.print-sheet {
+    box-sizing: border-box; width: 210mm; min-height: 297mm; padding: 8.5mm; margin: 0 auto 1.5rem;
+    background: white; color: #111; box-shadow: 0 3px 20px #0005;
+    font-family: "Noto Sans CJK TC", "Noto Sans TC", sans-serif;
+    font-weight: 400; font-style: normal; text-align: left;
+}
+.print-page-heading { height: 5mm; display: flex; justify-content: space-between; align-items: start; gap: 4mm; font-size: 7pt; line-height: 4mm; }
+.print-page-heading span:first-child { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.print-page-heading span:last-child { flex-shrink: 0; }
+.print-card-grid { display: grid; grid-template-columns: repeat(3, 63mm); grid-template-rows: repeat(3, 88mm); gap: 2mm; width: 193mm; height: 268mm; }
+.print-card {
+    box-sizing: border-box; width: 63mm; height: 88mm; border: .2mm dashed #888; padding: 2.5mm;
+    display: flex; flex-direction: column; gap: 1mm; background: white; color: #111;
+    break-inside: avoid; page-break-inside: avoid; min-width: 0; min-height: 0;
+}
+.print-card-header { display: flex; align-items: start; gap: 2mm; border-bottom: .7mm solid var(--will-color); min-height: 9mm; padding-bottom: 1mm; }
+.print-card-title { margin: 0; flex: 1; font-size: 10pt; line-height: 1.25; font-weight: 700; overflow-wrap: anywhere; }
+.print-cost { width: 7.5mm; height: 7.5mm; flex-shrink: 0; border: .3mm solid var(--will-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11pt; font-weight: 700; }
+.print-cost span { font-size: 6pt; margin-left: .3mm; }
+.print-card-meta { font-size: 7.8pt; font-weight: 700; line-height: 4mm; height: 4mm; margin: 0; color: var(--will-color); }
+.print-card-art { width: 100%; height: 29mm; flex-shrink: 0; object-fit: cover; border: .15mm solid #bbb; }
+.print-card-text { flex: 1; min-height: 0; font-size: 8.3pt; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
+.print-card-stats { display: flex; justify-content: space-between; align-items: center; border-top: .2mm solid #777; padding-top: .8mm; font-size: 7.6pt; flex-shrink: 0; }
+.print-card-stats b { font-size: 10.5pt; }
+.print-card-footer { display: flex; justify-content: space-between; gap: 2mm; font-size: 6.5pt; line-height: 3mm; color: #444; margin: 0; flex-shrink: 0; }
+.print-page-footer { height: 4mm; font-size: 6.5pt; line-height: 4mm; text-align: center; }
+.ink-saving .print-card-header, .ink-saving .print-cost { border-color: #222; }
+.ink-saving .print-card-meta { color: #111; }
+.ink-saving .print-card-text { font-size: 10pt; line-height: 1.55; padding: 3mm 0; }
+.life-card h2 { font-size: 12pt; font-weight: 700; margin: 0; }
+.life-card p { font-size: 8pt; line-height: 1.4; margin: 0; }
+.life-counts { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; margin: 2mm 0; flex: 1; }
+.life-counts span { display: flex; align-items: center; justify-content: center; border: .2mm solid #777; border-radius: 3mm; font-size: 16pt; }
+.print-ruler { width: 50mm; border-top: .3mm solid #111; border-left: .3mm solid #111; border-right: .3mm solid #111; height: 4mm; margin: 1.5mm auto 0; text-align: center; font-size: 6.5pt; line-height: 3.5mm; }
+.print-reference-title { font-size: 13pt; margin: 0 0 3mm; font-weight: 700; }
+.print-rules { column-count: 2; column-gap: 6mm; font-size: 9pt; line-height: 1.35; }
+.print-rules h4 { font-size: 10pt; font-weight: 700; margin: 0 0 1mm; break-after: avoid; }
+.print-rules p, .print-rules ul { margin: 0 0 2mm; }
+.print-rules ul { padding-left: 3.5mm; }
+.print-rules li { margin: 0 0 1mm; break-inside: avoid; }
+.print-list-title { font-size: 9pt; margin: 3mm 0 2mm; font-weight: 700; }
+.print-deck-list { display: grid; grid-template-columns: 1fr 1fr; column-gap: 7mm; font-size: 8.2pt; line-height: 4.2mm; }
+.print-deck-list > div { display: flex; justify-content: space-between; gap: 2mm; border-bottom: .1mm solid #ddd; break-inside: avoid; }
+.print-deck-list strong { flex-shrink: 0; }
+.print-reference-note { font-size: 7.5pt; line-height: 1.5; margin: 3mm 0 0; }
+@media (max-width: 600px) { .print-controls { padding: 1rem; } .print-control-heading { align-items: start; } .print-control-heading h1 { font-size: 1.2rem; } .print-sheet { margin-left: 0; } }
+@page { size: A4 portrait; margin: 8.5mm; }
+@media print {
+    body:has(.deck-print-overlay), body:has(.deck-print-overlay) .page, body:has(.deck-print-overlay) main,
+    body:has(.deck-print-overlay) main > article { display: block !important; width: auto !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; background: white !important; color: #111 !important; }
+    body:has(.deck-print-overlay) .sidebar, body:has(.deck-print-overlay) main > article > :not(.deck-print-overlay), body:has(.deck-print-overlay) #blazor-error-ui { display: none !important; }
+    .deck-print-overlay { position: static !important; overflow: visible !important; background: white !important; color: #111 !important; }
+    .print-controls { display: none !important; }
+    .print-pages { padding: 0; overflow: visible; }
+    .print-sheet { width: 193mm; min-height: 0; padding: 0; margin: 0; box-shadow: none; break-after: page; page-break-after: always; break-inside: avoid; page-break-inside: avoid; }
+    .print-sheet:last-child { break-after: auto; page-break-after: auto; }
+    .print-card, .print-sheet { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

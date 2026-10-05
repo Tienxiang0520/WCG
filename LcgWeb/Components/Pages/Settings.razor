@@ -1,0 +1,62 @@
+@page "/settings"
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<PageTitle>設定 - 魂誓</PageTitle>
+<section class="settings-page">
+    <h1>設定</h1>
+    <p class="settings-note">調整對戰操作習慣，選擇會儲存在這個瀏覽器。</p>
+    <section class="settings-panel" aria-labelledby="operation-settings">
+        <h2 id="operation-settings">操作</h2>
+        <div class="setting-row">
+            <div>
+                <h3 id="energy-confirmation-label">填能量前再次確認</h3>
+                <p id="energy-confirmation-help">開啟時，按下填能量或把手牌拖到能量區後，會先請你確認。關閉後會直接填入能量。</p>
+            </div>
+            <button type="button" class="setting-switch" role="switch" aria-checked="@(ConfirmEnergy ? "true" : "false")"
+                    aria-labelledby="energy-confirmation-label" aria-describedby="energy-confirmation-help"
+                    disabled="@(!Loaded || Saving)" @onclick="ToggleEnergyConfirmation">
+                <span class="switch-track" aria-hidden="true"><span></span></span>
+                <span>@(ConfirmEnergy ? "開啟" : "關閉")</span>
+            </button>
+        </div>
+    </section>
+    <p class="settings-status" role="status">@Status</p>
+</section>
+
+@code {
+    private IJSObjectReference? Module;
+    private bool ConfirmEnergy = true, Loaded, Saving;
+    private string Status = "載入設定…";
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/preferences.js");
+            ConfirmEnergy = await Module.InvokeAsync<bool>("readEnergyConfirmation");
+            Loaded = true; Status = "設定會自動儲存。";
+        }
+        catch (JSException) { Status = "設定載入失敗，請重新整理再試。"; }
+        StateHasChanged();
+    }
+    private async Task ToggleEnergyConfirmation()
+    {
+        if (!Loaded || Saving || Module == null) return;
+        Saving = true;
+        try
+        {
+            var next = !ConfirmEnergy;
+            await Module.InvokeVoidAsync("saveEnergyConfirmation", next);
+            ConfirmEnergy = next; Status = "已儲存。";
+        }
+        catch (JSException) { Status = "無法儲存設定，已保留原本的選擇。"; }
+        finally { Saving = false; }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (Module == null) return;
+        try { await Module.DisposeAsync(); }
+        catch (JSDisconnectedException) { }
+    }
+}

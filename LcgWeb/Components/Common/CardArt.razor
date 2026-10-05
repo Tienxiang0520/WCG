@@ -1,0 +1,17 @@
+@namespace LcgWeb.Components.Common
+@inject IWebHostEnvironment Environment
+
+@if (Environment.WebRootFileProvider.GetFileInfo($"card-art/{Card.Id}.png").Exists)
+{
+    <img class="card-illustration @CssClass" src="@($"/card-art/{Card.Id}.png")"
+         alt="@Card.Name" loading="lazy" decoding="async" draggable="false" />
+}
+else
+{
+    <span class="card-art-symbol" aria-hidden="true">@CardItem.GetCardArtIcon(Card)</span>
+}
+
+@code {
+    [Parameter, EditorRequired] public CardDefinition Card { get; set; } = null!;
+    [Parameter] public string CssClass { get; set; } = "";
+}

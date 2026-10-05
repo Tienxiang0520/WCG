@@ -1,0 +1,149 @@
+@page "/cards"
+@inject CardDatabase CardDb
+
+<PageTitle>卡牌圖鑑 - 魂誓</PageTitle>
+
+<div class="container-fluid py-3">
+    <div class="card bg-dark text-white border-secondary mb-3 shadow">
+        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <h4 class="mb-0">📖 卡牌圖鑑庫 (共 @CardDb.AllCards.Count 張卡牌)</h4>
+            <div class="d-flex align-items-center gap-2">
+                <input type="text" class="form-control bg-dark text-white border-secondary"
+                       placeholder="🔍 搜尋名稱、效果或卡牌編號..."
+                       style="width: 280px;"
+                       @bind="SearchText" @bind:event="oninput" />
+            </div>
+        </div>
+
+        <div class="card-body py-2 border-bottom border-secondary">
+            <!-- Will Filters -->
+            <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+                <span class="text-muted small me-2">意志派系:</span>
+                <button class="btn btn-sm @(SelectedWill == "" ? "btn-light" : "btn-outline-secondary")"
+                        @onclick='() => SelectedWill = ""'>全部 (@CardDb.AllCards.Count)</button>
+                <button class="btn btn-sm @(SelectedWill == "狂怒" ? "btn-danger" : "btn-outline-danger")"
+                        @onclick='() => SelectedWill = "狂怒"'>🔴 狂怒 (@CardDb.AllCards.Count(c => c.Will == "狂怒"))</button>
+                <button class="btn btn-sm @(SelectedWill == "理智" ? "btn-primary" : "btn-outline-primary")"
+                        @onclick='() => SelectedWill = "理智"'>🔵 理智 (@CardDb.AllCards.Count(c => c.Will == "理智"))</button>
+                <button class="btn btn-sm @(SelectedWill == "生機" ? "btn-success" : "btn-outline-success")"
+                        @onclick='() => SelectedWill = "生機"'>🟢 生機 (@CardDb.AllCards.Count(c => c.Will == "生機"))</button>
+                <button class="btn btn-sm @(SelectedWill == "秩序" ? "btn-warning" : "btn-outline-warning")"
+                        @onclick='() => SelectedWill = "秩序"'>🟡 秩序 (@CardDb.AllCards.Count(c => c.Will == "秩序"))</button>
+                <button class="btn btn-sm @(SelectedWill == "深淵" ? "btn-secondary text-info" : "btn-outline-info")"
+                        @onclick='() => SelectedWill = "深淵"'>🟣 深淵 (@CardDb.AllCards.Count(c => c.Will == "深淵"))</button>
+                <button class="btn btn-sm @(SelectedWill == "中立" ? "btn-secondary" : "btn-outline-secondary")"
+                        @onclick='() => SelectedWill = "中立"'>⚪ 中立 (@CardDb.AllCards.Count(c => c.Will == "中立"))</button>
+            </div>
+
+            <!-- Type Filters & Keyword Filters -->
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+                <span class="text-muted small me-2">卡牌類型:</span>
+                <button class="btn btn-sm @(SelectedType == "" ? "btn-light" : "btn-outline-secondary")"
+                        @onclick='() => SelectedType = ""'>全部</button>
+                <button class="btn btn-sm @(SelectedType == "怪物" ? "btn-info" : "btn-outline-info")"
+                        @onclick='() => SelectedType = "怪物"'>⚔️ 怪物 (@CardDb.AllCards.Count(c => c.Type == "怪物"))</button>
+                <button class="btn btn-sm @(SelectedType == "法術" ? "btn-warning" : "btn-outline-warning")"
+                        @onclick='() => SelectedType = "法術"'>✨ 法術 (@CardDb.AllCards.Count(c => c.Type == "法術"))</button>
+
+                <div class="vr mx-2 text-secondary"></div>
+                <span class="text-muted small me-2">關鍵字:</span>
+                @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "聖盾", "冰凍", "潛伏", "沉默" })
+                {
+                    string k = kw;
+                    <button class="btn btn-sm @(SelectedKeyword == k ? "btn-light" : "btn-outline-secondary")"
+                            @onclick="() => ToggleKeyword(k)">@k</button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Gallery Grid -->
+    <div class="d-flex flex-wrap gap-3 justify-content-center p-2">
+        @if (FilteredCards.Count == 0)
+        {
+            <div class="text-center py-5 text-muted">
+                <h4>沒有找到匹配的卡牌</h4>
+                <p>請嘗試清除關鍵字或更換篩選條件</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var card in FilteredCards)
+            {
+                <div>
+                    <LcgWeb.Components.Common.CardItem Card="@card" OnCardClicked="() => Inspect = card" />
+                    <div class="text-center mt-1 text-muted" style="font-size:0.7rem;">
+                        #@card.Id
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@if (Inspect is { } inspected)
+{
+    <div class="card-detail-backdrop" @onclick="() => Inspect = null">
+        <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+            <h2>@inspected.Name</h2>
+            <LcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
+            <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
+            @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
+            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
+            <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+        </section>
+    </div>
+}
+
+@code {
+    private CardDefinition? Inspect;
+    private string SearchText { get; set; } = "";
+    private string SelectedWill { get; set; } = "";
+    private string SelectedType { get; set; } = "";
+    private string SelectedKeyword { get; set; } = "";
+
+    private void ToggleKeyword(string kw)
+    {
+        SelectedKeyword = SelectedKeyword == kw ? "" : kw;
+    }
+
+    private List<CardDefinition> FilteredCards
+    {
+        get
+        {
+            var list = CardDb.AllCards.AsEnumerable();
+
+            if (!string.IsNullOrEmpty(SelectedWill))
+                list = list.Where(c => c.Will == SelectedWill);
+
+            if (!string.IsNullOrEmpty(SelectedType))
+                list = list.Where(c => c.Type == SelectedType);
+
+            if (!string.IsNullOrEmpty(SelectedKeyword))
+            {
+                list = list.Where(c => c.Text.Contains(SelectedKeyword) ||
+                                       (SelectedKeyword == "嘲諷" && c.HasTaunt) ||
+                                       (SelectedKeyword == "衝鋒" && c.HasCharge) ||
+                                       (SelectedKeyword == "貫穿" && c.HasTrample) ||
+                                       (SelectedKeyword == "劇毒" && c.HasPoison) ||
+                                       (SelectedKeyword == "聖盾" && c.Text.Contains("聖盾")) ||
+                                       (SelectedKeyword == "冰凍" && c.HasFreeze) ||
+                                       (SelectedKeyword == "潛伏" && c.HasStealth) ||
+                                       (SelectedKeyword == "沉默" && c.HasSilence));
+            }
+
+            if (!string.IsNullOrWhiteSpace(SearchText))
+            {
+                var q = SearchText.Trim();
+                list = list.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       c.Text.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return list.OrderBy(c => c.IsEnergy ? 0 : 1)
+                       .ThenBy(c => c.TotalCost)
+                       .ThenBy(c => c.Id)
+                       .ToList();
+        }
+    }
+}

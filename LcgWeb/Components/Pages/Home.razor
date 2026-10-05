@@ -1,0 +1,417 @@
+@page "/legacy"
+@implements IAsyncDisposable
+@using LcgWeb.Models.Battle
+@inject BattleCoordinator Coordinator
+@inject GameEngine Engine
+@inject CardDatabase CardDb
+@inject DeckService DeckSvc
+@inject IJSRuntime Js
+
+<PageTitle>對戰 - 魂誓</PageTitle>
+@{ var match = Engine.MatchId; var revision = Engine.Revision; }
+<div @ref="DragRoot" class="battle-page @(Engine.CurrentPhase != TurnPhase.NotStarted ? "in-game" : "")" @onkeydown="PageKey">
+    <header class="battle-heading">
+        <div><h1>魂誓</h1><p>50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 7 點生命</p></div>
+        <a href="/battle" class="btn btn-outline-info">新版對戰</a>
+        <a href="/deckbuilder" class="btn btn-outline-info">編輯牌組</a>
+    </header>
+    @if (!string.IsNullOrEmpty(Notice))
+    {
+        <div class="alert alert-warning" role="status" aria-live="polite">@Notice</div>
+    }
+    @if (Engine.CurrentPhase == TurnPhase.NotStarted)
+    {
+        <section class="battle-panel setup-panel">
+            <h2>準備對局</h2>
+            <label for="player-deck">你的牌組</label>
+            <select id="player-deck" class="form-select" @bind="PlayerDeckId">
+                @foreach (var deck in Decks)
+                { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
+            </select>
+            <label for="computer-deck">電腦牌組</label>
+            <select id="computer-deck" class="form-select" @bind="ComputerDeckId">
+                @foreach (var deck in Decks)
+                { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
+            </select>
+            <label for="starter">先攻</label>
+            <select id="starter" class="form-select" @bind="Starter"><option value="player">玩家先攻</option><option value="computer">電腦先攻</option><option value="random">隨機</option></select>
+            <p>起手 7 張、不換牌。先攻第一回合不抽牌。每個自己的回合可填一張能量，不抽牌。</p>
+            <button class="btn btn-primary btn-lg" @onclick="() => Start(match, revision)">開始對戰</button>
+        </section>
+    }
+    else
+    {
+        <div class="battle-toolbar" aria-live="polite">
+            <strong>第 @Engine.TurnNumber 回合 · @PhaseLabel</strong>
+            <span>@(Engine.DecisionPlayerId == "computer" && !Engine.IsOver ? "電腦正在評估出牌與攻擊…" : "")</span>
+            <label><input type="checkbox" @bind="FastAi" /> 加快電腦動作</label>
+            <button class="btn btn-sm btn-outline-danger" disabled="@Engine.IsOver" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "surrender"))'>投降</button>
+            <button class="btn btn-sm btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "reset"))'>返回房間</button>
+        </div>
+        @if (Engine.IsOver)
+        {
+            <div class="alert @(Engine.Player.HasLost ? "alert-danger" : "alert-success")" role="status">
+                <h2>@(Engine.Player.HasLost ? "本局敗北" : "本局獲勝")</h2>
+                <p>@(Engine.Player.HasLost ? Engine.Player.LossReason : Engine.Computer.LossReason)</p>
+                <button class="btn btn-primary" @onclick="() => Start(match, revision)">同牌組再玩一局</button>
+            </div>
+        }
+        <div class="battle-layout">
+            <main class="battle-board" @onclick="ClearAttack">
+                @foreach (var side in new[] { Engine.Computer, Engine.Player })
+                {
+                    bool mine = side.Id == "player";
+                    <section class="battle-panel" @key="side.Id">
+                        <div class="side-heading" data-drop-zone="@(mine ? null : "face")"><h2>@side.Name <span class="life-value">♥ @side.Hp / 7</span></h2><span>場上 @side.Field.Count / 5 · 牌庫 @side.Deck.Count · 手牌 @side.Hand.Count</span></div>
+                        @if (!mine && SelectedAttacker is { } faceAttacker)
+                        {
+                            <button data-drop-zone="face" class="btn btn-danger mb-2" disabled="@(VisualBusy || !Engine.CanAttackPlayer(faceAttacker))" @onpointerenter="e => HoverTarget(null, e)" @onfocus="() => ShowPreview(null)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => AttackClick(null, match, revision)">攻擊電腦玩家 · @faceAttacker.CurrentDP 傷害</button>
+                            @if (!Engine.CanAttackPlayer(faceAttacker)) { <small>先處理敵方嘲諷。</small> }
+                        }
+                        <div class="energy-summary" data-drop-zone="@(mine ? "energy" : null)">能量：可用 <strong>@side.AvailableEnergy</strong> / 總數 @side.TotalEnergy · 已支付 @side.EnergyZone.Count(e => e.IsTapped) · 聖盾保留 @side.AttachedEnergy
+                            @if (mine) { <span> · 本回合填能量：@(side.HasFilledEnergyThisTurn ? "已使用" : "尚未使用")</span> }
+                        </div>
+                        <div class="energy-row" role="region" data-drop-zone="@(mine ? "energy" : null)" aria-label="@(side.Name + "背面能量")">
+                            @foreach (var energy in side.EnergyZone)
+                            { <div @key="energy.InstanceId" class="energy-back @(energy.IsTapped ? "tapped" : "")" title="@(energy.IsTapped ? "已橫置使用" : "直立可用")">◆<span>@(energy.IsTapped ? "已用" : "可用")</span></div> }
+                            @if (side.EnergyZone.Count == 0) { <span class="text-muted">尚無能量</span> }
+                        </div>
+                        <div class="field-grid" role="region" data-drop-zone="@(mine ? "summon" : null)" aria-label="@(side.Name + "戰場")">
+                            @foreach (var monster in side.Field)
+                            {
+                                bool selectable = FieldSelectable(monster);
+                                <article data-drag-kind="@(mine ? "monster" : null)" data-drag-id="@monster.InstanceId" data-drop-zone="@(mine ? null : $"m:{monster.InstanceId}")" @key="monster.InstanceId" class="field-unit @(SelectedAttacker == monster ? "selected" : "") @(selectable ? "selectable" : SelectedAttacker != null && !mine ? "target-dim" : "") @(monster.IsFrozen ? "frozen" : "") @(monster.HasShield ? "shielded" : "") @(Engine.LastAttack is { } hit && hit.ActionNumber == Engine.Revision && hit.AttackerId == monster.InstanceId ? "attack-lunge" : "")">
+                                    <button class="field-action" disabled="@(!selectable)" @onpointerenter="e => HoverTarget(monster, e)" @onfocus="() => ShowPreview(monster)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => FieldClick(monster, match, revision)">
+                                        <LcgWeb.Components.Common.CardArt Card="monster.Card" CssClass="field-illustration" />
+                                        <strong>@monster.Card.Name</strong><span>@monster.CurrentPP PP · @monster.CurrentDP DP</span>
+                                        <small>@(monster.IsTaunt ? "嘲諷 · " : "")@(monster.HasShield ? $"聖盾 ×{monster.ShieldCount} · " : "")@(monster.IsFrozen ? "冰凍 · " : "")@(monster.IsStealthed ? "背面潛伏 · " : "")@(monster.IsSilenced ? "沉默 · " : "")@MonsterReadiness(monster)</small>
+                                        @if (selectable) { <span class="action-hint">@FieldHint(monster)</span> }
+                                    </button>
+                                    @if (monster.HasShield) { <small class="status-detail">◆ 保留 @monster.ShieldCount 張背面能量</small> }
+                                    @if (monster.IsFrozen) { <small class="status-detail">@FreezeLabel(monster, side)</small> }
+                                    @if (monster.SilenceSpell is { } attached) { <button class="btn btn-sm btn-outline-warning" @onclick:stopPropagation="true" @onclick="() => Inspect = attached.Card">附著：@attached.Card.Name</button> }
+                                    <button class="btn btn-sm btn-outline-secondary" @onclick:stopPropagation="true" @onclick="() => Inspect = monster.Card">查看卡片</button>
+                                </article>
+                            }
+                            @for (int i = side.Field.Count; i < 5; i++) { <div class="empty-slot">空位</div> }
+                        </div>
+                        <details class="graveyard"><summary>墓地（@side.Graveyard.Count 張）</summary>
+                            @foreach (var card in side.Graveyard) { <button @key="card.InstanceId" class="btn btn-sm btn-outline-secondary m-1" @onclick="() => Inspect = card.Card">@card.Card.Name</button> }
+                        </details>
+                    </section>
+                }
+                @if (Engine.CurrentPendingChoice is { OwnerId: "player" } choice)
+                {
+                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="region" aria-label="待選擇效果">
+                        <h2>@choice.Title</h2><p>@choice.Description</p>
+                        <div class="choice-grid">
+                            @foreach (var option in choice.Options)
+                            {
+                                <button class="choice-button" @key="option.Id" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "choice", OptionId: option.Id))'>
+                                    <strong>@option.Title</strong>
+                                    @if (option.PreviewCard is { } preview) { <span>@preview.Type · @preview.TotalCost 費</span><small>@preview.Text</small> }
+                                    else { <span>@option.Subtitle</span> }
+                                </button>
+                            }
+                        </div>
+                        @if (choice.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>取消，保留卡牌與能量</button> }
+                    </section>
+                }
+                @if (Engine.CurrentPendingTarget is { OwnerId: "player" } target)
+                {
+                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="status"><h2>@target.Title</h2><p>點選戰場上亮起的合法目標。</p>
+                        @if (target.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>取消，保留卡牌與能量</button> }
+                    </section>
+                }
+                <div class="battle-controls" @onclick:stopPropagation="true">
+                    @if (Engine.CurrentPhase == TurnPhase.MainPhase && Engine.ActivePlayer.Id == "player" && !Engine.IsWaiting && !Engine.IsOver)
+                    {
+                        @if (SelectedAttacker is { } attacking)
+                        { <span>【@attacking.Card.Name】：點敵方怪物或「攻擊電腦玩家」。</span><button class="btn btn-outline-secondary" @onclick="ClearAttack">取消選取</button> }
+                        else { <span>拖己方怪物到敵方目標即可攻擊，也可點選。手牌可拖到己方戰場或能量區。</span> }
+                        <button class="btn btn-primary" disabled="@VisualBusy" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "end"))'>結束回合</button>
+                    }
+                </div>
+                @if (SelectedAttacker is { } a && Preview is { } prediction)
+                {
+                    <section class="attack-preview battle-panel" aria-label="交戰預覽" aria-live="polite" @onclick:stopPropagation="true">
+                        <strong>@a.Card.Name → @(PreviewTarget?.Card.Name ?? "電腦玩家")</strong>
+                        @if (PreviewTarget != null)
+                        {
+                            <p>己方：@Outcome(prediction.AttackerDies, prediction.AttackerShieldBreaks)<br />敵方：@Outcome(prediction.DefenderDies, prediction.DefenderShieldBreaks)</p>
+                        }
+                        @if (prediction.PlayerDamage > 0)
+                        { <p>@(PreviewTarget == null ? "攻擊傷害" : "貫穿傷害")：@prediction.PlayerDamage 點@(PreviewTarget == null ? $"，生命 {Engine.Computer.Hp} → {Math.Max(0, Engine.Computer.Hp - prediction.PlayerDamage)}" : "（須存活至後續結算）")</p> }
+                        <small>僅預覽交戰；離場與其他能力可能追加效果，生命歸零會停止後續結算。</small>
+                        @if (TouchInput) { <button class="btn btn-danger" disabled="@VisualBusy" @onclick="() => ConfirmAttack(match, revision)">確認攻擊</button> }
+                    </section>
+                }
+
+            </main>
+            <aside class="battle-panel log-panel"><details open><summary>對戰紀錄 · 可收合</summary>
+                @foreach (var group in Engine.Logs.Take(50).GroupBy(l => l.ActionNumber))
+                {
+                    <section class="log-group"><small>行動 @group.Key</small>
+                @foreach (var log in group.Reverse())
+                {
+                    <p class="log-entry @log.Level">@foreach (var part in LogParts(log.Message))
+                        {
+                            var card = part.StartsWith("【") && part.EndsWith("】") ? CardDb.AllCards.FirstOrDefault(c => c.Name == part[1..^1]) : null;
+                            if (card != null)
+                            { <button type="button" class="log-card-link" aria-label="@($"查看卡片：{card.Name}")" @onclick="() => Inspect = card">@part</button> }
+                            else
+                            { @part }
+                        }</p>
+                }
+                    </section>
+                }
+                </details>
+            </aside>
+        </div>
+        <LcgWeb.Components.Common.HandDock @ref="HandDock" Engine="Engine" Busy="VisualBusy" OnPlay='c => Run(match, revision, new(Guid.NewGuid(), match, revision, "play", c.InstanceId))' OnEnergy='c => Run(match, revision, new(Guid.NewGuid(), match, revision, "energy", c.InstanceId))' OnInspect="c => Inspect = c" OnSelect="ClearAttack" />
+        @if (Feedback.Count > 0)
+        { <div class="battle-feedback" role="status" aria-live="polite" @key="FeedbackSerial">@foreach (var line in Feedback) { <span>@line</span> }</div> }
+    }
+    @if (Inspect is { } inspected)
+    {
+        <div class="card-detail-backdrop" @onclick="() => Inspect = null">
+            <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+                <h2>@inspected.Name</h2>
+                <LcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
+                <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
+                @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
+                <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
+                <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+            </section>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Deck> Decks = new();
+    private string PlayerDeckId = "", ComputerDeckId = "", Starter = "player", Notice = "";
+    private bool Disposed;
+    private bool FastAi { get => Coordinator.Fast; set => Coordinator.Fast = value; }
+    private CardDefinition? Inspect;
+    private static string[] LogParts(string message) => System.Text.RegularExpressions.Regex.Split(message, "(【[^】]+】)");
+    private MonsterInstance? SelectedAttacker, PreviewTarget;
+    private GameEngine.AttackPreview? Preview;
+    private bool TouchInput;
+    private LcgWeb.Components.Common.HandDock? HandDock;
+    private DateTime BusyUntil;
+    private bool VisualBusy => DateTime.UtcNow < BusyUntil;
+    private List<string> Feedback = new();
+    private int FeedbackSerial;
+    private Guid ObservedMatch;
+    private int PreviousHp, PreviousEnemyHp;
+    private Dictionary<Guid, (string Name, int Shield)> PreviousField = new();
+    private HashSet<Guid> PreviousHand = new();
+    private GameLogEntry? PreviousLog;
+
+    private readonly CancellationTokenSource Lifetime = new();
+    private Task? Driver;
+    private Guid Presenter;
+    private ElementReference DragRoot;
+    private IJSObjectReference? DragModule, DragHandle;
+    private DotNetObjectReference<Home>? DragReceiver;
+    private Guid DragMatch, DragId;
+    private long DragRevision;
+    private string? DragKind;
+    private bool Dragging;
+
+    protected override void OnInitialized()
+    {
+        Decks = DeckSvc.GetAllAvailableDecks();
+        Notice = DeckSvc.LastStorageError ?? "";
+        PlayerDeckId = CardDb.PresetDecks[0].Id; ComputerDeckId = CardDb.PresetDecks[1].Id;
+        Presenter = Coordinator.Attach();
+        CaptureState();
+        Engine.OnStateChanged += EngineChanged;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        Driver = Coordinator.DriveAsync(Presenter, response => InvokeAsync(() =>
+        { if (!Disposed) { Notice = response.Message; Coordinator.Acknowledge(Presenter, response.State.MatchId, response.State.Revision, response.BatchId); StateHasChanged(); } }), Lifetime.Token);
+        DragReceiver = DotNetObjectReference.Create(this);
+        DragModule = await Js.InvokeAsync<IJSObjectReference>("import", "./battle-drag.js");
+        DragHandle = await DragModule.InvokeAsync<IJSObjectReference>("attach", DragRoot, DragReceiver);
+    }
+    [JSInvokable] public object? BeginDrag(string kind, string id)
+    {
+        if (VisualBusy || Engine.IsWaiting || Engine.IsOver || Engine.ActivePlayer.Id != "player" || !Guid.TryParse(id, out var parsed)) return null;
+        var zones = new List<string>(); var label = "";
+        if (kind == "monster")
+        {
+            var m = Engine.Player.Field.FirstOrDefault(m => m.InstanceId == parsed);
+            if (m == null || !Engine.CanAttack(m)) return null;
+            HandDock?.ClearSelection(); SelectedAttacker = m; Preview = null;
+            zones.AddRange(Engine.GetAttackTargets(m).Select(t => $"m:{t.InstanceId}"));
+            if (Engine.CanAttackPlayer(m)) zones.Add("face");
+            label = $"{m.Card.Name}：拖向亮起的敵方目標，放開攻擊";
+        }
+        else if (kind == "hand")
+        {
+            var card = Engine.Player.Hand.FirstOrDefault(c => c.InstanceId == parsed);
+            if (card == null) return null;
+            ClearAttack(); HandDock?.ClearSelection();
+            if (card.Card.IsMonster && Engine.CanPlayCard(Engine.Player, card)) zones.Add("summon");
+            if (Engine.CanPlayEnergy(Engine.Player, card)) zones.Add("energy");
+            label = card.Card.IsMonster ? $"{card.Card.Name}：戰場召喚 · 能量區填能量" : $"{card.Card.Name}：能量區填能量；施法仍用點選";
+        }
+        else return null;
+        if (zones.Count == 0) return null;
+        Dragging = true; DragKind = kind; DragId = parsed; DragMatch = Engine.MatchId; DragRevision = Engine.Revision;
+        StateHasChanged(); return new { zones, label };
+    }
+    [JSInvokable] public void HoverDrag(string? zone)
+    {
+        if (!Dragging || DragKind != "monster") return;
+        if (zone == "face") ShowPreview(null);
+        else if (zone?.StartsWith("m:") == true && Guid.TryParse(zone[2..], out var id)) ShowPreview(Engine.Computer.Field.FirstOrDefault(m => m.InstanceId == id));
+        else { Preview = null; PreviewTarget = null; }
+        StateHasChanged();
+    }
+    [JSInvokable] public async Task DropDrag(string kind, string id, string zone)
+    {
+        if (!Dragging || kind != DragKind || id != DragId.ToString()) return;
+        Dragging = false; DragKind = null;
+        if (DragMatch != Engine.MatchId || DragRevision != Engine.Revision || VisualBusy)
+        { ClearAttack(); Notice = "拖曳期間畫面已更新，請重新操作。"; StateHasChanged(); return; }
+        if (kind == "monster")
+        {
+            var attacker = Engine.Player.Field.FirstOrDefault(m => m.InstanceId == DragId);
+            if (attacker != null && zone == "face") Run(DragMatch, DragRevision, new(Guid.NewGuid(), DragMatch, DragRevision, "attack", attacker.InstanceId));
+            else if (attacker != null && zone.StartsWith("m:") && Guid.TryParse(zone[2..], out var targetId))
+            {
+                var target = Engine.Computer.Field.FirstOrDefault(m => m.InstanceId == targetId);
+                if (target != null) Run(DragMatch, DragRevision, new(Guid.NewGuid(), DragMatch, DragRevision, "attack", attacker.InstanceId, target.InstanceId));
+            }
+        }
+        else
+        {
+            var card = Engine.Player.Hand.FirstOrDefault(c => c.InstanceId == DragId);
+            if (card != null && zone == "summon" && card.Card.IsMonster) Run(DragMatch, DragRevision, new(Guid.NewGuid(), DragMatch, DragRevision, "play", card.InstanceId));
+            else if (card != null && zone == "energy" && Engine.CanPlayEnergy(Engine.Player, card) && HandDock != null) await HandDock.FillDragged(card);
+        }
+        ClearAttack(); StateHasChanged();
+    }
+    [JSInvokable] public void CancelDrag() { Dragging = false; DragKind = null; ClearAttack(); StateHasChanged(); }
+
+    private void EngineChanged()
+    {
+        if (Disposed) return;
+        _ = InvokeAsync(() =>
+        {
+            Feedback = new();
+            if (ObservedMatch == Engine.MatchId)
+            {
+                var attack = Engine.Logs.TakeWhile(l => !ReferenceEquals(l, PreviousLog)).FirstOrDefault(l => l.Message.Contains("】攻擊【"));
+                if (attack != null) Feedback.Add("⚔ " + attack.Message.Replace("】攻擊【", "】 → 【"));
+                AddHpFeedback("玩家", Engine.Player.Hp - PreviousHp);
+                AddHpFeedback("電腦", Engine.Computer.Hp - PreviousEnemyHp);
+                var current = Engine.Player.Field.Concat(Engine.Computer.Field).ToDictionary(m => m.InstanceId);
+                foreach (var (id, old) in PreviousField)
+                {
+                    if (!current.TryGetValue(id, out var m)) Feedback.Add($"{old.Name} 離開戰場");
+                    else if (old.Shield > m.ShieldCount) Feedback.Add($"{old.Name} 消耗聖盾 · 能量返還");
+                }
+                foreach (var m in current.Values.Where(m => !PreviousField.ContainsKey(m.InstanceId))) Feedback.Add($"{m.Card.Name} 進場");
+                var drawn = Engine.Player.Hand.Count(c => !PreviousHand.Contains(c.InstanceId));
+                if (drawn > 0) Feedback.Add($"手牌加入 {drawn} 張");
+            }
+            CaptureState();
+            if (SelectedAttacker != null && !Engine.CanAttack(SelectedAttacker)) ClearAttack();
+            if (Preview != null && SelectedAttacker != null) Preview = Engine.PreviewAttack(SelectedAttacker, PreviewTarget);
+            if (Feedback.Count > 0)
+            {
+                BusyUntil = DateTime.UtcNow.AddMilliseconds(FastAi ? 100 : 450);
+                int serial = ++FeedbackSerial; _ = ClearFeedbackLater(serial);
+            }
+            StateHasChanged();
+        });
+    }
+    private void AddHpFeedback(string name, int delta) { if (delta != 0) Feedback.Add($"{name} {(delta > 0 ? "+" : "")}{delta} ♥"); }
+    private void CaptureState()
+    {
+        ObservedMatch = Engine.MatchId; PreviousHp = Engine.Player.Hp; PreviousEnemyHp = Engine.Computer.Hp;
+        PreviousField = Engine.Player.Field.Concat(Engine.Computer.Field).ToDictionary(m => m.InstanceId, m => (m.Card.Name, m.ShieldCount));
+        PreviousHand = Engine.Player.Hand.Select(c => c.InstanceId).ToHashSet();
+        PreviousLog = Engine.Logs.FirstOrDefault();
+    }
+    private async Task ClearFeedbackLater(int serial)
+    {
+        try
+        {
+            await Task.Delay(FastAi ? 150 : 500, Lifetime.Token);
+            await InvokeAsync(() => { if (!Disposed && serial == FeedbackSerial) { BusyUntil = DateTime.MinValue; StateHasChanged(); } });
+            await Task.Delay(1500, Lifetime.Token);
+            await InvokeAsync(() => { if (!Disposed && serial == FeedbackSerial) { Feedback.Clear(); StateHasChanged(); } });
+        }
+        catch (OperationCanceledException) { }
+    }
+    private void ClearAttack() { SelectedAttacker = null; PreviewTarget = null; Preview = null; }
+    private void PageKey(KeyboardEventArgs e) { if (e.Key == "Escape") { ClearAttack(); Inspect = null; } }
+    private static string Outcome(bool dies, bool shield) => dies ? "消滅" : shield ? "聖盾破裂，存活；返還 1 張可用能量" : "存活";
+    private string MonsterReadiness(MonsterInstance m) => m.HasAttacked ? "已攻擊" : m.IsFrozen ? "不能主動攻擊" : !m.IsSilenced && m.Card.CannotAttack ? "不能攻擊" : m.HasSummoningSickness && !m.HasCharge ? "召喚醉意" : "可攻擊";
+    private string FreezeLabel(MonsterInstance m, PlayerState side) => m.FrozenUntilTurn == Engine.TurnNumber ? $"{side.Name} 本回合結束解凍" : $"{side.Name} 下個回合結束解凍";
+    private void PointerDown(PointerEventArgs e) => TouchInput = e.PointerType == "touch";
+    private void HoverTarget(MonsterInstance? target, PointerEventArgs e) { if (e.PointerType != "touch") { TouchInput = false; ShowPreview(target); } }
+    private void ShowPreview(MonsterInstance? target)
+    { if (SelectedAttacker == null) return; PreviewTarget = target; Preview = Engine.PreviewAttack(SelectedAttacker, target); }
+    private void AttackClick(MonsterInstance? target, Guid match, long revision)
+    { if (TouchInput) ShowPreview(target); else if (SelectedAttacker is { } a) Run(match, revision, new(Guid.NewGuid(), match, revision, "attack", a.InstanceId, target?.InstanceId)); }
+    private void ConfirmAttack(Guid match, long revision)
+    { if (Preview != null && SelectedAttacker is { } a) Run(match, revision, new(Guid.NewGuid(), match, revision, "attack", a.InstanceId, PreviewTarget?.InstanceId)); }
+    private void Run(Guid match, long revision, BattleCommand command)
+    {
+        if (VisualBusy && command.Type is not ("reset" or "start" or "surrender")) return;
+        Coordinator.Fast = FastAi;
+        var result = Coordinator.Submit(Presenter, command);
+        Notice = result.Message;
+        Coordinator.Acknowledge(Presenter, result.State.MatchId, result.State.Revision, result.BatchId);
+        if (result.Success) ClearAttack();
+    }
+    private void Start(Guid match, long revision)
+    {
+        try
+        {
+            var p = DeckSvc.GetDeck(PlayerDeckId); var c = DeckSvc.GetDeck(ComputerDeckId);
+            if (p == null || c == null) { Notice = "找不到牌組，請重新選擇。"; return; }
+            Run(match, revision, new(Guid.NewGuid(), match, revision, "start", PlayerDeckId: PlayerDeckId, ComputerDeckId: ComputerDeckId, PlayerFirst: Starter == "player" || Starter == "random" && Random.Shared.Next(2) == 0));
+        }
+        catch (ArgumentException ex) { Notice = ex.Message; }
+        catch (IOException ex) { Notice = $"讀取牌組失敗：{ex.Message}"; }
+    }
+    private bool FieldSelectable(MonsterInstance m)
+    {
+        if (VisualBusy || Engine.IsOver || Engine.DecisionPlayerId != "player") return false;
+        if (Engine.CurrentPendingTarget is { } target) return target.Validator?.Invoke(m) == true;
+        if (Engine.IsWaiting) return false;
+        if (Engine.Player.Field.Contains(m)) return Engine.CanAttack(m);
+        return SelectedAttacker != null && Engine.GetAttackTargets(SelectedAttacker).Contains(m);
+    }
+    private string FieldHint(MonsterInstance m) => Engine.CurrentPendingTarget != null ? "選為法術／效果目標" : Engine.Player.Field.Contains(m) ? "選擇／取消攻擊者" : "攻擊此怪物";
+    private void FieldClick(MonsterInstance m, Guid match, long revision)
+    {
+        if (!FieldSelectable(m)) return;
+        if (Engine.CurrentPendingTarget != null) Run(match, revision, new(Guid.NewGuid(), match, revision, "target", TargetId: m.InstanceId));
+        else if (Engine.Player.Field.Contains(m)) { HandDock?.ClearSelection(); SelectedAttacker = SelectedAttacker == m ? null : m; Preview = null; PreviewTarget = null; }
+        else if (SelectedAttacker != null) AttackClick(m, match, revision);
+    }
+    private string PhaseLabel => Engine.IsOver ? "對局結束" : Engine.IsWaiting ? "等待效果選擇" : Engine.CurrentPhase switch
+    { TurnPhase.MainPhase => $"{Engine.ActivePlayer.Name}行動階段", TurnPhase.EndingTurn => "回合結束效果", _ => "準備對局" };
+    public async ValueTask DisposeAsync()
+    {
+        Disposed = true; Coordinator.Detach(Presenter); Engine.OnStateChanged -= EngineChanged; Lifetime.Cancel();
+        if (Driver != null) { try { await Driver; } catch (OperationCanceledException) { } }
+        try
+        {
+            if (DragHandle != null) { await DragHandle.InvokeVoidAsync("dispose"); await DragHandle.DisposeAsync(); }
+            if (DragModule != null) await DragModule.DisposeAsync();
+        }
+        catch (JSDisconnectedException) { }
+        DragReceiver?.Dispose();
+        Lifetime.Dispose();
+    }
+}

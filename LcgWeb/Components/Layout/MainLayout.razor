@@ -1,0 +1,50 @@
+@inherits LayoutComponentBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div class="page @(sidebarCollapsed ? "sidebar-collapsed" : "")">
+    <div class="sidebar" @ref="sidebarElement">
+        <NavMenu Collapsed="sidebarCollapsed" OnToggle="ToggleSidebar" />
+        <div class="sidebar-resizer" role="separator" aria-label="調整側邊欄寬度" aria-orientation="vertical"
+             aria-valuemin="200" aria-valuemax="360" aria-valuenow="250" tabindex="0"
+             title="拖曳調整寬度，或使用左右方向鍵" @ref="resizerElement"></div>
+    </div>
+
+    <main>
+        <article class="content px-3 py-2">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private bool sidebarCollapsed;
+    private ElementReference sidebarElement;
+    private ElementReference resizerElement;
+    private IJSObjectReference? sidebarModule;
+    private void ToggleSidebar() => sidebarCollapsed = !sidebarCollapsed;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        sidebarModule = await JS.InvokeAsync<IJSObjectReference>("import", "./sidebar.js");
+        await sidebarModule.InvokeVoidAsync("attach", sidebarElement, resizerElement);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (sidebarModule is null) return;
+        try
+        {
+            await sidebarModule.InvokeVoidAsync("detach", resizerElement);
+            await sidebarModule.DisposeAsync();
+        }
+        catch (JSDisconnectedException) { }
+    }
+}
+
+<div id="blazor-error-ui" data-nosnippet>
+    發生錯誤。
+    <a href="." class="reload">重新整理</a>
+    <span class="dismiss">🗙</span>
+</div>

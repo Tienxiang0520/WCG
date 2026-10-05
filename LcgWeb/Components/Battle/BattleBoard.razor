@@ -1,0 +1,80 @@
+@namespace LcgWeb.Components.Battle
+@using LcgWeb.Models.Battle
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject BattleBridge Bridge
+@inject BattleCoordinator Coordinator
+
+<div class="phaser-board-root" @ref="Root" aria-label="卡牌對戰戰場"></div>
+@if (Error != "")
+{
+    <p role="alert" class="alert alert-warning">@Error <a href="/legacy">使用原版對戰畫面</a></p>
+}
+@code {
+    [Parameter] public BattleBridge? Source { get; set; }
+    [Parameter] public BattleCoordinator? Driver { get; set; }
+    private BattleBridge EffectiveBridge => Source ?? Bridge;
+    private BattleCoordinator EffectiveCoordinator => Driver ?? Coordinator;
+    [Parameter] public bool AnimationPrototype { get; set; }
+    [Parameter] public BattleResponse? InitialResponse { get; set; }
+    [Parameter] public Guid Presenter { get; set; }
+    [Parameter] public EventCallback Ready { get; set; }
+    [Parameter] public EventCallback<BattleSnapshot> Changed { get; set; }
+    [Parameter] public EventCallback<string> SessionAction { get; set; }
+    private ElementReference Root;
+    private IJSObjectReference? Module;
+    private DotNetObjectReference<BattleBoard>? Receiver;
+    private string? Id;
+    private bool Disposed;
+    private string Error = "";
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/board.js");
+            Receiver = DotNetObjectReference.Create(this);
+            Id = await Module.InvokeAsync<string>("create", Root, Receiver, AnimationPrototype, SessionAction.HasDelegate);
+            if (Disposed) { await Module.InvokeVoidAsync("dispose", Id); return; }
+            await Publish(InitialResponse ?? new(true, "sync", "", Guid.NewGuid(), EffectiveBridge.Snapshot(), []));
+            await Ready.InvokeAsync();
+        }
+        catch (Exception ex) when (ex is JSException or JSDisconnectedException or TaskCanceledException)
+        { Error = "戰場載入失敗，請重新整理或使用原版畫面。"; if (!Disposed) StateHasChanged(); }
+    }
+    public async Task Publish(BattleResponse response)
+    {
+        if (Disposed || Module == null || Id == null) return;
+        try { await Module.InvokeVoidAsync("update", Id, response); }
+        catch (JSDisconnectedException) { }
+    }
+    [JSInvokable] public async Task<BattleResponse> Submit(BattleCommand command)
+    {
+        var response = EffectiveCoordinator.Submit(Presenter, command);
+        return await Task.FromResult(response);
+    }
+    [JSInvokable] public async Task<bool> Acknowledge(Guid match, long revision, Guid batch)
+    {
+        var accepted = EffectiveCoordinator.Acknowledge(Presenter, match, revision, batch);
+        if (!Disposed) await Changed.InvokeAsync(EffectiveBridge.Snapshot());
+        return accepted;
+    }
+    [JSInvokable] public bool Ping() => true;
+    [JSInvokable] public async Task RequestSessionAction(string type)
+    {
+        if (!Disposed && type is "surrender" or "reset" or "start") await SessionAction.InvokeAsync(type);
+    }
+    [JSInvokable] public void SetFast(bool fast) => EffectiveCoordinator.Fast = fast;
+    [JSInvokable] public async Task Resync() => await Publish(EffectiveCoordinator.Resync(Presenter));
+    public async ValueTask DisposeAsync()
+    {
+        Disposed = true;
+        try
+        {
+            if (Module != null && Id != null) await Module.InvokeVoidAsync("dispose", Id);
+            if (Module != null) await Module.DisposeAsync();
+        }
+        catch (Exception ex) when (ex is JSDisconnectedException or TaskCanceledException) { }
+        Receiver?.Dispose();
+    }
+}

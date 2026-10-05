@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="玩家守衛頭像">
+  <circle cx="48" cy="48" r="45" fill="#163b40" stroke="#84dbc1" stroke-width="4"/>
+  <path d="M18 81Q22 61 48 60Q74 61 78 81" fill="#427b80"/>
+  <path d="M30 30Q48 13 66 30L63 55L48 69L33 55Z" fill="#d4bb98"/>
+  <path d="M26 38L31 22L48 14L65 22L70 38L59 33L48 40L37 33Z" fill="#c9e8e2" stroke="#173b43" stroke-width="3"/>
+  <path d="M48 17V36M34 43H43M53 43H62" fill="none" stroke="#173b43" stroke-width="4" stroke-linecap="round"/>
+  <path d="M39 55L48 59L57 55" fill="none" stroke="#705d51" stroke-width="3" stroke-linecap="round"/>
+  <path d="M33 68L48 76L63 68L59 87H37Z" fill="#90c9bb"/>
+</svg>

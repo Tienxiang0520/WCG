@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>魂誓</title><meta name="description" content="魂誓：五大意志交鋒的單人卡牌對戰。組牌、人機對戰與本機天梯。" />
+    <base href="/" /><link rel="preload" id="webassembly" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" /><link rel="stylesheet" href="lcg.css" />
+    <link rel="stylesheet" href="SoulOath.Static.styles.css" /><link rel="stylesheet" href="battle/battle.css" />
+    <link rel="stylesheet" href="deck-print.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <script type="importmap"></script>
+    <style>body{background:#14161d;color:#e6eef8}.startup{padding:3rem;max-width:40rem;margin:10vh auto}.startup h1{font-size:2rem}.startup p{color:#a6bcd2}#blazor-error-ui{display:none;position:fixed;bottom:0;background:#44212e;color:#fff;padding:1rem;width:100%;z-index:2000}</style>
+</head>
+<body>
+    <div id="app"><main class="startup"><h1>🔮 魂誓</h1><p>正在準備卡牌與對戰…</p></main></div>
+    <div id="blazor-error-ui" role="alert">載入發生錯誤。<a href="." class="reload">重新整理</a></div>
+    <noscript>請開啟瀏覽器 JavaScript，才能進行魂誓對戰。</noscript>
+    <script src="local-data.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_framework/blazor.webassembly#[.{fingerprint}].js" autostart="false"></script>
+    <script>
+        soulOathStorage.ready.then(() => Blazor.start()).catch(() => {
+            document.querySelector('#blazor-error-ui').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

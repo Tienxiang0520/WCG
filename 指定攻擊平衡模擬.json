@@ -1,0 +1,171 @@
+{
+  "policy": "same deterministic heuristic both sides; seeds 100 onward; mirrored first player; not human win rates",
+  "seeds": 30,
+  "pairs": [
+    {
+      "player": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "opponent": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "games": 60,
+      "wins": 26,
+      "losses": 34,
+      "firstWins": 40,
+      "fatigue": 0,
+      "averageTurns": 11.03,
+      "averageActions": 46.42
+    },
+    {
+      "player": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "opponent": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "games": 60,
+      "wins": 20,
+      "losses": 40,
+      "firstWins": 36,
+      "fatigue": 0,
+      "averageTurns": 14.27,
+      "averageActions": 64.2
+    },
+    {
+      "player": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "opponent": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "games": 60,
+      "wins": 25,
+      "losses": 35,
+      "firstWins": 31,
+      "fatigue": 0,
+      "averageTurns": 12.87,
+      "averageActions": 56.7
+    },
+    {
+      "player": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "opponent": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "games": 60,
+      "wins": 24,
+      "losses": 36,
+      "firstWins": 36,
+      "fatigue": 0,
+      "averageTurns": 13.83,
+      "averageActions": 55.72
+    },
+    {
+      "player": "\uD83D\uDD25 \u72C2\u6012\u30FB\u71C3\u8840\u7A81\u64CA",
+      "opponent": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "games": 60,
+      "wins": 43,
+      "losses": 17,
+      "firstWins": 41,
+      "fatigue": 0,
+      "averageTurns": 10.58,
+      "averageActions": 46.23
+    },
+    {
+      "player": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "opponent": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "games": 60,
+      "wins": 26,
+      "losses": 34,
+      "firstWins": 30,
+      "fatigue": 2,
+      "averageTurns": 20.33,
+      "averageActions": 98.62
+    },
+    {
+      "player": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "opponent": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "games": 60,
+      "wins": 27,
+      "losses": 33,
+      "firstWins": 31,
+      "fatigue": 0,
+      "averageTurns": 16.22,
+      "averageActions": 76.6
+    },
+    {
+      "player": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "opponent": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "games": 60,
+      "wins": 23,
+      "losses": 37,
+      "firstWins": 37,
+      "fatigue": 0,
+      "averageTurns": 17.68,
+      "averageActions": 78.75
+    },
+    {
+      "player": "\uD83D\uDCA7 \u7406\u667A\u30FB\u971C\u7130\u7BC0\u594F",
+      "opponent": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "games": 60,
+      "wins": 44,
+      "losses": 16,
+      "firstWins": 36,
+      "fatigue": 0,
+      "averageTurns": 13.82,
+      "averageActions": 63.07
+    },
+    {
+      "player": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "opponent": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "games": 60,
+      "wins": 26,
+      "losses": 34,
+      "firstWins": 38,
+      "fatigue": 0,
+      "averageTurns": 15.73,
+      "averageActions": 72.55
+    },
+    {
+      "player": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "opponent": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "games": 60,
+      "wins": 32,
+      "losses": 28,
+      "firstWins": 38,
+      "fatigue": 0,
+      "averageTurns": 16.7,
+      "averageActions": 71.3
+    },
+    {
+      "player": "\uD83C\uDF3F \u751F\u6A5F\u30FB\u5DE8\u7378\u5954\u8972",
+      "opponent": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "games": 60,
+      "wins": 27,
+      "losses": 33,
+      "firstWins": 43,
+      "fatigue": 0,
+      "averageTurns": 12.33,
+      "averageActions": 55.32
+    },
+    {
+      "player": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "opponent": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "games": 60,
+      "wins": 21,
+      "losses": 39,
+      "firstWins": 33,
+      "fatigue": 0,
+      "averageTurns": 18.95,
+      "averageActions": 82.95
+    },
+    {
+      "player": "\uD83D\uDEE1\uFE0F \u79E9\u5E8F\u30FB\u8056\u76FE\u9577\u57CE",
+      "opponent": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "games": 60,
+      "wins": 41,
+      "losses": 19,
+      "firstWins": 37,
+      "fatigue": 0,
+      "averageTurns": 14.93,
+      "averageActions": 61.78
+    },
+    {
+      "player": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "opponent": "\uD83D\uDC80 \u6DF1\u6DF5\u30FB\u4EA1\u8005\u71C3\u9B42",
+      "games": 60,
+      "wins": 35,
+      "losses": 25,
+      "firstWins": 41,
+      "fatigue": 0,
+      "averageTurns": 11,
+      "averageActions": 47.28
+    }
+  ]
+}
