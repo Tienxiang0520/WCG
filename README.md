@@ -44,3 +44,5 @@ Sites 已於 2026-10-04 發布：[魂誓 WCG](https://soul-oath-wcg.thewomanbyth
 整理前原始碼保存在 `baseline/pre-cleanup-2026-10-05`；舊備份、廢稿與驗證資料保存在 `archive/pre-cleanup` 分支，可從 Git 匯出還原，工作目錄不再保留重複副本。
 
 使用方式見 [Git 使用說明](docs/Git使用說明.md)，整理範圍見 [專案整理紀錄](docs/專案整理.md)。最近的卡牌設計想法保留於 [設計待討論](docs/設計待討論.md)。
+
+後續發展建議記錄於 [專案建議](docs/專案建議.md)，目前列為待評估。
