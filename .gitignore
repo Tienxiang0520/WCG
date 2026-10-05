@@ -19,7 +19,7 @@ SoulOath.Static/wwwroot/deck-print.css
 SoulOath.Static/wwwroot/deck-print.js
 SoulOath.Static/wwwroot/print-art/
 LcgWeb/wwwroot/print-art/
-output/pdf/
+/output/
 
 # Local deployment checkout, player state, editor caches and generated outputs.
 /SoulOath.Site/

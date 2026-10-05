@@ -15,5 +15,8 @@
   </ItemGroup>
   <Target Name="PreparePublicGameAssets" BeforeTargets="PrepareForBuild">
     <Exec Command="node tools/prepare-assets.mjs" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <ItemGroup>
+      <Content Include="wwwroot/**/*" Exclude="@(Content)" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
   </Target>
 </Project>

@@ -1,9 +1,21 @@
 import { spawnSync } from 'node:child_process';
 import { cp, mkdir, copyFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const root = resolve(project, '..');
+const client = resolve(root, 'LcgWeb/Client');
+if (!existsSync(resolve(root, 'LcgWeb/wwwroot/battle/board.js'))
+    || !existsSync(resolve(root, 'LcgWeb/wwwroot/battle/preferences.js'))) {
+    for (const args of [
+        ...(['phaser', 'typescript', 'esbuild'].some(name => !existsSync(resolve(client, 'node_modules', name, 'package.json'))) ? [['ci']] : []),
+        ['run', 'build']
+    ]) {
+        const result = spawnSync('npm', args, { cwd: client, stdio: 'inherit' });
+        if (result.status !== 0) process.exit(result.status ?? 1);
+    }
+}
 const printArt = spawnSync('python3', [resolve(root, 'LcgWeb/tools/prepare-print-art.py')], { stdio: 'inherit' });
 if (printArt.status !== 0) process.exit(printArt.status ?? 1);
 for (const name of ['app.css','lcg.css','favicon.png','sidebar.js','battle-drag.js','deck-print.css','deck-print.js','print-art','lib','battle']) {

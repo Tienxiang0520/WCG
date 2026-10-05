@@ -1,0 +1,15 @@
+{
+  "id": "appgdep_6ac2624a69e08191a28cff2bd5c0735c",
+  "project_id": "appgprj_6ac2526863bc8191b6409359408c934f",
+  "title": "魂誓 WCG",
+  "version_id": "appgprj_6ac2526863bc8191b6409359408c934f~appgver_c69ebc5cdc908191b7c219247d15e315",
+  "type": "publish",
+  "status": "succeeded",
+  "url": "https://soul-oath-wcg.thewomanbythewindow.chatgpt.site",
+  "has_mcp": false,
+  "screenshot_asset_pointer": null,
+  "provider_deployment_id": "site---6ac2526863bc8191b6409359408c934f",
+  "failure_message": null,
+  "env_set_revision": 0,
+  "updated_at": "2026-10-04T14:28:03.352172+00:00"
+}

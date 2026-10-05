@@ -21,5 +21,8 @@
   <Target Name="BuildBattleClient" BeforeTargets="BeforeBuild" Condition="'$(DesignTimeBuild)' != 'true' and '$(SkipBattleClientBuild)' != 'true'">
     <Exec Command="npm ci" WorkingDirectory="$(MSBuildProjectDirectory)/Client" Condition="!Exists('$(MSBuildProjectDirectory)/Client/node_modules/phaser/package.json')" />
     <Exec Command="npm run build" WorkingDirectory="$(MSBuildProjectDirectory)/Client" />
+    <ItemGroup>
+      <Content Include="wwwroot/battle/board.js;wwwroot/battle/preferences.js" Exclude="@(Content)" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
   </Target>
 </Project>
