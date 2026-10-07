@@ -66,12 +66,6 @@
     "duration": 0.289841
   },
   {
-    "file": "confirmation_002.ogg",
-    "pack": "interface-sounds",
-    "sha256": "33b17a9a9a2397c62b285c52c33a907fdffb476909c99e42dde603f6a7a8b12c",
-    "duration": 0.539002
-  },
-  {
     "file": "confirmation_004.ogg",
     "pack": "interface-sounds",
     "sha256": "568967a3d9f8a8f6af54ea01729c4882284308f2a27d78c07ffd7ee0d6951661",
@@ -94,5 +88,30 @@
     "pack": "interface-sounds",
     "sha256": "be97ec4893a02d6eccfb678daa76c83e34cb2583b834ec2593d2641def739fa4",
     "duration": 0.102426
+  },
+  {
+    "file": "turn-mechanical.ogg",
+    "pack": "derived-turn",
+    "sha256": "995e86f70a4e1f50c396b1242756b263b22d3762f943f21c4da7222a225ab1ad",
+    "duration": 0.41932,
+    "sources": [
+      {
+        "file": "sources/turn/impactMetal_medium_001.ogg",
+        "sha256": "e8a9eaba7c4d27422e4eeb3e6c7100d5d7dc0f83e005efc98c960adcc5265337"
+      },
+      {
+        "file": "sources/turn/impactWood_medium_000.ogg",
+        "sha256": "1723a9fd25103ed41af06054814e84e65f4a772bac86ab2dc927da93d9592ff5"
+      },
+      {
+        "file": "sources/turn/toggle_002.ogg",
+        "sha256": "1f564f5520cfa0764028ce245ad97599d3ece8f0ab504554c403af92ac72b900"
+      }
+    ],
+    "sourcePacks": [
+      "interface-sounds",
+      "impact-sounds"
+    ],
+    "recipe": "toggle gain .65 + wood rate .90 gain .80 delay50ms lowpass2400Hz + metal rate .75 gain .20 delay65ms lowpass1800Hz; mix .44s fade .27-.44s; limiter .90"
   }
 ]

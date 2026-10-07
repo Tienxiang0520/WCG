@@ -149,7 +149,11 @@ export function bindFeedback(root, sound = null) {
                 } else if (ev.type === 'bounce') {
                     const source = visual(ev.instanceId);
                     if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, hero(ev.side)); }
-                } else if (ev.type === 'turn') { void sound?.play('turn'); await flash(hero(ev.side), '#9edcff'); }
+                } else if (ev.type === 'turn') {
+                    // Player pressed the mechanical button already; sound again only when their next turn begins.
+                    if (ev.side === 'player') void sound?.play('turn');
+                    await flash(hero(ev.side), '#9edcff');
+                }
                 else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
                 else if (ev.type === 'gameover') { void sound?.play('gameover'); await flash(hero(ev.side), '#ffe5a1'); }
                 else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');

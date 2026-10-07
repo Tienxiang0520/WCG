@@ -4,7 +4,7 @@ export const CUES = {
     place: ['card-place-1.ogg', .8], energy: ['card-shove-1.ogg', .65], draw: ['card-slide-4.ogg', .55],
     attack: ['impactSoft_heavy_000.ogg', .75], damage: ['impactPunch_medium_000.ogg', .7], death: ['impactGlass_light_003.ogg', .55],
     click: ['click_001.ogg', .45], spell: ['glass_001.ogg', .6], heal: ['confirmation_001.ogg', .5],
-    turn: ['confirmation_002.ogg', .45], gameover: ['confirmation_004.ogg', .55],
+    turn: ['turn-mechanical.ogg', .65], gameover: ['confirmation_004.ogg', .55],
     cancel: ['back_001.ogg', .4], error: ['error_002.ogg', .4], trigger: ['pluck_001.ogg', .45]
 };
 const EVENT_CUES = { play:'place',summon:'place',set:'place',energy:'energy',draw:'draw',take:'draw',recover:'draw',bounce:'draw',attack:'attack',damage:'damage',heal:'heal',death:'death',turn:'turn',gameover:'gameover',trigger:'trigger',status:'trigger',reveal:'flip' };
@@ -62,6 +62,7 @@ export function createBattleAudio(root = null, env = {}) {
         if (e.type === 'keydown' && (!['Enter', ' '].includes(e.key) || e.repeat)) return;
         if (e.target?.closest('[data-sound-toggle]')) return;
         if (e.target?.closest('.v06-hand-card,.field-card')) void play(e.button === 2 ? 'flip' : 'select');
+        else if (e.target?.closest('.end-turn')) void play('turn');
         else if (e.target?.closest('button')) void play('click');
     }
     root?.addEventListener('pointerdown', input, true); root?.addEventListener('keydown', input, true);
