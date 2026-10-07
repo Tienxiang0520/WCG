@@ -1,8 +1,8 @@
 // Pointer dragging keeps the floating card above all game layers. Clicks remain card details.
 export function bind(root, dotnet) {
-    let gesture = null, floating = null, suppressClick = false, disposed = false;
+    let gesture = null, floating = null, aim = null, suppressClick = false, disposed = false;
     const call = (method, ...args) => { if (!disposed) return dotnet.invokeMethodAsync(method, ...args).catch(() => {}); };
-    function cleanup() { floating?.remove(); floating = null; gesture = null; }
+    function cleanup() { floating?.remove(); floating = null; aim?.remove(); aim = null; gesture = null; }
     function down(e) {
         if (e.button !== 0 || e.target.closest('.modal-shade')) return;
         const source = e.target.closest('[data-drag-kind]');
@@ -19,8 +19,17 @@ export function bind(root, dotnet) {
             floating.removeAttribute('tabindex'); floating.setAttribute('aria-hidden', 'true');
             Object.assign(floating.style, { position: 'fixed', left: '0', top: '0', bottom: 'auto', width: '160px', height: '218px', transform: 'none', zIndex: '2147483000', pointerEvents: 'none', margin: '0', opacity: '.95', transition: 'none', boxShadow: '0 18px 35px #000b' });
             document.body.append(floating);
+            if (gesture.kind === 'attack') {
+                floating.style.display = 'none';
+                aim = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                Object.assign(aim.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '2147482999' });
+                aim.innerHTML = '<defs><marker id="wcg-attack-tip" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 Z" fill="#ffce79" /></marker></defs><line stroke="#ffce79" stroke-width="4" marker-end="url(#wcg-attack-tip)" />';
+                const line = aim.querySelector('line'); line.setAttribute('x1', gesture.x); line.setAttribute('y1', gesture.y);
+                document.body.append(aim);
+            }
             call('BeginDrag', gesture.kind, gesture.id);
         }
+        if (aim) { const line = aim.querySelector('line'); line.setAttribute('x2', e.clientX); line.setAttribute('y2', e.clientY); }
         floating.style.left = `${e.clientX - 80}px`; floating.style.top = `${e.clientY - 50}px`;
     }
     function up(e) {

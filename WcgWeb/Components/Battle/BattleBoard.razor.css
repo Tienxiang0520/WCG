@@ -89,3 +89,13 @@
 .end-turn{padding:10px 14px!important}
 
 .v06-hand-card:hover,.v06-hand-card:focus-visible{height:280px}.dragging .v06-hand-card:hover{height:218px}
+
+/* Card arrows point at physical neighbouring slots; opponent cards face the opponent. */
+.arrowmark{width:26px;height:26px;font-size:0;background:#8fe5ff;filter:drop-shadow(0 0 4px #36b9ff);border-radius:0;pointer-events:none}
+.arrowmark.left{clip-path:polygon(0 50%,75% 0,75% 30%,100% 30%,100% 70%,75% 70%,75% 100%)}
+.arrowmark.right{clip-path:polygon(100% 50%,25% 0,25% 30%,0 30%,0 70%,25% 70%,25% 100%)}
+.arrowmark.up{clip-path:polygon(50% 0,100% 75%,70% 75%,70% 100%,30% 100%,30% 75%,0 75%)}
+.enemy-card .arrowmark.left{left:auto;right:-13px;transform:rotate(180deg)}
+.enemy-card .arrowmark.right{right:auto;left:-13px;transform:rotate(180deg)}
+.enemy-card .arrowmark.up{top:auto;bottom:-12px;transform:rotate(180deg)}
+.card-detail{position:relative;overflow:visible}.card-detail .arrowmark{width:32px;height:32px}
