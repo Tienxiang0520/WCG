@@ -9,7 +9,7 @@
 <section class="v06-board @(Dragging!=null?"dragging":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
     <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@s.IsOver">投降</button><button @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
     <div class="opponent hero @(LegalZone("face")?"legal":"")" data-drop-zone="face"><strong>電腦</strong><b>♥ @s.Computer.Hp / 7</b><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small></div>
-    <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:s.Pending?.Title ?? (CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
+    <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:Busy?"動作進行中":s.Pending?.Title ?? (CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
     <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
     @foreach(var side in new[]{s.Computer,s.Player})
     {
@@ -51,12 +51,12 @@
     }
     </div>
     <small class="hand-hint">右鍵手牌切換蓋牌 · 背面牌拖入己方空格才進場</small>
-    @if(s.Pending is {} pending && pending.Kind!="target")
+    @if(!Busy&&s.Pending is {} pending && pending.Kind!="target")
     {
         <div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="效果選擇"><h3>@pending.Title</h3><p>@pending.Description</p><div class="choice-list">@foreach(var o in pending.Options){<button @onclick='()=>Send("choice",option:o.Id)'>@o.Title <small>@o.Subtitle</small></button>}</div>@if(pending.CanCancel){<button @onclick='()=>Send("cancel")'>取消（尚未付款）</button>}</section></div>
     }
-    @if(s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@targetPending.Title：點選亮起的卡片選擇目標 @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>取消</button>}</div>}
-    @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="填能量確認"><h3>填能量</h3><p>將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="()=>EnergyCandidate=null">取消</button></section></div>}
+    @if(!Busy&&s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@targetPending.Title：點選亮起的卡片選擇目標 @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>取消</button>}</div>}
+    @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="填能量確認"><h3>填能量</h3><p>將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="CancelEnergy">取消</button></section></div>}
     @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="卡片詳情" @onclick:stopPropagation="true">@foreach(var arrow in card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}<button class="close-dialog" @onclick="()=>Detail=null">關閉</button><small>@card.CardId · @card.Type · @card.Will</small><h2>@card.Name</h2><b>@card.Cost 費 @if(card.PP!=null){<span> · @card.PP PP · @card.DP DP</span>}</b><p>@card.Text</p>@if(card.Arrows?.Length>0){<p>箭頭 @string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</p>}@if(s.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){<p>@string.Join(" · ",own.Status)</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@a.Name：@a.Text</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>發動結界</button>}}<small>關閉後拖曳卡片進行操作。</small></section></div>}
     @if(ShowHistory){<div class="modal-shade" @onclick="()=>ShowHistory=false"><section class="v06-dialog" role="dialog" aria-label="對戰紀錄與墓地" @onclick:stopPropagation="true"><button @onclick="()=>ShowHistory=false">關閉</button><h3>雙方墓地</h3>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}<h3>對戰紀錄</h3>@foreach(var line in History.Take(60)){<p>@line</p>}</section></div>}
 </section>
@@ -102,7 +102,7 @@
     [JSInvokable] public Task BeginDrag(string kind,string id){if(CanDrag&&Guid.TryParse(id,out var guid)){Dragging=guid;DragKind=kind;}return InvokeAsync(StateHasChanged);}
     [JSInvokable] public async Task DropCard(string kind,string id,string zone,int slot,string target)
     {
-        Dragging=null;DragKind="";if(!CanDrag||!Guid.TryParse(id,out var guid))return;
+        Dragging=null;DragKind="";if(!CanDrag||!Guid.TryParse(id,out var guid)){if(DragBinding!=null)await DragBinding.InvokeVoidAsync("discardDrop");return;}
         Guid? targetId=Guid.TryParse(target,out var t)?t:null;
         if(kind=="attack"){
             var attacker=State!.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==guid);
@@ -120,8 +120,10 @@
                 else Message="請拖到亮起的合法目標。";
             }else Message=h.Problem;
         }
+        if(EnergyCandidate==null&&DragBinding!=null)await DragBinding.InvokeVoidAsync("discardDrop");
         await InvokeAsync(StateHasChanged);
     }
+    private async Task CancelEnergy(){EnergyCandidate=null;if(DragBinding!=null)await DragBinding.InvokeVoidAsync("discardDrop");}
     [JSInvokable]public Task EndDrag(){Dragging=null;DragKind="";return InvokeAsync(StateHasChanged);}
     private async Task Place(string type,Guid id,int slot){await Send(type,id);if(State?.Pending?.Options.Any(o=>o.Id==$"SLOT:{slot}")==true)await Send("choice",option:$"SLOT:{slot}");}
     private async Task Send(string type,Guid? id=null,Guid? target=null,string? option=null,bool force=false)
@@ -129,7 +131,13 @@
         if(Busy||State==null)return;
         if(type=="energy"&&ConfirmEnergy&&!force){EnergyCandidate=id;return;}
         EnergyCandidate=null;Busy=true;
-        try{await Publish(EffectiveCoordinator.Submit(Presenter,new(Guid.NewGuid(),State.MatchId,State.Revision,type,id,target,option)));}
+        try{
+            // Slot selection completes placement; energy confirmation completes energy filling.
+            var presentDrop=type is "energy" or "attack" || type=="choice"&&option?.StartsWith("SLOT:")==true
+                || type=="play"&&State.Hand.FirstOrDefault(h=>h.Card.InstanceId==id)?.Card.Type is not ("怪物" or "結界");
+            if(presentDrop&&DragBinding!=null){StateHasChanged();await DragBinding.InvokeVoidAsync("playDrop");}
+            if(!Disposed)await Publish(EffectiveCoordinator.Submit(Presenter,new(Guid.NewGuid(),State.MatchId,State.Revision,type,id,target,option)));
+        }
         finally{Busy=false;}
     }
     public async Task Publish(BattleResponse response)
