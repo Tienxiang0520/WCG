@@ -99,3 +99,7 @@
 .enemy-card .arrowmark.right{right:auto;left:-13px;transform:rotate(180deg)}
 .enemy-card .arrowmark.up{top:auto;bottom:-12px;transform:rotate(180deg)}
 .card-detail{position:relative;overflow:visible}.card-detail .arrowmark{width:32px;height:32px}
+
+.drag-source{opacity:.35!important}.drop-hover{outline:3px solid #adffd0!important;box-shadow:0 0 30px #74eb9da0!important}.drop-rejected{outline:2px solid #ff8c81!important}
+
+.v06-board{user-select:none}.v06-dialog{user-select:text}
