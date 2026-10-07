@@ -14,14 +14,10 @@
 .v06-slot.vacant{border-style:dashed}
 .slot-number{position:absolute;top:5px;left:9px;font-size:10px;color:#8fa9a6;pointer-events:none}
 .empty{display:flex;align-items:center;justify-content:center;height:100%;font-size:25px;color:#90b1a12b}
-.field-card{position:relative;display:flex;flex-direction:column;gap:5px;height:100%;box-sizing:border-box;padding:22px 9px 7px;border:2px solid #acaa81;border-radius:13px;background:linear-gradient(130deg,#364952,#1b3038);box-shadow:0 6px 12px #0005;overflow:visible}
+.field-card{position:relative;display:flex;flex-direction:column;gap:5px;height:100%;box-sizing:border-box;padding:14px 12px 44px;border:2px solid #acaa81;border-radius:13px;background:linear-gradient(130deg,#364952,#1b3038);box-shadow:0 6px 12px #0005;overflow:visible}
 .field-card strong{font-size:14px}
-.field-card small{font-size:10px;color:#c9d4ce}
 .stats{color:#ffdc94;font-size:13px}
-.field-text{font-size:11px;line-height:1.35;margin:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.status{margin-top:auto}
 .tapped .field-card{border-color:#927643;background:linear-gradient(130deg,#494338,#2b302c)}
-.tapped .status{color:#f2ce84}
 .attachment{margin:0;border-top:1px solid #73988b;font-size:10px;color:#bce5cb;max-height:28px;overflow:hidden}
 .arrowmark{position:absolute;z-index:4;color:#c2f0ff;font-weight:bold;font-size:24px;text-shadow:0 0 6px #258bbc;background:#122831;border-radius:4px;line-height:1}
 .arrowmark.left{left:-13px;top:42%}
@@ -71,7 +67,6 @@
 .v06-hand-card p{font-size:10px}
 }
 @media(max-width:700px){.v06-board{min-width:600px}
-.field-text{display:none}
 .v06-hand-card:hover{transform:translateX(var(--x)) translateY(-70px) rotate(0) scale(1.1)}
 }
 
@@ -111,7 +106,6 @@
 .hand-availability{display:block;font-size:10px;font-weight:bold;background:#172a2d;color:#ffe8b5;padding:3px 6px;border-radius:5px;text-align:center;margin-top:auto}
 .available .hand-availability{background:#17523d;color:#c0ffdc}.set-ready .hand-availability{background:#5c4c24;color:#ffebac}
 .attack-ready{border-color:#9cffc5!important;box-shadow:0 0 17px #6cffaa88,inset 0 0 10px #91ffd022;cursor:grab;touch-action:none}
-.attack-badge{position:absolute;right:5px;top:3px;font-size:10px;color:#beffd9;background:#183e2f;padding:2px 5px;border-radius:5px}
 .drop-hover.vacant::after{content:attr(data-drop-preview);position:absolute;inset:14px 18%;border:2px dashed #baffd4;border-radius:10px;background:#75fbb51a;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#ddffe9;pointer-events:none}
 .drop-hover:not(.vacant){outline-offset:4px}
 .battle-feedback-layer{position:fixed;inset:0;z-index:2147482997;pointer-events:none;color:#fff4db;font-family:Arial,sans-serif}
@@ -122,3 +116,9 @@
 .event-banner{box-sizing:border-box;background:#14262ef2;border-radius:6px;text-align:center;color:#ffdf9e;font-size:13px;padding:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .event-number{font-size:36px;font-weight:900;text-align:center;color:#ffbf9a;text-shadow:0 3px 2px #000,0 0 10px #ce4321;z-index:3}.event-number.healing{color:#bdffd9;text-shadow:0 3px 2px #000,0 0 10px #278359}
 .event-flash{box-sizing:border-box;border:3px solid #ff957b;border-radius:12px;background:#ffffff15;z-index:2}
+
+/* The battlefield face is a name with two corner values; click for all details. */
+.field-stats{position:absolute;left:12px;right:12px;bottom:9px;display:flex;justify-content:space-between;color:#ffdc94;font-size:20px;line-height:1}
+.v06-dialog .attachment{max-height:none;overflow:visible;font-size:12px}
+.event-card{position:relative;padding:14px 12px 44px}
+.event-card .field-stats{font-size:20px}.event-card .field-stats b{font-size:inherit}

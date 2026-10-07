@@ -19,18 +19,14 @@
         {
             var slot=mine?screen:4-screen;var m=side.Field.FirstOrDefault(x=>x.Slot==slot);
             <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m==null?"vacant":"") @(LegalSlot(mine,slot,m)?"legal":"")" data-drop-zone="@(mine?"own":"enemy")" data-slot="@slot" data-target="@m?.Card.InstanceId" @onclick="()=>OpenSlot(m)">
-                <small class="slot-number">@(mine?"己方":"敵方") @(slot+1)</small>
+                @if(m==null){<small class="slot-number">@(mine?"己方":"敵方") @(slot+1)</small>}
                 @if(m==null){<div class="empty">＋</div>}
                 else
                 {
-                    <div class="field-card @(mine?"":"enemy-card") @(mine&&m.CanAttack&&CanDrag?"attack-ready":"")" title="@(mine?AttackHint(m):"左鍵查看卡片")" data-drag-kind="@(m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
+                    <div class="field-card @(mine?"":"enemy-card") @(mine&&m.CanAttack&&CanDrag?"attack-ready":"")" aria-label="@m.Card.Name" data-drag-kind="@(m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
-                    @if(mine&&m.CanAttack&&CanDrag){<span class="attack-badge">可攻擊</span>}
-                    <strong>@m.Card.Name</strong><small>@m.Card.Type · @m.Card.Will</small>
-                    @if(m.Card.PP!=null){<b class="stats">@m.PP <small>PP</small> · @m.DP <small>DP</small></b>}
-                    <p class="field-text">@m.Card.Text</p><small class="status">@string.Join(" · ",m.Status)</small>
-                    @foreach(var a in m.Attachments ?? []){<p class="attachment">@a.Name：@a.Text</p>}
-                    @if(m.Attachment!=null){<p class="attachment">沉默：@m.Attachment.Name</p>}
+                    <strong>@m.Card.Name</strong>
+                    @if(m.Card.PP!=null){<div class="field-stats"><b>@m.PP</b><b>@m.DP</b></div>}
                     </div>
                 }
             </article>
@@ -59,7 +55,7 @@
     }
     @if(!Busy&&!Presenting&&s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@targetPending.Title：點選亮起的卡片選擇目標 @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>取消</button>}</div>}
     @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="填能量確認"><h3>填能量</h3><p>將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="CancelEnergy">取消</button></section></div>}
-    @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="卡片詳情" @onclick:stopPropagation="true">@foreach(var arrow in card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}<button class="close-dialog" @onclick="()=>Detail=null">關閉</button><small>@card.CardId · @card.Type · @card.Will</small><h2>@card.Name</h2><b>@card.Cost 費 @if(card.PP!=null){<span> · @card.PP PP · @card.DP DP</span>}</b><p>@card.Text</p>@if(card.Arrows?.Length>0){<p>箭頭 @string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</p>}@if(s.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){<p>@string.Join(" · ",own.Status)</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@a.Name：@a.Text</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>發動結界</button>}}<small>關閉後拖曳卡片進行操作。</small></section></div>}
+    @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="卡片詳情" @onclick:stopPropagation="true">@foreach(var arrow in card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}<button class="close-dialog" @onclick="()=>Detail=null">關閉</button><small>@card.CardId · @card.Type · @card.Will</small><h2>@card.Name</h2><b>@card.Cost 費 @if(card.PP!=null){<span> · @card.PP PP · @card.DP DP</span>}</b><p>@card.Text</p>@if(card.Arrows?.Length>0){<p>箭頭 @string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</p>}@if(s.Player.Field.Concat(s.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){@if(own.Card.PP!=null){<p>目前數值：@own.PP PP · @own.DP DP</p>}<p>@string.Join(" · ",own.Status)</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@a.Name：@a.Text</p>}@if(own.Attachment!=null){<p class="attachment">沉默：@own.Attachment.Name · @own.Attachment.Text</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>發動結界</button>}}<small>關閉後拖曳卡片進行操作。</small></section></div>}
     @if(ShowHistory){<div class="modal-shade" @onclick="()=>ShowHistory=false"><section class="v06-dialog" role="dialog" aria-label="對戰紀錄與墓地" @onclick:stopPropagation="true"><button @onclick="()=>ShowHistory=false">關閉</button><h3>雙方墓地</h3>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}<h3>對戰紀錄</h3>@foreach(var line in History.Take(60)){<p>@line</p>}</section></div>}
 </section>
 }
@@ -96,7 +92,6 @@
     private string HandClass(BattleHand h,bool back)=>!CanDrag?"inactive":back?(h.CanSet?"set-ready":"blocked"):h.CanPlay?"available":h.CanSet?"set-only":"blocked";
     private string HandLabel(BattleHand h,bool back)=>!CanAct?"等待行動":back?(h.CanSet?"可蓋牌 · 0費":"目前不能蓋牌"):h.CanPlay?"可出牌":h.CanSet?"只能蓋牌":"不可出牌";
     private string HandHint(BattleHand h,bool back)=>!CanAct?"等待你的行動時再出牌":back?(h.CanSet?"背面拖入己方空格，以0費蓋牌":"己方沒有可用格位或正在選擇效果"):h.CanPlay?"拖到亮起的合法位置出牌":h.Problem+(h.CanSet?"；右鍵可切換蓋牌，0費放入己方空格":"");
-    private string AttackHint(BattleMonster m)=>m.CanAttack&&CanDrag?"可以攻擊：拖向亮起的敵怪或電腦生命區":!CanAct?"等待你的行動":m.Problem;
     private static string FanStyle(int i,int n){var offset=i-(n-1)/2.0;var angle=offset*Math.Min(5,34.0/Math.Max(1,n-1));return FormattableString.Invariant($"--offset:{offset:0.##};--step:min(100px,calc((100vw - 470px) / {Math.Max(1,n-1)}));--angle:{angle:0.##}deg;--rise:{Math.Abs(offset)*Math.Min(6,25.0/Math.Max(1,n-1)):0.##}px;--order:{i+1}");}
     protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
     protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}

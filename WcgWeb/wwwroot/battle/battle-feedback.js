@@ -44,8 +44,11 @@ export function bindFeedback(root) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
         // Card data comes exclusively from public BattleEvent payloads; never inspect AI hand data.
         if (!card) { el.append(node('strong', '', '魂 誓'), node('small', '', '背面卡片')); return el; }
-        el.append(node('small', '', `${card.cost} 費 · ${card.type}`), node('strong', '', card.name), node('p', '', card.text));
-        if (card.pp != null) el.append(node('b', '', `${card.pp} PP · ${card.dp} DP`));
+        el.append(node('strong', '', card.name));
+        if (card.pp != null) {
+            const stats = node('div', 'field-stats');
+            stats.append(node('b', '', String(card.pp)), node('b', '', String(card.dp))); el.append(stats);
+        }
         return el;
     }
     function originCard(side, card) {
