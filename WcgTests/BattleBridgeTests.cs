@@ -27,7 +27,7 @@ public class BattleBridgeTests
     [Fact] public void DirectSpellTargetsRejectFriendlyAndStealthWithoutSpendingThenResolveEnemy()
     {
         Energy();var card=Hand("WCG-026");var own=Field(engine.Player,"WCG-101");
-        var hidden=Field(engine.Computer,"WCG-111");var enemy=Field(engine.Computer,"WCG-101");
+        var hidden=Field(engine.Computer,"WCG-111"); engine.Computer.Field.Remove(hidden); engine.Computer.Structures.Add(new(hidden.Card){InstanceId=hidden.InstanceId,IsSet=true});var enemy=Field(engine.Computer,"WCG-101");
         var hand=bridge.Snapshot().Hand.Single(h=>h.Card.InstanceId==card.InstanceId);
         Assert.Equal(new[]{enemy.InstanceId.ToString()},hand.PlayTargets);
         foreach(var id in new[]{own.InstanceId,hidden.InstanceId,Guid.NewGuid()})
@@ -45,7 +45,7 @@ public class BattleBridgeTests
         Assert.Equal(12,engine.Player.AvailableEnergy);Assert.Contains(card,engine.Player.Hand);
         Assert.True(bridge.Submit(Cmd("cancel")).Success);Assert.Contains(enemy,engine.Computer.Field);Assert.Equal(12,engine.Player.AvailableEnergy);
     }
-    MonsterInstance Field(PlayerState p,string id){var m=new MonsterInstance(db.GetCard(id)!){HasSummoningSickness=false};p.Field.Add(m);return m;}
+    MonsterInstance Field(PlayerState p,string id){var m=new MonsterInstance(db.GetCard(id)!){IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);return m;}
     [Fact] public void OpponentDeathChoiceDoesNotChangeTurnOwnership()
     {
         var attacker=Field(engine.Player,"WCG-009");attacker.CurrentPP=10000;
@@ -59,7 +59,7 @@ public class BattleBridgeTests
         Assert.Equal(1,response.State.Turn);
     }
     [Theory]
-    [InlineData("WCG-003", "none", null)]
+    [InlineData("WCG-003", "none", "choice")]
     [InlineData("WCG-026", "target", "target")]
     [InlineData("WCG-046", "choice", "choice")]
     [InlineData("WCG-096", "sacrifice", "target")]
@@ -152,9 +152,9 @@ public class BattleBridgeTests
     }
     [Fact] public void PresentationOrderCapturesCostAttackDeathAndTrigger()
     {
-        Energy();var c=Hand("WCG-101");var summon=bridge.Submit(Cmd("play",c.InstanceId));
+        Energy();var c=Hand("WCG-101");bridge.Submit(Cmd("play",c.InstanceId));var summon=bridge.Submit(Cmd("choice",option:engine.CurrentPendingChoice!.Options[0].Id));
         Assert.True(summon.Success);Assert.Equal(new[]{"pay","play","summon"},summon.Events.Select(e=>e.Type));
-        var attacker=engine.Player.Field.Single();attacker.HasSummoningSickness=false;
+        var attacker=engine.Player.Field.Single();attacker.IsTapped=false;attacker.HasSummoningSickness=false;
         var victim=Field(engine.Computer,"WCG-003");attacker.CurrentPP=2000;
         var response=bridge.Submit(Cmd("attack",attacker.InstanceId,victim.InstanceId));
         var types=response.Events.Select(e=>e.Type).ToList();
@@ -239,7 +239,7 @@ public class BattleBridgeTests
     {
         Energy(); engine.Computer.Hand.Clear();
         engine.Computer.Hand.Add(new(db.GetCard("WCG-101")!)); engine.Computer.Hand.Add(new(db.GetCard("WCG-121")!));
-        var card = Hand("WCG-040"); var response = bridge.Submit(Cmd("play", card.InstanceId));
+        var card = Hand("WCG-040"); bridge.Submit(Cmd("play",card.InstanceId)); var response=bridge.Submit(Cmd("choice",option:engine.CurrentPendingChoice!.Options[0].Id));
         Assert.True(response.Success); Assert.Equal(new[] { "WCG-101", "WCG-121" }, response.State.RevealedCards.Select(c => c.CardId));
         Assert.Single(response.State.Pending!.Options);
         Assert.Equal("WCG-121", response.State.Pending.Options[0].Card!.CardId);

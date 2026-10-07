@@ -21,7 +21,7 @@ public class InteractionRegressionTests
     void Energy(PlayerState p) { for (int i=0;i<12;i++) p.EnergyZone.Add(Card("WCG-101")); }
     CardInstance Hand(PlayerState p,string id) { var c=Card(id);p.Hand.Add(c);return c; }
     MonsterInstance Field(PlayerState p,string id,int? pp=null)
-    { var m=new MonsterInstance(db.GetCard(id)!){HasSummoningSickness=false};if(pp!=null)m.CurrentPP=pp.Value;p.Field.Add(m);return m; }
+    { var m=new MonsterInstance(db.GetCard(id)!){IsTapped=false,HasSummoningSickness=false};if(pp!=null)m.CurrentPP=pp.Value;p.Field.Add(m);return m; }
     void Choices()
     {
         for(int i=0;e.IsWaiting && i<100;i++)
@@ -42,7 +42,7 @@ public class InteractionRegressionTests
     [Fact] public void ExtraDiscardRejectsBeforePaymentAndExcludesSource()
     {
         var c=Hand(e.Player,"WCG-095");Hand(e.Player,"WCG-101");Assert.False(e.SummonMonster(e.Player,c));Assert.Equal(12,e.Player.AvailableEnergy);
-        Hand(e.Player,"WCG-101");Assert.True(e.SummonMonster(e.Player,c));Assert.Empty(e.Player.Hand);Assert.Equal(2,e.Player.Graveyard.Count);Assert.Single(e.Player.Field);Assert.Equal(c.Card.Id,e.Player.Field[0].Card.Id);
+        Hand(e.Player,"WCG-101");Assert.True(e.SummonMonster(e.Player,c));Choices();Assert.Empty(e.Player.Hand);Assert.Equal(2,e.Player.Graveyard.Count);Assert.Single(e.Player.Field);Assert.Equal(c.Card.Id,e.Player.Field[0].Card.Id);
     }
     [Fact] public void LifeCostAtOneLosesBeforeDrawing()
     {
@@ -92,12 +92,12 @@ public class InteractionRegressionTests
             Hand(e.Player,"WCG-001");Hand(e.Player,"WCG-003");Hand(e.Player,"WCG-121");
             e.Player.Graveyard.Add(Card("WCG-101"));e.Player.Graveyard.Add(Card("WCG-103"));
             var card=new CardInstance(definition);e.Player.Hand.Add(card);int before=Count();
-            Assert.True(definition.IsMonster?e.SummonMonster(e.Player,card):e.CastSpell(e.Player,card),definition.Id+": "+e.LastError);Choices();
+            var played=definition.IsCounter?e.SetCard(e.Player,card):definition.IsMonster?e.SummonMonster(e.Player,card):definition.IsEnchantment?e.PlayEnchantment(e.Player,card):e.CastSpell(e.Player,card);if(!played){Assert.NotEmpty(e.LastError);continue;}Choices();
             Assert.False(e.IsOver);Assert.Equal(before,Count());
-            if(definition.IsMonster) Assert.Equal(definition.PP??0,e.Player.Field.Single(m=>m.InstanceId==card.InstanceId).CurrentPP);
+            if(definition.IsMonster) Assert.Contains(e.Player.Field,m=>m.InstanceId==card.InstanceId);
             if(definition.IsMonster) { Energy(e.Player);var wipe=Hand(e.Player,"WCG-098");before=Count();Assert.True(e.CastSpell(e.Player,wipe),definition.Id+": "+e.LastError);Choices();Assert.Equal(before,Count()); }
         }
-        int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Field.Count+p.Field.Sum(m=>m.ShieldCount)+p.Field.Count(m=>m.SilenceSpell!=null));
+        int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
     }
     [Fact] public void SacrificeTriggersLastWordsButNotDestroyedListeners()
     {

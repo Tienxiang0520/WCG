@@ -43,11 +43,12 @@
                 <button class="btn btn-sm @(SelectedType == "怪物" ? "btn-info" : "btn-outline-info")"
                         @onclick='() => SelectedType = "怪物"'>⚔️ 怪物 (@CardDb.AllCards.Count(c => c.Type == "怪物"))</button>
                 <button class="btn btn-sm @(SelectedType == "法術" ? "btn-warning" : "btn-outline-warning")"
-                        @onclick='() => SelectedType = "法術"'>✨ 法術 (@CardDb.AllCards.Count(c => c.Type == "法術"))</button>
+                        @onclick='() => SelectedType = "法術"'>✨ 法術 (@CardDb.AllCards.Count(c => c.IsSpell))</button>
+                <button class="btn btn-sm btn-outline-success" @onclick='() => SelectedType = "結界"'>結界 (@CardDb.AllCards.Count(c=>c.IsEnchantment))</button>
 
                 <div class="vr mx-2 text-secondary"></div>
                 <span class="text-muted small me-2">關鍵字:</span>
-                @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "聖盾", "冰凍", "潛伏", "沉默" })
+                @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "聖盾", "箭頭", "反擊", "沉默" })
                 {
                     string k = kw;
                     <button class="btn btn-sm @(SelectedKeyword == k ? "btn-light" : "btn-outline-secondary")"
@@ -117,7 +118,7 @@
                 list = list.Where(c => c.Will == SelectedWill);
 
             if (!string.IsNullOrEmpty(SelectedType))
-                list = list.Where(c => c.Type == SelectedType);
+                list = list.Where(c => (SelectedType=="法術"?c.IsSpell:c.Type == SelectedType));
 
             if (!string.IsNullOrEmpty(SelectedKeyword))
             {
@@ -127,8 +128,8 @@
                                        (SelectedKeyword == "貫穿" && c.HasTrample) ||
                                        (SelectedKeyword == "劇毒" && c.HasPoison) ||
                                        (SelectedKeyword == "聖盾" && c.Text.Contains("聖盾")) ||
-                                       (SelectedKeyword == "冰凍" && c.HasFreeze) ||
-                                       (SelectedKeyword == "潛伏" && c.HasStealth) ||
+                                       (SelectedKeyword == "箭頭" && c.Arrows.Length>0) ||
+                                       (SelectedKeyword == "反擊" && c.IsCounter) ||
                                        (SelectedKeyword == "沉默" && c.HasSilence));
             }
 

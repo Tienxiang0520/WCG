@@ -42,8 +42,8 @@ public class Deck
         if (!Wills.Contains(MainWill)) errors.Add("請選擇五種意志之一作為主色（中立不能作為主色）。");
         else
         {
-            var offColor = GetColorCounts(getCard).OffColor;
-            if (offColor > MaxOffColorCards) errors.Add($"混色卡合計最多 {MaxOffColorCards} 張（目前：{offColor} 張，不含主色與中立）。");
+            var factions = CardIds.Select(getCard).Where(c => c != null && c.Will != "中立").Select(c => c!.Will).Distinct().ToArray();
+            if (factions.Length > 2) errors.Add("牌組最多包含兩個派系，中立不計。");
         }
 
         var counts = CardIds.GroupBy(CardIdentifier.Canonical).ToDictionary(g => g.Key, g => g.Count());

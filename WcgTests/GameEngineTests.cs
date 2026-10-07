@@ -23,7 +23,7 @@ public class GameEngineTests
     [Fact]
     public void TestCardDatabaseLoadsCards()
     {
-        Assert.Equal(123, _cardDb.AllCards.Count);
+        Assert.Equal(199, _cardDb.AllCards.Count);
         Assert.Null(_cardDb.GetCard("ENG-01"));
         Assert.NotNull(_cardDb.GetCard("WCG-001"));
         Assert.NotNull(_cardDb.GetCard("WCG-123"));
@@ -31,7 +31,7 @@ public class GameEngineTests
         // Verify vanilla monster text is empty
         var vanilla = _cardDb.GetCard("WCG-101"); // 綠洲迅猛龍
         Assert.NotNull(vanilla);
-        Assert.Empty(vanilla.Text.Trim());
+        Assert.Equal("無。",vanilla.Text.Trim());
     }
 
     [Fact]
@@ -100,7 +100,7 @@ public class GameEngineTests
         var monster = new CardInstance(_cardDb.GetCard("WCG-005")!);
         engine.Player.Hand.Add(monster);
         var deckBefore = engine.Player.Deck.ToArray();
-        Assert.True(engine.SummonMonster(engine.Player, monster));
+        Assert.True(engine.SummonMonster(engine.Player, monster)); TestV06.FinishPlacement(engine);
         Assert.Equal(resources, engine.Player.EnergyZone);
         Assert.All(resources, e => Assert.True(e.IsTapped));
         Assert.Equal(deckBefore, engine.Player.Deck);
@@ -159,7 +159,7 @@ public class GameEngineTests
         engine.Computer.Field.Add(enemy);
         for (int i = 0; i < 2; i++) engine.Player.EnergyZone.Add(new CardInstance(_cardDb.GetCard("WCG-101")!));
         var source = new CardInstance(_cardDb.GetCard("WCG-001")!); engine.Player.Hand.Add(source);
-        Assert.True(engine.SummonMonster(engine.Player, source));
+        Assert.True(engine.SummonMonster(engine.Player, source)); TestV06.FinishPlacement(engine);
         Assert.Equal(2, engine.CurrentPendingChoice!.Options.Count);
         Assert.True(engine.SelectChoice(engine.CurrentPendingChoice.Options.Single(o => o.Id == "KILL")));
         Assert.NotNull(engine.CurrentPendingTarget);

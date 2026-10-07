@@ -17,14 +17,14 @@ public class CardDataRevisionTests
     }
 
     [Fact]
-    public void LiveCatalogHasOnly123UniversalCostCards()
+    public void LiveCatalogHasOnly199UniversalCostCards()
     {
-        Assert.Equal(123, _cards.AllCards.Count);
-        Assert.Equal(123, _cards.AllCards.Select(c => c.Id).Distinct().Count());
+        Assert.Equal(199, _cards.AllCards.Count);
+        Assert.Equal(199, _cards.AllCards.Select(c => c.Id).Distinct().Count());
         Assert.All(_cards.AllCards, c =>
         {
             Assert.False(c.IsEnergy);
-            Assert.True(c.IsMonster || c.IsSpell);
+            Assert.True(c.IsMonster || c.IsSpell || c.IsEnchantment);
             Assert.Empty(c.CostSpec);
             Assert.Equal(c.TotalCost, c.CostGen);
         });

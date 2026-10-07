@@ -13,7 +13,7 @@ public partial class GameEngine
     internal BattleEvent[] PresentationEvents => _presentation.ToArray();
     internal static BattleCard VisibleCard(CardInstance c) => VisibleCard(c.Card, c.InstanceId);
     internal static BattleCard VisibleCard(CardDefinition c, Guid id) =>
-        new(id, c.Id, c.Name, c.Type, c.Will, c.TotalCost, c.PP, c.DP, c.Text, $"/card-art/{c.Id}.{(OperatingSystem.IsBrowser() ? "webp" : "png")}");
+        new(id, c.Id, c.Name, c.Type, c.Will, c.TotalCost, c.PP, c.DP, c.Text, "", c.Arrows.ToArray());
     private void Present(string type, PlayerState side, Guid? instance = null, Guid? target = null,
         int amount = 0, CardDefinition? card = null, string label = "") =>
         _presentation.Add(new(Guid.NewGuid(), Revision + 1, _presentation.Count, type, side.Id,

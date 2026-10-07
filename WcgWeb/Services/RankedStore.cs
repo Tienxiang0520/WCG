@@ -21,7 +21,7 @@ public sealed partial class RankedStore
         if (p.BestStars < 0 || p.SeasonBest < 0 || p.Wins < 0 || p.Losses < 0 || p.History.Any(h => h == null))
             throw new InvalidDataException("天梯成績格式不正確。");
         if (p.Match is { } m && (m.Tier is < 0 or > 5 || m.PlayerDeck == null || m.ComputerDeck == null || m.PlayerDeck.CardIds == null || m.ComputerDeck.CardIds == null || m.Actions == null ||
-            m.Actions.Any(a => a == null || a.RulesVersion is < 1 or > 2 || a.Type is not ("ai" or "energy" or "play" or "attack" or "target" or "choice" or "end" or "surrender" or "cancel"))))
+            m.Actions.Any(a => a == null || a.RulesVersion is < 1 or > 3 || a.Type is not ("ai" or "activate" or "set" or "energy" or "play" or "attack" or "target" or "choice" or "end" or "surrender" or "cancel"))))
             throw new InvalidDataException("天梯對局格式不正確。");
         return p;
     }

@@ -151,7 +151,7 @@ public class EnergyEngineTests
         var summonedObserver = Card("WCG-039");
         engine.Player.Hand.Add(summonedObserver);
         for (int i = 1; i < observer.Card.TotalCost; i++) engine.Player.EnergyZone.Add(Card("WCG-101"));
-        Assert.True(engine.SummonMonster(engine.Player, summonedObserver));
+        Assert.True(engine.SummonMonster(engine.Player, summonedObserver)); TestV06.FinishPlacement(engine);
         Assert.Equal(deckBefore - 2, engine.Player.Deck.Count);
         Assert.Single(engine.Player.Field);
     }

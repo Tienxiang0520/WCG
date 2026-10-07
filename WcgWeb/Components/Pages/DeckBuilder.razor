@@ -57,6 +57,7 @@
                         <button class="btn btn-sm @(SelectedType == "法術" ? "btn-warning" : "btn-outline-warning")"
                                 @onclick='() => SetTypeFilter("法術")'>✨ 法術</button>
 
+                        <button class="btn btn-sm btn-outline-success" @onclick='() => SetTypeFilter("結界")'>結界</button>
                         <div class="vr mx-2 text-secondary"></div>
                         <span class="text-muted small me-2">費用:</span>
                         <button class="btn btn-sm @(SelectedCost == -1 ? "btn-light" : "btn-outline-secondary")"
@@ -97,7 +98,7 @@
                                         <button class="btn btn-sm btn-outline-danger" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-xs btn-outline-light py-0 px-2 small"
                                                 style="font-size:0.75rem;"
-                                                title="@(CurrentDeck.IsOffColor(card) && ColorCounts.OffColor >= Deck.MaxOffColorCards ? "混色額度已滿（12 張）" : "加入牌組")"
+                                                title="@(!CanAddFaction(card) ? "最多兩個派系" : "加入牌組")"
                                                 aria-label="@("加入一張：" + card.Name)"
                                                 disabled="@(!CanAddCard(card))"
                                                 @onclick="@(() => AddCardToDeck(card))">
@@ -137,7 +138,7 @@
                     </select>
                     <div class="d-flex flex-wrap gap-1 small mb-2" aria-live="polite">
                         <span class="badge bg-secondary">主色 @ColorCounts.Main 張</span>
-                        <span class="badge @(ColorCounts.OffColor > Deck.MaxOffColorCards ? "bg-danger" : "bg-info text-dark")">混色 @ColorCounts.OffColor / @Deck.MaxOffColorCards 張</span>
+                        <span class="badge @(UsedFactions.Length > 2 ? "bg-danger" : "bg-info text-dark")">派系 @UsedFactions.Length / 2</span>
                         <span class="badge bg-secondary">中立 @ColorCounts.Neutral 張</span>
                     </div>
                     <!-- 50-Card Progress Bar -->
@@ -162,7 +163,7 @@
                         <span class="badge bg-secondary">法術: @SpellCount</span>
                     </div>
 
-                    <p class="small text-muted mt-2 mb-0">50 張牌組，每張最多 4 張。任意手牌可背面填能量。選定主色；主色與中立不限張數，其他四種意志合計最多 12 張，可任意混搭。費用維持通用。</p>
+                    <p class="small text-muted mt-2 mb-0">50 張牌組，每張最多 4 張。任意手牌可背面填能量。最多兩個派系，中立不計。原主色欄位保留作為分類。費用維持通用。</p>
                     <button class="btn btn-outline-info w-100 mt-3" @onclick="OpenPrintPreview">列印實體牌組</button>
                     @if (UnknownCardIds.Count > 0)
                     {
@@ -408,7 +409,7 @@
                 list = list.Where(c => c.Will == SelectedWill);
 
             if (!string.IsNullOrEmpty(SelectedType))
-                list = list.Where(c => c.Type == SelectedType);
+                list = list.Where(c => SelectedType=="法術"?c.IsSpell:c.Type == SelectedType);
 
             if (SelectedCost >= 0)
             {
@@ -472,10 +473,12 @@
         ValidateDeck();
     }
 
+    private string[] UsedFactions=>CurrentDeck.CardIds.Select(CardDb.GetCard).Where(c=>c!=null&&c.Will!="中立").Select(c=>c!.Will).Distinct().ToArray();
+    private bool CanAddFaction(CardDefinition card)=>card.Will=="中立"||UsedFactions.Contains(card.Will)||UsedFactions.Length<2;
     private bool CanAddCard(CardDefinition card)
     {
         if (CurrentDeck.CardIds.Count >= 50 || !Deck.Wills.Contains(CurrentDeck.MainWill)) return false;
-        if (CurrentDeck.IsOffColor(card) && ColorCounts.OffColor >= Deck.MaxOffColorCards) return false;
+        if (!CanAddFaction(card)) return false;
         int count = CurrentDeck.CardIds.Count(id => id == card.Id);
         return count < 4;
     }

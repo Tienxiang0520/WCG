@@ -1,4 +1,4 @@
-export interface Card { instanceId:string; cardId:string; name:string; type:string; will:string; cost:number; pp:number|null; dp:number|null; text:string; art:string }
+export interface Card { instanceId:string; cardId:string; name:string; type:string; will:string; cost:number; pp:number|null; dp:number|null; text:string; art:string; arrows?:string[] }
 export interface Hand { card:Card; canPlay:boolean; canEnergy:boolean; problem:string; preparation:'none'|'target'|'choice'|'sacrifice'; energyProblem:string; playTargets:string[]; warning:string }
 export interface Preview { attackerDies:boolean; defenderDies:boolean; attackerShieldBreaks:boolean; defenderShieldBreaks:boolean; playerDamage:number }
 export interface Target { id:string; label:string; preview:Preview|null }

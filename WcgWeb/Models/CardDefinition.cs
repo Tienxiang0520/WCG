@@ -47,37 +47,24 @@ public class CardDefinition
     public bool IsMonster => Type == "怪物";
 
     [JsonIgnore]
-    public bool IsSpell => Type == "法術";
+    public bool IsSpell => Type.StartsWith("法術");
 
     [JsonIgnore]
     public bool IsEnergy => Type == "能量";
 
-    [JsonIgnore]
-    public bool CannotAttack => Text.Contains("不能宣告攻擊") || Text.Contains("無法宣告攻擊");
-
-    [JsonIgnore]
-    public bool HasTaunt => IsMonster && Text.StartsWith("嘲諷");
-
-    [JsonIgnore]
-    public bool HasCharge => IsMonster && Text.StartsWith("衝鋒");
-
-    [JsonIgnore]
-    public bool HasDivineShield => IsMonster && Text.Contains("聖盾") && !Text.Contains("獲得聖盾");
-
-    [JsonIgnore]
-    public bool HasTrample => IsMonster && Text.StartsWith("貫穿");
-
-    [JsonIgnore]
-    public bool HasPoison => IsMonster && Text.StartsWith("劇毒");
-
-    [JsonIgnore]
-    public bool HasFreeze => Text.Contains("冰凍");
-
-    [JsonIgnore]
-    public bool HasStealth => IsMonster && Text.StartsWith("潛伏");
-
-    [JsonIgnore]
-    public bool HasSilence => IsSpell && Text.StartsWith("沉默");
+    [JsonPropertyName("keywords")] public string[] Keywords { get; set; } = [];
+    [JsonPropertyName("arrows")] public string[] Arrows { get; set; } = [];
+    [JsonIgnore] public bool IsEnchantment => Type == "結界";
+    [JsonIgnore] public bool IsCounter => Type == "法術（反擊）";
+    [JsonIgnore] public bool CannotAttack => IsMonster && Id == "WCG-120";
+    [JsonIgnore] public bool HasTaunt => Keywords.Contains("嘲諷");
+    [JsonIgnore] public bool HasCharge => Keywords.Contains("衝鋒");
+    [JsonIgnore] public bool HasDivineShield => Keywords.Contains("聖盾");
+    [JsonIgnore] public bool HasTrample => Keywords.Contains("貫穿");
+    [JsonIgnore] public bool HasPoison => Keywords.Contains("劇毒");
+    [JsonIgnore] public bool HasFreeze => false;
+    [JsonIgnore] public bool HasStealth => false;
+    [JsonIgnore] public bool HasSilence => IsSpell && Id == "WCG-072";
 
     public Dictionary<string, int> GetSpecificCost()
     {

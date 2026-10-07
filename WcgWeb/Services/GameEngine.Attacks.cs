@@ -1,77 +1,75 @@
 using WcgWeb.Models;
 namespace WcgWeb.Services;
-
 public partial class GameEngine
 {
     public record AttackPresentation(Guid AttackerId, Guid? TargetId, long ActionNumber);
-    public AttackPresentation? LastAttack { get; private set; }
-    public bool CanAttack(MonsterInstance m) => Main(ActivePlayer) && ActivePlayer.Field.Contains(m) &&
-        !m.HasAttacked && !m.IsFrozen && (!m.HasSummoningSickness || m.HasCharge) && (m.IsSilenced || !m.Card.CannotAttack);
-    public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance attacker)
+    public AttackPresentation? LastAttack {get;private set;}
+    public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&(m.IsSilenced||!m.Card.CannotAttack);
+    public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
+    {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-059"||m.CurrentPP>1300)).ToArray();return taunts.Length>0?taunts:all;}
+    public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-059"||m.CurrentPP>1300));
+    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage);
+    private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
+    {if(d==null)return new(false,false,false,false,a.CurrentDP);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
+        var ash=ah&&a.HasShield&&Owner(a).AvailableEnergy>0;var dsh=dh&&d.HasShield&&Owner(d).AvailableEnergy>0;
+        return new(ah&&!ash,dh&&!dsh,ash,dsh,!ah||ash ? dh&&!dsh&&a.HasTrample&&a.CurrentPP-d.CurrentPP>=700?1:0:0);}
+    public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
+    private class AttackContext{public bool Cancelled;}
+    public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>Change(()=>
     {
-        if (!CanAttack(attacker)) return Array.Empty<MonsterInstance>();
-        var targets = OpponentPlayer.Field.Where(m => !m.IsStealthed).ToList();
-        var taunts = targets.Where(m => m.IsTaunt && (attacker.IsSilenced || attacker.Card.Id != "WCG-059" || m.CurrentPP > 1325)).ToList();
-        return taunts.Count > 0 ? taunts : targets;
-    }
-    public bool CanAttackPlayer(MonsterInstance attacker) => CanAttack(attacker) && !OpponentPlayer.Field.Any(m =>
-        !m.IsStealthed && m.IsTaunt && (attacker.IsSilenced || attacker.Card.Id != "WCG-059" || m.CurrentPP > 1325));
-    // Preview and resolution share this calculation; aftermath is deliberately excluded.
-    public record AttackPreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks, bool DefenderShieldBreaks, int PlayerDamage);
-    private static AttackPreview CompareAttack(MonsterInstance a, MonsterInstance? d)
-    {
-        if (d == null) return new(false, false, false, false, a.CurrentDP);
-        bool aHit = a.CurrentPP <= d.CurrentPP || d.HasPoison;
-        bool dHit = d.CurrentPP <= a.CurrentPP || a.HasPoison;
-        bool aDies = aHit && !a.HasShield, dDies = dHit && !d.HasShield;
-        return new(aDies, dDies, aHit && a.HasShield, dHit && d.HasShield,
-            !aDies && dDies && a.HasTrample && a.CurrentPP - d.CurrentPP >= 675 ? 1 : 0);
-    }
-    public AttackPreview? PreviewAttack(MonsterInstance attacker, MonsterInstance? defender = null) =>
-        (defender == null ? CanAttackPlayer(attacker) : GetAttackTargets(attacker).Contains(defender)) ? CompareAttack(attacker, defender) : null;
-    public bool Attack(PlayerState p, MonsterInstance attacker, MonsterInstance? target = null) => Change(() =>
-    {
-        if (!Main(p) || !CanAttack(attacker)) return Fail("此怪物現在不能攻擊。");
-        if (target == null ? !CanAttackPlayer(attacker) : !GetAttackTargets(attacker).Contains(target))
-            return Fail("攻擊目標不合法：須優先攻擊嘲諷，且不能攻擊潛伏怪物。");
-        LastAttack = new(attacker.InstanceId, target?.InstanceId, Revision + 1);
-        Present("attack", p, attacker.InstanceId, target?.InstanceId, card: attacker.Card, label: "攻擊");
-        attacker.HasAttacked = true;
-        if (attacker.IsStealthed) Present("status", p, attacker.InstanceId, card: attacker.Card, label: "解除潛伏");
-        attacker.IsStealthed = false;
-        var enemy = GetOpponent(p);
-        Log($"【{p.Name}】以【{attacker.Card.Name}】攻擊【{(target == null ? enemy.Name : target.Card.Name)}】。", "combat");
-        if (target?.IsTaunt == true)
-            foreach (var priest in enemy.Field.Where(m => !m.IsSilenced && m.Card.Id == "WCG-071").ToArray()) Heal(enemy, 1);
-        Resolve(() => ResolveAttack(p, attacker, target)); return true;
+        if(!Main(p)||!CanAttack(a)||(d==null?!CanAttackPlayer(a):!GetAttackTargets(a).Contains(d)))return Fail("攻擊目標或直立狀態不合法。");
+        LastAttack=new(a.InstanceId,d?.InstanceId,Revision+1);Present("attack",p,a.InstanceId,d?.InstanceId,card:a.Card,label:"攻擊");
+        var ctx=new AttackContext();var e=GetOpponent(p);
+        Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
+            if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
+            ()=>{if(d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled)ResolveAttack(p,a,d);},()=>FinishAttack(p,a));return true;
     });
-    private void ResolveAttack(PlayerState p, MonsterInstance attacker, MonsterInstance? defender)
+    private void FinishAttack(PlayerState p,MonsterInstance a)
+    {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;
+        if(changed&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>x.CurrentPP<=500),x=>KillBatch([x],a.Card.Name));}
+    private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d)
     {
-        var enemy = GetOpponent(p);
-        if (!p.Field.Contains(attacker)) return;
-        if (defender == null) { Damage(enemy, attacker.CurrentDP); return; }
-        if (!enemy.Field.Contains(defender)) return;
-        var outcome = CompareAttack(attacker, defender);
-        var victims = new List<MonsterInstance>();
-        if (outcome.AttackerDies) victims.Add(attacker);
-        if (outcome.DefenderDies) victims.Add(defender);
-        foreach (var m in new[] { attacker, defender })
-            if (m == attacker ? outcome.AttackerShieldBreaks : outcome.DefenderShieldBreaks)
-            { ReleaseShield(m, all: false); Log($"【{m.Card.Name}】聖盾阻止交戰消滅，能量直立返回。", "combat"); }
-        bool trample = outcome.PlayerDamage > 0;
-        var after = new List<Action>();
-        if (trample) after.Add(() => { if (Alive(attacker)) Damage(enemy, 1); });
-        foreach (var m in new[] { attacker, defender })
+        if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP);return;}if(!e.Field.Contains(d))return;
+        var ap=a.CurrentPP;var dp=d.CurrentPP;var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
+        Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh,b=>dsaved=b),()=>
         {
-            var opponent = m == attacker ? defender : attacker; var owner = m == attacker ? p : enemy;
-            after.Add(() =>
+            var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
+            var kills=dead.ToArray();
+            Resolve(()=>{if(Alive(a)&&kills.Contains(d)&&a.HasTrample&&ap-dp>=700)Damage(e,1);},
+                ()=>{foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124"&&!x.IsTapped).ToArray())if(kills.Contains(d)){x.IsTapped=true;Damage(e,1);}
+                    foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124"&&!x.IsTapped).ToArray())if(kills.Contains(a)){x.IsTapped=true;Damage(p,1);}},
+                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;});
+            KillBatch(dead,"交戰");
+        });
+    }
+    private void Survived(PlayerState p,MonsterInstance m,MonsterInstance other,bool defending)
+    {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id=="WCG-109")DrawMany(p,1);
+        if(m.Card.Id=="WCG-029"&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
+        if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1);}
+    private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish)
+    {
+        var p=Owner(m);if(!hit||!m.HasShield||p.AvailableEnergy==0){finish(false);return;}
+        Ask(p,$"【{m.Card.Name}】將被交戰消滅，橫置1點能量保命？",[new(){Id="SHIELD",Title="橫置1點能量使用聖盾"},new(){Id="SKIP",Title="不使用，接受消滅"}],o=>
+        {var use=o.Id=="SHIELD"&&p.AvailableEnergy>0;if(use){p.EnergyZone.First(c=>!c.IsTapped).IsTapped=true;Present("status",p,m.InstanceId,card:m.Card,label:"橫置能量保命");}finish(use);});
+    }
+    private void Counter(PlayerState p,MonsterInstance attacker,AttackContext ctx)
+    {
+        var sets=p.Structures.Where(x=>x.IsSet).ToArray();if(sets.Length==0)return;
+        Ask(p,"玩家被宣告攻擊，可翻開1張蓋牌",sets.Select(x=>new ChoiceOption{Id=x.InstanceId.ToString(),Title=$"翻開第{x.Slot+1}格蓋牌"}).Append(new(){Id="SKIP",Title="不翻開"}),o=>
+        {
+            if(o.Id=="SKIP")return;var m=sets.First(x=>x.InstanceId.ToString()==o.Id);p.Structures.Remove(m);var c=new CardInstance(m.Card){InstanceId=m.InstanceId};p.Graveyard.Add(c);
+            Present("reveal",p,c.InstanceId,card:c.Card,label:"翻開蓋牌");if(!c.Card.IsCounter||!CanPayCost(p,c.Card,out var payment))return;
+            foreach(var x in payment)x.IsTapped=true;var e=GetOpponent(p);var power=attacker.CurrentPP;
+            switch(c.Card.Id)
             {
-                if (!Alive(m) || m.IsSilenced) return;
-                if (m.Card.Id == "WCG-109") DrawMany(owner, 1);
-                if (m.Card.Id == "WCG-029" && Alive(opponent)) Freeze(opponent);
-            });
-        }
-        Resolve(after.ToArray()); KillBatch(victims, "交戰");
+                case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1);});break;
+                case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
+                case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
+                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著聖盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
+                case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.Will=="深淵"))Recover(p,2,1);});break;
+            }
+            UsedSpell(p,c.Card);
+        });
     }
     public bool EndTurn() => Change(() =>
     {
@@ -85,58 +83,21 @@ public partial class GameEngine
                 if (!Alive(m) || m.IsSilenced) return; var enemy = GetOpponent(p);
                 if (enemy.Field.Count == 0) Damage(enemy, 1); else PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name));
             });
-            if (m.Card.Id == "WCG-060") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
+            if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
         }
+        foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
+            effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
         effects.Add(() =>
         {
-            foreach (var m in p.Field.Where(m => m.FrozenUntilTurn <= TurnNumber))
-            { m.FrozenUntilTurn = null; Present("status", p, m.InstanceId, card: m.Card, label: "解凍"); }
+            foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;}
+            p.NextCreatureDiscount=0;
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;
             Present("turn", ActivePlayer, label: $"第 {TurnNumber} 回合");
-            ActivePlayer.ResetEnergyForOwnTurn(); foreach (var m in ActivePlayer.Field) m.ResetTurnState();
+            ActivePlayer.ResetEnergyForOwnTurn(); foreach (var m in ActivePlayer.Board) m.ResetTurnState(); RefreshBoard();
             Draw(ActivePlayer); Log($"第 {TurnNumber} 回合：輪到【{ActivePlayer.Name}】行動。", "action");
         });
         Resolve(effects.ToArray()); return true;
     });
-    public bool ExecuteAiStep() => Change(() =>
-    {
-        if (AiLevel >= 0) return ExecuteRankedAiStep();
-        if (IsOver || CurrentPhase == TurnPhase.NotStarted || !PlayerById(DecisionPlayerId).IsAi) return false;
-        var computer = PlayerById(DecisionPlayerId); var player = GetOpponent(computer);
-        if (CurrentPendingChoice is { } choice)
-        {
-            var option = choice.Options.FirstOrDefault(o => o.Id == "KEEP") ?? choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0];
-            return SelectChoice(option);
-        }
-        if (CurrentPendingTarget is { } target)
-        {
-            var selected = player.Field.Concat(computer.Field).Where(m => target.Validator?.Invoke(m) != false)
-                .OrderByDescending(m => player.Field.Contains(m) ? m.CurrentPP : -m.CurrentPP).FirstOrDefault();
-            return selected != null && SelectTarget(selected);
-        }
-        if (!Main(computer)) return false;
-        var lethal = computer.Field.FirstOrDefault(m => CanAttackPlayer(m) && m.CurrentDP >= player.Hp);
-        if (lethal != null) return Attack(computer, lethal);
-        if (!computer.HasFilledEnergyThisTurn && computer.Hand.Count > 0 && computer.TotalEnergy < computer.Hand.Max(c => c.Card.TotalCost) + 1 && (computer.Hand.Count > 1 || !computer.Hand.Any(c => CanPlayCard(computer, c))))
-            return PlayEnergy(computer, computer.Hand.OrderBy(c => c.Card.TotalCost <= computer.AvailableEnergy + 1 ? 1 : 0).ThenByDescending(c => c.Card.TotalCost).First());
-        var playable = computer.Hand.Where(c => CanPlayCard(computer, c))
-            .Where(c => !(c.Card.Id is "WCG-050" or "WCG-070" && computer.Hp == PlayerState.MaxHp))
-            .OrderByDescending(c => c.Card.IsMonster).ThenByDescending(c => c.Card.TotalCost).FirstOrDefault();
-        if (playable != null) return playable.Card.IsMonster ? SummonMonster(computer, playable) : CastSpell(computer, playable);
-        foreach (var attacker in computer.Field.Where(CanAttack).OrderByDescending(m => m.CurrentDP).ThenByDescending(m => m.CurrentPP).ToArray())
-        {
-            var targets = GetAttackTargets(attacker);
-            var favorable = targets.Where(m => !m.HasShield && (attacker.HasPoison || attacker.CurrentPP > m.CurrentPP) && (!m.HasPoison || attacker.HasShield))
-                .OrderByDescending(m => m.IsTaunt).ThenByDescending(m => m.CurrentDP).ThenByDescending(m => m.CurrentPP).FirstOrDefault();
-            if (favorable != null) return Attack(computer, attacker, favorable);
-            if (CanAttackPlayer(attacker) && attacker.CurrentDP > 0) return Attack(computer, attacker);
-            var shield = targets.FirstOrDefault(m => m.HasShield && ((!m.HasPoison && attacker.CurrentPP > m.CurrentPP) || attacker.HasShield));
-            if (shield != null) return Attack(computer, attacker, shield);
-            var trade = targets.FirstOrDefault(m => attacker.HasPoison || attacker.CurrentPP == m.CurrentPP);
-            if (trade != null) return Attack(computer, attacker, trade);
-        }
-        return EndTurn();
-    });
-    public void ExecuteAiTurn()
-    { for (int i = 0; i < 200 && DecisionPlayerId == Computer.Id && !IsOver; i++) if (!ExecuteAiStep()) break; }
+    public bool ExecuteAiStep() => Change(()=>ExecuteV06Ai());
+    public void ExecuteAiTurn(){for(int i=0;i<400&&DecisionPlayerId==Computer.Id&&!IsOver;i++)if(!ExecuteAiStep())break;}
 }

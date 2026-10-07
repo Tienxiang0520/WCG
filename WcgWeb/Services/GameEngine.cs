@@ -43,9 +43,9 @@ public partial class GameEngine
             publish = _mutationDepth++ == 0;
             try
             {
-                if (publish) { LastError = ""; _presentation.Clear(); }
+                if (publish) { RefreshBoard(); LastError = ""; _presentation.Clear(); }
                 result = action();
-                if (publish && result) { Drain(); Revision++; }
+                if (publish && result) { Drain(); RefreshBoard(); Revision++; }
                 if (publish && !result) _presentation.Clear();
             }
             finally { _mutationDepth--; }
@@ -76,7 +76,7 @@ public partial class GameEngine
         while (!IsOver && !IsWaiting && _effects.First != null)
         {
             if (--limit == 0) throw new InvalidOperationException("Effect loop exceeded safety bound.");
-            var effect = _effects.First.Value; _effects.RemoveFirst(); effect();
+            var effect = _effects.First.Value; _effects.RemoveFirst(); effect(); RefreshBoard();
         }
         if (IsOver) { _effects.Clear(); CurrentPendingChoice = null; CurrentPendingTarget = null; }
     }
@@ -84,8 +84,8 @@ public partial class GameEngine
     { Logs.Insert(0, new(message, level) { ActionNumber = Revision + 1 }); if (Logs.Count > 150) Logs.RemoveAt(Logs.Count - 1); }
     private bool IsCurrent(PlayerState p) => ReferenceEquals(p, Player) || ReferenceEquals(p, Computer);
     private bool Main(PlayerState p) => IsCurrent(p) && ReferenceEquals(p, ActivePlayer) && !IsOver && !IsWaiting && CurrentPhase == TurnPhase.MainPhase;
-    private bool Alive(MonsterInstance m) => Player.Field.Contains(m) || Computer.Field.Contains(m);
-    private PlayerState Owner(MonsterInstance m) => Player.Field.Contains(m) ? Player : Computer;
+    private bool Alive(MonsterInstance m) => Player.Board.Contains(m) || Computer.Board.Contains(m);
+    private PlayerState Owner(MonsterInstance m) => Player.Board.Contains(m) ? Player : Computer;
     public PlayerState GetOpponent(PlayerState p) => ReferenceEquals(p, Player) ? Computer : Player;
     private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); }
     private void Damage(PlayerState p, int amount)
@@ -124,7 +124,7 @@ public partial class GameEngine
     { for (int i = list.Count - 1; i > 0; i--) { var j = _random.Next(i + 1); (list[i], list[j]) = (list[j], list[i]); } }
     private void ClearMatch()
     {
-        MatchId = Guid.NewGuid(); Revision = 0; TurnNumber = 1; LastAttack = null;
+        MatchId = Guid.NewGuid(); Revision = 0; TurnNumber = 1; LastAttack = null; plannedSlots.Clear();
         Player = new() { Id = "player", Name = "玩家" }; Computer = new() { Id = "computer", Name = "電腦", IsAi = true };
         CurrentTurnPlayerId = ""; CurrentPhase = TurnPhase.NotStarted;
         CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); Logs.Clear(); _presentation.Clear(); RevealedCards = []; RevealTitle = "";
@@ -136,7 +136,7 @@ public partial class GameEngine
         if (!Main(p)) return "目前不是可填能量的行動階段，或仍有選擇待結算。";
         if (p.HasFilledEnergyThisTurn) return "本回合已填過能量。";
         if (!p.Hand.Contains(c)) return "卡牌已不在手牌。";
-        if (!c.Card.IsMonster && !c.Card.IsSpell) return "此卡牌不能填能量。";
+        if (!c.Card.IsMonster && !c.Card.IsSpell && !c.Card.IsEnchantment) return "此卡牌不能填能量。";
         return "";
     }
     public bool CanPlayEnergy(PlayerState p, CardInstance c) => GetEnergyProblem(p, c) == "";
@@ -150,8 +150,9 @@ public partial class GameEngine
     public bool CanPayCost(PlayerState p, CardDefinition c, out List<CardInstance> payment)
     {
         payment = new(); if (c.TotalCost < 0) return false;
-        var options = p.EnergyZone.Where(e => !e.IsTapped).Distinct().Take(c.TotalCost).ToList();
-        if (options.Count != c.TotalCost) return false; payment = options; return true;
+        var cost = ActualCost(p, c);
+        var options = p.EnergyZone.Where(e => !e.IsTapped).Distinct().Take(cost).ToList();
+        if (options.Count != cost) return false; payment = options; return true;
     }
     private void Ask(PlayerState p, string title, IEnumerable<ChoiceOption> choices, Action<ChoiceOption> callback, bool cancel = false, Guid? sourceInstanceId = null)
     {
@@ -185,7 +186,7 @@ public partial class GameEngine
         if (CurrentPendingChoice?.CanCancel != true && CurrentPendingTarget?.CanCancel != true) return Fail("這是已支付卡牌的必要結算，請完成選擇。");
         CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); return true;
     });
-    private List<MonsterInstance> Targetable(PlayerState p, IEnumerable<MonsterInstance> source) => source.Where(m => Alive(m) && (ReferenceEquals(Owner(m), p) || !m.IsStealthed)).ToList();
+    private List<MonsterInstance> Targetable(PlayerState p, IEnumerable<MonsterInstance> source) => source.Where(Alive).ToList();
     private void PickMonster(PlayerState p, string title, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> callback, bool cancel = false, Guid? sourceInstanceId = null)
     {
         var list = Targetable(p, candidates); if (list.Count == 0) return;
@@ -209,28 +210,34 @@ public partial class GameEngine
             "WCG-012" or "WCG-064" => enemy.Where(m => m.Card.TotalCost <= 2),
             "WCG-004" or "WCG-046" => enemy.Where(m => m.CurrentPP <= 500),
             "WCG-048" => enemy.Where(m => m.CurrentPP <= p.Field.Count * 500),
-            "WCG-024" => enemy.Where(m => !m.IsFrozen),
+            "WCG-024" or "WCG-137" or "WCG-184" => enemy,
             "WCG-062" or "WCG-074" => p.Field.Where(CanShield),
-            "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= 1675),
-            "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= 1325),
-            "WCG-076" => enemy.Where(m => m.CurrentPP >= 1675),
+            "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= 1700),
+            "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= 1300),
+            "WCG-076" => enemy.Where(m => m.CurrentPP >= 1700),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => enemy,
-            "WCG-036" => p.Field,
+            "WCG-036" or "WCG-135" => p.Field,
+            "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-168" or "WCG-165" => p.Field.Concat(enemy),
+            "WCG-143" => p.Field.Concat(enemy).Where(m => m.IsTapped),
+            "WCG-167" => p.Field.Where(m => m.IsTapped),
+            "WCG-164" => p.Field.Where(m => !m.IsTapped),
+            "WCG-169" => p.Field,
             "WCG-072" => p.Field.Concat(enemy).Where(m => !m.IsSilenced),
             _ => Array.Empty<MonsterInstance>()
         };
-        return Targetable(p, candidates);
+        return Targetable(p, candidates).Where(m => m.IsSilenced || m.Card.Id != "WCG-152").ToList();
     }
-    private static bool NeedsSpellTarget(string id) => id is "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
+    private static bool NeedsSpellTarget(string id) => id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
     public string GetPlayProblem(PlayerState p, CardInstance c)
     {
         if (!Main(p)) return "目前不是可出牌的行動階段，或仍有選擇待結算。";
         if (!p.Hand.Contains(c)) return "卡牌已不在手牌。";
         if (_cardDb.GetCard(c.Card.Id) != c.Card) return "卡牌定義已失效。";
-        if (!c.Card.IsMonster && !c.Card.IsSpell) return "不支援此卡牌類型。";
-        if (c.Card.IsMonster && p.Field.Count >= 5) return "場上已滿（最多 5 隻）。";
-        if (!CanPayCost(p, c.Card, out _)) return $"可用能量不足，需要 {c.Card.TotalCost}。";
-        if (c.Card.Id is "WCG-062" or "WCG-074" && p.AvailableEnergy < c.Card.TotalCost + 1) return "付款後須另有 1 張直立能量供聖盾覆蓋。";
+        if (!c.Card.IsMonster && !c.Card.IsSpell && !c.Card.IsEnchantment) return "不支援此卡牌類型。";
+        if ((c.Card.IsMonster || c.Card.IsEnchantment) && p.Occupied >= 5) return "場上已滿（最多 5 隻）。";
+        if (!CanPayCost(p, c.Card, out _)) return $"可用能量不足，需要 {ActualCost(p,c.Card)}。";
+        if (c.Card.IsCounter) return "反擊法術須先蓋牌，於玩家被攻擊時發動。";
+        if(c.Card.Id=="WCG-166" && p.Hand.Count<2)return "需有另一張手牌可置底。";
         var discard = c.Card.Id == "WCG-095" ? 2 : c.Card.Id == "WCG-084" ? 1 : 0;
         if (p.Hand.Count - 1 < discard) return $"需要另外 {discard} 張手牌支付棄牌代價。";
         if (c.Card.Id is "WCG-006" or "WCG-088" or "WCG-096" && p.Field.Count == 0) return "需要犧牲 1 隻己方怪物。";
@@ -262,6 +269,8 @@ public partial class GameEngine
         void WithTarget(MonsterInstance? target)
         {
             if (NeedsSacrifice(c.Card.Id)) PickMonster(p, "選擇要犧牲的己方怪物（尚未扣費）", p.Field, sacrifice => CommitPlay(p, c, target, sacrifice, mode), true, c.InstanceId);
+            else if (c.Card.IsMonster || c.Card.IsEnchantment)
+                ChooseSlot(p, c.Card, slot => { plannedSlots[c.InstanceId] = slot; CommitPlay(p, c, target, null, mode); }, true, c.InstanceId);
             else CommitPlay(p, c, target, null, mode);
         }
         if (initialTarget != null) WithTarget(initialTarget);
@@ -279,21 +288,27 @@ public partial class GameEngine
         var id = c.Card.Id;
         if (id is "WCG-084" or "WCG-095") RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
         p.Hand.Remove(c);
+        if (c.Card.IsMonster && p.NextCreatureDiscount > 0) p.NextCreatureDiscount = 0;
         if (c.Card.IsSpell) p.Graveyard.Add(c);
+        if (id == "WCG-164" && target != null) target.IsTapped = true;
+        if (id == "WCG-165") { Damage(p, 1); if (IsOver) return; }
+        if (id == "WCG-169" && target != null) KillBatch([target], "消滅代價");
         if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: false);
         if (id == "WCG-096") { Damage(p, 1); if (IsOver) return; }
         // Cost-caused death triggers precede the original card effect.
         _effects.AddLast(() =>
         {
             if (c.Card.IsMonster) Summon(p, c, true);
-            else { Log($"【{p.Name}】施放【{c.Card.Name}】。", "action"); Spell(p, c, target, mode); UsedSpell(p); }
+            else if (c.Card.IsEnchantment) SummonStructure(p, c);
+            else { Log($"【{p.Name}】施放【{c.Card.Name}】。", "action"); Spell(p, c, target, mode); UsedSpell(p, c.Card); }
         });
     }
     private void Summon(PlayerState p, CardInstance c, bool paid)
     {
-        if (IsOver || p.Field.Count >= 5) return;
-        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId }; p.Field.Add(m); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
-        if (c.Card.HasDivineShield) Resolve(() => Shield(p, m, optional: true));
+        if (IsOver || p.Occupied >= 5) return;
+        var slot = plannedSlots.Remove(c.InstanceId, out var chosen) ? chosen : FirstSlot(p);
+        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshBoard(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
+        Summoned(p, m);
         if (!paid) return;
         _effects.AddLast(() => Deploy(p, m));
         _effects.AddLast(() =>
@@ -302,8 +317,9 @@ public partial class GameEngine
                 _effects.AddLast(() => PickLowest(p, GetOpponent(p).Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, "飛刀投擲手")));
         });
     }
-    private void UsedSpell(PlayerState p)
+    private void UsedSpell(PlayerState p, CardDefinition? spell = null)
     {
+        NewSpellTriggers(p, spell);
         foreach (var m in p.Field.Where(m => !m.IsSilenced).ToArray())
         {
             if (m.Card.Id == "WCG-023") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); Loot(p); } });

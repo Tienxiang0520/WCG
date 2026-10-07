@@ -15,5 +15,5 @@ public sealed partial class RankedDecks
     }
     public Deck Pick(int tier, Random random)
     { var pool = All.Where(e => e.Tier == tier).ToArray(); return DeckService.Copy(pool[random.Next(pool.Length)].Deck); }
-    public static string Strategy(int tier) => new[] { "基本出牌與攻擊", "交換怪物與保護場面", "效果選擇與資源分配", "斬殺判斷與出牌順序", "連續攻擊規劃與反擊評估", "更深入的攻擊路線規劃" }[tier];
+    public static string Strategy(int tier) => "v0.6 試玩 AI：固定站位、結界、反擊與能量防守，強度尚未校準";
 }

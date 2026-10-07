@@ -44,15 +44,12 @@ public sealed class IdentifierMigrationTests
         Assert.False(deck.IsValid(cards.GetCard,out var error));Assert.Contains("超過 4",error);
     }
 
-    [Fact] public void OriginalActiveRankedJournalReplaysTheExactPreRenameState()
+    [Fact] public void PriorRulesJournalIsPreservedWithoutReplayingWithNewRules()
     {
         var raw=Fixture("legacy-ranked.json");var storage=new MemoryStorage();storage.Values["ranked"]=raw;
         var session=Session(Cards(),storage);
         try {
-            Assert.Empty(session.Error);
-            Assert.Equal(Fixture("legacy-rule-fingerprint.txt"),session.Read().Match!.Rules);
-            Assert.Equal(2,session.Read().Match!.Actions.Count);
-            Assert.Equal(Fixture("legacy-state.json").Replace(CardIdentifier.LegacyPrefix,CardIdentifier.CurrentPrefix),StateShape(session.Engine));
+            Assert.NotEmpty(session.Error);
             Assert.Equal(raw,storage.Read("ranked"));
         } finally {session.Coordinator.Dispose();}
     }
@@ -72,7 +69,7 @@ public sealed class IdentifierMigrationTests
     {
         var cards=Cards();var backup=JsonSerializer.Serialize(new{format="soul-oath-local",version=1,
             data=new Dictionary<string,string>{{"decks",Fixture("legacy-decks.json")},{"ranked",Fixture("legacy-ranked.json")}},preferences=new{}});
-        PlayerBackupValidator.Validate(backup,cards,new RankedDecks(cards,File.ReadAllText(Path.Combine(data,"ranked_decks.json"))));
+        Assert.ThrowsAny<Exception>(()=>PlayerBackupValidator.Validate(backup,cards,new RankedDecks(cards,File.ReadAllText(Path.Combine(data,"ranked_decks.json")))));
     }
 
     static string StateShape(GameEngine e)=>JsonSerializer.Serialize(new{e.TurnNumber,e.CurrentTurnPlayerId,e.CurrentPhase,e.DecisionPlayerId,

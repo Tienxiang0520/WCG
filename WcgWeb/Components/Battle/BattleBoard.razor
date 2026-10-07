@@ -4,77 +4,111 @@
 @inject IJSRuntime JS
 @inject BattleBridge Bridge
 @inject BattleCoordinator Coordinator
-
-<div class="phaser-board-root" @ref="Root" aria-label="卡牌對戰戰場"></div>
-@if (Error != "")
+@if(State is {} s)
 {
-    <p role="alert" class="alert alert-warning">@Error <a href="/legacy">使用原版對戰畫面</a></p>
+<section class="v06-board" aria-label="v0.6 文字卡牌戰場">
+    <header><strong>v0.6 · 第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong>
+        <span>電腦 @s.Computer.Hp / 7 生命 · 能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</span>
+        <button disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>結束回合</button>
+        <button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@s.IsOver">投降</button>
+        <button @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button>
+    </header>
+    <p role="status">@Message @(s.IsOver?s.Outcome:s.Pending?.Title ?? (CanAct?"選擇怪物攻擊，或使用手牌。進場時選固定格位。":"等待電腦行動或效果選擇。"))</p>
+    @foreach(var side in new[]{s.Computer,s.Player})
+    {
+        var mine=side.Id=="player";
+        <div class="v06-row" aria-label="@(mine?"己方五格":"敵方五格")">
+        @for(int screen=0;screen<5;screen++)
+        {
+            var slot=mine?screen:4-screen;var m=side.Field.FirstOrDefault(x=>x.Slot==slot);
+            <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m!=null && Selected==m.Card.InstanceId?"selected":"")">
+                <small>@(mine?"己方":"敵方")第 @(slot+1) 格</small>
+                @if(m==null){<div class="empty">空格</div>}
+                else
+                {
+                    @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
+                    <strong>@m.Card.Name</strong><small>@m.Card.Type · @m.Card.Will</small>
+                    @if(m.Card.PP!=null){<b>@m.PP PP · @m.DP DP</b>}
+                    <p>@m.Card.Text</p><small>@string.Join(" · ",m.Status)</small>
+                    @foreach(var a in m.Attachments ?? []){<p class="attachment">附著 @a.Name：@a.Text</p>}
+                    @if(m.Attachment!=null){<p class="attachment">沉默：@m.Attachment.Name</p>}
+                    @if(m.CanAttack){<button @onclick="()=>SelectAttacker(m)">選擇攻擊者</button>}
+                    @if(m.CanActivate){<button @onclick='()=>Send("activate",m.Card.InstanceId)'>發動結界</button>}
+                    @if(s.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true){<button @onclick='()=>Send("target",target:m.Card.InstanceId)'>選此目標</button>}
+                    @if(s.Pending?.Options.Any(o=>o.Id==m.Card.InstanceId.ToString())==true){<button @onclick='()=>Send("choice",option:m.Card.InstanceId.ToString())'>選擇此卡</button>}
+                    @if(AttackTargets.Contains(m.Card.InstanceId.ToString())){<button @onclick='()=>Send("attack",Selected,m.Card.InstanceId)'>攻擊此怪物</button>}
+                }
+            </article>
+        }
+        </div>
+    }
+    @if(AttackTargets.Contains("face")){<button class="face" @onclick='()=>Send("attack",Selected)'>攻擊電腦玩家</button>}
+    @if(Selected!=null){<button @onclick="ClearSelection">取消攻擊選擇</button>}
+    <p>你的生命 @s.Player.Hp / 7 · 直立能量 @s.Player.AvailableEnergy / @s.Player.TotalEnergy · 牌庫 @s.Player.DeckCount</p>
+    @if(s.Pending is {} pending)
+    {
+        <section class="v06-pending" aria-label="效果選擇"><h3>@pending.Title</h3>
+        @foreach(var o in pending.Options){<button @onclick='()=>Send("choice",option:o.Id)'>@o.Title @o.Subtitle</button>}
+        @if(pending.CanCancel){<button @onclick='()=>Send("cancel")'>取消（尚未付款）</button>}
+        </section>
+    }
+    @if(EnergyCandidate is {} energyId){<section class="v06-pending"><p>確認將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="()=>EnergyCandidate=null">取消填能量</button></section>}
+    <div class="v06-hand" aria-label="手牌">
+    @foreach(var h in s.Hand)
+    {
+        <article class="v06-hand-card"><strong>@h.Card.Name · @h.Card.Cost 費</strong><small>@h.Card.Type · @h.Card.Will</small>
+        @if(h.Card.PP!=null){<b>@h.Card.PP PP · @h.Card.DP DP</b>}<p>@h.Card.Text</p>
+        <button disabled="@(!h.CanPlay||Busy||EnergyCandidate!=null)" @onclick='()=>Send("play",h.Card.InstanceId)'>@(h.Card.Type=="怪物"?"召喚":h.Card.Type=="結界"?"放置結界":"施放")</button>
+        <button disabled="@(!h.CanEnergy||Busy||EnergyCandidate!=null)" @onclick='()=>Send("energy",h.Card.InstanceId)'>填能量</button>
+        <button disabled="@(!h.CanSet||Busy||EnergyCandidate!=null)" @onclick='()=>Send("set",h.Card.InstanceId)'>0費蓋牌</button>
+        @if(!h.CanPlay){<small>@h.Problem</small>}
+        </article>
+    }
+    </div>
+    <details><summary>對戰紀錄</summary>@foreach(var line in History.Take(60)){<p>@line</p>}</details>
+    <details><summary>雙方墓地</summary>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}</details>
+</section>
 }
 @code {
-    [Parameter] public BattleBridge? Source { get; set; }
-    [Parameter] public BattleCoordinator? Driver { get; set; }
-    private BattleBridge EffectiveBridge => Source ?? Bridge;
-    private BattleCoordinator EffectiveCoordinator => Driver ?? Coordinator;
-    [Parameter] public bool AnimationPrototype { get; set; }
-    [Parameter] public BattleResponse? InitialResponse { get; set; }
-    [Parameter] public Guid Presenter { get; set; }
-    [Parameter] public EventCallback Ready { get; set; }
-    [Parameter] public EventCallback<BattleSnapshot> Changed { get; set; }
-    [Parameter] public EventCallback<string> SessionAction { get; set; }
-    private ElementReference Root;
-    private IJSObjectReference? Module;
-    private DotNetObjectReference<BattleBoard>? Receiver;
-    private string? Id;
-    private bool Disposed;
-    private string Error = "";
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    [Parameter] public BattleBridge? Source {get;set;}
+    [Parameter] public BattleCoordinator? Driver {get;set;}
+    private BattleBridge EffectiveBridge=>Source??Bridge;
+    private BattleCoordinator EffectiveCoordinator=>Driver??Coordinator;
+    [Parameter] public bool AnimationPrototype {get;set;}
+    [Parameter] public BattleResponse? InitialResponse {get;set;}
+    [Parameter] public Guid Presenter {get;set;}
+    [Parameter] public EventCallback Ready {get;set;}
+    [Parameter] public EventCallback<BattleSnapshot> Changed {get;set;}
+    [Parameter] public EventCallback<string> SessionAction {get;set;}
+    private BattleSnapshot? State;
+    private Guid? Selected;
+    private bool Busy,Disposed;
+    private Guid? EnergyCandidate;
+    private bool ConfirmEnergy=true;
+    private IJSObjectReference? Preferences;
+    private string Message="";
+    private List<string> History=[];
+    private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Selected)?.Targets.Select(t=>t.Id).ToArray()??[];
+    private bool CanAct=>!Busy&&State is {IsOver:false,DecisionPlayerId:"player"};
+    protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
+    protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
+    private void SelectAttacker(BattleMonster m){Selected=m.Card.InstanceId;}
+    private void ClearSelection()=>Selected=null;
+    private async Task Send(string type,Guid? id=null,Guid? target=null,string? option=null,bool force=false)
     {
-        if (!firstRender) return;
-        try
-        {
-            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/board.js");
-            Receiver = DotNetObjectReference.Create(this);
-            Id = await Module.InvokeAsync<string>("create", Root, Receiver, AnimationPrototype, SessionAction.HasDelegate);
-            if (Disposed) { await Module.InvokeVoidAsync("dispose", Id); return; }
-            await Publish(InitialResponse ?? new(true, "sync", "", Guid.NewGuid(), EffectiveBridge.Snapshot(), []));
-            await Ready.InvokeAsync();
-        }
-        catch (Exception ex) when (ex is JSException or JSDisconnectedException or TaskCanceledException)
-        { Error = "戰場載入失敗，請重新整理或使用原版畫面。"; if (!Disposed) StateHasChanged(); }
+        if(Busy||State==null)return;
+        if(type=="energy"&&ConfirmEnergy&&!force){EnergyCandidate=id;return;}
+        EnergyCandidate=null;Busy=true;
+        try{await Publish(EffectiveCoordinator.Submit(Presenter,new(Guid.NewGuid(),State.MatchId,State.Revision,type,id,target,option)));}
+        finally{Busy=false;}
     }
     public async Task Publish(BattleResponse response)
     {
-        if (Disposed || Module == null || Id == null) return;
-        try { await Module.InvokeVoidAsync("update", Id, response); }
-        catch (JSDisconnectedException) { }
+        if(Disposed)return;State=response.State;Message=response.Success?"":response.Message;Selected=null;
+        foreach(var ev in response.Events)History.Insert(0,$"{(ev.Side=="player"?"我方":"敵方")} {ev.Label} {ev.Card?.Name}");
+        if(History.Count>150)History.RemoveRange(150,History.Count-150);
+        EffectiveCoordinator.Acknowledge(Presenter,response.State.MatchId,response.State.Revision,response.BatchId);
+        await Changed.InvokeAsync(State);StateHasChanged();
     }
-    [JSInvokable] public async Task<BattleResponse> Submit(BattleCommand command)
-    {
-        var response = EffectiveCoordinator.Submit(Presenter, command);
-        return await Task.FromResult(response);
-    }
-    [JSInvokable] public async Task<bool> Acknowledge(Guid match, long revision, Guid batch)
-    {
-        var accepted = EffectiveCoordinator.Acknowledge(Presenter, match, revision, batch);
-        if (!Disposed) await Changed.InvokeAsync(EffectiveBridge.Snapshot());
-        return accepted;
-    }
-    [JSInvokable] public bool Ping() => true;
-    [JSInvokable] public async Task RequestSessionAction(string type)
-    {
-        if (!Disposed && type is "surrender" or "reset" or "start") await SessionAction.InvokeAsync(type);
-    }
-    [JSInvokable] public void SetFast(bool fast) => EffectiveCoordinator.Fast = fast;
-    [JSInvokable] public async Task Resync() => await Publish(EffectiveCoordinator.Resync(Presenter));
-    public async ValueTask DisposeAsync()
-    {
-        Disposed = true;
-        try
-        {
-            if (Module != null && Id != null) await Module.InvokeVoidAsync("dispose", Id);
-            if (Module != null) await Module.DisposeAsync();
-        }
-        catch (Exception ex) when (ex is JSDisconnectedException or TaskCanceledException) { }
-        Receiver?.Dispose();
-    }
+    public async ValueTask DisposeAsync(){Disposed=true;if(Preferences!=null)await Preferences.DisposeAsync();}
 }
