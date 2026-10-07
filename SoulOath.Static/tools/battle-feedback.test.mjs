@@ -8,6 +8,7 @@ function harness(t) {
         constructor(tag = 'div') { this.tag = tag; this.style = {}; this.attributes = {}; this.dataset = {}; this.children = []; this.textContent = ''; this.inert = false; }
         getAttributeNames() { return ['b-test']; }
         setAttribute(k, v) { this.attributes[k] = v; }
+        addEventListener() { }
         append(...els) { for (const el of els) { el.parent = this; this.children.push(el); } }
         remove() { if (this.parent) this.parent.children = this.parent.children.filter(x => x !== this); }
         getBoundingClientRect() { return { x: 10, y: 20, width: 160, height: 200 }; }
@@ -39,12 +40,24 @@ function harness(t) {
     return {feedback,root,body,record,state,unit,settle};
 }
 function text(el) {return [el.textContent,...el.children.map(text)].join(' ');}
+function descendants(el) { return [el, ...el.children.flatMap(descendants)]; }
 
 test('enemy energy stays face down and input unlocks only after snapshot commit', async t=>{
     const h=harness(t);
     await h.settle(h.feedback.present(h.state,h.state,[{type:'energy',side:'computer',instanceId:'private-card',order:0,label:'填能量'}]));
     const flying=h.record.find(r=>r.el.className.includes('event-card'));assert.match(text(flying.el),/背面卡片/);assert.doesNotMatch(text(flying.el),/private-card/);
+    assert.equal(descendants(flying.el).filter(el=>el.tag==='img').length,0,'hidden energy must not request card artwork');
     assert.equal(h.root.inert,true);h.feedback.clear();assert.equal(h.root.inert,false);assert.equal(h.body.children.length,0);
+});
+test('public AI play carries artwork, values and opponent-facing arrows together', async t=>{
+    const h=harness(t),card={cardId:'WCG-147',name:'聖堂仲裁護衛',pp:1500,dp:1,arrows:['left','up']};
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'computer',instanceId:'guard',order:0,card}]));
+    const moving=h.record.find(r=>r.el.className.includes('event-card')).el;
+    assert.match(moving.className,/enemy-card/);
+    assert.deepEqual(descendants(moving).filter(el=>el.tag==='img').map(el=>el.src),['card-art/WCG-147.webp']);
+    assert.match(text(moving),/聖堂仲裁護衛.*1500.*1/);
+    assert.equal(descendants(moving).filter(el=>el.className?.includes('arrowmark')).length,2);
+    h.feedback.clear();
 });
 test('death uses old visible field even when final snapshot has removed the card',async t=>{
     const h=harness(t);

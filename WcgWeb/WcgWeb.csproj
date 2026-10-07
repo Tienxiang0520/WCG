@@ -13,9 +13,11 @@
     <Content Update="wwwroot/battle/**/*.map" CopyToPublishDirectory="Never" />
   </ItemGroup>
   <Target Name="PreparePrintArtwork" BeforeTargets="PrepareForBuild" Condition="'$(DesignTimeBuild)' != 'true'">
+    <Exec Command="python3 tools/prepare-card-art.py" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Exec Command="python3 tools/prepare-print-art.py" WorkingDirectory="$(MSBuildProjectDirectory)" />
     <ItemGroup>
       <Content Include="wwwroot/print-art/**/*.jpg" Exclude="@(Content)" CopyToPublishDirectory="PreserveNewest" />
+      <Content Include="wwwroot/card-art/**/*.webp" Exclude="@(Content)" CopyToPublishDirectory="PreserveNewest" />
     </ItemGroup>
   </Target>
   <Target Name="BuildBattleClient" BeforeTargets="BeforeBuild" Condition="'$(DesignTimeBuild)' != 'true' and '$(SkipBattleClientBuild)' != 'true'">

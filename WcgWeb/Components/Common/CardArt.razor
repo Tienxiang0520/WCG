@@ -1,8 +1,5 @@
 @namespace WcgWeb.Components.Common
-<div class="card-illustration @CssClass" style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#172b3b;color:#d8e8f1;padding:10px;overflow:hidden;" aria-label="文字卡面">
-    <strong>@Card.Name</strong><small>@Card.Id · @Card.Will · @Card.Type</small>
-    @if(Card.Arrows.Length>0){<b style="font-size:2rem">@string.Join(" ",Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</b>}
-</div>
+<CardImage CardId="@Card.Id" CssClass="@CssClass" />
 @code {
     [Parameter,EditorRequired] public CardDefinition Card {get;set;}=null!;
     [Parameter] public string CssClass {get;set;}="";

@@ -20,6 +20,10 @@
             </div>
         }
         <CardArt Card="Card" />
+        @foreach (var arrow in Card.Arrows)
+        {
+            <span class="card-art-arrow @arrow" aria-label="@(arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格")">@(arrow == "left" ? "←" : arrow == "right" ? "→" : "↑")</span>
+        }
         <div class="card-type-strip">
             @Card.Type · @Card.Will
         </div>

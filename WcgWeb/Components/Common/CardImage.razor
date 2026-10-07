@@ -1,0 +1,16 @@
+@namespace WcgWeb.Components.Common
+@if (!Failed && CardId.Length == 7 && CardId.StartsWith("WCG-", StringComparison.Ordinal) && CardId[4..].All(char.IsDigit))
+{
+    <img @key="CardId" class="card-illustration @CssClass" src="@($"card-art/{CardId}.webp")" alt="" aria-hidden="true" draggable="false" loading="@Loading" @onerror="()=>Failed=true" />
+}
+@code {
+    [Parameter, EditorRequired] public string CardId { get; set; } = "";
+    [Parameter] public string CssClass { get; set; } = "";
+    [Parameter] public string Loading { get; set; } = "lazy";
+    private bool Failed;
+    private string PriorId = "";
+    protected override void OnParametersSet()
+    {
+        if (PriorId != CardId) { Failed = false; PriorId = CardId; }
+    }
+}

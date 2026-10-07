@@ -14,6 +14,7 @@ SoulOath.Static/wwwroot/battle-drag.js
 SoulOath.Static/wwwroot/lib/
 SoulOath.Static/wwwroot/battle/
 SoulOath.Static/wwwroot/card-art/
+WcgWeb/wwwroot/card-art/*.webp
 SoulOath.Static/wwwroot/data/
 SoulOath.Static/wwwroot/deck-print.css
 SoulOath.Static/wwwroot/deck-print.js

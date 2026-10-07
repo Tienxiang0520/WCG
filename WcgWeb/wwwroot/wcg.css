@@ -582,6 +582,10 @@ body {
 /* Original illustrations keep the existing card rules and interaction layout. */
 .card-illustration { display:block; width:100%; height:100%; object-fit:cover; object-position:center; user-select:none; -webkit-user-select:none; }
 .card-art-box > .card-illustration { position:absolute; inset:0; }
+.card-art-arrow{position:absolute;z-index:4;width:24px;height:24px;background:#8fe5ff;filter:drop-shadow(0 0 4px #36b9ff);font-size:0;pointer-events:none}
+.card-art-arrow.left{left:3px;top:42%;clip-path:polygon(0 50%,75% 0,75% 30%,100% 30%,100% 70%,75% 70%,75% 100%)}
+.card-art-arrow.right{right:3px;top:42%;clip-path:polygon(100% 50%,25% 0,25% 30%,0 30%,0 70%,25% 70%,25% 100%)}
+.card-art-arrow.up{top:3px;left:calc(50% - 12px);clip-path:polygon(50% 0,100% 75%,70% 75%,70% 100%,30% 100%,30% 75%,0 75%)}
 .card-art-box .card-type-strip { position:absolute; bottom:0; z-index:1; }
 .field-illustration { height:58px; border-radius:5px; flex-shrink:0; }
 .detail-illustration { height:auto; aspect-ratio:16/9; border-radius:8px; margin:8px 0 16px; object-fit:contain; }

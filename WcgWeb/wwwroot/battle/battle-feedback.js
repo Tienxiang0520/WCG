@@ -44,6 +44,15 @@ export function bindFeedback(root, sound = null) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
         // Card data comes exclusively from public BattleEvent payloads; never inspect AI hand data.
         if (!card) { el.append(node('strong', '', '魂 誓'), node('small', '', '背面卡片')); return el; }
+        if (/^WCG-\d{3}$/.test(card.cardId)) {
+            const art = node('div', 'card-art-layer'), image = node('img', 'card-illustration');
+            image.src = `card-art/${card.cardId}.webp`; image.alt = ''; image.draggable = false;
+            image.addEventListener('error', () => image.remove(), { once: true });
+            art.append(image); el.append(art);
+        }
+        for (const direction of card.arrows ?? []) {
+            if (['left', 'right', 'up'].includes(direction)) el.append(node('span', `arrowmark ${direction}`));
+        }
         el.append(node('strong', '', card.name));
         if (card.pp != null) {
             const stats = node('div', 'field-stats');
@@ -53,7 +62,9 @@ export function bindFeedback(root, sound = null) {
     }
     function originCard(side, card) {
         const r = hero(side).getBoundingClientRect();
-        return place(publicCard(card), { x: r.x + r.width / 2 - 80, y: r.y + r.height / 2 - 100, width: 160, height: 200 });
+        const el = publicCard(card);
+        if (side === 'computer') el.className += ' enemy-card';
+        return place(el, { x: r.x + r.width / 2 - 80, y: r.y + r.height / 2 - 100, width: 160, height: 200 });
     }
     async function fly(el, destination, keep = false) {
         if (!el || !destination) { el?.remove(); return; }

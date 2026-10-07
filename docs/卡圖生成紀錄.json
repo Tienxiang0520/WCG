@@ -1,0 +1,767 @@
+{
+  "date": "2026-10-08",
+  "mode": "built-in image_gen",
+  "existingPreserved": 123,
+  "cards": [
+    {
+      "id": "WCG-124",
+      "name": "血怒祭壇",
+      "type": "結界",
+      "will": "狂怒",
+      "text": "每當己方怪物在交戰中消滅敵方怪物時，對敵方玩家造成 1 點生命傷害。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-124.png",
+      "prompt": "Use case: stylized-concept. Asset: original WCG trading card illustration WCG-124 血怒祭壇 (Bloodrage Altar), an enchantment in the rage faction. A monumental blood-red sacrificial altar of black volcanic stone and forged iron, glowing crimson rune channels, battle banners and burning braziers, within a volcanic fortress, charged by the fury of battle. No gore. Detailed painterly dark fantasy, cinematic realistic materials, dramatic orange and crimson light; match a mature fantasy card-art collection. Landscape 16:9 full-bleed illustration, centrally framed altar that remains legible when cropped to a portrait battlefield card. Clear silhouette, detail concentrated in the middle. No text, no letters, no watermark, no card borders, no UI. One finished illustration only.",
+      "sha256": "880072f5ee2cf0c4f74303665938ff9546e804022195b3d0771b5a52f12fed9e"
+    },
+    {
+      "id": "WCG-125",
+      "name": "思維星軌",
+      "type": "結界",
+      "will": "理智",
+      "text": "橫置此卡：檢視己方牌庫頂 2 張牌，將其中 1 張置於牌庫底，另 1 張放回牌庫頂。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-125.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-125 思維星軌. Card category: 結界. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 思維星軌. Gameplay context for visual inspiration only: 橫置此卡：檢視己方牌庫頂 2 張牌，將其中 1 張置於牌庫底，另 1 張放回牌庫頂。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "d1fdbfed8e44732de09489dd87afcce368fb6538e5faa0a24bc87e4cd19c18bc"
+    },
+    {
+      "id": "WCG-126",
+      "name": "遠古母樹根鬚",
+      "type": "結界",
+      "will": "生機",
+      "text": "橫置此卡：本回合你召喚的下 1 隻怪物費用減少 1 點（最低為 1 費）。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-126.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-126 遠古母樹根鬚. Card category: 結界. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 遠古母樹根鬚. Gameplay context for visual inspiration only: 橫置此卡：本回合你召喚的下 1 隻怪物費用減少 1 點（最低為 1 費）。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "56ba5da3b53d6530b9044d8c30888139c80346280b74a81eedc1a1e6931592ac"
+    },
+    {
+      "id": "WCG-127",
+      "name": "守誓者壁壘",
+      "type": "結界",
+      "will": "秩序",
+      "text": "只要己方場上有直立的怪物，敵方法術對己方玩家造成的生命傷害減少 1 點。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-127.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-127 守誓者壁壘. Card category: 結界. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 守誓者壁壘. Gameplay context for visual inspiration only: 只要己方場上有直立的怪物，敵方法術對己方玩家造成的生命傷害減少 1 點。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "de010f2b5fbb4e3dd99b2b79f96ada6b79cbe59fda634834739c1a04279e9d9a"
+    },
+    {
+      "id": "WCG-128",
+      "name": "萬魂之井",
+      "type": "結界",
+      "will": "深淵",
+      "text": "橫置此卡，並犧牲己方 1 隻怪物：抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-128.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-128 萬魂之井. Card category: 結界. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 萬魂之井. Gameplay context for visual inspiration only: 橫置此卡，並犧牲己方 1 隻怪物：抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "cfbbe022241a862f2930bdab83544e0a87e4340cda767533cdd81a800db885e6"
+    },
+    {
+      "id": "WCG-129",
+      "name": "白銀哨衛",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-129.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-129 白銀哨衛. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 白銀哨衛. Gameplay context for visual inspiration only: 嘲諷。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "9d65e8ecb04b5b8cf1bc45ced3e91fae976a2e3b5804ff9abec5e4e1532e5302"
+    },
+    {
+      "id": "WCG-130",
+      "name": "觀星學徒",
+      "type": "怪物",
+      "will": "理智",
+      "text": "進場：抽 1 張牌，然後將 1 張手牌置於牌庫底。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-130.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-130 觀星學徒. Card category: 怪物. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 觀星學徒. Gameplay context for visual inspiration only: 進場：抽 1 張牌，然後將 1 張手牌置於牌庫底。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "9793f8fd481e5a8e06c85ed875eff3ed2676d76716129cb077e1ea874c009325"
+    },
+    {
+      "id": "WCG-131",
+      "name": "棘刺巨蛋",
+      "type": "怪物",
+      "will": "生機",
+      "text": "離場：你可以從手牌選擇 1 張費用 2 以下的怪物牌，不支付費用將其召喚進場。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-131.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-131 棘刺巨蛋. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 棘刺巨蛋. Gameplay context for visual inspiration only: 離場：你可以從手牌選擇 1 張費用 2 以下的怪物牌，不支付費用將其召喚進場。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "ab21e8f18355eba424f9b470a6ea56ecf66d2404b34ec590f906ed66078d339c"
+    },
+    {
+      "id": "WCG-132",
+      "name": "腐肉食腐蛛",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "劇毒。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-132.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-132 腐肉食腐蛛. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 腐肉食腐蛛. Gameplay context for visual inspiration only: 劇毒。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "47002fa9428c948302e74ed1f0f0e6008e81ec5cbfcbe5274e3bc7eba9238df7"
+    },
+    {
+      "id": "WCG-133",
+      "name": "厚甲石像鬼",
+      "type": "怪物",
+      "will": "中立",
+      "text": "嘲諷；只要己方生命值在 3 點以下，此怪物具有聖盾。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-133.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-133 厚甲石像鬼. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 厚甲石像鬼. Gameplay context for visual inspiration only: 嘲諷；只要己方生命值在 3 點以下，此怪物具有聖盾。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "a5b2a7c1342503acba4053613816debae40bbb2f45b41fbadc830e83a468011a"
+    },
+    {
+      "id": "WCG-134",
+      "name": "巡林驅邪工兵",
+      "type": "怪物",
+      "will": "中立",
+      "text": "進場：驅散 1 隻怪物身上的所有附著卡，或摧毀 1 個結界。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-134.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-134 巡林驅邪工兵. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 巡林驅邪工兵. Gameplay context for visual inspiration only: 進場：驅散 1 隻怪物身上的所有附著卡，或摧毀 1 個結界。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "2b28f20419ccc33b5b498e747e06d9a4ff9ab66ddf056e36e4773d586eb265c7"
+    },
+    {
+      "id": "WCG-135",
+      "name": "野性萌發",
+      "type": "法術",
+      "will": "生機",
+      "text": "將此法術附著於 1 隻己方怪物；附著期間該怪物 PP +500。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-135.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-135 野性萌發. Card category: 法術. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 野性萌發. Gameplay context for visual inspiration only: 將此法術附著於 1 隻己方怪物；附著期間該怪物 PP +500。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "8a56a7694ace287780f29c92d63f3da9242fe3e1815bfaa70f16fc740edd3112"
+    },
+    {
+      "id": "WCG-136",
+      "name": "狂戰士斥候",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "衝鋒；此怪物完成一次宣告攻擊，並在該次攻擊結束時轉為橫置時，消滅 1 隻 PP 500 以下的敵方怪物。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-136.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-136 狂戰士斥候. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 狂戰士斥候. Gameplay context for visual inspiration only: 衝鋒；此怪物完成一次宣告攻擊，並在該次攻擊結束時轉為橫置時，消滅 1 隻 PP 500 以下的敵方怪物。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "344827f0e19281d99ea1ab7a50ed2e584e058ebd2c043933282c18a5ed540a3c"
+    },
+    {
+      "id": "WCG-137",
+      "name": "思維凍結",
+      "type": "法術",
+      "will": "理智",
+      "text": "選擇 1 隻敵方怪物：若其為直立，將其橫置；若其已橫置，將其移回其擁有者的手牌。然後抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-137.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-137 思維凍結. Card category: 法術. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 思維凍結. Gameplay context for visual inspiration only: 選擇 1 隻敵方怪物：若其為直立，將其橫置；若其已橫置，將其移回其擁有者的手牌。然後抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "e6d41d4fe0db2dab8354329f3ce0776ea85204615515f74386f2b2047ea2e443"
+    },
+    {
+      "id": "WCG-138",
+      "name": "暗影伏擊者",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "衝鋒；進場：橫置對手 1 張直立能量。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-138.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-138 暗影伏擊者. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 暗影伏擊者. Gameplay context for visual inspiration only: 衝鋒；進場：橫置對手 1 張直立能量。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "00445b9c80492d5440316ac6a05414e53b49871ce0b037329e272bb560ec63e9"
+    },
+    {
+      "id": "WCG-139",
+      "name": "次元回溯",
+      "type": "法術",
+      "will": "理智",
+      "text": "將 1 隻怪物移回其擁有者的手牌；若目標為己方怪物，抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-139.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-139 次元回溯. Card category: 法術. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 次元回溯. Gameplay context for visual inspiration only: 將 1 隻怪物移回其擁有者的手牌；若目標為己方怪物，抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "0c316126be859e5130813da810ed3bff6607ed05a5e69a755be350d22d04b611"
+    },
+    {
+      "id": "WCG-140",
+      "name": "湮滅契約",
+      "type": "法術",
+      "will": "深淵",
+      "text": "消滅 1 隻怪物；該怪物的控制者抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-140.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-140 湮滅契約. Card category: 法術. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 湮滅契約. Gameplay context for visual inspiration only: 消滅 1 隻怪物；該怪物的控制者抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "fcde5184bca3f483715391f96f0cfc20ce2f77767efb289c4910037efc8645b2"
+    },
+    {
+      "id": "WCG-141",
+      "name": "狂亂血宴",
+      "type": "法術",
+      "will": "狂怒",
+      "text": "使 1 隻怪物獲得衝鋒且 PP +700。在該怪物控制者的下個回合結束時，消滅該怪物。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-141.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-141 狂亂血宴. Card category: 法術. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 狂亂血宴. Gameplay context for visual inspiration only: 使 1 隻怪物獲得衝鋒且 PP +700。在該怪物控制者的下個回合結束時，消滅該怪物。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "1bca936f882a300c39e1ba73657261609c1b856f6a33cd2c0bead70ce30381e7"
+    },
+    {
+      "id": "WCG-142",
+      "name": "誓言枷鎖",
+      "type": "法術",
+      "will": "秩序",
+      "text": "將此法術附著於 1 隻怪物，並將該怪物橫置；附著期間該怪物不能宣告攻擊，且在自己的重置階段不轉為直立。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-142.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-142 誓言枷鎖. Card category: 法術. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 誓言枷鎖. Gameplay context for visual inspiration only: 將此法術附著於 1 隻怪物，並將該怪物橫置；附著期間該怪物不能宣告攻擊，且在自己的重置階段不轉為直立。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "3c280f9bf69d0895abfb8b1a219fbc35992a2eb9a5167dbe2adbf6523e158007"
+    },
+    {
+      "id": "WCG-143",
+      "name": "甦生甘霖",
+      "type": "法術",
+      "will": "生機",
+      "text": "將 1 隻橫置的怪物轉為直立；若此怪物在場，其下一次交戰 PP +500。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-143.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-143 甦生甘霖. Card category: 法術. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 甦生甘霖. Gameplay context for visual inspiration only: 將 1 隻橫置的怪物轉為直立；若此怪物在場，其下一次交戰 PP +500。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "5065ccd6771693a761060254f2ae1ed53d7276faabfcd731e795a266c05ff74d"
+    },
+    {
+      "id": "WCG-144",
+      "name": "狂熱嘲弄者",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "嘲諷；每當此怪物受到交戰攻擊且存活時，對敵方玩家造成 1 點生命傷害。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-144.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-144 狂熱嘲弄者. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 狂熱嘲弄者. Gameplay context for visual inspiration only: 嘲諷；每當此怪物受到交戰攻擊且存活時，對敵方玩家造成 1 點生命傷害。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "8ae3786a5b952748169f6af5338cca1db08323cd4412624103f638035e06f1d2"
+    },
+    {
+      "id": "WCG-145",
+      "name": "逆流法師",
+      "type": "怪物",
+      "will": "理智",
+      "text": "進場：抉擇，驅散 1 隻怪物身上的所有附著卡；或者將 1 隻橫置的己方怪物轉為直立。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-145.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-145 逆流法師. Card category: 怪物. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 逆流法師. Gameplay context for visual inspiration only: 進場：抉擇，驅散 1 隻怪物身上的所有附著卡；或者將 1 隻橫置的己方怪物轉為直立。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "b161b63f2fc124e6a4aa45b9c880a3b8cb1292c9590aa0c5ce161125cfb520b7"
+    },
+    {
+      "id": "WCG-146",
+      "name": "荊棘巨龜",
+      "type": "怪物",
+      "will": "生機",
+      "text": "嘲諷。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-146.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-146 荊棘巨龜. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 荊棘巨龜. Gameplay context for visual inspiration only: 嘲諷。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "42324940efba74c0d2aedc60814a05e70c67c94051131b608222ea1f2d7110e2"
+    },
+    {
+      "id": "WCG-147",
+      "name": "聖堂仲裁護衛",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "【箭頭：← ↑】左側相鄰格的己方怪物，以及正對面同列格的敵方怪物具有聖盾。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-147.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-147 聖堂仲裁護衛. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 聖堂仲裁護衛. Gameplay context for visual inspiration only: 【箭頭：← ↑】左側相鄰格的己方怪物，以及正對面同列格的敵方怪物具有聖盾。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "0ea344a18c1fb8dd034c73181bd6f762f98a59f4115485e399daeccbade072c5"
+    },
+    {
+      "id": "WCG-148",
+      "name": "墓園守夜人",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "每當己方場上另 1 隻怪物被消滅時，橫置對手 1 張直立能量。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-148.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-148 墓園守夜人. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 墓園守夜人. Gameplay context for visual inspiration only: 每當己方場上另 1 隻怪物被消滅時，橫置對手 1 張直立能量。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "d6021413fa569745106278ccf394cd1047da89a6221bdd237699f7e835074160"
+    },
+    {
+      "id": "WCG-149",
+      "name": "靈魂集市",
+      "type": "結界",
+      "will": "中立",
+      "text": "橫置此卡：將你手牌 1 張卡置於牌庫底，然後抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-149.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-149 靈魂集市. Card category: 結界. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 靈魂集市. Gameplay context for visual inspiration only: 橫置此卡：將你手牌 1 張卡置於牌庫底，然後抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "e0411e664f4f6c89ee8fcc4f899061dea51aed57a03ac9266fefce8934a290ed"
+    },
+    {
+      "id": "WCG-150",
+      "name": "自爆發條偶",
+      "type": "怪物",
+      "will": "中立",
+      "text": "離場：消滅全場所有 PP 700 以下的怪物（包含友軍）。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-150.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-150 自爆發條偶. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 自爆發條偶. Gameplay context for visual inspiration only: 離場：消滅全場所有 PP 700 以下的怪物（包含友軍）。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "260a96aac29ee3e3dcc795a5b3a04b7224f6911d9d19d9ddebab7391d0a2317d"
+    },
+    {
+      "id": "WCG-151",
+      "name": "熔火鍛爐",
+      "type": "結界",
+      "will": "狂怒",
+      "text": "橫置此卡：消滅 1 隻 PP 800 以下的怪物。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-151.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-151 熔火鍛爐. Card category: 結界. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 熔火鍛爐. Gameplay context for visual inspiration only: 橫置此卡：消滅 1 隻 PP 800 以下的怪物。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "2363d4a5a67b99b099e81138093f89f2fb87154863b52d93053944b37c4cfc19"
+    },
+    {
+      "id": "WCG-152",
+      "name": "禁魔石像",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷；不能被任何法術指定為目標。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-152.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-152 禁魔石像. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 禁魔石像. Gameplay context for visual inspiration only: 嘲諷；不能被任何法術指定為目標。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "51eb220d07c4b6b76757b6b9f1b86c5f3c2acd43f745d0779cdd6a8ab199abd3"
+    },
+    {
+      "id": "WCG-153",
+      "name": "奧術回音塔",
+      "type": "結界",
+      "will": "理智",
+      "text": "每當你施放費用 2 以上的法術時，隨機將己方墓地中 1 張費用 1 的法術加入手牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-153.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-153 奧術回音塔. Card category: 結界. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 奧術回音塔. Gameplay context for visual inspiration only: 每當你施放費用 2 以上的法術時，隨機將己方墓地中 1 張費用 1 的法術加入手牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "1097ba9a6cd57a0d2ba95a8ad50fc105c4a7b92690d5b184b3a345809af36a0c"
+    },
+    {
+      "id": "WCG-154",
+      "name": "淡水狂鱷",
+      "type": "怪物",
+      "will": "中立",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-154.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-154 淡水狂鱷. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 淡水狂鱷. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "09bcc9aabc8cc166b5f13eceba61e1bfdf7a9121d5425b606528981694051a3e"
+    },
+    {
+      "id": "WCG-155",
+      "name": "鋼鐵構裝體",
+      "type": "怪物",
+      "will": "中立",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-155.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-155 鋼鐵構裝體. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 鋼鐵構裝體. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "65fd331827f9b42021cb3009bb136f59a54b6ec4d1eb0ae2f815c15f1f1fdb68"
+    },
+    {
+      "id": "WCG-156",
+      "name": "荒原巨槌食人魔",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-156.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-156 荒原巨槌食人魔. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 荒原巨槌食人魔. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "bee898c77ac0d8338f2e3fbbf5aa69093cdfe1028154e4a0849f295615f97368"
+    },
+    {
+      "id": "WCG-157",
+      "name": "蒼翠古樹衛士",
+      "type": "怪物",
+      "will": "生機",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-157.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-157 蒼翠古樹衛士. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 蒼翠古樹衛士. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "6b5ee98df2014c1d40f2f5c80166e1d90cdca219d315a6edd66c21bcbc5a6644"
+    },
+    {
+      "id": "WCG-158",
+      "name": "白銀持戟禁衛",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-158.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-158 白銀持戟禁衛. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 白銀持戟禁衛. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "711b1156094a97e5d14790ea9dfb57f04011eb294c9077ec811916d041f03a32"
+    },
+    {
+      "id": "WCG-159",
+      "name": "冥界骸骨巨獸",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "無。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-159.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-159 冥界骸骨巨獸. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 冥界骸骨巨獸. Gameplay context for visual inspiration only: 無。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "aa049df18437e8da3685f6a3773ccbba58bdfcdef62574fdb0b16a68108abf85"
+    },
+    {
+      "id": "WCG-160",
+      "name": "血肉熔爐巨怪",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "此卡費用減少等同於己方生命上限與目前生命值的差額。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-160.png",
+      "prompt": "Use case: stylized-concept. Asset: original WCG-160 fantasy trading-card illustration. Subject: a towering fully armored furnace giant, enormous enclosed black-iron plate armor, riveted heavy gauntlets, a glowing red magical furnace core sealed behind a metal chest grate, volcanic sparks and a basalt fortress around it. Its entire body is covered by armor. Powerful fantasy colossus with a clear central silhouette. Detailed painterly dark fantasy with cinematic realistic metal and stone, orange and crimson light, consistent with a mature fantasy card collection. Landscape 16:9 full-bleed art, subject centered for a portrait crop. No exposed flesh, no blood, no wounds, no gore, no nudity. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One finished illustration only.",
+      "sha256": "6af8b1d83917419355b0bd3f53cd8b58df7b35e617cd67cbd73c0153ddc78177"
+    },
+    {
+      "id": "WCG-161",
+      "name": "萬物終結者·世界之蝕",
+      "type": "怪物",
+      "will": "中立",
+      "text": "進場：消滅全場所有其他怪物與所有結界，並棄置你的所有手牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-161.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-161 萬物終結者·世界之蝕. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 萬物終結者·世界之蝕. Gameplay context for visual inspiration only: 進場：消滅全場所有其他怪物與所有結界，並棄置你的所有手牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "dfd395c310fcb54e5eb7202ff97c6fd5280e1037054c24b97838a0dec89529ce"
+    },
+    {
+      "id": "WCG-162",
+      "name": "遠古泰坦·世界樹之靈",
+      "type": "怪物",
+      "will": "生機",
+      "text": "嘲諷；進場：回復己方 3 點生命，並抽 2 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-162.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-162 遠古泰坦·世界樹之靈. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 遠古泰坦·世界樹之靈. Gameplay context for visual inspiration only: 嘲諷；進場：回復己方 3 點生命，並抽 2 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "313a9f77d3a6133d85c0080110429338bbc1fcc9564563b3ef3ec24c36fa542c"
+    },
+    {
+      "id": "WCG-163",
+      "name": "時空之主·克羅諾斯",
+      "type": "怪物",
+      "will": "理智",
+      "text": "進場：重置己方所有橫置的能量；將敵方場上 1 隻怪物移回其擁有者手牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-163.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-163 時空之主·克羅諾斯. Card category: 怪物. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 時空之主·克羅諾斯. Gameplay context for visual inspiration only: 進場：重置己方所有橫置的能量；將敵方場上 1 隻怪物移回其擁有者手牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "899361cb4a837805ce1b986cad27bf675421f6cb7869927a7c0d1867c190b9c0"
+    },
+    {
+      "id": "WCG-164",
+      "name": "緊急調度",
+      "type": "法術",
+      "will": "中立",
+      "text": "橫置 1 隻直立的己方怪物：抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-164.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-164 緊急調度. Card category: 法術. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 緊急調度. Gameplay context for visual inspiration only: 橫置 1 隻直立的己方怪物：抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "3eed62428b7fb1655a98b10ee4107a78d240822ebcdd3fa34265a37a00a3f64c"
+    },
+    {
+      "id": "WCG-165",
+      "name": "血祭狂暴",
+      "type": "法術",
+      "will": "狂怒",
+      "text": "對己方玩家造成 1 點生命傷害：使 1 隻怪物下一次交戰時 PP +500。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-165.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-165 血祭狂暴. Card category: 法術. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 血祭狂暴. Gameplay context for visual inspiration only: 對己方玩家造成 1 點生命傷害：使 1 隻怪物下一次交戰時 PP +500。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "053cedd15bbb98a9dcf6cdc3ce09b7ac27130969f2ffad22d856926df582f032"
+    },
+    {
+      "id": "WCG-166",
+      "name": "思維置換",
+      "type": "法術",
+      "will": "理智",
+      "text": "將 1 張手牌置於牌庫底，然後抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-166.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-166 思維置換. Card category: 法術. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 思維置換. Gameplay context for visual inspiration only: 將 1 張手牌置於牌庫底，然後抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "152767f82cd22c0eb0e4bfc5fad53c867a40d0022ab8a2f85d817c99912e1cb1"
+    },
+    {
+      "id": "WCG-167",
+      "name": "萌芽喚醒",
+      "type": "法術",
+      "will": "生機",
+      "text": "將 1 隻橫置的己方怪物轉為直立。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-167.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-167 萌芽喚醒. Card category: 法術. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 萌芽喚醒. Gameplay context for visual inspiration only: 將 1 隻橫置的己方怪物轉為直立。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "3ab952ae6bb21f71ec508f96184a425993bcfb853971005eb7d5b1f0d9dcc8ee"
+    },
+    {
+      "id": "WCG-168",
+      "name": "正義壓制",
+      "type": "法術",
+      "will": "秩序",
+      "text": "選擇 1 隻怪物，其下一次交戰時 PP -500。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-168.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-168 正義壓制. Card category: 法術. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 正義壓制. Gameplay context for visual inspiration only: 選擇 1 隻怪物，其下一次交戰時 PP -500。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "5371dcd9563ca65a0e41bf2f40ccbcceb88779cd369ad080e7ec06b1833e77b6"
+    },
+    {
+      "id": "WCG-169",
+      "name": "暗影獻祭",
+      "type": "法術",
+      "will": "深淵",
+      "text": "消滅 1 隻己方怪物：抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-169.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-169 暗影獻祭. Card category: 法術. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 暗影獻祭. Gameplay context for visual inspiration only: 消滅 1 隻己方怪物：抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "7f670893bad8723cf441d5adfe11326d2ec8a26c8af40d5b9dac6788d291583a"
+    },
+    {
+      "id": "WCG-170",
+      "name": "天火浩劫",
+      "type": "法術",
+      "will": "狂怒",
+      "text": "消滅敵方全場所有 PP 1500 以下的怪物；若敵方場上沒有怪物，對敵方玩家造成 2 點生命傷害。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-170.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-170 天火浩劫. Card category: 法術. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 天火浩劫. Gameplay context for visual inspiration only: 消滅敵方全場所有 PP 1500 以下的怪物；若敵方場上沒有怪物，對敵方玩家造成 2 點生命傷害。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "5778a1603a7038ccf9ace84141247bcc3e9a49df27691e70541bdd2d7a8581d3"
+    },
+    {
+      "id": "WCG-171",
+      "name": "聖光審判巨神",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷；聖盾；進場：回復己方 2 點生命。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-171.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-171 聖光審判巨神. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 聖光審判巨神. Gameplay context for visual inspiration only: 嘲諷；聖盾；進場：回復己方 2 點生命。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "86fce091872c50d7e0308991078320d5a25a66abe8802cd06032a0d77f3f1c90"
+    },
+    {
+      "id": "WCG-172",
+      "name": "遠古蠻荒巨獸",
+      "type": "怪物",
+      "will": "生機",
+      "text": "貫穿；離場：將己方牌庫頂 1 張牌背面朝上、以直立狀態放入能量區。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-172.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-172 遠古蠻荒巨獸. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 遠古蠻荒巨獸. Gameplay context for visual inspiration only: 貫穿；離場：將己方牌庫頂 1 張牌背面朝上、以直立狀態放入能量區。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "7fd15c820d612168957e567ca293f5b1f80067594ce4d7339292fea575ac1111"
+    },
+    {
+      "id": "WCG-173",
+      "name": "維度扭曲",
+      "type": "法術",
+      "will": "理智",
+      "text": "將全場所有怪物移回其擁有者的手牌；抽 2 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-173.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-173 維度扭曲. Card category: 法術. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 維度扭曲. Gameplay context for visual inspiration only: 將全場所有怪物移回其擁有者的手牌；抽 2 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "9b5a80bcc8644fbd1dcc8b5be44346439fd34b498647c3d94a5959f33255614f"
+    },
+    {
+      "id": "WCG-174",
+      "name": "熔岩黑龍軍團長",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "衝鋒；貫穿。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-174.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-174 熔岩黑龍軍團長. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 熔岩黑龍軍團長. Gameplay context for visual inspiration only: 衝鋒；貫穿。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "520103f6d9510ec1241464efbf610ea93352ef80b48f6438c50b42b17356daf0"
+    },
+    {
+      "id": "WCG-175",
+      "name": "冥界引渡者·冥王",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "進場：你可以從己方墓地選擇 1 張費用 5 以下的怪物牌，不支付費用將其召喚進場。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-175.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-175 冥界引渡者·冥王. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 冥界引渡者·冥王. Gameplay context for visual inspiration only: 進場：你可以從己方墓地選擇 1 張費用 5 以下的怪物牌，不支付費用將其召喚進場。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "e7e7a3d49ca4289ecbbf54ceca57feec7d8bd1b3bdd0baf6b58139fe49b1775e"
+    },
+    {
+      "id": "WCG-176",
+      "name": "神聖至高審判",
+      "type": "法術",
+      "will": "秩序",
+      "text": "消滅全場所有 PP 1500 以上的怪物；回復己方 2 點生命。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-176.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-176 神聖至高審判. Card category: 法術. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 神聖至高審判. Gameplay context for visual inspiration only: 消滅全場所有 PP 1500 以上的怪物；回復己方 2 點生命。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "ceb3c39899f8dc417ae4a00b60786691ef8950f4f74c1786e36ccd754c5e4424"
+    },
+    {
+      "id": "WCG-177",
+      "name": "機械工廠巨像",
+      "type": "怪物",
+      "will": "中立",
+      "text": "嘲諷；在你的回合結束時，若己方場上有空位，你可以從手牌選擇 1 張費用 2 以下的怪物牌，不支付費用將其召喚進場。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-177.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-177 機械工廠巨像. Card category: 怪物. Faction: 中立. Depict the subject or magical event clearly implied by the card name: 機械工廠巨像. Gameplay context for visual inspiration only: 嘲諷；在你的回合結束時，若己方場上有空位，你可以從手牌選擇 1 張費用 2 以下的怪物牌，不支付費用將其召喚進場。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: weathered fantasy wilderness or medieval workshop, natural earthy materials. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "ecae91362ef459e63ac30801be92047cb9108211198529ae1cf53972b8b9bdf7"
+    },
+    {
+      "id": "WCG-178",
+      "name": "滅世炎魔·薩弗拉斯",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "衝鋒；此怪物宣告攻擊時，消滅敵方全場所有嘲諷怪物。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-178.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-178 滅世炎魔·薩弗拉斯. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 滅世炎魔·薩弗拉斯. Gameplay context for visual inspiration only: 衝鋒；此怪物宣告攻擊時，消滅敵方全場所有嘲諷怪物。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "fdc5955f11a5dd0920d65c24ea30a8975b4b12d3cd93eef54aee2ca072e3b7c4"
+    },
+    {
+      "id": "WCG-179",
+      "name": "光輝至高大天使·阿曼蘇爾",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷；聖盾；進場：將己方玩家的生命值回復至上限（7 點）。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-179.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-179 光輝至高大天使·阿曼蘇爾. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 光輝至高大天使·阿曼蘇爾. Gameplay context for visual inspiration only: 嘲諷；聖盾；進場：將己方玩家的生命值回復至上限（7 點）。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "41345638fddbae0be0290537e7b3eee578459adf0542f1239dfb8049c56df3bc"
+    },
+    {
+      "id": "WCG-180",
+      "name": "戰歌號令",
+      "type": "法術",
+      "will": "狂怒",
+      "text": "檢視己方牌庫頂 3 張牌，將其中 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘以任意順序放回牌庫底。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-180.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-180 戰歌號令. Card category: 法術. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 戰歌號令. Gameplay context for visual inspiration only: 檢視己方牌庫頂 3 張牌，將其中 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘以任意順序放回牌庫底。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "1196cb0f8e1b8fe1728898ad212a7866bc912b0f0e6afa27ffe9ff8efc8545cf"
+    },
+    {
+      "id": "WCG-181",
+      "name": "赤誓戰鼓手",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "進場：若己方場上有其他【狂怒】怪物，使此效果結算時在場的所有己方【狂怒】怪物，本回合交戰時 PP +300。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-181.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-181 赤誓戰鼓手. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 赤誓戰鼓手. Gameplay context for visual inspiration only: 進場：若己方場上有其他【狂怒】怪物，使此效果結算時在場的所有己方【狂怒】怪物，本回合交戰時 PP +300。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "a774f43e1c120a4efac7e4496a694bfa12053cab678dde608f35aaef5f9109bc"
+    },
+    {
+      "id": "WCG-182",
+      "name": "血怒百夫長",
+      "type": "怪物",
+      "will": "狂怒",
+      "text": "衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物交戰時 PP +300。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-182.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-182 血怒百夫長. Card category: 怪物. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 血怒百夫長. Gameplay context for visual inspiration only: 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物交戰時 PP +300。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "d1095e6188359099f30c44f26d76bbb8455091fe3308be2c8baa0fe68ae83eda"
+    },
+    {
+      "id": "WCG-183",
+      "name": "觀星占卜師",
+      "type": "怪物",
+      "will": "理智",
+      "text": "進場：檢視己方牌庫頂 3 張牌，將其中 1 張法術牌加入手牌，其餘以任意順序放回牌庫底。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-183.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-183 觀星占卜師. Card category: 怪物. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 觀星占卜師. Gameplay context for visual inspiration only: 進場：檢視己方牌庫頂 3 張牌，將其中 1 張法術牌加入手牌，其餘以任意順序放回牌庫底。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "5d0a1452dd68c9ea90d5f6149c36ee049b66754a39fcd35ae280f3775d269912"
+    },
+    {
+      "id": "WCG-184",
+      "name": "奧術共鳴波",
+      "type": "法術",
+      "will": "理智",
+      "text": "選擇 1 隻敵方怪物：若其為直立，將其橫置；若其已橫置，將其移回其擁有者的手牌。然後，若己方場上有【理智】怪物或【理智】結界，抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-184.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-184 奧術共鳴波. Card category: 法術. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 奧術共鳴波. Gameplay context for visual inspiration only: 選擇 1 隻敵方怪物：若其為直立，將其橫置；若其已橫置，將其移回其擁有者的手牌。然後，若己方場上有【理智】怪物或【理智】結界，抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "dc7d5522154d0b1cbcb5b4b55659bbf54f3876fd2d119c419761cd81fd48ae72"
+    },
+    {
+      "id": "WCG-185",
+      "name": "魔導樞紐守衛",
+      "type": "怪物",
+      "will": "理智",
+      "text": "每當你施放 1 張【理智】法術牌時，消滅 1 隻 PP 1000 以下的敵方怪物（每回合至多觸發 2 次）。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-185.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-185 魔導樞紐守衛. Card category: 怪物. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 魔導樞紐守衛. Gameplay context for visual inspiration only: 每當你施放 1 張【理智】法術牌時，消滅 1 隻 PP 1000 以下的敵方怪物（每回合至多觸發 2 次）。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "2c1c3d41c2e95baac60e6c644057462866984df9eab6a144046f518d0d09ecfa"
+    },
+    {
+      "id": "WCG-186",
+      "name": "母樹共鳴",
+      "type": "法術",
+      "will": "生機",
+      "text": "檢視己方牌庫頂 3 張牌，將其中 1 張【生機】怪物牌加入手牌，其餘以任意順序放回牌庫底；若己方場上有【生機】結界，額外抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-186.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-186 母樹共鳴. Card category: 法術. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 母樹共鳴. Gameplay context for visual inspiration only: 檢視己方牌庫頂 3 張牌，將其中 1 張【生機】怪物牌加入手牌，其餘以任意順序放回牌庫底；若己方場上有【生機】結界，額外抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "f8a2616ba410c414798bac11e72091936287f0a67bab7de2e2ca946b5d950f6a"
+    },
+    {
+      "id": "WCG-187",
+      "name": "翠綠喚獸師",
+      "type": "怪物",
+      "will": "生機",
+      "text": "進場：若己方場上有其他【生機】怪物，你可以從手牌選擇 1 張費用 2 以下的【生機】怪物牌，不支付費用將其召喚進場。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-187.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-187 翠綠喚獸師. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 翠綠喚獸師. Gameplay context for visual inspiration only: 進場：若己方場上有其他【生機】怪物，你可以從手牌選擇 1 張費用 2 以下的【生機】怪物牌，不支付費用將其召喚進場。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "34ef7170e370ef57f922204c824ea9193def06b96f1e6105ba6d8e3175ea684b"
+    },
+    {
+      "id": "WCG-188",
+      "name": "萬靈樹精長老",
+      "type": "怪物",
+      "will": "生機",
+      "text": "嘲諷；進場：己方場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-188.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-188 萬靈樹精長老. Card category: 怪物. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 萬靈樹精長老. Gameplay context for visual inspiration only: 嘲諷；進場：己方場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "eb1a24b1aab4139bb33eb7e973204c1560e1f20a1f10fd852196ceecca07c35c"
+    },
+    {
+      "id": "WCG-189",
+      "name": "聖堂集結號角",
+      "type": "法術",
+      "will": "秩序",
+      "text": "檢視己方牌庫頂 3 張牌，將其中 1 張【秩序】怪物牌加入手牌，其餘以任意順序放回牌庫底；若己方場上有【秩序】怪物，將此法術附著於 1 隻己方怪物，附著期間該怪物具有聖盾。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-189.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-189 聖堂集結號角. Card category: 法術. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 聖堂集結號角. Gameplay context for visual inspiration only: 檢視己方牌庫頂 3 張牌，將其中 1 張【秩序】怪物牌加入手牌，其餘以任意順序放回牌庫底；若己方場上有【秩序】怪物，將此法術附著於 1 隻己方怪物，附著期間該怪物具有聖盾。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "4557fbe6f8d59cb6e2d6f2e8bcd8efdd93545c5d22fc9b5fa3a8ec7148879d8a"
+    },
+    {
+      "id": "WCG-190",
+      "name": "白銀軍團旗手",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷；每當你召喚 1 隻【秩序】怪物時，回復己方 1 點生命（每回合至多觸發 2 次）。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-190.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-190 白銀軍團旗手. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 白銀軍團旗手. Gameplay context for visual inspiration only: 嘲諷；每當你召喚 1 隻【秩序】怪物時，回復己方 1 點生命（每回合至多觸發 2 次）。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "47096b35450cd8e5f363178fb658ccb6cc123ff4a946c901d9ed91563407ea5b"
+    },
+    {
+      "id": "WCG-191",
+      "name": "聖光大審判官",
+      "type": "怪物",
+      "will": "秩序",
+      "text": "嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 2000 以上的敵方怪物，並回復己方 1 點生命。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-191.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-191 聖光大審判官. Card category: 怪物. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 聖光大審判官. Gameplay context for visual inspiration only: 嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 2000 以上的敵方怪物，並回復己方 1 點生命。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "d4fd0bcaa715500a1ec7338fef25dfb2aba9663d23cdd4c99734648402c47d93"
+    },
+    {
+      "id": "WCG-192",
+      "name": "冥河引魂術",
+      "type": "法術",
+      "will": "深淵",
+      "text": "檢視己方牌庫頂 3 張牌，將其中 1 張【深淵】怪物牌加入手牌，其餘送入墓地。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-192.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-192 冥河引魂術. Card category: 法術. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 冥河引魂術. Gameplay context for visual inspiration only: 檢視己方牌庫頂 3 張牌，將其中 1 張【深淵】怪物牌加入手牌，其餘送入墓地。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "85adc45d6c03fbab39f5859d69e344c8d459a9b80e979705714503f8b290e608"
+    },
+    {
+      "id": "WCG-193",
+      "name": "噬魂死靈術士",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "進場：你可以犧牲己方 1 隻其他【深淵】怪物；若如此做，抽 2 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-193.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-193 噬魂死靈術士. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 噬魂死靈術士. Gameplay context for visual inspiration only: 進場：你可以犧牲己方 1 隻其他【深淵】怪物；若如此做，抽 2 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "c6bb71482d4ede8c3752f6514303050fb0ee733f45a00cd6726f7a20317d35cd"
+    },
+    {
+      "id": "WCG-194",
+      "name": "冥府復甦領主",
+      "type": "怪物",
+      "will": "深淵",
+      "text": "進場：你可以從己方墓地選擇 1 張費用 3 以下的【深淵】怪物牌，不支付費用將其召喚進場；若己方場上有其他【深淵】怪物，將該被召喚的怪物轉為直立。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-194.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-194 冥府復甦領主. Card category: 怪物. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 冥府復甦領主. Gameplay context for visual inspiration only: 進場：你可以從己方墓地選擇 1 張費用 3 以下的【深淵】怪物牌，不支付費用將其召喚進場；若己方場上有其他【深淵】怪物，將該被召喚的怪物轉為直立。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "9449009b4646a33fbe779bec606cddf4ae6082fc6ab948b2624368f8b6b0700d"
+    },
+    {
+      "id": "WCG-195",
+      "name": "熔火爆炸陷阱",
+      "type": "法術（反擊）",
+      "will": "狂怒",
+      "text": "【反擊法術】消滅宣告攻擊的敵方怪物；若該怪物 PP 在 1500 以上，對敵方玩家造成 1 點生命傷害。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-195.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-195 熔火爆炸陷阱. Card category: 法術（反擊）. Faction: 狂怒. Depict the subject or magical event clearly implied by the card name: 熔火爆炸陷阱. Gameplay context for visual inspiration only: 【反擊法術】消滅宣告攻擊的敵方怪物；若該怪物 PP 在 1500 以上，對敵方玩家造成 1 點生命傷害。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: volcanic fortress, iron, crimson and ember light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "9617831f03fffecd5651bf7548ecbde10a253fd1c1ad32085d4c00deee1e5e61"
+    },
+    {
+      "id": "WCG-196",
+      "name": "維度時空屏障",
+      "type": "法術（反擊）",
+      "will": "理智",
+      "text": "【反擊法術】使本次攻擊無效；橫置宣告攻擊的怪物，然後抽 1 張牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-196.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-196 維度時空屏障. Card category: 法術（反擊）. Faction: 理智. Depict the subject or magical event clearly implied by the card name: 維度時空屏障. Gameplay context for visual inspiration only: 【反擊法術】使本次攻擊無效；橫置宣告攻擊的怪物，然後抽 1 張牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: arcane observatory or magical ruins, sapphire and violet light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "4be43dad78c181ad3893914b3294dffcf46538edb65e8b6c8b231590d24c5d2f"
+    },
+    {
+      "id": "WCG-197",
+      "name": "叢林守護伏擊",
+      "type": "法術（反擊）",
+      "will": "生機",
+      "text": "【反擊法術】使本次攻擊無效；你可以從手牌選擇 1 張費用 3 以下的【生機】怪物牌，不支付費用將其召喚進場。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-197.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-197 叢林守護伏擊. Card category: 法術（反擊）. Faction: 生機. Depict the subject or magical event clearly implied by the card name: 叢林守護伏擊. Gameplay context for visual inspiration only: 【反擊法術】使本次攻擊無效；你可以從手牌選擇 1 張費用 3 以下的【生機】怪物牌，不支付費用將其召喚進場。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: ancient living forest, emerald foliage and golden sunlight. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "78cad2cdfc08029b73b157ac7973e377a0d35459a1c7835a28fa60bac6c8798e"
+    },
+    {
+      "id": "WCG-198",
+      "name": "神聖救贖誓約",
+      "type": "法術（反擊）",
+      "will": "秩序",
+      "text": "【反擊法術】使本次攻擊造成的傷害減少為 0；回復己方 2 點生命，並將此法術附著於 1 隻己方怪物，附著期間該怪物具有聖盾。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-198.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-198 神聖救贖誓約. Card category: 法術（反擊）. Faction: 秩序. Depict the subject or magical event clearly implied by the card name: 神聖救贖誓約. Gameplay context for visual inspiration only: 【反擊法術】使本次攻擊造成的傷害減少為 0；回復己方 2 點生命，並將此法術附著於 1 隻己方怪物，附著期間該怪物具有聖盾。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: sacred citadel, silver armor, ivory stone and warm holy light. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "02949ce4d8de76b517d73de1f0f0dee53dd0ffd7227070fbf0945b27d170e5d7"
+    },
+    {
+      "id": "WCG-199",
+      "name": "亡魂索命陷阱",
+      "type": "法術（反擊）",
+      "will": "深淵",
+      "text": "【反擊法術】消滅宣告攻擊的敵方怪物；若己方墓地有【深淵】怪物牌，將其中 1 張費用 2 以下的怪物牌移回手牌。",
+      "file": "WcgWeb/wwwroot/card-art/WCG-199.png",
+      "prompt": "Use case: stylized-concept. Asset: one original fantasy trading-card illustration for WCG-199 亡魂索命陷阱. Card category: 法術（反擊）. Faction: 深淵. Depict the subject or magical event clearly implied by the card name: 亡魂索命陷阱. Gameplay context for visual inspiration only: 【反擊法術】消滅宣告攻擊的敵方怪物；若己方墓地有【深淵】怪物牌，將其中 1 張費用 2 以下的怪物牌移回手牌。 Style: detailed painterly dark fantasy with cinematic realistic materials, strong focal silhouette, dramatic illumination; consistent with a mature fantasy card art collection. Setting and palette: haunted necropolis, cold violet, teal soul light and shadows. For a creature card show the creature as the clear main subject; for a spell show the spell's event; for an enchantment show its location or structure. Composition: landscape 16:9 full-bleed art, subject in central 50% so a portrait crop retains it. No text, no letters, no numbers, no logos, no watermark, no UI, no card frame. One illustration only.",
+      "sha256": "bee420bd210cbe76d9910893719f8c8548a69191c951e73456b7883345148f74"
+    }
+  ]
+}
