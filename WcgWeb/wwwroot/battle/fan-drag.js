@@ -1,8 +1,10 @@
+import { createBattleAudio } from "./battle-audio.js";
 import { bindFeedback } from "./battle-feedback.js";
 
 // All gestures share the same aiming, destination feedback and cancellation lifecycle.
 export function bind(root, dotnet) {
-    const feedback = bindFeedback(root);
+    const sound = createBattleAudio(root);
+    const feedback = bindFeedback(root, sound);
     let gesture = null, aim = null, hovered = null;
     let pendingDrop = null, flight = null;
     let frame = 0, suppressClick = false, disposed = false;
@@ -81,7 +83,7 @@ export function bind(root, dotnet) {
         cleanup();
         setTimeout(() => { suppressClick = false; }, 0);
     }
-    function cancel() { if (gesture?.started) call('EndDrag'); cleanup(); }
+    function cancel() { if (gesture?.started) { void sound.play('cancel'); call('EndDrag'); } cleanup(); }
     function click(e) { if (suppressClick) { e.preventDefault(); e.stopImmediatePropagation(); suppressClick = false; } }
     function key(e) { if (e.key === 'Escape') cancel(); }
     root.addEventListener('pointerdown', down); root.addEventListener('click', click, true);
@@ -117,9 +119,10 @@ export function bind(root, dotnet) {
             { transform: arrive, opacity: 1, offset: .8 },
             { transform: arrive, opacity: zone === 'own' ? 1 : 0, offset: 1 }
         ], { duration: attack ? 360 : 280, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
+        void sound.play(attack ? 'attack' : zone === 'energy' ? 'energy' : !source.classList.contains('card-back') && source.dataset.cardType?.startsWith('法術') ? 'spell' : 'place', attack ? .18 : .22);
         flight = { animation, clone, restore() { source.style.visibility = visibility; root.inert = inert; clone.remove(); } };
         try { await animation.finished; } catch { /* Disposal cancels presentation without committing another action. */ }
         finally { flight?.restore(); flight = null; }
     }
-    return { playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
+    return { readSound: () => sound.enabled, toggleSound: () => sound.toggle(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
 }

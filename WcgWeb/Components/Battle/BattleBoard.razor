@@ -7,7 +7,7 @@
 @if(State is {} s)
 {
 <section class="v06-board @(Dragging!=null?"dragging":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
-    <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">投降</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
+    <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span><button class="sound-toggle" data-sound-toggle aria-label="@(SoundEnabled?"靜音":"開啟音效")" title="@(SoundEnabled?"靜音":"開啟音效")" @onclick="ToggleSound">@(SoundEnabled?"🔊":"🔇")</button><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">投降</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
     <div class="opponent hero @(LegalZone("face")?"legal":"")" data-drop-zone="face"><strong>電腦</strong><b>♥ @s.Computer.Hp / 7</b><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small></div>
     <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:(Busy||Presenting)?"動作進行中":s.Pending?.Title ?? (CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
     <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
@@ -41,7 +41,7 @@
     @for(var i=0;i<s.Hand.Length;i++)
     {
         var h=s.Hand[i];var index=i;var faceDown=SetModes.Contains(h.Card.InstanceId);
-        <article @key="h.Card.InstanceId" class="v06-hand-card @(faceDown?"card-back":"") @(HandClass(h,faceDown))" title="@HandHint(h,faceDown)" style="@FanStyle(index,s.Hand.Length)" data-drag-kind="@(CanDrag?"hand":null)" data-drag-id="@h.Card.InstanceId" @onclick="()=>OpenCard(h.Card)" @oncontextmenu="()=>ToggleSet(h.Card.InstanceId)" @oncontextmenu:preventDefault="true" tabindex="0" role="button" aria-label="@(h.Card.Name+(faceDown?"，蓋牌模式":"，左鍵看牌，右鍵蓋牌"))" @onkeydown="e=>HandKey(e,h.Card)">
+        <article @key="h.Card.InstanceId" class="v06-hand-card @(faceDown?"card-back":"") @(HandClass(h,faceDown))" title="@HandHint(h,faceDown)" style="@FanStyle(index,s.Hand.Length)" data-drag-kind="@(CanDrag?"hand":null)" data-card-type="@h.Card.Type" data-drag-id="@h.Card.InstanceId" @onclick="()=>OpenCard(h.Card)" @oncontextmenu="()=>ToggleSet(h.Card.InstanceId)" @oncontextmenu:preventDefault="true" tabindex="0" role="button" aria-label="@(h.Card.Name+(faceDown?"，蓋牌模式":"，左鍵看牌，右鍵蓋牌"))" @onkeydown="e=>HandKey(e,h.Card)">
         @if(faceDown){<div class="back-emblem">魂<br/>誓</div><strong>蓋牌模式</strong><small>拖到己方空格 · 0 費</small><small>右鍵翻回正面</small>}
         else{@foreach(var arrow in h.Card.Arrows ?? []){<span class="arrowmark @arrow" title="@(arrow=="left"?"指向左鄰格":arrow=="right"?"指向右鄰格":"指向正對面敵格")">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}<span class="mana">@h.Card.Cost</span><strong>@h.Card.Name</strong><small>@h.Card.Type · @h.Card.Will</small><div class="card-emblem">@(h.Card.Will switch{"狂怒"=>"🔥","理智"=>"✦","生機"=>"❧","秩序"=>"☀","深淵"=>"☾",_=>"◇"})</div><p>@h.Card.Text</p>@if(h.Card.PP!=null){<b class="stats">@h.Card.PP PP · @h.Card.DP DP</b>}@if(h.Card.Arrows?.Length>0){<small>箭頭 @string.Join(" ",h.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</small>}}
         <span class="hand-availability">@HandLabel(h,faceDown)</span>
@@ -76,7 +76,7 @@
     private string DragKind="";
     private HashSet<Guid> SetModes=[];
     private BattleCard? Detail;
-    private bool ConfirmEnergy=true;
+    private bool ConfirmEnergy=true,SoundEnabled=true;
     private ElementReference BoardElement;
     private IJSObjectReference? Preferences,DragModule,DragBinding;
     private DotNetObjectReference<BattleBoard>? Self;
@@ -94,7 +94,8 @@
     private string HandHint(BattleHand h,bool back)=>!CanAct?"等待你的行動時再出牌":back?(h.CanSet?"背面拖入己方空格，以0費蓋牌":"己方沒有可用格位或正在選擇效果"):h.CanPlay?"拖到亮起的合法位置出牌":h.Problem+(h.CanSet?"；右鍵可切換蓋牌，0費放入己方空格":"");
     private static string FanStyle(int i,int n){var offset=i-(n-1)/2.0;var angle=offset*Math.Min(5,34.0/Math.Max(1,n-1));return FormattableString.Invariant($"--offset:{offset:0.##};--step:min(100px,calc((100vw - 470px) / {Math.Max(1,n-1)}));--angle:{angle:0.##}deg;--rise:{Math.Abs(offset)*Math.Min(6,25.0/Math.Max(1,n-1)):0.##}px;--order:{i+1}");}
     protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
-    protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
+    protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);SoundEnabled=await DragBinding.InvokeAsync<bool>("readSound");if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
+    private async Task ToggleSound(){if(DragBinding!=null)SoundEnabled=await DragBinding.InvokeAsync<bool>("toggleSound");}
     private void OpenCard(BattleCard c)=>Detail=c;
     private async Task OpenSlot(BattleMonster? m){if(m==null)return;if(State?.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true)await Send("target",target:m.Card.InstanceId);else Detail=m.Card;}
     private void ToggleSet(Guid id){if(!CanDrag)return;if(!SetModes.Remove(id))SetModes.Add(id);}
@@ -154,6 +155,7 @@
             }
             if(Disposed)return;
             State=response.State;Message=response.Success?"":response.Message;Dragging=null;Detail=null;
+            if(!response.Success&&DragBinding!=null)await DragBinding.InvokeVoidAsync("playError");
             SetModes.IntersectWith(State.Hand.Select(h=>h.Card.InstanceId));
             foreach(var ev in response.Events)History.Insert(0,$"{(ev.Side=="player"?"我方":"敵方")} {ev.Label} {ev.Card?.Name}");
             if(History.Count>150)History.RemoveRange(150,History.Count-150);

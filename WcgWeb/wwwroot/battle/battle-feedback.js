@@ -1,5 +1,5 @@
 // Present only public engine events. Keep the old board until this batch completes.
-export function bindFeedback(root) {
+export function bindFeedback(root, sound = null) {
     let layer = null, disposed = false, priorInert = false, locked = false;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
@@ -75,6 +75,7 @@ export function bindFeedback(root) {
         if (!el) return;
         const r = el.getBoundingClientRect();
         const pop = place(node('div', `event-number ${heal ? 'healing' : ''}`, text), { x: r.x + r.width / 2 - 45, y: r.y - 8, width: 90, height: 55 });
+        void sound?.play(heal ? 'heal' : 'damage');
         pop.dataset.wcgEffect = heal ? 'heal' : 'damage';
         await Promise.all([flash(el, heal ? '#91ffc1' : '#ff957b'), animate(pop, [{ opacity: 0, transform: 'translateY(0) scale(.7)' }, { opacity: 1, transform: 'translateY(-10px) scale(1.15)', offset: .2 }, { opacity: 0, transform: 'translateY(-45px) scale(1)' }], 580)]);
         pop.remove();
@@ -86,6 +87,7 @@ export function bindFeedback(root) {
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
         const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; hide(source);
         const dx = to.x + to.width / 2 - from.x - from.width / 2, dy = to.y + to.height / 2 - from.y - from.height / 2;
+        void sound?.play('attack', .23);
         await animate(moving, [{ transform: 'translate(0,0)' }, { transform: `translate(${dx}px,${dy}px) scale(1.06)`, offset: .5 }, { transform: 'translate(0,0)' }], 460);
         moving.remove(); source.style.visibility = hidden.get(source) ?? ''; hidden.delete(source);
         await flash(destination);
@@ -95,6 +97,7 @@ export function bindFeedback(root) {
         if (!source) return;
         const departing = place(source.cloneNode(true), source.getBoundingClientRect()); departing.dataset.wcgEffect = 'death'; hide(source);
         await flash(departing);
+        void sound?.play('death');
         await animate(departing, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'translateY(35px) rotate(7deg) scale(.55)' }], 420);
         departing.remove(); ghosts.get(ev.instanceId)?.remove(); ghosts.delete(ev.instanceId);
     }
@@ -121,6 +124,7 @@ export function bindFeedback(root) {
                     hide(hand(ev.instanceId));
                     if (ev.side === 'computer') {
                         const isField = destination(ev.instanceId), moving = originCard(ev.side, ev.card);
+                        void sound?.play(isField ? 'place' : 'spell', .35);
                         await fly(moving, isField ?? visual(ev.targetId) ?? root.querySelector('.battlefield'), !!isField);
                         if (isField) ghosts.set(ev.instanceId, moving);
                     }
@@ -130,22 +134,24 @@ export function bindFeedback(root) {
                     if (target) {
                         if (!ghosts.has(ev.instanceId)) {
                             const card = ev.side === 'computer' && !played.has(ev.instanceId) ? originCard(ev.side, ev.type === 'set' ? null : ev.card) : publicCard(ev.type === 'set' ? null : ev.card);
-                            if (ev.side === 'computer' && !played.has(ev.instanceId)) await fly(card, target, true);
+                            if (ev.side === 'computer' && !played.has(ev.instanceId)) { void sound?.play('place', .35); await fly(card, target, true); }
                             else place(card, target.getBoundingClientRect());
                             ghosts.set(ev.instanceId, card);
                         }
                         hide(hand(ev.instanceId)); await flash(target, '#93ffc0');
                     }
                 } else if (ev.type === 'energy') {
-                    if (ev.side === 'computer') await fly(originCard(ev.side, null), hero(ev.side));
+                    if (ev.side === 'computer') { void sound?.play('energy', .35); await fly(originCard(ev.side, null), hero(ev.side)); }
                     else await flash(root.querySelector('.energy-zone'), '#8ad7ff');
                 } else if (ev.type === 'trigger' || ev.type === 'status' || ev.type === 'reveal') {
+                    void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
                     await flash(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1');
                 } else if (ev.type === 'bounce') {
                     const source = visual(ev.instanceId);
-                    if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); await fly(moving, hero(ev.side)); }
-                } else if (ev.type === 'turn') await flash(hero(ev.side), '#9edcff');
-                else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') await flash(hero(ev.side), '#9edcff');
+                    if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, hero(ev.side)); }
+                } else if (ev.type === 'turn') { void sound?.play('turn'); await flash(hero(ev.side), '#9edcff'); }
+                else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
+                else if (ev.type === 'gameover') { void sound?.play('gameover'); await flash(hero(ev.side), '#ffe5a1'); }
                 else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
             }
         } catch (error) { clear(); throw error; }

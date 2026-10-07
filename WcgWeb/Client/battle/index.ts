@@ -471,7 +471,7 @@ class Board {
     state:State|null=null;receiver:Receiver;root:HTMLElement;mount:HTMLElement;controls:HTMLElement;status:HTMLElement;primary:HTMLElement;focusActive=false;resizeFrame=0;
     selected:Card|null=null;energyCandidate:string|null=null;handPage=0;busy=false;busySince=0;watchdogLimit=8500;disposed=false;fast=false;reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;sound=false;generation=0;
     logCard:string|null=null;
-    history:{id:string;text:string;card:Card|null}[]=[];seen=new Set<string>();requestedArt=new Set<string>();audio:AudioContext|null=null;
+    history:{id:string;text:string;card:Card|null}[]=[];seen=new Set<string>();requestedArt=new Set<string>();audio:{enabled:boolean;play:(type:string)=>Promise<void>;setEnabled:(value:boolean)=>boolean;dispose:()=>void}|null=null;
     preview!:HTMLElement;modal:HTMLDialogElement;panel:string|null=null;
     nativePointerAt=0;
     presentation:{side:string;turn:number;stage:string}|null=null;
@@ -488,6 +488,8 @@ class Board {
         this.mount=el('div','','battle-canvas');this.controls=el('div','','battle-client-controls');
         this.primary=el('div','','battle-primary-controls');this.primary.setAttribute('aria-label','主要對戰操作');this.preview=el('aside','','battle-card-preview');this.preview.hidden=true;this.preview.setAttribute('aria-label','卡牌放大');this.modal=el('dialog','','battle-modal');root.append(this.status,this.mount,this.primary,this.controls,this.preview,this.modal);this.modal.addEventListener('cancel',e=>{e.preventDefault();this.closePanel();});this.modal.addEventListener('click',e=>{if(e.target===this.modal){const r=this.modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)this.closePanel();}});
         this.ready=new Promise((resolve,reject)=>{this.readyResolve=resolve;this.readyReject=reject;});
+        const audioPath=new URL('./battle-audio.js',import.meta.url).href;
+        void import(audioPath).then(module=>{if(this.disposed)return;this.audio=module.createBattleAudio(root);this.sound=this.audio!.enabled;}).catch(()=>{});
         const logicalWidth=root.clientWidth<800?560:1180;
         this.mount.style.height=`${this.mount.clientWidth*760/logicalWidth}px`;
         this.resizeObserver=new ResizeObserver(()=>this.queueLayout());this.resizeObserver.observe(root);this.resizeObserver.observe(this.mount);
@@ -741,7 +743,7 @@ class Board {
                 check('填能量前再次確認',readEnergyConfirmation(),saveEnergyConfirmation);
                 check('加速動畫',this.fast,v=>{this.fast=v;void this.receiver.invokeMethodAsync('SetFast',v);});
                 check('減少動畫',this.reduced,v=>this.reduced=v);
-                check('音效',this.sound,v=>{this.sound=v;if(v)this.audio??=new AudioContext();});
+                check('音效',this.sound,v=>{this.sound=v;this.audio?.setEnabled(v);});
                 content.append(button('全螢幕',()=>{if(document.fullscreenElement)void document.exitFullscreen();else void this.root.requestFullscreen();}));
                 if(this.sessionActions){const actions=el('div','','battle-session-actions');
                     actions.append(button('投降',()=>void this.sessionAction('surrender'),this.busy||s.isOver),button('返回房間',()=>void this.sessionAction('reset'),this.busy));
@@ -779,10 +781,8 @@ class Board {
         }else if(this.modal.open)this.modal.close();
         this.paintTurn();
     }
-    tone(type:string){if(!this.sound||!this.audio||document.hidden)return;
-        void this.audio.resume();const osc=this.audio.createOscillator(),gain=this.audio.createGain();osc.connect(gain);gain.connect(this.audio.destination);
-        osc.frequency.value=type==='attack'?180:type==='death'?110:440;gain.gain.setValueAtTime(.025,this.audio.currentTime);gain.gain.exponentialRampToValueAtTime(.001,this.audio.currentTime+.09);osc.start();osc.stop(this.audio.currentTime+.1);}
-    dispose(){this.disposed=true;this.generation++;this.abort.abort();this.resizeObserver.disconnect();cancelAnimationFrame(this.resizeFrame);clearInterval(this.watchdog);this.scene.tweens?.killAll();this.game.destroy(true);void this.audio?.close();this.root.replaceChildren();}
+    tone(type:string){if(this.sound&&!document.hidden)void this.audio?.play(type);}
+    dispose(){this.disposed=true;this.generation++;this.abort.abort();this.resizeObserver.disconnect();cancelAnimationFrame(this.resizeFrame);clearInterval(this.watchdog);this.scene.tweens?.killAll();this.game.destroy(true);this.audio?.dispose();this.root.replaceChildren();}
 }
 const boards=new Map<string,Board>();
 export async function create(root:HTMLElement,receiver:Receiver,animationPrototype=false,sessionActions=false){const b=new Board(root,receiver,animationPrototype,sessionActions);const id=crypto.randomUUID();boards.set(id,b);

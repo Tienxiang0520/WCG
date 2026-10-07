@@ -1,0 +1,98 @@
+[
+  {
+    "file": "card-slide-1.ogg",
+    "pack": "casino-audio",
+    "sha256": "006cf9822d15d7063f8899e56041f41646df30adb6fbd8b974ee5d5420012690",
+    "duration": 0.600771
+  },
+  {
+    "file": "card-place-1.ogg",
+    "pack": "casino-audio",
+    "sha256": "d8f26c33a665dcbdcc6f632f6050bc9dd548feb0d4942d4547615926d3926810",
+    "duration": 0.689116
+  },
+  {
+    "file": "card-shove-1.ogg",
+    "pack": "casino-audio",
+    "sha256": "1ea667aa6795d5f14239192116ebcbd8f3f47eb1c7faaf2ec56844b9067b8b06",
+    "duration": 0.765873
+  },
+  {
+    "file": "card-slide-4.ogg",
+    "pack": "casino-audio",
+    "sha256": "b9c82bcdbe6b7d00a06e2546bd2683a9ab082ca5fd090a42882f33eddd925b7f",
+    "duration": 0.45941
+  },
+  {
+    "file": "card-fan-1.ogg",
+    "pack": "casino-audio",
+    "sha256": "7a9758ccad8899baef1b9f60b4064e4baa724a548293832fdaea07e6e07e638d",
+    "duration": 0.720816
+  },
+  {
+    "file": "impactSoft_heavy_000.ogg",
+    "pack": "impact-sounds",
+    "sha256": "49e7ca88743fca974bb8676ea138b751cfd8f9033b5e7af8736c2a215d6edbc1",
+    "duration": 0.505102
+  },
+  {
+    "file": "impactPunch_medium_000.ogg",
+    "pack": "impact-sounds",
+    "sha256": "486988aa2d6440ffc4c62a0e8ccf3c23673ba84424bd4723378d451b7255eb5c",
+    "duration": 0.430544
+  },
+  {
+    "file": "impactGlass_light_003.ogg",
+    "pack": "impact-sounds",
+    "sha256": "765290ce32fa108c939a0dbd6fbacbcd05abde622b57b708eb8a64058ef4225a",
+    "duration": 0.209592
+  },
+  {
+    "file": "click_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "ccfb7fa0cccdd9faec0eb16033c732b1e308d139d80f799161495d58f7adcdb9",
+    "duration": 0.100023
+  },
+  {
+    "file": "glass_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "183eebee20eb0a532b0b85104d139cbf2673eb66d95c3cc733ac9ea98362e7e8",
+    "duration": 0.278435
+  },
+  {
+    "file": "confirmation_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "063564703b6094d70718a3e787a55cc9141611e4ecd6b6637f8828f79b4a8c3a",
+    "duration": 0.289841
+  },
+  {
+    "file": "confirmation_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "33b17a9a9a2397c62b285c52c33a907fdffb476909c99e42dde603f6a7a8b12c",
+    "duration": 0.539002
+  },
+  {
+    "file": "confirmation_004.ogg",
+    "pack": "interface-sounds",
+    "sha256": "568967a3d9f8a8f6af54ea01729c4882284308f2a27d78c07ffd7ee0d6951661",
+    "duration": 0.490408
+  },
+  {
+    "file": "back_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "07db973f79f6ae0f2edc34561e7592e24d0577455919fb602cb8ecc0da991dcf",
+    "duration": 0.063878
+  },
+  {
+    "file": "error_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "76810ec365f41078fd0507101da5bb7b8730fe011dde43908329fdabd8575e79",
+    "duration": 0.164558
+  },
+  {
+    "file": "pluck_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "be97ec4893a02d6eccfb678daa76c83e34cb2583b834ec2593d2641def739fa4",
+    "duration": 0.102426
+  }
+]
