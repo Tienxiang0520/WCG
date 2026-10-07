@@ -2,6 +2,7 @@
 @using WcgWeb.Models.Ranked
 @using WcgWeb.Models.Battle
 @using WcgWeb.Components.Battle
+@using WcgWeb.Components.Common
 @implements IAsyncDisposable
 @inject RankedSession Ranked
 @inject CardDatabase Cards
@@ -31,7 +32,7 @@ else
         <header><p class="ranked-eyebrow">單人天梯 · @Profile.Season</p><h1>挑戰下一個牌位</h1><p>每一場對局，往上多走一顆星。</p></header>
         @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
         <section class="ranked-card" aria-label="目前牌位">
-            <div class="ranked-emblem" aria-hidden="true">♜</div>
+            <RankEmblem Tier="@RankedRules.Tier(Profile.Stars)" />
             <div><p>目前牌位</p><h2>@RankedRules.Label(Profile.Stars)</h2>
                 @if (RankedRules.Tier(Profile.Stars) < 5)
                 {

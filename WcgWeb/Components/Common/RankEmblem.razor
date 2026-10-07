@@ -1,0 +1,59 @@
+@namespace WcgWeb.Components.Common
+
+<svg class="rank-emblem rank-emblem-@Style" viewBox="0 0 120 132" aria-hidden="true" focusable="false" data-rank-tier="@Level">
+    <defs>
+        <linearGradient id="@GradientId" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="var(--rank-light)" />
+            <stop offset=".48" stop-color="var(--rank-metal)" />
+            <stop offset="1" stop-color="var(--rank-dark)" />
+        </linearGradient>
+    </defs>
+    @if (Level >= 3)
+    {
+        <path class="rank-wings" d="M30 39 5 28 10 51 25 63 8 58 16 77 33 87 M90 39 115 28 110 51 95 63 112 58 104 77 87 87" />
+    }
+    <path class="rank-frame" fill="url(#@GradientId)" d="@Frame" />
+    <path class="rank-inset" d="M60 28 88 40 85 76 Q82 95 60 108 Q38 95 35 76 L32 40 Z" />
+    @switch (Level)
+    {
+        case 0:
+            <path class="rank-mark" d="M57 43 63 43 63 70 73 70 73 77 63 77 63 90 57 90 57 77 47 77 47 70 57 70 Z" />
+            break;
+        case 1:
+            <path class="rank-mark" d="M60 44 75 51 73 72 Q71 83 60 91 Q49 83 47 72 L45 51 Z" />
+            <path class="rank-detail" d="M60 51 60 81 M52 57 60 53 68 57" />
+            break;
+        case 2:
+            <path class="rank-mark" d="M43 59 51 65 60 48 69 65 77 59 73 80 47 80 Z" />
+            <path class="rank-detail" d="M49 85 71 85" />
+            break;
+        case 3:
+            <path class="rank-mark" d="M60 44 66 62 82 68 66 74 60 94 54 74 38 68 54 62 Z" />
+            break;
+        case 4:
+            <path class="rank-mark" d="M47 48 73 48 83 63 60 94 37 63 Z" />
+            <path class="rank-detail" d="M38 63 82 63 M47 49 53 63 60 91 67 63 73 49 M53 63 67 63" />
+            break;
+        default:
+            <path class="rank-mark" d="M40 57 51 65 60 46 69 65 80 57 74 84 46 84 Z" />
+            <path class="rank-detail" d="M48 90 72 90" />
+            <path class="rank-mark" d="M60 4 65 13 75 15 68 23 60 20 52 23 45 15 55 13 Z" />
+            break;
+    }
+</svg>
+
+@code {
+    [Parameter] public int Tier { get; set; }
+    private int Level => Math.Clamp(Tier, 0, 5);
+    private string Style => new[] { "bronze", "silver", "gold", "platinum", "diamond", "master" }[Level];
+    private readonly string GradientId = "rank-metal-" + Guid.NewGuid().ToString("N");
+    private string Frame => Level switch
+    {
+        0 => "M60 17 94 33 91 78 Q88 105 60 122 Q32 105 29 78 L26 33 Z",
+        1 => "M60 13 99 31 95 78 Q92 107 60 125 Q28 107 25 78 L21 31 Z",
+        2 => "M60 12 76 23 99 25 96 79 Q91 108 60 125 Q29 108 24 79 L21 25 44 23 Z",
+        3 => "M60 11 100 31 96 80 80 108 60 128 40 108 24 80 20 31 Z",
+        4 => "M60 7 99 28 103 64 87 101 60 128 33 101 17 64 21 28 Z",
+        _ => "M60 22 80 27 101 24 97 80 80 108 60 129 40 108 23 80 19 24 40 27 Z"
+    };
+}

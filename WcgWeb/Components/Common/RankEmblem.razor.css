@@ -1,0 +1,13 @@
+.rank-emblem{width:104px;height:114px;flex:none;overflow:visible;filter:drop-shadow(0 4px 5px #0005)}
+.rank-emblem-bronze{--rank-light:#f1c28e;--rank-metal:#b97946;--rank-dark:#6e412c;--rank-ink:#ffe0b2;--rank-face:#3f2c27}
+.rank-emblem-silver{--rank-light:#f4fbff;--rank-metal:#b9cbd9;--rank-dark:#667f96;--rank-ink:#eef8ff;--rank-face:#293d50}
+.rank-emblem-gold{--rank-light:#fff4b6;--rank-metal:#e5b447;--rank-dark:#8d611f;--rank-ink:#fff0a9;--rank-face:#46341b}
+.rank-emblem-platinum{--rank-light:#e6fff7;--rank-metal:#76d4c1;--rank-dark:#327c84;--rank-ink:#d0fff0;--rank-face:#163f45}
+.rank-emblem-diamond{--rank-light:#e3f9ff;--rank-metal:#6cc5f4;--rank-dark:#4763b5;--rank-ink:#c4f3ff;--rank-face:#263d68}
+.rank-emblem-master{--rank-light:#ffeeb9;--rank-metal:#e6b65c;--rank-dark:#855038;--rank-ink:#ffe7a5;--rank-face:#4d274e}
+.rank-frame{stroke:var(--rank-light);stroke-width:2;stroke-linejoin:round}
+.rank-inset{fill:var(--rank-face);stroke:var(--rank-dark);stroke-width:2}
+.rank-mark{fill:var(--rank-ink);stroke:var(--rank-metal);stroke-width:1;stroke-linejoin:round}
+.rank-detail{fill:none;stroke:var(--rank-face);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.rank-wings{fill:var(--rank-metal);stroke:var(--rank-light);stroke-width:2;stroke-linejoin:round}
+@media(max-width:550px){.rank-emblem{width:78px;height:86px}}
