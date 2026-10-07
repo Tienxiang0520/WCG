@@ -6,14 +6,11 @@
 @inject BattleCoordinator Coordinator
 @if(State is {} s)
 {
-<section class="v06-board" aria-label="v0.6 文字卡牌戰場">
-    <header><strong>v0.6 · 第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong>
-        <span>電腦 @s.Computer.Hp / 7 生命 · 能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</span>
-        <button disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>結束回合</button>
-        <button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@s.IsOver">投降</button>
-        <button @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button>
-    </header>
-    <p role="status">@Message @(s.IsOver?s.Outcome:s.Pending?.Title ?? (CanAct?"選擇怪物攻擊，或使用手牌。進場時選固定格位。":"等待電腦行動或效果選擇。"))</p>
+<section class="v06-board @(Dragging!=null?"dragging":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
+    <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@s.IsOver">投降</button><button @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
+    <div class="opponent hero @(LegalZone("face")?"legal":"")" data-drop-zone="face"><strong>電腦</strong><b>♥ @s.Computer.Hp / 7</b><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small></div>
+    <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:s.Pending?.Title ?? (CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
+    <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
     @foreach(var side in new[]{s.Computer,s.Player})
     {
         var mine=side.Id=="player";
@@ -21,52 +18,47 @@
         @for(int screen=0;screen<5;screen++)
         {
             var slot=mine?screen:4-screen;var m=side.Field.FirstOrDefault(x=>x.Slot==slot);
-            <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m!=null && Selected==m.Card.InstanceId?"selected":"")">
-                <small>@(mine?"己方":"敵方")第 @(slot+1) 格</small>
-                @if(m==null){<div class="empty">空格</div>}
+            <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m==null?"vacant":"") @(LegalSlot(mine,slot,m)?"legal":"")" data-drop-zone="@(mine?"own":"enemy")" data-slot="@slot" data-target="@m?.Card.InstanceId" @onclick="()=>OpenSlot(m)">
+                <small class="slot-number">@(mine?"己方":"敵方") @(slot+1)</small>
+                @if(m==null){<div class="empty">＋</div>}
                 else
                 {
+                    <div class="field-card" data-drag-kind="@(m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
                     <strong>@m.Card.Name</strong><small>@m.Card.Type · @m.Card.Will</small>
-                    @if(m.Card.PP!=null){<b>@m.PP PP · @m.DP DP</b>}
-                    <p>@m.Card.Text</p><small>@string.Join(" · ",m.Status)</small>
-                    @foreach(var a in m.Attachments ?? []){<p class="attachment">附著 @a.Name：@a.Text</p>}
+                    @if(m.Card.PP!=null){<b class="stats">@m.PP <small>PP</small> · @m.DP <small>DP</small></b>}
+                    <p class="field-text">@m.Card.Text</p><small class="status">@string.Join(" · ",m.Status)</small>
+                    @foreach(var a in m.Attachments ?? []){<p class="attachment">@a.Name：@a.Text</p>}
                     @if(m.Attachment!=null){<p class="attachment">沉默：@m.Attachment.Name</p>}
-                    @if(m.CanAttack){<button @onclick="()=>SelectAttacker(m)">選擇攻擊者</button>}
-                    @if(m.CanActivate){<button @onclick='()=>Send("activate",m.Card.InstanceId)'>發動結界</button>}
-                    @if(s.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true){<button @onclick='()=>Send("target",target:m.Card.InstanceId)'>選此目標</button>}
-                    @if(s.Pending?.Options.Any(o=>o.Id==m.Card.InstanceId.ToString())==true){<button @onclick='()=>Send("choice",option:m.Card.InstanceId.ToString())'>選擇此卡</button>}
-                    @if(AttackTargets.Contains(m.Card.InstanceId.ToString())){<button @onclick='()=>Send("attack",Selected,m.Card.InstanceId)'>攻擊此怪物</button>}
+                    </div>
                 }
             </article>
         }
         </div>
     }
-    @if(AttackTargets.Contains("face")){<button class="face" @onclick='()=>Send("attack",Selected)'>攻擊電腦玩家</button>}
-    @if(Selected!=null){<button @onclick="ClearSelection">取消攻擊選擇</button>}
-    <p>你的生命 @s.Player.Hp / 7 · 直立能量 @s.Player.AvailableEnergy / @s.Player.TotalEnergy · 牌庫 @s.Player.DeckCount</p>
-    @if(s.Pending is {} pending)
+    </div>
+    <div class="player hero"><strong>你</strong><b>♥ @s.Player.Hp / 7</b><small>牌庫 @s.Player.DeckCount</small></div>
+    <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy"><strong>能量 @s.Player.AvailableEnergy / @s.Player.TotalEnergy</strong><span>拖手牌到這裡填能量</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i class="@(energy.Tapped?"spent":"")"></i>}</div></aside>
+    <aside class="turn-controls"><button class="end-turn" disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>結束回合</button><button @onclick="()=>ShowHistory=true">紀錄／墓地</button></aside>
+    <div class="v06-hand" aria-label="扇形手牌">
+    @for(var i=0;i<s.Hand.Length;i++)
     {
-        <section class="v06-pending" aria-label="效果選擇"><h3>@pending.Title</h3>
-        @foreach(var o in pending.Options){<button @onclick='()=>Send("choice",option:o.Id)'>@o.Title @o.Subtitle</button>}
-        @if(pending.CanCancel){<button @onclick='()=>Send("cancel")'>取消（尚未付款）</button>}
-        </section>
-    }
-    @if(EnergyCandidate is {} energyId){<section class="v06-pending"><p>確認將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="()=>EnergyCandidate=null">取消填能量</button></section>}
-    <div class="v06-hand" aria-label="手牌">
-    @foreach(var h in s.Hand)
-    {
-        <article class="v06-hand-card"><strong>@h.Card.Name · @h.Card.Cost 費</strong><small>@h.Card.Type · @h.Card.Will</small>
-        @if(h.Card.PP!=null){<b>@h.Card.PP PP · @h.Card.DP DP</b>}<p>@h.Card.Text</p>
-        <button disabled="@(!h.CanPlay||Busy||EnergyCandidate!=null)" @onclick='()=>Send("play",h.Card.InstanceId)'>@(h.Card.Type=="怪物"?"召喚":h.Card.Type=="結界"?"放置結界":"施放")</button>
-        <button disabled="@(!h.CanEnergy||Busy||EnergyCandidate!=null)" @onclick='()=>Send("energy",h.Card.InstanceId)'>填能量</button>
-        <button disabled="@(!h.CanSet||Busy||EnergyCandidate!=null)" @onclick='()=>Send("set",h.Card.InstanceId)'>0費蓋牌</button>
-        @if(!h.CanPlay){<small>@h.Problem</small>}
+        var h=s.Hand[i];var index=i;var faceDown=SetModes.Contains(h.Card.InstanceId);
+        <article @key="h.Card.InstanceId" class="v06-hand-card @(faceDown?"card-back":"") @((h.CanPlay||h.CanSet)&&CanDrag?"available":"")" style="@FanStyle(index,s.Hand.Length)" data-drag-kind="@(CanDrag?"hand":null)" data-drag-id="@h.Card.InstanceId" @onclick="()=>OpenCard(h.Card)" @oncontextmenu="()=>ToggleSet(h.Card.InstanceId)" @oncontextmenu:preventDefault="true" tabindex="0" role="button" aria-label="@(h.Card.Name+(faceDown?"，蓋牌模式":"，左鍵看牌，右鍵蓋牌"))" @onkeydown="e=>HandKey(e,h.Card)">
+        @if(faceDown){<div class="back-emblem">魂<br/>誓</div><strong>蓋牌模式</strong><small>拖到己方空格 · 0 費</small><small>右鍵翻回正面</small>}
+        else{<span class="mana">@h.Card.Cost</span><strong>@h.Card.Name</strong><small>@h.Card.Type · @h.Card.Will</small><div class="card-emblem">@(h.Card.Will switch{"狂怒"=>"🔥","理智"=>"✦","生機"=>"❧","秩序"=>"☀","深淵"=>"☾",_=>"◇"})</div><p>@h.Card.Text</p>@if(h.Card.PP!=null){<b class="stats">@h.Card.PP PP · @h.Card.DP DP</b>}@if(h.Card.Arrows?.Length>0){<small>箭頭 @string.Join(" ",h.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</small>}}
         </article>
     }
     </div>
-    <details><summary>對戰紀錄</summary>@foreach(var line in History.Take(60)){<p>@line</p>}</details>
-    <details><summary>雙方墓地</summary>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}</details>
+    <small class="hand-hint">右鍵手牌切換蓋牌 · 背面牌拖入己方空格才進場</small>
+    @if(s.Pending is {} pending && pending.Kind!="target")
+    {
+        <div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="效果選擇"><h3>@pending.Title</h3><p>@pending.Description</p><div class="choice-list">@foreach(var o in pending.Options){<button @onclick='()=>Send("choice",option:o.Id)'>@o.Title <small>@o.Subtitle</small></button>}</div>@if(pending.CanCancel){<button @onclick='()=>Send("cancel")'>取消（尚未付款）</button>}</section></div>
+    }
+    @if(s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@targetPending.Title：點選亮起的卡片選擇目標 @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>取消</button>}</div>}
+    @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="填能量確認"><h3>填能量</h3><p>將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="()=>EnergyCandidate=null">取消</button></section></div>}
+    @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="卡片詳情" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>Detail=null">關閉</button><small>@card.CardId · @card.Type · @card.Will</small><h2>@card.Name</h2><b>@card.Cost 費 @if(card.PP!=null){<span> · @card.PP PP · @card.DP DP</span>}</b><p>@card.Text</p>@if(card.Arrows?.Length>0){<p>箭頭 @string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</p>}@if(s.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){<p>@string.Join(" · ",own.Status)</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@a.Name：@a.Text</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>發動結界</button>}}<small>關閉後拖曳卡片進行操作。</small></section></div>}
+    @if(ShowHistory){<div class="modal-shade" @onclick="()=>ShowHistory=false"><section class="v06-dialog" role="dialog" aria-label="對戰紀錄與墓地" @onclick:stopPropagation="true"><button @onclick="()=>ShowHistory=false">關閉</button><h3>雙方墓地</h3>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}<h3>對戰紀錄</h3>@foreach(var line in History.Take(60)){<p>@line</p>}</section></div>}
 </section>
 }
 @code {
@@ -81,19 +73,56 @@
     [Parameter] public EventCallback<BattleSnapshot> Changed {get;set;}
     [Parameter] public EventCallback<string> SessionAction {get;set;}
     private BattleSnapshot? State;
-    private Guid? Selected;
-    private bool Busy,Disposed;
-    private Guid? EnergyCandidate;
+    private bool Busy,Disposed,ShowHistory;
+    private Guid? EnergyCandidate,Dragging;
+    private string DragKind="";
+    private HashSet<Guid> SetModes=[];
+    private BattleCard? Detail;
     private bool ConfirmEnergy=true;
-    private IJSObjectReference? Preferences;
+    private ElementReference BoardElement;
+    private IJSObjectReference? Preferences,DragModule,DragBinding;
+    private DotNetObjectReference<BattleBoard>? Self;
     private string Message="";
     private List<string> History=[];
-    private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Selected)?.Targets.Select(t=>t.Id).ToArray()??[];
     private bool CanAct=>!Busy&&State is {IsOver:false,DecisionPlayerId:"player"};
+    private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory;
+    private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
+    private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
+    private bool LegalZone(string zone)=>Dragging!=null&&(zone=="energy"?DragKind=="hand"&&DragHand?.CanEnergy==true:zone=="face"?DragKind=="attack"&&AttackTargets.Contains("face"):zone=="center"?DragKind=="hand"&&DragHand is {CanPlay:true,PlayTargets.Length:0} h&&!SetModes.Contains(h.Card.InstanceId)&&h.Card.Type is not ("怪物" or "結界"):false);
+    private bool LegalSlot(bool mine,int slot,BattleMonster? m)=>State?.Pending?.Targets.Contains(m?.Card.InstanceId.ToString()??"")==true || (Dragging!=null&&(DragKind=="attack"?m!=null&&AttackTargets.Contains(m.Card.InstanceId.ToString()):DragHand is {} h && (SetModes.Contains(h.Card.InstanceId)?mine&&m==null&&h.CanSet:h.CanPlay&&(h.Card.Type is "怪物" or "結界"?mine&&m==null:m!=null&&h.PlayTargets.Contains(m.Card.InstanceId.ToString())))));
+    private static string FanStyle(int i,int n){var offset=i-(n-1)/2.0;var angle=offset*Math.Min(5,34.0/Math.Max(1,n-1));return FormattableString.Invariant($"--offset:{offset:0.##};--step:min(100px,calc((100vw - 470px) / {Math.Max(1,n-1)}));--angle:{angle:0.##}deg;--rise:{Math.Abs(offset)*Math.Min(6,25.0/Math.Max(1,n-1)):0.##}px;--order:{i+1}");}
     protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
-    protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
-    private void SelectAttacker(BattleMonster m){Selected=m.Card.InstanceId;}
-    private void ClearSelection()=>Selected=null;
+    protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
+    private void OpenCard(BattleCard c)=>Detail=c;
+    private async Task OpenSlot(BattleMonster? m){if(m==null)return;if(State?.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true)await Send("target",target:m.Card.InstanceId);else Detail=m.Card;}
+    private void ToggleSet(Guid id){if(!CanDrag)return;if(!SetModes.Remove(id))SetModes.Add(id);}
+    private void HandKey(KeyboardEventArgs e,BattleCard c){if(e.Key is "Enter" or " ")OpenCard(c);if(e.Key=="s"||e.Key=="S")ToggleSet(c.InstanceId);}
+    private async Task ActivateDetail(Guid id){Detail=null;await Send("activate",id);}
+    [JSInvokable] public Task BeginDrag(string kind,string id){if(CanDrag&&Guid.TryParse(id,out var guid)){Dragging=guid;DragKind=kind;}return InvokeAsync(StateHasChanged);}
+    [JSInvokable] public async Task DropCard(string kind,string id,string zone,int slot,string target)
+    {
+        Dragging=null;DragKind="";if(!CanDrag||!Guid.TryParse(id,out var guid))return;
+        Guid? targetId=Guid.TryParse(target,out var t)?t:null;
+        if(kind=="attack"){
+            var attacker=State!.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==guid);
+            if(attacker?.Targets.Any(t=>t.Id==(zone=="face"?"face":targetId?.ToString()))==true)await Send("attack",guid,zone=="face"?null:targetId);
+            else Message="這裡不能攻擊，卡片已回到原位。";
+        }else if(State!.Hand.FirstOrDefault(h=>h.Card.InstanceId==guid) is {} h){
+            if(zone=="energy"&&h.CanEnergy)await Send("energy",guid);
+            else if(SetModes.Contains(guid)){
+                if(zone=="own"&&targetId==null&&slot>=0&&h.CanSet)await Place("set",guid,slot);else Message="蓋牌請拖到己方空格。";
+            }else if(h.CanPlay){
+                if(h.Card.Type is "怪物" or "結界"){
+                    if(zone=="own"&&targetId==null&&slot>=0)await Place("play",guid,slot);else Message="請拖到己方空格。";
+                }else if(targetId!=null&&h.PlayTargets.Contains(targetId.Value.ToString()))await Send("play",guid,targetId);
+                else if(zone is "center" or "face" && h.PlayTargets.Length==0)await Send("play",guid);
+                else Message="請拖到亮起的合法目標。";
+            }else Message=h.Problem;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+    [JSInvokable]public Task EndDrag(){Dragging=null;DragKind="";return InvokeAsync(StateHasChanged);}
+    private async Task Place(string type,Guid id,int slot){await Send(type,id);if(State?.Pending?.Options.Any(o=>o.Id==$"SLOT:{slot}")==true)await Send("choice",option:$"SLOT:{slot}");}
     private async Task Send(string type,Guid? id=null,Guid? target=null,string? option=null,bool force=false)
     {
         if(Busy||State==null)return;
@@ -104,11 +133,12 @@
     }
     public async Task Publish(BattleResponse response)
     {
-        if(Disposed)return;State=response.State;Message=response.Success?"":response.Message;Selected=null;
+        if(Disposed)return;State=response.State;Message=response.Success?"":response.Message;Dragging=null;Detail=null;
+        SetModes.IntersectWith(State.Hand.Select(h=>h.Card.InstanceId));
         foreach(var ev in response.Events)History.Insert(0,$"{(ev.Side=="player"?"我方":"敵方")} {ev.Label} {ev.Card?.Name}");
         if(History.Count>150)History.RemoveRange(150,History.Count-150);
         EffectiveCoordinator.Acknowledge(Presenter,response.State.MatchId,response.State.Revision,response.BatchId);
         await Changed.InvokeAsync(State);StateHasChanged();
     }
-    public async ValueTask DisposeAsync(){Disposed=true;if(Preferences!=null)await Preferences.DisposeAsync();}
+    public async ValueTask DisposeAsync(){Disposed=true;if(DragBinding!=null){await DragBinding.InvokeVoidAsync("dispose");await DragBinding.DisposeAsync();}Self?.Dispose();if(DragModule!=null)await DragModule.DisposeAsync();if(Preferences!=null)await Preferences.DisposeAsync();}
 }
