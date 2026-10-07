@@ -1,10 +1,13 @@
+import { bindFeedback } from "./battle-feedback.js";
+
 // All gestures share the same aiming, destination feedback and cancellation lifecycle.
 export function bind(root, dotnet) {
+    const feedback = bindFeedback(root);
     let gesture = null, aim = null, hovered = null;
     let pendingDrop = null, flight = null;
     let frame = 0, suppressClick = false, disposed = false;
     const call = (method, ...args) => { if (!disposed) return dotnet.invokeMethodAsync(method, ...args).catch(() => {}); };
-    function clearHover() { hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered = null; }
+    function clearHover() { hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered?.removeAttribute('data-drop-preview'); hovered = null; }
     function cleanup() {
         cancelAnimationFrame(frame); frame = 0; clearHover();
         aim?.remove();
@@ -33,6 +36,9 @@ export function bind(root, dotnet) {
         if (hovered !== destination) { clearHover(); hovered = destination; }
         hovered?.classList.toggle('drop-hover', valid);
         hovered?.classList.toggle('drop-rejected', !valid);
+        if (hovered && valid && hovered.dataset.dropZone === 'own' && !hovered.dataset.target)
+            hovered.dataset.dropPreview = `第 ${Number(hovered.dataset.slot) + 1} 格 · ${gesture.source.classList.contains('card-back') ? '蓋牌 0費' : '進場'}`;
+        else hovered?.removeAttribute('data-drop-preview');
         const color = valid ? '#9cf4bc' : destination ? '#ff8c81' : '#ffce79';
         aim.querySelector('path[data-aim]').setAttribute('stroke', color);
         aim.querySelector('marker path').setAttribute('fill', color);
@@ -115,5 +121,5 @@ export function bind(root, dotnet) {
         try { await animation.finished; } catch { /* Disposal cancels presentation without committing another action. */ }
         finally { flight?.restore(); flight = null; }
     }
-    return { playDrop, discardDrop, dispose() { disposed = true; pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
+    return { playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
 }

@@ -103,3 +103,22 @@
 .drop-hover{outline:3px solid #adffd0!important;box-shadow:0 0 30px #74eb9da0!important}.drop-rejected{outline:2px solid #ff8c81!important}
 
 .v06-board{user-select:none}.v06-dialog{user-select:text}
+
+/* Readiness is tied to the chosen face, never to the ability to set some other face. */
+.v06-hand-card.available{border-color:#91ffd0;box-shadow:0 0 14px #6cffaa66,0 5px 12px #0008}
+.v06-hand-card.set-only{border-color:#b7a16d}.v06-hand-card.set-ready{border-color:#ffe5a1;box-shadow:0 0 14px #ffde7b66,0 5px 12px #0008}
+.v06-hand-card.blocked,.v06-hand-card.inactive{filter:saturate(.55)}
+.hand-availability{display:block;font-size:10px;font-weight:bold;background:#172a2d;color:#ffe8b5;padding:3px 6px;border-radius:5px;text-align:center;margin-top:auto}
+.available .hand-availability{background:#17523d;color:#c0ffdc}.set-ready .hand-availability{background:#5c4c24;color:#ffebac}
+.attack-ready{border-color:#9cffc5!important;box-shadow:0 0 17px #6cffaa88,inset 0 0 10px #91ffd022;cursor:grab;touch-action:none}
+.attack-badge{position:absolute;right:5px;top:3px;font-size:10px;color:#beffd9;background:#183e2f;padding:2px 5px;border-radius:5px}
+.drop-hover.vacant::after{content:attr(data-drop-preview);position:absolute;inset:14px 18%;border:2px dashed #baffd4;border-radius:10px;background:#75fbb51a;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#ddffe9;pointer-events:none}
+.drop-hover:not(.vacant){outline-offset:4px}
+.battle-feedback-layer{position:fixed;inset:0;z-index:2147482997;pointer-events:none;color:#fff4db;font-family:Arial,sans-serif}
+.event-card{box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:15px 12px;border:2px solid #a6c7ae;border-radius:12px;background:linear-gradient(145deg,#d4c5a4,#ada78e);color:#182a2d;box-shadow:0 10px 24px #0009;font-size:12px;overflow:hidden}
+.event-card strong{font-size:15px}.event-card small{font-size:10px}.event-card p{font-size:11px;margin:0;flex:1;overflow:hidden}.event-card b{font-size:12px}
+.event-card-back{background:repeating-linear-gradient(45deg,#243a57,#243a57 10px,#294666 10px,#294666 20px);color:#eddba9;border-color:#bba46b;justify-content:center;align-items:center}
+.event-card-back strong{font-size:26px;border:2px solid #bba46b;border-radius:50%;padding:15px}
+.event-banner{box-sizing:border-box;background:#14262ef2;border-radius:6px;text-align:center;color:#ffdf9e;font-size:13px;padding:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.event-number{font-size:36px;font-weight:900;text-align:center;color:#ffbf9a;text-shadow:0 3px 2px #000,0 0 10px #ce4321;z-index:3}.event-number.healing{color:#bdffd9;text-shadow:0 3px 2px #000,0 0 10px #278359}
+.event-flash{box-sizing:border-box;border:3px solid #ff957b;border-radius:12px;background:#ffffff15;z-index:2}
