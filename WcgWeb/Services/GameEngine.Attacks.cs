@@ -36,8 +36,8 @@ public partial class GameEngine
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();
             Resolve(()=>{if(Alive(a)&&kills.Contains(d)&&a.HasTrample&&ap-dp>=700)Damage(e,1);},
-                ()=>{foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124"&&!x.IsTapped).ToArray())if(kills.Contains(d)){x.IsTapped=true;Damage(e,1);}
-                    foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124"&&!x.IsTapped).ToArray())if(kills.Contains(a)){x.IsTapped=true;Damage(p,1);}},
+                ()=>{foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(d)){Damage(e,1);}
+                    foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a)){Damage(p,1);}},
                 ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;});
             KillBatch(dead,"交戰");
         });

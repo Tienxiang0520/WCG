@@ -43,4 +43,25 @@ public class V06RulesTests
             for(int i=0;i<3000&&!g.IsOver;i++){Assert.True(g.ExecuteAiStep(),$"{p.Name}/{e.Name} stalled at {g.TurnNumber} {g.CurrentPendingChoice?.Title}");foreach(var side in new[]{g.Player,g.Computer}){Assert.InRange(side.Occupied,0,5);Assert.Equal(side.Occupied,side.Board.Select(m=>m.Slot).Distinct().Count());}}
             Assert.True(g.IsOver,$"{p.Name}/{e.Name} did not finish");}
     }
+    [Fact]public void PassiveAltarTriggersForEveryCombatWithoutTapping()
+    {
+        var g=Game();var altar=new MonsterInstance(cards.GetCard("WCG-124")!){Slot=2,IsTapped=false};g.Player.Structures.Add(altar);
+        var a=Unit(g.Player,119,0);var b=Unit(g.Player,119,1);var x=Unit(g.Computer,101,0);var y=Unit(g.Computer,101,1);
+        Assert.True(g.Attack(g.Player,a,x));Finish(g);Assert.True(g.Attack(g.Player,b,y));Finish(g);
+        Assert.Equal(5,g.Computer.Hp);Assert.False(altar.IsTapped);Assert.Equal(0,altar.TriggersThisTurn);Assert.Equal(4,altar.Card.TotalCost);
+    }
+    [Fact]public void PassiveEchoRecoversOnEveryQualifyingSpellWithoutTapping()
+    {
+        var g=Game();var tower=new MonsterInstance(cards.GetCard("WCG-153")!){Slot=2,IsTapped=false};g.Player.Structures.Add(tower);var m=Unit(g.Player,101,0);
+        g.Player.Graveyard.Add(new(cards.GetCard("WCG-014")!));g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));
+        for(int i=0;i<2;i++){Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Equal(i+1,g.Player.Hand.Count);}
+        Assert.Empty(g.Player.Graveyard);Assert.False(tower.IsTapped);Assert.Equal(0,tower.TriggersThisTurn);Assert.Equal(5,tower.Card.TotalCost);
+    }
+    [Fact]public void MultipleEchoTowersRecheckGraveyardBeforeEachRecovery()
+    {
+        var g=Game();for(int i=1;i<=2;i++)g.Player.Structures.Add(new(cards.GetCard("WCG-153")!){Slot=i});var m=Unit(g.Player,101,0);
+        var recovered=new CardInstance(cards.GetCard("WCG-014")!);g.Player.Graveyard.Add(recovered);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Single(g.Player.Hand);Assert.Same(recovered,g.Player.Hand[0]);Assert.Empty(g.Player.Graveyard);
+        g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Equal(2,g.Player.Hand.Count);
+    }
 }

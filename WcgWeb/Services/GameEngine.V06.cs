@@ -84,8 +84,8 @@ public partial class GameEngine
         if(spell==null)return;
         foreach(var x in p.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-185"&&x.TriggersThisTurn<2).ToArray())
             if(spell.Will=="理智"){x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x))PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>m.CurrentPP<=1000),m=>KillBatch([m],x.Card.Name));});}
-        foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-153"&&!x.IsTapped).ToArray())
-            if(spell.TotalCost>=2){x.IsTapped=true;_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);}});}
+        foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-153").ToArray())
+            if(spell.TotalCost>=2){_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);}});}
     }
     private void ExtraDeploy(PlayerState p,MonsterInstance m)
     {
