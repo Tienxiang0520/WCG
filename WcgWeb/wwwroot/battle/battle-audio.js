@@ -4,7 +4,7 @@ export const CUES = {
     place: ['card-place-1.ogg', .8], energy: ['card-shove-1.ogg', .65], draw: ['card-slide-4.ogg', .55],
     attack: ['impactSoft_heavy_000.ogg', .75], damage: ['impactPunch_medium_000.ogg', .7], death: ['impactGlass_light_003.ogg', .55],
     click: ['click_001.ogg', .45], spell: ['glass_001.ogg', .6], heal: ['confirmation_001.ogg', .5],
-    turn: ['turn-mechanical.ogg', .65], gameover: ['confirmation_004.ogg', .55],
+    turn: ['impactWood_heavy_000.ogg', .65], gameover: ['confirmation_004.ogg', .55],
     cancel: ['back_001.ogg', .4], error: ['error_002.ogg', .4], trigger: ['pluck_001.ogg', .45]
 };
 const EVENT_CUES = { play:'place',summon:'place',set:'place',energy:'energy',draw:'draw',take:'draw',recover:'draw',bounce:'draw',attack:'attack',damage:'damage',heal:'heal',death:'death',turn:'turn',gameover:'gameover',trigger:'trigger',status:'trigger',reveal:'flip' };

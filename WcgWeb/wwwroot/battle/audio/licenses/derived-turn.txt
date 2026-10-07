@@ -1,9 +1,0 @@
-Mechanical turn cue
-
-Mixed from Kenney CC0 samples:
-- Interface Sounds: toggle_002.ogg
-- Impact Sounds: impactWood_medium_000.ogg, impactMetal_medium_001.ogg
-
-Source license: Creative Commons Zero (CC0). Original license texts are retained in interface-sounds.txt and impact-sounds.txt.
-Source files and hashes: ../sources/turn/ and ../manifest.json.
-Processing: layering, gain, resampling, low-pass filtering and fade; no additional source recordings.
