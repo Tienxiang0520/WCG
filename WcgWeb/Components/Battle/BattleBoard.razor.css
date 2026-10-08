@@ -1,4 +1,4 @@
-.v06-board{position:relative;isolation:isolate;box-sizing:border-box;height:min(850px,calc(100dvh - 38px));min-height:620px;max-width:1500px;margin:auto;color:#f3ece0;background:radial-gradient(ellipse at 50% 40%,#2d4949,#14262e 65%,#101c27);border:1px solid #657571;border-radius:20px;overflow:hidden;padding:12px 18px;font-size:14px;--card-width:160px}
+.v06-board{position:relative;isolation:isolate;box-sizing:border-box;width:100%;height:100%;flex:1 1 100%;min-height:0;margin:auto;color:#f3ece0;background:radial-gradient(ellipse at 50% 40%,#2d4949,#14262e 65%,#101c27);border:1px solid #657571;border-radius:20px;overflow:hidden;padding:12px 18px;font-size:14px;--card-width:160px}
 .match-header{display:flex;gap:12px;align-items:center;position:relative;z-index:2;font-size:13px}
 .match-header>span{margin-right:auto;color:#a2b4b7}
 .v06-board button{background:#29414c;color:#fff4db;border:1px solid #768b8b;border-radius:8px;padding:8px 14px;cursor:pointer}
@@ -6,10 +6,10 @@
 .hero{display:flex;align-items:center;justify-content:center;gap:16px;border:1px solid #829189;background:#1c3039;border-radius:32px;padding:9px 22px;width:fit-content;position:relative;z-index:3;box-shadow:0 3px 12px #0006}
 .hero b{color:#ffc1b4}
 .hero small{color:#bbc8c7}
-.opponent{margin:10px auto 0}
-.battle-message{text-align:center;margin:8px 0;height:22px;color:#d8e5d0;font-size:13px}
-.battlefield{position:relative;z-index:1;padding:0 max(10px,5%);height:calc(100% - 340px);min-height:260px;display:flex;flex-direction:column;justify-content:space-around;border-top:1px solid #c7c49822;border-bottom:1px solid #c7c49822}
-.v06-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;max-width:1050px;width:100%;margin:0 auto;height:46%}
+.opponent{position:absolute;top:10px;left:50%;transform:translateX(-50%);margin:0}
+.battle-message{position:absolute;top:55px;left:18px;right:18px;z-index:3;text-align:center;margin:0;height:22px;color:#d8e5d0;font-size:13px}
+.battlefield{position:absolute;top:88px;bottom:160px;left:18px;right:18px;z-index:1;padding:0 max(10px,5%);height:auto;min-height:0;display:flex;flex-direction:column;justify-content:space-around;border-top:1px solid #c7c49822;border-bottom:1px solid #c7c49822}
+.v06-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:18px;max-width:1200px;width:100%;margin:0 auto;height:46%}
 .v06-slot{position:relative;min-height:0;border:1px solid #809b9840;border-radius:14px;background:#ffffff03;cursor:pointer}
 .v06-slot.vacant{border-style:dashed}
 .slot-number{position:absolute;top:5px;left:9px;font-size:10px;color:#8fa9a6;pointer-events:none}
@@ -24,15 +24,15 @@
 .arrowmark.right{right:-13px;top:42%}
 .arrowmark.up{top:-12px;left:45%}
 .legal{outline:2px solid #9cf4bc!important;box-shadow:0 0 20px #64df8580!important;background-color:#41684e55!important}
-.player{margin:10px auto;z-index:3}
-.energy-zone{position:absolute;left:20px;bottom:70px;z-index:4;border:2px solid #648fbc;border-radius:14px;padding:14px;width:135px;background:#14283dcc;display:flex;flex-direction:column;gap:8px}
+.player{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);margin:0;z-index:3}
+.energy-zone{position:absolute;left:20px;bottom:18px;z-index:4;border:2px solid #648fbc;border-radius:14px;padding:14px;width:135px;background:#14283dcc;display:flex;flex-direction:column;gap:8px}
 .energy-zone span{font-size:11px;color:#adc3d2}
 .energy-dots{display:flex;gap:4px;flex-wrap:wrap}
 .energy-dots i{width:10px;height:16px;background:#72c4f4;border-radius:5px;box-shadow:0 0 5px #6bcaff}
 .energy-dots i.spent{opacity:.25;box-shadow:none}
-.turn-controls{position:absolute;right:20px;bottom:70px;z-index:4;display:flex;flex-direction:column;gap:10px}
+.turn-controls{position:absolute;right:20px;bottom:18px;z-index:4;display:flex;flex-direction:column;gap:10px}
 .end-turn{background:linear-gradient(#917942,#574a2b)!important;border-color:#ddc488!important;padding:14px!important}
-.v06-hand{position:absolute;bottom:24px;left:50%;width:0;height:180px;z-index:10;overflow:visible}
+.v06-hand{position:absolute;bottom:-110px;left:50%;width:0;height:180px;z-index:10;overflow:visible}
 .v06-hand-card{position:absolute;left:calc(var(--card-width) / -2);bottom:calc(-1 * var(--rise));width:var(--card-width);height:218px;box-sizing:border-box;display:flex;flex-direction:column;gap:5px;padding:16px 12px 10px;background:linear-gradient(145deg,#d4c5a4,#ada78e);border:3px solid #7b8474;border-radius:13px;color:#182a2d;box-shadow:0 5px 12px #0008;transform:translateX(var(--x)) rotate(var(--angle));transform-origin:50% 120%;z-index:var(--order);transition:transform .16s,box-shadow .16s;cursor:grab;user-select:none;touch-action:none}
 .v06-hand-card.available{border-color:#90b392}
 .v06-hand-card strong{font-size:13px;padding-left:16px;line-height:1.25}
@@ -60,26 +60,26 @@
 .battlefield{padding:0 5px}
 .v06-row{gap:10px}
 .field-card strong{font-size:12px}
-.energy-zone{width:105px;left:10px;bottom:165px;padding:9px}
-.turn-controls{right:10px;bottom:165px}
+.energy-zone{width:105px;left:10px;padding:9px}
+.turn-controls{right:10px}
+.opponent{gap:8px;padding:7px 12px;font-size:12px}
 .hero small{font-size:10px}
 .v06-hand-card{height:205px}
+.v06-hand{bottom:-102px}
 .v06-hand-card p{font-size:10px}
 }
 @media(max-width:700px){.v06-board{min-width:600px}
-.v06-hand-card:hover{transform:translateX(var(--x)) translateY(-70px) rotate(0) scale(1.1)}
+.opponent{top:52px}
+.battle-message{top:88px;font-size:12px}
+.battlefield{top:118px}
 }
 
 
-.v06-board{width:100%;flex:1 1 100%;min-height:640px}
-.battlefield{position:absolute;top:140px;bottom:290px;left:18px;right:18px;height:auto;min-height:0}
-.player{position:absolute;bottom:250px;left:50%;transform:translateX(-50%);margin:0}
 .v06-hand-card{transform:translateX(calc(var(--offset) * var(--step))) rotate(var(--angle))}
-.v06-hand-card:hover,.v06-hand-card:focus-visible{transform:translateX(calc(var(--offset) * var(--step))) translateY(-92px) rotate(0) scale(1.2)}
+.v06-hand-card:hover,.v06-hand-card:focus-visible{transform:translateX(calc(var(--offset) * var(--step))) translateY(-130px) rotate(0) scale(1.2)}
 .dragging .v06-hand-card:hover{transform:translateX(calc(var(--offset) * var(--step))) rotate(var(--angle))}
 
 
-.energy-zone,.turn-controls{bottom:210px}
 .v06-hand-card:focus:not(:focus-visible){outline:none}
 .end-turn{padding:10px 14px!important}
 

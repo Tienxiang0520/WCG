@@ -9,6 +9,12 @@ export function bind(root, dotnet) {
     let pendingDrop = null, flight = null;
     let frame = 0, suppressClick = false, disposed = false;
     const call = (method, ...args) => { if (!disposed) return dotnet.invokeMethodAsync(method, ...args).catch(() => {}); };
+    function visibleOrigin(source) {
+        const rect = source.getBoundingClientRect(), board = root.getBoundingClientRect();
+        // Resting hand cards extend below the board; aim from their visible portion.
+        return { x: (Math.max(0, board.left, rect.left) + Math.min(innerWidth, board.right, rect.right)) / 2,
+            y: (Math.max(0, board.top, rect.top) + Math.min(innerHeight, board.bottom, rect.bottom)) / 2 };
+    }
     function clearHover() { hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered?.removeAttribute('data-drop-preview'); hovered = null; }
     function cleanup() {
         cancelAnimationFrame(frame); frame = 0; clearHover();
@@ -19,9 +25,9 @@ export function bind(root, dotnet) {
         if (flight || e.button !== 0 || e.target.closest('.modal-shade')) return;
         const source = e.target.closest('[data-drag-kind]');
         if (!source || !root.contains(source) || !source.dataset.dragKind) return;
-        const rect = source.getBoundingClientRect();
+        const origin = visibleOrigin(source);
         gesture = { id: source.dataset.dragId, kind: source.dataset.dragKind, source,
-            x: e.clientX, y: e.clientY, originX: rect.x + rect.width / 2, originY: rect.y + rect.height / 2,
+            x: e.clientX, y: e.clientY, originX: origin.x, originY: origin.y,
             currentX: e.clientX, currentY: e.clientY, pointer: e.pointerId, started: false };
     }
     function destinationAt(x, y) {
@@ -31,8 +37,7 @@ export function bind(root, dotnet) {
     function draw() {
         if (!gesture?.started) return;
         const { currentX: x, currentY: y } = gesture;
-        const rect = gesture.source.getBoundingClientRect();
-        const originX = rect.x + rect.width / 2, originY = rect.y + rect.height / 2;
+        const { x: originX, y: originY } = visibleOrigin(gesture.source);
         const destination = destinationAt(x, y);
         const valid = destination?.classList.contains('legal') ?? false;
         if (hovered !== destination) { clearHover(); hovered = destination; }
