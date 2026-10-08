@@ -5,7 +5,11 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const project=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const root=resolve(project,'..');
-const site=resolve(root,process.argv[2]??'SoulOath.Site');
+const args=process.argv.slice(2);
+const azure=args.includes('--azure');
+const site=resolve(root,args.find(arg=>!arg.startsWith('--'))??(azure?'.build-tmp/azure-site':'.build-tmp/v06-site'));
+const sitesCheckout=site===resolve(root,'SoulOath.Site');
+if(azure&&sitesCheckout)throw new Error('Azure output must not overwrite the existing Sites checkout.');
 function run(command,args,cwd=project){
     const result=spawnSync(command,args,{cwd,stdio:'inherit'});
     if(result.status!==0)process.exit(result.status??1);
@@ -21,17 +25,20 @@ run('node',['--test','tools/storage.test.mjs','tools/deck-print.test.mjs','tools
 await rm(resolve(project,'bin/site-publish'),{recursive:true,force:true});
 run('dotnet',['publish','SoulOath.Static.csproj','--nologo','-c','Release','-o',resolve(project,'bin/site-publish')]);
 await mkdir(site,{recursive:true});
-await mkdir(resolve(site,'.openai'),{recursive:true});
-const hostingTemplate=resolve(root,'deployment/hosting.json');
-const hostingPath=resolve(site,'.openai/hosting.json');
-if(existsSync(hostingPath)){
-    const expected=JSON.parse(await readFile(hostingTemplate,'utf8'));
-    const existing=JSON.parse(await readFile(hostingPath,'utf8'));
-    if(expected.project_id!==existing.project_id)
-        throw new Error('The existing Sites checkout belongs to a different project.');
-}else await cp(hostingTemplate,hostingPath);
-if(!existsSync(resolve(site,'README.md')))
-    await cp(resolve(root,'deployment/site-readme.md'),resolve(site,'README.md'));
+// Sites metadata is only needed when explicitly building its separate checkout.
+if(sitesCheckout){
+    await mkdir(resolve(site,'.openai'),{recursive:true});
+    const hostingTemplate=resolve(root,'deployment/hosting.json');
+    const hostingPath=resolve(site,'.openai/hosting.json');
+    if(existsSync(hostingPath)){
+        const expected=JSON.parse(await readFile(hostingTemplate,'utf8'));
+        const existing=JSON.parse(await readFile(hostingPath,'utf8'));
+        if(expected.project_id!==existing.project_id)
+            throw new Error('The existing Sites checkout belongs to a different project.');
+    }else await cp(hostingTemplate,hostingPath);
+    if(!existsSync(resolve(site,'README.md')))
+        await cp(resolve(root,'deployment/site-readme.md'),resolve(site,'README.md'));
+}
 await rm(resolve(site,'dist'),{recursive:true,force:true});
 await cp(resolve(project,'bin/site-publish/wwwroot'),resolve(site,'dist'),{recursive:true});
 async function strip(directory){
@@ -42,6 +49,7 @@ async function strip(directory){
     }
 }
 await strip(resolve(site,'dist'));
+if(azure)await cp(resolve(root,'deployment/azure/staticwebapp.config.json'),resolve(site,'dist/staticwebapp.config.json'));
 // Real index files keep every public route refreshable on a plain static host.
 for (const route of ['battle','cards','deckbuilder','ranked','rules','settings','legacy','not-found']) {
     await mkdir(resolve(site,'dist',route),{recursive:true});

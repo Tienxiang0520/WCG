@@ -1,0 +1,26 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/_framework/*", "/data/*", "/card-art/*", "/print-art/*", "/battle/*", "/lib/*", "/*.{css,js,json,wasm,webp,jpg,png,svg,ogg,woff,woff2}"]
+  },
+  "mimeTypes": {
+    ".wasm": "application/wasm",
+    ".webp": "image/webp",
+    ".ogg": "audio/ogg"
+  },
+  "routes": [
+    { "route": "/index.html", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/data/*", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/*.js", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/*.css", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/_framework/*", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/battle/*", "headers": { "Cache-Control": "no-cache" } },
+    { "route": "/card-art/*", "headers": { "Cache-Control": "public, max-age=3600" } },
+    { "route": "/print-art/*", "headers": { "Cache-Control": "public, max-age=3600" } }
+  ],
+  "globalHeaders": {
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Cache-Control": "no-cache"
+  }
+}
