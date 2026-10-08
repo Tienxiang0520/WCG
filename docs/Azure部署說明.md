@@ -1,6 +1,6 @@
 # Azure 部署
 
-本專案改以 Azure Static Web Apps Free 作為下一個部署目標。GitHub 儲存庫使用私人可見性；GitHub 私人原始碼與 Azure 網站存取權是不同設定，網站存取權仍需另行決定。
+本專案改以微軟 Azure 為部署目標。學生訂用帳戶的允許區域與 Static Web Apps 五個後端區域沒有交集，因此目前改用 **Windows App Service、日本東部、F1 免費方案**。網站資源 `wcg-game-tienxiang0520` 已建立；原始碼仍在私人 GitHub 儲存庫。私人原始碼與網站存取權是不同設定，部署的遊戲網站提供公開存取，玩家資料留在瀏覽器。
 
 私人儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。
 
@@ -31,5 +31,32 @@ Azure 的預設 Blazor 工作流程不足以處理本專案共用元件、前端
 ## 存檔
 
 網站改網址不會自動搬移瀏覽器存檔。從目前實際有進度的網址，在設定頁匯出，再到新網址匯入；匯入前先檢查內容。原本本地存檔、備份和 5180 服務繼續保留。
+
+## Windows App Service 本機部署
+
+目前資源群組為 `wcg-game-rg`，方案 `ASP-wcggamerg-a454`、SKU `F1`、區域 `Japan East`。網站：
+
+[Azure 遊戲網址](https://wcg-game-tienxiang0520-a7hphvhuexh8ekbh.japaneast-01.azurewebsites.net/)
+
+遊戲仍是相同的 WebAssembly 靜態版；App Service 只負責提供檔案，未上傳 `WcgWeb` 伺服器版與本地玩家資料。
+
+```sh
+node SoulOath.Static/tools/build-site.mjs .build-tmp/azure-site --azure
+python3 SoulOath.Static/tools/prepare-appservice.py
+```
+
+部署包是 `.build-tmp/azure-appservice.zip`，內容為靜態網站與 `deployment/azure/appservice-web.config`。IIS 設定支援 WebAssembly、卡圖、音效、字型及頁面刷新，遺失的資源仍回傳 404。只部署這個包，不上傳整份專案。
+
+本地 Azure CLI 2.91.0 安裝在 `.build-tmp/azure-cli`。登入設定保存在 `.runtime/azure-cli-config`，不可提交或上傳；這個目錄屬於需保留的本機資料。部署沿用 Microsoft Entra 授權，網站的基本部署驗證維持停用。
+
+```sh
+AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
+  .build-tmp/azure-cli/bin/az webapp deploy \
+  --resource-group wcg-game-rg --name wcg-game-tienxiang0520 \
+  --src-path .build-tmp/azure-appservice.zip --type zip \
+  --clean true --restart true --timeout 600000 --output none
+```
+
+F1 為試玩／開發測試方案，有每日 CPU 與流量配額且沒有正式服務 SLA；需要更多流量時再評估方案，不能把測試成功視為大型公開服務的容量保證。[App Service 免費方案說明](https://azure.microsoft.com/en-us/pricing/details/app-service/windows/)
 
 官方文件：[Azure 建置設定](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration)、[網站設定](https://learn.microsoft.com/en-us/azure/static-web-apps/configuration)、[免費方案限制](https://learn.microsoft.com/en-us/azure/static-web-apps/quotas)。
