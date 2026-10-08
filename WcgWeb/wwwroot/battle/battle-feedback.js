@@ -2,6 +2,7 @@
 export function bindFeedback(root, sound = null) {
     let layer = null, disposed = false, priorInert = false, locked = false;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
+    let publicUnits = new Map();
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
     function node(tag, className, text = '') {
         const el = document.createElement(tag); el.className = className; el.textContent = text;
@@ -12,6 +13,7 @@ export function bindFeedback(root, sound = null) {
         for (const animation of animations) animation.cancel(); animations.clear();
         for (const [el, visibility] of hidden) el.style.visibility = visibility;
         hidden.clear(); ghosts.clear(); layer?.remove(); layer = null;
+        publicUnits.clear();
         if (locked) root.inert = priorInert;
         locked = false;
     }
@@ -44,6 +46,11 @@ export function bindFeedback(root, sound = null) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
         // Card data comes exclusively from public BattleEvent payloads; never inspect AI hand data.
         if (!card) { el.append(node('strong', '', '魂 誓'), node('small', '', '背面卡片')); return el; }
+        if (publicUnits.get(card.instanceId)?.status?.includes('嘲諷')) {
+            el.className += ' has-taunt';
+            const frame = node('img', 'taunt-frame'); frame.src = 'battle/taunt-frame.svg'; frame.alt = ''; frame.draggable = false;
+            el.append(frame);
+        }
         if (/^WCG-\d{3}$/.test(card.cardId)) {
             const art = node('div', 'card-art-layer'), image = node('img', 'card-illustration');
             image.src = `card-art/${card.cardId}.webp`; image.alt = ''; image.draggable = false;
@@ -119,6 +126,7 @@ export function bindFeedback(root, sound = null) {
         const messageRect = root.querySelector('.battle-message').getBoundingClientRect();
         const banner = place(node('div', 'event-banner'), messageRect);
         const played = new Set();
+        publicUnits = new Map([...previous.player.field, ...previous.computer.field, ...next.player.field, ...next.computer.field].map(m => [m.card.instanceId, m]));
         // Next public field provides fixed destinations; old public field preserves departing sources.
         const locations = new Map([...previous.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...previous.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]]), ...next.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...next.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]])]);
         const destination = id => { const location = locations.get(id); return location ? slot(...location) : null; };

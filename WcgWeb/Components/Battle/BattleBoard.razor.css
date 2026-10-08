@@ -140,3 +140,10 @@
 .detail-art-layer{width:100%;height:180px;border-radius:10px;overflow:hidden}
 .detail-art-layer ::deep img{width:100%;height:100%;object-fit:cover}
 .card-detail{overflow:auto}
+
+/* Taunt changes the silhouette; attack readiness remains a separate outer glow. */
+.has-taunt{border-color:transparent;box-shadow:none}
+.tapped .has-taunt{border-color:transparent}
+.taunt-frame{position:absolute;left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 16px);z-index:1;pointer-events:none;filter:drop-shadow(0 3px 4px #0008)}
+.has-taunt.attack-ready{border-color:transparent!important;box-shadow:none}
+.has-taunt.attack-ready>.taunt-frame{filter:drop-shadow(0 0 5px #6cffaaa0) drop-shadow(0 0 9px #6cffaa70)}

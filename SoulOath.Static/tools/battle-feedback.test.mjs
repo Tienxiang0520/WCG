@@ -65,6 +65,21 @@ test('death uses old visible field even when final snapshot has removed the card
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='death'));assert.equal(h.unit.style.visibility,'hidden');
     h.feedback.clear();assert.equal(h.unit.style.visibility,undefined);
 });
+test('taunt frame follows public current status and disappears after silence', async t=>{
+    const h=harness(t),card={instanceId:'guard',cardId:'WCG-073',name:'榮耀護衛官',pp:2300,dp:1,text:'嘲諷',arrows:['left','right']};
+    const next=status=>({player:{field:[]},computer:{field:[{card,slot:0,status}]}});
+    const event={type:'play',side:'computer',instanceId:'guard',order:0,card};
+    await h.settle(h.feedback.present(h.state,next(['嘲諷','直立']),[event]));
+    const first=h.record.find(r=>r.el.className.includes('event-card')).el;
+    assert.match(first.className,/has-taunt/);
+    assert.equal(descendants(first).filter(el=>el.src==='battle/taunt-frame.svg').length,1);
+    h.feedback.clear();h.record.length=0;
+    await h.settle(h.feedback.present(h.state,next(['沉默','直立']),[event]));
+    const silenced=h.record.find(r=>r.el.className.includes('event-card')).el;
+    assert.doesNotMatch(silenced.className,/has-taunt/);
+    assert.equal(descendants(silenced).filter(el=>el.src==='battle/taunt-frame.svg').length,0);
+    h.feedback.clear();
+});
 test('ordered damage then healing completes sequentially and uses separate feedback',async t=>{
     const h=harness(t);
     await h.settle(h.feedback.present(h.state,h.state,[{type:'heal',side:'player',amount:2,order:2,label:'回復'},{type:'damage',side:'player',amount:1,order:1,label:'傷害'}]));

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef5fa"/>
+      <stop offset=".24" stop-color="#9bafbf"/>
+      <stop offset=".5" stop-color="#d3dfe7"/>
+      <stop offset=".75" stop-color="#6c8294"/>
+      <stop offset="1" stop-color="#bccbd6"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#metal)" fill-rule="evenodd" stroke="#344757" stroke-width=".7"
+    d="M9 0H91L100 9V82L92 92H61L50 100L39 92H8L0 82V9Z M11 4H89L96 11V80L90 88H60L50 94L40 88H10L4 80V11Z"/>
+  <path fill="none" stroke="#f0f6fa" stroke-opacity=".75" stroke-width=".6"
+    d="M9 1H91L99 9V82L91.5 91H61L50 99L39 91H8.5L1 82V9Z"/>
+</svg>
