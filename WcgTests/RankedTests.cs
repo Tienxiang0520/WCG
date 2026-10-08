@@ -121,6 +121,56 @@ public sealed class RankedTests : IDisposable
         }
         Assert.True(decks.All.Select(e=>string.Join(',',e.Deck.CardIds.Order())).Distinct().Count()>=5);
     }
+    static string ArchetypeKey(string id) => id.Split('-',3)[2];
+    [Fact] public void TiersGrowFromSimplePoolsToEveryArchetype()
+    {
+        var keys=Enumerable.Range(0,6).Select(t=>decks.Pool(t).Select(e=>ArchetypeKey(e.Deck.Id)).ToHashSet()).ToArray();
+        for(int tier=0;tier<6;tier++)
+        {
+            var pool=decks.Pool(tier);
+            Assert.True(pool.Count>=7);Assert.Equal(pool.Count,keys[tier].Count);
+            Assert.All(pool,e=>{Assert.True(decks.IsLegal(e.Deck,out var error),error);Assert.NotEmpty(e.Archetype);Assert.NotEmpty(e.Deck.Description);
+                Assert.True(e.Deck.GetColorCounts(cards.GetCard).OffColor<=Deck.MaxOffColorCards);Assert.True((e.Variants?.Count??0)>=3);});
+            if(tier>0){Assert.Superset(keys[tier-1],keys[tier]);Assert.True(keys[tier].Count>keys[tier-1].Count);}
+        }
+        Assert.Equal(20,keys[5].Count);
+        Assert.Equal(decks.All.Count,decks.All.Select(e=>string.Join(',',e.Deck.CardIds.Order())).Distinct().Count());
+        Assert.DoesNotContain(decks.All,e=>cards.PresetDecks.Any(p=>p.CardIds.Order().SequenceEqual(e.Deck.CardIds.Order())));
+    }
+    [Fact] public void VariantsAreLegalAndPicksAvoidRepeatingTheLastArchetype()
+    {
+        foreach(var entry in decks.All) foreach(var variant in entry.Variants!)
+        {
+            var changed=RankedDecks.Apply(entry.Deck,variant);Assert.NotNull(changed);Assert.True(decks.IsLegal(changed!,out var error),entry.Deck.Name+" "+variant.Name+" "+error);
+            Assert.Equal(50,changed!.CardIds.Count);
+        }
+        for(int tier=0;tier<6;tier++)
+        {
+            var rng=new Random(tier);string? last=null;var lists=new HashSet<string>();
+            for(int i=0;i<120;i++)
+            {
+                var deck=decks.Pick(tier,rng,last);Assert.True(decks.IsLegal(deck,out _));
+                Assert.Contains(decks.Pool(tier),e=>e.Deck.Id==deck.Id);
+                if(last!=null)Assert.NotEqual(ArchetypeKey(last),ArchetypeKey(deck.Id));
+                last=deck.Id;lists.Add(string.Join(',',deck.CardIds.Order()));
+            }
+            Assert.True(lists.Count>decks.Pool(tier).Count,"variants should add decklists beyond the base pool");
+        }
+        Assert.Equal(decks.Pick(3,new Random(42),null).CardIds,decks.Pick(3,new Random(42),null).CardIds);
+    }
+    [Fact] public void NextRankedMatchFacesADifferentArchetypeAndKeepsItsSnapshot()
+    {
+        var s=Session();
+        for(int i=0;i<6;i++)
+        {
+            var before=s.Read().Match?.ComputerDeck.Id;
+            Assert.True(s.Start(cards.PresetDecks[0]).Success);var match=s.Read().Match!;
+            if(before!=null)Assert.NotEqual(ArchetypeKey(before),ArchetypeKey(match.ComputerDeck.Id));
+            Assert.True(decks.IsLegal(match.ComputerDeck,out _));
+            var restored=Session();Assert.Equal(match.ComputerDeck.CardIds,restored.Read().Match!.ComputerDeck.CardIds);
+            Assert.True(Send(s,"surrender").Success);
+        }
+    }
     [Fact] public void EveryRankedDeckFinishesAndConservesCards()
     {
         foreach(var entry in decks.All)

@@ -64,8 +64,9 @@ public sealed partial class RankedSession
             if (profile.Match is { Settled: false }) return Reject("還有未完成的天梯對局，請先繼續或投降。");
             var before = RankedStore.Copy(profile);
             var tier = RankedRules.Tier(profile.Stars); var seed = Random.Shared.Next();
+            var previousOpponent = profile.Match?.ComputerDeck?.Id;
             profile.Match = new() { Season = profile.Season, Seed = seed, Tier = tier, PlayerFirst = Random.Shared.Next(2) == 0,
-                Rules = rules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed)) };
+                Rules = rules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed), previousOpponent) };
             profile.SelectedDeck = deck.Id; profile.Result = null;
             try { Restore(); store.Save(profile); }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
