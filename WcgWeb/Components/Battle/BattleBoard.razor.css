@@ -105,7 +105,9 @@
 .v06-hand-card.blocked,.v06-hand-card.inactive{filter:saturate(.55)}
 .hand-availability{display:block;font-size:10px;font-weight:bold;background:#172a2d;color:#ffe8b5;padding:3px 6px;border-radius:5px;text-align:center;margin-top:auto}
 .available .hand-availability{background:#17523d;color:#c0ffdc}.set-ready .hand-availability{background:#5c4c24;color:#ffebac}
-.attack-ready{border-color:#9cffc5!important;box-shadow:0 0 17px #6cffaa88,inset 0 0 10px #91ffd022;cursor:grab;touch-action:none}
+/* Green means the card can act now; only attacking monsters are draggable. */
+.action-ready{border-color:#9cffc5!important;box-shadow:0 0 17px #6cffaa88,inset 0 0 10px #91ffd022}
+.attack-ready{cursor:grab;touch-action:none}
 .drop-hover.vacant::after{content:attr(data-drop-preview);position:absolute;inset:14px 18%;border:2px dashed #baffd4;border-radius:10px;background:#75fbb51a;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;color:#ddffe9;pointer-events:none}
 .drop-hover:not(.vacant){outline-offset:4px}
 .battle-feedback-layer{position:fixed;inset:0;z-index:2147482997;pointer-events:none;color:#fff4db;font-family:Arial,sans-serif}
@@ -141,9 +143,9 @@
 .detail-art-layer ::deep img{width:100%;height:100%;object-fit:cover}
 .card-detail{overflow:auto}
 
-/* Taunt changes the silhouette; attack readiness remains a separate outer glow. */
+/* Taunt changes the silhouette; action readiness remains a separate outer glow. */
 .has-taunt{border-color:transparent;box-shadow:none}
 .tapped .has-taunt{border-color:transparent}
 .taunt-frame{position:absolute;left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 16px);z-index:1;pointer-events:none;filter:drop-shadow(0 3px 4px #0008)}
-.has-taunt.attack-ready{border-color:transparent!important;box-shadow:none}
-.has-taunt.attack-ready>.taunt-frame{filter:drop-shadow(0 0 5px #6cffaaa0) drop-shadow(0 0 9px #6cffaa70)}
+.has-taunt.action-ready{border-color:transparent!important;box-shadow:none}
+.has-taunt.action-ready>.taunt-frame{filter:drop-shadow(0 0 5px #6cffaaa0) drop-shadow(0 0 9px #6cffaa70)}
