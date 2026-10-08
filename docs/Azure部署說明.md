@@ -1,8 +1,8 @@
 # Azure 部署
 
-本專案改以微軟 Azure 為部署目標。學生訂用帳戶的允許區域與 Static Web Apps 五個後端區域沒有交集，因此目前改用 **Windows App Service、日本東部、F1 免費方案**。網站資源 `wcg-game-tienxiang0520` 已建立；原始碼仍在私人 GitHub 儲存庫。私人原始碼與網站存取權是不同設定，部署的遊戲網站提供公開存取，玩家資料留在瀏覽器。
+本專案改以微軟 Azure 為部署目標。學生訂用帳戶的允許區域與 Static Web Apps 五個後端區域沒有交集，因此目前改用 **Windows App Service、日本東部、F1 免費方案**。網站資源 `wcg-game-tienxiang0520` 已建立；原始碼儲存庫已於 2026-10-09 依使用者要求改為公開。原始碼與網站存取權是不同設定，部署的遊戲網站提供公開存取，玩家資料留在瀏覽器。
 
-私人儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。
+公開儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。
 
 ## 建置與驗證
 
@@ -24,7 +24,7 @@ Azure 只應部署 `.build-tmp/azure-site/dist`。不可把整份原始碼、`.r
 - 資源群組：`wcg-game-rg`。
 - 名稱：`wcg-game`。
 - 方案：Free。
-- 來源：GitHub，選新建的私人遊戲儲存庫，分支 `main`。
+- 來源：GitHub，選遊戲儲存庫，分支 `main`。
 
 Azure 的預設 Blazor 工作流程不足以處理本專案共用元件、前端與卡圖準備。必須在部署前將流程改成安裝上述工具、執行本專案建置，再將 `app_location` 指向 `.build-tmp/azure-site/dist`，設 `skip_app_build: true`，`output_location: ''` 與空白 API 路徑。部署憑證存放 GitHub Actions secret，不寫入原始碼或聊天。
 
