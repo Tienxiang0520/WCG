@@ -12,6 +12,7 @@
 @if (ShowingBattle && Ranked.Error == "")
 {
     <div class="phaser-page in-game ranked-game">
+        @if (Ranked.BalanceNotice != "") { <p class="ranked-balance-notice" role="status">@Ranked.BalanceNotice</p> }
         <BattleBoard @key="Presenter" @ref="Board" Source="Ranked.Bridge" Driver="Ranked.Coordinator" Presenter="Presenter"
             InitialResponse="Initial" Ready="Ready" Changed="Changed" SessionAction="SessionAction" />
         @if (State?.IsOver == true && Profile.Result is { } result)

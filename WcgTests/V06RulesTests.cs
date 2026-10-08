@@ -64,4 +64,25 @@ public class V06RulesTests
         Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Single(g.Player.Hand);Assert.Same(recovered,g.Player.Hand[0]);Assert.Empty(g.Player.Graveyard);
         g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Equal(2,g.Player.Hand.Count);
     }
+    [Fact]public void ArcaneGuardTriggersOnThirdSpellWithoutCountingOrTapping()
+    {
+        var g=Game();var guard=Unit(g.Player,185,4);Hand(g,101);
+        for(int i=0;i<3;i++)Unit(g.Computer,101,i);
+        for(int i=0;i<3;i++){Assert.True(g.CastSpell(g.Player,Hand(g,166)));Finish(g);Assert.Equal(2-i,g.Computer.Field.Count);}
+        Assert.False(guard.IsTapped);Assert.Equal(0,guard.TriggersThisTurn);Assert.Equal(6,guard.Card.TotalCost);
+    }
+    [Fact]public void SilverFlagHealsOnItsEntryAndEveryLaterOrderSummon()
+    {
+        var g=Game();g.Player.Hp=1;
+        Assert.True(g.SummonMonster(g.Player,Hand(g,190)));Finish(g,0);var flag=g.Player.Field.Single();Assert.Equal(2,g.Player.Hp);
+        for(int i=0;i<3;i++){Assert.True(g.SummonMonster(g.Player,Hand(g,129)));Finish(g,i+1);Assert.Equal(3+i,g.Player.Hp);}
+        Assert.Equal(0,flag.TriggersThisTurn);Assert.Equal(4,flag.Card.TotalCost);
+        g.Player.Hp=7;Assert.True(g.SummonMonster(g.Player,Hand(g,129)));Finish(g,4);Assert.Equal(7,g.Player.Hp);
+    }
+    [Fact]public void SilencedFactionSourcesDoNotTrigger()
+    {
+        var g=Game();g.Player.Hp=1;var guard=Unit(g.Player,185,3);var flag=Unit(g.Player,190,4);guard.IsSilenced=flag.IsSilenced=true;
+        Unit(g.Computer,101,0);Hand(g,101);Assert.True(g.CastSpell(g.Player,Hand(g,166)));Finish(g);Assert.Single(g.Computer.Field);
+        Assert.True(g.SummonMonster(g.Player,Hand(g,129)));Finish(g,0);Assert.Equal(1,g.Player.Hp);
+    }
 }

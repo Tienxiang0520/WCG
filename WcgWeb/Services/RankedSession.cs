@@ -16,11 +16,14 @@ public sealed partial class RankedSession
     private readonly TimeProvider clock;
     private readonly string rules;
     private readonly string priorIdentifierRules;
+    private readonly CardDatabase currentCards, priorBalanceCards;
+    private readonly string priorBalanceRules, priorBalanceIdentifierRules;
     private RankedProfile profile = new();
     public GameEngine Engine { get; }
     public BattleBridge Bridge { get; }
     public BattleCoordinator Coordinator { get; }
     public string Error { get; private set; } = "";
+    public string BalanceNotice { get; private set; } = "";
     public RankedSession(CardDatabase cards, DeckService decks, RankedStore store, RankedDecks opponents,
         ILogger<BattleCoordinator> logger, TimeProvider? clock = null)
     {
@@ -28,6 +31,11 @@ public sealed partial class RankedSession
         var catalog = JsonSerializer.Serialize(cards.AllCards);
         rules = Fingerprint(catalog);
         priorIdentifierRules = Fingerprint(catalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
+        currentCards = cards;
+        priorBalanceCards = CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards);
+        var priorCatalog = JsonSerializer.Serialize(priorBalanceCards.AllCards);
+        priorBalanceRules = Fingerprint(priorCatalog);
+        priorBalanceIdentifierRules = Fingerprint(priorCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try { profile = store.Load(); Restore(); RefreshSeason(); }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
@@ -88,9 +96,16 @@ public sealed partial class RankedSession
     private void Restore()
     {
         Engine.ResetToNotStarted();
+        Engine.UseMatchCatalog(currentCards, false); BalanceNotice = "";
         if (profile.Match is not { } match) return;
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
-        if (match.Rules != rules && match.Rules != priorIdentifierRules) throw new InvalidOperationException("存檔對局使用不同規則版本。");
+        if (match.Rules != rules && match.Rules != priorIdentifierRules)
+        {
+            if (match.Rules != priorBalanceRules && match.Rules != priorBalanceIdentifierRules)
+                throw new InvalidOperationException("存檔對局使用不同規則版本。");
+            Engine.UseMatchCatalog(priorBalanceCards, true);
+            BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
+        }
         Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier;
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         foreach (var action in match.Actions)

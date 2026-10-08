@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
     <Content Remove="Client/**" />
     <None Remove="Client/node_modules/**" />
     <Content Update="wwwroot/battle/**/*.map" CopyToPublishDirectory="Never" />

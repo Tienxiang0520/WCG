@@ -6,7 +6,16 @@ namespace WcgWeb.Services;
 // Presentation owns cancellable AI pacing; the engine never starts background tasks.
 public partial class GameEngine
 {
-    private readonly CardDatabase _cardDb;
+    private CardDatabase _cardDb;
+    internal bool LimitFactionTriggers { get; private set; }
+    internal void UseMatchCatalog(CardDatabase catalog, bool limitFactionTriggers)
+    {
+        lock (_gate)
+        {
+            if (CurrentPhase != TurnPhase.NotStarted) throw new InvalidOperationException("不能在對局中切換卡牌平衡。");
+            _cardDb = catalog; LimitFactionTriggers = limitFactionTriggers;
+        }
+    }
     private Random _random;
     public int AiLevel { get; set; } = -1;
     internal void SetReplaySeed(int seed) => _random = new Random(seed);
