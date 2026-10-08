@@ -34,7 +34,9 @@ Azure 的預設 Blazor 工作流程不足以處理本專案共用元件、前端
 
 ## 首次載入
 
-首頁會顯示下載進度條與百分比；達到 100% 後繼續顯示正在準備卡牌與對戰，完成後進入遊戲。進度以實際載入的啟動檔案數量計算，網路快或已有快取時會直接完成。載入失敗時可按重新整理重試。
+首頁會先下載完整遊戲資源，包含 199 張卡圖、音效、列印圖、介面與程式，全部完成並通過完整性檢查後才進入。讀條依實際收到或已保存在瀏覽器的資源大小計算，顯示百分比、MB 與完成項數；首次約 128 MB。下載中斷可重新整理，接續下載缺少的檔案。下次開啟只補缺少或更新的資源，不再重新下載全部卡圖。
+
+請保留此網站的瀏覽器資料。資源快取與玩家存檔分開；載入流程不會清除存檔。新網址、不同瀏覽器或清除資源快取後，需要重新下載。網站首頁與清單會檢查更新，已開啟的對戰分頁沿用自身版本。
 
 ## Windows App Service 本機部署
 
@@ -64,3 +66,9 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 F1 為試玩／開發測試方案，有每日 CPU 與流量配額且沒有正式服務 SLA；需要更多流量時再評估方案，不能把測試成功視為大型公開服務的容量保證。[App Service 免費方案說明](https://azure.microsoft.com/en-us/pricing/details/app-service/windows/)
 
 官方文件：[Azure 建置設定](https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration)、[網站設定](https://learn.microsoft.com/en-us/azure/static-web-apps/configuration)、[免費方案限制](https://learn.microsoft.com/en-us/azure/static-web-apps/quotas)。
+
+## 2026-10-08 配額狀態
+
+完整下載更新已部署，但線上驗證途中 F1 每日輸出流量達上限，網站回傳 403 Site Disabled。管理 API 確認 QuotaExceeded，下一次流量重置為台灣時間 2026-10-09 08:00；重置後重新整理可接續已下載的資源。此狀態與卡圖完整性或存檔無關。
+
+F1 每日流量上限為 165 MiB，而完整首次下載約 128 MB，無法作為多人試玩的長期主機。保留免費方案時只能等額度重置；更換 Azure 主機或靜態儲存體之前，應先確認使用方式與費用。[微軟配額與停止服務說明](https://learn.microsoft.com/en-us/azure/app-service/web-sites-monitor)

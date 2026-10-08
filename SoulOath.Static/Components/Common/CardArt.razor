@@ -1,5 +1,5 @@
 @namespace WcgWeb.Components.Common
-<CardImage CardId="@Card.Id" CssClass="@CssClass" />
+<CardImage CardId="@Card.Id" CssClass="@CssClass" Loading="eager" />
 @code {
     [Parameter,EditorRequired] public CardDefinition Card {get;set;}=null!;
     [Parameter] public string CssClass {get;set;}="";

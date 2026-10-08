@@ -20,7 +20,7 @@
         .startup-download progress::-webkit-progress-value{background:#67b7ef;border-radius:1rem;transition:width .15s ease-out}
         .startup-download progress::-moz-progress-bar{background:#67b7ef;border-radius:1rem}
         #startup-percentage{min-width:3.5rem;text-align:right;font-variant-numeric:tabular-nums;color:#b8dafa}
-        .startup.failed p{color:#efb0bb}.startup.failed progress::-webkit-progress-value{background:#db8293}
+        .startup-detail{font-size:.85rem;margin-top:.65rem}.startup.failed p{color:#efb0bb}.startup.failed progress::-webkit-progress-value{background:#db8293}
         .startup.failed progress::-moz-progress-bar{background:#db8293}
         @media(prefers-reduced-motion:reduce){.startup-download progress::-webkit-progress-value{transition:none}}
         @media(max-width:480px){.startup{padding:1.5rem}}
@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-    <div id="app"><main class="startup"><h1>🔮 魂誓</h1><p id="startup-status" role="status">正在下載遊戲資料…</p><div class="startup-download"><progress id="startup-progress" value="0" max="100" aria-label="遊戲下載進度"></progress><span id="startup-percentage" aria-hidden="true">0%</span></div></main></div>
+    <div id="app"><main class="startup"><h1>🔮 魂誓</h1><p id="startup-status" role="status">正在檢查遊戲資源…</p><div class="startup-download"><progress id="startup-progress" value="0" max="100" aria-label="遊戲下載進度"></progress><span id="startup-percentage" aria-hidden="true">0%</span></div><p id="startup-detail" class="startup-detail">首次開啟會下載全部卡圖與音效，完成後自動進入。</p></main></div>
     <div id="blazor-error-ui" role="alert">載入發生錯誤。<a href="." class="reload">重新整理</a></div>
     <noscript>請開啟瀏覽器 JavaScript，才能進行魂誓對戰。</noscript>
     <script src="startup.js"></script>
@@ -36,8 +36,8 @@
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js" autostart="false"></script>
     <script>
-        Promise.resolve().then(() => soulOathStorage.ready).then(() => Blazor.start()).catch(() => {
-            window.wcgStartup?.fail();
+        Promise.all([soulOathStorage.ready, wcgStartup.ready]).then(() => Blazor.start()).catch(error => {
+            window.wcgStartup?.fail(error);
             document.querySelector('#blazor-error-ui').style.display = 'block';
         });
     </script>
