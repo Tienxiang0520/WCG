@@ -2,7 +2,9 @@ namespace WcgWeb.Models.Battle;
 
 public record BattleCommand(Guid CommandId, Guid MatchId, long ExpectedRevision, string Type,
     Guid? InstanceId = null, Guid? TargetId = null, string? OptionId = null,
-    string? PlayerDeckId = null, string? ComputerDeckId = null, bool PlayerFirst = true);
+    string? PlayerDeckId = null, string? ComputerDeckId = null, bool PlayerFirst = true, TrainingEdit? Training = null);
+public record TrainingEdit(string Side = "player", string? CardId = null, int Slot = 0,
+    int Hp = 7, int TotalEnergy = 0, int AvailableEnergy = 0, string? Scene = null);
 public record BattleCard(Guid InstanceId, string CardId, string Name, string Type, string Will,
     int Cost, int? PP, int? DP, string Text, string Art, string[]? Arrows = null);
 public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string Problem,

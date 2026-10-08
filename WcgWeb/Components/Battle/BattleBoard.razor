@@ -7,10 +7,10 @@
 @inject BattleCoordinator Coordinator
 @if(State is {} s)
 {
-<section class="v06-board @(Dragging!=null?"dragging":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
-    <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span><button class="sound-toggle" data-sound-toggle aria-label="@(SoundEnabled?"靜音":"開啟音效")" title="@(SoundEnabled?"靜音":"開啟音效")" @onclick="ToggleSound">@(SoundEnabled?"🔊":"🔇")</button><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">投降</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
+<section class="v06-board @(Training?"training":"") @(Dragging!=null?"dragging":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
+    <header class="match-header"><strong>第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span>@if(Training){<button class="training-toggle" disabled="@(Busy||Presenting||EnergyCandidate!=null||Detail!=null||ShowHistory)" @onclick="()=>OpenTraining.InvokeAsync()">測試工具</button>}<button class="sound-toggle" data-sound-toggle aria-label="@(SoundEnabled?"靜音":"開啟音效")" title="@(SoundEnabled?"靜音":"開啟音效")" @onclick="ToggleSound">@(SoundEnabled?"🔊":"🔇")</button><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">投降</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
     <div class="opponent hero @(LegalZone("face")?"legal":"")" data-drop-zone="face"><strong>電腦</strong><b>♥ @s.Computer.Hp / 7</b><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small></div>
-    <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:(Busy||Presenting)?"動作進行中":s.Pending?.Title ?? (CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
+    <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:(Busy||Presenting)?"動作進行中":s.Pending?.Title ?? (TrainingToolsOpen?"訓練工具已開啟":Training&&TrainingAiPaused&&s.DecisionPlayerId=="computer"?"電腦已暫停 · 開啟測試工具選擇單步或自動行動":CanAct?"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌":"等待電腦行動或效果選擇"))</p>
     <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
     @foreach(var side in new[]{s.Computer,s.Player})
     {
@@ -74,6 +74,10 @@
     [Parameter] public EventCallback Ready {get;set;}
     [Parameter] public EventCallback<BattleSnapshot> Changed {get;set;}
     [Parameter] public EventCallback<string> SessionAction {get;set;}
+    [Parameter] public bool Training {get;set;}
+    [Parameter] public bool TrainingToolsOpen {get;set;}
+    [Parameter] public bool TrainingAiPaused {get;set;}
+    [Parameter] public EventCallback OpenTraining {get;set;}
     private BattleSnapshot? State;
     private bool Busy,Presenting,Disposed,ShowHistory;
     private Guid? EnergyCandidate,Dragging;
@@ -86,7 +90,7 @@
     private DotNetObjectReference<BattleBoard>? Self;
     private string Message="";
     private List<string> History=[];
-    private bool CanAct=>!Busy&&!Presenting&&State is {IsOver:false,DecisionPlayerId:"player"};
+    private bool CanAct=>!Busy&&!Presenting&&!TrainingToolsOpen&&State is {IsOver:false,DecisionPlayerId:"player"};
     private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
     private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
@@ -100,8 +104,8 @@
     protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
     protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);SoundEnabled=await DragBinding.InvokeAsync<bool>("readSound");if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
     private async Task ToggleSound(){if(DragBinding!=null)SoundEnabled=await DragBinding.InvokeAsync<bool>("toggleSound");}
-    private void OpenCard(BattleCard c)=>Detail=c;
-    private async Task OpenSlot(BattleMonster? m){if(m==null)return;if(State?.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true)await Send("target",target:m.Card.InstanceId);else Detail=m.Card;}
+    private void OpenCard(BattleCard c){if(!TrainingToolsOpen)Detail=c;}
+    private async Task OpenSlot(BattleMonster? m){if(m==null||TrainingToolsOpen)return;if(State?.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true)await Send("target",target:m.Card.InstanceId);else Detail=m.Card;}
     private void ToggleSet(Guid id){if(!CanDrag)return;if(!SetModes.Remove(id))SetModes.Add(id);}
     private void HandKey(KeyboardEventArgs e,BattleCard c){if(e.Key is "Enter" or " ")OpenCard(c);if(e.Key=="s"||e.Key=="S")ToggleSet(c.InstanceId);}
     private async Task ActivateDetail(Guid id){Detail=null;await Send("activate",id);}
@@ -150,6 +154,7 @@
     {
         if(Disposed)return;
         var previous=State;
+        if(previous?.MatchId!=response.State.MatchId){History.Clear();SetModes.Clear();EnergyCandidate=null;ShowHistory=false;}
         Presenting=response.Success&&previous!=null&&previous.MatchId==response.State.MatchId&&previous.Revision!=response.State.Revision&&response.Events.Length>0&&DragBinding!=null;
         try{
             if(Presenting){

@@ -7,16 +7,17 @@
 @inject NavigationManager Navigation
 @inject CardDatabase CardDb
 @inject DeckService DeckSvc
-@inject BattleBridge Bridge
-@inject BattleCoordinator Coordinator
+@inject ILogger<BattleCoordinator> Logger
+@inject IJSRuntime JS
 
-<PageTitle>對戰 - 魂誓</PageTitle>
+<PageTitle>訓練場 - 魂誓</PageTitle>
 <div class="@(State != null && State.Phase != "NotStarted" ? "phaser-page in-game" : "phaser-page")">
     @if (Notice != "") { <p class="alert alert-warning" role="status">@Notice</p> }
     @if (State?.Phase == "NotStarted")
     {
         <section class="battle-panel setup-panel">
-            <h2>準備對局</h2>
+            <h2>訓練場</h2>
+            <p>指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。</p>
             <label for="phaser-player">你的牌組</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
                 @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
             </select>
@@ -25,15 +26,72 @@
             </select>
             <label for="phaser-starter">先攻</label><select id="phaser-starter" class="form-select" @bind="First"><option value="player">玩家先攻</option><option value="computer">電腦先攻</option><option value="random">隨機</option></select>
             <p>50 張牌組、7 點生命；起手 7 張。每回合可將一張手牌背面填為能量，不抽牌。</p>
-            <button class="btn btn-primary btn-lg" disabled="@(Sending || !Interactive)" @onclick="Start">開始對戰</button>
+            <button class="btn btn-primary btn-lg" disabled="@(Sending || !Interactive)" @onclick="Start">開始訓練</button>
+            @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">載入保存場面</button>}
+            @if(ToolNotice!=""){<p role="status">@ToolNotice</p>}
         </section>
     }
     @if (State != null && State.Phase != "NotStarted")
     {
-        <BattleBoard @ref="Board" Presenter="Presenter" InitialResponse="InitialResponse" Ready="OnReady" Changed="StateChanged" SessionAction="SessionAction" />
+        <BattleBoard @ref="Board" Source="Bridge" Driver="Coordinator" Presenter="Presenter" InitialResponse="InitialResponse" Ready="OnReady" Changed="StateChanged" SessionAction="SessionAction" Training="true" TrainingToolsOpen="ToolsOpen" TrainingAiPaused="Coordinator.AiPaused" OpenTraining="ToggleTools" />
+        @if(ToolsOpen)
+        {
+            <aside class="training-tools" role="region" aria-label="訓練工具">
+                <header><h2>訓練工具</h2><button @onclick="()=>ToolsOpen=false">收起工具</button></header>
+                <p>測試調整只作用於這一局。</p>
+                <div class="training-buttons"><button disabled="@Sending" @onclick="ToggleAi">@(Coordinator.AiPaused?"恢復電腦自動行動":"暫停電腦")</button><button disabled="@(Sending || Coordinator.IsBusy || !Coordinator.AiPaused || State.DecisionPlayerId!="computer" || State.IsOver)" @onclick="AiStep">電腦執行一步</button></div>
+                <p role="status">@(Coordinator.AiPaused?"電腦已暫停":"電腦自動行動中") · @ToolNotice</p>
+                <fieldset disabled="@(Sending || Coordinator.IsBusy || State.IsOver || State.Pending!=null || Engine.IsWaiting)">
+                    <legend>指定卡片與布置</legend>
+                    <label>調整陣營<select aria-label="調整陣營" @bind="Side" @bind:after="LoadResources"><option value="player">己方</option><option value="computer">電腦</option></select></label>
+                    <label>搜尋卡片<input aria-label="搜尋卡片" placeholder="卡名或編號，例如125" @bind="Search" @bind:event="oninput" @bind:after="FilterCard" /></label>
+                    <label>指定卡片<select aria-label="指定卡片" @bind="SelectedCard">@foreach(var c in FilteredCards){<option value="@c.Id">@c.Id · @c.Name（@c.TotalCost 費）</option>}</select></label>
+                    @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@card.Text</p>}
+                    <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>加入手牌</button>
+                    <label>布置格位<select aria-label="布置格位" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">第 @(i+1) 格 @(SelectedSide.Field.Any(m=>m.Slot==i)?"（已有卡片）":"")</option>}</select></label>
+                    <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>直接擺放</button><button @onclick='()=>Edit("training-enter")'>進場並觸發效果</button><button @onclick='()=>Edit("training-set")'>背面蓋牌</button></div>
+                    <small>直接擺放不觸發進場或召喚效果；進場測試不扣費。已有卡片的格位不會被覆蓋。</small>
+                    <legend>生命與能量</legend>
+                    <label>生命（0–7）<input aria-label="生命" type="number" min="0" max="7" @bind="Hp" @bind:event="oninput" /></label>
+                    <label>總能量（0–30）<input aria-label="總能量" type="number" min="0" max="30" @bind="TotalEnergy" @bind:event="oninput" /></label>
+                    <label>可用能量<input aria-label="可用能量" type="number" min="0" max="30" @bind="AvailableEnergy" @bind:event="oninput" /></label>
+                    <button @onclick='()=>Edit("training-resources")'>套用生命與能量</button>
+                    <legend>場上卡片</legend>
+                    <select aria-label="調整場上卡片" @bind="SelectedUnit"><option value="">選擇場上卡片</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">第 @(m.Slot+1) 格 · @m.Card.Name</option>}</select>
+                    <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>轉直立</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>橫置</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>移至墓地</button></div>
+                    <small>移至墓地是調整場面，不觸發死亡效果。</small>
+                </fieldset>
+                <h3>重複測試</h3>
+                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting)" @onclick="SaveScene">保存目前場面</button><button disabled="@(SavedScene==null || Sending || Coordinator.IsBusy)" @onclick="RestoreScene">還原保存場面</button></div>
+                <small>另存於此瀏覽器，可重新整理後載入。保存會取代上一份測試場面。</small>
+            </aside>
+        }
     }
 </div>
 @code {
+    private GameEngine Engine=null!;
+    private BattleBridge Bridge=null!;
+    private BattleCoordinator Coordinator=null!;
+    private IJSObjectReference? TrainingModule;
+    private bool ToolsOpen;
+    private string Side="player",Search="",SelectedCard="WCG-001",SelectedUnit="",ToolNotice="";
+    private string? SavedScene;
+    private int Slot,Hp=7,TotalEnergy,AvailableEnergy;
+    private CardDefinition[] FilteredCards=>CardDb.AllCards.Where(c=>c.Name.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||c.Id.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)).ToArray();
+    private BattleSide SelectedSide=>Side=="player"?State!.Player:State!.Computer;
+    private void FilterCard(){if(!FilteredCards.Any(c=>c.Id==SelectedCard))SelectedCard=FilteredCards.FirstOrDefault()?.Id??"";}
+    private void LoadResources(){Hp=SelectedSide.Hp;TotalEnergy=SelectedSide.TotalEnergy;AvailableEnergy=SelectedSide.AvailableEnergy;SelectedUnit="";}
+    private void ToggleTools(){ToolsOpen=!ToolsOpen;if(ToolsOpen){Coordinator.AiPaused=true;LoadResources();}}
+    private void ToggleAi(){Coordinator.AiPaused=!Coordinator.AiPaused;}
+    private async Task AiStep(){if(Board==null||Sending)return;Sending=true;try{await Board.Publish(Coordinator.StepAi(Presenter));}finally{Sending=false;}}
+    private Task Edit(string type)=>Command(type,new TrainingEdit(Side,SelectedCard,Slot,Hp,TotalEnergy,AvailableEnergy));
+    private async Task SaveScene()
+    {
+        if(Sending||Coordinator.IsBusy||TrainingModule==null)return;
+        try{var json=Engine.ExportTrainingScene();await TrainingModule.InvokeVoidAsync("saveScene",json,SavedScene);SavedScene=json;ToolNotice="已保存測試場面。";}
+        catch(Exception ex) when(ex is JSException or InvalidOperationException){ToolNotice=ex.Message;}
+    }
+    private async Task RestoreScene(){if(SavedScene==null)return;Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:SavedScene));LoadResources();}
     private List<Deck> Decks = [];
     private string PlayerDeck = "", ComputerDeck = "", First = "player", Notice = "";
     private Guid Presenter;
@@ -45,15 +103,16 @@
     private Task? Driver;
     protected override void OnInitialized()
     {
+        Engine=GameEngine.CreateTraining(CardDb);Bridge=new BattleBridge(Engine,DeckSvc);Coordinator=new BattleCoordinator(Bridge,Engine,Logger){AiPaused=true};
         if (Configuration["BattlePresentation:Mode"] == "legacy" && new Uri(Navigation.Uri).AbsolutePath == "/")
         { Navigation.NavigateTo("/legacy", replace: true); return; }
         Decks = DeckSvc.GetAllAvailableDecks(); Notice = DeckSvc.LastStorageError ?? "";
         PlayerDeck = CardDb.PresetDecks[0].Id; ComputerDeck = CardDb.PresetDecks[1].Id;
         Presenter = Coordinator.Attach(); State = Bridge.Snapshot();
     }
-    protected override void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) { Interactive = true; StateHasChanged(); }
+        if (firstRender) { TrainingModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/training.js");try{SavedScene=await TrainingModule.InvokeAsync<string?>("readScene");}catch(JSException){Notice="無法讀取測試場面，仍可開始訓練。";}Interactive = true; StateHasChanged(); }
     }
     private Task StateChanged(BattleSnapshot state) { State = state; StateHasChanged(); return Task.CompletedTask; }
     private Task OnReady()
@@ -72,29 +131,32 @@
         "start" when State?.IsOver == true => Command(type),
         _ => Task.CompletedTask
     };
-    private async Task Command(string type)
+    private async Task Command(string type,TrainingEdit? edit=null)
     {
-        if (Sending || State == null || type is not ("start" or "reset") && !BattleReady) return;
+        if (Sending || State == null || type is not ("start" or "reset" or "training-restore") && !BattleReady) return;
         Sending = true;
         try
         {
             var current = Bridge.Snapshot();
             var response = Coordinator.Submit(Presenter, new(Guid.NewGuid(), current.MatchId, current.Revision, type,
+                InstanceId:Guid.TryParse(SelectedUnit,out var selectedUnitId)?selectedUnitId:null,
                 PlayerDeckId: PlayerDeck, ComputerDeckId: ComputerDeck,
-                PlayerFirst: First == "player" || First == "random" && Random.Shared.Next(2) == 0));
-            Notice = response.Message;
+                PlayerFirst: First == "player" || First == "random" && Random.Shared.Next(2) == 0,Training:edit));
+            if(type.StartsWith("training-")){ToolNotice=response.Success?"已套用測試調整。":response.Message;if(response.State.Pending!=null)ToolsOpen=false;if(!SelectedSide.Field.Any(m=>m.Card.InstanceId.ToString()==SelectedUnit))SelectedUnit="";}
+            else Notice = response.Message;
             if (response.Success && type == "reset")
             {
                 // Leave the scene entirely; the next match receives a fresh board instance.
                 State = response.State; InitialResponse = null; Board = null; BattleReady = false;
                 Coordinator.Acknowledge(Presenter, response.State.MatchId, response.State.Revision, response.BatchId);
             }
-            else if (response.Success && type == "start" && State.Phase == "NotStarted")
+            else if (response.Success && type is "start" or "training-restore" && State.Phase == "NotStarted")
             {
                 // Mount only after the start command succeeds. The child presents and acknowledges this batch.
                 InitialResponse = response; State = response.State; BattleReady = false;
             }
             else if (Board != null) await Board.Publish(response);
+            if(type=="reset"){ToolsOpen=false;Coordinator.AiPaused=true;}
         }
         finally { Sending = false; }
     }
@@ -102,5 +164,6 @@
     {
         Disposed = true; Coordinator.Detach(Presenter); Lifetime.Cancel();
         if (Driver != null) await Driver; Lifetime.Dispose();
+        Coordinator.Dispose();if(TrainingModule!=null)await TrainingModule.DisposeAsync();
     }
 }

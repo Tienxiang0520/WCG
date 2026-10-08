@@ -1,0 +1,6 @@
+.training-tools{position:fixed;right:12px;top:65px;bottom:12px;z-index:60;width:min(370px,calc(100vw - 24px));overflow:auto;box-sizing:border-box;padding:18px;background:#172d38f7;color:#f4edde;border:1px solid #93afaa;border-radius:12px;box-shadow:0 12px 35px #0009;font-size:13px}
+.training-tools header,.training-buttons{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.training-tools header{justify-content:space-between}.training-tools h2{font-size:20px;margin:0}.training-tools h3,.training-tools legend{font-size:15px;margin:15px 0 8px;font-weight:bold}
+.training-tools label{display:block;margin:10px 0}.training-tools input,.training-tools select{display:block;width:100%;box-sizing:border-box;margin-top:5px;padding:7px;border:1px solid #7c9b9e;border-radius:5px;background:#233d47;color:#fff}
+.training-tools button{background:#32515d;color:#fff;border:1px solid #829d9e;border-radius:6px;padding:7px 10px}.training-tools button:disabled{opacity:.45}
+.training-tools fieldset{border:0;padding:0;margin:0}.training-tools fieldset:disabled{opacity:.7}.training-tools small{display:block;color:#b8cbca;line-height:1.5;margin-top:8px}.training-card-text{padding:9px;background:#0e2028;border-radius:6px;line-height:1.6}

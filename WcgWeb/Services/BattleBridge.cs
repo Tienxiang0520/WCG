@@ -28,7 +28,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         try
         {
             var result = engine.ExecuteCommand("player", command.MatchId, command.ExpectedRevision,
-                () => Dispatch(command), command.Type is "start" or "reset" or "surrender");
+                () => Dispatch(command), command.Type is "start" or "reset" or "surrender" || engine.TrainingMode && command.Type.StartsWith("training-"));
             var response = new BattleResponse(result.Success, result.Code, result.Success ? "" : string.IsNullOrWhiteSpace(result.Message) ? "操作已失效，請重新選擇卡牌或目標。" : result.Message, Guid.NewGuid(),
                 BuildSnapshot(), result.Success ? engine.PresentationEvents : []);
             // A start/reset command changes MatchId. Keep its result for retries in the new match.
@@ -44,6 +44,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         Guid.NewGuid(), BuildSnapshot(), []);
     private bool Dispatch(BattleCommand c)
     {
+        if(c.Type.StartsWith("training-")) return engine.EditTraining(c.Type, c.Training, c.InstanceId);
         var hand = engine.Player.Hand.FirstOrDefault(x => x.InstanceId == c.InstanceId);
         var monster = engine.Player.Board.FirstOrDefault(x => x.InstanceId == c.InstanceId);
         var target = engine.Player.Board.Concat(engine.Computer.Board).FirstOrDefault(x => x.InstanceId == c.TargetId);

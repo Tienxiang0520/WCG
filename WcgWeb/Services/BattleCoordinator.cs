@@ -13,6 +13,7 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
     private DateTime deadline;
     private bool executing;
     public bool Fast { get; set; }
+    public bool AiPaused { get; set; }
     public string Error { get; private set; } = "";
     public Guid Attach() { lock (gate) { presenter = Guid.NewGuid(); pending = null; Error = ""; return presenter.Value; } }
     public void Detach(Guid token) { lock (gate) { if (presenter == token) { presenter = null; pending = null; } } }
@@ -49,6 +50,15 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
             return new(true, "sync", "已同步目前對局。", Guid.NewGuid(), bridge.Snapshot(), []);
         }
     }
+    public BattleResponse StepAi(Guid token)
+    {
+        lock(gate)
+        {
+            if(presenter != token || executing || IsBusy || !AiPaused || engine.DecisionPlayerId != "computer" || engine.IsOver)
+                return new(false,"idle","請先暫停電腦，並等待電腦的行動或效果選擇。",Guid.NewGuid(),bridge.Snapshot(),[]);
+            var response=bridge.AiStep(); Track(response); return response;
+        }
+    }
     public async Task DriveAsync(Guid token, Func<BattleResponse, Task> publish, CancellationToken cancellation)
     {
         try
@@ -66,7 +76,7 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
                         pending = null;
                         response = new(true, "resync", "動畫已同步。", Guid.NewGuid(), bridge.Snapshot(), []);
                     }
-                    else if (!IsBusy && Error == "" && engine.DecisionPlayerId == "computer" && !engine.IsOver)
+                    else if (!AiPaused && !IsBusy && Error == "" && engine.DecisionPlayerId == "computer" && !engine.IsOver)
                     {
                         executing = true;
                         try { response = bridge.AiStep(); Track(response); }
