@@ -2,6 +2,8 @@
 
 本專案改以 Azure Static Web Apps Free 作為下一個部署目標。GitHub 儲存庫使用私人可見性；GitHub 私人原始碼與 Azure 網站存取權是不同設定，網站存取權仍需另行決定。
 
+私人儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。
+
 ## 建置與驗證
 
 需要 .NET 10 SDK、Node.js 22、Python 3 與 Pillow 12.1.1。建置過程會安裝前端鎖定依賴，準備 199 張卡圖與列印圖，執行靜態版檢查。
