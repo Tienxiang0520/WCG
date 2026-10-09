@@ -51,7 +51,7 @@ article.wcg-face .face-arrow{position:absolute;z-index:5;width:8.6cqw;height:13c
   filter:drop-shadow(0 0 .25cqw #2a1c04) drop-shadow(0 0 .25cqw #2a1c04) drop-shadow(0 0 1.4cqw rgba(255,226,140,.9))}
 article.wcg-face .face-arrow.right{right:-5.6cqw;top:50%;transform:translateY(-50%);clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
 article.wcg-face .face-arrow.left{left:-5.6cqw;top:50%;transform:translateY(-50%);clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
-article.wcg-face .face-arrow.up{top:-6.6cqw;left:50%;width:13cqw;height:8.6cqw;transform:translateX(-50%);background:linear-gradient(180deg,#fff1b8,#e1b54c 45%,#a8761d);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+article.wcg-face .face-arrow.up{top:-3.2cqw;left:50%;width:13cqw;height:8.6cqw;transform:translateX(-50%);background:linear-gradient(180deg,#fff1b8,#e1b54c 45%,#a8761d);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
 article.wcg-face .face-text{position:relative;flex:1;min-height:0;display:flex;align-items:center;padding:1.6cqw 3cqw;overflow:hidden;
   border:.3cqw solid rgba(160,122,44,.5);border-radius:1.4cqw;background:rgba(255,253,246,.55)}
 article.wcg-face .face-compass{position:absolute;left:50%;top:50%;width:min(56cqw,92%);height:auto;aspect-ratio:1;transform:translate(-50%,-50%);fill:none;stroke:var(--gold-3);stroke-width:.8;opacity:.16;pointer-events:none}
