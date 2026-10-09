@@ -76,11 +76,8 @@
 {
     <div class="card-detail-backdrop" @onclick="() => Inspect = null">
         <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
-            <h2>@L.CardName(inspected)</h2>
-            <WcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
-            <p>@inspected.Id · @L.CardType(inspected.Type) · @L.F("{0} 通用費用", inspected.TotalCost)</p>
-            @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
-            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? L["無異能"] : L.CardText(inspected))</p>
+            <h2 class="visually-hidden">@L.CardName(inspected)</h2>
+            <WcgWeb.Components.Common.CardFace Card="inspected" Class="face-preview" Loading="eager" />
             <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>

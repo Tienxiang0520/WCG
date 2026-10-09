@@ -1,0 +1,70 @@
+@namespace WcgWeb.Components.Common
+@using WcgWeb.Models.Battle
+@* Full physical-style card face (ivory parchment, gold frame, cost medallion, will·type band, art window with
+   gold direction triangles, effect box with compass watermark, PP/DP footer, set name + card number).
+   Pure CSS/SVG; sizes are container-relative so the same markup works from gallery tiles to the large preview. *@
+<article class="wcg-face @LengthClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText">
+    <svg class="face-frame" viewBox="0 0 63 88" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner" />
+    </svg>
+    @foreach (var star in Stars)
+    {
+        <svg class="face-star @star" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg>
+    }
+    <header class="face-head">
+        <h3 class="face-name"><svg class="face-spark" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg><span>@NameText</span></h3>
+        <span class="face-cost" title="@L["費"]"><b>@Cost</b><small>@L["費"]</small></span>
+    </header>
+    <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
+    <div class="face-art">
+        <CardImage CardId="@Id" Loading="@Loading" />
+        @foreach (var arrow in Arrows ?? [])
+        {
+            <span class="face-arrow @arrow" title="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]" role="img" aria-label="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]"></span>
+        }
+    </div>
+    <div class="face-text">
+        <svg class="face-compass" viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="50" cy="50" r="44" /><circle cx="50" cy="50" r="31" /><circle cx="50" cy="50" r="6" />
+            <path d="M50 2 56 44 98 50 56 56 50 98 44 56 2 50 44 44Z" /><path d="M50 18 53 47 82 50 53 53 50 82 47 53 18 50 47 47Z" transform="rotate(45 50 50)" />
+        </svg>
+        <p>@(string.IsNullOrWhiteSpace(TextValue) ? L["無異能"] : TextValue)</p>
+    </div>
+    @if (PP != null)
+    {
+        <div class="face-stats">
+            <span class="pp"><small>@L["力量"]</small><b>@PP</b><small>PP</small></span>
+            <svg class="face-star mid" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg>
+            <span class="dp"><small>@L["傷害"]</small><b>@DP</b><small>DP</small></span>
+        </div>
+    }
+    <footer class="face-foot"><span>@L["魂誓"]</span><span>@Id</span></footer>
+    @ChildContent
+</article>
+@code {
+    [Parameter] public CardDefinition? Card { get; set; }
+    [Parameter] public BattleCard? Battle { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Loading { get; set; } = "lazy";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private static readonly string[] Stars = ["tl", "tr", "bl", "br", "top", "bottom", "head"];
+    private string Id => Card?.Id ?? Battle?.CardId ?? "";
+    private string Will => Card?.Will ?? Battle?.Will ?? "";
+    private string Type => Card?.Type ?? Battle?.Type ?? "";
+    private int Cost => Card?.TotalCost ?? Battle?.Cost ?? 0;
+    private int? PP => Card != null ? (Card.IsMonster ? Card.PP ?? 0 : null) : Battle?.PP;
+    private int? DP => Card != null ? (Card.IsMonster ? Card.DP ?? 1 : null) : Battle?.DP;
+    private string[]? Arrows => Card?.Arrows ?? Battle?.Arrows;
+    private string NameText => Card != null ? L.CardName(Card) : L.CardName(Battle);
+    private string TextValue => Card != null ? L.CardText(Card) : L.CardText(Battle);
+    private string WillKey => Will switch { "狂怒" => "wrath", "理智" => "reason", "生機" => "vitality", "秩序" => "order", "深淵" => "abyss", _ => "neutral" };
+    // Longer (usually English) effect text steps the font down so it stays inside the box.
+    private string LengthClass
+    {
+        get
+        {
+            var text = TextValue ?? ""; var weight = text.Sum(c => c > 0x2E80 ? 2 : 1);
+            return weight > 190 ? "text-xl" : weight > 130 ? "text-l" : weight > 80 ? "text-m" : "";
+        }
+    }
+}
