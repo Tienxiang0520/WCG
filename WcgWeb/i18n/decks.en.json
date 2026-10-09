@@ -97,9 +97,9 @@
  },
  "RANKED-1-WRATH-ASHFALL": {
   "zhName": "狂怒・灰燼殉爆（連動）",
-  "zhDescription": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+  "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
   "name": "Fury · Ashfall Chain (Combo)",
-  "description": "Departure damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
+  "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-1-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
@@ -181,9 +181,9 @@
  },
  "RANKED-2-WRATH-ASHFALL": {
   "zhName": "狂怒・灰燼殉爆（連動）",
-  "zhDescription": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+  "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
   "name": "Fury · Ashfall Chain (Combo)",
-  "description": "Departure damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
+  "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-2-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
@@ -265,9 +265,9 @@
  },
  "RANKED-3-WRATH-ASHFALL": {
   "zhName": "狂怒・灰燼殉爆（連動）",
-  "zhDescription": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+  "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
   "name": "Fury · Ashfall Chain (Combo)",
-  "description": "Departure damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
+  "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-3-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
@@ -337,9 +337,9 @@
  },
  "RANKED-4-WRATH-ASHFALL": {
   "zhName": "狂怒・灰燼殉爆（連動）",
-  "zhDescription": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+  "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
   "name": "Fury · Ashfall Chain (Combo)",
-  "description": "Departure damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
+  "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-4-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
@@ -451,9 +451,9 @@
  },
  "RANKED-5-ORDER-VERDICT": {
   "zhName": "秩序・誓約審判（控制）",
-  "zhDescription": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁離場再清場。",
+  "zhDescription": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁陣亡後再清場。",
   "name": "Order · Oath Verdict (Control)",
-  "description": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board on Departure."
+  "description": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board On Death."
  },
  "RANKED-5-ORDER-GROVE": {
   "zhName": "秩序・聖林守衛（中速）",

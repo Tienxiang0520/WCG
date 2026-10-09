@@ -1303,5 +1303,7 @@
  "陣亡效果": "On Death effects",
  "【{0}】進場：要驅散附著或摧毀結界嗎？": "{0} Deploy: dispel attachments or destroy a Ward?",
  "選擇驅散或摧毀目標": "Choose a target to dispel or destroy",
- "不發動": "Don't activate"
+ "不發動": "Don't activate",
+ "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury.",
+ "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁離場再清場。": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board On Death."
 }

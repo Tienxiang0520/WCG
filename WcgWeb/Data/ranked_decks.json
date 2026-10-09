@@ -1138,7 +1138,7 @@
     "Deck": {
       "Id": "RANKED-1-WRATH-ASHFALL",
       "Name": "狂怒・灰燼殉爆（連動）",
-      "Description": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+      "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
         "WCG-003",
@@ -2617,7 +2617,7 @@
     "Deck": {
       "Id": "RANKED-2-WRATH-ASHFALL",
       "Name": "狂怒・灰燼殉爆（連動）",
-      "Description": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+      "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
         "WCG-003",
@@ -4118,7 +4118,7 @@
     "Deck": {
       "Id": "RANKED-3-WRATH-ASHFALL",
       "Name": "狂怒・灰燼殉爆（連動）",
-      "Description": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+      "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
         "WCG-003",
@@ -5436,7 +5436,7 @@
     "Deck": {
       "Id": "RANKED-4-WRATH-ASHFALL",
       "Name": "狂怒・灰燼殉爆（連動）",
-      "Description": "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+      "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
         "WCG-003",
@@ -7521,7 +7521,7 @@
     "Deck": {
       "Id": "RANKED-5-ORDER-VERDICT",
       "Name": "秩序・誓約審判（控制）",
-      "Description": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁離場再清場。",
+      "Description": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁陣亡後再清場。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-063",
