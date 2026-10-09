@@ -87,6 +87,9 @@
 .print-deck-list > div { display: flex; justify-content: space-between; gap: 2mm; border-bottom: .1mm solid #ddd; break-inside: avoid; }
 .print-deck-list strong { flex-shrink: 0; }
 .print-reference-note { font-size: 7.5pt; line-height: 1.5; margin: 3mm 0 0; }
+/* The screen's dark theme uses pale heading and rule text; paper needs dark ink on its white background. */
+.print-sheet.reference-sheet :is(h2, h3, h4, p), .print-sheet .life-card h2, .print-sheet .print-card-title { color: #111; text-shadow: none; }
+.print-sheet.reference-sheet .game-rules-content h4 { border-left-color: #555; }
 @media (max-width: 600px) { .print-controls { padding: 1rem; } .print-control-heading { align-items: start; } .print-control-heading h1 { font-size: 1.2rem; } .print-sheet { margin-left: 0; } }
 @page { size: A4 portrait; margin: 6mm; }
 @media print {

@@ -622,7 +622,7 @@
  "未命名牌組": "Untitled deck",
  "未命名自訂牌組": "Untitled custom deck",
  "未實作卡牌 {0}": "Card {0} isn't implemented",
- "本回合及下一次交戰加成依卡文到期；下一次交戰包含被攻擊，但攻擊玩家不消耗。181加成可疊加，只影響每次結算當下的狂怒怪物。185、190保留每回合兩次。": "\"This turn\" and \"next combat\" bonuses expire as the card says; the next combat includes being attacked, but attacking a player doesn't use it up. Card 181's bonus stacks and affects only Fury monsters present at each resolution. Cards 185 and 190 keep their twice-per-turn limit.",
+ "本回合及下一次交戰加成依卡文到期；下一次交戰包含被攻擊，但攻擊玩家不消耗。181加成可疊加，只影響每次結算當下的狂怒怪物。185、190每次條件成立都觸發，不限制每回合次數。": "\"This turn\" and \"next combat\" bonuses expire as the card says; the next combat includes being attacked, but attacking a player doesn't use it up. Card 181's bonus stacks and affects only Fury monsters present at each resolution. Cards 185 and 190 trigger whenever their conditions are met, with no per-turn limit.",
  "本回合已填過能量。": "You've already added energy this turn.",
  "本季": "This season",
  "本季尚無對局紀錄，切換「全部」可查看先前賽季。": "No matches this season yet. Switch to \"All\" to see earlier seasons.",

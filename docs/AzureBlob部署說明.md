@@ -64,6 +64,8 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 
 設定頁可切換繁體中文／English；語言選擇也隨存檔保存。未儲存選擇時依瀏覽器第一偏好判斷，只有明確偏好英文才使用英文。切換會重建頁面，因此組牌尚未儲存的編輯須先保存。效果播放時可按右上角快轉，或點擊戰場，加速剩餘演出。
 
+在「牌組構築室 → 列印實體牌組」可預覽新版彩色卡面與裁切線，也可選省墨文字版。50 張牌為 6 頁 A4，附規則速查表時共 7 頁；卡片尺寸 63 × 88 mm。列印或存成 PDF 時選實際大小／100%、關閉頁首頁尾，彩色版開啟背景圖形；先試印一頁量尺寸。
+
 建議同一網址只保留一個有存檔寫入權的分頁。手機版需要再以實機確認；本次部署不會讓模擬器測試自動變成實機驗證。
 
 官方參考：[Storage 靜態網站](https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website)、[Blazor 部署到 Azure Storage](https://learn.microsoft.com/en-us/aspnet/core/blazor/host-and-deploy/webassembly/azure-storage?view=aspnetcore-10.0)。
