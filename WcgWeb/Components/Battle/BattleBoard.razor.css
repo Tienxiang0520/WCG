@@ -68,7 +68,7 @@
 .v06-hand{bottom:-102px}
 .v06-hand-card p{font-size:10px}
 }
-@media(max-width:700px){.v06-board{min-width:600px}
+@media(min-width:601px) and (max-width:700px){.v06-board{min-width:600px}
 .opponent{top:52px}
 .battle-message{top:88px;font-size:12px}
 .battlefield{top:118px}
@@ -230,3 +230,84 @@
 .motion-reduced *,.motion-reduced *::before,.motion-reduced *::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 .motion-reduced .board-ambience::before,.motion-reduced .board-ambience::after{animation:none!important}
 @media(max-width:700px){.turn-chip,.match-header button{white-space:nowrap}.turn-chip{padding:2px 7px}.motion-label{display:none}}
+
+/* Touch vs mouse wording for the same actions. */
+.hint-touch{display:none}
+@media(hover:none) and (pointer:coarse){.hint-mouse{display:none}.hint-touch{display:inline}}
+.detail-set-toggle{background:#5c4c24!important;border-color:#ffe5a1!important}
+
+/* ==== Phone portrait (≤600px wide): stacked layout without a forced minimum width. ====
+   Top: header, opponent, prompt. Middle: two five-slot rows sized from the width.
+   Bottom: energy / your portrait / end turn, then the full-width hand fan. Desktop and landscape are unchanged. */
+@media(max-width:600px){
+.v06-board{min-width:0;padding:6px 8px;border-radius:14px;font-size:12px;--card-width:min(116px,29vw);--hand-h:calc(var(--card-width) * 1.38);--dock:calc(var(--hand-h) + 76px)}
+.match-header{gap:4px;font-size:11px;flex-wrap:nowrap;min-width:0}
+.match-header>span{font-size:0;margin-right:auto;flex:1 1 0}
+.turn-chip{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 7px;font-size:11px}
+.match-header button{flex:none;padding:6px 7px;min-height:32px;font-size:11px;white-space:nowrap}
+.motion-label{display:none}
+.v06-board .opponent{top:44px;gap:8px;padding:4px 12px;font-size:12px;max-width:calc(100% - 16px);white-space:nowrap}
+.hero small{font-size:10px}
+.v06-board .battle-message{top:76px;left:8px;right:8px;height:16px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v06-board .battlefield{top:96px;bottom:var(--dock);left:6px;right:6px;padding:0;justify-content:center;gap:clamp(12px,4vh,40px)}
+.v06-row{gap:5px;height:auto;max-height:48%;align-items:stretch}
+.v06-slot{aspect-ratio:5/8.2;max-height:100%;border-radius:9px;min-width:0}
+.slot-number{font-size:8px;top:3px;left:4px}
+.empty{font-size:16px}
+.field-card{padding:4px 3px 22px;border-radius:8px;border-width:1.5px;gap:2px}
+.field-card strong,.field-card>strong{font-size:9px;line-height:1.2;padding:1px 2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-stats{left:3px;right:3px;bottom:3px;font-size:12px}
+.field-stats b{padding:2px 3px;min-width:17px}
+.arrowmark,.card-detail .arrowmark{width:15px;height:15px}
+.arrowmark.left{left:-7px}.arrowmark.right{right:-7px}.arrowmark.up{top:-7px}
+.enemy-card .arrowmark.left{right:-7px}.enemy-card .arrowmark.right{left:-7px}.enemy-card .arrowmark.up{bottom:-7px}
+.card-detail .arrowmark.left{left:-10px}.card-detail .arrowmark.right{right:-10px}.card-detail .arrowmark.up{top:-10px}
+.taunt-frame{left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 10px)}
+.has-shield::before{inset:-4px;border-radius:11px}
+.field-card.attack-ready::after{inset:-3px;border-radius:10px;box-shadow:0 0 10px 2px #6cffaa}
+.drop-hover.vacant::after{inset:6px;font-size:9px;border-radius:6px}
+/* Control strip: energy (left), your portrait (centre), end turn + log (right). */
+.player{bottom:calc(var(--hand-h) + 22px);padding:5px 12px;gap:8px;font-size:12px;white-space:nowrap}
+.energy-zone{left:6px;bottom:calc(var(--hand-h) + 14px);width:auto;min-width:74px;padding:5px 8px;gap:3px;border-radius:10px;border-width:1.5px}
+.energy-zone strong{font-size:12px;white-space:nowrap}
+.energy-zone>span{display:none}
+.energy-dots{gap:3px;max-width:86px}
+.energy-dots i{width:6px;height:11px}
+.turn-controls{right:6px;bottom:calc(var(--hand-h) + 14px);gap:4px;align-items:stretch}
+.end-turn{padding:8px 10px!important;font-size:12px;min-height:36px}
+.turn-controls button:not(.end-turn){padding:4px 8px;font-size:10px}
+/* Hand: full-width fan, whole cards visible; tap opens the zoomed card, drag aims. */
+.v06-hand{bottom:14px;height:var(--hand-h)}
+.v06-hand-card{--mstep:min(64px,calc((100vw - 46px - var(--card-width)) / var(--gaps)));transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5));bottom:calc(-.4 * var(--rise));height:var(--hand-h);padding:8px 6px 6px;gap:2px;border-width:2px;border-radius:9px;transform-origin:50% 100%}
+.v06-hand-card>strong{font-size:10px;padding-left:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v06-hand-card>p,.v06-hand-card>small{display:none}
+.v06-hand-card .hand-art-layer{height:calc(var(--card-width) * .5);margin:2px 0}
+.v06-hand-card .stats{font-size:9px;white-space:nowrap}
+.v06-hand-card .mana{width:22px;height:22px;line-height:22px;font-size:14px;left:-5px;top:-5px;border-width:1.5px}
+.v06-hand-card .arrowmark{display:none}
+.hand-availability{font-size:8px;padding:2px 3px;white-space:nowrap;overflow:hidden}
+.v06-hand-card.available::after,.v06-hand-card.set-ready::after{inset:-3px;border-radius:11px;box-shadow:0 0 10px 2px #6cffaa}
+.v06-hand-card.set-ready::after{box-shadow:0 0 10px 2px #ffde7b}
+.back-emblem{padding:6px 10px;font-size:13px;margin-bottom:4px}
+.card-back>small{display:block;font-size:8px;text-align:center}
+.card-back>small+small{display:none}
+.v06-hand-card:hover,.v06-hand-card:focus-visible,.dragging .v06-hand-card:hover{height:var(--hand-h);transform:translateX(calc(var(--offset) * var(--mstep))) translateY(-10px) rotate(0) scale(1.04)}
+.v06-hand-card:hover .hand-art-layer,.v06-hand-card:focus-visible .hand-art-layer{height:calc(var(--card-width) * .5)}
+.hand-hint{display:none}
+@keyframes hand-deal{from{translate:0 90px;opacity:0}to{translate:0 0;opacity:1}}
+/* Dialogs fit the phone. */
+.modal-shade{padding:10px}
+.v06-dialog{max-width:100%;max-height:88%;padding:14px;gap:8px;border-radius:12px}
+.card-detail{max-width:min(340px,100%)}
+.detail-art-layer{height:min(170px,32vh)}
+.v06-dialog button{min-height:40px}
+.target-banner{top:96px;font-size:12px;padding:6px 8px}
+/* Fixed overlays: smaller numbers so they stay within the screen. */
+.event-number{font-size:32px}.event-number.big{font-size:40px}
+.event-banner{font-size:11px}
+/* Lighter ambience on phones. */
+.board-ambience::after{display:none}
+}
+@media(max-width:400px){.match-header{gap:3px}.match-header button{padding:6px 5px}.turn-chip{padding:3px 6px}}
+/* Touch devices never get a sticky hover lift after a tap. */
+@media(hover:none){.v06-hand-card:hover .hand-shine{opacity:0}.field-card.attack-ready:hover{transform:none}}

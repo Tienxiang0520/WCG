@@ -99,3 +99,20 @@ test('feedback with effects still releases the input lock on commit and keeps hi
     feedback.clear(); assert.equal(d.root.inert, false);
     feedback.dispose(); assert.equal(d.body.children.length, 0);
 });
+
+test('phones get lighter effects: half the particles, fewer shards and a gentler shake', async t => {
+    const d = dom(t);
+    const full = createFx(d.root, { random: () => .5, compact: false });
+    const phone = createFx(d.root, { random: () => .5, compact: true });
+    const sparks = () => d.created.filter(el => el.className.includes('wcg-fx-spark')).length;
+    void full.burst({ x: 0, y: 0, width: 100, height: 100 }, { count: 20 }); const desktop = sparks();
+    void phone.burst({ x: 0, y: 0, width: 100, height: 100 }, { count: 20 }); const mobile = sparks() - desktop;
+    assert.equal(desktop, 20); assert.equal(mobile, 10);
+    const before = d.running.length; void phone.shatter(new d.El()); 
+    assert.equal(d.running.length - before - 5, 4, 'compact shatter uses a 2x2 grid (plus 5 dust motes)');
+    void phone.shake(1); const shake = d.running.at(-1).frames.map(f => f.transform);
+    const max = Math.max(...shake.flatMap(s => [...s.matchAll(/(-?\d+(?:\.\d+)?)px/g)].map(m => Math.abs(+m[1]))));
+    assert.ok(max <= 11 * .55 + .1, `phone shake stays gentle (${max}px)`);
+    assert.equal(phone.compact(), true); assert.equal(full.compact(), false);
+    full.dispose(); phone.dispose(); await d.finishAll();
+});

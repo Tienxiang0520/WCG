@@ -90,7 +90,7 @@
 .wcg-fx-banner.computer span{font-size:40px;color:#ffe6d2;text-shadow:0 3px 0 #0009,0 0 16px #ff9b6a,0 0 36px #ff6a3a88;border-image:linear-gradient(90deg,transparent,#e3895a,transparent) 1}
 .wcg-fx-banner.victory span{font-size:56px;color:#fff6cf;text-shadow:0 3px 0 #000a,0 0 24px #ffd65a,0 0 60px #ffb300aa}
 .wcg-fx-banner.defeat span{font-size:56px;color:#d9dde6;text-shadow:0 3px 0 #000a,0 0 24px #7f93b8,0 0 50px #31415faa;border-image:linear-gradient(90deg,transparent,#7f93b8,transparent) 1}
-@media(max-width:700px){.wcg-fx-banner span{font-size:30px;padding:12px 30px}.wcg-fx-banner.victory span,.wcg-fx-banner.defeat span{font-size:40px}}
+@media(max-width:700px){.wcg-fx-banner span,.wcg-fx-banner.computer span{font-size:30px;padding:12px 30px}.wcg-fx-banner.victory span,.wcg-fx-banner.defeat span{font-size:40px}}
 
 /* Targeting arrow: soft glow underlay, flowing dashed core and a lock-on reticle on legal drops. */
 .wcg-aim .wcg-aim-glow{opacity:.25}
@@ -104,3 +104,4 @@
 @keyframes wcg-aim-spin{to{rotate:360deg}}
 @keyframes wcg-aim-lock{from{scale:1.8;opacity:0}to{scale:1;opacity:1}}
 html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-core,html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-spin{animation:none}
+@media(max-width:600px){.wcg-fx-banner span,.wcg-fx-banner.computer span{font-size:24px;padding:9px 20px;letter-spacing:.12em}.wcg-fx-banner.victory span,.wcg-fx-banner.defeat span{font-size:32px}.wcg-aim .wcg-aim-glow{stroke-width:9}}

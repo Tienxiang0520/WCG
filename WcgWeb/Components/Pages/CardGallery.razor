@@ -17,7 +17,7 @@
 
         <div class="card-body py-2 border-bottom border-secondary">
             <!-- Will Filters -->
-            <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+            <div class="d-flex flex-wrap gap-2 align-items-center mb-2 filter-row">
                 <span class="text-muted small me-2">意志派系:</span>
                 <button class="btn btn-sm @(SelectedWill == "" ? "btn-light" : "btn-outline-secondary")"
                         @onclick='() => SelectedWill = ""'>全部 (@CardDb.AllCards.Count)</button>
@@ -36,7 +36,7 @@
             </div>
 
             <!-- Type Filters & Keyword Filters -->
-            <div class="d-flex flex-wrap gap-2 align-items-center">
+            <div class="d-flex flex-wrap gap-2 align-items-center filter-row">
                 <span class="text-muted small me-2">卡牌類型:</span>
                 <button class="btn btn-sm @(SelectedType == "" ? "btn-light" : "btn-outline-secondary")"
                         @onclick='() => SelectedType = ""'>全部</button>
@@ -59,7 +59,7 @@
     </div>
 
     <!-- Cards Gallery Grid -->
-    <div class="d-flex flex-wrap gap-3 justify-content-center p-2">
+    <div class="d-flex flex-wrap gap-3 justify-content-center p-2 card-grid">
         @if (FilteredCards.Count == 0)
         {
             <div class="text-center py-5 text-muted">

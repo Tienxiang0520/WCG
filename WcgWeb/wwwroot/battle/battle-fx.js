@@ -36,6 +36,9 @@ export function createFx(root, env = {}) {
     let layer = null, disposed = false;
     const nodes = new Set();
     const reduced = () => motionReduced(env);
+    // Phones get lighter effects: fewer, smaller particles and a gentler shake, all scaled to the screen.
+    const compact = () => { try { return env.compact ?? ((globalThis.innerWidth ?? 1024) <= 600 || (globalThis.innerHeight ?? 768) <= 500); } catch { return false; } };
+    const budget = () => compact() ? Math.round(MAX_PARTICLES / 2) : MAX_PARTICLES;
     function ensureLayer() {
         if (layer) return layer;
         layer = doc.createElement('div'); layer.className = 'wcg-fx-layer'; layer.setAttribute('aria-hidden', 'true');
@@ -62,7 +65,7 @@ export function createFx(root, env = {}) {
     let shaking = null;
     function shake(strength = .4) {
         if (disposed || reduced() || !root?.animate) return Promise.resolve();
-        const s = Math.max(0, Math.min(1, strength)), px = 2 + s * 9, frames = [];
+        const s = Math.max(0, Math.min(1, strength)), px = (2 + s * 9) * (compact() ? .55 : 1), frames = [];
         for (let i = 0; i < 7; i++) {
             const decay = 1 - i / 7, angle = random() * Math.PI * 2;
             frames.push({ transform: `translate(${(Math.cos(angle) * px * decay).toFixed(1)}px,${(Math.sin(angle) * px * decay).toFixed(1)}px) rotate(${((random() - .5) * s * 1.2 * decay).toFixed(2)}deg)` });
@@ -78,7 +81,8 @@ export function createFx(root, env = {}) {
         if (disposed || reduced()) return Promise.resolve();
         const r = rectOf(target); if (!r) return Promise.resolve();
         const { x } = center(r), y = origin === 'bottom' ? r.y + r.height * .92 : r.y + r.height / 2, jobs = [];
-        const n = Math.min(count, Math.max(0, MAX_PARTICLES - nodes.size));
+        if (compact()) { count = Math.ceil(count * .5); spread *= .6; size *= .7; rise *= .6; }
+        const n = Math.min(count, Math.max(0, budget() - nodes.size));
         for (let i = 0; i < n; i++) {
             // Ground dust fans out sideways from under the card; sparks spray in every direction.
             const angle = origin === 'bottom' ? Math.PI + random() * Math.PI : random() * Math.PI * 2;
@@ -131,7 +135,7 @@ export function createFx(root, env = {}) {
         if (disposed || !source) return Promise.resolve();
         const r = rect ?? source.getBoundingClientRect();
         if (reduced()) return Promise.resolve();
-        const cols = 3, rows = 3, jobs = [];
+        const cols = compact() ? 2 : 3, rows = compact() ? 2 : 3, jobs = [];
         for (let row = 0; row < rows; row++) for (let col = 0; col < cols; col++) {
             const shard = source.cloneNode(true);
             const x0 = col / cols * 100, x1 = (col + 1) / cols * 100, y0 = row / rows * 100, y1 = (row + 1) / rows * 100;
@@ -140,7 +144,7 @@ export function createFx(root, env = {}) {
             Object.assign(shard.style, { position: 'fixed', left: `${r.x}px`, top: `${r.y}px`, width: `${r.width}px`, height: `${r.height}px`, margin: '0', transform: 'none', transition: 'none', visibility: 'visible',
                 clipPath: `polygon(${x0 + jx()}% ${y0 + jy()}%, ${x1 + jx()}% ${y0 + jy()}%, ${x1 + jx()}% ${y1 + jy()}%, ${x0 + jx()}% ${y1 + jy()}%)` });
             shard.classList?.add('wcg-fx-shard'); ensureLayer().append(shard); nodes.add(shard);
-            const cx = (col - 1) * (30 + random() * 40), cy = (row - 1) * 25 + 40 + random() * 60;
+            const k = compact() ? .55 : 1, cx = (col - (cols - 1) / 2) * (30 + random() * 40) * k, cy = ((row - (rows - 1) / 2) * 25 + 40 + random() * 60) * k;
             jobs.push(run(shard, [
                 { transform: 'translate(0,0) rotate(0)', opacity: 1, filter: 'brightness(1.6)' },
                 { transform: `translate(${(cx * .25).toFixed(1)}px,${(cy * .1 - 8).toFixed(1)}px) rotate(${((random() - .5) * 10).toFixed(1)}deg)`, opacity: 1, filter: 'brightness(1.2)', offset: .25 },
@@ -195,6 +199,6 @@ export function createFx(root, env = {}) {
         for (const animation of animations) { try { animation.cancel(); } catch { } }
         animations.clear(); shaking = null; nodes.clear(); layer?.remove(); layer = null;
     }
-    return { shake, burst, ring, glow, flare, recoil, shatter, banner, slam, impact, clear, reduced,
+    return { shake, burst, ring, glow, flare, recoil, shatter, banner, slam, impact, clear, reduced, compact,
         get active() { return animations.size; }, dispose() { disposed = true; clear(); } };
 }
