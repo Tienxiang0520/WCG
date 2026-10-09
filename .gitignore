@@ -40,3 +40,4 @@ WcgWeb/wwwroot/battle/preferences.js
 
 .build-tmp/
 .runtime/
+**/__pycache__/
