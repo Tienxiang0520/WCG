@@ -158,6 +158,24 @@ public sealed class RankedTests : IDisposable
         for(int n=0;n<12;n++){Assert.True(a.ExecuteAiStep());Assert.True(b.ExecuteAiStep());
             Assert.Equal(JsonSerializer.Serialize(StateShape(a)),JsonSerializer.Serialize(StateShape(b)));}
     }
+    [Fact] public void TieredAiReplaysWholeGamesIdenticallyDespiteFreshInstanceIds()
+    {
+        // Card instance ids are new GUIDs in every engine, as in a replay; decisions must not depend on them.
+        string Play(int level,int seed,Deck mine,Deck theirs)
+        {
+            var e=new GameEngine(cards,new Random(seed)){AiLevel=level};e.SeedRankedAi(seed);e.StartGame(mine,theirs,seed%2==0);e.Player.IsAi=true;
+            var trace=new System.Text.StringBuilder();
+            for(int n=0;n<3000&&!e.IsOver;n++){e.AiLevel=e.DecisionPlayerId=="player"?level:(level+3)%6;Assert.True(e.ExecuteAiStep(),e.LastError);
+                trace.Append(e.Revision).Append(':').Append(e.Player.Hp).Append('/').Append(e.Computer.Hp).Append('/').Append(e.Player.Hand.Count).Append('/').Append(e.Computer.Field.Count).Append(';');}
+            Assert.True(e.IsOver);return trace.ToString();
+        }
+        var pool=decks.All;
+        for(int k=0;k<24;k++)
+        {
+            int level=k%6;var mine=pool[(k*7)%pool.Count].Deck;var theirs=pool[(k*11+3)%pool.Count].Deck;
+            Assert.Equal(Play(level,1000+k,mine,theirs),Play(level,1000+k,mine,theirs));
+        }
+    }
     [Fact] public void MasterAiFindsCombinedLethalThatBronzeMisses()
     {
         GameEngine Setup(int level)

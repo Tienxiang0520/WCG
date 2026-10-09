@@ -226,7 +226,9 @@ public partial class GameEngine
             var value = CardValue(c) - (c.TotalCost > p.TotalEnergy + 2 ? 3 : 0);
             return discard ? -value : value;
         }
-        return SelectChoice(choice.Options.OrderByDescending(Score).ThenBy(o => o.Id, StringComparer.Ordinal).First());
+        // Ties fall back to option order. Card options use random instance GUIDs as Ids, which differ between a match
+        // and its replay, so they must never decide a tie; named options (KEEP, HEAL...) keep the ordinal tie-break.
+        return SelectChoice(choice.Options.OrderByDescending(Score).ThenBy(o => Guid.TryParse(o.Id, out _) ? "" : o.Id, StringComparer.Ordinal).First());
     }
 
     private bool TieredTarget(PlayerState p, PlayerState e, PendingTarget pending, AiProfile prof)
