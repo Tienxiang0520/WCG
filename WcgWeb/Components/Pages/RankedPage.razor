@@ -80,7 +80,7 @@ else
                     </select></div>
                     <div class="ranked-intel">
                         <p class="ranked-intel-title"><span class="tier-tag">@RankedRules.Tiers[RankedRules.Tier(Profile.Stars)]</span>@L["對手情報"]</p>
-                        <p>@RankedDecks.Strategy(RankedRules.Tier(Profile.Stars))</p>
+                        <p>@L.Text(RankedDecks.Strategy(RankedRules.Tier(Profile.Stars)))</p>
                         <p class="ranked-help">@L["本牌位對手池："]@OpponentSummary(RankedRules.Tier(Profile.Stars))</p>
                     </div>
                     <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />@L["開始天梯對戰"]</button>
