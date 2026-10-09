@@ -76,3 +76,5 @@ article.wcg-face .face-foot{position:relative;display:flex;justify-content:space
 .face-preview{width:min(340px,78vw);margin:0 auto 12px}
 @media (max-height:700px){.face-preview{width:min(290px,70vw)}}
 .detail-face{width:100%}
+article.wcg-face.name-l .face-name{font-size:7cqw}article.wcg-face.name-xl .face-name{font-size:5.9cqw}
+.wcg-card.face-tile .face-qty.badge{left:9%;right:auto;top:30%;background:rgba(20,14,4,.86)!important;color:#f6e3a6;box-shadow:0 0 0 1px #c9a24b,0 2px 6px rgba(0,0,0,.5)!important}

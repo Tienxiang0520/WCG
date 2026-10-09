@@ -66,7 +66,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     function faceCard(card) {
         const svg = (cls, view, inner) => { const el = document.createElementNS?.('http://www.w3.org/2000/svg', 'svg') ?? node('i', cls); if (el.setAttribute) { el.setAttribute('class', cls); el.setAttribute('viewBox', view); el.setAttribute('aria-hidden', 'true'); el.innerHTML = inner; } return el; };
         const star = cls => svg(`face-star ${cls}`, '0 0 20 20', `<path d="${STAR}"/>`);
-        const outer = node('article', 'wcg-face'); outer.dataset.will = WILL_KEYS[card.will] ?? 'neutral'; outer.dataset.cardId = card.cardId ?? '';
+        const outer = node('article', 'wcg-face'), nameLen = [...String(card.name ?? '')].reduce((n, c) => n + (c.charCodeAt(0) > 0x2e80 ? 2 : 1), 0);
+        if (nameLen > 15) outer.className += nameLen > 24 ? ' name-xl' : ' name-l'; outer.dataset.will = WILL_KEYS[card.will] ?? 'neutral'; outer.dataset.cardId = card.cardId ?? '';
         const body = node('div', 'face-card'); outer.append(body);
         body.append(svg('face-frame', '0 0 63 88', '<rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner"/>'));
         for (const c of ['tl', 'tr', 'bl', 'br', 'top', 'bottom', 'head']) body.append(star(c));
