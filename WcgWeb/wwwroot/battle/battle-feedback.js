@@ -1,5 +1,9 @@
 import { motionReduced } from './battle-fx.js';
 
+// Fixed animation strings. Event labels and card names arrive already localized from the server.
+const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat' };
+const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) || zh;
+
 // Present only public engine events. Keep the old board until this batch completes.
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
@@ -51,7 +55,7 @@ export function bindFeedback(root, sound = null, fx = null) {
     function publicCard(card) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
         // Card data comes exclusively from public BattleEvent payloads; never inspect AI hand data.
-        if (!card) { el.append(node('strong', '', '魂 誓'), node('small', '', '背面卡片')); return el; }
+        if (!card) { el.append(node('strong', '', t('魂 誓')), node('small', '', t('背面卡片'))); return el; }
         if (publicUnits.get(card.instanceId)?.status?.includes('嘲諷')) {
             el.className += ' has-taunt';
             const frame = node('img', 'taunt-frame'); frame.src = 'battle/taunt-frame.svg'; frame.alt = ''; frame.draggable = false;
@@ -177,7 +181,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             for (const ev of [...events].sort((a, b) => a.order - b.order)) {
                 if (disposed) break;
                 layer.dataset.wcgEvent = ev.type; layer.dataset.wcgEventSide = ev.side;
-                banner.textContent = `${ev.side === 'player' ? '我方' : '電腦'} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
+                banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
                 if (ev.type === 'attack') await attack(ev);
                 else if (ev.type === 'damage' && ev.amount > 0) await number(hero(ev.side), `−${ev.amount}`);
                 else if (ev.type === 'heal' && ev.amount > 0) await number(hero(ev.side), `+${ev.amount}`, true);
@@ -222,14 +226,14 @@ export function bindFeedback(root, sound = null, fx = null) {
                     // Player pressed the mechanical button already; sound again only when their next turn begins.
                     if (ev.side === 'player') void sound?.play('turn');
                     // Non-blocking banner; input unlocks on the normal snapshot commit.
-                    void fx?.banner(ev.side === 'player' ? '你的回合' : '電腦回合', ev.side);
+                    void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
                     await flash(hero(ev.side), '#9edcff');
                 }
                 else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
                 else if (ev.type === 'gameover') {
                     void sound?.play(ev.side === 'player' ? 'defeat' : 'victory');
                     // The gameover event names the losing side.
-                    void fx?.banner(ev.side === 'player' ? '敗北' : '勝利', ev.side === 'player' ? 'defeat' : 'victory', 1800);
+                    void fx?.banner(t(ev.side === 'player' ? '敗北' : '勝利'), ev.side === 'player' ? 'defeat' : 'victory', 1800);
                     // Portrait finish: the loser's frame cracks with dust, the winner's sparkles gold.
                     const loser = hero(ev.side), winner = hero(ev.side === 'player' ? 'computer' : 'player');
                     const loserFace = loser?.querySelector?.('.hero-face') ?? loser, winnerFace = winner?.querySelector?.('.hero-face') ?? winner;

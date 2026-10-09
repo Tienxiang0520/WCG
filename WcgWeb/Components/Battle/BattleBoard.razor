@@ -67,6 +67,8 @@
 </section>
 }
 @code {
+    // Animation banners only: the engine events themselves stay canonical (zh labels, card ids).
+    private WcgWeb.Models.Battle.BattleEvent[] LocalizeEvents(WcgWeb.Models.Battle.BattleEvent[] events)=>!L.IsEnglish?events:events.Select(e=>e with{Label=L.Text(e.Label),Card=e.Card is {} c?c with{Name=L.CardName(c)}:null}).ToArray();
     [Parameter] public BattleBridge? Source {get;set;}
     [Parameter] public BattleCoordinator? Driver {get;set;}
     private BattleBridge EffectiveBridge=>Source??Bridge;
@@ -184,7 +186,7 @@
         try{
             if(Presenting){
                 StateHasChanged();
-                try{await DragBinding!.InvokeVoidAsync("presentEvents",previous,response.State,response.Events);}
+                try{await DragBinding!.InvokeVoidAsync("presentEvents",previous,response.State,LocalizeEvents(response.Events));}
                 catch(JSException){await DragBinding!.InvokeVoidAsync("clearEvents");Presenting=false;}
             }
             if(Disposed)return;

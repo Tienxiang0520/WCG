@@ -30,3 +30,17 @@ test('failure preserves the progress and explains retry; subsequent events canno
     state.finish();await state.context.window.wcgStartup.ready;
     assert.match(state.elements['startup-status'].textContent,/接續下載/);
 });
+test('loading screen follows the saved English choice, and stays zh-Hant without one',async()=>{
+    for(const [storage,languages,expected] of [[{getItem:()=> 'en'},['zh-TW'],'Downloading all game assets…'],[{getItem:()=>null},['en-US'],'Downloading all game assets…'],[{getItem:()=>null},['ja','en'],'正在下載完整遊戲資源…'],[undefined,undefined,'正在下載完整遊戲資源…']]){
+        let report;
+        const status={textContent:'正在檢查遊戲資源…'},detail={textContent:''},h1={textContent:'魂誓'};
+        const progress={value:0,isConnected:true,attributes:{},setAttribute(k,v){this.attributes[k]=v;},closest(){return null;}};
+        const elements={'startup-progress':progress,'startup-percentage':{},'startup-status':status,'startup-detail':detail};
+        const documentElement={lang:'zh-Hant'};
+        const context={window:{},URL,localStorage:storage,navigator:languages?{languages}:undefined,document:{baseURI:'https://game.test/',documentElement,title:'魂誓',querySelector:()=>h1,getElementById:id=>elements[id]},loadModule:()=>Promise.resolve({prepareGame(callback){report=callback;return new Promise(()=>{});}})};
+        vm.createContext(context);vm.runInContext(source.replace("import(new URL('asset-preload.js', document.baseURI).href)",'loadModule()'),context);
+        await Promise.resolve();await Promise.resolve();report({bytes:1,total:10,completed:0,count:3});
+        assert.equal(status.textContent,expected);
+        assert.equal(documentElement.lang,expected.startsWith('Down')?'en':'zh-Hant');
+    }
+});

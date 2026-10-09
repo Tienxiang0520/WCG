@@ -11,7 +11,7 @@
     </div>
     @if (Pending != null)
     {
-        <p class="mt-3">@Summary</p>
+        <p class="mt-3">@L.Text(Summary)</p>
         <p>@L["匯入會取代目前本機的牌組、天梯進度、頭像與設定。請先匯出目前存檔。"]</p>
         <button class="btn btn-warning" @onclick="Import">@L["確認取代並匯入"]</button>
         <button class="btn btn-secondary ms-2" @onclick="() => Pending = null">@L["取消"]</button>

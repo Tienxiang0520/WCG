@@ -65,7 +65,7 @@ else
                 @if (Profile.Match is { Settled: false } ongoing)
                 {
                     <h3 class="panel-title">@L["有一場尚未完成的對局"]</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
-                    @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@ongoing.ComputerDeck.Description</p> }
+                    @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@L.Text(ongoing.ComputerDeck.Description)</p> }
                     <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />@L["繼續對局"]</button>
                     <p class="ranked-help">@L["離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。"]</p>
                 }

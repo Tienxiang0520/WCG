@@ -45,7 +45,7 @@
                         <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />@L["開始訓練"]</button>
                         @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">@L["載入保存場面"]</button>}
                     </div>
-                    @if(ToolNotice!=""){<p class="field-note" role="status">@ToolNotice</p>}
+                    @if(ToolNotice!=""){<p class="field-note" role="status">@L.Text(ToolNotice)</p>}
                 </section>
                 <aside class="wcg-panel lobby-facts" aria-label="@L["對局規則速覽"]">
                     <h2 class="panel-title">@L["對局速覽"]</h2>
@@ -79,7 +79,7 @@
                     <label>@L["調整陣營"]<select aria-label="@L["調整陣營"]" @bind="Side" @bind:after="LoadResources"><option value="player">@L["己方"]</option><option value="computer">@L["電腦"]</option></select></label>
                     <label>@L["搜尋卡片"]<input aria-label="@L["搜尋卡片"]" placeholder="@L["卡名或編號，例如125"]" @bind="Search" @bind:event="oninput" @bind:after="FilterCard" /></label>
                     <label>@L["指定卡片"]<select aria-label="@L["指定卡片"]" @bind="SelectedCard">@foreach(var c in FilteredCards){<option value="@c.Id">@c.Id · @L.CardName(c)（@L.F("{0} 費", c.TotalCost)）</option>}</select></label>
-                    @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@card.Text</p>}
+                    @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@L.CardText(card)</p>}
                     <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>@L["加入手牌"]</button>
                     <label>@L["布置格位"]<select aria-label="@L["布置格位"]" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">@L.F("第 {0} 格", i+1) @(SelectedSide.Field.Any(m=>m.Slot==i)?L["（已有卡片）"]:"")</option>}</select></label>
                     <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>@L["直接擺放"]</button><button @onclick='()=>Edit("training-enter")'>@L["進場並觸發效果"]</button><button @onclick='()=>Edit("training-set")'>@L["背面蓋牌"]</button></div>

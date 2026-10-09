@@ -30,7 +30,7 @@
                 <section class="coach-body coach-complete" @key="@($"done-{Session.Attempt}")" data-sfx-show="starGain" data-sfx-delay="0.2" role="status">
                     <p class="coach-step">@L["課程完成"]</p>
                     <h2><Icon Name="star" Size="20" />@L[lesson.Title]</h2>
-                    <p class="coach-text">@step?.Text</p>
+                    <p class="coach-text">@L[step?.Text ?? ""]</p>
                     <p class="coach-score">@L.F("已完成 {0} / {1} 課", DoneCount, TutorialLessons.All.Count)</p>
                     <div class="coach-actions">
                         @if (next != null) { <a class="btn btn-primary" data-sfx="nav" href="@next.Href"><Icon Name="play" Size="16" />@L.F("下一課：{0}", next.Title)</a> }

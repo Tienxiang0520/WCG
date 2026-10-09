@@ -574,3 +574,5 @@
 :root:lang(en) .field-card strong,:root:lang(en) .field-card>strong{letter-spacing:0;line-height:1.1;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;hyphens:auto}
 :root:lang(en) .hand-availability{letter-spacing:.01em;white-space:normal;line-height:1.15}
 @media (max-width:700px){:root:lang(en) .v06-hand-card>strong{font-size:9.5px}:root:lang(en) .field-card strong,:root:lang(en) .field-card>strong{font-size:8px}:root:lang(en) .hand-availability{font-size:7.5px}}
+:root:lang(en) .turn-chip{letter-spacing:.01em}
+@media(max-width:700px){:root:lang(en) .turn-chip{font-size:10.5px;padding:3px 6px;text-overflow:clip}}

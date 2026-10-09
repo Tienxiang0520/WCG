@@ -1084,3 +1084,6 @@ html[data-wcg-motion="reduced"] .coach-notice, html[data-wcg-motion="reduced"] .
 /* English mode: longer card names wrap onto two lines instead of being cut off. */
 :root:lang(en) .card-title { white-space: normal; overflow: visible; text-overflow: clip; font-size: .76rem; letter-spacing: .01em; line-height: 1.15; overflow-wrap: anywhere; hyphens: auto; min-height: 2.3em; display: flex; align-items: center; }
 :root:lang(en) .card-type-strip { letter-spacing: .02em; }
+@media (max-width: 600px) {
+    :root:lang(en) .tutorial-game .coach-body:not(.coach-complete):not(.coach-failed) h2 { white-space: normal; overflow: hidden; font-size: .86rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+}
