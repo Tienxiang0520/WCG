@@ -7,6 +7,7 @@
 @inject RankedSession Ranked
 @inject CardDatabase Cards
 @inject DeckService Decks
+@inject RankedDecks Opponents
 
 <PageTitle>天梯 - 魂誓</PageTitle>
 @if (ShowingBattle && Ranked.Error == "")
@@ -21,6 +22,7 @@
                 <p>@result.Season 賽季</p><h2>@(result.Won ? "天梯勝利" : "本局敗北")</h2>
                 <strong class="ranked-result-stars">@(result.After > result.Before ? "★ ＋1" : result.After < result.Before ? "★ －1" : "牌位保護 · 星數不變")</strong>
                 <p>@RankedRules.Label(result.Before) → @RankedRules.Label(result.After)</p>
+                @if (Profile.Match is { } finished && finished.Id == result.MatchId) { <p class="ranked-result-opponent">對手：@finished.ComputerDeck.Name</p> }
                 @if (result.Season != Profile.Season) { <p>新賽季已開始，目前為 @RankedRules.Label(Profile.Stars)。</p> }
                 <button class="btn btn-primary" @onclick="Lobby">返回天梯</button>
             </section>
@@ -32,6 +34,7 @@ else
     <div class="ranked-lobby">
         <header><p class="ranked-eyebrow">單人天梯 · @Profile.Season</p><h1>挑戰下一個牌位</h1><p>每一場對局，往上多走一顆星。</p></header>
         @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
+        @if (Ranked.ResetNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@Ranked.ResetNotice</p> }
         <section class="ranked-card" aria-label="目前牌位">
             <RankEmblem Tier="@RankedRules.Tier(Profile.Stars)" />
             <div><p>目前牌位</p><h2>@RankedRules.Label(Profile.Stars)</h2>
@@ -48,24 +51,26 @@ else
             @if (Profile.Match is { Settled: false } ongoing)
             {
                 <h3>有一場尚未完成的對局</h3><p>@ongoing.PlayerDeck.Name · 對手：@ongoing.ComputerDeck.Name</p>
+                @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@ongoing.ComputerDeck.Description</p> }
                 <button class="btn btn-primary btn-lg" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume">繼續對局</button>
                 <p class="ranked-help">離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。</p>
             }
             else
             {
                 @if (Profile.Result is { } last)
-                { <p class="ranked-last">上一場：@(last.Won ? "勝利 ＋1 星" : last.After == last.Before ? "敗北 · 牌位保護" : "敗北 －1 星")</p> }
+                { <p class="ranked-last">上一場：@(last.Won ? "勝利 ＋1 星" : last.After == last.Before ? "敗北 · 牌位保護" : "敗北 －1 星")@(Profile.Match is { } previous && previous.Id == last.MatchId ? " · 對手 " + previous.ComputerDeck.Name : "")</p> }
                 <label for="ranked-deck">出戰牌組</label>
                 <select id="ranked-deck" class="form-select" @bind="SelectedDeck">
                     @foreach (var deck in Available) { <option value="@deck.Id" disabled="@(!deck.IsValid(Cards.GetCard, out _))">@deck.Name</option> }
                 </select>
                 <p>對手難度：@RankedRules.Tiers[RankedRules.Tier(Profile.Stars)] · @RankedDecks.Strategy(RankedRules.Tier(Profile.Stars))</p>
+                <p class="ranked-help">本牌位對手池：@Opponents.Summary(RankedRules.Tier(Profile.Stars))</p>
                 <button class="btn btn-primary btn-lg" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start">開始天梯對戰</button>
-                <p class="ranked-help">先後手隨機，對手由同牌位牌組池抽選。</p>
+                <p class="ranked-help">先後手隨機；對手由同牌位牌組池抽選，不會連續遇到同一流派，每場另隨機微調 0～2 組卡牌。</p>
             }
         </section>
         <p class="ranked-season">本季至 @SeasonEnd（台灣時間）。新賽季下降兩個大牌位，最低青銅。</p>
-        <details><summary>升段與存檔規則</summary><p>每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。</p><p>進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。</p><p>高牌位電腦使用更集中的牌組與更多攻擊規劃，遵守相同卡牌規則。</p></details>
+        <details><summary>升段與存檔規則</summary><p>每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。</p><p>進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。</p><p>牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。</p></details>
         @if (Profile.History.Count > 0)
         {
             <details><summary>歷季成績</summary><ul>@foreach (var season in Profile.History.AsEnumerable().Reverse()) { <li>@season.Season：@RankedRules.Label(season.EndingStars)，最高 @RankedRules.Label(season.BestStars)，@season.Wins 勝 @season.Losses 敗</li> }</ul></details>
