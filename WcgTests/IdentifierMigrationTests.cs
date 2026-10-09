@@ -44,13 +44,17 @@ public sealed class IdentifierMigrationTests
         Assert.False(deck.IsValid(cards.GetCard,out var error));Assert.Contains("超過 4",error);
     }
 
-    [Fact] public void PriorRulesJournalIsPreservedWithoutReplayingWithNewRules()
+    [Fact] public void PriorRulesJournalIsArchivedAndTheSeasonRestarts()
     {
         var raw=Fixture("legacy-ranked.json");var storage=new MemoryStorage();storage.Values["ranked"]=raw;
         var session=Session(Cards(),storage);
         try {
-            Assert.NotEmpty(session.Error);
-            Assert.Equal(raw,storage.Read("ranked"));
+            Assert.Empty(session.Error);Assert.NotEmpty(session.ResetNotice);
+            var profile=session.Read();
+            Assert.Equal(RankedRules.ProfileVersion,profile.Version);Assert.Equal(0,profile.Stars);Assert.Null(profile.Match);
+            var archived=Assert.Single(profile.History);Assert.Equal("2026-10 舊版電腦",archived.Season);Assert.Equal(7,archived.EndingStars);
+            Assert.NotEqual(raw,storage.Read("ranked"));
+            Assert.Empty(Session(Cards(),storage).Error);
         } finally {session.Coordinator.Dispose();}
     }
 
@@ -61,7 +65,8 @@ public sealed class IdentifierMigrationTests
         var cards=new CardDatabase(catalog.ToJsonString(),File.ReadAllText(Path.Combine(data,"preset_decks.json")));
         var raw=Fixture("legacy-ranked.json");var storage=new MemoryStorage();storage.Values["ranked"]=raw;
         var session=Session(cards,storage);
-        try {Assert.NotEmpty(session.Error);Assert.Equal(raw,storage.Read("ranked"));}
+        // The old match is archived before its rules are replayed, so the save loads and restarts cleanly.
+        try {Assert.Empty(session.Error);Assert.NotEmpty(session.ResetNotice);Assert.Null(session.Read().Match);}
         finally {session.Coordinator.Dispose();}
     }
 
@@ -69,7 +74,8 @@ public sealed class IdentifierMigrationTests
     {
         var cards=Cards();var backup=JsonSerializer.Serialize(new{format="soul-oath-local",version=1,
             data=new Dictionary<string,string>{{"decks",Fixture("legacy-decks.json")},{"ranked",Fixture("legacy-ranked.json")}},preferences=new{}});
-        Assert.ThrowsAny<Exception>(()=>PlayerBackupValidator.Validate(backup,cards,new RankedDecks(cards,File.ReadAllText(Path.Combine(data,"ranked_decks.json")))));
+        // Version 1 ranked saves are archived and reset rather than rejected, so a backup with a legacy match imports cleanly.
+        PlayerBackupValidator.Validate(backup,cards,new RankedDecks(cards,File.ReadAllText(Path.Combine(data,"ranked_decks.json"))));
     }
 
     static string StateShape(GameEngine e)=>JsonSerializer.Serialize(new{e.TurnNumber,e.CurrentTurnPlayerId,e.CurrentPhase,e.DecisionPlayerId,

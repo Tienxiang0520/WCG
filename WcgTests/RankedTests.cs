@@ -121,6 +121,64 @@ public sealed class RankedTests : IDisposable
         }
         Assert.True(decks.All.Select(e=>string.Join(',',e.Deck.CardIds.Order())).Distinct().Count()>=5);
     }
+    [Fact] public void VersionOneSaveIsArchivedAndTheSeasonRestarts()
+    {
+        store.Save(new(){Version=1,Season="2026-10",Stars=61,BestStars=80,SeasonBest=70,Wins=9,Losses=4,
+            History=[new("2026-09",30,30,1,1)],Match=new(){Season="2026-10",Tier=4},Result=new(Guid.NewGuid(),"2026-10",true,60,61,"")});
+        var s=Session();Assert.Empty(s.Error);Assert.NotEmpty(s.ResetNotice);
+        var p=s.Read();Assert.Equal(RankedRules.ProfileVersion,p.Version);Assert.Equal(0,p.Stars);Assert.Equal(80,p.BestStars);
+        Assert.Equal(0,p.Wins+p.Losses);Assert.Null(p.Match);Assert.Null(p.Result);
+        var archived=Assert.Single(p.History,h=>h.Season=="2026-10 舊版電腦");Assert.Equal(61,archived.EndingStars);Assert.Equal(9,archived.Wins);
+        Assert.Empty(Session().ResetNotice);Assert.Equal(0,Session().Read().Stars);
+        Assert.True(s.Start(cards.PresetDecks[0]).Success);Assert.True(s.Read().Match!.Actions.Count==0);
+    }
+    [Fact] public void CorruptSaveIsStillPreservedWhenTheVersionCannotBeRead()
+    {
+        Directory.CreateDirectory(dir);File.WriteAllText(store.Path,"{\"Version\":9}");var s=Session();Assert.NotEmpty(s.Error);Assert.False(s.Start(cards.PresetDecks[0]).Success);
+        Assert.Equal("{\"Version\":9}",File.ReadAllText(store.Path));
+    }
+    [Fact] public void HigherTiersWinMoreOftenAgainstTheTrialAiAndStayDeterministic()
+    {
+        int Wins(int level,int games)
+        {
+            int wins=0;
+            for(int seed=0;seed<games;seed++)
+            {
+                var e=new GameEngine(cards,new Random(seed+800)){AiLevel=level};e.SeedRankedAi(seed);
+                e.StartGame(cards.PresetDecks[seed%5],cards.PresetDecks[(seed+2)%5],seed%2==0);e.Player.IsAi=true;
+                for(int n=0;n<3000&&!e.IsOver;n++){e.AiLevel=e.DecisionPlayerId=="player"?level:-1;Assert.True(e.ExecuteAiStep(),e.LastError);}
+                Assert.True(e.IsOver);if(e.Computer.HasLost)wins++;
+            }
+            return wins;
+        }
+        var bronze=Wins(0,20);var silver=Wins(1,20);var master=Wins(5,20);
+        Assert.True(bronze<silver&&silver<master,$"bronze {bronze}, silver {silver}, master {master}");
+        var a=new GameEngine(cards,new Random(5)){AiLevel=3};a.SeedRankedAi(5);a.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);a.Player.IsAi=true;
+        var b=new GameEngine(cards,new Random(5)){AiLevel=3};b.SeedRankedAi(5);b.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);b.Player.IsAi=true;
+        for(int n=0;n<12;n++){Assert.True(a.ExecuteAiStep());Assert.True(b.ExecuteAiStep());
+            Assert.Equal(JsonSerializer.Serialize(StateShape(a)),JsonSerializer.Serialize(StateShape(b)));}
+    }
+    [Fact] public void MasterAiFindsCombinedLethalThatBronzeMisses()
+    {
+        GameEngine Setup(int level)
+        {
+            var e=new GameEngine(cards,new Random(1)){AiLevel=level};e.SeedRankedAi(1);e.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],false);
+            e.Computer.Hand.Clear();e.Player.Hp=2;
+            for(int i=0;i<2;i++)e.Computer.Field.Add(new(cards.GetCard("WCG-101")!){IsTapped=false,HasSummoningSickness=false});
+            e.Player.Field.Add(new(cards.GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false});
+            return e;
+        }
+        var master=Setup(5);Assert.True(master.ExecuteAiStep());Assert.Equal(1,master.Player.Hp);Assert.True(master.ExecuteAiStep());Assert.True(master.Player.HasLost);
+        var bronze=Setup(0);var swings=0;
+        for(int n=0;n<3&&!bronze.IsOver;n++){Assert.True(bronze.ExecuteAiStep());if(bronze.Player.Field.Count<1)swings++;}
+        Assert.False(bronze.Player.HasLost);
+    }
+    [Fact] public void RankedActionsRecordTheTieredAiVersion()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        var state=s.Bridge.Snapshot();Assert.True(s.Bridge.Submit(new(Guid.NewGuid(),state.MatchId,state.Revision,"surrender")).Success);
+        Assert.Equal(GameEngine.RankedAiVersion,s.Read().Match!.Actions.Single().RulesVersion);
+    }
     static string ArchetypeKey(string id) => id.Split('-',3)[2];
     [Fact] public void TiersGrowFromSimplePoolsToEveryArchetype()
     {

@@ -24,6 +24,7 @@ public sealed partial class RankedSession
     public BattleCoordinator Coordinator { get; }
     public string Error { get; private set; } = "";
     public string BalanceNotice { get; private set; } = "";
+    public string ResetNotice { get; private set; } = "";
     public RankedSession(CardDatabase cards, DeckService decks, RankedStore store, RankedDecks opponents,
         ILogger<BattleCoordinator> logger, TimeProvider? clock = null)
     {
@@ -37,7 +38,16 @@ public sealed partial class RankedSession
         priorBalanceRules = Fingerprint(priorCatalog);
         priorBalanceIdentifierRules = Fingerprint(priorCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
-        try { profile = store.Load(); Restore(); RefreshSeason(); }
+        try
+        {
+            profile = store.Load();
+            if (store.ResetOnLoad)
+            {
+                store.Save(profile);
+                ResetNotice = "天梯電腦已改為依牌位分級。舊版進度已封存到歷季成績，本季從青銅 III 重新開始；未完成的舊對局不計勝負。";
+            }
+            Restore(); RefreshSeason();
+        }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
         { logger.LogWarning(ex, "Ranked save could not be restored"); Error = "天梯存檔暫時無法載入，原檔已保留。"; }
         Bridge.RankedSubmit = Submit; Bridge.RankedAi = Ai;
@@ -80,7 +90,7 @@ public sealed partial class RankedSession
             : Engine.Player.Hand.FindIndex(m => m.InstanceId == c.InstanceId);
         var side = Engine.Player.Board.Any(m => m.InstanceId == c.TargetId) ? 0 : Engine.Computer.Board.Any(m => m.InstanceId == c.TargetId) ? 1 : -1;
         var target = side < 0 ? -1 : (side == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToList().FindIndex(m => m.InstanceId == c.TargetId);
-        return new(c.Type, source, side, target, Engine.CurrentPendingChoice?.Options.FindIndex(o => o.Id == c.OptionId) ?? -1, RulesVersion: 3);
+        return new(c.Type, source, side, target, Engine.CurrentPendingChoice?.Options.FindIndex(o => o.Id == c.OptionId) ?? -1, RulesVersion: GameEngine.RankedAiVersion);
     }
     private BattleCommand Decode(RankedAction a)
     {
@@ -137,7 +147,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
-            return Apply(new("ai", RulesVersion: 3), Bridge.AiStepCore);
+            return Apply(new("ai", RulesVersion: GameEngine.RankedAiVersion), Bridge.AiStepCore);
         }
     }
     private BattleResponse Apply(RankedAction action, Func<BattleResponse> apply)
