@@ -80,7 +80,7 @@
 .white-color .print-card-stats b { font-size: 12pt; }
 .white-color .print-card-meta { font-size: 8pt; }
 .white-print-art-wrap { position: relative; flex: 0 0 auto; }
-.white-print-art { display: block; width: 100%; height: 24mm; object-fit: contain; background: white; border: .15mm solid #777; }
+.white-print-art { display: block; width: 100%; height: 24mm; object-fit: cover; background: white; border: .15mm solid #777; }
 .white-print-card.long-text .white-print-art { height: 18mm; }
 .white-print-arrow { position: absolute; z-index: 2; background: var(--will-color); }
 .white-print-arrow.left, .white-print-arrow.right { width: 3mm; height: 4mm; top: 50%; transform: translateY(-50%); }
