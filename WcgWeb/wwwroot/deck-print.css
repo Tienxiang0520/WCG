@@ -88,7 +88,7 @@
 @media (max-width: 600px) { .print-controls { padding: 1rem; } .print-control-heading { align-items: start; } .print-control-heading h1 { font-size: 1.2rem; } .print-sheet { margin-left: 0; } }
 @page { size: A4 portrait; margin: 6mm; }
 @media print {
-    html:has(.deck-print-overlay) { background: white !important; }
+    html:has(.deck-print-overlay) { background: white !important; color-scheme: light !important; }
     body:has(.deck-print-overlay), body:has(.deck-print-overlay) .page, body:has(.deck-print-overlay) main,
     body:has(.deck-print-overlay) main > article { display: block !important; width: auto !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; background: white !important; color: #111 !important; }
     body:has(.deck-print-overlay) .sidebar, body:has(.deck-print-overlay) main > article > :not(.deck-print-overlay), body:has(.deck-print-overlay) #blazor-error-ui { display: none !important; }
