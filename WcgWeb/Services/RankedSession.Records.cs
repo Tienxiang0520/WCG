@@ -37,6 +37,7 @@ public sealed partial class RankedSession
             var actions = RankedRecord.Decode(record.Actions);
             CardDatabase catalog; bool limit;
             if (record.Rules == rules || record.Rules == priorIdentifierRules) { catalog = currentCards; limit = false; }
+            else if (record.Rules == priorArrowRules || record.Rules == priorArrowIdentifierRules) { catalog = priorArrowCards; limit = false; }
             else if (record.Rules == priorBalanceRules || record.Rules == priorBalanceIdentifierRules) { catalog = priorBalanceCards; limit = true; }
             else return new(record, [], "這場對局使用的卡牌版本已更新，無法重新模擬回顧。");
             var engine = new GameEngine(currentCards); var bridge = new BattleBridge(engine, deckService);

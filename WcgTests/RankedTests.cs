@@ -89,8 +89,7 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void BalanceUpdatePreservesActiveOldMatchAndUsesNewRulesOnNextMatch()
     {
-        var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(env.ContentRootPath,"Data/balance-before-unlimited-faction-triggers.json")))!.ToDictionary(c=>c.Id);
-        var oldCards=new CardDatabase(JsonSerializer.Serialize(cards.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(cards.PresetDecks));
+        var oldCards=Overlay(Overlay(cards,"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
         var deck=DeckService.Copy(oldCards.PresetDecks[1]);deck.CardIds.RemoveRange(0,4);deck.CardIds.AddRange(Enumerable.Repeat("WCG-185",4));
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(oldSession.Start(deck).Success);
@@ -106,6 +105,42 @@ public sealed class RankedTests : IDisposable
         Assert.Empty(restored.BalanceNotice);
         Assert.Equal(6,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
         Assert.Empty(Session().Error);
+    }
+    CardDatabase Overlay(CardDatabase current,string file)
+    {
+        var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(env.ContentRootPath,"Data",file)))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
+    static string Hash(CardDatabase c)=>Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(c.AllCards))));
+    [Fact] public void HistoricCatalogsReproduceTheReleasedFingerprints()
+    {
+        // Ranked saves store a hash of the catalog; the overlays must rebuild the exact released catalogs or old matches stop resuming.
+        var beforeArrows=Overlay(cards,"balance-before-arrow-cards.json");
+        Assert.Equal("3664E96255F2DBC34CDF76D9BB5760AAD8F97A0E153FFF94F9CC95BCF97EA2CE",Hash(beforeArrows));
+        Assert.Equal("4ED3BFBD9FD5B5D2EFB919883D80442392F1B27B160F17119C1EFB0FF235A194",Hash(Overlay(beforeArrows,"balance-before-unlimited-faction-triggers.json")));
+        Assert.NotEqual(Hash(beforeArrows),Hash(cards));
+    }
+    [Fact] public void ArrowExpansionPreservesActivePreArrowMatchAndReplays()
+    {
+        var oldCards=Overlay(cards,"balance-before-arrow-cards.json");
+        Assert.Empty(oldCards.GetCard("WCG-156")!.Arrows);Assert.Equal(1500,oldCards.GetCard("WCG-156")!.PP);
+        var deck=DeckService.Copy(oldCards.PresetDecks[0]);
+        var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(oldSession.Start(deck).Success);
+        var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+        oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
+        Assert.Equal(1500,oldSession.Engine.Player.Hand.Concat(oldSession.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-156").Card.PP);
+        var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));var stars=oldSession.Read().Stars;
+        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
+        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.Equal(stars,restored.Read().Stars);
+        Assert.True(Send(restored,"surrender").Success);
+        var record=restored.Read().Records!.Last();
+        var replay=restored.BuildReplay(record.Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
+        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
+        var ogre=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-156").Card;
+        Assert.Equal(1300,ogre.PP);Assert.Equal(["up"],ogre.Arrows);
     }
     [Fact] public void CorruptSaveIsPreservedAndBlocksRankedOnly()
     {
