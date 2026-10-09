@@ -71,3 +71,36 @@
 .battle-log-detail > button { margin-top:12px; }
 
 .battle-card-warning { color:#ffd28c;border-left:3px solid #eab96b;padding-left:8px; }
+
+/* ==== Battle effects layer (battle-fx.js). Procedural and original; never receives input. ==== */
+.wcg-fx-layer{position:fixed;inset:0;pointer-events:none;z-index:2147482998;overflow:hidden;contain:strict}
+.wcg-fx{position:fixed;pointer-events:none;will-change:transform,opacity;box-sizing:border-box}
+.wcg-fx-spark{border-radius:50%}
+.wcg-fx-dust{border-radius:50%;opacity:.85}
+.wcg-fx-flare{clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);mix-blend-mode:screen}
+.wcg-fx-ring{border:3px solid #ffe2a6;border-radius:50%}
+.wcg-fx-glow{border-radius:16px;mix-blend-mode:screen}
+.wcg-fx-shard{pointer-events:none;will-change:transform,opacity}
+.wcg-fx-banner{display:flex;align-items:center;justify-content:center}
+.wcg-fx-banner span{display:block;padding:18px 72px;font:900 48px/1.1 "Noto Serif TC","Songti TC",serif;letter-spacing:.2em;white-space:nowrap;color:#fff5da;
+  text-shadow:0 3px 0 #0009,0 0 18px #ffd27a,0 0 40px #ffb84d99;
+  background:linear-gradient(90deg,transparent,#0b1f29ee 18%,#0b1f29ee 82%,transparent);
+  border-top:2px solid;border-bottom:2px solid;border-image:linear-gradient(90deg,transparent,#e8c877,transparent) 1}
+.wcg-fx-banner.player span{color:#eafff2;text-shadow:0 3px 0 #0009,0 0 18px #6cffaa,0 0 42px #3fd88a99}
+.wcg-fx-banner.computer span{font-size:40px;color:#ffe6d2;text-shadow:0 3px 0 #0009,0 0 16px #ff9b6a,0 0 36px #ff6a3a88;border-image:linear-gradient(90deg,transparent,#e3895a,transparent) 1}
+.wcg-fx-banner.victory span{font-size:56px;color:#fff6cf;text-shadow:0 3px 0 #000a,0 0 24px #ffd65a,0 0 60px #ffb300aa}
+.wcg-fx-banner.defeat span{font-size:56px;color:#d9dde6;text-shadow:0 3px 0 #000a,0 0 24px #7f93b8,0 0 50px #31415faa;border-image:linear-gradient(90deg,transparent,#7f93b8,transparent) 1}
+@media(max-width:700px){.wcg-fx-banner span{font-size:30px;padding:12px 30px}.wcg-fx-banner.victory span,.wcg-fx-banner.defeat span{font-size:40px}}
+
+/* Targeting arrow: soft glow underlay, flowing dashed core and a lock-on reticle on legal drops. */
+.wcg-aim .wcg-aim-glow{opacity:.25}
+.wcg-aim .wcg-aim-core{stroke-dasharray:16 8;animation:wcg-aim-flow .45s linear infinite}
+.wcg-aim .wcg-aim-reticle{opacity:0;transition:opacity .12s}
+.wcg-aim[data-state="valid"] .wcg-aim-reticle{opacity:1}
+.wcg-aim[data-state="invalid"] .wcg-aim-reticle{opacity:.45}
+.wcg-aim .wcg-aim-spin{transform-box:fill-box;transform-origin:center;animation:wcg-aim-spin 1.8s linear infinite}
+.wcg-aim[data-state="valid"] .wcg-aim-spin{animation:wcg-aim-lock .22s cubic-bezier(.2,.8,.3,1.5) both,wcg-aim-spin 1.8s .22s linear infinite}
+@keyframes wcg-aim-flow{to{stroke-dashoffset:-24}}
+@keyframes wcg-aim-spin{to{rotate:360deg}}
+@keyframes wcg-aim-lock{from{scale:1.8;opacity:0}to{scale:1;opacity:1}}
+html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-core,html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-spin{animation:none}

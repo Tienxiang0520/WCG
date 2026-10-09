@@ -1,5 +1,8 @@
+import { motionReduced } from './battle-fx.js';
+
 // Present only public engine events. Keep the old board until this batch completes.
-export function bindFeedback(root, sound = null) {
+// `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
+export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, priorInert = false, locked = false;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
     let publicUnits = new Map();
@@ -21,10 +24,10 @@ export function bindFeedback(root, sound = null) {
         if (!el || hidden.has(el)) return;
         hidden.set(el, el.style.visibility); el.style.visibility = 'hidden';
     }
-    async function animate(el, frames, duration) {
+    async function animate(el, frames, duration, easing = 'ease-out') {
         if (disposed || !el) return;
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration, easing: 'ease-out', fill: 'forwards' });
+        const reduced = motionReduced();
+        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration, easing, fill: 'forwards' });
         animations.add(animation);
         try { await animation.finished; } catch { /* Leaving the board cancels the visual batch. */ }
         finally { animations.delete(animation); }
@@ -79,7 +82,13 @@ export function bindFeedback(root, sound = null) {
         const dx = to.x + to.width / 2 - from.x - from.width / 2;
         const dy = to.y + to.height / 2 - from.y - from.height / 2;
         const scale = keep ? Math.min(1, to.width / from.width, to.height / from.height) : .65;
-        await animate(el, [{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${dx}px,${dy}px) scale(${scale})`, opacity: keep ? 1 : 0 }], 460);
+        // A lifted arc reads as "played from the hand" instead of a flat slide.
+        const lift = Math.min(90, Math.abs(dy) * .35 + 30), tilt = dx > 0 ? 6 : -6;
+        await animate(el, [
+            { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
+            { transform: `translate(${dx * .45}px,${dy * .45 - lift}px) scale(${keep ? 1.12 : .95}) rotate(${tilt}deg)`, opacity: 1, offset: .45 },
+            { transform: `translate(${dx}px,${dy}px) scale(${keep ? scale * 1.06 : scale}) rotate(0deg)`, opacity: keep ? 1 : .2, offset: .86 },
+            { transform: `translate(${dx}px,${dy}px) scale(${scale})`, opacity: keep ? 1 : 0 }], 520, 'cubic-bezier(.25,.75,.35,1)');
         if (!keep) el.remove();
     }
     async function flash(el, color = '#ff957b') {
@@ -92,21 +101,44 @@ export function bindFeedback(root, sound = null) {
     async function number(el, text, heal = false) {
         if (!el) return;
         const r = el.getBoundingClientRect();
-        const pop = place(node('div', `event-number ${heal ? 'healing' : ''}`, text), { x: r.x + r.width / 2 - 45, y: r.y - 8, width: 90, height: 55 });
+        const amount = Number(String(text).replace(/[^\d]/g, '')) || 1;
+        // Portraits near the top edge get their number just below, so it never leaves the screen.
+        const top = r.y < 90 ? r.y + r.height + 26 : r.y - 14;
+        const pop = place(node('div', `event-number ${heal ? 'healing' : ''} ${amount >= 3 ? 'big' : ''}`, text), { x: r.x + r.width / 2 - 60, y: top, width: 120, height: 64 });
         void sound?.play(heal ? 'heal' : 'damage');
         pop.dataset.wcgEffect = heal ? 'heal' : 'damage';
-        await Promise.all([flash(el, heal ? '#91ffc1' : '#ff957b'), animate(pop, [{ opacity: 0, transform: 'translateY(0) scale(.7)' }, { opacity: 1, transform: 'translateY(-10px) scale(1.15)', offset: .2 }, { opacity: 0, transform: 'translateY(-45px) scale(1)' }], 580)]);
+        if (heal) void fx?.burst(el, { color: '#9dffc9', count: 12, spread: 60, size: 6, rise: 50, duration: 760 });
+        else {
+            void fx?.burst(el, { color: '#ff9f80', count: 8 + amount * 3, spread: 70, size: 6 });
+            void fx?.recoil(el, null, Math.min(1, .35 + amount * .2));
+            void fx?.shake(Math.min(1, .25 + amount * .18));
+        }
+        await Promise.all([flash(el, heal ? '#91ffc1' : '#ff957b'), animate(pop, [
+            { opacity: 0, transform: 'translateY(6px) scale(.35)' },
+            { opacity: 1, transform: 'translateY(-8px) scale(1.3)', offset: .18 },
+            { opacity: 1, transform: 'translateY(-14px) scale(1)', offset: .55 },
+            { opacity: 0, transform: 'translateY(-48px) scale(.95)' }], 680, 'cubic-bezier(.2,.8,.3,1)')]);
         pop.remove();
     }
     async function attack(ev) {
         const source = visual(ev.instanceId), destination = ev.targetId ? visual(ev.targetId) : hero(ev.side === 'player' ? 'computer' : 'player');
         if (!source || !destination) return;
-        if (ev.side === 'player') { await flash(destination); return; } // Player already lunged on release.
+        const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
+        if (ev.side === 'player') { await flash(destination); return; } // Player already lunged (with contact sparks) on release.
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
         const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; hide(source);
         const dx = to.x + to.width / 2 - from.x - from.width / 2, dy = to.y + to.height / 2 - from.y - from.height / 2;
         void sound?.play('attack', .23);
-        await animate(moving, [{ transform: 'translate(0,0)' }, { transform: `translate(${dx}px,${dy}px) scale(1.06)`, offset: .5 }, { transform: 'translate(0,0)' }], 460);
+        // Wind-up, fast lunge that stops just short of the target, then recoil home.
+        await animate(moving, [
+            { transform: 'translate(0,0) scale(1)' },
+            { transform: `translate(${-dx * .06}px,${-dy * .06}px) scale(1.08) rotate(${dx > 0 ? -3 : 3}deg)`, offset: .22 },
+            { transform: `translate(${dx * .86}px,${dy * .86}px) scale(1.1)`, offset: .5 }], 300, 'cubic-bezier(.5,0,.75,.4)');
+        void fx?.impact(destination, moving, power);
+        await animate(moving, [
+            { transform: `translate(${dx * .86}px,${dy * .86}px) scale(1.1)` },
+            { transform: `translate(${dx * .7}px,${dy * .7}px) scale(1.04)`, offset: .25 },
+            { transform: 'translate(0,0) scale(1)' }], 260, 'cubic-bezier(.2,.7,.3,1)');
         moving.remove(); source.style.visibility = hidden.get(source) ?? ''; hidden.delete(source);
         await flash(destination);
     }
@@ -116,7 +148,11 @@ export function bindFeedback(root, sound = null) {
         const departing = place(source.cloneNode(true), source.getBoundingClientRect()); departing.dataset.wcgEffect = 'death'; hide(source);
         await flash(departing);
         void sound?.play('death');
-        await animate(departing, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'translateY(35px) rotate(7deg) scale(.55)' }], 420);
+        if (fx && !motionReduced()) {
+            // Shards carry the exit; the solid card vanishes quickly underneath them.
+            void fx.shatter(departing);
+            await animate(departing, [{ opacity: 1, transform: 'scale(1)', filter: 'brightness(1.8)' }, { opacity: 0, transform: 'scale(1.04)', filter: 'brightness(2.2)' }], 160);
+        } else await animate(departing, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'translateY(35px) rotate(7deg) scale(.55)' }], 420);
         departing.remove(); ghosts.get(ev.instanceId)?.remove(); ghosts.delete(ev.instanceId);
     }
     async function present(previous, next, events) {
@@ -144,8 +180,10 @@ export function bindFeedback(root, sound = null) {
                     if (ev.side === 'computer') {
                         const isField = destination(ev.instanceId), moving = originCard(ev.side, ev.card);
                         void sound?.play(isField ? 'place' : 'spell', .35);
-                        await fly(moving, isField ?? visual(ev.targetId) ?? root.querySelector('.battlefield'), !!isField);
+                        const spellTarget = isField ? null : visual(ev.targetId) ?? root.querySelector('.battlefield');
+                        await fly(moving, isField ?? spellTarget, !!isField);
                         if (isField) ghosts.set(ev.instanceId, moving);
+                        else { void fx?.ring(spellTarget, '#b9e6ff', .6); void fx?.burst(spellTarget, { color: '#bfe9ff', count: 16, spread: 80, size: 6 }); }
                     }
                     played.add(ev.instanceId);
                 } else if (ev.type === 'summon' || ev.type === 'set') {
@@ -157,13 +195,16 @@ export function bindFeedback(root, sound = null) {
                             else place(card, target.getBoundingClientRect());
                             ghosts.set(ev.instanceId, card);
                         }
-                        hide(hand(ev.instanceId)); await flash(target, '#93ffc0');
+                        hide(hand(ev.instanceId));
+                        void fx?.slam(target, ev.type === 'set' ? 0 : ev.card?.cost ?? 1);
+                        await flash(target, '#93ffc0');
                     }
                 } else if (ev.type === 'energy') {
                     if (ev.side === 'computer') { void sound?.play('energy', .35); await fly(originCard(ev.side, null), hero(ev.side)); }
-                    else await flash(root.querySelector('.energy-zone'), '#8ad7ff');
+                    else { const zone = root.querySelector('.energy-zone'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
                 } else if (ev.type === 'trigger' || ev.type === 'status' || ev.type === 'reveal') {
                     void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
+                    void fx?.ring(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1', .7);
                     await flash(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1');
                 } else if (ev.type === 'bounce') {
                     const source = visual(ev.instanceId);
@@ -171,14 +212,21 @@ export function bindFeedback(root, sound = null) {
                 } else if (ev.type === 'turn') {
                     // Player pressed the mechanical button already; sound again only when their next turn begins.
                     if (ev.side === 'player') void sound?.play('turn');
+                    // Non-blocking banner; input unlocks on the normal snapshot commit.
+                    void fx?.banner(ev.side === 'player' ? '你的回合' : '電腦回合', ev.side);
                     await flash(hero(ev.side), '#9edcff');
                 }
                 else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
-                else if (ev.type === 'gameover') { void sound?.play('gameover'); await flash(hero(ev.side), '#ffe5a1'); }
+                else if (ev.type === 'gameover') {
+                    void sound?.play('gameover');
+                    // The gameover event names the losing side.
+                    void fx?.banner(ev.side === 'player' ? '敗北' : '勝利', ev.side === 'player' ? 'defeat' : 'victory', 1800);
+                    await flash(hero(ev.side), '#ffe5a1');
+                }
                 else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
             }
         } catch (error) { clear(); throw error; }
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
-    return { present, clear, dispose() { disposed = true; clear(); } };
+    return { present, clear, dispose() { disposed = true; clear(); fx?.clear(); } };
 }

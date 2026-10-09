@@ -71,7 +71,7 @@
         {
             @foreach (var card in FilteredCards)
             {
-                <div>
+                <div class="gallery-entry" @key="card.Id">
                     <WcgWeb.Components.Common.CardItem Card="@card" OnCardClicked="() => Inspect = card" />
                     <div class="text-center mt-1 text-muted" style="font-size:0.7rem;">
                         #@card.Id

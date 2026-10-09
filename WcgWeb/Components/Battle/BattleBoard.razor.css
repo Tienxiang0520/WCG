@@ -150,3 +150,83 @@
 .has-taunt.action-ready{border-color:transparent!important;box-shadow:none}
 .has-taunt.action-ready>.taunt-frame{filter:drop-shadow(0 0 5px #6cffaaa0) drop-shadow(0 0 9px #6cffaa70)}
 @media(max-width:1000px){.training .opponent{top:52px}.training .battle-message{top:88px}.training .battlefield{top:118px}}
+
+/* ==== Game feel: ambience, juice and feedback (2026-10-09). Visual only; rules and input locks are untouched. ==== */
+.board-ambience{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit;transition:box-shadow .8s ease}
+.board-ambience::before,.board-ambience::after{content:"";position:absolute;inset:-25%;background-image:radial-gradient(2px 2px at 12% 18%,#ffe9b380,transparent 70%),radial-gradient(1.6px 1.6px at 64% 42%,#bfefff70,transparent 70%),radial-gradient(1.2px 1.2px at 38% 82%,#fff3d060,transparent 70%),radial-gradient(2.2px 2.2px at 86% 66%,#9fe8d060,transparent 70%);background-size:310px 270px;opacity:.55;animation:mote-drift 46s linear infinite;will-change:transform}
+.board-ambience::after{background-size:430px 390px;opacity:.35;animation-duration:71s;animation-direction:reverse}
+@keyframes mote-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-310px,-270px,0)}}
+.turn-player .board-ambience{box-shadow:inset 0 -70px 110px -60px #74f0b04d,inset 0 0 160px #0007}
+.turn-computer .board-ambience{box-shadow:inset 0 70px 110px -60px #ff9b6a40,inset 0 0 160px #0007}
+.turn-chip{display:inline-block;padding:3px 10px;border-radius:999px;background:#0f222b;border:1px solid #5d7a74;animation:chip-in .45s cubic-bezier(.2,.8,.3,1.3) both}
+.turn-chip.mine{color:#c9ffe0;border-color:#79e3aa;box-shadow:0 0 12px #6cffaa40}
+.turn-chip.theirs{color:#ffd9bd;border-color:#d99a6c;box-shadow:0 0 12px #ff9b6a33}
+@keyframes chip-in{from{opacity:0;translate:0 -8px;scale:.9}to{opacity:1;translate:0 0;scale:1}}
+
+/* Buttons: hover lift, press squash. */
+.v06-board button{transition:transform .12s ease,background-color .15s,box-shadow .15s,border-color .15s,filter .15s}
+.v06-board button:not(:disabled):hover{transform:translateY(-1px);background-color:#35525f;border-color:#a9c2bd;box-shadow:0 4px 12px #0007}
+.v06-board button:not(:disabled):active{transform:translateY(1px) scale(.96);box-shadow:0 1px 3px #0007;filter:brightness(.92)}
+.v06-board button:focus-visible{outline:2px solid #ffe3a0;outline-offset:2px}
+.motion-toggle{font-size:12px}
+
+/* Portraits: active side, life bump on change, danger pulse when low. */
+.hero{transition:border-color .4s,box-shadow .4s}
+.hero.is-active{border-color:#e9d58f;box-shadow:0 0 0 1px #e9d58f55,0 0 24px #e9d58f40,0 3px 12px #0006}
+.hp-value{display:inline-block;animation:hp-bump .5s cubic-bezier(.2,.8,.3,1.5) both}
+.low-hp .hp-value{color:#ff8f86;animation:hp-bump .5s cubic-bezier(.2,.8,.3,1.5) both,low-hp 1.3s .5s ease-in-out infinite}
+@keyframes hp-bump{0%{scale:1.6;filter:brightness(2)}100%{scale:1;filter:none}}
+@keyframes low-hp{50%{scale:1.12;text-shadow:0 0 12px #ff4c3b}}
+
+/* Hand: dealt-in arrival, smooth fan reflow, cursor tilt with sheen, breathing playable glow. */
+.v06-hand-card{transition:transform .28s cubic-bezier(.2,.8,.3,1),box-shadow .2s,height .2s,filter .2s;animation:hand-deal .46s cubic-bezier(.2,.8,.3,1.1) both;animation-delay:calc(var(--order) * 35ms)}
+@keyframes hand-deal{from{translate:0 140px;opacity:0}to{translate:0 0;opacity:1}}
+.v06-hand-card:hover,.v06-hand-card:focus-visible{transform:translateX(calc(var(--offset) * var(--step))) translateY(-130px) perspective(800px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) scale(1.2);transition:transform .14s ease-out,box-shadow .2s,height .2s}
+.dragging .v06-hand-card:hover{transform:translateX(calc(var(--offset) * var(--step))) rotate(var(--angle))}
+.hand-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;opacity:0;transition:opacity .2s;background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,10%),#ffffff59,#ffffff14 30%,transparent 55%)}
+.v06-hand-card:hover .hand-shine{opacity:1}.dragging .hand-shine{opacity:0!important}
+.v06-hand-card.available::after,.v06-hand-card.set-ready::after{content:"";position:absolute;inset:-4px;border-radius:16px;pointer-events:none;box-shadow:0 0 16px 3px #6cffaa;opacity:.25;animation:breathe 2.2s ease-in-out infinite}
+.v06-hand-card.set-ready::after{box-shadow:0 0 16px 3px #ffde7b}
+@keyframes breathe{50%{opacity:.85}}
+
+/* Drag targeting: legal zones pulse while aiming. */
+.dragging .legal{animation:legal-pulse .9s ease-in-out infinite alternate}
+@keyframes legal-pulse{from{outline-offset:1px}to{outline-offset:6px}}
+
+/* Field: readiness pulse, taunt breathe, shield bubble, silence desaturation. */
+.field-card{transition:filter .3s,border-color .3s}
+.tapped .field-card{filter:brightness(.86) saturate(.8)}
+.field-card.attack-ready::after{content:"";position:absolute;inset:-4px;border-radius:16px;pointer-events:none;z-index:3;box-shadow:0 0 18px 3px #6cffaa;opacity:.3;animation:breathe 1.6s ease-in-out infinite}
+.field-card.attack-ready:hover{transform:translateY(-3px);transition:transform .15s}
+.has-taunt>.taunt-frame{animation:taunt-breathe 2.8s ease-in-out infinite}
+@keyframes taunt-breathe{50%{scale:1.018}}
+.has-shield::before{content:"";position:absolute;inset:-6px;border-radius:18px;pointer-events:none;z-index:3;border:2px solid #ffe58acc;box-shadow:0 0 14px #ffe58a88,inset 0 0 18px #ffe58a55;background:radial-gradient(ellipse at 50% 0%,#fff6c840,transparent 60%);animation:shield-shimmer 2.6s ease-in-out infinite}
+@keyframes shield-shimmer{50%{opacity:.55}}
+.is-silenced .card-art-layer{filter:grayscale(.85) brightness(.75)}
+.is-poisonous .field-stats b:first-child{color:#b8ff9e;box-shadow:0 0 8px #6dff5a80}
+
+/* Energy crystals fill in, spent ones dim and shrink; counter bumps on change. */
+.energy-dots i{background:linear-gradient(#d6f3ff,#47a9ec);transition:opacity .35s,transform .35s,box-shadow .35s;animation:crystal-in .55s cubic-bezier(.2,.8,.3,1.6) both}
+.energy-dots i.spent{transform:scale(.78);opacity:.22}
+@keyframes crystal-in{0%{scale:0;filter:brightness(3)}60%{scale:1.35}100%{scale:1;filter:none}}
+.energy-count{display:inline-block;animation:hp-bump .45s cubic-bezier(.2,.8,.3,1.5) both}
+
+/* End turn: glows once nothing playable remains (presentation hint only). */
+.end-turn.no-moves:not(:disabled){border-color:#fff0b8!important;animation:end-turn-glow 1.2s ease-in-out infinite alternate}
+@keyframes end-turn-glow{from{box-shadow:0 0 6px #ffd76a66}to{box-shadow:0 0 22px 4px #ffd76acc}}
+
+/* Dialogs and prompts pop in. */
+.modal-shade{animation:shade-in .18s ease-out both}
+.v06-dialog{animation:dialog-pop .28s cubic-bezier(.2,.8,.3,1.25) both}
+.choice-list button{transition:transform .12s,border-color .15s,background-color .15s}
+.choice-list button:not(:disabled):hover{border-color:#ffe3a0;background-color:#3a5764}
+.target-banner{animation:banner-drop .3s cubic-bezier(.2,.8,.3,1.2) both}
+@keyframes shade-in{from{opacity:0}}
+@keyframes dialog-pop{from{opacity:0;scale:.9;translate:0 12px}}
+@keyframes banner-drop{from{opacity:0;translate:-0px -14px}}
+.event-number{font-size:42px;-webkit-text-stroke:1.5px #4a0f06;letter-spacing:.02em}.event-number.healing{-webkit-text-stroke:1.5px #0d3b24}.event-number.big{font-size:54px}
+
+/* One switch disables every looping or decorative CSS motion in the board. */
+.motion-reduced *,.motion-reduced *::before,.motion-reduced *::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+.motion-reduced .board-ambience::before,.motion-reduced .board-ambience::after{animation:none!important}
+@media(max-width:700px){.turn-chip,.match-header button{white-space:nowrap}.turn-chip{padding:2px 7px}.motion-label{display:none}}

@@ -29,6 +29,13 @@
         if (!firstRender) return;
         sidebarModule = await JS.InvokeAsync<IJSObjectReference>("import", "./sidebar.js");
         await sidebarModule.InvokeVoidAsync("attach", sidebarElement, resizerElement);
+        // Mirror the 特效 preference on <html> so page-level CSS motion follows the same switch as battle effects.
+        try
+        {
+            await using var motion = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/battle-fx.js");
+            await motion.InvokeVoidAsync("applyMotionAttribute");
+        }
+        catch (JSException) { }
     }
 
     public async ValueTask DisposeAsync()

@@ -55,3 +55,10 @@
     .mobile-toggle { display: none; }
     .nav-scrollable, .nav-scrollable.mobile-open { display: block; flex: 1; max-height: none; }
 }
+/* Navigation feedback: smooth hover, icon nudge and an accent bar on the active page. */
+.nav-item ::deep .nav-link { position: relative; transition: background-color .18s ease, color .18s ease; }
+.nav-item ::deep .nav-link .nav-icon { transition: transform .2s cubic-bezier(.2,.8,.3,1.4); }
+.nav-item ::deep .nav-link:hover .nav-icon { transform: scale(1.18) rotate(-6deg); }
+.nav-item ::deep .nav-link:active { background: rgba(255, 255, 255, .18); }
+.nav-item ::deep .nav-link::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 3px; border-radius: 3px; background: #8acaff; box-shadow: 0 0 10px #8acaff; transform: scaleY(0); transition: transform .22s cubic-bezier(.2,.8,.3,1.2); }
+.nav-item ::deep a.active::before { transform: scaleY(1); }

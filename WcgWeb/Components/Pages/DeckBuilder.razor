@@ -93,7 +93,7 @@
                                         QuantityInDeck="@inDeck"
                                         OnCardClicked="@(() => Inspect = card)" />
                                     <div class="d-flex flex-wrap gap-1 justify-content-center align-items-center mt-2">
-                                        <span class="badge bg-secondary" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
+                                        <span class="badge bg-secondary count-bump" @key="inDeck" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
                                         <button class="btn btn-sm btn-outline-light" aria-label="@("查看卡片：" + card.Name)" @onclick="() => Inspect = card">查看</button>
                                         <button class="btn btn-sm btn-outline-danger" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-xs btn-outline-light py-0 px-2 small"
@@ -174,7 +174,7 @@
                     }
                     @if (!string.IsNullOrEmpty(ValidationErrorMessage))
                     {
-                        <div class="alert alert-danger py-1 px-2 small mt-2 mb-0">
+                        <div class="alert alert-danger py-1 px-2 small mt-2 mb-0 wcg-attention" @key="ValidationErrorMessage">
                             ⚠️ @ValidationErrorMessage
                         </div>
                     }
@@ -183,6 +183,7 @@
                         <div class="alert alert-success py-1 px-2 small mt-2 mb-0">
                             ✅ @SavedMessage
                         </div>
+                        <div class="wcg-toast success" role="status" aria-live="polite" @key="SavedMessage">✅ @SavedMessage</div>
                     }
                 </div>
 
@@ -202,7 +203,7 @@
                             {
                                 var card = group.Card;
                                 int count = group.Count;
-                                <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2">
+                                <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2 deck-line" @key="card.Id">
                                     <div class="d-flex align-items-center gap-2 overflow-hidden">
                                         <span class="badge @(card.IsEnergy ? "bg-success" : (card.IsMonster ? "bg-info" : "bg-warning text-dark"))" style="font-size:0.68rem;">
                                             @(card.IsEnergy ? "能" : $"{card.TotalCost}費")
@@ -214,7 +215,7 @@
                                     <div class="d-flex align-items-center gap-1">
                                         <button class="btn btn-sm btn-outline-danger py-0 px-2"
                                                 @onclick="() => RemoveCardFromDeck(card)">-</button>
-                                        <span class="fw-bold px-1 small" style="min-width: 20px; text-align: center;">
+                                        <span class="fw-bold px-1 small count-bump" @key="count" style="min-width: 20px; text-align: center;">
                                             @count
                                         </span>
                                         <button class="btn btn-sm btn-outline-success py-0 px-2"
