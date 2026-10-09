@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 
-ROUTES = ('battle', 'cards', 'deckbuilder', 'ranked', 'rules', 'settings', 'legacy', 'not-found')
+ROUTES = ('battle', 'cards', 'deckbuilder', 'ranked', 'rules', 'settings', 'tutorial', 'legacy', 'not-found')
 CACHE_CONTROL = 'no-cache'
 MIME = {
     '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',

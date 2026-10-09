@@ -67,6 +67,14 @@ class BlobPlanTests(unittest.TestCase):
                     parent.rmdir()
                     parent = parent.parent
 
+    def test_tutorial_deep_link_publishes_html_alias(self):
+        self.write('tutorial/index.html', (self.root / 'index.html').read_bytes())
+        _, entries = deploy.plan(self.root)
+        alias = next(e for e in entries if e.name == 'tutorial')
+        self.assertEqual(alias.source.read_bytes(), (self.root / 'index.html').read_bytes())
+        self.assertEqual(alias.content_type, 'text/html; charset=utf-8')
+        self.assertEqual(alias.phase, 2)
+
     def test_corrupt_artwork_stops_plan(self):
         self.write('card-art/WCG-001.webp', b'changed')
         with self.assertRaisesRegex(ValueError, 'Missing or damaged'):

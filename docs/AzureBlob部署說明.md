@@ -52,13 +52,15 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 
 ## 頁面與檔案設定
 
-`$web` 的首頁為 `index.html`，錯誤頁為 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。
+`$web` 的首頁為 `index.html`，錯誤頁為 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings`、`/tutorial` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。
 
 所有檔案明確設定 Content-Type，包含 `application/wasm`、JavaScript、WebP 與 Ogg。`Cache-Control: no-cache` 讓瀏覽器檢查網站更新；遊戲完整下載快取仍由既有 Service Worker 與資源雜湊控制，已下載的圖片不因重新開啟就全部重抓。
 
 ## 試玩
 
 先開新網址等讀條完成；到圖鑑看卡圖、設定看頭像，再到訓練場開始一場對戰。拖曳手牌到格位、拖曳怪物到目標，檢查指向線、召喚及攻擊動畫。右鍵可切換蓋牌，點擊卡片可查看資訊。
+
+新手可從側邊選單的「教學」開始，共 13 課。更新前未回答教學提示的玩家也會看到一次邀請，可選稍後或略過。完成課程的紀錄跟著玩家頭像一起保存在 `profile`，並隨靜態版存檔匯出／匯入。
 
 建議同一網址只保留一個有存檔寫入權的分頁。手機版需要再以實機確認；本次部署不會讓模擬器測試自動變成實機驗證。
 
