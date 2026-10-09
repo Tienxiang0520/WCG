@@ -1,12 +1,12 @@
 /* 對局回顧: full-screen replay viewer in the redesign language (glass panels, gold accents). */
 .replay-shade { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 18px; background: rgba(5, 7, 12, .78); backdrop-filter: blur(6px); }
 .replay-viewer {
-    display: flex; flex-direction: column; gap: 12px; width: min(1240px, 100%); max-height: 100%; overflow: auto; padding: 18px 20px 14px;
+    display: flex; flex-direction: column; gap: 12px; width: min(1240px, 100%); max-height: 100%; overflow: hidden; padding: 18px 20px 14px;
     color: var(--wcg-text); border-radius: var(--wcg-radius-xl);
     background: radial-gradient(600px 220px at 50% 0%, rgba(214, 180, 108, .12), transparent 70%), linear-gradient(180deg, var(--wcg-surface-2), var(--wcg-surface-1));
     box-shadow: inset 0 0 0 1px var(--wcg-line-strong), var(--wcg-shadow-3);
 }
-.replay-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.replay-head { display: flex; flex: 0 0 auto; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .replay-kicker { margin: 0; font-size: var(--wcg-fs-xs); letter-spacing: .24em; color: var(--wcg-gold); }
 .replay-head h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin: 4px 0; font-size: 1.35rem; letter-spacing: .06em; color: #fff; }
 .replay-head h2 em { font-style: normal; font-family: var(--wcg-font-display); font-size: .8rem; letter-spacing: .2em; color: var(--wcg-gold); }
@@ -21,7 +21,7 @@
 @keyframes replay-spin { to { transform: rotate(360deg); } }
 .replay-error { margin: 0; padding: 10px 14px; border-radius: var(--wcg-radius-md); color: #f6d0cb; background: rgba(228, 104, 95, .1); box-shadow: inset 3px 0 0 var(--wcg-ember); font-size: var(--wcg-fs-sm); }
 
-.replay-body { display: grid; grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr); gap: 14px; min-height: 0; }
+.replay-body { display: grid; flex: 1 1 auto; grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr); gap: 14px; min-height: 0; overflow: auto; }
 .replay-board { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: var(--wcg-radius-lg); background: radial-gradient(500px 260px at 50% 50%, rgba(214, 180, 108, .07), transparent 70%), rgba(9, 11, 17, .55); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
 .replay-hero { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; border-radius: var(--wcg-radius-md); background: rgba(255, 255, 255, .03); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); font-size: var(--wcg-fs-sm); color: var(--wcg-text-2); }
 .replay-hero strong { color: var(--wcg-text); letter-spacing: .1em; min-width: 3em; }
@@ -77,7 +77,7 @@
 .replay-log ol { max-height: 240px; }
 .replay-log li small { color: var(--wcg-text-3); min-width: 2.4em; }
 
-.replay-controls { position: sticky; bottom: -14px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "buttons scrub speed"; align-items: center; gap: 14px; margin: 0 -20px -14px; padding: 12px 20px; background: rgba(14, 17, 25, .94); border-top: 1px solid var(--wcg-line); backdrop-filter: blur(8px); }
+.replay-controls { position: relative; flex: 0 0 auto; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "buttons scrub speed"; align-items: center; gap: 14px; margin: 0 -20px -14px; padding: 12px 20px; background: rgba(14, 17, 25, .94); border-top: 1px solid var(--wcg-line); backdrop-filter: blur(8px); }
 .replay-scrub { grid-area: scrub; width: 100%; accent-color: var(--wcg-gold); }
 .replay-buttons { grid-area: buttons; display: flex; align-items: center; gap: 6px; }
 .replay-buttons button { display: inline-grid; place-items: center; min-width: 42px; min-height: 42px; border: 0; border-radius: var(--wcg-radius-md); color: var(--wcg-text); background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px var(--wcg-line); }
@@ -103,7 +103,7 @@
     .replay-name { font-size: .58rem; padding: 10px 2px 3px; }
     .replay-pp, .replay-dp { font-size: .62rem; padding: 0 3px; min-width: 16px; }
     .replay-hero { gap: 4px 10px; padding: 6px 8px; font-size: .78rem; }
-    .replay-controls { grid-template-columns: 1fr; grid-template-areas: "scrub" "buttons" "speed"; gap: 8px; margin: 0 -12px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); bottom: 0; }
+    .replay-controls { grid-template-columns: 1fr; grid-template-areas: "scrub" "buttons" "speed"; gap: 8px; margin: 0 -12px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); }
     .replay-buttons { justify-content: center; }
     .replay-speed { justify-self: center; }
     .replay-buttons .replay-play span { display: none; }
