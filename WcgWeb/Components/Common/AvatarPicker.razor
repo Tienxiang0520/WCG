@@ -7,15 +7,15 @@
 <section class="avatar-picker" @ref="Root">
     <div class="avatar-current">
         <img src="@Profile.AvatarUrl" alt="@L["目前頭像"]" draggable="false" />
-        <div><strong>@L["目前頭像"]</strong><small>@Profile.Label</small></div>
+        <div><strong>@L["目前頭像"]</strong><small>@L.Text(Profile.Label)</small></div>
     </div>
     <div class="avatar-grid" role="radiogroup" aria-label="@L["內建頭像"]" hidden="@Cropping">
         @foreach (var avatar in PlayerAvatars.BuiltIn)
         {
             var value = PlayerAvatars.BuiltInPrefix + avatar.Id;
-            <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@avatar.Label"
+            <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@L[avatar.Label]"
                     class="avatar-option @(Profile.Avatar == value ? "selected" : "")" data-sfx="avatar" disabled="@(Busy || Cropping)" @onclick="() => Choose(value)">
-                <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@avatar.Label</span>
+                <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@L[avatar.Label]</span>
             </button>
         }
     </div>

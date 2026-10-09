@@ -6,8 +6,8 @@
   <ItemGroup>
     <EmbeddedResource Include="../WcgWeb/Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
     <EmbeddedResource Include="../WcgWeb/i18n/en.json" LogicalName="WcgWeb.I18n.en.json" />
-    <EmbeddedResource Include="../WcgWeb/i18n/cards.en.json" LogicalName="WcgWeb.I18n.cards.en.json" />
-    <EmbeddedResource Include="../WcgWeb/i18n/decks.en.json" LogicalName="WcgWeb.I18n.decks.en.json" />
+    <EmbeddedResource Include="../WcgWeb/i18n/cards.en.json" LogicalName="WcgWeb.I18n.cards.en.json" WithCulture="false" />
+    <EmbeddedResource Include="../WcgWeb/i18n/decks.en.json" LogicalName="WcgWeb.I18n.decks.en.json" WithCulture="false" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.12" PrivateAssets="all" />
     <Compile Include="../WcgWeb/Models/**/*.cs" Link="Models/%(RecursiveDir)%(Filename)%(Extension)" />

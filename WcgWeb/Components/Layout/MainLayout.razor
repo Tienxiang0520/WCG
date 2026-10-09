@@ -16,8 +16,9 @@
             @Body
         </article>
     </main>
-    <WcgWeb.Components.Tutorial.TutorialPrompt />
 </div>
+@* Outside the language-keyed subtree so 「稍後再說」 survives a language switch. *@
+<WcgWeb.Components.Tutorial.TutorialPrompt />
 
 @code {
     private bool sidebarCollapsed;

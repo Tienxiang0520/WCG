@@ -32,7 +32,7 @@
     private bool Visible => Ready && !dismissedThisVisit && Profile.Tutorial.Prompt == "" && !OnTutorialPage;
     private bool OnTutorialPage => Nav.ToBaseRelativePath(Nav.Uri).StartsWith("tutorial", StringComparison.OrdinalIgnoreCase) || Nav.Uri.Contains("tour=", StringComparison.Ordinal);
 
-    protected override void OnInitialized() { Nav.LocationChanged += Changed; Profile.Changed += ProfileChanged; }
+    protected override void OnInitialized() { Nav.LocationChanged += Changed; Profile.Changed += ProfileChanged; L.Changed += ProfileChanged; }
     private void Changed(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e) => _ = InvokeAsync(StateHasChanged);
     private void ProfileChanged() => _ = InvokeAsync(StateHasChanged);
 
@@ -47,5 +47,5 @@
     private void Skip() => Profile.AnswerTutorialPrompt(TutorialProgress.Skipped);
     private void Later() => dismissedThisVisit = true;
 
-    public void Dispose() { Nav.LocationChanged -= Changed; Profile.Changed -= ProfileChanged; }
+    public void Dispose() { Nav.LocationChanged -= Changed; Profile.Changed -= ProfileChanged; L.Changed -= ProfileChanged; }
 }

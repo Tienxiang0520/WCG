@@ -123,7 +123,13 @@ public static class LocalizationCatalog
             foreach (var deck in decks.RootElement.EnumerateObject())
                 result.Decks[deck.Name] = new(deck.Value.GetProperty("name").GetString() ?? "", deck.Value.GetProperty("description").GetString() ?? "",
                     deck.Value.GetProperty("zhName").GetString() ?? "", deck.Value.GetProperty("zhDescription").GetString() ?? "");
-        foreach (var deck in result.Decks.Values) { result.DeckTextByZh.TryAdd(deck.ZhName, deck.Name); result.DeckTextByZh.TryAdd(deck.ZhDescription, deck.Description); }
+        foreach (var deck in result.Decks.Values)
+        {
+            result.DeckTextByZh.TryAdd(deck.ZhName, deck.Name); result.DeckTextByZh.TryAdd(deck.ZhDescription, deck.Description);
+            // Ranked records keep the short archetype title ("秩序・白銀長城（控制）" → "白銀長城").
+            var zhShort = Between(deck.ZhName, "・", "（"); var enShort = Between(deck.Name, " · ", " (");
+            if (zhShort != deck.ZhName && enShort != deck.Name) result.DeckTextByZh.TryAdd(zhShort, enShort);
+        }
         // Keys with {0}, {1}… also match run-time text such as engine logs; longer fixed text wins.
         foreach (var (key, value) in result.Ui)
         {
@@ -135,6 +141,11 @@ public static class LocalizationCatalog
         }
         result.Templates.Sort((a, b) => b.Weight.CompareTo(a.Weight));
         return result;
+    }
+    private static string Between(string text, string start, string end)
+    {
+        var s = text.IndexOf(start, StringComparison.Ordinal); if (s >= 0) text = text[(s + start.Length)..];
+        var e = text.IndexOf(end, StringComparison.Ordinal); return e > 0 ? text[..e] : text;
     }
     private static readonly Regex Hole = new(@"\{(\d+)\}", RegexOptions.CultureInvariant);
 
