@@ -40,7 +40,7 @@ export function auraSource(target, all, keyword = '聖盾') {
 export function planSteps(previous, next, events) {
     const steps = [], before = units(previous), after = units(next);
     const ordered = [...(events ?? [])].sort((a, b) => a.order - b.order);
-    const badged = new Set(), attacked = new Set();
+    const badged = new Set(), attacked = new Set(), turnStart = ordered.some(ev => ev.type === 'turn');
     let source = null;
     const target = ev => ev.type === 'attach' ? ev.targetId : ev.instanceId;
     for (const ev of ordered) {
@@ -77,7 +77,8 @@ export function planSteps(previous, next, events) {
         }
         const delta = (Number(unit.pp) || 0) - (Number(old.pp) || 0);
         if (delta && Number.isFinite(delta)) steps.push({ kind: 'stat', target: id, delta });
-        if (!!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
+        // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
+        if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
     }
     return steps;
 }

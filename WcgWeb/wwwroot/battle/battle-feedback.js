@@ -306,7 +306,13 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (inHand) hide(inHand);
             void sound?.play('draw');
             if (el) { el.dataset.wcgEffect = 'discard'; await animate(el, [{ opacity: 1, transform: 'translateY(0) rotate(0)', filter: 'none' }, { opacity: 0, transform: 'translateY(-60px) rotate(-14deg) scale(.8)', filter: 'grayscale(1) brightness(.6)' }], 520); el.remove(); }
-            else await cardTo(ev.side, ev.card, hero(ev.side));
+            else if (hero(ev.side)) {
+                // The computer's hand is hidden: the discarded card is revealed beside its portrait, then greys out.
+                const c = center(hero(ev.side)), shown = place(publicCard(ev.card), { x: c.x + 70, y: c.y - 50, width: 84, height: 112 });
+                shown.dataset.wcgEffect = 'discard';
+                await animate(shown, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.05)', offset: .3 }, { opacity: 1, transform: 'scale(1)', filter: 'none', offset: .65 }, { opacity: 0, transform: 'translateY(30px) rotate(10deg) scale(.85)', filter: 'grayscale(1) brightness(.6)' }], 760);
+                shown.remove();
+            }
         }
         else if (ev.type === 'gameover') {
             void sound?.play(ev.side === 'player' ? 'defeat' : 'victory');
@@ -362,7 +368,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         const r = root.getBoundingClientRect();
         const catcher = place(node('button', 'event-skip'), { x: r.x, y: r.y, width: r.width, height: r.height });
         catcher.type = 'button'; catcher.setAttribute('aria-label', t('點擊快轉')); catcher.title = t('點擊快轉');
-        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: r.x + r.width - 132, y: r.y + 8, width: 120, height: 34 });
+        const b = boardRect(), ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + b.width - 128, y: b.y + 6, width: 120, height: 32 });
         ff.type = 'button';
         // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
         const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };
