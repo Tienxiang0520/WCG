@@ -20,7 +20,7 @@
         }
     </div>
     <div class="avatar-actions" hidden="@Cropping">
-        <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")">上傳圖片<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
+        <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")"><Icon Name="upload" Size="16" />上傳圖片<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
         <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Profile.IsDefault)" @onclick="Reset">恢復預設</button>
     </div>
     <p class="avatar-help" hidden="@Cropping">支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。</p>
@@ -35,7 +35,7 @@
     </div>
     @if (Toast != null)
     {
-        <div class="wcg-toast @(ToastError ? "error" : "success")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@(ToastError ? "⚠️" : "✅") @Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
+        <div class="wcg-toast @(ToastError ? "error" : "success")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
     }
 </section>
 

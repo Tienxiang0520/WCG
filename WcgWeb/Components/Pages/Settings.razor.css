@@ -1,18 +1,19 @@
-.settings-page { max-width:800px;margin:24px auto;padding:0 12px; }
-.settings-page h1 { font-size:28px;margin-bottom:12px; }
-.settings-note,.setting-row p { color:#aec2d3;line-height:1.6; }
-.settings-panel { margin-top:28px;padding:24px;background:#132332;border:1px solid #344e62;border-radius:14px; }
-.settings-panel h2 { font-size:18px;margin:0 0 24px; }
-.setting-row { display:flex;align-items:center;gap:24px; }
-.setting-row > div { flex:1; }
-.setting-row h3 { font-size:17px;margin:0 0 10px; }
-.setting-row p { font-size:14px;margin:0; }
-.setting-switch { display:flex;flex-direction:column;align-items:center;gap:8px;min-width:72px;padding:8px;color:#e5eef5;background:transparent;border:0;border-radius:8px; }
-.setting-switch:focus-visible { outline:3px solid #8dcaff;outline-offset:3px; }
-.setting-switch:disabled { opacity:.5; }
-.switch-track { display:block;width:52px;height:30px;padding:3px;background:#536574;border-radius:20px; }
-.switch-track > span { display:block;width:24px;height:24px;background:white;border-radius:50%; }
-.setting-switch[aria-checked="true"] .switch-track { background:#287d65; }
-.setting-switch[aria-checked="true"] .switch-track > span { transform:translateX(22px); }
-.settings-status { min-height:24px;margin-top:16px;color:#9bd7c4; }
-@media(max-width:480px) { .settings-panel { padding:18px; }.setting-row { gap:12px; } }
+.settings-page { max-width: 860px; margin: 0 auto; padding: 0; }
+.settings-panel { position: relative; margin-top: 20px; padding: 24px; border-radius: var(--wcg-radius-xl); background: linear-gradient(180deg, var(--wcg-surface-2), var(--wcg-surface-1) 140px); box-shadow: inset 0 0 0 1px var(--wcg-line), inset 0 1px 0 rgba(255, 255, 255, .05), var(--wcg-shadow-2); }
+.settings-panel h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 20px; font-size: 1.1rem; letter-spacing: .12em; }
+.settings-panel h2::before { content: ""; width: 7px; height: 7px; transform: rotate(45deg); background: var(--wcg-gold); box-shadow: 0 0 10px rgba(214, 180, 108, .7); }
+.settings-panel > p { color: var(--wcg-text-2); line-height: 1.7; font-size: .9rem; }
+.setting-row { display: flex; align-items: center; gap: 24px; padding: 16px 18px; border-radius: var(--wcg-radius-lg); background: rgba(9, 11, 17, .45); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
+.setting-row > div { flex: 1; }
+.setting-row h3 { font-family: var(--wcg-font-sans); font-size: 1rem; letter-spacing: .04em; margin: 0 0 6px; }
+.setting-row p { font-size: .85rem; margin: 0; color: var(--wcg-text-3); line-height: 1.7; }
+.setting-switch { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 72px; padding: 8px; color: var(--wcg-text-2); background: transparent; border: 0; border-radius: var(--wcg-radius-md); font-size: .8rem; font-weight: 600; }
+.setting-switch:focus-visible { outline: none; box-shadow: var(--wcg-focus); }
+.setting-switch:disabled { opacity: .5; }
+.switch-track { display: block; width: 52px; height: 30px; padding: 3px; background: rgba(9, 11, 17, .8); border-radius: 20px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), inset 0 2px 4px rgba(0, 0, 0, .5); transition: background-color .2s; }
+.switch-track > span { display: block; width: 24px; height: 24px; background: linear-gradient(180deg, #f4efe4, #b9b3a6); border-radius: 50%; box-shadow: 0 2px 5px rgba(0, 0, 0, .5); transition: transform .22s var(--wcg-ease-spring), background .2s; }
+.setting-switch[aria-checked="true"] { color: var(--wcg-gold-bright); }
+.setting-switch[aria-checked="true"] .switch-track { background: linear-gradient(180deg, #b38a40, #d4ad5e); box-shadow: inset 0 0 0 1px rgba(243, 220, 163, .6), 0 0 14px rgba(214, 180, 108, .3); }
+.setting-switch[aria-checked="true"] .switch-track > span { transform: translateX(22px); background: linear-gradient(180deg, #fffaf0, #f3dca3); }
+.settings-status { min-height: 24px; margin-top: 16px; color: var(--wcg-teal); font-size: .85rem; }
+@media (max-width: 480px) { .settings-panel { padding: 18px 16px; border-radius: var(--wcg-radius-lg); } .setting-row { gap: 12px; padding: 14px; } }

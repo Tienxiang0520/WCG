@@ -1,8 +1,14 @@
 @page "/rules"
 <PageTitle>遊戲規則 - 魂誓</PageTitle>
-<div class="container py-4"><div class="card bg-dark text-white border-secondary shadow">
-<div class="card-header bg-primary py-3"><h3>📜 指定攻擊與 PP 比較規則</h3></div>
-<div class="card-body p-4">
-<WcgWeb.Components.Common.GameRulesContent />
-<p class="text-info">新版 5 副預組已提供。數值與配對模擬仍須搭配真人試玩評估。</p>
-</div></div></div>
+<div class="rules-page">
+    <header class="page-hero compact">
+        <div class="page-hero-text">
+            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="scroll" Size="14" />官方遊戲規則</p>
+            <h1>指定攻擊與 PP 比較規則</h1>
+        </div>
+    </header>
+    <article class="wcg-panel rules-body">
+        <WcgWeb.Components.Common.GameRulesContent />
+        <p class="rules-note">新版 5 副預組已提供。數值與配對模擬仍須搭配真人試玩評估。</p>
+    </article>
+</div>

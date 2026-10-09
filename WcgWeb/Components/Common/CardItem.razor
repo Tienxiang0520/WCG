@@ -57,10 +57,10 @@
     {
         <div class="card-footer-stats">
             <div class="stat-badge-pp" title="力量值 PP (戰鬥消滅判定)">
-                ⚔️ @(Card.PP?.ToString() ?? "0")
+                <small>PP</small>@(Card.PP?.ToString() ?? "0")
             </div>
             <div class="stat-badge-dp" title="傷害值 DP (對玩家本體傷害)">
-                ❤️ @(Card.DP?.ToString() ?? "1")
+                <small>DP</small>@(Card.DP?.ToString() ?? "1")
             </div>
         </div>
     }

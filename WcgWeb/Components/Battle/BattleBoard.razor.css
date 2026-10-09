@@ -412,3 +412,128 @@
 .avatar-dialog ::deep .avatar-picker{width:100%}
 /* Phone: the hint sits just under the opponent portrait, so it steps aside while a face-attack glow is showing. */
 @media(max-width:600px){.v06-board .battle-message{transition:opacity .15s}.v06-board.dragging .battle-message{opacity:0}}
+
+/* ==== Visual redesign (2026-10): 暗金典藏 table. Colours, materials and type only —
+   every position, size, hit area and the phone half-hidden hand stay exactly as tuned above. ==== */
+.v06-board{color:var(--wcg-text);border:0;font-family:var(--wcg-font-sans);
+    background:
+        radial-gradient(ellipse 70% 55% at 50% 48%,rgba(214,180,108,.09),transparent 70%),
+        radial-gradient(ellipse 120% 80% at 50% 50%,#1b202c 0%,#11141c 55%,#07090d 100%);
+    box-shadow:inset 0 0 0 1px rgba(214,180,108,.32),inset 0 0 0 5px #07090d,inset 0 0 0 6px rgba(214,180,108,.12),inset 0 0 120px rgba(0,0,0,.65),0 20px 60px rgba(0,0,0,.5)}
+.v06-board::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;opacity:.5;
+    background-image:radial-gradient(circle at 50% 50%,transparent 0 38%,rgba(0,0,0,.35) 100%),repeating-linear-gradient(45deg,rgba(255,255,255,.012) 0 2px,transparent 2px 6px)}
+.turn-player .board-ambience{box-shadow:inset 0 -90px 120px -70px rgba(95,211,189,.28),inset 0 0 160px rgba(0,0,0,.5)}
+.turn-computer .board-ambience{box-shadow:inset 0 90px 120px -70px rgba(228,104,95,.24),inset 0 0 160px rgba(0,0,0,.5)}
+/* Header strip. */
+.match-header>span{font-family:var(--wcg-font-num);font-size:11px;letter-spacing:.24em;color:var(--wcg-text-3)}
+.turn-chip{padding:5px 14px;font-size:12.5px;font-weight:700;letter-spacing:.08em;border:0;background:rgba(9,11,17,.75);box-shadow:inset 0 0 0 1px var(--wcg-line-strong)}
+.turn-chip.mine{color:#c8f6ec;box-shadow:inset 0 0 0 1px rgba(95,211,189,.7),0 0 16px rgba(95,211,189,.25)}
+.turn-chip.theirs{color:#ffd9cf;box-shadow:inset 0 0 0 1px rgba(228,104,95,.65),0 0 16px rgba(228,104,95,.22)}
+.v06-board button{border:0;border-radius:var(--wcg-radius-md);color:var(--wcg-text);font-weight:600;letter-spacing:.04em;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),rgba(20,24,34,.85);box-shadow:inset 0 0 0 1px var(--wcg-line-strong),0 4px 12px rgba(0,0,0,.35)}
+.v06-board button:not(:disabled):hover{background:linear-gradient(180deg,rgba(243,220,163,.14),rgba(243,220,163,.04)),rgba(28,32,46,.9);border-color:transparent;color:#fff;box-shadow:inset 0 0 0 1px var(--wcg-gold),0 6px 16px rgba(0,0,0,.45)}
+.v06-board button:focus-visible{outline:none;box-shadow:var(--wcg-focus)}
+/* Battlefield: engraved sockets on a dark table, a gold rift between the two rows. */
+.battlefield{border-top:0;border-bottom:0;background:linear-gradient(90deg,transparent,rgba(214,180,108,.35),transparent) center/80% 1px no-repeat}
+.battlefield::before,.battlefield::after{content:"";position:absolute;left:8%;right:8%;height:1px;background:linear-gradient(90deg,transparent,rgba(214,180,108,.18),transparent);pointer-events:none}
+.battlefield::before{top:0}.battlefield::after{bottom:0}
+.v06-slot{border:0;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.025),rgba(0,0,0,.22));box-shadow:inset 0 0 0 1px rgba(214,180,108,.13),inset 0 2px 10px rgba(0,0,0,.45)}
+.v06-slot.vacant{border-style:none;background-image:linear-gradient(rgba(214,180,108,.16),rgba(214,180,108,.16)),linear-gradient(rgba(214,180,108,.16),rgba(214,180,108,.16)),radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.02),rgba(0,0,0,.24));background-size:14px 1px,1px 14px,auto;background-position:center,center,center;background-repeat:no-repeat}
+.slot-number{font-family:var(--wcg-font-num);letter-spacing:.14em;color:rgba(214,180,108,.38);text-transform:uppercase}
+.empty{font-size:0;color:transparent}
+.v06-slot.legal,.legal{outline:2px solid rgba(95,211,189,.9)!important;box-shadow:0 0 22px rgba(95,211,189,.45),inset 0 0 18px rgba(95,211,189,.18)!important;background-color:rgba(95,211,189,.08)!important}
+.drop-hover{outline:3px solid var(--wcg-gold-bright)!important;box-shadow:0 0 30px rgba(243,220,163,.55)!important}
+.drop-hover.vacant::after{border-color:rgba(243,220,163,.85);background:rgba(243,220,163,.08);color:#fff6dc}
+/* Field cards: gilded frame around full-bleed art. */
+.field-card{border:0;border-radius:12px;background:#0b0d13;box-shadow:inset 0 0 0 1.5px rgba(214,180,108,.8),inset 0 0 0 3.5px rgba(7,9,13,.9),0 8px 18px rgba(0,0,0,.6)}
+.field-card .card-art-layer{inset:3px;border-radius:9px}
+.field-card.enemy-card{box-shadow:inset 0 0 0 1.5px rgba(222,140,120,.75),inset 0 0 0 3.5px rgba(7,9,13,.9),0 8px 18px rgba(0,0,0,.6)}
+.tapped .field-card{background:#0b0d13}
+.field-card>strong,.event-card>strong{font-family:var(--wcg-font-display);letter-spacing:.04em;background:linear-gradient(90deg,rgba(7,9,13,.85),rgba(7,9,13,.35));border-radius:5px;padding:3px 6px}
+.field-stats b{display:grid;place-items:center;min-width:28px;height:28px;padding:0 4px;border-radius:50%;font-family:var(--wcg-font-num);font-size:16px;font-weight:800;color:#fff}
+.field-stats b:first-child{background:radial-gradient(circle at 35% 30%,#e5776d,#9a2f29 60%,#521411);box-shadow:0 0 0 1.5px #f0c98a,0 3px 8px rgba(0,0,0,.6)}
+.field-stats b:last-child{background:radial-gradient(circle at 35% 30%,#7fb0ff,#2d58a8 60%,#132a5c);box-shadow:0 0 0 1.5px #f0c98a,0 3px 8px rgba(0,0,0,.6)}
+.action-ready{box-shadow:inset 0 0 0 2px rgba(95,211,189,.95),inset 0 0 0 4px rgba(7,9,13,.9),0 0 18px rgba(95,211,189,.5)!important}
+.field-card.attack-ready::after{box-shadow:0 0 18px 3px rgba(95,211,189,.85)}
+.is-poisonous .field-stats b:first-child{box-shadow:0 0 0 1.5px #b8ff9e,0 0 10px rgba(109,255,90,.6)}
+/* Heroes: gilded medallion plates. */
+.hero{border:0;background:linear-gradient(90deg,color-mix(in srgb,var(--tint) 20%,rgba(20,24,34,.95)),rgba(14,17,25,.92) 70%);box-shadow:inset 0 0 0 1px rgba(214,180,108,.38),0 8px 22px rgba(0,0,0,.55);backdrop-filter:blur(6px)}
+.hero.is-active{box-shadow:inset 0 0 0 1px var(--wcg-gold-bright),0 0 26px rgba(243,220,163,.28),0 8px 22px rgba(0,0,0,.55)}
+.hero-portrait{border-width:2px;border-color:color-mix(in srgb,var(--tint) 40%,#d6b46c)}
+.hero-meta strong{font-family:var(--wcg-font-display);letter-spacing:.1em;color:#f6efe0}
+.hero small{color:var(--wcg-text-2)}
+.hero .hero-hp{border:2px solid #f0d290;font-family:var(--wcg-font-num)}
+.battle-message{color:var(--wcg-text-2);letter-spacing:.04em;text-shadow:0 1px 3px #000}
+/* Energy: sapphire crystal well. */
+.energy-zone{border:0;border-radius:var(--wcg-radius-lg);background:linear-gradient(180deg,rgba(26,40,66,.88),rgba(10,14,24,.92));box-shadow:inset 0 0 0 1px rgba(127,180,239,.5),inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.5)}
+.energy-zone strong{font-family:var(--wcg-font-display);letter-spacing:.1em;color:#dbe9ff}
+.energy-count{font-family:var(--wcg-font-num);color:#fff;font-size:1.2em;text-shadow:0 0 10px rgba(127,180,239,.8)}
+.energy-zone span{color:rgba(205,222,245,.7)}
+.energy-dots i{width:10px;height:15px;border-radius:2px 2px 5px 5px;clip-path:polygon(50% 0,100% 30%,100% 75%,50% 100%,0 75%,0 30%);background:linear-gradient(180deg,#e8f4ff,#7fb4ef 45%,#3c6fc0)}
+/* End turn: the one gold call to action on the table. */
+.end-turn{color:var(--wcg-text-inverse)!important;font-family:var(--wcg-font-display);font-size:15px;font-weight:800;letter-spacing:.14em;background:var(--wcg-gold-grad)!important;border:0!important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -2px 0 rgba(0,0,0,.2),0 0 0 1px #f2d898,0 0 0 3px rgba(7,9,13,.9),0 0 0 4px rgba(214,180,108,.5),0 8px 22px rgba(0,0,0,.55)!important;text-shadow:0 1px 0 rgba(255,240,200,.5)}
+.end-turn:not(:disabled):hover{color:var(--wcg-text-inverse)!important;background:linear-gradient(180deg,#fbe8b8,#e0bb6c 48%,#b38a40)!important}
+.end-turn:disabled{filter:grayscale(.7) brightness(.6)}
+.end-turn.no-moves:not(:disabled){animation:end-turn-glow-gold 1.2s ease-in-out infinite alternate}
+@keyframes end-turn-glow-gold{from{filter:brightness(1)}to{filter:brightness(1.18) drop-shadow(0 0 14px rgba(243,220,163,.8))}}
+/* Hand: obsidian card faces with a gilt edge, matching the catalog cards. */
+.v06-hand-card{color:var(--wcg-text);border-color:#8a6a2f;background:linear-gradient(180deg,#232838 0%,#151924 50%,#0e1118 100%);box-shadow:inset 0 0 0 1px rgba(7,9,13,.9),inset 0 0 0 2px rgba(243,220,163,.18),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card>strong{font-family:var(--wcg-font-display);letter-spacing:.04em;color:#fbf4e4}
+.v06-hand-card>small{color:var(--wcg-text-3)}
+.v06-hand-card p{color:var(--wcg-text-2)}
+.v06-hand-card .stats{color:var(--wcg-gold-bright);font-family:var(--wcg-font-num)}
+.hand-art-layer{box-shadow:inset 0 0 0 1px rgba(214,180,108,.35),0 2px 6px rgba(0,0,0,.5)}
+.mana{border:0;font-family:var(--wcg-font-num);background:radial-gradient(circle at 35% 30%,#7fb0ff,#2d58a8 58%,#132a5c);box-shadow:0 0 0 2px #f0d290,0 0 0 4px rgba(7,9,13,.85),0 4px 10px rgba(0,0,0,.6);text-shadow:0 1px 2px #000}
+.v06-hand-card:hover,.v06-hand-card:focus-visible{outline:2px solid var(--wcg-gold-bright)}
+.v06-hand-card.available{border-color:#5fd3bd;box-shadow:inset 0 0 0 1px rgba(7,9,13,.9),0 0 16px rgba(95,211,189,.45),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card.set-only{border-color:#8a6a2f}
+.v06-hand-card.set-ready{border-color:var(--wcg-gold-bright);box-shadow:0 0 16px rgba(243,220,163,.45),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card.available::after{box-shadow:0 0 16px 3px rgba(95,211,189,.95)}
+.hand-availability{border-radius:var(--wcg-radius-pill);letter-spacing:.06em;background:rgba(7,9,13,.75);color:var(--wcg-text-3);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.available .hand-availability{background:rgba(95,211,189,.18);color:#c8f6ec;box-shadow:inset 0 0 0 1px rgba(95,211,189,.55)}
+.set-ready .hand-availability{background:rgba(214,180,108,.2);color:var(--wcg-gold-bright);box-shadow:inset 0 0 0 1px rgba(214,180,108,.55)}
+.card-back,.event-card-back,.field-card-back{color:var(--wcg-gold-bright);border-color:#8a6a2f;
+    background:radial-gradient(circle at 50% 50%,rgba(214,180,108,.18),transparent 55%),repeating-linear-gradient(45deg,#141a2c 0 8px,#18203a 8px 16px)}
+.back-emblem,.event-card-back strong{border:1.5px solid var(--wcg-gold);background:#0e1322;font-family:var(--wcg-font-display);color:var(--wcg-gold-bright);box-shadow:0 0 18px rgba(214,180,108,.25)}
+.hand-hint{color:var(--wcg-text-3);letter-spacing:.04em}
+/* Floating event cards follow the hand-card material. */
+.event-card{color:var(--wcg-text);border-color:#8a6a2f;background:linear-gradient(180deg,#232838,#0e1118)}
+.event-card p,.event-card small{color:var(--wcg-text-2)}
+.event-banner{background:rgba(9,11,17,.92);color:var(--wcg-gold-bright);box-shadow:inset 0 0 0 1px var(--wcg-line-strong)}
+/* Dialogs, prompts and banners. */
+.modal-shade{background:rgba(5,6,10,.72);backdrop-filter:blur(8px)}
+.v06-dialog{border:0;border-radius:var(--wcg-radius-xl);color:var(--wcg-text);background:radial-gradient(400px 200px at 50% 0%,rgba(214,180,108,.12),transparent 70%),linear-gradient(180deg,#1c2130,#12151e);box-shadow:inset 0 0 0 1px var(--wcg-line-strong),0 30px 80px rgba(0,0,0,.7)}
+.v06-dialog h2,.v06-dialog h3{font-family:var(--wcg-font-display);letter-spacing:.1em;color:#f6efe0}
+.v06-dialog p{color:var(--wcg-text-2)}
+.v06-dialog>small{color:var(--wcg-text-3);letter-spacing:.06em}
+.v06-dialog>b{color:var(--wcg-gold-bright)}
+.choice-list button{text-align:left}
+.choice-list button:not(:disabled):hover{background:rgba(214,180,108,.1)}
+.choice-list small{color:var(--wcg-text-3);font-weight:400}
+.detail-art-layer{box-shadow:inset 0 0 0 1px rgba(214,180,108,.35),0 8px 22px rgba(0,0,0,.5)}
+.detail-set-toggle{background:rgba(214,180,108,.16)!important;box-shadow:inset 0 0 0 1px var(--wcg-gold)!important;color:var(--wcg-gold-bright)!important}
+.target-banner{border:0;border-radius:var(--wcg-radius-pill);padding:8px 10px 8px 18px;color:#c8f6ec;background:rgba(9,11,17,.92);box-shadow:inset 0 0 0 1px rgba(95,211,189,.6),0 10px 30px rgba(0,0,0,.6),0 0 22px rgba(95,211,189,.2)}
+.target-banner button{margin-left:8px;padding:5px 12px}
+.hero-blocked{border:0;background:rgba(32,20,22,.95);box-shadow:inset 0 0 0 1px rgba(228,104,95,.7);color:#ffd9d4}
+.attachment{border-top-color:rgba(214,180,108,.3);color:var(--wcg-text-2)}
+.event-number{font-family:var(--wcg-font-num)}
+@media(max-width:600px){
+.v06-board{box-shadow:inset 0 0 0 1px rgba(214,180,108,.3),inset 0 0 80px rgba(0,0,0,.6)}
+.field-card{border-radius:8px;box-shadow:inset 0 0 0 1px rgba(214,180,108,.8),inset 0 0 0 2px rgba(7,9,13,.9),0 4px 10px rgba(0,0,0,.6)}
+.field-card.enemy-card{box-shadow:inset 0 0 0 1px rgba(222,140,120,.75),inset 0 0 0 2px rgba(7,9,13,.9),0 4px 10px rgba(0,0,0,.6)}
+.field-card .card-art-layer{inset:2px;border-radius:6px}
+.action-ready{box-shadow:inset 0 0 0 1.5px rgba(95,211,189,.95),0 0 10px rgba(95,211,189,.5)!important}
+.field-stats b{min-width:19px;height:19px;font-size:11px;padding:0 2px}
+.end-turn{font-size:12px;letter-spacing:.08em}
+.v06-slot.vacant{background-size:9px 1px,1px 9px,auto}
+.turn-chip{padding:3px 9px;font-size:11px}
+}
+.match-header button{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+@media(max-width:600px){
+.match-header>span{font-size:0;letter-spacing:0}
+.energy-dots i{width:7px;height:11px}
+.energy-count{font-size:1.05em}
+.match-header .header-label{display:none}
+
+}
