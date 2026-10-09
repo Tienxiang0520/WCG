@@ -18,6 +18,7 @@ SoulOath.Static/wwwroot/card-art/
 WcgWeb/wwwroot/card-art/*.webp
 SoulOath.Static/wwwroot/data/
 SoulOath.Static/wwwroot/deck-print.css
+SoulOath.Static/wwwroot/card-face.css
 SoulOath.Static/wwwroot/deck-print.js
 SoulOath.Static/wwwroot/print-art/
 WcgWeb/wwwroot/print-art/
