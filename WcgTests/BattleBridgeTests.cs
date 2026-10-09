@@ -163,6 +163,25 @@ public class BattleBridgeTests
         Assert.All(response.Events,e=>Assert.Equal(response.State.Revision,e.Revision));
         Assert.Equal(response.Events.Length,response.Events.Select(e=>e.Id).Distinct().Count());
     }
+    // Presentation-only events for the client effect queue: a deploy ability names its source before its result,
+    // and an attachment names the spell and the monster it lands on. Neither changes the resolved state.
+    [Fact] public void DeployAbilityAndAttachmentEmitSourceEventsForTheEffectQueue()
+    {
+        Energy();var c=Hand("WCG-021");bridge.Submit(Cmd("play",c.InstanceId));
+        var deck=engine.Player.Deck.Count;var hand=engine.Player.Hand.Count;
+        var summon=bridge.Submit(Cmd("choice",option:engine.CurrentPendingChoice!.Options[0].Id));
+        Assert.Equal(new[]{"pay","play","summon","effect","draw"},summon.Events.Select(e=>e.Type));
+        var effect=summon.Events.Single(e=>e.Type=="effect");Assert.Equal(c.InstanceId,effect.InstanceId);Assert.Equal("進場能力",effect.Label);
+        Assert.Equal(deck-1,engine.Player.Deck.Count);Assert.Equal(hand,engine.Player.Hand.Count); // the summoned card left, one card was drawn
+        var own=engine.Player.Field.Single();var shield=Hand("WCG-062");
+        var cast=bridge.Submit(Cmd("play",shield.InstanceId,own.InstanceId));
+        if(cast.State.Pending!=null)cast=bridge.Submit(Cmd("target",target:own.InstanceId));
+        Assert.True(cast.Success);
+        var attach=cast.Events.Single(e=>e.Type=="attach");
+        Assert.Equal(shield.InstanceId,attach.InstanceId);Assert.Equal(own.InstanceId,attach.TargetId);
+        var types=cast.Events.Select(e=>e.Type).ToList();Assert.True(types.IndexOf("play")<types.IndexOf("attach"));
+        Assert.Contains(bridge.Snapshot().Player.Field.Single().Status,s=>s.StartsWith("聖盾"));
+    }
     [Fact] public void CoordinatorRejectsOldPresenterAndMismatchedAcknowledgement()
     {
         using var coordinator=new BattleCoordinator(bridge,engine,NullLogger<BattleCoordinator>.Instance);
