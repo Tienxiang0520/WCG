@@ -2,7 +2,7 @@
  "WCG-001": {
   "zh": "赤誓殘酷監工",
   "name": "Crimson Oath Taskmaster",
-  "text": "Deploy: Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
  },
  "WCG-002": {
   "zh": "致死衝擊",
@@ -107,7 +107,7 @@
  "WCG-022": {
   "zh": "伺機待發",
   "name": "Lie in Wait",
-  "text": "Look at the top 3 cards of your deck. Put up to 1 spell among them into your hand and the rest on the bottom of your deck in any order."
+  "text": "Look at the top 3 cards of your deck. Put up to 1 spell card among them into your hand and the rest on the bottom in any order."
  },
  "WCG-023": {
   "zh": "靈光學徒",
@@ -127,7 +127,7 @@
  "WCG-026": {
   "zh": "空間回折",
   "name": "Spatial Fold",
-  "text": "Return 1 enemy monster to its owner's hand."
+  "text": "Return 1 enemy monster to its hand."
  },
  "WCG-027": {
   "zh": "幻術編織者",
@@ -147,12 +147,12 @@
  "WCG-030": {
   "zh": "預言秘術",
   "name": "Prophetic Arts",
-  "text": "Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom of your deck in any order."
+  "text": "Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom in any order."
  },
  "WCG-031": {
   "zh": "鏡像護衛",
   "name": "Mirror Guard",
-  "text": "Taunt; Holy Shield."
+  "text": "Taunt. Holy Shield."
  },
  "WCG-032": {
   "zh": "質能瓦解",
@@ -182,12 +182,12 @@
  "WCG-037": {
   "zh": "符文構裝巨像",
   "name": "Runebound Colossus",
-  "text": "Whenever you cast a spell, if the enemy has more cards in hand than you, draw 1 card."
+  "text": "Whenever you cast a spell, if your opponent has more cards in hand than you, draw 1 card."
  },
  "WCG-038": {
   "zh": "逆流風暴",
   "name": "Reverse Tide",
-  "text": "Return all monsters that cost 2 or less to their owners' hands."
+  "text": "Return all monsters on both sides that cost 2 or less to their owners' hands."
  },
  "WCG-039": {
   "zh": "萬象觀測者",
@@ -197,12 +197,12 @@
  "WCG-040": {
   "zh": "星穹領主·奧瑞斯",
   "name": "Starvault Lord, Oris",
-  "text": "Deploy: Look at your opponent's hand and put 1 spell from it into their graveyard."
+  "text": "Deploy: Look at your opponent's hand and put 1 spell card from it into their graveyard."
  },
  "WCG-041": {
   "zh": "利爪巨鹿",
   "name": "Clawed Stag",
-  "text": "Deploy: Choose One — restore 1 life; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Restore 1 life; or draw 1 card, then discard 1 card."
  },
  "WCG-042": {
   "zh": "野性之力",
@@ -222,12 +222,12 @@
  "WCG-045": {
   "zh": "叢林行者",
   "name": "Jungle Strider",
-  "text": "Deploy: If you control another monster, draw 1 card, then discard 1 card."
+  "text": "Deploy: If you have another monster, draw 1 card, then discard 1 card."
  },
  "WCG-046": {
   "zh": "自然之怒",
   "name": "Nature's Wrath",
-  "text": "Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
  },
  "WCG-047": {
   "zh": "繁衍蜂群",
@@ -267,7 +267,7 @@
  "WCG-054": {
   "zh": "原始印記",
   "name": "Primal Mark",
-  "text": "Look at the top 5 cards of your deck. Put up to 2 monsters among them into your hand and the rest on the bottom of your deck in any order."
+  "text": "Look at the top 5 cards of your deck. Put up to 2 monster cards among them into your hand and the rest on the bottom in any order."
  },
  "WCG-055": {
   "zh": "沼澤巨鱷",
@@ -282,12 +282,12 @@
  "WCG-057": {
   "zh": "遠古守護者",
   "name": "Ancient Guardian",
-  "text": "Taunt; Deploy: Restore 1 life."
+  "text": "Taunt. Deploy: Restore 1 life."
  },
  "WCG-058": {
   "zh": "萬物復甦",
   "name": "Revival of All",
-  "text": "Put up to 2 monsters that cost 2 or less from your graveyard into your hand."
+  "text": "Put up to 2 monster cards that cost 2 or less from your graveyard into your hand."
  },
  "WCG-059": {
   "zh": "蓋亞暴龍",
@@ -302,7 +302,7 @@
  "WCG-061": {
   "zh": "銀色誓言衛",
   "name": "Silver Oath Guard",
-  "text": "[Arrow: →] Your monster in the adjacent slot to the right has Holy Shield."
+  "text": "[Arrow: →] Your adjacent monster on the right has Holy Shield."
  },
  "WCG-062": {
   "zh": "保護之手",
@@ -332,7 +332,7 @@
  "WCG-067": {
   "zh": "正義裁判官",
   "name": "Righteous Arbiter",
-  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its owner's hand."
+  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its hand."
  },
  "WCG-068": {
   "zh": "神聖審判",
@@ -342,7 +342,7 @@
  "WCG-069": {
   "zh": "鐵壁騎士",
   "name": "Bulwark Knight",
-  "text": "Taunt; Holy Shield."
+  "text": "Taunt. Holy Shield."
  },
  "WCG-070": {
   "zh": "崇高奉獻",
@@ -362,7 +362,7 @@
  "WCG-073": {
   "zh": "榮耀護衛官",
   "name": "Glory Warden",
-  "text": "Taunt; [Arrow: ← →] Your monsters in the adjacent slots on both sides have Holy Shield."
+  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield."
  },
  "WCG-074": {
   "zh": "堅壁祈願",
@@ -372,7 +372,7 @@
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Holy Shield; Deploy: Restore 1 life."
+  "text": "Holy Shield. Deploy: Restore 1 life."
  },
  "WCG-076": {
   "zh": "誓約封禁",
@@ -392,7 +392,7 @@
  "WCG-079": {
   "zh": "日耀聖堂巨像",
   "name": "Sunblaze Temple Colossus",
-  "text": "Taunt; Holy Shield."
+  "text": "Taunt. Holy Shield."
  },
  "WCG-080": {
   "zh": "光輝聖皇·弗丁",
@@ -447,7 +447,7 @@
  "WCG-090": {
   "zh": "冥界引渡",
   "name": "Underworld Passage",
-  "text": "Put 1 monster from your graveyard into your hand."
+  "text": "Put 1 monster card from your graveyard into your hand."
  },
  "WCG-091": {
   "zh": "哀慟女妖",
@@ -457,7 +457,7 @@
  "WCG-092": {
   "zh": "絕望疫病",
   "name": "Plague of Despair",
-  "text": "Destroy all monsters with 800 PP or less (including your own)."
+  "text": "Destroy all monsters on both sides with 800 PP or less."
  },
  "WCG-093": {
   "zh": "深淵伏擊魔",
@@ -487,7 +487,7 @@
  "WCG-098": {
   "zh": "凋零降臨",
   "name": "Withering Descent",
-  "text": "Destroy all monsters."
+  "text": "Destroy all monsters on both sides."
  },
  "WCG-099": {
   "zh": "幽冥巨龍",
@@ -497,7 +497,7 @@
  "WCG-100": {
   "zh": "深淵之主·瑪爾加尼斯",
   "name": "Abyss Lord, Malganis",
-  "text": "Taunt; Deploy: Restore 2 life, then put another monster from your graveyard into your hand."
+  "text": "Taunt. Deploy: Restore 2 life, then put another monster card from your graveyard into your hand."
  },
  "WCG-101": {
   "zh": "巡邏輕步兵",
@@ -507,7 +507,7 @@
  "WCG-102": {
   "zh": "精靈遊俠",
   "name": "Elven Ranger",
-  "text": "Deploy: Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
  },
  "WCG-103": {
   "zh": "淘金鼠人",
@@ -517,7 +517,7 @@
  "WCG-104": {
   "zh": "腐蝕軟泥怪",
   "name": "Corrosive Ooze",
-  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its owner's hand."
+  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its hand."
  },
  "WCG-105": {
   "zh": "狂暴投彈手",
@@ -597,7 +597,7 @@
  "WCG-120": {
   "zh": "炎魔·拉格納羅斯",
   "name": "Fire Lord, Ragnaros",
-  "text": "This monster can't declare attacks. At the end of your turn, destroy the enemy monster with the lowest PP. If the enemy has no monsters, deal 1 damage to the enemy player."
+  "text": "This monster can't attack. At the end of your turn, destroy the enemy monster with the lowest PP; if the enemy has no monsters, deal 1 damage to the enemy player instead."
  },
  "WCG-121": {
   "zh": "冒險者行囊",
@@ -632,7 +632,7 @@
  "WCG-127": {
   "zh": "守誓者壁壘",
   "name": "Oathkeeper's Rampart",
-  "text": "While you control an untapped monster, damage dealt to you by enemy spells is reduced by 1."
+  "text": "While you have an untapped monster, damage enemy spells deal to you is reduced by 1."
  },
  "WCG-128": {
   "zh": "萬魂之井",
@@ -662,7 +662,7 @@
  "WCG-133": {
   "zh": "厚甲石像鬼",
   "name": "Armored Gargoyle",
-  "text": "Taunt; while you have 3 or less life, this monster has Holy Shield."
+  "text": "Taunt. While you have 3 or less life, this monster has Holy Shield."
  },
  "WCG-134": {
   "zh": "巡林驅邪工兵",
@@ -672,7 +672,7 @@
  "WCG-135": {
   "zh": "野性萌發",
   "name": "Wild Sprouting",
-  "text": "Attach this spell to 1 of your monsters; while attached, that monster has +500 PP."
+  "text": "Give 1 of your monsters +500 PP (attach this card to it)."
  },
  "WCG-136": {
   "zh": "狂戰士斥候",
@@ -692,7 +692,7 @@
  "WCG-139": {
   "zh": "次元回溯",
   "name": "Dimensional Rewind",
-  "text": "Return 1 monster to its owner's hand; if it was your monster, draw 1 card."
+  "text": "Return 1 monster to its owner's hand. If it was your monster, draw 1 card."
  },
  "WCG-140": {
   "zh": "湮滅契約",
@@ -757,7 +757,7 @@
  "WCG-152": {
   "zh": "禁魔石像",
   "name": "Spellward Statue",
-  "text": "Taunt; can't be targeted by spells."
+  "text": "Taunt. Can't be targeted by spells."
  },
  "WCG-153": {
   "zh": "奧術回音塔",
@@ -802,12 +802,12 @@
  "WCG-161": {
   "zh": "萬物終結者·世界之蝕",
   "name": "World Ender, Eclipse",
-  "text": "Deploy: Destroy all other monsters and all Wards, and discard your entire hand."
+  "text": "Deploy: Destroy all other monsters on both sides and all Wards, and discard your entire hand."
  },
  "WCG-162": {
   "zh": "遠古泰坦·世界樹之靈",
   "name": "Ancient Titan, Spirit of the World Tree",
-  "text": "Taunt; Deploy: Restore 3 life and draw 2 cards."
+  "text": "Taunt. Deploy: Restore 3 life and draw 2 cards."
  },
  "WCG-163": {
   "zh": "時空之主·克羅諾斯",
@@ -832,7 +832,7 @@
  "WCG-167": {
   "zh": "萌芽喚醒",
   "name": "Sprouting Awakening",
-  "text": "Untap 1 of your tapped monsters."
+  "text": "Untap 1 of your tapped monsters (it can attack this turn)."
  },
  "WCG-168": {
   "zh": "正義壓制",
@@ -847,12 +847,12 @@
  "WCG-170": {
   "zh": "天火浩劫",
   "name": "Skyfire Cataclysm",
-  "text": "Destroy all enemy monsters with 1500 PP or less; if the enemy has no monsters, deal 2 damage to the enemy player."
+  "text": "Destroy all enemy monsters with 1500 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player."
  },
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt; Holy Shield; Deploy: Restore 2 life."
+  "text": "Taunt. Holy Shield. Deploy: Restore 2 life."
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -862,12 +862,12 @@
  "WCG-173": {
   "zh": "維度扭曲",
   "name": "Dimensional Warp",
-  "text": "Return all monsters to their owners' hands; draw 2 cards."
+  "text": "Return all monsters on both sides to their owners' hands. Draw 2 cards."
  },
  "WCG-174": {
   "zh": "熔岩黑龍軍團長",
   "name": "Lava Black Dragon Warlord",
-  "text": "Charge; Trample."
+  "text": "Charge. Trample."
  },
  "WCG-175": {
   "zh": "冥界引渡者·冥王",
@@ -877,7 +877,7 @@
  "WCG-176": {
   "zh": "神聖至高審判",
   "name": "Supreme Holy Judgment",
-  "text": "Destroy all monsters with 1500 PP or more; restore 2 life."
+  "text": "Destroy all monsters on both sides with 1500 PP or more. Restore 2 life."
  },
  "WCG-177": {
   "zh": "機械工廠巨像",
@@ -892,12 +892,12 @@
  "WCG-179": {
   "zh": "光輝至高大天使·阿曼蘇爾",
   "name": "Radiant Supreme Archangel, Amansul",
-  "text": "Taunt; Holy Shield; Deploy: Restore your life to its maximum (7)."
+  "text": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7)."
  },
  "WCG-180": {
   "zh": "戰歌號令",
   "name": "Warsong Command",
-  "text": "Look at the top 3 cards of your deck. Put 1 [Fury] monster and 1 [Fury] spell among them into your hand and the rest on the bottom of your deck in any order."
+  "text": "Look at the top 3 cards of your deck. Put 1 [Fury] monster card and 1 [Fury] spell card among them into your hand and the rest on the bottom in any order."
  },
  "WCG-181": {
   "zh": "赤誓戰鼓手",
@@ -912,7 +912,7 @@
  "WCG-183": {
   "zh": "觀星占卜師",
   "name": "Stargazing Diviner",
-  "text": "Deploy: Look at the top 3 cards of your deck. Put 1 spell among them into your hand and the rest on the bottom of your deck in any order."
+  "text": "Deploy: Look at the top 3 cards of your deck. Put 1 spell card among them into your hand and the rest on the bottom in any order."
  },
  "WCG-184": {
   "zh": "奧術共鳴波",
@@ -927,7 +927,7 @@
  "WCG-186": {
   "zh": "母樹共鳴",
   "name": "Mother Tree Resonance",
-  "text": "Look at the top 3 cards of your deck. Put 1 [Life] monster among them into your hand and the rest on the bottom of your deck in any order. If you control a [Life] Ward, draw 1 more card."
+  "text": "Look at the top 3 cards of your deck. Put 1 [Life] monster card among them into your hand and the rest on the bottom in any order. If you have a [Life] Ward, draw 1 more card."
  },
  "WCG-187": {
   "zh": "翠綠喚獸師",
@@ -937,7 +937,7 @@
  "WCG-188": {
   "zh": "萬靈樹精長老",
   "name": "Elder of the Myriad Dryads",
-  "text": "Taunt; Deploy: Restore 1 life for each other [Life] monster on your side."
+  "text": "Taunt. Deploy: Restore 1 life for each other [Life] monster you have."
  },
  "WCG-189": {
   "zh": "聖堂集結號角",
@@ -952,12 +952,12 @@
  "WCG-191": {
   "zh": "聖光大審判官",
   "name": "Grand Inquisitor of Holy Light",
-  "text": "Taunt; Deploy: If you control another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life."
+  "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life."
  },
  "WCG-192": {
   "zh": "冥河引魂術",
   "name": "Styx Soulguide Rite",
-  "text": "Look at the top 3 cards of your deck. Put 1 [Abyss] monster among them into your hand and the rest into your graveyard."
+  "text": "Look at the top 3 cards of your deck. Put 1 [Abyss] monster card among them into your hand and the rest into your graveyard."
  },
  "WCG-193": {
   "zh": "噬魂死靈術士",
