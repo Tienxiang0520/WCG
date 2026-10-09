@@ -25,6 +25,9 @@ public sealed partial class RankedDecks
                     throw new InvalidDataException($"天梯牌組微調不合法：{entry.Deck.Name} / {variant.Name}");
         }
         if (Enumerable.Range(0, 6).Any(t => All.Count(e => e.Tier == t) < 5)) throw new InvalidDataException("各牌位須至少五套對手牌組。");
+        // Archetypes are gated to specific tiers by the generator; every tier must still face all five wills.
+        if (Enumerable.Range(0, 6).Any(t => All.Where(e => e.Tier == t).Select(e => e.Deck.MainWill).Distinct().Count() < 5))
+            throw new InvalidDataException("各牌位對手須涵蓋五種意志。");
     }
     // Deck.Validate covers size, copies and factions; ranked data also keeps the off-color limit from 規則.md.
     public bool IsLegal(Deck deck, out string? error)
@@ -65,15 +68,22 @@ public sealed partial class RankedDecks
         var pool = Pool(tier);
         var styles = pool.GroupBy(e => e.Archetype == "" ? "其他" : e.Archetype).OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal)
             .Select(g => $"{g.Key} {g.Count()}");
-        return $"{pool.Count} 副對手（{string.Join("、", styles)}）";
+        return $"{pool.Count} 種流派（{string.Join("、", styles)}）：{string.Join("、", pool.Select(e => ArchetypeName(e.Deck)))}";
+    }
+    // "秩序・白銀長城（控制）" → "白銀長城"
+    public static string ArchetypeName(Deck deck)
+    {
+        var name = deck.Name;
+        var dot = name.IndexOf('・'); if (dot >= 0) name = name[(dot + 1)..];
+        var end = name.IndexOf('（'); return end > 0 ? name[..end] : name;
     }
     public static string Strategy(int tier) => tier switch
     {
-        0 => "新手電腦：常隨機出牌、亂選目標，半數看漏斬殺；入門牌表",
-        1 => "基礎電腦：照怪物優先順序出牌，偶爾失誤；基礎牌表",
-        2 => "進階電腦：評估交換與目標、會用直傷斬殺；雙色流派登場",
-        3 => "老練電腦：注意反撲、優先鋪場；牌表更完整",
-        4 => "高手電腦：聰明填能量、兩步攻擊規劃；雙色控制登場",
-        _ => "大師電腦：幾乎不失誤、三步攻擊規劃、先解嘲諷再斬殺；完整牌表",
+        0 => "新手電腦：常隨機出牌、亂選目標，半數看漏斬殺；入門流派的簡化牌表",
+        1 => "基礎電腦：照怪物優先順序出牌，偶爾失誤；節奏、巨獸與快攻流派加入",
+        2 => "進階電腦：評估交換與目標、會用直傷斬殺；暗影刺殺加入",
+        3 => "老練電腦：注意反撲、優先鋪場；最弱的控制與獻祭流派退場，焦土控場加入",
+        4 => "高手電腦：聰明填能量、兩步攻擊規劃；冰封堡壘、聖林守衛加入",
+        _ => "大師電腦：幾乎不失誤、三步攻擊規劃、先解嘲諷再斬殺；只剩強勢流派的完整牌表，白銀長城、誓約審判、荊棘毒牙只在此出現",
     } + "；每場隨機微調 0～2 組卡牌";
 }

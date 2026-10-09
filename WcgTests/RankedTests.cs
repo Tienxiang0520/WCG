@@ -180,18 +180,32 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(GameEngine.RankedAiVersion,s.Read().Match!.Actions.Single().RulesVersion);
     }
     static string ArchetypeKey(string id) => id.Split('-',3)[2];
-    [Fact] public void TiersGrowFromSimplePoolsToEveryArchetype()
+    [Fact] public void ArchetypesAreGatedToSpecificTiers()
     {
         var keys=Enumerable.Range(0,6).Select(t=>decks.Pool(t).Select(e=>ArchetypeKey(e.Deck.Id)).ToHashSet()).ToArray();
         for(int tier=0;tier<6;tier++)
         {
             var pool=decks.Pool(tier);
-            Assert.True(pool.Count>=7);Assert.Equal(pool.Count,keys[tier].Count);
+            Assert.True(pool.Count>=8);Assert.Equal(pool.Count,keys[tier].Count);
+            Assert.Equal(5,pool.Select(e=>e.Deck.MainWill).Distinct().Count());
             Assert.All(pool,e=>{Assert.True(decks.IsLegal(e.Deck,out var error),error);Assert.NotEmpty(e.Archetype);Assert.NotEmpty(e.Deck.Description);
                 Assert.True(e.Deck.GetColorCounts(cards.GetCard).OffColor<=Deck.MaxOffColorCards);Assert.True((e.Variants?.Count??0)>=3);});
-            if(tier>0){Assert.Superset(keys[tier-1],keys[tier]);Assert.True(keys[tier].Count>keys[tier-1].Count);}
+            var summary=decks.Summary(tier);Assert.StartsWith($"{pool.Count} 種流派",summary);
+            Assert.All(pool,e=>Assert.Contains(RankedDecks.ArchetypeName(e.Deck),summary));
         }
-        Assert.Equal(20,keys[5].Count);
+        // 嘲諷回血最強的流派只在大師；冰封堡壘只在鑽石與大師。
+        foreach(var key in new[]{"ORDER-RAMPART","ORDER-VERDICT","VITAL-THORN"})
+            Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains(key)));
+        Assert.Equal([4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-GLACIER")));
+        // 較弱的連動與控制流派不會出現在高牌位，高牌位不再是低牌位的超集合。
+        Assert.DoesNotContain("REASON-ARCANE",keys[3]);Assert.DoesNotContain("ABYSS-SOULFEAST",keys[3]);
+        Assert.DoesNotContain("REASON-ORACLE",keys[4]);Assert.DoesNotContain("WRATH-WARBAND",keys[5]);
+        Assert.False(keys[5].IsSupersetOf(keys[0]));
+        Assert.DoesNotContain("白銀長城",decks.Summary(4));Assert.Contains("白銀長城",decks.Summary(5));
+        Assert.Equal(20,keys.SelectMany(k=>k).Distinct().Count());
+        // 大師使用完整牌表；同一流派在較低牌位的牌表是簡化版。
+        var thorn=decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="VITAL-THORN").Deck;
+        Assert.Contains(thorn.CardIds,id=>id=="WCG-082");
         Assert.Equal(decks.All.Count,decks.All.Select(e=>string.Join(',',e.Deck.CardIds.Order())).Distinct().Count());
         Assert.DoesNotContain(decks.All,e=>cards.PresetDecks.Any(p=>p.CardIds.Order().SequenceEqual(e.Deck.CardIds.Order())));
     }

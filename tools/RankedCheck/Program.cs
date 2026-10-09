@@ -58,5 +58,6 @@ for(int tier=0;tier<6;tier++)
  }
  picks.Add(new{tier,pool=pool.Pool(tier).Count,distinctDecklistsIn200Picks=distinct.Count,consecutiveRepeats=repeats});
 }
-var tiers=output.Cast<dynamic>().GroupBy(r=>(int)r.tier).Select(g=>new{tier=g.Key,decks=g.Count(),games=g.Sum(r=>(int)r.games),winRate=Math.Round((double)g.Sum(r=>(int)r.wins)/g.Sum(r=>(int)r.games),3)});
+var tiers=output.Cast<dynamic>().GroupBy(r=>(int)r.tier).Select(g=>{var sorted=g.OrderBy(r=>(double)r.winRate).ToList();return new{tier=g.Key,decks=g.Count(),games=g.Sum(r=>(int)r.games),winRate=Math.Round((double)g.Sum(r=>(int)r.wins)/g.Sum(r=>(int)r.games),3),
+ wills=g.Select(r=>(string)r.will).Distinct().Count(),weakest=new{deck=(string)sorted[0].deck,winRate=(double)sorted[0].winRate},strongest=new{deck=(string)sorted[^1].deck,winRate=(double)sorted[^1].winRate},archetypes=sorted.Select(r=>(string)r.deck).ToList()};});
 Console.WriteLine(JsonSerializer.Serialize(new{policy="seeds 700 onward, both starting positions; ranked side uses the tiered AI for its tier, presets use the v0.6 trial AI; not human win rates",seeds,aiLadder=ladder,aiLadderSlowestActionMs=Math.Round(worst,2),tiers,picks,results=output},new JsonSerializerOptions{WriteIndented=true,Encoder=System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
