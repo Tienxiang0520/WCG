@@ -627,3 +627,9 @@
 .v06-hand-card:not(.card-back) .hand-availability{background:#3a2c18;color:#f6e3a6}
 .v06-hand-card.available:not(.card-back) .hand-availability{background:#1d6b52;color:#eafff5}
 .v06-hand-card.set-ready:not(.card-back) .hand-availability{background:#6d5420;color:#fff1c4}
+@media(max-width:600px){
+.field-card{box-shadow:inset 0 0 0 1px #e4c574,inset 0 0 0 1.5px #7a5a1e,inset 0 0 0 3px #f3ead4,0 0 0 1px rgba(20,14,4,.8),0 4px 10px rgba(0,0,0,.6)}
+.field-card.enemy-card{box-shadow:inset 0 0 0 1px #e0b48a,inset 0 0 0 1.5px #7a3a22,inset 0 0 0 3px #f1e4d6,0 0 0 1px rgba(20,8,4,.8),0 4px 10px rgba(0,0,0,.6)}
+.field-card .card-art-layer{inset:3px;border-radius:5px}
+.field-stats b:first-child,.field-stats b:last-child{box-shadow:0 0 0 1px #a07a2c,0 0 0 2px #f6e3a6,0 2px 5px rgba(0,0,0,.55)}
+}
