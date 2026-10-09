@@ -80,27 +80,27 @@ public static class TutorialLessons
             Summary = "攻擊敵方怪物時比較 PP，高者存活、平手同歸於盡；學會預覽勝負與查看墓地。",
             Topics = ["怪物攻擊怪物", "PP 比較", "平手同歸於盡", "無累積傷害", "攻擊後橫置", "墓地與紀錄", "略過怪物直接攻擊玩家"],
             Scene = new(
-                new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-158", 1), new("WCG-154", 2), new("WCG-155", 3)] },
-                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-119", 1), new("WCG-154", 2), new("WCG-101", 3)] }),
+                new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-154", 2), new("WCG-155", 3)] },
+                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-157", 1), new("WCG-156", 2), new("WCG-101", 3)] }),
             Steps =
             [
                 new() { Title = "交戰規則", Spot = ["field"],
                     Text = "怪物攻擊怪物時比較目前 PP：較高者存活、較低者被消滅；PP 相同則同歸於盡。傷害不會累積，存活的怪物不會留下傷痕。DP 只在攻擊玩家時使用。" },
-                new() { Title = "以強擊弱", Spot = ["own-card:WCG-158", "enemy-card:WCG-101"], Allow = [Attack("WCG-158", "WCG-101")],
+                new() { Title = "以強擊弱", Spot = ["own-card:WCG-114", "enemy-card:WCG-101"], Allow = [Attack("WCG-114", "WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101"),
-                    Text = "把「白銀持戟禁衛」（2200）拖到敵方「巡邏輕步兵」（700）上。拖曳途中會顯示勝負預覽。",
-                    Hint = "請用「白銀持戟禁衛」攻擊「巡邏輕步兵」。" },
-                new() { Title = "攻擊後橫置", Spot = ["own-card:WCG-158"],
+                    Text = "把「雪人巨獸」（2200）拖到敵方「巡邏輕步兵」（700）上。拖曳途中會顯示勝負預覽。",
+                    Hint = "請用「雪人巨獸」攻擊「巡邏輕步兵」。" },
+                new() { Title = "攻擊後橫置", Spot = ["own-card:WCG-114"],
                     Text = "攻擊過的怪物會橫置，這回合不能再攻擊；少數卡牌效果可以讓怪物重新直立、再攻擊一次。" },
-                new() { Title = "平手同歸於盡", Spot = ["own-card:WCG-154", "enemy-card:WCG-154"], Allow = [Attack("WCG-154", "WCG-154")],
-                    Done = e => !OnField(e.Computer, "WCG-154") && !OnField(e.Player, "WCG-154"),
-                    Text = "雙方的「淡水狂鱷」都是 1500 PP。讓它們交戰，看看平手時會發生什麼。",
-                    Hint = "請用你的「淡水狂鱷」攻擊敵方的「淡水狂鱷」。" },
+                new() { Title = "平手同歸於盡", Spot = ["own-card:WCG-154", "enemy-card:WCG-156"], Allow = [Attack("WCG-154", "WCG-156")],
+                    Done = e => !OnField(e.Computer, "WCG-156") && !OnField(e.Player, "WCG-154"),
+                    Text = "「淡水狂鱷」與「荒原巨槌食人魔」都是 1500 PP。讓它們交戰，看看平手時會發生什麼。",
+                    Hint = "請用「淡水狂鱷」攻擊「荒原巨槌食人魔」。" },
                 new() { Title = "墓地與對戰紀錄", Spot = ["history"],
                     Text = "被消滅的卡會進入墓地。按「紀錄／墓地」可以查看雙方墓地與完整對戰紀錄；看完記得關閉視窗。" },
                 new() { Title = "略過怪物，直接打玩家", Spot = ["own-card:WCG-155", "face"], Allow = [Attack("WCG-155")],
                     Done = e => e.Computer.Hp == 6,
-                    Text = "對手沒有嘲諷怪物時，你可以不理會敵方怪物，直接攻擊玩家。「食人魔拳手」有 2800 PP，硬碰只會讓「鋼鐵構裝體」被消滅，所以改打電腦頭像。",
+                    Text = "對手沒有嘲諷怪物時，你可以不理會敵方怪物，直接攻擊玩家。「蒼翠古樹衛士」有 2300 PP，硬碰只會讓「鋼鐵構裝體」被消滅，所以改打電腦頭像。",
                     Hint = "請把「鋼鐵構裝體」拖到電腦頭像。" },
                 new() { Title = "本課重點",
                     Text = "出手前先比 PP：贏了換掉對方、平手一換一、輸了只會白白損失。能量、手牌與場上格位都是資源，好的交換能讓你掌握戰場。" }
@@ -163,10 +163,10 @@ public static class TutorialLessons
         new()
         {
             Id = "arrows", Icon = "compass", Title = "箭頭與站位",
-            Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭攻擊正對面的敵人。",
+            Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭影響正對面的敵人。",
             Topics = ["箭頭 ← → ↑", "相鄰格光環", "正對面同列格", "五大意志的箭頭"],
             Scene = new(
-                new() { Hand = ["WCG-005", "WCG-156"], Deck = Deck(), Energy = 5, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
+                new() { Hand = ["WCG-005", "WCG-033"], Deck = Deck(), Energy = 6, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-132", 0), new("WCG-155", 2)] }),
             Steps =
             [
@@ -178,12 +178,12 @@ public static class TutorialLessons
                     Hint = "請把「突擊狼騎兵」放在第 3 格。" },
                 new() { Title = "站在中間最划算", Spot = ["own-card:WCG-101", "own-card:WCG-154"],
                     Text = "兩側隊友都變強了：700→900、1500→1700。放在邊格只能照顧一側；來源被沉默或離場，加成立刻消失。" },
-                new() { Title = "正對面", Spot = ["hand:WCG-156", "own:4", "enemy-card:WCG-132"], Allow = [Play("WCG-156"), Slot(4)],
-                    Done = e => !OnField(e.Computer, "WCG-132") && Settled(e),
-                    Text = "「荒原巨槌食人魔」的 ↑ 進場時消滅正對面 PP 800 以下的敵方怪物。己方第 5 格正對敵方第 1 格的「腐肉食腐蛛」，把它放在第 5 格。",
-                    Hint = "請把「荒原巨槌食人魔」放在第 5 格（腐肉食腐蛛的正對面）。" },
+                new() { Title = "正對面", Spot = ["hand:WCG-033", "own:4", "enemy-card:WCG-132"], Allow = [Play("WCG-033"), Slot(4)],
+                    Done = e => Unit(e.Computer, "WCG-132")?.IsTapped == true && Settled(e),
+                    Text = "「秘法竊取者」的 ↑ 進場時把正對面直立的敵方怪物橫置，讓它這回合無法攻擊；正對面是空格或已橫置的敵怪就改抽 1 張牌。己方第 5 格正對敵方第 1 格的「腐肉食腐蛛」，把它放在第 5 格。",
+                    Hint = "請把「秘法竊取者」放在第 5 格（腐肉食腐蛛的正對面）。" },
                 new() { Title = "本課重點",
-                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ↑ 劈砍正對面，理智依站位抽牌或橫置對手，生機用光環培育隊友，秩序用箭頭分配聖盾，深淵與中立壓低正對面敵怪的 PP。" }
+                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ← → 帶隊衝鋒，理智依站位抽牌或橫置對手，生機用嘲諷守住戰線並強化兩側，秩序用箭頭分配聖盾，深淵壓低正對面敵怪的 PP。" }
             ]
         },
         new()

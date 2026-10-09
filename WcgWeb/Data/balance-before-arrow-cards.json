@@ -1,21 +1,5 @@
 [
   {
-    "id": "WCG-156",
-    "name": "荒原巨槌食人魔",
-    "type": "怪物",
-    "will": "狂怒",
-    "cost_spec": "",
-    "cost_gen": 3,
-    "total_cost": 3,
-    "pp": 1500,
-    "dp": 2,
-    "text": "無。",
-    "design_note": "狂怒系特色白板。犧牲 300 PP 換取高達 2 點的直接踢臉傷害，進攻性極強。",
-    "hs_ref": "熔火狂暴者 / 狂怒打擊者",
-    "keywords": [],
-    "arrows": []
-  },
-  {
     "id": "WCG-005",
     "name": "突擊狼騎兵",
     "type": "怪物",
@@ -66,54 +50,6 @@
     "arrows": []
   },
   {
-    "id": "WCG-055",
-    "name": "沼澤巨鱷",
-    "type": "怪物",
-    "will": "生機",
-    "cost_spec": "",
-    "cost_gen": 4,
-    "total_cost": 4,
-    "pp": 2300,
-    "dp": 1,
-    "text": "無。",
-    "design_note": "生機系 4 費頂級純數值標竿。",
-    "hs_ref": "冰風雪人 / 綠洲鉗嘴龜",
-    "keywords": [],
-    "arrows": []
-  },
-  {
-    "id": "WCG-157",
-    "name": "蒼翠古樹衛士",
-    "type": "怪物",
-    "will": "生機",
-    "cost_spec": "",
-    "cost_gen": 4,
-    "total_cost": 4,
-    "pp": 2300,
-    "dp": 1,
-    "text": "無。",
-    "design_note": "生機系特色白板。高達 2300 PP，比中立 4 費雪人多 100 PP，體現生機派系大體型巨獸優勢。",
-    "hs_ref": "沼澤爬行者 / 德魯伊大怪",
-    "keywords": [],
-    "arrows": []
-  },
-  {
-    "id": "WCG-159",
-    "name": "冥界骸骨巨獸",
-    "type": "怪物",
-    "will": "深淵",
-    "cost_spec": "",
-    "cost_gen": 5,
-    "total_cost": 5,
-    "pp": 2500,
-    "dp": 1,
-    "text": "無。",
-    "design_note": "深淵系 5 費純身材白板。2500 PP 足以壓制 4 費雪人（2200 PP），成為中盤對撞的中流砥柱。",
-    "hs_ref": "墓園巨獸 / 冥界骸骨兵",
-    "keywords": [],
-    "arrows": []
-  },
-  {
     "id": "WCG-085",
     "name": "苦痛契約者",
     "type": "怪物",
@@ -130,19 +66,21 @@
     "arrows": []
   },
   {
-    "id": "WCG-114",
-    "name": "雪人巨獸",
+    "id": "WCG-049",
+    "name": "鐵木樹人",
     "type": "怪物",
-    "will": "中立",
+    "will": "生機",
     "cost_spec": "",
-    "cost_gen": 4,
-    "total_cost": 4,
-    "pp": 2200,
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1800,
     "dp": 1,
-    "text": "無。",
-    "design_note": "4 費純身材最強標準範本。",
-    "hs_ref": "冰風雪人",
-    "keywords": [],
+    "text": "嘲諷。",
+    "design_note": "生機系 3 費 1800 PP 超模厚重嘲諷，優先承受敵方攻擊。 嘲諷可正常攻擊；費用與 PP 暫保留，需重新試玩平衡。",
+    "hs_ref": "鐵鬃灰熊 / 埃隆巴克保護者",
+    "keywords": [
+      "嘲諷"
+    ],
     "arrows": []
   }
 ]

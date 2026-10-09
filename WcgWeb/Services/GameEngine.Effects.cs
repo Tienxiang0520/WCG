@@ -24,13 +24,10 @@ public partial class GameEngine
             case "WCG-020": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 1300).ToArray(), m.Card.Name); break;
             case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
-            case "WCG-156" when m.Card.Arrows.Length > 0:
-                if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy && x.CurrentPP <= 800) is { } cleaved) KillBatch(new[] { cleaved }, m.Card.Name);
-                break;
             case "WCG-027": case "WCG-047": case "WCG-115": FreeHand(p, 1, 1); break;
             case "WCG-067": case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
             case "WCG-033" when m.Card.Arrows.Length > 0:
-                if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
+                if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
                 else DrawMany(p, 1);
                 break;
             case "WCG-033": if (enemy.Hand.Count > p.Hand.Count) DrawMany(p, 1); break;
@@ -193,17 +190,12 @@ public partial class GameEngine
     private void Death(PlayerState p, MonsterInstance m, CardInstance grave)
     {
         if (m.IsSilenced) return;
-        if (m.Card.Id is "WCG-003" or "WCG-016" or "WCG-025" or "WCG-103" or "WCG-043" or "WCG-108" or "WCG-080" or "WCG-083" or "WCG-093" or "WCG-097"
-            || m.Card.Id == "WCG-159" && m.Card.Arrows.Length > 0)
+        if (m.Card.Id is "WCG-003" or "WCG-016" or "WCG-025" or "WCG-103" or "WCG-043" or "WCG-108" or "WCG-080" or "WCG-083" or "WCG-093" or "WCG-097")
             Present("trigger", p, m.InstanceId, card: m.Card, label: "離場能力");
         var enemy = GetOpponent(p);
         switch (m.Card.Id)
         {
             case "WCG-003": Damage(enemy, 1); break;
-            // The source has already left: its slot still names the column it was guarding.
-            case "WCG-159" when m.Card.Arrows.Length > 0:
-                if (enemy.Field.FirstOrDefault(x => x.Slot == 4 - m.Slot && x.CurrentPP <= 2000) is { } opposite) KillBatch(new[] { opposite }, m.Card.Name);
-                break;
             case "WCG-016": PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-025": case "WCG-103": DrawMany(p, 1); break;
             case "WCG-043": case "WCG-108": Recover(p, 1, 1, grave); break;

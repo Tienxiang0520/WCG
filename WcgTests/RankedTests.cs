@@ -123,14 +123,14 @@ public sealed class RankedTests : IDisposable
     [Fact] public void ArrowExpansionPreservesActivePreArrowMatchAndReplays()
     {
         var oldCards=Overlay(cards,"balance-before-arrow-cards.json");
-        Assert.Empty(oldCards.GetCard("WCG-156")!.Arrows);Assert.Equal(1500,oldCards.GetCard("WCG-156")!.PP);
+        Assert.Empty(oldCards.GetCard("WCG-005")!.Arrows);Assert.Equal("衝鋒。",oldCards.GetCard("WCG-005")!.Text);
         var deck=DeckService.Copy(oldCards.PresetDecks[0]);
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(oldSession.Start(deck).Success);
         var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
         oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
-        Assert.Equal(1500,oldSession.Engine.Player.Hand.Concat(oldSession.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-156").Card.PP);
+        Assert.Empty(oldSession.Engine.Player.Hand.Concat(oldSession.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-005").Card.Arrows);
         var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));var stars=oldSession.Read().Stars;
         var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
         Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
@@ -139,8 +139,8 @@ public sealed class RankedTests : IDisposable
         var record=restored.Read().Records!.Last();
         var replay=restored.BuildReplay(record.Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
-        var ogre=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-156").Card;
-        Assert.Equal(1300,ogre.PP);Assert.Equal(["up"],ogre.Arrows);
+        var rider=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-005").Card;
+        Assert.Equal(["left","right"],rider.Arrows);
     }
     [Fact] public void CorruptSaveIsPreservedAndBlocksRankedOnly()
     {

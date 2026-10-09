@@ -36,7 +36,7 @@ public partial class GameEngine
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the holy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (200, 0), "WCG-055" => (300, 0), "WCG-157" => (500, 0), "WCG-085" => (0, -300), "WCG-114" => (0, -300), _ => (0, 0) };
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return sourceOwner == owner ? aura.Ally : aura.Enemy; });
