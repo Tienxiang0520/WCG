@@ -74,6 +74,11 @@ public sealed class Localizer : IDisposable
     public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, zhText) : zhText;
     public string CardName(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardName(card.CardId, card.Name);
     public string CardText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardText(card.CardId, card.Text);
+    // Text shown on card faces and detail panels: vanilla cards ("無。" / "None.") leave the box blank. Search keeps using CardText.
+    public string FaceText(CardDefinition? card) => card == null || card.IsVanilla ? "" : CardText(card);
+    public string FaceText(string id, string zhText) => CardDefinition.IsVanillaText(zhText) ? "" : Blank(CardText(id, zhText));
+    public string FaceText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : FaceText(card.CardId, card.Text);
+    private static string Blank(string text) => CardDefinition.IsVanillaText(text) ? "" : text;
     public string Will(string? will) => Text(will);
     public string CardType(string? type) => Text(type);
     // Official and ranked decks are translated by id while they keep their original name; player-named decks stay as typed.

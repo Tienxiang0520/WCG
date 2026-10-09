@@ -77,7 +77,7 @@ public class PowerScaleTests
         var allowed = Monster(engine.Computer, "WCG-101", limit);
         var outside = Monster(engine.Computer, "WCG-101", limit + 100);
         var spell = Hand("WCG-048");
-        Assert.Contains("× 500", spell.Card.Text);
+        Assert.Contains("+500", spell.Card.Text);
         Assert.Equal(3, spell.Card.TotalCost);
         var energy = engine.Player.AvailableEnergy; var deck = engine.Player.Deck.Count;
         Assert.False(engine.CastSpellAt(engine.Player, spell, outside));

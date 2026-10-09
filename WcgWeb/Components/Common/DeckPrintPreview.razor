@@ -124,7 +124,7 @@
     private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
     private string PrintedText(PrintedCard card)
     {
-        var text = string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text);
+        var text = L.FaceText(card.Id, card.Text);
         return WhiteColor ? ArrowPrefix.Replace(text, "").Trim() : text;
     }
     private string PlainClass(PrintedCard card) => "print-card" + (WhiteColor ? " white-print-card" +

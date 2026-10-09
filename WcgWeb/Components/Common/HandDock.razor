@@ -6,7 +6,7 @@
         var problem = Engine.GetPlayProblem(Engine.Player, card);
         <section class="hand-selection" aria-label="@L["選取的手牌"]" aria-live="polite">
             <div><strong>@L.CardName(card.Card) · @L.F("{0} 費", card.Card.TotalCost)</strong><button class="btn btn-sm btn-outline-secondary" @onclick="Clear">@L["取消選牌"]</button></div>
-            <p>@L.CardText(card.Card)</p>
+            <p>@L.FaceText(card.Card)</p>
             <div class="hand-selection-actions">
                 <button class="btn btn-success" disabled="@(Busy || problem != "")" @onclick="() => Use(card)">@L[card.Card.IsMonster ? "召喚" : "施放"] · @L.F("{0} 費", card.Card.TotalCost)</button>
                 <button class="btn btn-outline-info" disabled="@(Busy || !Engine.CanPlayEnergy(Engine.Player, card))" @onclick="() => Fill(card)">@L["填能量"]</button>

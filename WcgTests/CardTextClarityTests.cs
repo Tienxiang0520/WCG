@@ -1,0 +1,209 @@
+using System.Reflection;
+using System.Text.Json;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
+using WcgWeb.Components.Common;
+using WcgWeb.Models;
+using WcgWeb.Models.Battle;
+using WcgWeb.Services;
+namespace WcgTests;
+
+// 卡牌文字白話化 (docs/history/卡牌文字白話化.md): reworded cards, four engine fixes, four effect changes and blank vanilla text boxes.
+public class CardTextClarityTests
+{
+    private readonly CardDatabase cards;
+    private readonly string root;
+    public CardTextClarityTests(){root=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb"));var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(root);cards=new(env.Object);}
+    // Old ranked matches replay with LegacyCardRules; tests switch it on the same way UseMatchCatalog does.
+    public static bool IsLegacy(GameEngine g)=>(bool)typeof(GameEngine).GetProperty("LegacyCardRules",BindingFlags.NonPublic|BindingFlags.Instance)!.GetValue(g)!;
+    public static void Legacy(GameEngine g)=>typeof(GameEngine).GetProperty("LegacyCardRules",BindingFlags.NonPublic|BindingFlags.Instance)!.SetValue(g,true);
+    private GameEngine Game(bool legacy=false){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);if(legacy)Legacy(g);g.Player.Hand.Clear();g.Computer.Hand.Clear();g.Player.Field.Clear();g.Computer.Field.Clear();for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));return g;}
+    private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
+    private MonsterInstance Unit(PlayerState p,int n,int slot){var m=new MonsterInstance(cards.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
+    private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
+    private static void Slot(GameEngine g,int slot){if(g.CurrentPendingChoice is {} c&&c.Options.FirstOrDefault(o=>o.Id==$"SLOT:{slot}") is {} o)Assert.True(g.SelectChoice(o));}
+
+    [Fact] public void CardTextsUseTheNewGlossary()
+    {
+        Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("離場",c.Text);Assert.DoesNotContain("犧牲不算",c.Text);Assert.DoesNotContain("敵方全場",c.Text);Assert.DoesNotContain("不支付費用",c.Text);});
+        Assert.All(cards.AllCards.Where(c=>Regex.IsMatch(c.Text,"免費召喚(至多 )?\\d")),c=>Assert.Contains("不觸發進場",c.Text));
+        Assert.All(cards.AllCards.Where(c=>c.IsCounter),c=>Assert.StartsWith("【反擊】敵方怪物攻擊你時翻開：",c.Text));
+        foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("直到它下一次攻擊或交戰結束",cards.GetCard(id)!.Text);
+        Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
+        Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);
+        Assert.Equal(1000,cards.GetCard("WCG-147")!.PP);
+        var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(root,"i18n/cards.en.json")))!;
+        Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
+        Assert.Equal(10,cards.AllCards.Count(c=>c.IsVanilla));
+    }
+    [Fact] public void PriorCatalogSnapshotOnlyHoldsChangedCards()
+    {
+        var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-card-text.json")))!;
+        Assert.Equal(88,prior.Count);
+        Assert.All(prior,p=>Assert.NotEqual(p.Text,cards.GetCard(p.Id)!.Text));
+        Assert.Equal(1200,prior.Single(p=>p.Id=="WCG-147").PP);
+        Assert.DoesNotContain(prior,p=>p.Text=="無。");
+    }
+
+    [Theory] [InlineData(false,5,3)] [InlineData(true,4,2)]
+    public void SacrificeCountsAsDestroyed(bool legacy,int hp,int drawn)
+    {
+        var g=Game(legacy);g.Player.Hp=5;Unit(g.Player,11,0);Unit(g.Player,99,1);var victim=Unit(g.Player,3,2);var deck=g.Player.Deck.Count;
+        Assert.True(g.CastSpell(g.Player,Hand(g,96)));Assert.True(g.SelectTarget(victim));
+        Assert.Equal(hp,g.Player.Hp);Assert.Equal(deck-drawn,g.Player.Deck.Count);
+    }
+    [Theory] [InlineData(false,1500)] [InlineData(true,2000)]
+    public void NextCombatBonusEndsAfterAttackingThePlayer(bool legacy,int after)
+    {
+        var g=Game(legacy);var m=Unit(g.Player,154,2);m.IsTapped=true;
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,143),m));Assert.Equal(2000,m.CurrentPP);
+        var hp=g.Computer.Hp;Assert.True(g.Attack(g.Player,m));Assert.Equal(hp-1,g.Computer.Hp);
+        Assert.Equal(after,m.CurrentPP);
+    }
+    [Fact] public void DebuffEndsAfterTheTargetsNextAttack()
+    {
+        var g=Game();var m=Unit(g.Player,154,2);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),m));Assert.Equal(1000,m.CurrentPP);
+        Assert.True(g.Attack(g.Player,m));Assert.Equal(1500,m.CurrentPP);
+    }
+    [Theory] [InlineData(false)] [InlineData(true)]
+    public void QueenReviveIsOptional(bool legacy)
+    {
+        var g=Game(legacy);var queen=Unit(g.Player,97,1);var ghoul=new CardInstance(cards.GetCard("WCG-101")!);g.Player.Graveyard.Add(ghoul);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,169),queen));
+        var choice=g.CurrentPendingChoice;Assert.NotNull(choice);
+        Assert.Equal(!legacy,choice!.Options.Any(o=>o.Id=="SKIP"));
+        if(!legacy){Assert.True(g.SelectChoice(choice.Options.First(o=>o.Id=="SKIP")));Assert.Contains(ghoul,g.Player.Graveyard);Assert.False(g.IsWaiting);}
+    }
+    [Theory] [InlineData(112)] [InlineData(134)]
+    public void DispelOnDeployIsOptional(int id)
+    {
+        var g=Game();var shield=Unit(g.Player,101,0);Assert.True(g.CastSpellAt(g.Player,Hand(g,62),shield));Assert.True(shield.HasShield);
+        Assert.True(g.SummonMonster(g.Player,Hand(g,id)));Slot(g,2);
+        var choice=g.CurrentPendingChoice;Assert.NotNull(choice);Assert.Equal(["DISPEL_OPT","SKIP"],choice!.Options.Select(o=>o.Id));
+        Assert.True(g.SelectChoice(choice.Options[1]));Assert.False(g.IsWaiting);Assert.True(shield.HasShield);
+        // Legacy matches still force the pick.
+        g=Game(true);shield=Unit(g.Player,101,0);Assert.True(g.CastSpellAt(g.Player,Hand(g,62),shield));
+        Assert.True(g.SummonMonster(g.Player,Hand(g,id)));Slot(g,2);Assert.Null(g.CurrentPendingChoice);Assert.NotNull(g.CurrentPendingTarget);
+    }
+    [Fact] public void AiOnlyDispelsWhenItHelps()
+    {
+        var g=Game();var own=Unit(g.Player,101,0);Assert.True(g.CastSpellAt(g.Player,Hand(g,62),own));
+        bool Worth()=> (bool)typeof(GameEngine).GetMethod("DispelWorth",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Player])!;
+        Assert.False(Worth());
+        var mute=Unit(g.Player,154,1);mute.IsSilenced=true;Assert.True(Worth());mute.IsSilenced=false;Assert.False(Worth());
+        g.Computer.Structures.Add(new MonsterInstance(cards.GetCard("WCG-127")!){Slot=4,IsTapped=false});Assert.True(Worth());
+    }
+    [Fact] public void ArbiterShieldsTheLeftAllyAndStripsTheEnemyAhead()
+    {
+        var g=Game();var ally=Unit(g.Player,101,0);Unit(g.Player,147,1);var ahead=Unit(g.Computer,31,3);var other=Unit(g.Computer,31,1);Refresh(g);
+        Assert.True(ally.HasShield);Assert.False(ahead.HasShield);Assert.True(other.HasShield);
+        g=Game();Unit(g.Player,147,1);var plain=Unit(g.Computer,101,3);Refresh(g);Assert.False(plain.HasShield);
+        // Legacy: the old 147 handed the enemy ahead a shield.
+        g=Game(true);Unit(g.Player,147,1);plain=Unit(g.Computer,101,3);Refresh(g);Assert.True(plain.HasShield);
+    }
+    [Fact] public void ArbiterAlsoCancelsAttachedShieldsAndStopsWhenSilenced()
+    {
+        var g=Game();var src=Unit(g.Player,147,1);var foe=Unit(g.Computer,101,3);
+        g.Computer.Field.Single().Attachments.Add(new(new CardInstance(cards.GetCard("WCG-062")!),g.Computer.Id));Refresh(g);Assert.False(foe.HasShield);
+        src.IsSilenced=true;Refresh(g);Assert.True(foe.HasShield);
+    }
+    [Theory] [InlineData(false,true)] [InlineData(true,false)]
+    public void ScoutTriggersWheneverItSurvivesItsAttack(bool legacy,bool triggers)
+    {
+        var g=Game(legacy);var scout=Unit(g.Player,136,0);scout.IsTapped=true;Unit(g.Computer,3,1);
+        typeof(GameEngine).GetMethod("FinishAttack",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Player,scout]);
+        Assert.Equal(triggers,g.CurrentPendingTarget!=null);
+    }
+    [Fact] public void ScoutDestroysAfterAttackingThePlayer()
+    {
+        var g=Game();var scout=Unit(g.Player,136,0);var tiny=Unit(g.Computer,101,2);
+        // 101 is 700 PP; 正義壓制 brings it to 200 so the scout has a legal victim.
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,168),tiny));Assert.Equal(200,tiny.CurrentPP);
+        Assert.True(g.Attack(g.Player,scout));Assert.NotNull(g.CurrentPendingTarget);Assert.True(g.SelectTarget(tiny));Assert.DoesNotContain(tiny,g.Computer.Field);
+    }
+    [Theory] [InlineData(false)] [InlineData(true)]
+    public void SulfrasIgnoresTauntAndClearsItFirst(bool legacy)
+    {
+        var g=Game(legacy);var lord=Unit(g.Player,178,2);var taunt=Unit(g.Computer,49,0);var other=Unit(g.Computer,101,1);
+        Assert.Equal(!legacy,g.CanAttackPlayer(lord));Assert.Equal(legacy?[taunt]:[taunt,other],g.GetAttackTargets(lord));
+        if(legacy)return;
+        var hp=g.Computer.Hp;Assert.True(g.Attack(g.Player,lord));
+        Assert.DoesNotContain(taunt,g.Computer.Field);Assert.Contains(other,g.Computer.Field);Assert.Equal(hp-3,g.Computer.Hp);
+    }
+    [Fact] public void SulfrasCanAttackANonTauntMonsterBehindTaunt()
+    {
+        var g=Game();var lord=Unit(g.Player,178,2);var taunt=Unit(g.Computer,49,0);var other=Unit(g.Computer,101,1);
+        Assert.True(g.Attack(g.Player,lord,other));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.First(o=>o.Id!="SHIELD")));
+        Assert.DoesNotContain(taunt,g.Computer.Field);Assert.DoesNotContain(other,g.Computer.Field);Assert.Contains(lord,g.Player.Field);
+    }
+    [Fact] public void FrenzyTargetsOnlyYourOwnMonsterAndReadiesIt()
+    {
+        var g=Game();var own=Unit(g.Player,154,1);own.IsTapped=true;own.HasAttacked=true;var foe=Unit(g.Computer,154,2);var spell=Hand(g,141);
+        var targets=g.GetDirectPlayTargets(g.Player,spell);Assert.Contains(own,targets);Assert.DoesNotContain(foe,targets);
+        Assert.False(g.CastSpellAt(g.Player,spell,foe));
+        Assert.True(g.CastSpellAt(g.Player,spell,own));Assert.True(g.CanAttack(own));Assert.Equal(2200,own.CurrentPP);
+        Assert.Equal(g.TurnNumber+2,own.Attachments.Single().ExpireTurn);
+        g=Game(true);foe=Unit(g.Computer,154,2);Assert.Contains(foe,g.GetDirectPlayTargets(g.Player,Hand(g,141)));
+    }
+
+    // ---- vanilla cards: blank effect text box -------------------------------------------------
+    sealed class MemoryStorage : IPlayerStorage
+    {
+        public object Gate { get; } = new();
+        public Dictionary<string, string> Values { get; } = new();
+        public string? Read(string key) => Values.GetValueOrDefault(key);
+        public void Write(string key, string value, string? expected) => Values[key] = value;
+    }
+    private static async Task<string> Render<T>(string language, Dictionary<string, object?> parameters) where T : IComponent
+    {
+        var services = new ServiceCollection();
+        var store = new PlayerProfileStore(new MemoryStorage());
+        var l = new Localizer(store); l.Set(language);
+        services.AddSingleton(store).AddSingleton(l);
+        await using var provider = services.BuildServiceProvider();
+        await using var renderer = new HtmlRenderer(provider, NullLoggerFactory.Instance);
+        return await renderer.Dispatcher.InvokeAsync(async () =>
+            System.Net.WebUtility.HtmlDecode((await renderer.RenderComponentAsync<T>(ParameterView.FromDictionary(parameters))).ToHtmlString()));
+    }
+    private static string FaceText(string html) => Regex.Match(html, "<div class=\"face-text\">(.*?)</div>", RegexOptions.Singleline).Groups[1].Value;
+    [Theory] [InlineData("zh")] [InlineData("en")]
+    public async Task VanillaCardsShowAnEmptyTextBoxWithTheEmblem(string language)
+    {
+        foreach (var card in cards.AllCards.Where(c => c.IsVanilla))
+        {
+            var html = await Render<CardFace>(language, new() { ["Card"] = card });
+            var box = FaceText(html);
+            Assert.Contains("face-emblem", box);
+            Assert.Matches("<p></p>", box);
+            Assert.DoesNotContain("無", box); Assert.DoesNotContain("None", box); Assert.DoesNotContain("No ability", box);
+            var battle = new BattleCard(Guid.NewGuid(), card.Id, card.Name, card.Type, card.Will, card.TotalCost, card.PP, card.DP, card.Text, "", []);
+            Assert.Matches("<p></p>", FaceText(await Render<CardFace>(language, new() { ["Battle"] = battle })));
+        }
+        var effect = FaceText(await Render<CardFace>(language, new() { ["Card"] = cards.GetCard("WCG-147") }));
+        Assert.Contains(language == "zh" ? "失去聖盾" : "loses Holy Shield", effect);
+    }
+    [Fact] public void FaceTextBlanksVanillaButSearchTextKeepsIt()
+    {
+        var store = new PlayerProfileStore(new MemoryStorage());
+        foreach (var language in new[] { "zh", "en" })
+        {
+            var l = new Localizer(store); l.Set(language);
+            var vanilla = cards.GetCard("WCG-101")!;
+            Assert.Equal("", l.FaceText(vanilla)); Assert.Equal("", l.FaceText(vanilla.Id, vanilla.Text));
+            Assert.Equal(language == "zh" ? "無。" : "None.", l.CardText(vanilla));
+            Assert.Equal(l.CardText(cards.GetCard("WCG-005")), l.FaceText(cards.GetCard("WCG-005")));
+        }
+        Assert.True(CardDefinition.IsVanillaText(" 無。 ")); Assert.False(CardDefinition.IsVanillaText("嘲諷。"));
+    }
+    [Fact] public void BattleFeedbackBlanksVanillaText()
+    {
+        var js = File.ReadAllText(Path.Combine(root, "wwwroot/battle/battle-feedback.js"));
+        Assert.Contains("/^(無。?|None\\.?)$/.test(plain) ? '' : plain", js);
+        Assert.DoesNotContain("plain || t('無異能')", js);
+    }
+}

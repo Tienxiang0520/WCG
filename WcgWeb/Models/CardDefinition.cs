@@ -55,6 +55,9 @@ public class CardDefinition
     [JsonPropertyName("keywords")] public string[] Keywords { get; set; } = [];
     [JsonPropertyName("arrows")] public string[] Arrows { get; set; } = [];
     [JsonIgnore] public bool IsEnchantment => Type == "結界";
+    // Vanilla cards print "無。" / "None." in the data; card faces show an empty text box instead.
+    public static bool IsVanillaText(string? text) => (text ?? "").Trim() is "" or "無" or "無。" or "None" or "None.";
+    [JsonIgnore] public bool IsVanilla => IsVanillaText(Text);
     [JsonIgnore] public bool IsCounter => Type == "法術（反擊）";
     [JsonIgnore] public bool CannotAttack => IsMonster && Id == "WCG-120";
     [JsonIgnore] public bool HasTaunt => Keywords.Contains("嘲諷");

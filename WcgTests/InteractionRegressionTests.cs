@@ -99,8 +99,15 @@ public class InteractionRegressionTests
         }
         int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
     }
-    [Fact] public void SacrificeTriggersLastWordsButNotDestroyedListeners()
+    [Fact] public void SacrificeTriggersLastWordsAndCountsAsDestroyed()
     {
+        // 卡牌文字白話化: a sacrifice counts as destroyed, so 嗜血戰狂 draws and 幽冥巨龍 heals.
+        e.Player.Hp=5;Field(e.Player,"WCG-011");Field(e.Player,"WCG-099");var victim=Field(e.Player,"WCG-003");var c=Hand(e.Player,"WCG-096");int deck=e.Player.Deck.Count;
+        Assert.True(e.CastSpell(e.Player,c));Assert.True(e.SelectTarget(victim));Assert.Equal(5,e.Player.Hp);Assert.Equal(6,e.Computer.Hp);Assert.Equal(deck-3,e.Player.Deck.Count);
+    }
+    [Fact] public void LegacySacrificeTriggersLastWordsButNotDestroyedListeners()
+    {
+        CardTextClarityTests.Legacy(e);
         e.Player.Hp=5;Field(e.Player,"WCG-011");Field(e.Player,"WCG-099");var victim=Field(e.Player,"WCG-003");var c=Hand(e.Player,"WCG-096");int deck=e.Player.Deck.Count;
         Assert.True(e.CastSpell(e.Player,c));Assert.True(e.SelectTarget(victim));Assert.Equal(4,e.Player.Hp);Assert.Equal(6,e.Computer.Hp);Assert.Equal(deck-2,e.Player.Deck.Count);
     }
