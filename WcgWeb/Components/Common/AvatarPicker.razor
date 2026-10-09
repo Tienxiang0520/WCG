@@ -6,36 +6,36 @@
 @* Avatar picker: built-in pictures, or a local image cropped to a circle in the browser (never uploaded to a server). *@
 <section class="avatar-picker" @ref="Root">
     <div class="avatar-current">
-        <img src="@Profile.AvatarUrl" alt="目前頭像" draggable="false" />
-        <div><strong>目前頭像</strong><small>@Profile.Label</small></div>
+        <img src="@Profile.AvatarUrl" alt="@L["目前頭像"]" draggable="false" />
+        <div><strong>@L["目前頭像"]</strong><small>@L.Text(Profile.Label)</small></div>
     </div>
-    <div class="avatar-grid" role="radiogroup" aria-label="內建頭像" hidden="@Cropping">
+    <div class="avatar-grid" role="radiogroup" aria-label="@L["內建頭像"]" hidden="@Cropping">
         @foreach (var avatar in PlayerAvatars.BuiltIn)
         {
             var value = PlayerAvatars.BuiltInPrefix + avatar.Id;
-            <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@avatar.Label"
+            <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@L[avatar.Label]"
                     class="avatar-option @(Profile.Avatar == value ? "selected" : "")" data-sfx="avatar" disabled="@(Busy || Cropping)" @onclick="() => Choose(value)">
-                <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@avatar.Label</span>
+                <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@L[avatar.Label]</span>
             </button>
         }
     </div>
     <div class="avatar-actions" hidden="@Cropping">
-        <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")"><Icon Name="upload" Size="16" />上傳圖片<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
-        <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Profile.IsDefault)" @onclick="Reset">恢復預設</button>
+        <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")"><Icon Name="upload" Size="16" />@L["上傳圖片"]<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
+        <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Profile.IsDefault)" @onclick="Reset">@L["恢復預設"]</button>
     </div>
-    <p class="avatar-help" hidden="@Cropping">支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。</p>
-    <div class="avatar-crop" hidden="@(!Cropping)" aria-label="裁切頭像">
-        <div class="avatar-crop-stage" data-crop-stage tabindex="0" aria-label="拖曳調整位置，方向鍵微調，加減號縮放"><canvas></canvas><span class="avatar-crop-mask" aria-hidden="true"></span></div>
-        <label class="avatar-zoom">縮放<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom aria-label="縮放" /></label>
-        <p class="avatar-help">拖曳移動圖片，雙指或滑桿縮放。圓圈內就是頭像。</p>
+    <p class="avatar-help" hidden="@Cropping">@L["支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。"]</p>
+    <div class="avatar-crop" hidden="@(!Cropping)" aria-label="@L["裁切頭像"]">
+        <div class="avatar-crop-stage" data-crop-stage tabindex="0" aria-label="@L["拖曳調整位置，方向鍵微調，加減號縮放"]"><canvas></canvas><span class="avatar-crop-mask" aria-hidden="true"></span></div>
+        <label class="avatar-zoom">@L["縮放"]<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom aria-label="@L["縮放"]" /></label>
+        <p class="avatar-help">@L["拖曳移動圖片，雙指或滑桿縮放。圓圈內就是頭像。"]</p>
         <div class="avatar-actions">
-            <button type="button" class="btn btn-primary" data-sfx="avatar" disabled="@Busy" @onclick="ConfirmCrop">使用這張頭像</button>
-            <button type="button" class="btn btn-outline-secondary" disabled="@Busy" @onclick="CancelCrop">取消</button>
+            <button type="button" class="btn btn-primary" data-sfx="avatar" disabled="@Busy" @onclick="ConfirmCrop">@L["使用這張頭像"]</button>
+            <button type="button" class="btn btn-outline-secondary" disabled="@Busy" @onclick="CancelCrop">@L["取消"]</button>
         </div>
     </div>
     @if (Toast != null)
     {
-        <div class="wcg-toast @(ToastError ? "error" : "success")" data-sfx-quiet="@(ToastError ? null : "true")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
+        <div class="wcg-toast @(ToastError ? "error" : "success")" data-sfx-quiet="@(ToastError ? null : "true")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@L.Text(Toast)</span><button type="button" class="wcg-toast-close" aria-label="@L["關閉提示"]" @onclick="() => Toast = null">✕</button></div>
     }
 </section>
 

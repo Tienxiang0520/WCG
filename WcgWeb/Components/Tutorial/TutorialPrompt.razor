@@ -11,13 +11,13 @@
     <div class="tutorial-prompt-shade">
         <section class="tutorial-prompt" role="dialog" aria-modal="true" aria-labelledby="tutorial-prompt-title" aria-describedby="tutorial-prompt-text">
             <span class="tutorial-prompt-mark" aria-hidden="true"><Icon Name="school" Size="30" /></span>
-            <p class="eyebrow">歡迎來到魂誓</p>
-            <h2 id="tutorial-prompt-title">要先玩新手教學嗎？</h2>
-            <p id="tutorial-prompt-text">約五分鐘的互動對局，帶你學會填能量、召喚、攻擊與勝利條件。之後隨時可以從側邊選單的「教學」再次開啟，還有更多進階課程。</p>
+            <p class="eyebrow">@L["歡迎來到魂誓"]</p>
+            <h2 id="tutorial-prompt-title">@L["要先玩新手教學嗎？"]</h2>
+            <p id="tutorial-prompt-text">@L["約五分鐘的互動對局，帶你學會填能量、召喚、攻擊與勝利條件。之後隨時可以從側邊選單的「教學」再次開啟，還有更多進階課程。"]</p>
             <div class="tutorial-prompt-actions">
-                <button type="button" class="btn btn-primary btn-lg" data-sfx="matchStart" @onclick="Start" @ref="StartButton"><Icon Name="play" Size="18" />開始新手教學</button>
-                <button type="button" class="btn btn-outline-primary" data-sfx="back" @onclick="Later">稍後再說</button>
-                <button type="button" class="btn btn-link tutorial-prompt-skip" data-sfx="click" @onclick="Skip">略過，不再提示</button>
+                <button type="button" class="btn btn-primary btn-lg" data-sfx="matchStart" @onclick="Start" @ref="StartButton"><Icon Name="play" Size="18" />@L["開始新手教學"]</button>
+                <button type="button" class="btn btn-outline-primary" data-sfx="back" @onclick="Later">@L["稍後再說"]</button>
+                <button type="button" class="btn btn-link tutorial-prompt-skip" data-sfx="click" @onclick="Skip">@L["略過，不再提示"]</button>
             </div>
         </section>
     </div>
@@ -32,7 +32,7 @@
     private bool Visible => Ready && !dismissedThisVisit && Profile.Tutorial.Prompt == "" && !OnTutorialPage;
     private bool OnTutorialPage => Nav.ToBaseRelativePath(Nav.Uri).StartsWith("tutorial", StringComparison.OrdinalIgnoreCase) || Nav.Uri.Contains("tour=", StringComparison.Ordinal);
 
-    protected override void OnInitialized() { Nav.LocationChanged += Changed; Profile.Changed += ProfileChanged; }
+    protected override void OnInitialized() { Nav.LocationChanged += Changed; Profile.Changed += ProfileChanged; L.Changed += ProfileChanged; }
     private void Changed(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e) => _ = InvokeAsync(StateHasChanged);
     private void ProfileChanged() => _ = InvokeAsync(StateHasChanged);
 
@@ -47,5 +47,5 @@
     private void Skip() => Profile.AnswerTutorialPrompt(TutorialProgress.Skipped);
     private void Later() => dismissedThisVisit = true;
 
-    public void Dispose() { Nav.LocationChanged -= Changed; Profile.Changed -= ProfileChanged; }
+    public void Dispose() { Nav.LocationChanged -= Changed; Profile.Changed -= ProfileChanged; L.Changed -= ProfileChanged; }
 }

@@ -2,16 +2,16 @@
 @implements IAsyncDisposable
 
 <section class="audio-settings" aria-labelledby="audio-settings-title">
-    <h2 id="audio-settings-title">音效</h2>
+    <h2 id="audio-settings-title">@L["音效"]</h2>
     <div class="audio-row audio-master">
         <div>
-            <h3 id="sound-enabled-label">開啟音效</h3>
-            <p id="sound-enabled-help">介面、天梯與對戰共用的總開關。對戰畫面右上角的喇叭也會同步切換。</p>
+            <h3 id="sound-enabled-label">@L["開啟音效"]</h3>
+            <p id="sound-enabled-help">@L["介面、天梯與對戰共用的總開關。對戰畫面右上角的喇叭也會同步切換。"]</p>
         </div>
         <button type="button" class="audio-switch" role="switch" aria-checked="@(Enabled ? "true" : "false")"
                 aria-labelledby="sound-enabled-label" aria-describedby="sound-enabled-help" disabled="@(!Loaded)" @onclick="ToggleEnabled">
             <span class="audio-track" aria-hidden="true"><span></span></span>
-            <span>@(Enabled ? "開啟" : "靜音")</span>
+            <span>@L[Enabled ? "開啟" : "靜音"]</span>
         </button>
     </div>
     @foreach (var (key, label, help) in Channels)
@@ -19,18 +19,18 @@
         var value = Volume(key);
         <div class="audio-row audio-slider @(Enabled ? "" : "muted")">
             <label for="@($"volume-{key}")">
-                <span class="audio-label">@label</span>
-                <small>@help</small>
+                <span class="audio-label">@L[label]</span>
+                <small>@L[help]</small>
             </label>
             <div class="audio-control">
                 <input id="@($"volume-{key}")" type="range" min="0" max="100" step="5" value="@value" style="--fill:@(value)%" disabled="@(!Loaded)"
                        aria-valuetext="@($"{value}%")" @oninput="e => SetVolume(key, e.Value)" />
                 <output for="@($"volume-{key}")">@value%</output>
-                <button type="button" class="audio-preview" disabled="@(!Loaded || !Enabled)" aria-label="@($"試聽{label}")" @onclick="() => Preview(key)"><Icon Name="play" Size="14" /></button>
+                <button type="button" class="audio-preview" disabled="@(!Loaded || !Enabled)" aria-label="@L.F("試聽{0}", label)" @onclick="() => Preview(key)"><Icon Name="play" Size="14" /></button>
             </div>
         </div>
     }
-    <p class="audio-note">音效素材為 Kenney 的 CC0 授權素材，已隨網站打包，不會從外部載入。瀏覽器需要先點擊或按鍵一次才會出聲。</p>
+    <p class="audio-note">@L["音效素材為 Kenney 的 CC0 授權素材，已隨網站打包，不會從外部載入。瀏覽器需要先點擊或按鍵一次才會出聲。"]</p>
 </section>
 
 @code {

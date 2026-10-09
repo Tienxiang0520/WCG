@@ -4,14 +4,14 @@
 @inject NavigationManager Nav
 @implements IDisposable
 
-<PageTitle>牌組構築 - 魂誓</PageTitle>
-@if (DeckSvc.LastStorageError != null) { <div class="alert alert-warning m-3" role="alert">@DeckSvc.LastStorageError</div> }
+<PageTitle>@L["牌組構築 - 魂誓"]</PageTitle>
+@if (DeckSvc.LastStorageError != null) { <div class="alert alert-warning m-3" role="alert">@L.Text(DeckSvc.LastStorageError)</div> }
 
 <div class="container-fluid py-3 deck-page">
     <header class="page-hero compact">
         <div class="page-hero-text">
-            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="cards" Size="14" />牌組構築室</p>
-            <h1>組出你的 50 張誓約</h1>
+            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="cards" Size="14" />@L["牌組構築室"]</p>
+            <h1>@L["組出你的 50 張誓約"]</h1>
         </div>
     </header>
     <div class="row g-4">
@@ -19,51 +19,51 @@
         <div class="col-lg-8">
             <div class="card bg-dark text-white border-secondary mb-3 shadow catalog-card">
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h5 class="mb-0 catalog-title">@(ShowDeckCards ? $"目前牌組：{CurrentDeck.CardIds.Count} 張／共 {CurrentDeck.CardIds.Distinct().Count()} 種" : $"卡牌庫 · {CardDb.AllCards.Count} 張")</h5>
+                    <h5 class="mb-0 catalog-title">@(ShowDeckCards ? L.F("目前牌組：{0} 張／共 {1} 種", CurrentDeck.CardIds.Count, CurrentDeck.CardIds.Distinct().Count()) : L.F("卡牌庫 · {0} 張", CardDb.AllCards.Count))</h5>
                     <label class="search-field">
                         <WcgWeb.Components.Common.Icon Name="search" Size="16" />
-                        <input type="text" class="form-control form-control-sm" aria-label="搜尋卡片"
-                               placeholder="搜尋名稱或能力關鍵字…"
+                        <input type="text" class="form-control form-control-sm" aria-label="@L["搜尋卡片"]"
+                               placeholder="@L["搜尋名稱或能力關鍵字…"]"
                                @bind="SearchText" @bind:event="oninput" />
                     </label>
                 </div>
 
                 <!-- Filter Controls -->
                 <div class="card-body py-3 border-bottom border-secondary filter-panel">
-                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3" role="group" aria-label="卡片顯示範圍">
+                    <div class="d-flex flex-wrap gap-2 align-items-center mb-3" role="group" aria-label="@L["卡片顯示範圍"]">
                         <div class="segmented small-seg">
-                            <button class="@(ShowDeckCards ? "" : "on")" aria-pressed="@(!ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = false">全部卡片</button>
-                            <button class="@(ShowDeckCards ? "on" : "")" aria-pressed="@(ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = true">目前牌組</button>
+                            <button class="@(ShowDeckCards ? "" : "on")" aria-pressed="@(!ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = false">@L["全部卡片"]</button>
+                            <button class="@(ShowDeckCards ? "on" : "")" aria-pressed="@(ShowDeckCards ? "true" : "false")" @onclick="() => ShowDeckCards = true">@L["目前牌組"]</button>
                         </div>
-                        <span class="filter-summary">顯示 <b>@FilteredCards.Count</b> 種卡片 · 點卡面查看，使用 ＋／－ 調整張數</span>
+                        <span class="filter-summary">@L["顯示"] <b>@FilteredCards.Count</b> @L["種卡片 · 點卡面查看，使用 ＋／－ 調整張數"]</span>
                     </div>
                     <!-- Will Filters -->
                     <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
-                        <span class="filter-label">意志</span>
-                        <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SetWillFilter("")'>全部</button>
-                        <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "") @WillChipState("狂怒")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" disabled="@LockedOut("狂怒")" title="@WillChipTitle("狂怒")" @onclick='() => SetWillFilter("狂怒")'><i class="will-dot"></i><span>狂怒</span>@if (LockedOut("狂怒")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
-                        <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "") @WillChipState("理智")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" disabled="@LockedOut("理智")" title="@WillChipTitle("理智")" @onclick='() => SetWillFilter("理智")'><i class="will-dot"></i><span>理智</span>@if (LockedOut("理智")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
-                        <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "") @WillChipState("生機")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" disabled="@LockedOut("生機")" title="@WillChipTitle("生機")" @onclick='() => SetWillFilter("生機")'><i class="will-dot"></i><span>生機</span>@if (LockedOut("生機")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
-                        <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@WillChipTitle("秩序")" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>秩序</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
-                        <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@WillChipTitle("深淵")" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>深淵</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
-                        <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>中立</button>
+                        <span class="filter-label">@L["意志"]</span>
+                        <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SetWillFilter("")'>@L["全部"]</button>
+                        <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "") @WillChipState("狂怒")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" disabled="@LockedOut("狂怒")" title="@L[WillChipTitle("狂怒")]" @onclick='() => SetWillFilter("狂怒")'><i class="will-dot"></i><span>@L["狂怒"]</span>@if (LockedOut("狂怒")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "") @WillChipState("理智")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" disabled="@LockedOut("理智")" title="@L[WillChipTitle("理智")]" @onclick='() => SetWillFilter("理智")'><i class="will-dot"></i><span>@L["理智"]</span>@if (LockedOut("理智")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "") @WillChipState("生機")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" disabled="@LockedOut("生機")" title="@L[WillChipTitle("生機")]" @onclick='() => SetWillFilter("生機")'><i class="will-dot"></i><span>@L["生機"]</span>@if (LockedOut("生機")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@L[WillChipTitle("秩序")]" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>@L["秩序"]</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@L[WillChipTitle("深淵")]" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>@L["深淵"]</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>@L["中立"]</button>
                     </div>
 
                     <p class="deck-lock-note @(AllowedWills == null ? "" : "locked")" aria-live="polite">
-                        @if (AllowedWills == null) { <span>尚未選擇主色：先在右側選擇主色與單色／雙色，卡片庫就只會顯示這副牌組能放入的卡。</span> }
-                        else { <WcgWeb.Components.Common.Icon Name="lock" Size="13" /><span>依組色顯示：<b>@LockSummary</b>@(DualColor && SecondWill == "" ? "（第一張副色卡決定副色）" : "")</span> }
+                        @if (AllowedWills == null) { <span>@L["尚未選擇主色：先在右側選擇主色與單色／雙色，卡片庫就只會顯示這副牌組能放入的卡。"]</span> }
+                        else { <WcgWeb.Components.Common.Icon Name="lock" Size="13" /><span>@L["依組色顯示："]<b>@LockSummary</b>@(DualColor && SecondWill == "" ? L["（第一張副色卡決定副色）"] : "")</span> }
                     </p>
 
                     <!-- Type & Cost Filters -->
                     <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
-                        <span class="filter-label">類型</span>
-                        <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SetTypeFilter("")'>全部</button>
-                        <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SetTypeFilter("怪物")'>怪物</button>
-                        <button class="filter-chip @(SelectedType == "法術" ? "on" : "")" aria-pressed="@(SelectedType == "法術" ? "true" : "false")" @onclick='() => SetTypeFilter("法術")'>法術</button>
-                        <button class="filter-chip @(SelectedType == "結界" ? "on" : "")" aria-pressed="@(SelectedType == "結界" ? "true" : "false")" @onclick='() => SetTypeFilter("結界")'>結界</button>
+                        <span class="filter-label">@L["類型"]</span>
+                        <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SetTypeFilter("")'>@L["全部"]</button>
+                        <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SetTypeFilter("怪物")'>@L["怪物"]</button>
+                        <button class="filter-chip @(SelectedType == "法術" ? "on" : "")" aria-pressed="@(SelectedType == "法術" ? "true" : "false")" @onclick='() => SetTypeFilter("法術")'>@L["法術"]</button>
+                        <button class="filter-chip @(SelectedType == "結界" ? "on" : "")" aria-pressed="@(SelectedType == "結界" ? "true" : "false")" @onclick='() => SetTypeFilter("結界")'>@L["結界"]</button>
                         <div class="vr mx-2"></div>
-                        <span class="filter-label">費用</span>
-                        <button class="filter-chip cost-chip @(SelectedCost == -1 ? "on" : "")" aria-pressed="@(SelectedCost == -1 ? "true" : "false")" @onclick='() => SelectedCost = -1'>全部</button>
+                        <span class="filter-label">@L["費用"]</span>
+                        <button class="filter-chip cost-chip @(SelectedCost == -1 ? "on" : "")" aria-pressed="@(SelectedCost == -1 ? "true" : "false")" @onclick='() => SelectedCost = -1'>@L["全部"]</button>
                         @for (int c = 0; c <= 7; c++)
                         {
                             int costVal = c;
@@ -77,9 +77,9 @@
                     @if (FilteredCards.Count == 0)
                     {
                         <div class="text-center py-5 text-muted">
-                            <h5>@(ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "目前牌組沒有卡片" : "找不到符合條件的卡牌")</h5>
-                            <p class="small">@(ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "切換到全部卡片，使用 ＋ 加入牌組。" : "可清除篩選以查看其他卡片。")</p>
-                            <button class="btn btn-sm btn-outline-light" @onclick="ResetFilters">清除篩選</button>
+                            <h5>@L[ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "目前牌組沒有卡片" : "找不到符合條件的卡牌"]</h5>
+                            <p class="small">@L[ShowDeckCards && CurrentDeck.CardIds.Count == 0 ? "切換到全部卡片，使用 ＋ 加入牌組。" : "可清除篩選以查看其他卡片。"]</p>
+                            <button class="btn btn-sm btn-outline-light" @onclick="ResetFilters">@L["清除篩選"]</button>
                         </div>
                     }
                     else
@@ -94,15 +94,15 @@
                                         QuantityInDeck="@inDeck"
                                         OnCardClicked="@(() => Inspect = card)" />
                                     <div class="d-flex flex-wrap gap-1 justify-content-center align-items-center mt-2">
-                                        <span class="badge @(inDeck > 0 ? "bg-info" : "bg-secondary") count-bump" @key="inDeck" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
-                                        <button class="btn btn-sm btn-outline-light" aria-label="@("查看卡片：" + card.Name)" @onclick="() => Inspect = card"><WcgWeb.Components.Common.Icon Name="eye" Size="14" /><span class="visually-hidden">查看</span></button>
-                                        <button class="btn btn-sm btn-outline-danger" data-sfx="deckRemove" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
+                                        <span class="badge @(inDeck > 0 ? "bg-info" : "bg-secondary") count-bump" @key="inDeck" aria-label="@L.F("{0}在牌組中的張數", L.CardName(card))">×@inDeck</span>
+                                        <button class="btn btn-sm btn-outline-light" aria-label="@L.F("查看卡片：{0}", L.CardName(card))" @onclick="() => Inspect = card"><WcgWeb.Components.Common.Icon Name="eye" Size="14" /><span class="visually-hidden">@L["查看"]</span></button>
+                                        <button class="btn btn-sm btn-outline-danger" data-sfx="deckRemove" aria-label="@L.F("移除一張：{0}", L.CardName(card))" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-sm btn-outline-info add-card-btn" data-sfx="deckAdd"
-                                                title="@(!CanAddFaction(card) ? "最多兩個派系" : LockedOut(card.Will) ? "不在這副牌組的組色內" : "加入牌組")"
-                                                aria-label="@("加入一張：" + card.Name)"
+                                                title="@L[!CanAddFaction(card) ? "最多兩個派系" : LockedOut(card.Will) ? "不在這副牌組的組色內" : "加入牌組"]"
+                                                aria-label="@L.F("加入一張：{0}", L.CardName(card))"
                                                 disabled="@(!CanAddCard(card))"
                                                 @onclick="@(() => AddCardToDeck(card))">
-                                            ＋ 加入
+                                            @L["＋ 加入"]
                                         </button>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                 </div>
             </div>
             @* Phones stack the deck under 199 cards: this pill sticks to the screen bottom while browsing the catalog and stops above the deck panel. *@
-            <a class="deck-jump @(CurrentDeck.CardIds.Count == 50 ? "complete" : "")" href="deckbuilder#deck-panel" aria-label="@($"跳到編輯牌組，目前 {CurrentDeck.CardIds.Count} / 50 張")"><WcgWeb.Components.Common.Icon Name="cards" Size="16" />牌組 <b>@CurrentDeck.CardIds.Count</b>/50</a>
+            <a class="deck-jump @(CurrentDeck.CardIds.Count == 50 ? "complete" : "")" href="deckbuilder#deck-panel" aria-label="@L.F("跳到編輯牌組，目前 {0} / 50 張", CurrentDeck.CardIds.Count)"><WcgWeb.Components.Common.Icon Name="cards" Size="16" />@L["牌組"] <b>@CurrentDeck.CardIds.Count</b>/50</a>
         </div>
 
         <!-- Right Column: Current Deck Builder & Stats -->
@@ -120,49 +120,49 @@
             <div class="card bg-dark text-white border-secondary shadow sticky-top deck-panel-card" style="top: 15px;">
                 <div class="card-header bg-dark border-secondary">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0 panel-title">編輯牌組</h5>
+                        <h5 class="mb-0 panel-title">@L["編輯牌組"]</h5>
                         <button class="btn btn-sm btn-info" type="button" @onclick="() => ShowDeckSelectModal = true">
-                            <WcgWeb.Components.Common.Icon Name="folder" Size="15" />選擇 / 載入牌組
+                            <WcgWeb.Components.Common.Icon Name="folder" Size="15" />@L["選擇 / 載入牌組"]
                         </button>
                     </div>
 
                     <!-- Deck Name & Description Input -->
                     <div class="input-group input-group-sm mb-2">
-                        <span class="input-group-text bg-secondary text-white border-secondary">名稱</span>
+                        <span class="input-group-text bg-secondary text-white border-secondary">@L["名稱"]</span>
                         <input type="text" class="form-control bg-dark text-white border-secondary"
-                               @bind="CurrentDeck.Name" @bind:event="oninput" placeholder="輸入自訂牌組名稱..." />
+                               @bind="CurrentDeck.Name" @bind:event="oninput" placeholder="@L["輸入自訂牌組名稱..."]" />
                     </div>
 
-                    <label for="main-will" class="small mb-1">主色</label>
+                    <label for="main-will" class="small mb-1">@L["主色"]</label>
                     <select id="main-will" class="form-select form-select-sm bg-dark text-white border-secondary mb-2" @bind="CurrentDeck.MainWill" @bind:after="MainWillChanged">
-                        <option value="">請選擇主色</option>
-                        @foreach (var will in Deck.Wills) { <option value="@will">@will</option> }
+                        <option value="">@L["請選擇主色"]</option>
+                        @foreach (var will in Deck.Wills) { <option value="@will">@L.Will(will)</option> }
                     </select>
-                    <div class="color-mode mb-2" role="group" aria-label="組色">
-                        <div class="segmented small-seg" role="radiogroup" aria-label="單色或雙色">
-                            <button type="button" role="radio" aria-checked="@(!DualColor ? "true" : "false")" class="@(!DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(false)">單色</button>
-                            <button type="button" role="radio" aria-checked="@(DualColor ? "true" : "false")" class="@(DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(true)">雙色</button>
+                    <div class="color-mode mb-2" role="group" aria-label="@L["組色"]">
+                        <div class="segmented small-seg" role="radiogroup" aria-label="@L["單色或雙色"]">
+                            <button type="button" role="radio" aria-checked="@(!DualColor ? "true" : "false")" class="@(!DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(false)">@L["單色"]</button>
+                            <button type="button" role="radio" aria-checked="@(DualColor ? "true" : "false")" class="@(DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(true)">@L["雙色"]</button>
                         </div>
                         @if (DualColor)
                         {
-                            <select id="second-will" aria-label="副色" class="form-select form-select-sm bg-dark text-white border-secondary" value="@SecondWill" @onchange="SecondWillChanged">
-                                <option value="">副色未定</option>
-                                @foreach (var will in Deck.Wills.Where(w => w != CurrentDeck.MainWill)) { <option value="@will" selected="@(SecondWill == will)">副色 @will</option> }
+                            <select id="second-will" aria-label="@L["副色"]" class="form-select form-select-sm bg-dark text-white border-secondary" value="@SecondWill" @onchange="SecondWillChanged">
+                                <option value="">@L["副色未定"]</option>
+                                @foreach (var will in Deck.Wills.Where(w => w != CurrentDeck.MainWill)) { <option value="@will" selected="@(SecondWill == will)">@L.F("副色 {0}", will)</option> }
                             </select>
                         }
                     </div>
-                    @if (OutsideColorCount > 0) { <p class="color-mode-warning small mb-2" role="status">牌組內有 @OutsideColorCount 張不在目前組色的卡，請在下方清單移除，或改回雙色／更換副色。</p> }
+                    @if (OutsideColorCount > 0) { <p class="color-mode-warning small mb-2" role="status">@L.F("牌組內有 {0} 張不在目前組色的卡，請在下方清單移除，或改回雙色／更換副色。", OutsideColorCount)</p> }
                     <div class="d-flex flex-wrap gap-1 small mb-2" aria-live="polite">
-                        <span class="badge bg-secondary">主色 @ColorCounts.Main 張</span>
-                        <span class="badge @(UsedFactions.Length > 2 ? "bg-danger" : "bg-info text-dark")">派系 @UsedFactions.Length / 2</span>
-                        <span class="badge bg-secondary">中立 @ColorCounts.Neutral 張</span>
+                        <span class="badge bg-secondary">@L.F("主色 {0} 張", ColorCounts.Main)</span>
+                        <span class="badge @(UsedFactions.Length > 2 ? "bg-danger" : "bg-info text-dark")">@L.F("派系 {0} / 2", UsedFactions.Length)</span>
+                        <span class="badge bg-secondary">@L.F("中立 {0} 張", ColorCounts.Neutral)</span>
                     </div>
                     <!-- 50-Card Progress Bar -->
                     <div class="mb-2">
                         <div class="d-flex justify-content-between small mb-1">
-                            <span>牌組張數進度</span>
+                            <span>@L["牌組張數進度"]</span>
                             <span class="fw-bold @(CurrentDeck.CardIds.Count == 50 ? "text-success" : (CurrentDeck.CardIds.Count > 50 ? "text-danger" : "text-warning"))">
-                                @CurrentDeck.CardIds.Count / 50 張
+                                @L.F("{0} / 50 張", CurrentDeck.CardIds.Count)
                             </span>
                         </div>
                         <div class="progress" style="height: 10px;">
@@ -175,28 +175,28 @@
 
                     <!-- Composition Statistics Badges -->
                     <div class="d-flex flex-wrap gap-1 small">
-                        <span class="badge bg-secondary">怪物: @MonsterCount</span>
-                        <span class="badge bg-secondary">法術: @SpellCount</span>
+                        <span class="badge bg-secondary">@L.F("怪物: {0}", MonsterCount)</span>
+                        <span class="badge bg-secondary">@L.F("法術: {0}", SpellCount)</span>
                     </div>
 
-                    <p class="small text-muted mt-2 mb-0">50 張牌組，每張最多 4 張。任意手牌可背面填能量。最多兩個派系，中立不計。原主色欄位保留作為分類。費用維持通用。</p>
-                    <button class="btn btn-outline-info w-100 mt-3" @onclick="OpenPrintPreview"><WcgWeb.Components.Common.Icon Name="printer" Size="16" />列印實體牌組</button>
+                    <p class="small text-muted mt-2 mb-0">@L["50 張牌組，每張最多 4 張。任意手牌可背面填能量。最多兩個派系，中立不計。原主色欄位保留作為分類。費用維持通用。"]</p>
+                    <button class="btn btn-outline-info w-100 mt-3" @onclick="OpenPrintPreview"><WcgWeb.Components.Common.Icon Name="printer" Size="16" />@L["列印實體牌組"]</button>
                     @if (UnknownCardIds.Count > 0)
                     {
                         <div class="alert alert-warning small mt-2">
-                            舊牌組含已取消或找不到的卡牌：@string.Join("、", UnknownCardIds)。原存檔保留，請移除後重新補足 50 張。
-                            <button class="btn btn-sm btn-outline-dark mt-1" @onclick="RemoveLegacyCards">從目前編輯副本移除無效卡牌</button>
+                            @L.F("舊牌組含已取消或找不到的卡牌：{0}。原存檔保留，請移除後重新補足 50 張。", string.Join(", ", UnknownCardIds))
+                            <button class="btn btn-sm btn-outline-dark mt-1" @onclick="RemoveLegacyCards">@L["從目前編輯副本移除無效卡牌"]</button>
                         </div>
                     }
                     @if (!string.IsNullOrEmpty(ValidationErrorMessage))
                     {
                         <div class="alert alert-danger py-1 px-2 small mt-2 mb-0 wcg-attention" @key="ValidationErrorMessage">
-                            @ValidationErrorMessage
+                            @L.Text(ValidationErrorMessage)
                         </div>
                     }
                     @if (SavedMessage != null)
                     {
-                        <div class="wcg-toast success" data-sfx-quiet role="status" aria-live="polite" @key="ToastId"><span>@SavedMessage</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => SavedMessage = null">✕</button></div>
+                        <div class="wcg-toast success" data-sfx-quiet role="status" aria-live="polite" @key="ToastId"><span>@L.Text(SavedMessage)</span><button type="button" class="wcg-toast-close" aria-label="@L["關閉提示"]" @onclick="() => SavedMessage = null">✕</button></div>
                     }
                 </div>
 
@@ -205,8 +205,8 @@
                     @if (CurrentDeck.CardIds.Count == 0)
                     {
                         <div class="text-center py-4 text-muted">
-                            <p>牌組是空的</p>
-                            <p class="small">點選左側卡牌或右上角載入預設牌組！</p>
+                            <p>@L["牌組是空的"]</p>
+                            <p class="small">@L["點選左側卡牌或右上角載入預設牌組！"]</p>
                         </div>
                     }
                     else
@@ -219,10 +219,10 @@
                                 <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2 deck-line" @key="card.Id">
                                     <div class="d-flex align-items-center gap-2 overflow-hidden">
                                         <span class="badge @(card.IsEnergy ? "bg-success" : (card.IsMonster ? "bg-info" : "bg-warning text-dark"))" style="font-size:0.68rem;">
-                                            @(card.IsEnergy ? "能" : $"{card.TotalCost}費")
+                                            @(card.IsEnergy ? L["能"] : L.F("{0}費", card.TotalCost))
                                         </span>
-                                        <span class="text-truncate small" style="max-width: 140px;" title="@card.Name">
-                                            @card.Name
+                                        <span class="text-truncate small" style="max-width: 140px;" title="@L.CardName(card)">
+                                            @L.CardName(card)
                                         </span>
                                     </div>
                                     <div class="d-flex align-items-center gap-1">
@@ -244,19 +244,19 @@
                 <!-- Footer Operations -->
                 <div class="card-footer bg-dark border-secondary d-flex justify-content-between align-items-center gap-2">
                     <button class="btn btn-sm btn-outline-secondary" @onclick="CreateNewDeck">
-                        <WcgWeb.Components.Common.Icon Name="plus" Size="14" />新建
+                        <WcgWeb.Components.Common.Icon Name="plus" Size="14" />@L["新建"]
                     </button>
                     <button class="btn btn-sm btn-outline-danger" @onclick="ClearDeck" disabled="@(CurrentDeck.CardIds.Count == 0)">
-                        <WcgWeb.Components.Common.Icon Name="trash" Size="14" />清空
+                        <WcgWeb.Components.Common.Icon Name="trash" Size="14" />@L["清空"]
                     </button>
                     @if (DeckSvc.GetCustomDecks().Any(d => d.Id == CurrentDeck.Id))
                     {
                         <button class="btn btn-sm btn-danger" @onclick="DeleteCurrentDeck">
-                            刪除此牌組
+                            @L["刪除此牌組"]
                         </button>
                     }
                     <button class="btn btn-sm btn-success px-3" data-sfx="save" @onclick="SaveDeck">
-                        <WcgWeb.Components.Common.Icon Name="save" Size="15" />儲存牌組
+                        <WcgWeb.Components.Common.Icon Name="save" Size="15" />@L["儲存牌組"]
                     </button>
                 </div>
             </div>
@@ -269,15 +269,15 @@
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-white border-secondary shadow-lg">
                     <div class="modal-header border-secondary">
-                        <h5 class="modal-title">選擇要編輯或載入的牌組</h5>
+                        <h5 class="modal-title">@L["選擇要編輯或載入的牌組"]</h5>
                         <button type="button" class="btn-close btn-close-white" @onclick="() => ShowDeckSelectModal = false"></button>
                     </div>
                     <div class="modal-body p-4" style="max-height: 70vh; overflow-y: auto;">
                         <!-- 1. Official Presets -->
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <WcgWeb.Components.Common.Icon Name="star" Size="18" Class="text-warning" />
-                            <h5 class="text-warning fw-bold mb-0">官方 5 大主題預設牌組</h5>
-                            <span class="badge bg-secondary">直接複製並編輯</span>
+                            <h5 class="text-warning fw-bold mb-0">@L["官方 5 大主題預設牌組"]</h5>
+                            <span class="badge bg-secondary">@L["直接複製並編輯"]</span>
                         </div>
                         <div class="row g-3 mb-4">
                             @foreach (var p in CardDb.PresetDecks)
@@ -285,13 +285,13 @@
                                 <div class="col-md-6">
                                     <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
                                         <div>
-                                            <div class="fw-bold text-light fs-6 mb-1">@p.Name</div>
-                                            <p class="text-white-50 small mb-2">@p.Description</p>
+                                            <div class="fw-bold text-light fs-6 mb-1">@L.DeckName(p)</div>
+                                            <p class="text-white-50 small mb-2">@L.DeckDescription(p)</p>
                                         </div>
                                         <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top border-secondary">
-                                            <span class="badge bg-dark text-info border border-secondary">50 張完備</span>
+                                            <span class="badge bg-dark text-info border border-secondary">@L["50 張完備"]</span>
                                             <button class="btn btn-sm btn-outline-info fw-bold" @onclick="() => { ClonePreset(p); ShowDeckSelectModal = false; }">
-                                                複製並載入編輯
+                                                @L["複製並載入編輯"]
                                             </button>
                                         </div>
                                     </div>
@@ -305,19 +305,19 @@
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex align-items-center gap-2">
                                 <WcgWeb.Components.Common.Icon Name="cards" Size="18" Class="text-info" />
-                                <h5 class="text-info fw-bold mb-0">我的自訂牌組</h5>
-                                <span class="badge bg-info text-dark">@DeckSvc.GetCustomDecks().Count 套</span>
+                                <h5 class="text-info fw-bold mb-0">@L["我的自訂牌組"]</h5>
+                                <span class="badge bg-info text-dark">@L.F("{0} 套", DeckSvc.GetCustomDecks().Count)</span>
                             </div>
                             <button class="btn btn-sm btn-outline-success fw-bold" @onclick="() => { CreateNewDeck(); ShowDeckSelectModal = false; }">
-                                <WcgWeb.Components.Common.Icon Name="plus" Size="14" />建立全新空白牌組
+                                <WcgWeb.Components.Common.Icon Name="plus" Size="14" />@L["建立全新空白牌組"]
                             </button>
                         </div>
 
                         @if (DeckSvc.GetCustomDecks().Count == 0)
                         {
                             <div class="p-4 text-center text-muted bg-secondary bg-opacity-10 rounded border border-secondary">
-                                <h6>尚無儲存的自訂牌組</h6>
-                                <p class="small mb-0">你可以點擊上方「複製並載入編輯」官方牌組，進行自訂調整並儲存！</p>
+                                <h6>@L["尚無儲存的自訂牌組"]</h6>
+                                <p class="small mb-0">@L["你可以點擊上方「複製並載入編輯」官方牌組，進行自訂調整並儲存！"]</p>
                             </div>
                         }
                         else
@@ -328,17 +328,17 @@
                                     <div class="col-md-6">
                                         <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
                                             <div>
-                                                <div class="fw-bold text-light fs-6 mb-1">@cd.Name</div>
+                                                <div class="fw-bold text-light fs-6 mb-1">@L.Text(cd.Name)</div>
                                                 <div class="text-white-50 small mb-1">
-                                                    包含 @cd.CardIds.Count 張卡牌
+                                                    @L.F("包含 {0} 張卡牌", cd.CardIds.Count)
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-end gap-2 mt-2 pt-2 border-top border-secondary">
-                                                <button class="btn btn-sm btn-outline-danger px-2" title="刪除此牌組" @onclick="() => DeleteCustomDeck(cd.Id, cd.Version)">
-                                                    <WcgWeb.Components.Common.Icon Name="trash" Size="14" />刪除
+                                                <button class="btn btn-sm btn-outline-danger px-2" title="@L["刪除此牌組"]" @onclick="() => DeleteCustomDeck(cd.Id, cd.Version)">
+                                                    <WcgWeb.Components.Common.Icon Name="trash" Size="14" />@L["刪除"]
                                                 </button>
                                                 <button class="btn btn-sm btn-primary fw-bold px-3" @onclick="() => { LoadCustomDeck(cd); ShowDeckSelectModal = false; }">
-                                                    載入編輯
+                                                    @L["載入編輯"]
                                                 </button>
                                             </div>
                                         </div>
@@ -348,7 +348,7 @@
                         }
                     </div>
                     <div class="modal-footer border-secondary">
-                        <button type="button" class="btn btn-secondary px-4" @onclick="() => ShowDeckSelectModal = false">關閉</button>
+                        <button type="button" class="btn btn-secondary px-4" @onclick="() => ShowDeckSelectModal = false">@L["關閉"]</button>
                     </div>
                 </div>
             </div>
@@ -359,13 +359,13 @@
 @if (Inspect is { } inspected)
 {
     <div class="card-detail-backdrop" @onclick="() => Inspect = null">
-        <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
-            <h2>@inspected.Name</h2>
+        <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
+            <h2>@L.CardName(inspected)</h2>
             <WcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
-            <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
+            <p>@inspected.Id · @L.CardType(inspected.Type) · @L.F("{0} 通用費用", inspected.TotalCost)</p>
             @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
-            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
-            <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? L["無異能"] : L.CardText(inspected))</p>
+            <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>
 }
@@ -473,7 +473,9 @@
                 var q = SearchText.Trim();
                 list = list.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                                        c.Text.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase));
+                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardName(c).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardText(c).Contains(q, StringComparison.OrdinalIgnoreCase));
             }
 
             return list.OrderBy(c => c.IsEnergy ? 0 : 1)
@@ -533,7 +535,7 @@
     private bool LockedOut(string will) => AllowedWills is { } a && !a.Contains(will);
     private string WillChipState(string will) => AllowedWills == null ? "" : LockedOut(will) ? "locked" : will == CurrentDeck.MainWill ? "main-will" : will == "中立" ? "" : "second-will";
     private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
-    private string LockSummary => string.Join("＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null));
+    private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
     private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !a.Contains(c.Will)) : 0;
     private void DropLockedFilter() { if (SelectedWill != "" && LockedOut(SelectedWill)) SelectedWill = ""; }
     private void SetDual(bool dual)
@@ -606,7 +608,7 @@
         CurrentDeck = new Deck
         {
             Id = Guid.NewGuid().ToString(),
-            Name = "新自訂牌組",
+            Name = L["新自訂牌組"],
             CardIds = new List<string>()
         };
         SyncColorMode(); ValidateDeck();
@@ -618,8 +620,8 @@
         CurrentDeck = new Deck
         {
             Id = Guid.NewGuid().ToString(),
-            Name = $"{preset.Name} (副本)",
-            Description = preset.Description,
+            Name = L.F("{0} (副本)", L.DeckName(preset)),
+            Description = L.DeckDescription(preset),
             MainWill = preset.MainWill,
             CardIds = new List<string>(preset.CardIds)
         };
@@ -652,7 +654,7 @@
     {
         if (string.IsNullOrWhiteSpace(CurrentDeck.Name))
         {
-            CurrentDeck.Name = "未命名自訂牌組";
+            CurrentDeck.Name = L["未命名自訂牌組"];
         }
 
         if (!ValidateDeck())

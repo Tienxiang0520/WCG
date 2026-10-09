@@ -1,0 +1,997 @@
+{
+ "WCG-001": {
+  "zh": "赤誓殘酷監工",
+  "name": "Crimson Oath Taskmaster",
+  "text": "Deploy: Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+ },
+ "WCG-002": {
+  "zh": "致死衝擊",
+  "name": "Lethal Strike",
+  "text": "Destroy 1 enemy monster with 1000 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player."
+ },
+ "WCG-003": {
+  "zh": "熔岩地精",
+  "name": "Lava Goblin",
+  "text": "Departure: Deal 1 damage to the enemy player."
+ },
+ "WCG-004": {
+  "zh": "熾炎猛擊",
+  "name": "Blazing Smash",
+  "text": "Destroy 1 enemy monster with 500 PP or less, then draw 1 card."
+ },
+ "WCG-005": {
+  "zh": "突擊狼騎兵",
+  "name": "Raiding Wolf Rider",
+  "text": "Charge."
+ },
+ "WCG-006": {
+  "zh": "怒意沸騰",
+  "name": "Boiling Rage",
+  "text": "Additional cost: sacrifice 1 of your monsters. Deal 2 damage to the enemy player."
+ },
+ "WCG-007": {
+  "zh": "狂血投擲者",
+  "name": "Bloodfrenzy Hurler",
+  "text": "Deploy: Destroy the enemy monster with the lowest PP if it has 500 PP or less."
+ },
+ "WCG-008": {
+  "zh": "烈焰旋風",
+  "name": "Flame Whirlwind",
+  "text": "Destroy all monsters with 500 PP or less (including your own)."
+ },
+ "WCG-009": {
+  "zh": "阿曼尼狂戰士",
+  "name": "Amani Berserker",
+  "text": "This monster gets +200 PP in combat for each monster on the enemy side."
+ },
+ "WCG-010": {
+  "zh": "戰鬥狂怒",
+  "name": "Battle Fury",
+  "text": "Draw 1 card for each monster on your side (up to 2 cards)."
+ },
+ "WCG-011": {
+  "zh": "嗜血戰狂",
+  "name": "Bloodthirsty Warmonger",
+  "text": "Whenever another of your monsters is destroyed, draw 1 card."
+ },
+ "WCG-012": {
+  "zh": "狂暴斬殺",
+  "name": "Savage Execution",
+  "text": "Destroy 1 enemy monster that costs 2 or less."
+ },
+ "WCG-013": {
+  "zh": "焦土縱火犯",
+  "name": "Scorched-Earth Arsonist",
+  "text": "Deploy: Deal 1 damage to the enemy player and 1 damage to yourself."
+ },
+ "WCG-014": {
+  "zh": "熾紅戰斧",
+  "name": "Crimson War Axe",
+  "text": "Deal 1 damage to the enemy player."
+ },
+ "WCG-015": {
+  "zh": "炎息重騎兵",
+  "name": "Flamebreath Lancer",
+  "text": "Deploy: If the enemy has more monsters than you, draw 1 card."
+ },
+ "WCG-016": {
+  "zh": "灰燼復仇者",
+  "name": "Ashen Avenger",
+  "text": "Departure: Destroy the enemy monster with the lowest PP."
+ },
+ "WCG-017": {
+  "zh": "滅絕怒火",
+  "name": "Annihilating Wrath",
+  "text": "Destroy 1 enemy monster with 1700 PP or less and deal 1 damage to the enemy player."
+ },
+ "WCG-018": {
+  "zh": "地獄戰狂",
+  "name": "Infernal Warmonger",
+  "text": "Charge."
+ },
+ "WCG-019": {
+  "zh": "燃血召喚",
+  "name": "Bloodcall",
+  "text": "Lose 2 life; draw 2 cards."
+ },
+ "WCG-020": {
+  "zh": "赤帝·燼滅之龍",
+  "name": "Crimson Emperor, Cinder Dragon",
+  "text": "Deploy: Destroy all enemy monsters with 1300 PP or less."
+ },
+ "WCG-021": {
+  "zh": "秘法學徒",
+  "name": "Arcane Apprentice",
+  "text": "Deploy: Draw 1 card."
+ },
+ "WCG-022": {
+  "zh": "伺機待發",
+  "name": "Lie in Wait",
+  "text": "Look at the top 3 cards of your deck. Put up to 1 spell among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-023": {
+  "zh": "靈光學徒",
+  "name": "Lumen Apprentice",
+  "text": "Whenever you cast a spell, draw 1 card, then discard 1 card."
+ },
+ "WCG-024": {
+  "zh": "寒霜禁錮",
+  "name": "Frost Shackles",
+  "text": "Choose 1 enemy monster: if it is untapped, tap it; if it is already tapped, draw 1 card, then discard 1 card."
+ },
+ "WCG-025": {
+  "zh": "智謀策士",
+  "name": "Cunning Strategist",
+  "text": "Departure: Draw 1 card."
+ },
+ "WCG-026": {
+  "zh": "空間回折",
+  "name": "Spatial Fold",
+  "text": "Return 1 enemy monster to its owner's hand."
+ },
+ "WCG-027": {
+  "zh": "幻術編織者",
+  "name": "Illusion Weaver",
+  "text": "Deploy: You may summon 1 monster that costs 1 or less from your hand without paying its cost."
+ },
+ "WCG-028": {
+  "zh": "奧術靈感",
+  "name": "Arcane Insight",
+  "text": "Draw 2 cards."
+ },
+ "WCG-029": {
+  "zh": "冰霜魔導師",
+  "name": "Frost Magus",
+  "text": "After combat, if this monster and its opponent are still in play: tap the opponent if it is untapped; if it is already tapped, draw 1 card."
+ },
+ "WCG-030": {
+  "zh": "預言秘術",
+  "name": "Prophetic Arts",
+  "text": "Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-031": {
+  "zh": "鏡像護衛",
+  "name": "Mirror Guard",
+  "text": "Taunt; Holy Shield."
+ },
+ "WCG-032": {
+  "zh": "質能瓦解",
+  "name": "Mass Disruption",
+  "text": "Destroy 1 enemy monster with 1700 PP or less."
+ },
+ "WCG-033": {
+  "zh": "秘法竊取者",
+  "name": "Arcane Thief",
+  "text": "Deploy: If your opponent has more cards in hand than you, draw 1 card."
+ },
+ "WCG-034": {
+  "zh": "思維超載",
+  "name": "Mind Overload",
+  "text": "Draw 3 cards."
+ },
+ "WCG-035": {
+  "zh": "時間靜止者",
+  "name": "Timestopper",
+  "text": "Deploy: Based on the board before this resolves, tap all untapped enemy monsters and return up to 1 enemy monster that was already tapped to its owner's hand."
+ },
+ "WCG-036": {
+  "zh": "虛空調度",
+  "name": "Void Recall",
+  "text": "Return 1 of your monsters to your hand, then draw 1 card."
+ },
+ "WCG-037": {
+  "zh": "符文構裝巨像",
+  "name": "Runebound Colossus",
+  "text": "Whenever you cast a spell, if the enemy has more cards in hand than you, draw 1 card."
+ },
+ "WCG-038": {
+  "zh": "逆流風暴",
+  "name": "Reverse Tide",
+  "text": "Return all monsters that cost 2 or less to their owners' hands."
+ },
+ "WCG-039": {
+  "zh": "萬象觀測者",
+  "name": "All-Seeing Observer",
+  "text": "Deploy: Draw 2 cards."
+ },
+ "WCG-040": {
+  "zh": "星穹領主·奧瑞斯",
+  "name": "Starvault Lord, Oris",
+  "text": "Deploy: Look at your opponent's hand and put 1 spell from it into their graveyard."
+ },
+ "WCG-041": {
+  "zh": "利爪巨鹿",
+  "name": "Clawed Stag",
+  "text": "Deploy: Choose One — restore 1 life; or draw 1 card, then discard 1 card."
+ },
+ "WCG-042": {
+  "zh": "野性之力",
+  "name": "Wild Strength",
+  "text": "Choose One — draw 1 card; or summon 1 monster that costs 1 or less from your hand without paying its cost."
+ },
+ "WCG-043": {
+  "zh": "孢子幼芽",
+  "name": "Spore Sprout",
+  "text": "Departure: Put another monster that costs 1 or less from your graveyard into your hand."
+ },
+ "WCG-044": {
+  "zh": "滋養萌發",
+  "name": "Nourishing Bloom",
+  "text": "Put the top card of your deck face down and tapped into your energy zone. This does not count as your energy fill from hand this turn. If your deck is empty, nothing happens."
+ },
+ "WCG-045": {
+  "zh": "叢林行者",
+  "name": "Jungle Strider",
+  "text": "Deploy: If you control another monster, draw 1 card, then discard 1 card."
+ },
+ "WCG-046": {
+  "zh": "自然之怒",
+  "name": "Nature's Wrath",
+  "text": "Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+ },
+ "WCG-047": {
+  "zh": "繁衍蜂群",
+  "name": "Breeding Swarm",
+  "text": "Deploy: You may summon 1 monster that costs 1 or less from your hand without paying its cost."
+ },
+ "WCG-048": {
+  "zh": "巨熊咆哮",
+  "name": "Ursine Roar",
+  "text": "Destroy 1 enemy monster whose PP is at most 500 × the number of monsters on your side, then draw 1 card."
+ },
+ "WCG-049": {
+  "zh": "鐵木樹人",
+  "name": "Ironwood Treant",
+  "text": "Taunt."
+ },
+ "WCG-050": {
+  "zh": "甦生之雨",
+  "name": "Reviving Rain",
+  "text": "Restore 2 life."
+ },
+ "WCG-051": {
+  "zh": "猛毒荊棘蜥",
+  "name": "Venomthorn Lizard",
+  "text": "Poison."
+ },
+ "WCG-052": {
+  "zh": "森林呼喚",
+  "name": "Call of the Forest",
+  "text": "Summon up to 2 monsters that cost 2 or less from your hand, one after another, without paying their costs. Each summon needs an empty slot."
+ },
+ "WCG-053": {
+  "zh": "奔竄巨犀",
+  "name": "Stampeding Rhino",
+  "text": "Trample."
+ },
+ "WCG-054": {
+  "zh": "原始印記",
+  "name": "Primal Mark",
+  "text": "Look at the top 5 cards of your deck. Put up to 2 monsters among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-055": {
+  "zh": "沼澤巨鱷",
+  "name": "Swamp Crocodile",
+  "text": "None."
+ },
+ "WCG-056": {
+  "zh": "生態同調",
+  "name": "Ecological Attunement",
+  "text": "Look at the top 3 cards of your deck. Put 1 monster that costs 2 or less among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-057": {
+  "zh": "遠古守護者",
+  "name": "Ancient Guardian",
+  "text": "Taunt; Deploy: Restore 1 life."
+ },
+ "WCG-058": {
+  "zh": "萬物復甦",
+  "name": "Revival of All",
+  "text": "Put up to 2 monsters that cost 2 or less from your graveyard into your hand."
+ },
+ "WCG-059": {
+  "zh": "蓋亞暴龍",
+  "name": "Gaia Tyrant",
+  "text": "When this monster chooses an attack target, it may ignore Taunt on enemy monsters with 1300 PP or less."
+ },
+ "WCG-060": {
+  "zh": "始祖母樹·伊瓦",
+  "name": "Progenitor Mother Tree, Iva",
+  "text": "Taunt; at the end of your turn, if you have an empty slot, you may summon 1 monster that costs 2 or less from your hand without paying its cost."
+ },
+ "WCG-061": {
+  "zh": "銀色誓言衛",
+  "name": "Silver Oath Guard",
+  "text": "[Arrow: →] Your monster in the adjacent slot to the right has Holy Shield."
+ },
+ "WCG-062": {
+  "zh": "保護之手",
+  "name": "Hand of Protection",
+  "text": "Attach this spell to 1 of your monsters; while attached, that monster has Holy Shield. Then restore 1 life."
+ },
+ "WCG-063": {
+  "zh": "聖印侍從",
+  "name": "Sigil Squire",
+  "text": "Holy Shield."
+ },
+ "WCG-064": {
+  "zh": "謙遜戒律",
+  "name": "Edict of Humility",
+  "text": "Destroy 1 enemy monster that costs 2 or less."
+ },
+ "WCG-065": {
+  "zh": "白銀巡邏衛",
+  "name": "Silver Patroller",
+  "text": "Taunt."
+ },
+ "WCG-066": {
+  "zh": "王者賜福",
+  "name": "Blessing of Kings",
+  "text": "Restore 2 life, then draw 1 card."
+ },
+ "WCG-067": {
+  "zh": "正義裁判官",
+  "name": "Righteous Arbiter",
+  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its owner's hand."
+ },
+ "WCG-068": {
+  "zh": "神聖審判",
+  "name": "Divine Judgment",
+  "text": "Destroy all enemy monsters with 700 PP or less."
+ },
+ "WCG-069": {
+  "zh": "鐵壁騎士",
+  "name": "Bulwark Knight",
+  "text": "Taunt; Holy Shield."
+ },
+ "WCG-070": {
+  "zh": "崇高奉獻",
+  "name": "Noble Devotion",
+  "text": "Restore 1 life."
+ },
+ "WCG-071": {
+  "zh": "祈光神官",
+  "name": "Lightcaller Priest",
+  "text": "Whenever one of your Taunt monsters becomes the target of an enemy monster's attack, restore 1 life."
+ },
+ "WCG-072": {
+  "zh": "淨化聖光",
+  "name": "Purifying Light",
+  "text": "Silence 1 monster that is not already silenced, then draw 1 card."
+ },
+ "WCG-073": {
+  "zh": "榮耀護衛官",
+  "name": "Glory Warden",
+  "text": "Taunt; [Arrow: ← →] Your monsters in the adjacent slots on both sides have Holy Shield."
+ },
+ "WCG-074": {
+  "zh": "堅壁祈願",
+  "name": "Prayer of the Bulwark",
+  "text": "Attach this spell to 1 of your monsters; while attached, that monster has Holy Shield. Then draw 1 card."
+ },
+ "WCG-075": {
+  "zh": "破邪大天使",
+  "name": "Evil-Breaker Archangel",
+  "text": "Holy Shield; Deploy: Restore 1 life."
+ },
+ "WCG-076": {
+  "zh": "誓約封禁",
+  "name": "Oathbound Seal",
+  "text": "Destroy 1 enemy monster with 1700 PP or more."
+ },
+ "WCG-077": {
+  "zh": "秩序聖裁者",
+  "name": "Order Adjudicator",
+  "text": "Deploy: Destroy 1 enemy monster with 2300 PP or more."
+ },
+ "WCG-078": {
+  "zh": "聖光普照",
+  "name": "Radiant Dawn",
+  "text": "Destroy all enemy monsters with 700 PP or less, then restore 1 life."
+ },
+ "WCG-079": {
+  "zh": "日耀聖堂巨像",
+  "name": "Sunblaze Temple Colossus",
+  "text": "Taunt; Holy Shield."
+ },
+ "WCG-080": {
+  "zh": "光輝聖皇·弗丁",
+  "name": "Radiant Holy Emperor, Fordin",
+  "text": "Holy Shield; Departure: Destroy all enemy monsters with 1000 PP or less."
+ },
+ "WCG-081": {
+  "zh": "虛空夜行魔",
+  "name": "Void Nightstalker",
+  "text": "Taunt."
+ },
+ "WCG-082": {
+  "zh": "暗影裂箭",
+  "name": "Shadow Rift Arrow",
+  "text": "Destroy 1 enemy monster with 1300 PP or less."
+ },
+ "WCG-083": {
+  "zh": "腐爛食屍鬼",
+  "name": "Rotting Ghoul",
+  "text": "Departure: Destroy 1 enemy monster with 500 PP or less."
+ },
+ "WCG-084": {
+  "zh": "靈魂撕裂",
+  "name": "Soul Rend",
+  "text": "Additional cost: your opponent discards 1 random card from your hand. Destroy 1 enemy monster with 1300 PP or less."
+ },
+ "WCG-085": {
+  "zh": "苦痛契約者",
+  "name": "Pain Pactbearer",
+  "text": "Deploy: Deal 1 damage to yourself."
+ },
+ "WCG-086": {
+  "zh": "衰竭詛咒",
+  "name": "Curse of Exhaustion",
+  "text": "Destroy 1 enemy monster with 1000 PP or less, then draw 1 card."
+ },
+ "WCG-087": {
+  "zh": "墓穴行屍",
+  "name": "Crypt Walker",
+  "text": "Deploy: If you have 5 or more cards in your graveyard, restore 1 life."
+ },
+ "WCG-088": {
+  "zh": "恐懼吞噬",
+  "name": "Devouring Dread",
+  "text": "Additional cost: sacrifice 1 of your monsters. Destroy 1 enemy monster."
+ },
+ "WCG-089": {
+  "zh": "骨鐮刺客",
+  "name": "Bonescythe Assassin",
+  "text": "Poison."
+ },
+ "WCG-090": {
+  "zh": "冥界引渡",
+  "name": "Underworld Passage",
+  "text": "Put 1 monster from your graveyard into your hand."
+ },
+ "WCG-091": {
+  "zh": "哀慟女妖",
+  "name": "Wailing Banshee",
+  "text": "Deploy: Destroy all enemy monsters with 500 PP or less."
+ },
+ "WCG-092": {
+  "zh": "絕望疫病",
+  "name": "Plague of Despair",
+  "text": "Destroy all monsters with 800 PP or less (including your own)."
+ },
+ "WCG-093": {
+  "zh": "深淵伏擊魔",
+  "name": "Abyssal Ambusher",
+  "text": "Departure: If you have an empty slot, you may summon another monster that costs 2 or less from your graveyard without paying its cost."
+ },
+ "WCG-094": {
+  "zh": "靈魂汲取",
+  "name": "Soul Drain",
+  "text": "Destroy 1 enemy monster and restore 1 life."
+ },
+ "WCG-095": {
+  "zh": "縛魂巨怪",
+  "name": "Soulbound Brute",
+  "text": "Charge; Additional cost: your opponent discards 2 random cards from your hand."
+ },
+ "WCG-096": {
+  "zh": "黑暗交易",
+  "name": "Dark Bargain",
+  "text": "Additional cost: sacrifice 1 of your monsters and pay 1 life. Draw 2 cards."
+ },
+ "WCG-097": {
+  "zh": "亡靈女王·希爾瓦",
+  "name": "Undead Queen, Sylva",
+  "text": "Departure: Destroy the enemy monster with the highest PP, then you may summon 1 monster that costs 3 or less from your graveyard without paying its cost."
+ },
+ "WCG-098": {
+  "zh": "凋零降臨",
+  "name": "Withering Descent",
+  "text": "Destroy all monsters."
+ },
+ "WCG-099": {
+  "zh": "幽冥巨龍",
+  "name": "Netherwyrm",
+  "text": "Whenever another monster is destroyed, restore 1 life."
+ },
+ "WCG-100": {
+  "zh": "深淵之主·瑪爾加尼斯",
+  "name": "Abyss Lord, Malganis",
+  "text": "Taunt; Deploy: Restore 2 life, then put another monster from your graveyard into your hand."
+ },
+ "WCG-101": {
+  "zh": "巡邏輕步兵",
+  "name": "Patrol Footman",
+  "text": "None."
+ },
+ "WCG-102": {
+  "zh": "精靈遊俠",
+  "name": "Elven Ranger",
+  "text": "Deploy: Choose One — destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+ },
+ "WCG-103": {
+  "zh": "淘金鼠人",
+  "name": "Gold-Panning Ratfolk",
+  "text": "Departure: Draw 1 card."
+ },
+ "WCG-104": {
+  "zh": "腐蝕軟泥怪",
+  "name": "Corrosive Ooze",
+  "text": "Deploy: Return 1 enemy monster that costs 2 or less to its owner's hand."
+ },
+ "WCG-105": {
+  "zh": "狂暴投彈手",
+  "name": "Mad Bomber",
+  "text": "Deploy: Destroy all other monsters with 500 PP or less (including your own)."
+ },
+ "WCG-106": {
+  "zh": "日怒壁壘",
+  "name": "Sunfury Bulwark",
+  "text": "Deploy: Restore 1 life."
+ },
+ "WCG-107": {
+  "zh": "飛刀投擲手",
+  "name": "Knife Juggler",
+  "text": "Whenever you summon another monster from your hand by paying its cost, destroy the enemy monster with the lowest PP if it has 500 PP or less."
+ },
+ "WCG-108": {
+  "zh": "殘破魔像",
+  "name": "Broken Golem",
+  "text": "Departure: Put another monster that costs 1 or less from your graveyard into your hand."
+ },
+ "WCG-109": {
+  "zh": "苦痛信徒",
+  "name": "Acolyte of Agony",
+  "text": "Whenever this monster is still in play after combat, draw 1 card."
+ },
+ "WCG-110": {
+  "zh": "狼騎兵先遣隊",
+  "name": "Wolf Rider Vanguard",
+  "text": "Charge."
+ },
+ "WCG-111": {
+  "zh": "叢林獵豹",
+  "name": "Jungle Panther",
+  "text": "Trample."
+ },
+ "WCG-112": {
+  "zh": "破咒者",
+  "name": "Spellbreaker",
+  "text": "Deploy: Dispel all attached cards from 1 monster, or destroy 1 Ward."
+ },
+ "WCG-113": {
+  "zh": "森金持盾衛",
+  "name": "Senjin Shieldbearer",
+  "text": "Taunt."
+ },
+ "WCG-114": {
+  "zh": "雪人巨獸",
+  "name": "Yeti Behemoth",
+  "text": "None."
+ },
+ "WCG-115": {
+  "zh": "阿古斯防衛者",
+  "name": "Argus Defender",
+  "text": "Deploy: You may summon 1 monster that costs 1 or less from your hand without paying its cost."
+ },
+ "WCG-116": {
+  "zh": "碧藍魔龍",
+  "name": "Azure Drake",
+  "text": "Deploy: Draw 1 card."
+ },
+ "WCG-117": {
+  "zh": "狂奔科多獸",
+  "name": "Stampeding Kodo",
+  "text": "Deploy: Destroy the enemy monster with the lowest PP if it has 1000 PP or less."
+ },
+ "WCG-118": {
+  "zh": "荊棘谷猛虎",
+  "name": "Thornvale Tiger",
+  "text": "Trample."
+ },
+ "WCG-119": {
+  "zh": "食人魔拳手",
+  "name": "Ogre Brawler",
+  "text": "None."
+ },
+ "WCG-120": {
+  "zh": "炎魔·拉格納羅斯",
+  "name": "Fire Lord, Ragnaros",
+  "text": "This monster can't declare attacks. At the end of your turn, destroy the enemy monster with the lowest PP. If the enemy has no monsters, deal 1 damage to the enemy player."
+ },
+ "WCG-121": {
+  "zh": "冒險者行囊",
+  "name": "Adventurer's Pack",
+  "text": "Draw 1 card."
+ },
+ "WCG-122": {
+  "zh": "傭兵號召",
+  "name": "Call to Arms",
+  "text": "Look at the top 5 cards of your deck. Put 1 monster among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-123": {
+  "zh": "終焉彗星",
+  "name": "Doomsday Comet",
+  "text": "Destroy 1 enemy monster and deal 1 damage to the enemy player."
+ },
+ "WCG-124": {
+  "zh": "血怒祭壇",
+  "name": "Bloodrage Altar",
+  "text": "Whenever one of your monsters destroys an enemy monster in combat, deal 1 damage to the enemy player."
+ },
+ "WCG-125": {
+  "zh": "思維星軌",
+  "name": "Starpath of Thought",
+  "text": "Tap this card: look at the top 2 cards of your deck. Put 1 on the bottom of your deck and the other back on top."
+ },
+ "WCG-126": {
+  "zh": "遠古母樹根鬚",
+  "name": "Roots of the Ancient Mother",
+  "text": "Tap this card: the next monster you summon this turn costs 1 less (minimum 1)."
+ },
+ "WCG-127": {
+  "zh": "守誓者壁壘",
+  "name": "Oathkeeper's Rampart",
+  "text": "While you control an untapped monster, damage dealt to you by enemy spells is reduced by 1."
+ },
+ "WCG-128": {
+  "zh": "萬魂之井",
+  "name": "Well of Myriad Souls",
+  "text": "Tap this card and sacrifice 1 of your monsters: draw 1 card."
+ },
+ "WCG-129": {
+  "zh": "白銀哨衛",
+  "name": "Silver Sentry",
+  "text": "Taunt."
+ },
+ "WCG-130": {
+  "zh": "觀星學徒",
+  "name": "Stargazer Apprentice",
+  "text": "Deploy: Draw 1 card, then put 1 card from your hand on the bottom of your deck."
+ },
+ "WCG-131": {
+  "zh": "棘刺巨蛋",
+  "name": "Thorned Giant Egg",
+  "text": "Departure: You may summon 1 monster that costs 2 or less from your hand without paying its cost."
+ },
+ "WCG-132": {
+  "zh": "腐肉食腐蛛",
+  "name": "Carrion Spider",
+  "text": "Poison."
+ },
+ "WCG-133": {
+  "zh": "厚甲石像鬼",
+  "name": "Armored Gargoyle",
+  "text": "Taunt; while you have 3 or less life, this monster has Holy Shield."
+ },
+ "WCG-134": {
+  "zh": "巡林驅邪工兵",
+  "name": "Exorcist Ranger Sapper",
+  "text": "Deploy: Dispel all attached cards from 1 monster, or destroy 1 Ward."
+ },
+ "WCG-135": {
+  "zh": "野性萌發",
+  "name": "Wild Sprouting",
+  "text": "Attach this spell to 1 of your monsters; while attached, that monster has +500 PP."
+ },
+ "WCG-136": {
+  "zh": "狂戰士斥候",
+  "name": "Berserker Scout",
+  "text": "Charge; when this monster completes a declared attack and becomes tapped at the end of that attack, destroy 1 enemy monster with 500 PP or less."
+ },
+ "WCG-137": {
+  "zh": "思維凍結",
+  "name": "Mind Freeze",
+  "text": "Choose 1 enemy monster: if it is untapped, tap it; if it is already tapped, return it to its owner's hand. Then draw 1 card."
+ },
+ "WCG-138": {
+  "zh": "暗影伏擊者",
+  "name": "Shadow Ambusher",
+  "text": "Charge; Deploy: Tap 1 of your opponent's untapped energy."
+ },
+ "WCG-139": {
+  "zh": "次元回溯",
+  "name": "Dimensional Rewind",
+  "text": "Return 1 monster to its owner's hand; if it was your monster, draw 1 card."
+ },
+ "WCG-140": {
+  "zh": "湮滅契約",
+  "name": "Pact of Oblivion",
+  "text": "Destroy 1 monster; its controller draws 1 card."
+ },
+ "WCG-141": {
+  "zh": "狂亂血宴",
+  "name": "Frenzied Blood Feast",
+  "text": "Give 1 monster Charge and +700 PP. Destroy it at the end of its controller's next turn."
+ },
+ "WCG-142": {
+  "zh": "誓言枷鎖",
+  "name": "Shackles of Oath",
+  "text": "Attach this spell to 1 monster and tap it; while attached, that monster can't declare attacks and doesn't untap during its controller's reset phase."
+ },
+ "WCG-143": {
+  "zh": "甦生甘霖",
+  "name": "Reviving Downpour",
+  "text": "Untap 1 tapped monster; if it is still in play, it gets +500 PP in its next combat."
+ },
+ "WCG-144": {
+  "zh": "狂熱嘲弄者",
+  "name": "Fanatical Taunter",
+  "text": "Taunt; whenever this monster is attacked in combat and survives, deal 1 damage to the enemy player."
+ },
+ "WCG-145": {
+  "zh": "逆流法師",
+  "name": "Countertide Mage",
+  "text": "Deploy: Choose One — dispel all attached cards from 1 monster; or untap 1 of your tapped monsters."
+ },
+ "WCG-146": {
+  "zh": "荊棘巨龜",
+  "name": "Thornback Tortoise",
+  "text": "Taunt."
+ },
+ "WCG-147": {
+  "zh": "聖堂仲裁護衛",
+  "name": "Temple Arbiter Guard",
+  "text": "[Arrow: ← ↑] Your monster in the adjacent slot to the left, and the enemy monster in the slot directly opposite, have Holy Shield."
+ },
+ "WCG-148": {
+  "zh": "墓園守夜人",
+  "name": "Graveyard Nightwatch",
+  "text": "Whenever another of your monsters is destroyed, tap 1 of your opponent's untapped energy."
+ },
+ "WCG-149": {
+  "zh": "靈魂集市",
+  "name": "Soul Bazaar",
+  "text": "Tap this card: put 1 card from your hand on the bottom of your deck, then draw 1 card."
+ },
+ "WCG-150": {
+  "zh": "自爆發條偶",
+  "name": "Self-Destructing Clockwork",
+  "text": "Departure: Destroy all monsters with 700 PP or less (including your own)."
+ },
+ "WCG-151": {
+  "zh": "熔火鍛爐",
+  "name": "Molten Forge",
+  "text": "Tap this card: destroy 1 monster with 800 PP or less."
+ },
+ "WCG-152": {
+  "zh": "禁魔石像",
+  "name": "Spellward Statue",
+  "text": "Taunt; can't be targeted by spells."
+ },
+ "WCG-153": {
+  "zh": "奧術回音塔",
+  "name": "Arcane Echo Tower",
+  "text": "Whenever you cast a spell that costs 2 or more, put a random spell that costs 1 from your graveyard into your hand."
+ },
+ "WCG-154": {
+  "zh": "淡水狂鱷",
+  "name": "Freshwater Crocolisk",
+  "text": "None."
+ },
+ "WCG-155": {
+  "zh": "鋼鐵構裝體",
+  "name": "Steel Construct",
+  "text": "None."
+ },
+ "WCG-156": {
+  "zh": "荒原巨槌食人魔",
+  "name": "Wasteland Maul Ogre",
+  "text": "None."
+ },
+ "WCG-157": {
+  "zh": "蒼翠古樹衛士",
+  "name": "Verdant Elder Warden",
+  "text": "None."
+ },
+ "WCG-158": {
+  "zh": "白銀持戟禁衛",
+  "name": "Silver Halberd Guard",
+  "text": "None."
+ },
+ "WCG-159": {
+  "zh": "冥界骸骨巨獸",
+  "name": "Underworld Bone Behemoth",
+  "text": "None."
+ },
+ "WCG-160": {
+  "zh": "血肉熔爐巨怪",
+  "name": "Flesh Furnace Brute",
+  "text": "This card costs less by the difference between your maximum life and your current life."
+ },
+ "WCG-161": {
+  "zh": "萬物終結者·世界之蝕",
+  "name": "World Ender, Eclipse",
+  "text": "Deploy: Destroy all other monsters and all Wards, and discard your entire hand."
+ },
+ "WCG-162": {
+  "zh": "遠古泰坦·世界樹之靈",
+  "name": "Ancient Titan, Spirit of the World Tree",
+  "text": "Taunt; Deploy: Restore 3 life and draw 2 cards."
+ },
+ "WCG-163": {
+  "zh": "時空之主·克羅諾斯",
+  "name": "Lord of Time, Kronos",
+  "text": "Deploy: Untap all of your tapped energy; return 1 enemy monster to its owner's hand."
+ },
+ "WCG-164": {
+  "zh": "緊急調度",
+  "name": "Emergency Redeploy",
+  "text": "Tap 1 of your untapped monsters: draw 1 card."
+ },
+ "WCG-165": {
+  "zh": "血祭狂暴",
+  "name": "Blood Sacrifice Frenzy",
+  "text": "Deal 1 damage to yourself: 1 monster gets +500 PP in its next combat."
+ },
+ "WCG-166": {
+  "zh": "思維置換",
+  "name": "Mind Swap",
+  "text": "Put 1 card from your hand on the bottom of your deck, then draw 1 card."
+ },
+ "WCG-167": {
+  "zh": "萌芽喚醒",
+  "name": "Sprouting Awakening",
+  "text": "Untap 1 of your tapped monsters."
+ },
+ "WCG-168": {
+  "zh": "正義壓制",
+  "name": "Righteous Suppression",
+  "text": "Choose 1 monster; it gets -500 PP in its next combat."
+ },
+ "WCG-169": {
+  "zh": "暗影獻祭",
+  "name": "Shadow Offering",
+  "text": "Destroy 1 of your monsters: draw 1 card."
+ },
+ "WCG-170": {
+  "zh": "天火浩劫",
+  "name": "Skyfire Cataclysm",
+  "text": "Destroy all enemy monsters with 1500 PP or less; if the enemy has no monsters, deal 2 damage to the enemy player."
+ },
+ "WCG-171": {
+  "zh": "聖光審判巨神",
+  "name": "Holy Light Judgment Colossus",
+  "text": "Taunt; Holy Shield; Deploy: Restore 2 life."
+ },
+ "WCG-172": {
+  "zh": "遠古蠻荒巨獸",
+  "name": "Ancient Primal Behemoth",
+  "text": "Trample; Departure: Put the top card of your deck face down and untapped into your energy zone."
+ },
+ "WCG-173": {
+  "zh": "維度扭曲",
+  "name": "Dimensional Warp",
+  "text": "Return all monsters to their owners' hands; draw 2 cards."
+ },
+ "WCG-174": {
+  "zh": "熔岩黑龍軍團長",
+  "name": "Lava Black Dragon Warlord",
+  "text": "Charge; Trample."
+ },
+ "WCG-175": {
+  "zh": "冥界引渡者·冥王",
+  "name": "Underworld Ferryman, Hades",
+  "text": "Deploy: You may summon 1 monster that costs 5 or less from your graveyard without paying its cost."
+ },
+ "WCG-176": {
+  "zh": "神聖至高審判",
+  "name": "Supreme Holy Judgment",
+  "text": "Destroy all monsters with 1500 PP or more; restore 2 life."
+ },
+ "WCG-177": {
+  "zh": "機械工廠巨像",
+  "name": "Mechanical Factory Colossus",
+  "text": "Taunt; at the end of your turn, if you have an empty slot, you may summon 1 monster that costs 2 or less from your hand without paying its cost."
+ },
+ "WCG-178": {
+  "zh": "滅世炎魔·薩弗拉斯",
+  "name": "World-Burning Fire Fiend, Sulfras",
+  "text": "Charge; when this monster declares an attack, destroy all enemy Taunt monsters."
+ },
+ "WCG-179": {
+  "zh": "光輝至高大天使·阿曼蘇爾",
+  "name": "Radiant Supreme Archangel, Amansul",
+  "text": "Taunt; Holy Shield; Deploy: Restore your life to its maximum (7)."
+ },
+ "WCG-180": {
+  "zh": "戰歌號令",
+  "name": "Warsong Command",
+  "text": "Look at the top 3 cards of your deck. Put 1 [Fury] monster and 1 [Fury] spell among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-181": {
+  "zh": "赤誓戰鼓手",
+  "name": "Crimson Oath Drummer",
+  "text": "Deploy: If you control another [Fury] monster, all your [Fury] monsters in play as this resolves get +300 PP in combat this turn."
+ },
+ "WCG-182": {
+  "zh": "血怒百夫長",
+  "name": "Bloodrage Centurion",
+  "text": "Charge; this monster gets +300 PP in combat for each other [Fury] monster on your side."
+ },
+ "WCG-183": {
+  "zh": "觀星占卜師",
+  "name": "Stargazing Diviner",
+  "text": "Deploy: Look at the top 3 cards of your deck. Put 1 spell among them into your hand and the rest on the bottom of your deck in any order."
+ },
+ "WCG-184": {
+  "zh": "奧術共鳴波",
+  "name": "Arcane Resonance Wave",
+  "text": "Choose 1 enemy monster: if it is untapped, tap it; if it is already tapped, return it to its owner's hand. Then, if you control a [Reason] monster or [Reason] Ward, draw 1 card."
+ },
+ "WCG-185": {
+  "zh": "魔導樞紐守衛",
+  "name": "Arcane Nexus Warden",
+  "text": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 1000 PP or less."
+ },
+ "WCG-186": {
+  "zh": "母樹共鳴",
+  "name": "Mother Tree Resonance",
+  "text": "Look at the top 3 cards of your deck. Put 1 [Life] monster among them into your hand and the rest on the bottom of your deck in any order. If you control a [Life] Ward, draw 1 more card."
+ },
+ "WCG-187": {
+  "zh": "翠綠喚獸師",
+  "name": "Verdant Beastcaller",
+  "text": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster that costs 2 or less from your hand without paying its cost."
+ },
+ "WCG-188": {
+  "zh": "萬靈樹精長老",
+  "name": "Elder of the Myriad Dryads",
+  "text": "Taunt; Deploy: Restore 1 life for each other [Life] monster on your side."
+ },
+ "WCG-189": {
+  "zh": "聖堂集結號角",
+  "name": "Temple Rally Horn",
+  "text": "Look at the top 3 cards of your deck. Put 1 [Order] monster among them into your hand and the rest on the bottom of your deck in any order. If you control an [Order] monster, attach this spell to 1 of your monsters; while attached, that monster has Holy Shield."
+ },
+ "WCG-190": {
+  "zh": "白銀軍團旗手",
+  "name": "Silver Legion Standard-Bearer",
+  "text": "Taunt; whenever you summon an [Order] monster, restore 1 life."
+ },
+ "WCG-191": {
+  "zh": "聖光大審判官",
+  "name": "Grand Inquisitor of Holy Light",
+  "text": "Taunt; Deploy: If you control another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life."
+ },
+ "WCG-192": {
+  "zh": "冥河引魂術",
+  "name": "Styx Soulguide Rite",
+  "text": "Look at the top 3 cards of your deck. Put 1 [Abyss] monster among them into your hand and the rest into your graveyard."
+ },
+ "WCG-193": {
+  "zh": "噬魂死靈術士",
+  "name": "Soul-Eating Necromancer",
+  "text": "Deploy: You may sacrifice another of your [Abyss] monsters; if you do, draw 2 cards."
+ },
+ "WCG-194": {
+  "zh": "冥府復甦領主",
+  "name": "Netherworld Revival Lord",
+  "text": "Deploy: You may summon 1 [Abyss] monster that costs 3 or less from your graveyard without paying its cost; if you control another [Abyss] monster, untap the summoned monster."
+ },
+ "WCG-195": {
+  "zh": "熔火爆炸陷阱",
+  "name": "Molten Blast Trap",
+  "text": "[Counter] Destroy the attacking enemy monster; if it has 1500 PP or more, deal 1 damage to the enemy player."
+ },
+ "WCG-196": {
+  "zh": "維度時空屏障",
+  "name": "Dimensional Time Barrier",
+  "text": "[Counter] Negate this attack; tap the attacking monster, then draw 1 card."
+ },
+ "WCG-197": {
+  "zh": "叢林守護伏擊",
+  "name": "Jungle Guardian Ambush",
+  "text": "[Counter] Negate this attack; you may summon 1 [Life] monster that costs 3 or less from your hand without paying its cost."
+ },
+ "WCG-198": {
+  "zh": "神聖救贖誓約",
+  "name": "Oath of Holy Redemption",
+  "text": "[Counter] Reduce the damage of this attack to 0; restore 2 life and attach this spell to 1 of your monsters; while attached, that monster has Holy Shield."
+ },
+ "WCG-199": {
+  "zh": "亡魂索命陷阱",
+  "name": "Vengeful Spirit Trap",
+  "text": "[Counter] Destroy the attacking enemy monster; if you have an [Abyss] monster in your graveyard, return 1 monster that costs 2 or less from your graveyard to your hand."
+ }
+}

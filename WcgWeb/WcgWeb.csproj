@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
+    <EmbeddedResource Include="i18n/en.json" LogicalName="WcgWeb.I18n.en.json" />
+    <EmbeddedResource Include="i18n/cards.en.json" LogicalName="WcgWeb.I18n.cards.en.json" WithCulture="false" />
+    <EmbeddedResource Include="i18n/decks.en.json" LogicalName="WcgWeb.I18n.decks.en.json" WithCulture="false" />
     <Content Remove="Client/**" />
     <None Remove="Client/node_modules/**" />
     <Content Update="wwwroot/battle/**/*.map" CopyToPublishDirectory="Never" />

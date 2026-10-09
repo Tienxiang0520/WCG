@@ -85,7 +85,7 @@
             const backup = { format: 'soul-oath-local', version: 1, exportedAt: new Date().toISOString(), data: canonicalData(root.data), preferences };
             const url = URL.createObjectURL(new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' }));
             const a = document.createElement('a');
-            a.href = url; a.download = `魂誓存檔-${new Date().toISOString().slice(0, 10)}.json`;
+            a.href = url; a.download = `${document.documentElement?.lang === 'en' ? 'soul-oath-save' : '魂誓存檔'}-${new Date().toISOString().slice(0, 10)}.json`;
             document.body.append(a); a.click(); a.remove();
             setTimeout(() => URL.revokeObjectURL(url), 1000);
         },

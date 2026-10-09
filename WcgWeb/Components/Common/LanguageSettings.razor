@@ -1,0 +1,21 @@
+@* Interface language. Each option keeps its own native name so it can always be found. *@
+<section class="settings-panel language-settings" aria-labelledby="language-settings">
+    <h2 id="language-settings">@L["語言"]</h2>
+    <div class="setting-row">
+        <div>
+            <h3 id="language-label">@L["介面語言"]</h3>
+            <p id="language-help">@L["切換後立即套用到選單、對戰、卡牌與教學。存檔與對局紀錄不受語言影響。"]</p>
+        </div>
+        <div class="segmented language-switch" role="radiogroup" aria-labelledby="language-label" aria-describedby="language-help">
+            @foreach (var (id, name) in Localizer.Languages)
+            {
+                var on = L.Language == id;
+                <button type="button" role="radio" lang="@id" aria-checked="@(on ? "true" : "false")" class="@(on ? "on" : "")" data-sfx="toggle" @onclick="() => L.Set(id)">@name</button>
+            }
+        </div>
+    </div>
+    @if (!L.HasSavedChoice)
+    {
+        <p class="language-note">@L["尚未選擇語言：目前依瀏覽器偏好顯示（無法判斷時使用繁體中文）。"]</p>
+    }
+</section>

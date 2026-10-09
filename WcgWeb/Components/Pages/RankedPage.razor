@@ -10,23 +10,23 @@
 @inject DeckService Decks
 @inject RankedDecks Opponents
 
-<PageTitle>天梯 - 魂誓</PageTitle>
+<PageTitle>@L["天梯 - 魂誓"]</PageTitle>
 @if (ShowingBattle && Ranked.Error == "")
 {
     <div class="phaser-page in-game ranked-game">
-        @if (Ranked.BalanceNotice != "") { <p class="ranked-balance-notice" role="status">@Ranked.BalanceNotice</p> }
+        @if (Ranked.BalanceNotice != "") { <p class="ranked-balance-notice" role="status">@L.Text(Ranked.BalanceNotice)</p> }
         <BattleBoard @key="Presenter" @ref="Board" Source="Ranked.Bridge" Driver="Ranked.Coordinator" Presenter="Presenter"
             InitialResponse="Initial" Ready="Ready" Changed="Changed" SessionAction="SessionAction" />
         @if (State?.IsOver == true && Profile.Result is { } result)
         {
-            <section class="ranked-result @(result.Won ? "won" : "lost")" data-sfx-show="@ResultCues(result.Before, result.After)" role="status" aria-label="天梯結算">
-                <p class="ranked-kicker">@result.Season 賽季</p><div class="ranked-result-emblem"><RankEmblem Tier="@RankedRules.Tier(result.After)" /></div><h2>@(result.Won ? "天梯勝利" : "本局敗北")</h2>
-                <strong class="ranked-result-stars">@(result.After > result.Before ? "★ ＋1" : result.After < result.Before ? "★ －1" : "牌位保護 · 星數不變")</strong>
-                <p>@RankedRules.Label(result.Before) → @RankedRules.Label(result.After)</p>
-                @if (Profile.Match is { } finished && finished.Id == result.MatchId) { <p class="ranked-result-opponent">對手：@finished.ComputerDeck.Name</p> }
-                @if (result.Season != Profile.Season) { <p>新賽季已開始，目前為 @RankedRules.Label(Profile.Stars)。</p> }
-                <div class="ranked-result-actions"><button class="btn btn-primary" @onclick="Lobby">返回天梯</button>
-                @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button class="btn btn-outline-primary" data-sfx="nav" @onclick="() => ReviewFinished(result.MatchId)"><Icon Name="history" Size="17" />對局回顧</button> }</div>
+            <section class="ranked-result @(result.Won ? "won" : "lost")" data-sfx-show="@ResultCues(result.Before, result.After)" role="status" aria-label="@L["天梯結算"]">
+                <p class="ranked-kicker">@L.F("{0} 賽季", result.Season)</p><div class="ranked-result-emblem"><RankEmblem Tier="@RankedRules.Tier(result.After)" /></div><h2>@L[result.Won ? "天梯勝利" : "本局敗北"]</h2>
+                <strong class="ranked-result-stars">@(result.After > result.Before ? "★ ＋1" : result.After < result.Before ? "★ －1" : L["牌位保護 · 星數不變"])</strong>
+                <p>@L.Text(RankedRules.Label(result.Before)) → @L.Text(RankedRules.Label(result.After))</p>
+                @if (Profile.Match is { } finished && finished.Id == result.MatchId) { <p class="ranked-result-opponent">@L.F("對手：{0}", L.DeckName(finished.ComputerDeck))</p> }
+                @if (result.Season != Profile.Season) { <p>@L.F("新賽季已開始，目前為 {0}。", RankedRules.Label(Profile.Stars))</p> }
+                <div class="ranked-result-actions"><button class="btn btn-primary" @onclick="Lobby">@L["返回天梯"]</button>
+                @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button class="btn btn-outline-primary" data-sfx="nav" @onclick="() => ReviewFinished(result.MatchId)"><Icon Name="history" Size="17" />@L["對局回顧"]</button> }</div>
             </section>
         }
     </div>
@@ -36,69 +36,69 @@ else
     <div class="ranked-lobby">
         <header class="page-hero">
             <div class="page-hero-text">
-                <p class="eyebrow ranked-eyebrow"><Icon Name="trophy" Size="14" />單人天梯 · @Profile.Season 賽季</p>
-                <h1>挑戰下一個牌位</h1>
-                <p class="lead">每一場對局，往上多走一顆星。</p>
+                <p class="eyebrow ranked-eyebrow"><Icon Name="trophy" Size="14" />@L.F("單人天梯 · {0} 賽季", Profile.Season)</p>
+                <h1>@L["挑戰下一個牌位"]</h1>
+                <p class="lead">@L["每一場對局，往上多走一顆星。"]</p>
             </div>
-            <div class="ranked-identity"><AvatarBadge Class="large" Caption="@($"{RankedRules.Label(Profile.Stars)} · 點擊換頭像")" /></div>
+            <div class="ranked-identity"><AvatarBadge Class="large" Caption="@L.F("{0} · 點擊換頭像", RankedRules.Label(Profile.Stars))" /></div>
         </header>
-        @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
-        @if (Ranked.ResetNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@Ranked.ResetNotice</p> }
+        @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@L.Text(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
+        @if (Ranked.ResetNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@L.Text(Ranked.ResetNotice)</p> }
         <div class="ranked-grid">
-            <section class="ranked-card tier-@RankedRules.Tier(Profile.Stars)" aria-label="目前牌位">
+            <section class="ranked-card tier-@RankedRules.Tier(Profile.Stars)" aria-label="@L["目前牌位"]">
                 <div class="ranked-emblem-wrap"><RankEmblem Tier="@RankedRules.Tier(Profile.Stars)" /></div>
-                <p class="ranked-kicker">目前牌位</p>
-                <h2>@RankedRules.Label(Profile.Stars)</h2>
+                <p class="ranked-kicker">@L["目前牌位"]</p>
+                <h2>@L.Text(RankedRules.Label(Profile.Stars))</h2>
                 @if (RankedRules.Tier(Profile.Stars) < 5)
                 {
-                    <div class="ranked-stars" role="img" aria-label="@(Profile.Stars % 5 + " / 5 星")">@for (var i = 0; i < 5; i++) { <Icon Name="star" Size="26" Class="@(i < Profile.Stars % 5 ? "pip on" : "pip")" /> }</div>
-                    <p class="ranked-next">再 <b>@((5 - Profile.Stars % 5))</b> 勝晉升下一小段</p>
+                    <div class="ranked-stars" role="img" aria-label="@L.F("{0} / 5 星", Profile.Stars % 5)">@for (var i = 0; i < 5; i++) { <Icon Name="star" Size="26" Class="@(i < Profile.Stars % 5 ? "pip on" : "pip")" /> }</div>
+                    <p class="ranked-next">@L["再"] <b>@((5 - Profile.Stars % 5))</b> @L["勝晉升下一小段"]</p>
                 }
-                else { <p class="ranked-next">持續累積星數，刷新你的賽季紀錄。</p> }
+                else { <p class="ranked-next">@L["持續累積星數，刷新你的賽季紀錄。"]</p> }
                 <dl class="ranked-stats">
-                    <div><dt>本季戰績</dt><dd><span class="wcg-num">@Profile.Wins</span> 勝 · <span class="wcg-num">@Profile.Losses</span> 敗</dd></div>
-                    <div><dt>勝率</dt><dd class="wcg-num">@(Profile.Wins + Profile.Losses == 0 ? "—" : $"{Profile.Wins * 100 / (Profile.Wins + Profile.Losses)}%")</dd></div>
-                    <div><dt>歷史最高</dt><dd>@RankedRules.Label(Profile.BestStars)</dd></div>
+                    <div><dt>@L["本季戰績"]</dt><dd><span class="wcg-num">@Profile.Wins</span> @L["勝 ·"] <span class="wcg-num">@Profile.Losses</span> @L["敗"]</dd></div>
+                    <div><dt>@L["勝率"]</dt><dd class="wcg-num">@(Profile.Wins + Profile.Losses == 0 ? "—" : $"{Profile.Wins * 100 / (Profile.Wins + Profile.Losses)}%")</dd></div>
+                    <div><dt>@L["歷史最高"]</dt><dd>@L.Text(RankedRules.Label(Profile.BestStars))</dd></div>
                 </dl>
             </section>
             <section class="ranked-entry wcg-panel">
                 @if (Profile.Match is { Settled: false } ongoing)
                 {
-                    <h3 class="panel-title">有一場尚未完成的對局</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
-                    @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@ongoing.ComputerDeck.Description</p> }
-                    <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />繼續對局</button>
-                    <p class="ranked-help">離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。</p>
+                    <h3 class="panel-title">@L["有一場尚未完成的對局"]</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
+                    @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@L.Text(ongoing.ComputerDeck.Description)</p> }
+                    <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />@L["繼續對局"]</button>
+                    <p class="ranked-help">@L["離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。"]</p>
                 }
                 else
                 {
-                    <h3 class="panel-title">出戰準備</h3>
+                    <h3 class="panel-title">@L["出戰準備"]</h3>
                     @if (Profile.Result is { } last)
-                    { <p class="ranked-last @(last.Won ? "won" : "lost")">上一場：@(last.Won ? "勝利 ＋1 星" : last.After == last.Before ? "敗北 · 牌位保護" : "敗北 －1 星")@(Profile.Match is { } previous && previous.Id == last.MatchId ? " · 對手 " + previous.ComputerDeck.Name : "")</p> }
-                    <div class="wcg-field"><label for="ranked-deck">出戰牌組</label>
+                    { <p class="ranked-last @(last.Won ? "won" : "lost")">@L["上一場："]@L[last.Won ? "勝利 ＋1 星" : last.After == last.Before ? "敗北 · 牌位保護" : "敗北 －1 星"]@(Profile.Match is { } previous && previous.Id == last.MatchId ? " · " + L.F("對手 {0}", L.DeckName(previous.ComputerDeck)) : "")</p> }
+                    <div class="wcg-field"><label for="ranked-deck">@L["出戰牌組"]</label>
                     <select id="ranked-deck" class="form-select" @bind="SelectedDeck">
-                        @foreach (var deck in Available) { <option value="@deck.Id" disabled="@(!deck.IsValid(Cards.GetCard, out _))">@deck.Name</option> }
+                        @foreach (var deck in Available) { <option value="@deck.Id" disabled="@(!deck.IsValid(Cards.GetCard, out _))">@L.DeckName(deck)</option> }
                     </select></div>
                     <div class="ranked-intel">
-                        <p class="ranked-intel-title"><span class="tier-tag">@RankedRules.Tiers[RankedRules.Tier(Profile.Stars)]</span>對手情報</p>
-                        <p>@RankedDecks.Strategy(RankedRules.Tier(Profile.Stars))</p>
-                        <p class="ranked-help">本牌位對手池：@Opponents.Summary(RankedRules.Tier(Profile.Stars))</p>
+                        <p class="ranked-intel-title"><span class="tier-tag">@L[RankedRules.Tiers[RankedRules.Tier(Profile.Stars)]]</span>@L["對手情報"]</p>
+                        <p>@L.Text(RankedDecks.Strategy(RankedRules.Tier(Profile.Stars)))</p>
+                        <p class="ranked-help">@L["本牌位對手池："]@OpponentSummary(RankedRules.Tier(Profile.Stars))</p>
                     </div>
-                    <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />開始天梯對戰</button>
-                    <p class="ranked-help">先後手隨機；對手由同牌位牌組池抽選，不會連續遇到同一流派，每場另隨機微調 0～2 組卡牌。</p>
+                    <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />@L["開始天梯對戰"]</button>
+                    <p class="ranked-help">@L["先後手隨機；對手由同牌位牌組池抽選，不會連續遇到同一流派，每場另隨機微調 0～2 組卡牌。"]</p>
                 }
             </section>
         </div>
         <section class="ranked-records wcg-panel" aria-labelledby="ranked-records-title">
             <header class="ranked-records-head">
-                <h3 class="panel-title" id="ranked-records-title"><Icon Name="history" Size="18" />對戰紀錄</h3>
-                <div class="segmented small-seg" role="radiogroup" aria-label="紀錄範圍">
-                    <button type="button" role="radio" aria-checked="@(!AllSeasons ? "true" : "false")" class="@(!AllSeasons ? "on" : "")" @onclick="() => AllSeasons = false">本季</button>
-                    <button type="button" role="radio" aria-checked="@(AllSeasons ? "true" : "false")" class="@(AllSeasons ? "on" : "")" @onclick="() => AllSeasons = true">全部</button>
+                <h3 class="panel-title" id="ranked-records-title"><Icon Name="history" Size="18" />@L["對戰紀錄"]</h3>
+                <div class="segmented small-seg" role="radiogroup" aria-label="@L["紀錄範圍"]">
+                    <button type="button" role="radio" aria-checked="@(!AllSeasons ? "true" : "false")" class="@(!AllSeasons ? "on" : "")" @onclick="() => AllSeasons = false">@L["本季"]</button>
+                    <button type="button" role="radio" aria-checked="@(AllSeasons ? "true" : "false")" class="@(AllSeasons ? "on" : "")" @onclick="() => AllSeasons = true">@L["全部"]</button>
                 </div>
             </header>
             @if (Records.Count == 0)
             {
-                <p class="ranked-records-empty">@(AllSeasons || (Profile.Records?.Count ?? 0) == 0 ? "完成一場天梯對局後，紀錄會出現在這裡，並可逐步回顧。" : "本季尚無對局紀錄，切換「全部」可查看先前賽季。")</p>
+                <p class="ranked-records-empty">@L[AllSeasons || (Profile.Records?.Count ?? 0) == 0 ? "完成一場天梯對局後，紀錄會出現在這裡，並可逐步回顧。" : "本季尚無對局紀錄，切換「全部」可查看先前賽季。"]</p>
             }
             else
             {
@@ -106,41 +106,41 @@ else
                     @foreach (var r in Records)
                     {
                         <li class="ranked-record @(r.Won ? "won" : "lost")">
-                            <div class="record-result"><span class="record-badge">@(r.Won ? "勝" : "敗")</span><span class="record-stars">@StarChange(r)</span></div>
+                            <div class="record-result"><span class="record-badge">@L[r.Won ? "勝" : "敗"]</span><span class="record-stars">@L[StarChange(r)]</span></div>
                             <div class="record-main">
-                                <p class="record-matchup"><span class="will-chip @WillClass(r.ComputerDeck.MainWill)"><i class="will-dot"></i>@(r.ComputerDeck.MainWill == "" ? "混合" : r.ComputerDeck.MainWill)</span><b>@(r.Archetype != "" ? r.Archetype : r.ComputerDeck.Name)</b><small>使用 @r.PlayerDeck.Name</small></p>
-                                <p class="record-meta"><span>@When(r)</span><span>@RankedRules.Label(r.Before) → @RankedRules.Label(r.After)</span><span class="wcg-num">@r.Turns 回合</span><span class="wcg-num">@Duration(r)</span>@if (AllSeasons) { <span>@r.Season 賽季</span> }</p>
+                                <p class="record-matchup"><span class="will-chip @WillClass(r.ComputerDeck.MainWill)"><i class="will-dot"></i>@L[r.ComputerDeck.MainWill == "" ? "混合" : r.ComputerDeck.MainWill]</span><b>@(r.Archetype != "" ? L.Text(r.Archetype) : L.DeckName(r.ComputerDeck))</b><small>@L.F("使用 {0}", L.DeckName(r.PlayerDeck))</small></p>
+                                <p class="record-meta"><span>@When(r)</span><span>@L.Text(RankedRules.Label(r.Before)) → @L.Text(RankedRules.Label(r.After))</span><span class="wcg-num">@L.F("{0} 回合", r.Turns)</span><span class="wcg-num">@Duration(r)</span>@if (AllSeasons) { <span>@L.F("{0} 賽季", r.Season)</span> }</p>
                             </div>
                             <div class="record-actions">
-                                <button type="button" class="btn btn-outline-primary record-deck-toggle" data-sfx="@(OpenDeck == r.Id ? "toggleOff" : "toggleOn")" aria-expanded="@(OpenDeck == r.Id ? "true" : "false")" aria-controls="deck-@r.Id" disabled="@(!Interactive)" @onclick="() => OpenDeck = OpenDeck == r.Id ? null : r.Id"><Icon Name="cards" Size="15" />對手牌組</button>
-                                <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="回顧 @When(r) 對戰 @r.ComputerDeck.Name" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />對局回顧</button>
+                                <button type="button" class="btn btn-outline-primary record-deck-toggle" data-sfx="@(OpenDeck == r.Id ? "toggleOff" : "toggleOn")" aria-expanded="@(OpenDeck == r.Id ? "true" : "false")" aria-controls="deck-@r.Id" disabled="@(!Interactive)" @onclick="() => OpenDeck = OpenDeck == r.Id ? null : r.Id"><Icon Name="cards" Size="15" />@L["對手牌組"]</button>
+                                <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="@L.F("回顧 {0} 對戰 {1}", When(r), L.DeckName(r.ComputerDeck))" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />@L["對局回顧"]</button>
                             </div>
                             @if (OpenDeck == r.Id)
                             {
                                 var list = DeckList(r.ComputerDeck);
                                 <div class="record-deck" id="deck-@r.Id" data-sfx-show="flip" data-sfx-delay="0">
-                                    <p class="record-deck-title"><b>@r.ComputerDeck.Name</b><span class="wcg-num">@r.ComputerDeck.CardIds.Count 張</span>@if (r.ComputerDeck.Description != "") { <small>@r.ComputerDeck.Description</small> }</p>
+                                    <p class="record-deck-title"><b>@L.DeckName(r.ComputerDeck)</b><span class="wcg-num">@L.F("{0} 張", r.ComputerDeck.CardIds.Count)</span>@if (r.ComputerDeck.Description != "") { <small>@L.DeckDescription(r.ComputerDeck)</small> }</p>
                                     <ul class="record-deck-list">
                                         @foreach (var (card, count) in list)
                                         {
-                                            <li><button type="button" class="deck-chip @WillClass(card.Will)" data-sfx="flip" title="查看 @card.Name" @onclick="() => Preview = GameEngine.VisibleCard(card, Guid.Empty)"><span class="deck-chip-cost wcg-num">@card.TotalCost</span><span class="deck-chip-name">@card.Name</span><span class="deck-chip-count wcg-num">×@count</span></button></li>
+                                            <li><button type="button" class="deck-chip @WillClass(card.Will)" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(card))" @onclick="() => Preview = GameEngine.VisibleCard(card, Guid.Empty)"><span class="deck-chip-cost wcg-num">@card.TotalCost</span><span class="deck-chip-name">@L.CardName(card)</span><span class="deck-chip-count wcg-num">×@count</span></button></li>
                                         }
                                     </ul>
-                                    @if (list.Sum(x => x.Count) < r.ComputerDeck.CardIds.Count) { <p class="ranked-help">部分卡牌已不在目前的卡表中，未列出。</p> }
+                                    @if (list.Sum(x => x.Count) < r.ComputerDeck.CardIds.Count) { <p class="ranked-help">@L["部分卡牌已不在目前的卡表中，未列出。"]</p> }
                                 </div>
                             }
                         </li>
                     }
                 </ol>
-                <p class="ranked-help">保留最近 @RankedRules.MaxRecords 場；回顧依照當局隨機種子與行動重新模擬，只顯示你當時看得到的資訊。</p>
+                <p class="ranked-help">@L.F("保留最近 {0} 場；回顧依照當局隨機種子與行動重新模擬，只顯示你當時看得到的資訊。", RankedRules.MaxRecords)</p>
             }
         </section>
         <section class="ranked-info">
-            <p class="ranked-season"><Icon Name="clock" Size="16" />本季至 @SeasonEnd（台灣時間）。新賽季下降兩個大牌位，最低青銅。</p>
-            <details><summary>升段與存檔規則</summary><p>每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。</p><p>進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。</p><p>牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。</p></details>
+            <p class="ranked-season"><Icon Name="clock" Size="16" />@L.F("本季至 {0}（台灣時間）。新賽季下降兩個大牌位，最低青銅。", SeasonEnd)</p>
+            <details><summary>@L["升段與存檔規則"]</summary><p>@L["每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。"]</p><p>@L["進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。"]</p><p>@L["牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。"]</p></details>
             @if (Profile.History.Count > 0)
             {
-                <details><summary>歷季成績</summary><ul class="ranked-history">@foreach (var season in Profile.History.AsEnumerable().Reverse()) { <li><b>@season.Season</b><span>@RankedRules.Label(season.EndingStars)</span><span>最高 @RankedRules.Label(season.BestStars)</span><span class="wcg-num">@season.Wins 勝 @season.Losses 敗</span></li> }</ul></details>
+                <details><summary>@L["歷季成績"]</summary><ul class="ranked-history">@foreach (var season in Profile.History.AsEnumerable().Reverse()) { <li><b>@season.Season</b><span>@L.Text(RankedRules.Label(season.EndingStars))</span><span>@L.F("最高 {0}", RankedRules.Label(season.BestStars))</span><span class="wcg-num">@L.F("{0} 勝 {1} 敗", season.Wins, season.Losses)</span></li> }</ul></details>
             }
         </section>
     </div>
@@ -174,10 +174,24 @@ else
     // Taiwan has no daylight saving time, so a fixed UTC+8 matches Asia/Taipei on both server and WebAssembly.
     private static readonly TimeSpan Taipei = TimeSpan.FromHours(8);
     private static string When(RankedRecord r) => (r.EndedAt ?? r.StartedAt) is { } t ? t.ToOffset(Taipei).ToString("MM/dd HH:mm") : r.Season;
-    private static string Duration(RankedRecord r)
+    private string Duration(RankedRecord r)
     {
         if (r.StartedAt is not { } a || r.EndedAt is not { } b || b < a) return "—";
-        var d = b - a; return d.TotalHours >= 1 ? $"{(int)d.TotalHours}時{d.Minutes:00}分" : $"{d.Minutes}分{d.Seconds:00}秒";
+        var d = b - a; return d.TotalHours >= 1 ? L.F("{0}時{1}分", (int)d.TotalHours, d.Minutes.ToString("00")) : L.F("{0}分{1}秒", d.Minutes, d.Seconds.ToString("00"));
+    }
+    // English mode rebuilds RankedDecks.Summary from the same pool so deck/archetype names come from the dictionaries.
+    private string OpponentSummary(int tier)
+    {
+        if (!L.IsEnglish) return Opponents.Summary(tier);
+        var pool = Opponents.Pool(tier);
+        var styles = pool.GroupBy(e => e.Archetype == "" ? "其他" : e.Archetype).OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal)
+            .Select(g => $"{L[g.Key]} {g.Count()}");
+        return L.F("{0} 種流派（{1}）：{2}", pool.Count, string.Join(", ", styles), string.Join(", ", pool.Select(e => ShortDeckName(L.DeckName(e.Deck)))));
+    }
+    private static string ShortDeckName(string name)
+    {
+        var dot = name.IndexOf(" · ", StringComparison.Ordinal); if (dot >= 0) name = name[(dot + 3)..];
+        var end = name.IndexOf(" (", StringComparison.Ordinal); return end > 0 ? name[..end] : name;
     }
     private static string StarChange(RankedRecord r) => r.After > r.Before ? "★＋1" : r.After < r.Before ? "★－1" : "保護";
     private static string WillClass(string will) => will switch

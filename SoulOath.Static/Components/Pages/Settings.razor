@@ -3,36 +3,37 @@
 @inject IJSRuntime JS
 @implements IAsyncDisposable
 
-<PageTitle>設定 - 魂誓</PageTitle>
+<PageTitle>@L["設定 - 魂誓"]</PageTitle>
 <section class="settings-page">
     <header class="page-hero compact">
         <div class="page-hero-text">
-            <p class="eyebrow"><Icon Name="gear" Size="14" />設定</p>
-            <h1>你的魂誓</h1>
-            <p class="lead settings-note">調整頭像與對戰操作習慣，選擇會儲存在這個瀏覽器。</p>
+            <p class="eyebrow"><Icon Name="gear" Size="14" />@L["設定"]</p>
+            <h1>@L["你的魂誓"]</h1>
+            <p class="lead settings-note">@L["調整頭像與對戰操作習慣，選擇會儲存在這個瀏覽器。"]</p>
         </div>
     </header>
+    <LanguageSettings />
     <section class="settings-panel" aria-labelledby="operation-settings">
-        <h2 id="operation-settings">操作</h2>
+        <h2 id="operation-settings">@L["操作"]</h2>
         <div class="setting-row">
             <div>
-                <h3 id="energy-confirmation-label">填能量前再次確認</h3>
-                <p id="energy-confirmation-help">開啟時，按下填能量或把手牌拖到能量區後，會先請你確認。關閉後會直接填入能量。</p>
+                <h3 id="energy-confirmation-label">@L["填能量前再次確認"]</h3>
+                <p id="energy-confirmation-help">@L["開啟時，按下填能量或把手牌拖到能量區後，會先請你確認。關閉後會直接填入能量。"]</p>
             </div>
             <button type="button" class="setting-switch" role="switch" aria-checked="@(ConfirmEnergy ? "true" : "false")"
                     aria-labelledby="energy-confirmation-label" aria-describedby="energy-confirmation-help"
                     disabled="@(!Loaded || Saving)" @onclick="ToggleEnergyConfirmation">
                 <span class="switch-track" aria-hidden="true"><span></span></span>
-                <span>@(ConfirmEnergy ? "開啟" : "關閉")</span>
+                <span>@L[ConfirmEnergy ? "開啟" : "關閉"]</span>
             </button>
         </div>
     </section>
     <AudioSettings />
     <section class="settings-panel" aria-labelledby="avatar-settings">
-        <h2 id="avatar-settings">玩家頭像</h2>
+        <h2 id="avatar-settings">@L["玩家頭像"]</h2>
         <AvatarPicker />
     </section>
-    <p class="settings-status" role="status">@Status</p>
+    <p class="settings-status" role="status">@L[Status]</p>
     @if (Tour == "settings") { <WcgWeb.Components.Tutorial.GuidedTour LessonId="settings" /> }
     <PlayerDataTools />
 </section>

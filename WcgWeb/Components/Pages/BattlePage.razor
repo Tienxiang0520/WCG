@@ -10,55 +10,55 @@
 @inject ILogger<BattleCoordinator> Logger
 @inject IJSRuntime JS
 
-<PageTitle>訓練場 - 魂誓</PageTitle>
+<PageTitle>@L["訓練場 - 魂誓"]</PageTitle>
 <div class="@(State != null && State.Phase != "NotStarted" ? "phaser-page in-game" : "phaser-page")">
-    @if (Notice != "") { <p class="alert alert-warning" role="status">@Notice</p> }
+    @if (Notice != "") { <p class="alert alert-warning" role="status">@L.Text(Notice)</p> }
     @if (State?.Phase == "NotStarted")
     {
         <section class="lobby">
             <header class="page-hero">
                 <div class="page-hero-text">
-                    <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="swords" Size="14" />訓練場</p>
-                    <h1>磨練你的每一張牌</h1>
-                    <p class="lead">指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。</p>
+                    <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="swords" Size="14" />@L["訓練場"]</p>
+                    <h1>@L["磨練你的每一張牌"]</h1>
+                    <p class="lead">@L["指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。"]</p>
                 </div>
-                <WcgWeb.Components.Common.AvatarBadge Class="large" Caption="訓練者 · 點擊換頭像" />
+                <WcgWeb.Components.Common.AvatarBadge Class="large" Caption="@L["訓練者 · 點擊換頭像"]" />
             </header>
             <div class="lobby-grid">
                 <section class="wcg-panel battle-panel setup-panel" aria-labelledby="setup-title">
-                    <h2 id="setup-title" class="panel-title">準備對局</h2>
+                    <h2 id="setup-title" class="panel-title">@L["準備對局"]</h2>
                     <div class="field-grid-2">
-                        <div class="wcg-field"><label for="phaser-player">你的牌組</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
-                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
+                        <div class="wcg-field"><label for="phaser-player">@L["你的牌組"]</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
+                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@L.DeckName(deck)</option> }
                         </select></div>
-                        <div class="wcg-field"><label for="phaser-computer">電腦牌組</label><select id="phaser-computer" class="form-select" @bind="ComputerDeck">
-                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
+                        <div class="wcg-field"><label for="phaser-computer">@L["電腦牌組"]</label><select id="phaser-computer" class="form-select" @bind="ComputerDeck">
+                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@L.DeckName(deck)</option> }
                         </select></div>
                     </div>
-                    <div class="wcg-field"><span class="field-label" id="phaser-starter-label">先攻</span>
+                    <div class="wcg-field"><span class="field-label" id="phaser-starter-label">@L["先攻"]</span>
                         <div class="segmented" role="radiogroup" aria-labelledby="phaser-starter-label">
                             @foreach (var (value, label) in new[] { ("player", "玩家先攻"), ("computer", "電腦先攻"), ("random", "隨機") })
-                            { <button type="button" role="radio" aria-checked="@(First == value ? "true" : "false")" class="@(First == value ? "on" : "")" @onclick="() => First = value">@label</button> }
+                            { <button type="button" role="radio" aria-checked="@(First == value ? "true" : "false")" class="@(First == value ? "on" : "")" @onclick="() => First = value">@L[label]</button> }
                         </div>
                     </div>
                     <div class="lobby-actions">
-                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />開始訓練</button>
-                        @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">載入保存場面</button>}
+                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />@L["開始訓練"]</button>
+                        @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">@L["載入保存場面"]</button>}
                     </div>
-                    @if(ToolNotice!=""){<p class="field-note" role="status">@ToolNotice</p>}
+                    @if(ToolNotice!=""){<p class="field-note" role="status">@L.Text(ToolNotice)</p>}
                 </section>
-                <aside class="wcg-panel lobby-facts" aria-label="對局規則速覽">
-                    <h2 class="panel-title">對局速覽</h2>
+                <aside class="wcg-panel lobby-facts" aria-label="@L["對局規則速覽"]">
+                    <h2 class="panel-title">@L["對局速覽"]</h2>
                     <dl class="fact-grid">
-                        <div><dt>牌組</dt><dd><b class="wcg-num">50</b>張</dd></div>
-                        <div><dt>生命</dt><dd><b class="wcg-num">7</b>點</dd></div>
-                        <div><dt>起手</dt><dd><b class="wcg-num">7</b>張</dd></div>
-                        <div><dt>填能量</dt><dd><b class="wcg-num">1</b>張／回合</dd></div>
+                        <div><dt>@L["牌組"]</dt><dd><b class="wcg-num">50</b>@L["張"]</dd></div>
+                        <div><dt>@L["生命"]</dt><dd><b class="wcg-num">7</b>@L["點"]</dd></div>
+                        <div><dt>@L["起手"]</dt><dd><b class="wcg-num">7</b>@L["張"]</dd></div>
+                        <div><dt>@L["填能量"]</dt><dd><b class="wcg-num">1</b>@L["張／回合"]</dd></div>
                     </dl>
-                    <p class="field-note">每回合可將一張手牌背面填為能量，不抽牌。</p>
-                    <nav class="lobby-links" aria-label="其他模式">
-                        <a href="ranked"><WcgWeb.Components.Common.Icon Name="trophy" Size="18" /><span><b>天梯</b><small>對手隨牌位變強</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
-                        <a href="deckbuilder"><WcgWeb.Components.Common.Icon Name="cards" Size="18" /><span><b>牌組構築室</b><small>組出你的 50 張</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
+                    <p class="field-note">@L["每回合可將一張手牌背面填為能量，不抽牌。"]</p>
+                    <nav class="lobby-links" aria-label="@L["其他模式"]">
+                        <a href="ranked"><WcgWeb.Components.Common.Icon Name="trophy" Size="18" /><span><b>@L["天梯"]</b><small>@L["對手隨牌位變強"]</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
+                        <a href="deckbuilder"><WcgWeb.Components.Common.Icon Name="cards" Size="18" /><span><b>@L["牌組構築室"]</b><small>@L["組出你的 50 張"]</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
                     </nav>
                 </aside>
             </div>
@@ -69,34 +69,34 @@
         <BattleBoard @ref="Board" Source="Bridge" Driver="Coordinator" Presenter="Presenter" InitialResponse="InitialResponse" Ready="OnReady" Changed="StateChanged" SessionAction="SessionAction" Training="true" TrainingToolsOpen="ToolsOpen" TrainingAiPaused="Coordinator.AiPaused" OpenTraining="ToggleTools" />
         @if(ToolsOpen)
         {
-            <aside class="training-tools" role="region" aria-label="訓練工具">
-                <header><h2>訓練工具</h2><button @onclick="()=>ToolsOpen=false">收起工具</button></header>
-                <p>測試調整只作用於這一局。</p>
-                <div class="training-buttons"><button disabled="@Sending" @onclick="ToggleAi">@(Coordinator.AiPaused?"恢復電腦自動行動":"暫停電腦")</button><button disabled="@(Sending || Coordinator.IsBusy || !Coordinator.AiPaused || State.DecisionPlayerId!="computer" || State.IsOver)" @onclick="AiStep">電腦執行一步</button></div>
-                <p role="status">@(Coordinator.AiPaused?"電腦已暫停":"電腦自動行動中") · @ToolNotice</p>
+            <aside class="training-tools" role="region" aria-label="@L["訓練工具"]">
+                <header><h2>@L["訓練工具"]</h2><button @onclick="()=>ToolsOpen=false">@L["收起工具"]</button></header>
+                <p>@L["測試調整只作用於這一局。"]</p>
+                <div class="training-buttons"><button disabled="@Sending" @onclick="ToggleAi">@L[Coordinator.AiPaused?"恢復電腦自動行動":"暫停電腦"]</button><button disabled="@(Sending || Coordinator.IsBusy || !Coordinator.AiPaused || State.DecisionPlayerId!="computer" || State.IsOver)" @onclick="AiStep">@L["電腦執行一步"]</button></div>
+                <p role="status">@L[Coordinator.AiPaused?"電腦已暫停":"電腦自動行動中"] · @L.Text(ToolNotice)</p>
                 <fieldset disabled="@(Sending || Coordinator.IsBusy || State.IsOver || State.Pending!=null || Engine.IsWaiting)">
-                    <legend>指定卡片與布置</legend>
-                    <label>調整陣營<select aria-label="調整陣營" @bind="Side" @bind:after="LoadResources"><option value="player">己方</option><option value="computer">電腦</option></select></label>
-                    <label>搜尋卡片<input aria-label="搜尋卡片" placeholder="卡名或編號，例如125" @bind="Search" @bind:event="oninput" @bind:after="FilterCard" /></label>
-                    <label>指定卡片<select aria-label="指定卡片" @bind="SelectedCard">@foreach(var c in FilteredCards){<option value="@c.Id">@c.Id · @c.Name（@c.TotalCost 費）</option>}</select></label>
-                    @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@card.Text</p>}
-                    <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>加入手牌</button>
-                    <label>布置格位<select aria-label="布置格位" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">第 @(i+1) 格 @(SelectedSide.Field.Any(m=>m.Slot==i)?"（已有卡片）":"")</option>}</select></label>
-                    <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>直接擺放</button><button @onclick='()=>Edit("training-enter")'>進場並觸發效果</button><button @onclick='()=>Edit("training-set")'>背面蓋牌</button></div>
-                    <small>直接擺放不觸發進場或召喚效果；進場測試不扣費。已有卡片的格位不會被覆蓋。</small>
-                    <legend>生命與能量</legend>
-                    <label>生命（0–7）<input aria-label="生命" type="number" min="0" max="7" @bind="Hp" @bind:event="oninput" /></label>
-                    <label>總能量（0–30）<input aria-label="總能量" type="number" min="0" max="30" @bind="TotalEnergy" @bind:event="oninput" /></label>
-                    <label>可用能量<input aria-label="可用能量" type="number" min="0" max="30" @bind="AvailableEnergy" @bind:event="oninput" /></label>
-                    <button @onclick='()=>Edit("training-resources")'>套用生命與能量</button>
-                    <legend>場上卡片</legend>
-                    <select aria-label="調整場上卡片" @bind="SelectedUnit"><option value="">選擇場上卡片</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">第 @(m.Slot+1) 格 · @m.Card.Name</option>}</select>
-                    <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>轉直立</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>橫置</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>移至墓地</button></div>
-                    <small>移至墓地是調整場面，不觸發死亡效果。</small>
+                    <legend>@L["指定卡片與布置"]</legend>
+                    <label>@L["調整陣營"]<select aria-label="@L["調整陣營"]" @bind="Side" @bind:after="LoadResources"><option value="player">@L["己方"]</option><option value="computer">@L["電腦"]</option></select></label>
+                    <label>@L["搜尋卡片"]<input aria-label="@L["搜尋卡片"]" placeholder="@L["卡名或編號，例如125"]" @bind="Search" @bind:event="oninput" @bind:after="FilterCard" /></label>
+                    <label>@L["指定卡片"]<select aria-label="@L["指定卡片"]" @bind="SelectedCard">@foreach(var c in FilteredCards){<option value="@c.Id">@c.Id · @L.CardName(c)（@L.F("{0} 費", c.TotalCost)）</option>}</select></label>
+                    @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@L.CardText(card)</p>}
+                    <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>@L["加入手牌"]</button>
+                    <label>@L["布置格位"]<select aria-label="@L["布置格位"]" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">@L.F("第 {0} 格", i+1) @(SelectedSide.Field.Any(m=>m.Slot==i)?L["（已有卡片）"]:"")</option>}</select></label>
+                    <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>@L["直接擺放"]</button><button @onclick='()=>Edit("training-enter")'>@L["進場並觸發效果"]</button><button @onclick='()=>Edit("training-set")'>@L["背面蓋牌"]</button></div>
+                    <small>@L["直接擺放不觸發進場或召喚效果；進場測試不扣費。已有卡片的格位不會被覆蓋。"]</small>
+                    <legend>@L["生命與能量"]</legend>
+                    <label>@L["生命（0–7）"]<input aria-label="@L["生命"]" type="number" min="0" max="7" @bind="Hp" @bind:event="oninput" /></label>
+                    <label>@L["總能量（0–30）"]<input aria-label="@L["總能量"]" type="number" min="0" max="30" @bind="TotalEnergy" @bind:event="oninput" /></label>
+                    <label>@L["可用能量"]<input aria-label="@L["可用能量"]" type="number" min="0" max="30" @bind="AvailableEnergy" @bind:event="oninput" /></label>
+                    <button @onclick='()=>Edit("training-resources")'>@L["套用生命與能量"]</button>
+                    <legend>@L["場上卡片"]</legend>
+                    <select aria-label="@L["調整場上卡片"]" @bind="SelectedUnit"><option value="">@L["選擇場上卡片"]</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">@L.F("第 {0} 格", m.Slot+1) · @L.CardName(m.Card)</option>}</select>
+                    <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>@L["轉直立"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>@L["橫置"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>@L["移至墓地"]</button></div>
+                    <small>@L["移至墓地是調整場面，不觸發死亡效果。"]</small>
                 </fieldset>
-                <h3>重複測試</h3>
-                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting)" @onclick="SaveScene">保存目前場面</button><button disabled="@(SavedScene==null || Sending || Coordinator.IsBusy)" @onclick="RestoreScene">還原保存場面</button></div>
-                <small>另存於此瀏覽器，可重新整理後載入。保存會取代上一份測試場面。</small>
+                <h3>@L["重複測試"]</h3>
+                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting)" @onclick="SaveScene">@L["保存目前場面"]</button><button disabled="@(SavedScene==null || Sending || Coordinator.IsBusy)" @onclick="RestoreScene">@L["還原保存場面"]</button></div>
+                <small>@L["另存於此瀏覽器，可重新整理後載入。保存會取代上一份測試場面。"]</small>
             </aside>
         }
     }
@@ -110,7 +110,7 @@
     private string Side="player",Search="",SelectedCard="WCG-001",SelectedUnit="",ToolNotice="";
     private string? SavedScene;
     private int Slot,Hp=7,TotalEnergy,AvailableEnergy;
-    private CardDefinition[] FilteredCards=>CardDb.AllCards.Where(c=>c.Name.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||c.Id.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)).ToArray();
+    private CardDefinition[] FilteredCards=>CardDb.AllCards.Where(c=>c.Name.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||L.CardName(c).Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||c.Id.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)).ToArray();
     private BattleSide SelectedSide=>Side=="player"?State!.Player:State!.Computer;
     private void FilterCard(){if(!FilteredCards.Any(c=>c.Id==SelectedCard))SelectedCard=FilteredCards.FirstOrDefault()?.Id??"";}
     private void LoadResources(){Hp=SelectedSide.Hp;TotalEnergy=SelectedSide.TotalEnergy;AvailableEnergy=SelectedSide.AvailableEnergy;SelectedUnit="";}

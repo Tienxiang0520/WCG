@@ -68,7 +68,8 @@ export function bind(root, dotnet) {
         hovered?.classList.toggle('drop-hover', valid);
         hovered?.classList.toggle('drop-rejected', !valid);
         if (hovered && valid && hovered.dataset.dropZone === 'own' && !hovered.dataset.target)
-            hovered.dataset.dropPreview = `第 ${Number(hovered.dataset.slot) + 1} 格 · ${gesture.source.classList.contains('card-back') ? '蓋牌 0費' : '進場'}`;
+            { const n = Number(hovered.dataset.slot) + 1, set = gesture.source.classList.contains('card-back');
+                hovered.dataset.dropPreview = document.documentElement.lang === 'en' ? `Slot ${n} · ${set ? 'Set face-down, 0 cost' : 'Enter'}` : `第 ${n} 格 · ${set ? '蓋牌 0費' : '進場'}`; }
         else hovered?.removeAttribute('data-drop-preview');
         const color = valid ? '#9cf4bc' : destination ? '#ff8c81' : '#ffce79';
         aim.dataset.state = valid ? 'valid' : destination ? 'invalid' : 'free';
