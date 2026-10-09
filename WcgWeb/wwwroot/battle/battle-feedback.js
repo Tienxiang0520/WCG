@@ -100,24 +100,25 @@ export function bindFeedback(root, sound = null, fx = null) {
     }
     async function number(el, text, heal = false) {
         if (!el) return;
-        const r = el.getBoundingClientRect();
+        // Hero numbers land on the portrait itself; a portrait near the top edge drifts its number downward.
+        const face = el.querySelector?.('.hero-face') ?? null, anchor = face ?? el, r = anchor.getBoundingClientRect();
         const amount = Number(String(text).replace(/[^\d]/g, '')) || 1;
-        // Portraits near the top edge get their number just below, so it never leaves the screen.
-        const top = r.y < 90 ? r.y + r.height + 26 : r.y - 14;
+        const nearTop = r.y < 90, top = face ? r.y + r.height / 2 - 32 : nearTop ? r.y + r.height + 26 : r.y - 14, drift = face && nearTop ? -1 : 1;
         const pop = place(node('div', `event-number ${heal ? 'healing' : ''} ${amount >= 3 ? 'big' : ''}`, text), { x: r.x + r.width / 2 - 60, y: top, width: 120, height: 64 });
         void sound?.play(heal ? 'heal' : 'damage');
         pop.dataset.wcgEffect = heal ? 'heal' : 'damage';
         if (heal) void fx?.burst(el, { color: '#9dffc9', count: 12, spread: 60, size: 6, rise: 50, duration: 760 });
         else {
-            void fx?.burst(el, { color: '#ff9f80', count: 8 + amount * 3, spread: 70, size: 6 });
+            void fx?.burst(anchor, { color: '#ff9f80', count: 8 + amount * 3, spread: 70, size: 6 });
+            if (face) { void fx?.flare(anchor, '#ffb39a', .9); void fx?.glow(anchor, '#ff5a3c', 300); }
             void fx?.recoil(el, null, Math.min(1, .35 + amount * .2));
             void fx?.shake(Math.min(1, .25 + amount * .18));
         }
         await Promise.all([flash(el, heal ? '#91ffc1' : '#ff957b'), animate(pop, [
-            { opacity: 0, transform: 'translateY(6px) scale(.35)' },
-            { opacity: 1, transform: 'translateY(-8px) scale(1.3)', offset: .18 },
-            { opacity: 1, transform: 'translateY(-14px) scale(1)', offset: .55 },
-            { opacity: 0, transform: 'translateY(-48px) scale(.95)' }], 680, 'cubic-bezier(.2,.8,.3,1)')]);
+            { opacity: 0, transform: `translateY(${6 * drift}px) scale(.35)` },
+            { opacity: 1, transform: `translateY(${-8 * drift}px) scale(1.3)`, offset: .18 },
+            { opacity: 1, transform: `translateY(${-14 * drift}px) scale(1)`, offset: .55 },
+            { opacity: 0, transform: `translateY(${-48 * drift}px) scale(.95)` }], 680, 'cubic-bezier(.2,.8,.3,1)')]);
         pop.remove();
     }
     async function attack(ev) {
@@ -221,6 +222,11 @@ export function bindFeedback(root, sound = null, fx = null) {
                     void sound?.play('gameover');
                     // The gameover event names the losing side.
                     void fx?.banner(ev.side === 'player' ? '敗北' : '勝利', ev.side === 'player' ? 'defeat' : 'victory', 1800);
+                    // Portrait finish: the loser's frame cracks with dust, the winner's sparkles gold.
+                    const loser = hero(ev.side), winner = hero(ev.side === 'player' ? 'computer' : 'player');
+                    const loserFace = loser?.querySelector?.('.hero-face') ?? loser, winnerFace = winner?.querySelector?.('.hero-face') ?? winner;
+                    if (loserFace) { void fx?.impact(loserFace, null, .9); void fx?.burst(loserFace, { color: '#9aa3ad', count: 16, spread: 70, size: 14, kind: 'dust', origin: 'bottom' }); }
+                    if (winnerFace) { void fx?.ring(winnerFace, '#ffd65a', 1.4); void fx?.burst(winnerFace, { color: '#ffe08a', count: 22, spread: 90, size: 6, rise: 50, duration: 900 }); }
                     await flash(hero(ev.side), '#ffe5a1');
                 }
                 else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');

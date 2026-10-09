@@ -52,9 +52,9 @@ export function bind(root, dotnet) {
     }
     function draw() {
         if (!gesture?.started) return;
-        const { currentX: x, currentY: y } = gesture;
+        const { currentX: px, currentY: py } = gesture;
         const { x: originX, y: originY } = visibleOrigin(gesture.source);
-        const destination = destinationAt(x, y);
+        const destination = destinationAt(px, py);
         const valid = destination?.classList.contains('legal') ?? false;
         if (hovered !== destination) { clearHover(); hovered = destination; }
         hovered?.classList.toggle('drop-hover', valid);
@@ -66,7 +66,10 @@ export function bind(root, dotnet) {
         aim.dataset.state = valid ? 'valid' : destination ? 'invalid' : 'free';
         for (const path of aim.querySelectorAll('path[data-aim]')) path.setAttribute('stroke', color);
         aim.querySelector('marker path').setAttribute('fill', color);
-        // The card stays at its origin while aiming; only the arrow follows the pointer.
+        // The card stays at its origin while aiming; the arrow follows the pointer and snaps onto a legal target
+        // (a hero's portrait, or the centre of a card/slot) so the lock-on reads clearly under a finger.
+        let x = gesture.currentX, y = gesture.currentY;
+        if (valid && hovered) { const r = (hovered.querySelector?.('.hero-face') ?? hovered).getBoundingClientRect(); x = r.x + r.width / 2; y = r.y + r.height / 2; }
         const d = `M ${originX} ${originY} Q ${originX} ${originY + (y - originY) * .65} ${x} ${y}`;
         for (const path of aim.querySelectorAll('path[data-aim]')) path.setAttribute('d', d);
         const reticle = aim.querySelector('[data-reticle]');
@@ -106,7 +109,7 @@ export function bind(root, dotnet) {
         // Capture first; the managed rules decide whether this drop can animate.
         if (destination) {
             pendingDrop = { source: gesture.source, clone: gesture.source.cloneNode(true), kind,
-                from: gesture.source.getBoundingClientRect(), to: destination.getBoundingClientRect(), zone: destination.dataset.dropZone };
+                from: gesture.source.getBoundingClientRect(), to: (destination.querySelector?.('.hero-face') ?? destination).getBoundingClientRect(), zone: destination.dataset.dropZone };
         }
         if (destination) call('DropCard', kind, id, destination.dataset.dropZone, Number(destination.dataset.slot ?? -1), destination.dataset.target ?? '');
         else call('EndDrag');

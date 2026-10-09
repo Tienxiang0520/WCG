@@ -10,7 +10,7 @@
 <section class="v06-board @(Training?"training":"") @(Dragging!=null?"dragging":"") @(s.ActivePlayerId=="player"?"turn-player":"turn-computer") @(MotionReduced?"motion-reduced":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
     <div class="board-ambience" aria-hidden="true"></div>
     <header class="match-header"><strong class="turn-chip @(s.ActivePlayerId=="player"?"mine":"theirs")" @key="s.Turn">第 @s.Turn 回合 · @(s.ActivePlayerId=="player"?"你的回合":"電腦回合")</strong><span>v0.6</span>@if(Training){<button class="training-toggle" disabled="@(Busy||Presenting||EnergyCandidate!=null||Detail!=null||ShowHistory)" @onclick="()=>OpenTraining.InvokeAsync()">測試工具</button>}<button class="motion-toggle" aria-pressed="@(MotionReduced?"true":"false")" aria-label="@(MotionReduced?"切換為完整特效":"切換為精簡特效")" title="@(MotionReduced?"特效：精簡（點擊改為完整）":"特效：完整（點擊改為精簡）")" @onclick="ToggleMotion"><span aria-hidden="true">@(MotionReduced?"◌":"✨")</span><span class="motion-label"> @(MotionReduced?"精簡":"特效")</span></button><button class="sound-toggle" data-sound-toggle aria-label="@(SoundEnabled?"靜音":"開啟音效")" title="@(SoundEnabled?"靜音":"開啟音效")" @onclick="ToggleSound">@(SoundEnabled?"🔊":"🔇")</button><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">投降</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>返回房間</button></header>
-    <div class="opponent hero @(LegalZone("face")?"legal":"") @(s.Computer.Hp<=2?"low-hp":"") @(s.ActivePlayerId=="computer"?"is-active":"")" data-drop-zone="face"><strong>電腦</strong><b class="hp-value" @key="s.Computer.Hp">♥ @s.Computer.Hp / 7</b><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small></div>
+    <div class="opponent hero @HeroClass(s,s.Computer,false) @(LegalZone("face")?"legal":"") @(FaceBlocked?"face-blocked":"")" data-drop-zone="face" aria-label="電腦頭像 · 生命 @s.Computer.Hp / 7">@HeroFace(s.Computer,false)<div class="hero-meta"><strong>電腦</strong><small>能量 @s.Computer.AvailableEnergy / @s.Computer.TotalEnergy · 手牌 @s.Computer.HandCount</small><small class="hero-deck">牌庫 @s.Computer.DeckCount</small></div>@if(FaceBlocked){<span class="hero-blocked">@(s.Computer.Field.Any(m=>m.Status.Contains("嘲諷"))?"🛡 嘲諷阻擋":"無法直接攻擊")</span>}</div>
     <p class="battle-message" role="status">@Message @(s.IsOver?s.Outcome:(Busy||Presenting)?"動作進行中":s.Pending?.Title ?? (TrainingToolsOpen?"訓練工具已開啟":Training&&TrainingAiPaused&&s.DecisionPlayerId=="computer"?"電腦已暫停 · 開啟測試工具選擇單步或自動行動":!CanAct?"等待電腦行動或效果選擇":""))@if(ShowActHint){<span class="hint-mouse">拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌</span><span class="hint-touch">拖曳出牌或攻擊 · 點牌放大／切換蓋牌</span>}</p>
     <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
     @foreach(var side in new[]{s.Computer,s.Player})
@@ -39,7 +39,7 @@
         </div>
     }
     </div>
-    <div class="player hero @(s.Player.Hp<=2?"low-hp":"") @(s.ActivePlayerId=="player"?"is-active":"")"><strong>你</strong><b class="hp-value" @key="s.Player.Hp">♥ @s.Player.Hp / 7</b><small>牌庫 @s.Player.DeckCount</small></div>
+    <div class="player hero @HeroClass(s,s.Player,true)" aria-label="你的頭像 · 生命 @s.Player.Hp / 7">@HeroFace(s.Player,true)<div class="hero-meta"><strong>你</strong><small>牌庫 @s.Player.DeckCount</small></div></div>
     <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy"><strong>能量 <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>拖手牌到這裡填能量</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"")"></i>}</div></aside>
     <aside class="turn-controls"><button class="end-turn @(NoMovesLeft?"no-moves":"")" title="@(NoMovesLeft?"沒有可用的行動了":"")" disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>結束回合</button><button @onclick="()=>ShowHistory=true">紀錄／墓地</button></aside>
     <div class="v06-hand" aria-label="扇形手牌">
@@ -95,6 +95,20 @@
     // Presentation hint only: glow the end-turn button when nothing playable, fillable or attack-ready remains.
     private bool NoMovesLeft=>CanAct&&State is {Pending:null} s&&EnergyCandidate==null&&!s.Hand.Any(h=>h.CanPlay||h.CanEnergy)&&!s.Player.Field.Any(m=>m.CanAttack||m.CanActivate);
     private bool ShowActHint=>CanAct&&State?.Pending==null;
+    // Hero portraits (presentation only): will tint from visible cards, damage stages, end-of-match states.
+    private bool FaceBlocked=>Dragging!=null&&DragKind=="attack"&&!AttackTargets.Contains("face");
+    private static string HeroClass(BattleSnapshot s,BattleSide side,bool mine)
+    {
+        var lost=s.IsOver&&(mine==s.Outcome.StartsWith("本局敗北"));
+        var will=DominantWill(s,side,mine);
+        return string.Join(' ',new[]{side.Hp<=2?"low-hp":side.Hp<=4?"hurt":"",s.ActivePlayerId==side.Id&&!s.IsOver?"is-active":"",will==null?"":$"will-{will}",s.IsOver?(lost?"defeated":"victorious"):""}.Where(c=>c!=""));
+    }
+    private static string? DominantWill(BattleSnapshot s,BattleSide side,bool mine)
+    {
+        var cards=side.Field.Where(m=>!m.IsSet).Select(m=>m.Card).Concat(side.Graveyard).Concat(mine?s.Hand.Select(h=>h.Card):[]);
+        return cards.Select(c=>c.Will).Where(w=>!string.IsNullOrEmpty(w)&&w!="中立").GroupBy(w=>w).OrderByDescending(g=>g.Count()).ThenBy(g=>g.Key,StringComparer.Ordinal).Select(g=>g.Key).FirstOrDefault();
+    }
+    private RenderFragment HeroFace(BattleSide side,bool mine)=>@<div class="hero-face"><div class="hero-portrait"><img src="battle/avatars/@(mine?"player":"computer").svg" alt="" draggable="false" /></div><span class="hero-crack" aria-hidden="true"></span><b class="hero-hp hp-value" @key="side.Hp" title="生命 @side.Hp / 7">@side.Hp</b></div>;
     private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
     private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
