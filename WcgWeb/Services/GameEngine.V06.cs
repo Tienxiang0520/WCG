@@ -26,12 +26,23 @@ public partial class GameEngine
             var unit=m;
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => a.Card.Card.Id == "WCG-135" ? 500 : a.Card.Card.Id == "WCG-141" ? 700 : 0)+unit.NextCombatBonus+unit.TurnBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
-                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.Will=="狂怒")*300 : 0));
+                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.Will=="狂怒")*300 : 0)+ArrowPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasDivineShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
-                || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit));
+                || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit));
         }
     }
+    // Only these arrows hand out holy shield; the other arrow cards link slots for their own effects.
+    public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
+    // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the holy-shield arrows.
+    internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), _ => (0, 0) };
+    private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
+        Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
+            .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return sourceOwner == owner ? aura.Ally : aura.Enemy; });
+    // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
+    private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
+        m.IsSilenced ? [] : Player.Field.Concat(Computer.Field).Where(x => x != m && PointsAt(p, m, Owner(x), x)).ToArray();
     private bool PointsAt(PlayerState sourceOwner, MonsterInstance source, PlayerState owner, MonsterInstance target) =>
         source.Card.Arrows.Any(a=>a switch { "left" => owner==sourceOwner && target.Slot==source.Slot-1,
             "right"=>owner==sourceOwner && target.Slot==source.Slot+1, "up"=>owner!=sourceOwner && target.Slot==4-source.Slot, _=>false });

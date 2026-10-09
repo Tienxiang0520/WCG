@@ -137,6 +137,8 @@ public class TutorialTests
             }
             Assert.All(lesson.Steps.SelectMany(s => s.Allow).SelectMany(a => new[] { a.Card, a.Target, a.OptionCard }).Where(x => x is not (null or "*")), id => Assert.NotNull(cards.GetCard(id!)));
             Assert.True(lesson.Steps[^1].IsInfo, $"{lesson.Id} 應以說明步驟收尾");
+            // Spotlight tokens are parsed by TutorialPage.Selectors; a slot token without a number crashes the circuit.
+            Assert.All(lesson.Steps.SelectMany(s => s.Spot), t => Assert.Matches(@"^(face|hero|energy|end|history|hand(:WCG-\d{3})?|(own|enemy):[0-4]|(own|enemy)-card:WCG-\d{3}|dialog|field)$", t));
         }
         Assert.Equal(TutorialLessons.All.Count, TutorialLessons.All.Select(l => l.Id).Distinct().Count());
         Assert.Equal(TutorialLessons.BeginnerId, TutorialLessons.All[0].Id);

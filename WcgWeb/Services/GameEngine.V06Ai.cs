@@ -15,7 +15,8 @@ public partial class GameEngine
                 double Position(ChoiceOption o){var slot=int.Parse(o.Id[5..]);var score=0d;
                     if(card?.Arrows.Contains("right")==true)score+=p.Field.Any(m=>m.Slot==slot+1)?5:slot<4?1:-4;
                     if(card?.Arrows.Contains("left")==true)score+=p.Field.Any(m=>m.Slot==slot-1)?5:slot>0?1:-4;
-                    if(card?.Arrows.Contains("up")==true)score-=e.Field.Any(m=>m.Slot==4-slot)?6:0;
+                    // 147's up arrow shields the enemy; every other up arrow harms the monster straight ahead.
+                    if(card?.Arrows.Contains("up")==true)score+=e.Field.Any(m=>m.Slot==4-slot)?(card.Id=="WCG-147"?-6:6):0;
                     score+=p.Field.Count(m=>m.Card.Arrows.Contains("right")&&m.Slot==slot-1||m.Card.Arrows.Contains("left")&&m.Slot==slot+1)*3;
                     return score;}
                 return SelectChoice(choice.Options.OrderByDescending(Position).First());}

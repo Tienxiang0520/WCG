@@ -22,9 +22,14 @@ public partial class GameEngine
             case "WCG-013": Resolve(() => Damage(enemy, 1), () => Damage(p, 1)); break;
             case "WCG-015": if (enemy.Field.Count > p.Field.Count) DrawMany(p, 1); break;
             case "WCG-020": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 1300).ToArray(), m.Card.Name); break;
+            case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
             case "WCG-027": case "WCG-047": case "WCG-115": FreeHand(p, 1, 1); break;
             case "WCG-067": case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
+            case "WCG-033" when m.Card.Arrows.Length > 0:
+                if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
+                else DrawMany(p, 1);
+                break;
             case "WCG-033": if (enemy.Hand.Count > p.Hand.Count) DrawMany(p, 1); break;
             case "WCG-035": var tapped=enemy.Field.Where(x=>x.IsTapped).ToArray(); foreach(var x in enemy.Field.Where(x=>!x.IsTapped)) x.IsTapped=true; OptionalTarget(p,"可選原本橫置敵怪回手",tapped,Bounce); break;
             case "WCG-039": DrawMany(p, 2); break;

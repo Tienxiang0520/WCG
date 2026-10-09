@@ -16,8 +16,9 @@ public sealed partial class RankedSession
     private readonly TimeProvider clock;
     private readonly string rules;
     private readonly string priorIdentifierRules;
-    private readonly CardDatabase currentCards, priorBalanceCards;
+    private readonly CardDatabase currentCards, priorBalanceCards, priorArrowCards;
     private readonly string priorBalanceRules, priorBalanceIdentifierRules;
+    private readonly string priorArrowRules, priorArrowIdentifierRules;
     private RankedProfile profile = new();
     private readonly DeckService deckService;
     public GameEngine Engine { get; }
@@ -38,6 +39,11 @@ public sealed partial class RankedSession
         var priorCatalog = JsonSerializer.Serialize(priorBalanceCards.AllCards);
         priorBalanceRules = Fingerprint(priorCatalog);
         priorBalanceIdentifierRules = Fingerprint(priorCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
+        // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
+        priorArrowCards = CardBalanceHistory.BeforeArrowCards(cards);
+        var arrowCatalog = JsonSerializer.Serialize(priorArrowCards.AllCards);
+        priorArrowRules = Fingerprint(arrowCatalog);
+        priorArrowIdentifierRules = Fingerprint(arrowCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try
         {
@@ -114,9 +120,9 @@ public sealed partial class RankedSession
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
         if (match.Rules != rules && match.Rules != priorIdentifierRules)
         {
-            if (match.Rules != priorBalanceRules && match.Rules != priorBalanceIdentifierRules)
-                throw new InvalidOperationException("存檔對局使用不同規則版本。");
-            Engine.UseMatchCatalog(priorBalanceCards, true);
+            if (match.Rules == priorArrowRules || match.Rules == priorArrowIdentifierRules) Engine.UseMatchCatalog(priorArrowCards, false);
+            else if (match.Rules == priorBalanceRules || match.Rules == priorBalanceIdentifierRules) Engine.UseMatchCatalog(priorBalanceCards, true);
+            else throw new InvalidOperationException("存檔對局使用不同規則版本。");
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }
         Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier;

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "WCG-005",
+    "name": "突擊狼騎兵",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": 800,
+    "dp": 1,
+    "text": "衝鋒。",
+    "design_note": "經典快攻狼騎兵，打破召喚醉意進場直撲。",
+    "hs_ref": "狼騎兵 / 庫卡隆精英衛士",
+    "keywords": [
+      "衝鋒"
+    ],
+    "arrows": []
+  },
+  {
+    "id": "WCG-021",
+    "name": "秘法學徒",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 500,
+    "dp": 1,
+    "text": "進場：抽 1 張牌。",
+    "design_note": "進場抽牌怪物身材極度貧弱化（僅 500 PP），無法正面抵擋主流交戰。",
+    "hs_ref": "工程學徒 / 戰利品保鏢",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-033",
+    "name": "秘法竊取者",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": 1200,
+    "dp": 1,
+    "text": "進場：若對手手牌數多於己方，抽 1 張牌。",
+    "design_note": "條件補牌怪身材砍至 1200 PP，落後於 4 費主流身材。",
+    "hs_ref": "寒光智者 / 竊賊",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-085",
+    "name": "苦痛契約者",
+    "type": "怪物",
+    "will": "深淵",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": 1000,
+    "dp": 1,
+    "text": "進場：對己方玩家造成 1 點生命傷害。",
+    "design_note": "自殘 1 血換取 1 費超模 1000 PP。",
+    "hs_ref": "烈焰小鬼",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-049",
+    "name": "鐵木樹人",
+    "type": "怪物",
+    "will": "生機",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1800,
+    "dp": 1,
+    "text": "嘲諷。",
+    "design_note": "生機系 3 費 1800 PP 超模厚重嘲諷，優先承受敵方攻擊。 嘲諷可正常攻擊；費用與 PP 暫保留，需重新試玩平衡。",
+    "hs_ref": "鐵鬃灰熊 / 埃隆巴克保護者",
+    "keywords": [
+      "嘲諷"
+    ],
+    "arrows": []
+  }
+]
