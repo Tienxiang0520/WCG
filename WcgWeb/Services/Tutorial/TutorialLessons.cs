@@ -170,7 +170,7 @@ public static class TutorialLessons
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-132", 0), new("WCG-155", 2)] }),
             Steps =
             [
-                new() { Title = "箭頭連結格位", Spot = ["face", "own"],
+                new() { Title = "箭頭連結格位", Spot = ["field"],
                     Text = "卡圖邊緣的金色三角就是箭頭：← → 連到己方左右相鄰格，↑ 連到正對面的敵方格。每張卡用箭頭做的事不同，看效果文字就知道。" },
                 new() { Title = "左右光環", Spot = ["hand:WCG-005", "own:2"], Allow = [Play("WCG-005"), Slot(2)],
                     Done = e => Unit(e.Player, "WCG-005")?.Slot == 2,
