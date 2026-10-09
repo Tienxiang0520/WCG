@@ -33,10 +33,12 @@
         <AvatarPicker />
     </section>
     <p class="settings-status" role="status">@Status</p>
+    @if (Tour == "settings") { <WcgWeb.Components.Tutorial.GuidedTour LessonId="settings" /> }
     <PlayerDataTools />
 </section>
 
 @code {
+    [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
     private IJSObjectReference? Module;
     private bool ConfirmEnergy = true, Loaded, Saving;
     private string Status = "載入設定…";

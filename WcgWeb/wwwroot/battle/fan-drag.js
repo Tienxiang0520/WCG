@@ -52,7 +52,10 @@ export function bind(root, dotnet) {
             currentX: e.clientX, currentY: e.clientY, pointer: e.pointerId, started: false };
     }
     function destinationAt(x, y) {
-        const destination = document.elementFromPoint(x, y)?.closest('[data-drop-zone]');
+        // Skip the dragged card itself: on phones the lifted card can cover the energy zone next to the hand.
+        const source = gesture?.source;
+        const hit = document.elementsFromPoint(x, y).find(el => !source?.contains(el));
+        const destination = hit?.closest('[data-drop-zone]');
         return destination && root.contains(destination) ? destination : null;
     }
     function draw() {

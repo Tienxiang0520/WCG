@@ -146,6 +146,10 @@ else
     </div>
 }
 <CardPreviewDialog Card="Preview" OnClose="() => Preview = null" />
+@if (Tour == "ranked" && !ShowingBattle)
+{
+    <WcgWeb.Components.Tutorial.GuidedTour LessonId="ranked" Checks="@(new Dictionary<string, bool> { ["ranked-all"] = AllSeasons })" />
+}
 @if (ReplayRecord != null)
 {
     <RankedReplayViewer Record="ReplayRecord" Replay="Replay" OnClose="CloseReplay" />
@@ -155,6 +159,7 @@ else
     private static string ResultCues(int before, int after) =>
         RankedRules.Tier(after) > RankedRules.Tier(before) ? "starGain rankUp" : RankedRules.Tier(after) < RankedRules.Tier(before) ? "starLoss rankDown" : after > before ? "starGain" : after < before ? "starLoss" : "";
 
+    [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
     private RankedProfile Profile = new();
     private bool AllSeasons;
     private Guid? OpenDeck;
@@ -212,7 +217,7 @@ else
     {
         if (!firstRender) return;
         Interactive = true;
-        if (Profile.Match is { Settled: false } && Ranked.Error == "") await Resume();
+        if (Profile.Match is { Settled: false } && Ranked.Error == "" && Tour != "ranked") await Resume();
         RefreshLoop = Refresh(); StateHasChanged();
     }
     private async Task Refresh()

@@ -1,0 +1,281 @@
+@page "/tutorial"
+@using WcgWeb.Models.Battle
+@using WcgWeb.Components.Battle
+@using WcgWeb.Components.Common
+@using WcgWeb.Services.Tutorial
+@implements IAsyncDisposable
+@inject NavigationManager Nav
+@inject CardDatabase CardDb
+@inject DeckService DeckSvc
+@inject ILogger<BattleCoordinator> Logger
+@inject PlayerProfileStore Profile
+@inject IJSRuntime JS
+
+<PageTitle>@(Active is { } open ? $"{open.Title} - 教學 - 魂誓" : "教學 - 魂誓")</PageTitle>
+@if (Active is { } lesson && Session != null)
+{
+    var step = Session.Step;
+    <div class="phaser-page in-game tutorial-game">
+        <aside class="tutorial-coach @(CoachExpanded ? "expanded" : "")" aria-label="教學提示">
+            <header class="coach-head">
+                <p class="coach-eyebrow"><Icon Name="@lesson.Icon" Size="14" /><span>教學 · @lesson.Title</span></p>
+                <button type="button" class="coach-exit" data-sfx="back" aria-label="離開課程，回到教學列表" title="離開課程" @onclick="Leave"><Icon Name="close" Size="16" /></button>
+            </header>
+            <div class="coach-progress" role="progressbar" aria-label="課程進度" aria-valuemin="0" aria-valuemax="@lesson.Steps.Length" aria-valuenow="@(Session.Completed ? lesson.Steps.Length : Session.StepIndex)">
+                <span style="width:@(Session.Completed ? 100 : Session.StepIndex * 100 / lesson.Steps.Length)%"></span>
+            </div>
+            @if (Session.Completed)
+            {
+                var next = TutorialLessons.NextAfter(lesson.Id);
+                <section class="coach-body coach-complete" @key="@($"done-{Session.Attempt}")" data-sfx-show="starGain" data-sfx-delay="0.2" role="status">
+                    <p class="coach-step">課程完成</p>
+                    <h2><Icon Name="star" Size="20" />@lesson.Title</h2>
+                    <p class="coach-text">@step?.Text</p>
+                    <p class="coach-score">已完成 <b class="wcg-num">@DoneCount</b> / @TutorialLessons.All.Count 課</p>
+                    <div class="coach-actions">
+                        @if (next != null) { <a class="btn btn-primary" data-sfx="nav" href="@next.Href"><Icon Name="play" Size="16" />下一課：@next.Title</a> }
+                        <button type="button" class="btn btn-outline-primary" data-sfx="click" @onclick="Restart"><Icon Name="skip-back" Size="15" />重玩本課</button>
+                        <a class="btn btn-outline-primary" data-sfx="back" href="tutorial">回到課程列表</a>
+                    </div>
+                </section>
+            }
+            else if (Session.Failed)
+            {
+                <section class="coach-body coach-failed" @key="@($"fail-{Session.Attempt}")" role="alert">
+                    <p class="coach-step">本課中斷</p>
+                    <h2>再試一次吧</h2>
+                    <p class="coach-text">這一局已經結束。重新開始會還原同一個場面。</p>
+                    <div class="coach-actions"><button type="button" class="btn btn-primary" data-sfx="click" @onclick="Restart"><Icon Name="skip-back" Size="15" />重新開始</button></div>
+                </section>
+            }
+            else if (step != null)
+            {
+                <section class="coach-body" @key="@($"{Session.Attempt}-{Session.StepIndex}")" data-sfx-show="tab" data-sfx-delay="0">
+                    <p class="coach-step">第 <b class="wcg-num">@(Session.StepIndex + 1)</b> / @lesson.Steps.Length 步 · @(step.IsInfo ? "說明" : step.IsWaiting ? "請稍候" : "動手做")</p>
+                    <h2>@step.Title</h2>
+                    <p class="coach-text">@step.Text</p>
+                    @if (Session.Notice != "") { <p class="coach-notice" role="alert" @key="Session.Notice"><Icon Name="flag" Size="14" />@Session.Notice</p> }
+                    <div class="coach-actions">
+                        @if (step.IsInfo)
+                        {
+                            <button type="button" class="btn btn-primary coach-next" data-sfx="select" disabled="@(!BattleReady)" @onclick="Next">@(Session.StepIndex == lesson.Steps.Length - 1 ? "完成課程" : "下一步")<Icon Name="chevron-right" Size="16" /></button>
+                        }
+                        else if (step.IsWaiting) { <span class="coach-wait"><span class="coach-spinner" aria-hidden="true"></span>電腦行動中</span> }
+                        else { <span class="coach-hint"><Icon Name="spark" Size="14" />照著亮起的位置操作</span> }
+                        <button type="button" class="btn btn-outline-primary coach-restart" data-sfx="click" @onclick="Restart" title="還原本課的起始場面"><Icon Name="skip-back" Size="15" />重來</button>
+                        <button type="button" class="coach-more" aria-expanded="@(CoachExpanded ? "true" : "false")" @onclick="() => CoachExpanded = !CoachExpanded">@(CoachExpanded ? "收合" : "展開")</button>
+                    </div>
+                </section>
+            }
+        </aside>
+        <div class="tutorial-board">
+            <BattleBoard @key="@((Session, Session.Attempt))" @ref="Board" Source="Session.Bridge" Driver="Session.Coordinator" Presenter="Presenter" InitialResponse="Initial" Ready="OnReady" Changed="StateChanged" SessionAction="SessionAction" />
+        </div>
+    </div>
+}
+else
+{
+    var next = NextLesson;
+    <section class="tutorial-page">
+        <header class="page-hero">
+            <div class="page-hero-text">
+                <p class="eyebrow"><Icon Name="school" Size="14" />教學</p>
+                <h1>從第一張牌學起</h1>
+                <p class="lead">互動課程帶你在真正的戰場上操作，每一步只接受課程要你做的動作；介面導覽則直接在牌組構築室、天梯與設定頁面裡說明。</p>
+                <div class="tutorial-hero-actions">
+                    @if (next != null) { <a class="btn btn-primary btn-lg" data-sfx="matchStart" href="@next.Href"><Icon Name="play" Size="18" />@(DoneCount == 0 ? "開始新手教學" : $"繼續：{next.Title}")</a> }
+                    else { <a class="btn btn-outline-primary btn-lg" data-sfx="nav" href="@TutorialLessons.All[0].Href"><Icon Name="skip-back" Size="18" />重玩新手教學</a> }
+                </div>
+            </div>
+            <div class="tutorial-meter" role="img" aria-label="已完成 @DoneCount / @TutorialLessons.All.Count 課">
+                <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="track" cx="60" cy="60" r="52" /><circle class="fill" cx="60" cy="60" r="52" style="stroke-dasharray:@(Math.Round(326.7 * DoneCount / TutorialLessons.All.Count, 1)) 326.7" /></svg>
+                <span><b class="wcg-num">@DoneCount</b><small>/ @TutorialLessons.All.Count 課</small></span>
+            </div>
+        </header>
+        @if (Profile.LastError is { } error && error != "") { <p class="alert alert-warning" role="status">@error</p> }
+        @if (DoneCount == TutorialLessons.All.Count)
+        {
+            <p class="tutorial-all-done" role="status" data-sfx-show="rankUp" data-sfx-delay="0.3"><Icon Name="trophy" Size="20" />所有課程都完成了！你已經認識魂誓的全部規則與功能，去天梯證明自己吧。</p>
+        }
+        @foreach (var (title, note, lessons) in Groups)
+        {
+            <section class="tutorial-group" aria-labelledby="@($"group-{title}")">
+                <h2 class="panel-title" id="@($"group-{title}")">@title</h2>
+                <p class="tutorial-group-note">@note</p>
+                <ol class="tutorial-list">
+                    @foreach (var item in lessons)
+                    {
+                        var done = Profile.TutorialDone(item.Id);
+                        <li class="tutorial-lesson @(done ? "done" : "") @(item.Beginner ? "featured" : "")" data-lesson="@item.Id">
+                            <span class="lesson-icon" aria-hidden="true"><Icon Name="@(done ? "check" : item.Icon)" Size="22" /></span>
+                            <div class="lesson-main">
+                                <p class="lesson-kicker"><span class="wcg-num">@(TutorialLessons.All.ToList().IndexOf(item) + 1).</span>@(item.IsBattle ? "互動對局" : "介面導覽") · <span>@item.StepCount 步</span>
+                                    @if (done) { <span class="lesson-done"><Icon Name="check" Size="13" />已完成</span> }</p>
+                                <h3>@item.Title</h3>
+                                <p class="lesson-summary">@item.Summary</p>
+                                <ul class="lesson-topics" aria-label="涵蓋機制">@foreach (var topic in item.Topics) { <li>@topic</li> }</ul>
+                            </div>
+                            <a class="btn @(done ? "btn-outline-primary" : "btn-primary") lesson-go" data-sfx="nav" href="@item.Href" aria-label="@((done ? "重玩：" : "開始：") + item.Title)">@(done ? "重玩" : "開始")<Icon Name="chevron-right" Size="16" /></a>
+                        </li>
+                    }
+                </ol>
+            </section>
+        }
+        <footer class="tutorial-footer">
+            <p>教學進度只記錄在這個存檔的頭像資料旁，重設不影響牌組與天梯。</p>
+            @if (ConfirmReset)
+            {
+                <span class="tutorial-reset-confirm" role="group" aria-label="確認重設">確定清除所有完成標記？
+                    <button type="button" class="btn btn-sm btn-danger" data-sfx="deckRemove" @onclick="ResetProgress">清除</button>
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-sfx="back" @onclick="() => ConfirmReset = false">取消</button></span>
+            }
+            else { <button type="button" class="btn btn-sm btn-outline-primary" disabled="@(DoneCount == 0)" @onclick="() => ConfirmReset = true">重設教學進度</button> }
+        </footer>
+    </section>
+}
+
+@code {
+    [SupplyParameterFromQuery(Name = "lesson")] public string? LessonId { get; set; }
+    private TutorialLesson? Active;
+    private TutorialSession? Session;
+    private BattleBoard? Board;
+    private BattleResponse? Initial;
+    private Guid Presenter;
+    private bool BattleReady, Disposed, CoachExpanded, ConfirmReset, Recorded;
+    private CancellationTokenSource? Lifetime;
+    private Task? Driver;
+    private IJSObjectReference? Spotlight;
+    private string SpotKey = "";
+
+    private int DoneCount => TutorialLessons.All.Count(l => Profile.TutorialDone(l.Id));
+    private TutorialLesson? NextLesson => TutorialLessons.All.FirstOrDefault(l => !Profile.TutorialDone(l.Id));
+    private static readonly (string Title, string Note, TutorialLesson[] Lessons)[] Groups =
+    [
+        ("新手教學", "第一次玩魂誓？從這裡開始，大約五分鐘。", TutorialLessons.All.Where(l => l.Beginner).ToArray()),
+        ("對戰進階", "每一課都是固定場面的小對局，專注練習一組機制。", TutorialLessons.All.Where(l => l.IsBattle && !l.Beginner).ToArray()),
+        ("介面導覽", "在真正的頁面上逐步說明，導覽不會改動你的存檔。", TutorialLessons.All.Where(l => !l.IsBattle).ToArray())
+    ];
+
+    protected override void OnInitialized() => Profile.Changed += ProfileChanged;
+    private void ProfileChanged() => _ = InvokeAsync(StateHasChanged);
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var lesson = TutorialLessons.Find(LessonId);
+        if (lesson is { IsBattle: false }) { Nav.NavigateTo(lesson.Href, replace: true); return; }
+        if (lesson?.Id == Active?.Id) return;
+        await StopSession();
+        Active = lesson; ConfirmReset = false;
+        if (lesson == null) return;
+        Session = new TutorialSession(CardDb, DeckSvc, Logger);
+        Session.Changed += SessionChanged;
+        Presenter = Session.Coordinator.Attach();
+        Initial = Session.Load(lesson); Recorded = false; CoachExpanded = false;
+    }
+
+    private void SessionChanged() => _ = InvokeAsync(() => { Record(); StateHasChanged(); });
+    private void Record()
+    {
+        if (Session is { Completed: true } s && Active != null && !Recorded) { Recorded = true; Profile.CompleteLesson(Active.Id); }
+    }
+
+    private Task StateChanged(BattleSnapshot state) { Session?.Evaluate(); StateHasChanged(); return Task.CompletedTask; }
+
+    private Task OnReady()
+    {
+        if (Disposed || Session == null) return Task.CompletedTask;
+        BattleReady = true;
+        Lifetime ??= new CancellationTokenSource();
+        var session = Session; var token = Lifetime.Token;
+        Driver ??= session.Coordinator.DriveAsync(Presenter, response => InvokeAsync(async () =>
+        { if (!Disposed && Board != null && Session == session) await Board.Publish(response); }), token);
+        StateHasChanged(); return Task.CompletedTask;
+    }
+
+    private void Next() { if (!BattleReady) return; Session?.Next(); Record(); CoachExpanded = false; }
+
+    private void Restart()
+    {
+        if (Session == null) return;
+        Initial = Session.Restart(); Session.Coordinator.Resync(Presenter);
+        Recorded = Session.Completed; BattleReady = false; CoachExpanded = false;
+    }
+
+    private async Task SessionAction(string type)
+    {
+        if (Session == null) return;
+        if (type == "reset") { Leave(); return; }
+        if (type == "start") { Restart(); return; }
+        if (type == "surrender" && !Session.Engine.IsOver)
+        {
+            var current = Session.Bridge.Snapshot();
+            var response = Session.Coordinator.Submit(Presenter, new(Guid.NewGuid(), current.MatchId, current.Revision, "surrender"));
+            if (Board != null) await Board.Publish(response);
+        }
+    }
+
+    private void Leave() => Nav.NavigateTo("tutorial");
+
+    private void ResetProgress() { Profile.ResetTutorialProgress(); ConfirmReset = false; }
+
+    // Lesson step tokens → selectors on the real battle board.
+    private string[] Selectors()
+    {
+        if (Session?.Step is not { } step || Session.Completed || Session.Failed) return [];
+        var e = Session.Engine;
+        return e.ReadConsistent(() => step.Spot.Select(token =>
+        {
+            var parts = token.Split(':', 2); var arg = parts.Length > 1 ? parts[1] : "";
+            string Slot(string side, int slot) => $".v06-slot[data-drop-zone=\"{side}\"][data-slot=\"{slot}\"]";
+            return parts[0] switch
+            {
+                "face" => ".v06-board .opponent.hero",
+                "hero" => ".v06-board .player.hero",
+                "energy" => ".v06-board .energy-zone",
+                "end" => ".v06-board .turn-controls .end-turn",
+                "history" => ".v06-board .turn-controls button:nth-of-type(2)",
+                "hand" when arg == "" => ".v06-board .v06-hand",
+                "hand" => e.Player.Hand.FirstOrDefault(c => c.Card.Id == arg) is { } c ? $".v06-hand-card[data-drag-id=\"{c.InstanceId}\"]" : "",
+                "own" => Slot("own", int.Parse(arg)),
+                "own-card" => e.Player.Board.FirstOrDefault(m => m.Card.Id == arg) is { } m ? Slot("own", m.Slot) : "",
+                "enemy-card" => e.Computer.Board.FirstOrDefault(m => m.Card.Id == arg) is { } m ? Slot("enemy", m.Slot) : "",
+                "dialog" => ".v06-board .modal-shade .v06-dialog:not(.card-detail), .v06-board .target-banner",
+                "field" => ".v06-board .battlefield",
+                _ => ""
+            };
+        }).Where(x => x != "").ToArray());
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Disposed) return;
+        var selectors = Active != null ? Selectors() : [];
+        var key = string.Join("|", selectors) + $"#{Session?.Attempt}-{Session?.StepIndex}";
+        if (key == SpotKey) return;
+        SpotKey = key;
+        try
+        {
+            Spotlight ??= await JS.InvokeAsync<IJSObjectReference>("import", "./battle/tutorial-spotlight.js");
+            if (selectors.Length == 0) await Spotlight.InvokeVoidAsync("clear"); else await Spotlight.InvokeVoidAsync("spotlight", selectors, false);
+        }
+        catch (JSException) { }
+        catch (JSDisconnectedException) { }
+    }
+
+    private async Task StopSession()
+    {
+        Lifetime?.Cancel();
+        if (Driver != null) { try { await Driver; } catch (OperationCanceledException) { } }
+        Driver = null; Lifetime?.Dispose(); Lifetime = null;
+        if (Session != null) { Session.Changed -= SessionChanged; Session.Coordinator.Detach(Presenter); Session.Dispose(); }
+        Session = null; Board = null; Initial = null; BattleReady = false; SpotKey = "";
+        if (Spotlight != null) { try { await Spotlight.InvokeVoidAsync("clear"); } catch (JSException) { } catch (JSDisconnectedException) { } }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Disposed = true; Profile.Changed -= ProfileChanged;
+        await StopSession();
+        if (Spotlight != null) { try { await Spotlight.DisposeAsync(); } catch (JSDisconnectedException) { } }
+    }
+}

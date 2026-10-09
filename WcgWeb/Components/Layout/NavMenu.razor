@@ -1,3 +1,5 @@
+@implements IDisposable
+@inject PlayerProfileStore Profile
 <div class="top-row navbar navbar-dark">
     <a class="navbar-brand" href="" aria-label="魂誓首頁">
         <span class="brand-mark" aria-hidden="true"><WcgWeb.Components.Common.Icon Name="sigil" Size="22" /></span>
@@ -21,6 +23,7 @@
                          aria-label="@item.Label" @onclick="CloseMobileMenu">
                     <span class="nav-icon" aria-hidden="true"><WcgWeb.Components.Common.Icon Name="@item.Icon" Size="19" /></span>
                     <span class="nav-label">@item.Label</span>
+                    @if (item.Href == "tutorial") { <span class="nav-badge @(TutorialDone == TutorialTotal ? "complete" : "")" aria-label="@($"教學已完成 {TutorialDone} / {TutorialTotal} 課")">@TutorialDone/@TutorialTotal</span> }
                 </NavLink>
             </div>
         }
@@ -30,6 +33,11 @@
 
 @code {
     [Parameter] public bool Collapsed { get; set; }
+    private static int TutorialTotal => WcgWeb.Services.Tutorial.TutorialLessons.All.Count;
+    private int TutorialDone => WcgWeb.Services.Tutorial.TutorialLessons.All.Count(l => Profile.TutorialDone(l.Id));
+    protected override void OnInitialized() => Profile.Changed += ProfileChanged;
+    private void ProfileChanged() => _ = InvokeAsync(StateHasChanged);
+    public void Dispose() => Profile.Changed -= ProfileChanged;
     [Parameter] public EventCallback OnToggle { get; set; }
     private bool mobileMenuOpen;
     private void ToggleMobileMenu() => mobileMenuOpen = !mobileMenuOpen;
@@ -37,6 +45,7 @@
     private readonly (string Href, string Icon, string Label, NavLinkMatch Match)[] menuItems =
     [
         ("", "swords", "訓練場", NavLinkMatch.All),
+        ("tutorial", "school", "教學", NavLinkMatch.Prefix),
         ("ranked", "trophy", "天梯", NavLinkMatch.Prefix),
         ("deckbuilder", "cards", "牌組構築室", NavLinkMatch.Prefix),
         ("cards", "book", "完整卡牌圖鑑", NavLinkMatch.Prefix),

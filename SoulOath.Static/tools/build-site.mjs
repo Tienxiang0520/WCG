@@ -53,7 +53,7 @@ await strip(resolve(site,'dist'));
 if(azure)await cp(resolve(root,'deployment/azure/staticwebapp.config.json'),resolve(site,'dist/staticwebapp.config.json'));
 await createAssetManifest(resolve(site,'dist'));
 // Real index files keep every public route refreshable on a plain static host.
-for (const route of ['battle','cards','deckbuilder','ranked','rules','settings','legacy','not-found']) {
+for (const route of ['battle','cards','deckbuilder','ranked','rules','settings','tutorial','legacy','not-found']) {
     await mkdir(resolve(site,'dist',route),{recursive:true});
     await cp(resolve(site,'dist/index.html'),resolve(site,'dist',route,'index.html'));
 }
