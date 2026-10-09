@@ -168,21 +168,24 @@ public static class LocalizationCatalog
         var d = data.Value;
         var trimmed = zh.Trim();
         if (trimmed != zh && trimmed.Length > 0) { var inner = Translate(trimmed, depth + 1); return HasHan(inner) ? null : zh.Replace(trimmed, inner); }
-        foreach (var t in d.Templates)
-        {
-            var m = t.Pattern.Match(zh);
-            if (!m.Success) continue;
-            var args = new object[m.Groups.Count - 1];
-            var ok = true;
-            for (var i = 1; i < m.Groups.Count; i++)
+        // Strict pass: every argument must translate. Lenient pass (top level only): keep untranslatable
+        // arguments as-is, so player-entered names such as a custom deck title survive inside English text.
+        foreach (var strict in depth == 0 ? [true, false] : new[] { true })
+            foreach (var t in d.Templates)
             {
-                var value = Translate(m.Groups[i].Value, depth + 1);
-                if (HasHan(value)) { ok = false; break; }
-                args[i - 1] = value;
+                var m = t.Pattern.Match(zh);
+                if (!m.Success) continue;
+                var args = new object[m.Groups.Count - 1];
+                var ok = true;
+                for (var i = 1; i < m.Groups.Count; i++)
+                {
+                    var value = Translate(m.Groups[i].Value, depth + 1);
+                    if (strict && HasHan(value)) { ok = false; break; }
+                    args[i - 1] = value;
+                }
+                if (!ok) continue;
+                try { return string.Format(CultureInfo.InvariantCulture, t.English, args); } catch (FormatException) { }
             }
-            if (!ok) continue;
-            try { return string.Format(CultureInfo.InvariantCulture, t.English, args); } catch (FormatException) { }
-        }
         // 【名稱】 brackets around card or player names.
         if (zh.StartsWith('【') && zh.EndsWith('】') && zh.Length > 2) { var inner = Translate(zh[1..^1], depth + 1); if (!HasHan(inner)) return inner; }
         foreach (var sep in Separators)
