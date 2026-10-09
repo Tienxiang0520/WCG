@@ -3,6 +3,7 @@
 @using WcgWeb.Models.Battle
 @using WcgWeb.Components.Battle
 @using WcgWeb.Components.Common
+@using WcgWeb.Components.Ranked
 @implements IAsyncDisposable
 @inject RankedSession Ranked
 @inject CardDatabase Cards
@@ -24,7 +25,8 @@
                 <p>@RankedRules.Label(result.Before) → @RankedRules.Label(result.After)</p>
                 @if (Profile.Match is { } finished && finished.Id == result.MatchId) { <p class="ranked-result-opponent">對手：@finished.ComputerDeck.Name</p> }
                 @if (result.Season != Profile.Season) { <p>新賽季已開始，目前為 @RankedRules.Label(Profile.Stars)。</p> }
-                <button class="btn btn-primary" @onclick="Lobby">返回天梯</button>
+                <div class="ranked-result-actions"><button class="btn btn-primary" @onclick="Lobby">返回天梯</button>
+                @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button class="btn btn-outline-primary" data-sfx="nav" @onclick="() => ReviewFinished(result.MatchId)"><Icon Name="history" Size="17" />對局回顧</button> }</div>
             </section>
         }
     </div>
@@ -86,6 +88,36 @@ else
                 }
             </section>
         </div>
+        <section class="ranked-records wcg-panel" aria-labelledby="ranked-records-title">
+            <header class="ranked-records-head">
+                <h3 class="panel-title" id="ranked-records-title"><Icon Name="history" Size="18" />對戰紀錄</h3>
+                <div class="segmented small-seg" role="radiogroup" aria-label="紀錄範圍">
+                    <button type="button" role="radio" aria-checked="@(!AllSeasons ? "true" : "false")" class="@(!AllSeasons ? "on" : "")" @onclick="() => AllSeasons = false">本季</button>
+                    <button type="button" role="radio" aria-checked="@(AllSeasons ? "true" : "false")" class="@(AllSeasons ? "on" : "")" @onclick="() => AllSeasons = true">全部</button>
+                </div>
+            </header>
+            @if (Records.Count == 0)
+            {
+                <p class="ranked-records-empty">@(AllSeasons || (Profile.Records?.Count ?? 0) == 0 ? "完成一場天梯對局後，紀錄會出現在這裡，並可逐步回顧。" : "本季尚無對局紀錄，切換「全部」可查看先前賽季。")</p>
+            }
+            else
+            {
+                <ol class="ranked-records-list">
+                    @foreach (var r in Records)
+                    {
+                        <li class="ranked-record @(r.Won ? "won" : "lost")">
+                            <div class="record-result"><span class="record-badge">@(r.Won ? "勝" : "敗")</span><span class="record-stars">@StarChange(r)</span></div>
+                            <div class="record-main">
+                                <p class="record-matchup"><span class="will-chip @WillClass(r.ComputerDeck.MainWill)"><i class="will-dot"></i>@(r.ComputerDeck.MainWill == "" ? "混合" : r.ComputerDeck.MainWill)</span><b>@(r.Archetype != "" ? r.Archetype : r.ComputerDeck.Name)</b><small>使用 @r.PlayerDeck.Name</small></p>
+                                <p class="record-meta"><span>@When(r)</span><span>@RankedRules.Label(r.Before) → @RankedRules.Label(r.After)</span><span class="wcg-num">@r.Turns 回合</span><span class="wcg-num">@Duration(r)</span>@if (AllSeasons) { <span>@r.Season 賽季</span> }</p>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="回顧 @When(r) 對戰 @r.ComputerDeck.Name" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />對局回顧</button>
+                        </li>
+                    }
+                </ol>
+                <p class="ranked-help">保留最近 @RankedRules.MaxRecords 場；回顧依照當局隨機種子與行動重新模擬，只顯示你當時看得到的資訊。</p>
+            }
+        </section>
         <section class="ranked-info">
             <p class="ranked-season"><Icon Name="clock" Size="16" />本季至 @SeasonEnd（台灣時間）。新賽季下降兩個大牌位，最低青銅。</p>
             <details><summary>升段與存檔規則</summary><p>每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。</p><p>進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。</p><p>牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。</p></details>
@@ -96,12 +128,44 @@ else
         </section>
     </div>
 }
+@if (ReplayRecord != null)
+{
+    <RankedReplayViewer Record="ReplayRecord" Replay="Replay" OnClose="CloseReplay" />
+}
 @code {
     // Result stingers: tier change outranks a single star change (played after the battle victory/defeat stinger).
     private static string ResultCues(int before, int after) =>
         RankedRules.Tier(after) > RankedRules.Tier(before) ? "starGain rankUp" : RankedRules.Tier(after) < RankedRules.Tier(before) ? "starLoss rankDown" : after > before ? "starGain" : after < before ? "starLoss" : "";
 
     private RankedProfile Profile = new();
+    private bool AllSeasons;
+    private RankedRecord? ReplayRecord;
+    private RankedReplay? Replay;
+    private List<RankedRecord> Records => (Profile.Records ?? []).Where(r => AllSeasons || r.Season == Profile.Season).Reverse().ToList();
+    // Taiwan has no daylight saving time, so a fixed UTC+8 matches Asia/Taipei on both server and WebAssembly.
+    private static readonly TimeSpan Taipei = TimeSpan.FromHours(8);
+    private static string When(RankedRecord r) => (r.EndedAt ?? r.StartedAt) is { } t ? t.ToOffset(Taipei).ToString("MM/dd HH:mm") : r.Season;
+    private static string Duration(RankedRecord r)
+    {
+        if (r.StartedAt is not { } a || r.EndedAt is not { } b || b < a) return "—";
+        var d = b - a; return d.TotalHours >= 1 ? $"{(int)d.TotalHours}時{d.Minutes:00}分" : $"{d.Minutes}分{d.Seconds:00}秒";
+    }
+    private static string StarChange(RankedRecord r) => r.After > r.Before ? "★＋1" : r.After < r.Before ? "★－1" : "保護";
+    private static string WillClass(string will) => will switch
+    { "狂怒" => "will-wrath", "理智" => "will-reason", "生機" => "will-vitality", "秩序" => "will-order", "深淵" => "will-abyss", _ => "will-neutral" };
+    private async Task OpenReplay(RankedRecord r)
+    {
+        ReplayRecord = r; Replay = null; StateHasChanged();
+        await Task.Delay(30); // let the loading state paint before the synchronous re-simulation
+        if (ReplayRecord?.Id != r.Id) return;
+        Replay = Ranked.BuildReplay(r.Id); StateHasChanged();
+    }
+    private void CloseReplay() { ReplayRecord = null; Replay = null; }
+    private async Task ReviewFinished(Guid id)
+    {
+        await Lobby();
+        if (Profile.Records?.LastOrDefault(r => r.Id == id) is { } r) await OpenReplay(r);
+    }
     private List<Deck> Available = [];
     private string SelectedDeck = "", Notice = "";
     private bool Interactive, Busy, ShowingBattle, Disposed;

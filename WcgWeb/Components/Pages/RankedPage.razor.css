@@ -95,3 +95,35 @@
     .ranked-stats dd { font-size: .78rem; }
     .ranked-history li { grid-template-columns: 1fr 1fr; }
 }
+
+/* 對戰紀錄 */
+.ranked-records { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+.ranked-records-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.ranked-records-head .panel-title { display: flex; align-items: center; gap: 8px; margin: 0; }
+.ranked-records-empty { margin: 0; padding: 18px; text-align: center; border-radius: var(--wcg-radius-lg); font-size: var(--wcg-fs-sm); color: var(--wcg-text-3); background: rgba(9, 11, 17, .4); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
+.ranked-records-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow: auto; }
+.ranked-record { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px; border-radius: var(--wcg-radius-lg); background: rgba(9, 11, 17, .5); box-shadow: inset 3px 0 0 var(--wcg-text-3), inset 0 0 0 1px var(--wcg-line-soft); transition: background-color .15s; }
+.ranked-record:hover { background: rgba(255, 255, 255, .04); }
+.ranked-record.won { box-shadow: inset 3px 0 0 var(--wcg-teal), inset 0 0 0 1px var(--wcg-line-soft); }
+.ranked-record.lost { box-shadow: inset 3px 0 0 var(--wcg-ember), inset 0 0 0 1px var(--wcg-line-soft); }
+.record-result { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.record-badge { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; font-weight: 800; font-size: 1rem; }
+.won .record-badge { color: #c8f6ec; background: rgba(95, 211, 189, .14); box-shadow: inset 0 0 0 1px rgba(95, 211, 189, .5); }
+.lost .record-badge { color: #f6d0cb; background: rgba(228, 104, 95, .12); box-shadow: inset 0 0 0 1px rgba(228, 104, 95, .45); }
+.record-stars { font-size: .7rem; color: var(--wcg-gold-bright); white-space: nowrap; }
+.lost .record-stars { color: var(--wcg-text-3); }
+.record-main { min-width: 0; }
+.record-main p { margin: 0; }
+.record-matchup { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.record-matchup b { color: var(--wcg-text); letter-spacing: .04em; }
+.record-matchup small { color: var(--wcg-text-3); font-size: var(--wcg-fs-xs); }
+.will-chip { display: inline-flex; align-items: center; gap: 6px; padding: 1px 9px 1px 7px; border-radius: var(--wcg-radius-pill); font-size: .72rem; color: var(--wcg-text-2); background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
+.record-meta { display: flex; flex-wrap: wrap; gap: 2px 12px; margin-top: 4px !important; font-size: var(--wcg-fs-xs); color: var(--wcg-text-3); }
+.record-replay { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.ranked-result-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.ranked-result-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+@media (max-width: 550px) {
+    .ranked-record { grid-template-columns: 48px minmax(0, 1fr); gap: 10px; padding: 10px; }
+    .record-replay { grid-column: 1 / -1; justify-content: center; min-height: 40px; }
+    .ranked-result-actions .btn { min-width: 0; flex: 1; }
+}

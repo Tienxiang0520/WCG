@@ -192,7 +192,7 @@ export function installGlobalAudio() {
             if (node.closest(BOARD) && !node.matches('[data-sfx-show]')) continue;
             if (added) {
                 if (seen.has(node)) continue;
-                if (node.matches('[data-sfx-show]')) { seen.add(node); showCues(node).forEach((cue, i) => void audio.play(cue, 1.1 + i * .8)); }
+                if (node.matches('[data-sfx-show]')) { seen.add(node); const base = Number(node.dataset.sfxDelay ?? 1.1); showCues(node).forEach((cue, i) => void audio.play(cue, base + i * (base > 0 ? .8 : .12))); }
                 else if (node.matches('.wcg-toast') && !node.matches('[data-sfx-quiet]')) { seen.add(node); void audio.play(node.classList.contains('error') ? 'toastError' : 'toastSuccess'); }
                 else if (node.matches(DIALOG)) { seen.add(node); void audio.play('modalOpen'); }
             } else if (node.matches(DIALOG) && seen.has(node)) { seen.delete(node); void audio.play('modalClose'); }

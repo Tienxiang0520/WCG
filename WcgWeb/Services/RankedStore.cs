@@ -25,6 +25,8 @@ public sealed partial class RankedStore
         if (p.Match is { } m && (m.Tier is < 0 or > 5 || m.PlayerDeck == null || m.ComputerDeck == null || m.PlayerDeck.CardIds == null || m.ComputerDeck.CardIds == null || m.Actions == null ||
             m.Actions.Any(a => a == null || a.RulesVersion is < 1 or > GameEngine.RankedAiVersion || a.Type is not ("ai" or "activate" or "set" or "energy" or "play" or "attack" or "target" or "choice" or "end" or "surrender" or "cancel"))))
             throw new InvalidDataException("天梯對局格式不正確。");
+        // Optional history: drop unusable entries instead of blocking ranked play.
+        if (p.Records != null) p.Records = p.Records.Where(ValidRecord).TakeLast(RankedRules.MaxRecords).ToList();
         if (p.Version < RankedRules.ProfileVersion) { ResetForTieredAi(p); ResetOnLoad = true; }
         return p;
     }
@@ -43,6 +45,12 @@ public sealed partial class RankedStore
             p.History.Add(new(p.Season + " 舊版電腦", p.Stars, Math.Max(p.SeasonBest, p.Stars), p.Wins, p.Losses));
         p.Stars = 0; p.SeasonBest = 0; p.Wins = 0; p.Losses = 0; p.Match = null; p.Result = null;
         p.Version = RankedRules.ProfileVersion;
+    }
+    static bool ValidRecord(RankedRecord? r)
+    {
+        if (r == null || r.Tier is < 0 or > 5 || r.PlayerDeck?.CardIds == null || r.ComputerDeck?.CardIds == null || r.Season == null || r.Actions == null || r.Turns < 0) return false;
+        try { return RankedRecord.Decode(r.Actions).All(a => a.RulesVersion is >= 1 and <= GameEngine.RankedAiVersion); }
+        catch (InvalidDataException) { return false; }
     }
     public static RankedProfile Copy(RankedProfile p) => JsonSerializer.Deserialize<RankedProfile>(JsonSerializer.Serialize(p))!;
 }
