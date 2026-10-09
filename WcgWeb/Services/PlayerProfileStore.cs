@@ -45,7 +45,29 @@ public static class PlayerAvatars
         : value != null && IsUpload(value) ? value : "battle/avatars/player.svg";
 }
 
-public sealed class PlayerProfile { public string Avatar { get; set; } = PlayerAvatars.Default; }
+public sealed class PlayerProfile
+{
+    public string Avatar { get; set; } = PlayerAvatars.Default;
+    // Optional since the tutorial update; older saves simply have no tutorial progress.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public TutorialProgress? Tutorial { get; set; }
+}
+
+// First-visit answer (started / skipped; empty = not answered yet) and the lessons finished at least once.
+public sealed class TutorialProgress
+{
+    public const string Started = "started", Skipped = "skipped";
+    public string Prompt { get; set; } = "";
+    public List<string> Completed { get; set; } = [];
+    internal static TutorialProgress? Normalize(TutorialProgress? value)
+    {
+        if (value == null) return null;
+        var prompt = value.Prompt is Started or Skipped ? value.Prompt : "";
+        var completed = (value.Completed ?? []).Where(id => id is { Length: > 0 and <= 40 } && id.All(c => c is >= 'a' and <= 'z' or >= '0' and <= '9' or '-'))
+            .Distinct().Take(64).ToList();
+        return new() { Prompt = prompt, Completed = completed };
+    }
+}
 
 public sealed partial class PlayerProfileStore(IPlayerStorage storage)
 {
@@ -68,23 +90,58 @@ public sealed partial class PlayerProfileStore(IPlayerStorage storage)
         catch (JsonException ex) { throw new InvalidDataException("頭像存檔格式不正確。", ex); }
         if (profile == null) throw new InvalidDataException("頭像存檔格式不正確。");
         profile.Avatar = PlayerAvatars.Normalize(profile.Avatar);
+        profile.Tutorial = TutorialProgress.Normalize(profile.Tutorial);
         return profile;
     }
+    private TutorialProgress? tutorial;
+    private bool tutorialReadOnly;
+    public TutorialProgress Tutorial { get { if (avatar == null) _ = Avatar; return tutorial ??= new(); } }
     private string Load()
     {
-        try { LastError = null; return Parse(storage.Read(Key)).Avatar; }
-        catch (Exception ex) when (ex is InvalidDataException or IOException) { LastError = ex.Message; return PlayerAvatars.Default; }
+        try { LastError = null; var profile = Parse(storage.Read(Key)); tutorial = profile.Tutorial ?? new(); tutorialReadOnly = false; return profile.Avatar; }
+        catch (Exception ex) when (ex is InvalidDataException or IOException) { LastError = ex.Message; tutorial = new(); tutorialReadOnly = true; return PlayerAvatars.Default; }
     }
-    public void Reload() { avatar = null; _ = Avatar; Changed?.Invoke(); }
+    public void Reload() { avatar = null; tutorial = null; _ = Avatar; Changed?.Invoke(); }
     public void SetAvatar(string value)
     {
         var normalized = PlayerAvatars.Normalize(value);
         lock (storage.Gate)
         {
             var current = storage.Read(Key);
-            storage.Write(Key, JsonSerializer.Serialize(new PlayerProfile { Avatar = normalized }), current);
+            // Keep the tutorial progress stored next to the avatar.
+            TutorialProgress? kept = null;
+            try { kept = Parse(current).Tutorial; } catch (InvalidDataException) { }
+            storage.Write(Key, JsonSerializer.Serialize(new PlayerProfile { Avatar = normalized, Tutorial = kept }), current);
+            tutorial = kept ?? new(); tutorialReadOnly = false;
         }
         avatar = normalized; LastError = null;
+        Changed?.Invoke();
+    }
+    public bool TutorialDone(string lessonId) => Tutorial.Completed.Contains(lessonId);
+    public void AnswerTutorialPrompt(string answer) => UpdateTutorial(t => t.Prompt = answer is TutorialProgress.Started ? answer : TutorialProgress.Skipped);
+    public void CompleteLesson(string lessonId) => UpdateTutorial(t => { if (!t.Completed.Contains(lessonId)) t.Completed.Add(lessonId); if (t.Prompt == "") t.Prompt = TutorialProgress.Started; });
+    public void ResetTutorialProgress() => UpdateTutorial(t => t.Completed.Clear());
+    // A damaged profile is never overwritten for tutorial progress: the change stays for this visit only.
+    private void UpdateTutorial(Action<TutorialProgress> change)
+    {
+        _ = Avatar;
+        lock (storage.Gate)
+        {
+            try
+            {
+                if (tutorialReadOnly) throw new InvalidDataException("頭像存檔無法讀取，教學進度只保留到關閉網站為止。");
+                var current = storage.Read(Key);
+                var profile = Parse(current);
+                var next = TutorialProgress.Normalize(profile.Tutorial) ?? new();
+                change(next); profile.Tutorial = TutorialProgress.Normalize(next);
+                storage.Write(Key, JsonSerializer.Serialize(profile), current);
+                tutorial = profile.Tutorial;
+            }
+            catch (Exception ex) when (ex is InvalidDataException or IOException)
+            {
+                LastError = ex.Message; var local = tutorial ?? new(); change(local); tutorial = local;
+            }
+        }
         Changed?.Invoke();
     }
     public void Reset() => SetAvatar(PlayerAvatars.Default);

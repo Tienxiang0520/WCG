@@ -60,6 +60,7 @@ main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: c
     .sidebar-collapsed .sidebar-resizer { display: none; }
     .sidebar-collapsed .sidebar ::deep .brand-text,
     .sidebar-collapsed .sidebar ::deep .nav-label,
+    .sidebar-collapsed .sidebar ::deep .nav-badge,
     .sidebar-collapsed .sidebar ::deep .nav-footer { display: none; }
     .sidebar-collapsed .sidebar ::deep .top-row { flex-direction: column; padding: .65rem .5rem; }
     .sidebar-collapsed .sidebar ::deep .sidebar-toggle { margin-left: 0; }

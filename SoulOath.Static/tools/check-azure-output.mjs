@@ -21,6 +21,6 @@ if(config.navigationFallback?.rewrite!=='/index.html'||config.mimeTypes?.['.wasm
 const cards=JSON.parse(await readFile(resolve(directory,'data/cards.json'),'utf8'));
 if(cards.length!==199)throw new Error('Expected v0.6 catalog with 199 cards.');
 for(const card of cards)await stat(resolve(directory,'card-art',`${card.Id??card.id}.webp`));
-for(const route of ['','battle','cards','deckbuilder','ranked','rules','settings'])
+for(const route of ['','battle','cards','deckbuilder','ranked','rules','settings','tutorial'])
     await stat(resolve(directory,route,'index.html'));
 console.log(`Azure Free package validated: ${files} files, ${(bytes/1_000_000).toFixed(1)} MB, 199 card images.`);

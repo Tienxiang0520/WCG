@@ -370,12 +370,25 @@
     </div>
 }
 
+@if (Tour == "deckbuilding")
+{
+    <WcgWeb.Components.Tutorial.GuidedTour LessonId="deckbuilding" Checks="TourChecks" />
+}
+
 @if (PrintPlan != null)
 {
     <WcgWeb.Components.Common.DeckPrintPreview Plan="PrintPlan" OnClose="() => PrintPlan = null" />
 }
 
 @code {
+    [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
+    // The deck-building tour only reads page state; nothing is saved unless the player presses 儲存.
+    private Dictionary<string, bool> TourChecks => new()
+    {
+        ["deck-new"] = CurrentDeck.CardIds.Count == 0 && string.IsNullOrEmpty(CurrentDeck.MainWill),
+        ["deck-main"] = !string.IsNullOrEmpty(CurrentDeck.MainWill),
+        ["deck-add"] = CurrentDeck.CardIds.Count > 0
+    };
     private DeckPrintPlan? PrintPlan;
     private void OpenPrintPreview()
     {
