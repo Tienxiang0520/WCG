@@ -85,20 +85,7 @@
     }
 </section>
 </div>
-@if (Detail is { } card)
-{
-    <div class="replay-shade detail-shade" @onclick="() => Detail = null">
-        <section class="replay-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
-            <button type="button" class="replay-close" data-sfx="back" aria-label="關閉卡片" @onclick="() => Detail = null"><Icon Name="close" Size="18" /><span>關閉</span></button>
-            <div class="replay-detail-art"><CardImage CardId="@card.CardId" Loading="eager" /></div>
-            <small>@card.CardId · @card.Type@(card.Will != "" ? " · " + card.Will : "")</small>
-            <h3>@card.Name</h3>
-            <b>@card.Cost 費@(card.PP != null ? $" · {card.PP} PP · {card.DP} DP" : "")</b>
-            <p>@card.Text</p>
-            @if (card.Arrows?.Length > 0) { <p>箭頭 @string.Join(" ", card.Arrows.Select(a => a == "left" ? "←" : a == "right" ? "→" : "↑"))</p> }
-        </section>
-    </div>
-}
+<CardPreviewDialog Card="Detail" OnClose="() => Detail = null" />
 
 @code {
     [Parameter] public RankedRecord? Record { get; set; }

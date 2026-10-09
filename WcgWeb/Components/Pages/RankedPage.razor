@@ -111,7 +111,24 @@ else
                                 <p class="record-matchup"><span class="will-chip @WillClass(r.ComputerDeck.MainWill)"><i class="will-dot"></i>@(r.ComputerDeck.MainWill == "" ? "混合" : r.ComputerDeck.MainWill)</span><b>@(r.Archetype != "" ? r.Archetype : r.ComputerDeck.Name)</b><small>使用 @r.PlayerDeck.Name</small></p>
                                 <p class="record-meta"><span>@When(r)</span><span>@RankedRules.Label(r.Before) → @RankedRules.Label(r.After)</span><span class="wcg-num">@r.Turns 回合</span><span class="wcg-num">@Duration(r)</span>@if (AllSeasons) { <span>@r.Season 賽季</span> }</p>
                             </div>
-                            <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="回顧 @When(r) 對戰 @r.ComputerDeck.Name" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />對局回顧</button>
+                            <div class="record-actions">
+                                <button type="button" class="btn btn-outline-primary record-deck-toggle" data-sfx="@(OpenDeck == r.Id ? "toggleOff" : "toggleOn")" aria-expanded="@(OpenDeck == r.Id ? "true" : "false")" aria-controls="deck-@r.Id" disabled="@(!Interactive)" @onclick="() => OpenDeck = OpenDeck == r.Id ? null : r.Id"><Icon Name="cards" Size="15" />對手牌組</button>
+                                <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="回顧 @When(r) 對戰 @r.ComputerDeck.Name" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />對局回顧</button>
+                            </div>
+                            @if (OpenDeck == r.Id)
+                            {
+                                var list = DeckList(r.ComputerDeck);
+                                <div class="record-deck" id="deck-@r.Id" data-sfx-show="flip" data-sfx-delay="0">
+                                    <p class="record-deck-title"><b>@r.ComputerDeck.Name</b><span class="wcg-num">@r.ComputerDeck.CardIds.Count 張</span>@if (r.ComputerDeck.Description != "") { <small>@r.ComputerDeck.Description</small> }</p>
+                                    <ul class="record-deck-list">
+                                        @foreach (var (card, count) in list)
+                                        {
+                                            <li><button type="button" class="deck-chip @WillClass(card.Will)" data-sfx="flip" title="查看 @card.Name" @onclick="() => Preview = GameEngine.VisibleCard(card, Guid.Empty)"><span class="deck-chip-cost wcg-num">@card.TotalCost</span><span class="deck-chip-name">@card.Name</span><span class="deck-chip-count wcg-num">×@count</span></button></li>
+                                        }
+                                    </ul>
+                                    @if (list.Sum(x => x.Count) < r.ComputerDeck.CardIds.Count) { <p class="ranked-help">部分卡牌已不在目前的卡表中，未列出。</p> }
+                                </div>
+                            }
                         </li>
                     }
                 </ol>
@@ -128,6 +145,7 @@ else
         </section>
     </div>
 }
+<CardPreviewDialog Card="Preview" OnClose="() => Preview = null" />
 @if (ReplayRecord != null)
 {
     <RankedReplayViewer Record="ReplayRecord" Replay="Replay" OnClose="CloseReplay" />
@@ -139,6 +157,12 @@ else
 
     private RankedProfile Profile = new();
     private bool AllSeasons;
+    private Guid? OpenDeck;
+    private BattleCard? Preview;
+    // The record keeps the exact computer deck used (including that match's random tweaks), so the list is what was played.
+    private List<(CardDefinition Card, int Count)> DeckList(Deck deck) => deck.CardIds.GroupBy(id => id)
+        .Select(g => (Card: Cards.GetCard(g.Key), Count: g.Count())).Where(x => x.Card != null).Select(x => (x.Card!, x.Count))
+        .OrderBy(x => x.Item1.TotalCost).ThenBy(x => x.Item1.Id, StringComparer.Ordinal).ToList();
     private RankedRecord? ReplayRecord;
     private RankedReplay? Replay;
     private List<RankedRecord> Records => (Profile.Records ?? []).Where(r => AllSeasons || r.Season == Profile.Season).Reverse().ToList();

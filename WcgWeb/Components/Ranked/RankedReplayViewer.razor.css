@@ -1,6 +1,5 @@
 /* 對局回顧: full-screen replay viewer in the redesign language (glass panels, gold accents). */
 .replay-shade { position: fixed; inset: 0; z-index: 1200; display: grid; place-items: center; padding: 18px; background: rgba(5, 7, 12, .78); backdrop-filter: blur(6px); }
-.replay-shade.detail-shade { z-index: 1300; }
 .replay-viewer {
     display: flex; flex-direction: column; gap: 12px; width: min(1240px, 100%); max-height: 100%; overflow: auto; padding: 18px 20px 14px;
     color: var(--wcg-text); border-radius: var(--wcg-radius-xl);
@@ -89,14 +88,6 @@
 .replay-speed { grid-area: speed; }
 .replay-speed > button { padding: 0 10px; min-height: 34px; }
 
-.replay-detail { position: relative; display: flex; flex-direction: column; gap: 6px; width: min(360px, 100%); max-height: 100%; overflow: auto; padding: 18px; border-radius: var(--wcg-radius-xl); color: var(--wcg-text); background: linear-gradient(180deg, var(--wcg-surface-2), var(--wcg-surface-1)); box-shadow: inset 0 0 0 1px var(--wcg-line-strong), var(--wcg-shadow-3); }
-.replay-detail .replay-close { align-self: flex-end; }
-.replay-detail-art { aspect-ratio: 4 / 3; border-radius: var(--wcg-radius-md); overflow: hidden; background: rgba(255, 255, 255, .04); }
-.replay-detail-art ::deep img { width: 100%; height: 100%; object-fit: cover; }
-.replay-detail small { color: var(--wcg-text-3); letter-spacing: .08em; }
-.replay-detail h3 { margin: 0; font-size: 1.3rem; color: #fff; }
-.replay-detail b { color: var(--wcg-gold-bright); }
-.replay-detail p { margin: 0; line-height: 1.7; font-size: var(--wcg-fs-sm); color: var(--wcg-text-2); }
 
 @media (max-width: 900px) {
     .replay-body { grid-template-columns: 1fr; }
@@ -116,5 +107,4 @@
     .replay-buttons { justify-content: center; }
     .replay-speed { justify-self: center; }
     .replay-buttons .replay-play span { display: none; }
-    .replay-detail { width: 100%; height: 100%; border-radius: 0; }
 }

@@ -407,7 +407,7 @@ public sealed class RankedTests : IDisposable
         var live=JsonSerializer.Serialize(PublicShape(s.Bridge.Snapshot()));
         var profile=s.Read();var record=Assert.Single(profile.Records!);
         Assert.Equal(profile.Result!.MatchId,record.Id);Assert.Equal(s.Engine.TurnNumber,record.Turns);Assert.NotNull(record.StartedAt);Assert.NotNull(record.EndedAt);
-        Assert.Equal(profile.Match!.Actions,RankedRecord.Decode(record.Actions));Assert.NotEmpty(record.Archetype);
+        Assert.Equal(profile.Match!.Actions,RankedRecord.Decode(record.Actions));Assert.Equal(profile.Match.ComputerDeck.CardIds,record.ComputerDeck.CardIds);Assert.Equal(profile.Match.ComputerDeck.Name,record.ComputerDeck.Name);Assert.NotEmpty(record.Archetype);
         var replay=Session().BuildReplay(record.Id);Assert.Empty(replay.Error);
         Assert.Equal(profile.Match.Actions.Count+1,replay.Steps.Count);
         Assert.Equal(live,JsonSerializer.Serialize(PublicShape(replay.Steps[^1].State)));

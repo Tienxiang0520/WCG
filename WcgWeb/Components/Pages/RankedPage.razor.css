@@ -101,7 +101,7 @@
 .ranked-records-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .ranked-records-head .panel-title { display: flex; align-items: center; gap: 8px; margin: 0; }
 .ranked-records-empty { margin: 0; padding: 18px; text-align: center; border-radius: var(--wcg-radius-lg); font-size: var(--wcg-fs-sm); color: var(--wcg-text-3); background: rgba(9, 11, 17, .4); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
-.ranked-records-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow: auto; }
+.ranked-records-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .ranked-record { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 14px; padding: 10px 14px; border-radius: var(--wcg-radius-lg); background: rgba(9, 11, 17, .5); box-shadow: inset 3px 0 0 var(--wcg-text-3), inset 0 0 0 1px var(--wcg-line-soft); transition: background-color .15s; }
 .ranked-record:hover { background: rgba(255, 255, 255, .04); }
 .ranked-record.won { box-shadow: inset 3px 0 0 var(--wcg-teal), inset 0 0 0 1px var(--wcg-line-soft); }
@@ -124,6 +124,29 @@
 .ranked-result-actions .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 @media (max-width: 550px) {
     .ranked-record { grid-template-columns: 48px minmax(0, 1fr); gap: 10px; padding: 10px; }
-    .record-replay { grid-column: 1 / -1; justify-content: center; min-height: 40px; }
     .ranked-result-actions .btn { min-width: 0; flex: 1; }
+}
+.ranked-record { grid-template-areas: "result main actions" "deck deck deck"; }
+.record-result { grid-area: result; } .record-main { grid-area: main; } .record-actions { grid-area: actions; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.record-deck-toggle { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.record-deck-toggle[aria-expanded="true"] { color: var(--wcg-text-inverse); background: var(--wcg-gold-grad); border-color: transparent; }
+.record-deck { grid-area: deck; min-width: 0; margin-top: 4px; padding: 12px 14px; border-radius: var(--wcg-radius-md); background: rgba(5, 7, 12, .5); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); animation: record-deck-in .2s var(--wcg-ease); }
+@keyframes record-deck-in { from { opacity: 0; transform: translateY(-4px); } }
+.record-deck-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0 0 10px; font-size: var(--wcg-fs-sm); color: var(--wcg-text-3); }
+.record-deck-title b { color: var(--wcg-text); }
+.record-deck-title small { flex-basis: 100%; line-height: 1.6; }
+.record-deck-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+.deck-chip { --chip: var(--wcg-will-neutral); display: flex; align-items: center; gap: 8px; width: 100%; min-height: 34px; padding: 3px 10px 3px 4px; border: 0; border-radius: var(--wcg-radius-sm); text-align: left; color: var(--wcg-text); background: linear-gradient(90deg, color-mix(in srgb, var(--chip) 18%, transparent), rgba(255, 255, 255, .02)); box-shadow: inset 2px 0 0 var(--chip), inset 0 0 0 1px var(--wcg-line-soft); }
+.deck-chip:hover, .deck-chip:focus-visible { box-shadow: inset 2px 0 0 var(--chip), inset 0 0 0 1px var(--wcg-gold); color: var(--wcg-gold-bright); }
+.deck-chip.will-wrath { --chip: var(--wcg-will-wrath); } .deck-chip.will-reason { --chip: var(--wcg-will-reason); } .deck-chip.will-vitality { --chip: var(--wcg-will-vitality); }
+.deck-chip.will-order { --chip: var(--wcg-will-order); } .deck-chip.will-abyss { --chip: var(--wcg-will-abyss); }
+.deck-chip-cost { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; font-size: .78rem; font-weight: 700; color: var(--wcg-text-inverse); background: var(--wcg-gold-grad); flex: none; }
+.deck-chip-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .85rem; }
+.deck-chip-count { color: var(--wcg-text-3); font-size: .8rem; }
+@media (max-width: 550px) {
+    .ranked-record { grid-template-areas: "result main" "actions actions" "deck deck"; }
+    .record-actions { justify-content: stretch; } .record-actions .btn { flex: 1; justify-content: center; min-height: 40px; }
+    .record-deck-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .deck-chip { gap: 6px; padding-right: 6px; }
+    .record-deck { padding: 10px; }
 }

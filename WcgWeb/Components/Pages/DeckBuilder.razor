@@ -41,13 +41,18 @@
                     <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
                         <span class="filter-label">意志</span>
                         <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SetWillFilter("")'>全部</button>
-                        <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" @onclick='() => SetWillFilter("狂怒")'><i class="will-dot"></i>狂怒</button>
-                        <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" @onclick='() => SetWillFilter("理智")'><i class="will-dot"></i>理智</button>
-                        <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" @onclick='() => SetWillFilter("生機")'><i class="will-dot"></i>生機</button>
-                        <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i>秩序</button>
-                        <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i>深淵</button>
-                        <button class="filter-chip will-chip will-neutral @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>中立</button>
+                        <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "") @WillChipState("狂怒")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" disabled="@LockedOut("狂怒")" title="@WillChipTitle("狂怒")" @onclick='() => SetWillFilter("狂怒")'><i class="will-dot"></i><span>狂怒</span>@if (LockedOut("狂怒")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "") @WillChipState("理智")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" disabled="@LockedOut("理智")" title="@WillChipTitle("理智")" @onclick='() => SetWillFilter("理智")'><i class="will-dot"></i><span>理智</span>@if (LockedOut("理智")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "") @WillChipState("生機")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" disabled="@LockedOut("生機")" title="@WillChipTitle("生機")" @onclick='() => SetWillFilter("生機")'><i class="will-dot"></i><span>生機</span>@if (LockedOut("生機")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@WillChipTitle("秩序")" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>秩序</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@WillChipTitle("深淵")" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>深淵</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
+                        <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>中立</button>
                     </div>
+
+                    <p class="deck-lock-note @(AllowedWills == null ? "" : "locked")" aria-live="polite">
+                        @if (AllowedWills == null) { <span>尚未選擇主色：先在右側選擇主色與單色／雙色，卡片庫就只會顯示這副牌組能放入的卡。</span> }
+                        else { <WcgWeb.Components.Common.Icon Name="lock" Size="13" /><span>依組色顯示：<b>@LockSummary</b>@(DualColor && SecondWill == "" ? "（第一張副色卡決定副色）" : "")</span> }
+                    </p>
 
                     <!-- Type & Cost Filters -->
                     <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
@@ -93,7 +98,7 @@
                                         <button class="btn btn-sm btn-outline-light" aria-label="@("查看卡片：" + card.Name)" @onclick="() => Inspect = card"><WcgWeb.Components.Common.Icon Name="eye" Size="14" /><span class="visually-hidden">查看</span></button>
                                         <button class="btn btn-sm btn-outline-danger" data-sfx="deckRemove" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-sm btn-outline-info add-card-btn" data-sfx="deckAdd"
-                                                title="@(!CanAddFaction(card) ? "最多兩個派系" : "加入牌組")"
+                                                title="@(!CanAddFaction(card) ? "最多兩個派系" : LockedOut(card.Will) ? "不在這副牌組的組色內" : "加入牌組")"
                                                 aria-label="@("加入一張：" + card.Name)"
                                                 disabled="@(!CanAddCard(card))"
                                                 @onclick="@(() => AddCardToDeck(card))">
@@ -133,6 +138,20 @@
                         <option value="">請選擇主色</option>
                         @foreach (var will in Deck.Wills) { <option value="@will">@will</option> }
                     </select>
+                    <div class="color-mode mb-2" role="group" aria-label="組色">
+                        <div class="segmented small-seg" role="radiogroup" aria-label="單色或雙色">
+                            <button type="button" role="radio" aria-checked="@(!DualColor ? "true" : "false")" class="@(!DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(false)">單色</button>
+                            <button type="button" role="radio" aria-checked="@(DualColor ? "true" : "false")" class="@(DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(true)">雙色</button>
+                        </div>
+                        @if (DualColor)
+                        {
+                            <select id="second-will" aria-label="副色" class="form-select form-select-sm bg-dark text-white border-secondary" value="@SecondWill" @onchange="SecondWillChanged">
+                                <option value="">副色未定</option>
+                                @foreach (var will in Deck.Wills.Where(w => w != CurrentDeck.MainWill)) { <option value="@will" selected="@(SecondWill == will)">副色 @will</option> }
+                            </select>
+                        }
+                    </div>
+                    @if (OutsideColorCount > 0) { <p class="color-mode-warning small mb-2" role="status">牌組內有 @OutsideColorCount 張不在目前組色的卡，請在下方清單移除，或改回雙色／更換副色。</p> }
                     <div class="d-flex flex-wrap gap-1 small mb-2" aria-live="polite">
                         <span class="badge bg-secondary">主色 @ColorCounts.Main 張</span>
                         <span class="badge @(UsedFactions.Length > 2 ? "bg-danger" : "bg-info text-dark")">派系 @UsedFactions.Length / 2</span>
@@ -419,6 +438,9 @@
                 list = list.Where(c => ids.Contains(c.Id));
             }
 
+            // Locked to the deck's colours (主色＋副色＋中立) while browsing the library; 目前牌組 still lists every card in the deck.
+            if (!ShowDeckCards && AllowedWills is { } allowed)
+                list = list.Where(c => allowed.Contains(c.Will));
             if (!string.IsNullOrEmpty(SelectedWill))
                 list = list.Where(c => c.Will == SelectedWill);
 
@@ -474,7 +496,51 @@
     }
 
     private (int Main, int OffColor, int Neutral) ColorCounts => CurrentDeck.GetColorCounts(CardDb.GetCard);
-    private void MainWillChanged() { SavedMessage = null; ValidateDeck(); }
+    private void MainWillChanged()
+    {
+        SavedMessage = null;
+        if (SecondWill == CurrentDeck.MainWill) SecondWill = "";
+        DropLockedFilter(); ValidateDeck();
+    }
+
+    // 單色／雙色 is a builder-only choice (not saved): it follows the existing rule of at most two factions plus neutral,
+    // and is re-derived from the cards whenever a deck is opened, so deck files are unchanged.
+    private bool DualColor;
+    private string SecondWill = "";
+    private HashSet<string>? AllowedWills
+    {
+        get
+        {
+            if (!Deck.Wills.Contains(CurrentDeck.MainWill)) return null;
+            var set = new HashSet<string> { CurrentDeck.MainWill, "中立" };
+            if (DualColor) { if (SecondWill != "") set.Add(SecondWill); else set.UnionWith(Deck.Wills); }
+            return set;
+        }
+    }
+    private bool LockedOut(string will) => AllowedWills is { } a && !a.Contains(will);
+    private string WillChipState(string will) => AllowedWills == null ? "" : LockedOut(will) ? "locked" : will == CurrentDeck.MainWill ? "main-will" : will == "中立" ? "" : "second-will";
+    private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
+    private string LockSummary => string.Join("＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null));
+    private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !a.Contains(c.Will)) : 0;
+    private void DropLockedFilter() { if (SelectedWill != "" && LockedOut(SelectedWill)) SelectedWill = ""; }
+    private void SetDual(bool dual)
+    {
+        DualColor = dual;
+        if (dual && SecondWill == "") SecondWill = UsedFactions.FirstOrDefault(w => w != CurrentDeck.MainWill) ?? "";
+        DropLockedFilter();
+    }
+    private void SecondWillChanged(ChangeEventArgs e)
+    {
+        var will = e.Value?.ToString() ?? "";
+        SecondWill = Deck.Wills.Contains(will) && will != CurrentDeck.MainWill ? will : "";
+        DropLockedFilter();
+    }
+    private void SyncColorMode()
+    {
+        var off = UsedFactions.Where(w => w != CurrentDeck.MainWill).ToArray();
+        DualColor = off.Length > 0; SecondWill = off.FirstOrDefault() ?? "";
+        DropLockedFilter();
+    }
 
     private int MonsterCount => CurrentDeck.CardIds.Count(id => CardDb.GetCard(id)?.IsMonster == true);
     private int SpellCount => CurrentDeck.CardIds.Count(id => CardDb.GetCard(id)?.IsSpell == true);
@@ -492,7 +558,7 @@
     private bool CanAddCard(CardDefinition card)
     {
         if (CurrentDeck.CardIds.Count >= 50 || !Deck.Wills.Contains(CurrentDeck.MainWill)) return false;
-        if (!CanAddFaction(card)) return false;
+        if (!CanAddFaction(card) || LockedOut(card.Will)) return false;
         int count = CurrentDeck.CardIds.Count(id => id == card.Id);
         return count < 4;
     }
@@ -503,6 +569,7 @@
         if (!CanAddCard(card)) return;
 
         CurrentDeck.CardIds.Add(card.Id);
+        if (DualColor && SecondWill == "" && card.Will != "中立" && card.Will != CurrentDeck.MainWill) SecondWill = card.Will;
         ValidateDeck();
     }
 
@@ -529,7 +596,7 @@
             Name = "新自訂牌組",
             CardIds = new List<string>()
         };
-        ValidateDeck();
+        SyncColorMode(); ValidateDeck();
     }
 
     private void ClonePreset(Deck preset)
@@ -543,7 +610,7 @@
             MainWill = preset.MainWill,
             CardIds = new List<string>(preset.CardIds)
         };
-        ValidateDeck();
+        SyncColorMode(); ValidateDeck();
     }
 
     private void LoadCustomDeck(Deck custom)
@@ -558,7 +625,7 @@
             MainWill = custom.MainWill,
             CardIds = new List<string>(custom.CardIds)
         };
-        ValidateDeck();
+        SyncColorMode(); ValidateDeck();
     }
 
     private bool ValidateDeck()
