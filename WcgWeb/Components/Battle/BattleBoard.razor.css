@@ -624,4 +624,6 @@
 .v06-hand-card .mana{color:#2b2010;text-shadow:none;font-family:Georgia,"Noto Serif TC",serif;background:radial-gradient(circle at 40% 35%,#fffdf6,#f3ead4 70%,#e5d6b2);box-shadow:0 0 0 2px #f7e4a8,0 0 0 3.5px #a07a2c,0 3px 8px rgba(0,0,0,.55)}
 .v06-hand-card.available:not(.card-back){border-color:#5fd3bd;box-shadow:inset 0 0 0 1px #fff6d8,inset 0 0 0 2px #a07a2c,0 0 16px rgba(95,211,189,.55),0 8px 18px rgba(0,0,0,.6)}
 .v06-hand-card.set-ready:not(.card-back){border-color:#ffe08a}
-.v06-hand-card .hand-availability{color:#f3dca3}
+.v06-hand-card:not(.card-back) .hand-availability{background:#3a2c18;color:#f6e3a6}
+.v06-hand-card.available:not(.card-back) .hand-availability{background:#1d6b52;color:#eafff5}
+.v06-hand-card.set-ready:not(.card-back) .hand-availability{background:#6d5420;color:#fff1c4}
