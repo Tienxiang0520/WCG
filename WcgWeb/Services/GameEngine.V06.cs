@@ -33,7 +33,7 @@ public partial class GameEngine
         }
     }
     // Only these arrows hand out holy shield; the other arrow cards link slots for their own effects.
-    internal static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
+    public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the holy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
     { "WCG-005" => (200, 0), "WCG-055" => (300, 0), "WCG-157" => (500, 0), "WCG-085" => (0, -300), "WCG-114" => (0, -300), _ => (0, 0) };
