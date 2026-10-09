@@ -3,7 +3,7 @@
 @* Full physical-style card face (ivory parchment, gold frame, cost medallion, will·type band, art window with
    gold direction triangles, effect box with compass watermark, PP/DP footer, set name + card number).
    Pure CSS/SVG; sizes are container-relative so the same markup works from gallery tiles to the large preview. *@
-<article class="wcg-face @LengthClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText">
+<article class="wcg-face @LengthClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText"><div class="face-card">
     <svg class="face-frame" viewBox="0 0 63 88" preserveAspectRatio="none" aria-hidden="true">
         <rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner" />
     </svg>
@@ -39,7 +39,7 @@
         </div>
     }
     <footer class="face-foot"><span>@L["魂誓"]</span><span>@Id</span></footer>
-    @ChildContent
+    </div>@ChildContent
 </article>
 @code {
     [Parameter] public CardDefinition? Card { get; set; }
@@ -56,7 +56,9 @@
     private int? DP => Card != null ? (Card.IsMonster ? Card.DP ?? 1 : null) : Battle?.DP;
     private string[]? Arrows => Card?.Arrows ?? Battle?.Arrows;
     private string NameText => Card != null ? L.CardName(Card) : L.CardName(Battle);
-    private string TextValue => Card != null ? L.CardText(Card) : L.CardText(Battle);
+    // The arrow prefix ("【箭頭：→】" / "[Arrow: →]") is drawn as gold triangles on the art instead.
+    private string TextValue => ArrowPrefix.Replace(Card != null ? L.CardText(Card) : L.CardText(Battle), "").Trim();
+    private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
     private string WillKey => Will switch { "狂怒" => "wrath", "理智" => "reason", "生機" => "vitality", "秩序" => "order", "深淵" => "abyss", _ => "neutral" };
     // Longer (usually English) effect text steps the font down so it stays inside the box.
     private string LengthClass

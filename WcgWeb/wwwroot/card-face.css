@@ -1,9 +1,10 @@
 /* 魂誓 card face — mirrors the physical card: ivory parchment, ornate gold frame, cost medallion, will·type band,
    gold-bordered art window with triangle direction arrows, compass-watermarked effect box, PP/DP footer.
    Everything is sized in container units (1cqw = 1% of the card width) so one layout serves every size. */
-article.wcg-face{
-  --gold-1:#f6e3a6;--gold-2:#d4ad55;--gold-3:#a07a2c;--gold-4:#6d4f17;--ink:#3a2c18;--ink-soft:#6a5634;--accent:#b8913c;
-  container-type:inline-size;position:relative;width:100%;aspect-ratio:63/88;box-sizing:border-box;
+article.wcg-face{--gold-1:#f6e3a6;--gold-2:#d4ad55;--gold-3:#a07a2c;--gold-4:#6d4f17;--ink:#3a2c18;--ink-soft:#6a5634;--accent:#b8913c;container-type:inline-size;position:relative;display:block;width:100%;aspect-ratio:63/88;box-sizing:border-box;border-radius:4.2cqw}
+article.wcg-face>.face-card{
+  
+  position:absolute;inset:0;box-sizing:border-box;
   display:flex;flex-direction:column;gap:1.3cqw;padding:5.4cqw 5.2cqw 4.2cqw;border-radius:4.2cqw;overflow:visible;
   color:var(--ink);font-family:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",Georgia,serif;text-align:left;
   background:
@@ -17,7 +18,7 @@ article.wcg-face[data-will=wrath]{--accent:#b5482f}article.wcg-face[data-will=re
 article.wcg-face[data-will=order]{--accent:#b8913c}article.wcg-face[data-will=abyss]{--accent:#6d4497}article.wcg-face[data-will=neutral]{--accent:#7d7462}
 article.wcg-face .face-frame{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
 article.wcg-face .face-frame .frame-inner{fill:none;stroke:var(--gold-3);stroke-width:.32;opacity:.85}
-.wcg-face::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;
+article.wcg-face>.face-card::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;
   border:1.9cqw solid transparent;background:linear-gradient(135deg,var(--gold-1),var(--gold-2) 30%,var(--gold-4) 52%,var(--gold-2) 70%,var(--gold-1)) border-box;
   -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
 article.wcg-face .face-star{position:absolute;width:5.2cqw;height:5.2cqw;z-index:4;fill:var(--gold-2);filter:drop-shadow(0 0 .4cqw rgba(255,240,190,.9));pointer-events:none}
@@ -28,7 +29,7 @@ article.wcg-face .face-star.bottom{left:50%;bottom:-.6cqw;width:6.4cqw;height:6.
 article.wcg-face .face-star.head{left:50%;top:21.3cqw;width:4cqw;height:4cqw;transform:translateX(-50%)}
 article.wcg-face .face-star.mid{position:static;width:3.6cqw;height:3.6cqw;flex:none}
 
-article.wcg-face .face-head{position:relative;z-index:1;display:flex;align-items:center;gap:2cqw;min-height:15cqw;padding:0 1cqw 1cqw;border-bottom:.35cqw solid rgba(160,122,44,.55)}
+article.wcg-face .face-head{position:relative;display:flex;align-items:center;gap:2cqw;min-height:15cqw;padding:0 1cqw 1cqw;border-bottom:.35cqw solid rgba(160,122,44,.55)}
 article.wcg-face .face-name{flex:1;min-width:0;margin:0;display:flex;align-items:center;gap:1.4cqw;font-size:8.4cqw;line-height:1.08;font-weight:700;letter-spacing:.02em;
   background:linear-gradient(180deg,#c9a24b,#8e6620 60%,#6b4a12);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
 article.wcg-face .face-name span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
@@ -38,12 +39,12 @@ article.wcg-face .face-cost{flex:none;position:relative;display:flex;align-items
   box-shadow:0 0 0 .7cqw #f7e4a8,0 0 0 1.5cqw var(--gold-3),0 0 0 1.9cqw #fff5d5,0 .8cqw 2cqw rgba(0,0,0,.35);padding-top:3.4cqw;box-sizing:border-box}
 article.wcg-face .face-cost b{font-size:8cqw;line-height:1;font-weight:800}
 article.wcg-face .face-cost small{font-size:3.6cqw;font-weight:700;margin-left:.3cqw}
-article.wcg-face .face-band{position:relative;z-index:1;display:flex;align-items:center;gap:.4cqw;min-height:7.6cqw;padding:0 2.4cqw;font-size:4.6cqw;font-weight:700;letter-spacing:.08em;
+article.wcg-face .face-band{position:relative;display:flex;align-items:center;gap:.4cqw;min-height:7.6cqw;padding:0 2.4cqw;font-size:4.6cqw;font-weight:700;letter-spacing:.08em;
   color:var(--ink-soft);border:.3cqw solid rgba(160,122,44,.55);border-radius:1.4cqw;background:linear-gradient(90deg,rgba(255,255,255,.6),rgba(240,228,200,.45));
   box-shadow:inset .9cqw 0 0 var(--accent)}
 article.wcg-face .face-band span:first-child{color:color-mix(in srgb,var(--accent) 70%,var(--ink))}
 article.wcg-face .face-band i{font-style:normal;opacity:.7}
-article.wcg-face .face-art{position:relative;z-index:1;flex:none;height:52cqw;border-radius:1.2cqw;background:#2a2418 radial-gradient(circle,#4a3c22,#1d170d);
+article.wcg-face .face-art{position:relative;flex:none;height:52cqw;border-radius:1.2cqw;background:#2a2418 radial-gradient(circle,#4a3c22,#1d170d);
   box-shadow:0 0 0 .55cqw #fff6d8,0 0 0 1.2cqw var(--gold-2),0 0 0 1.5cqw var(--gold-4),0 1cqw 2cqw rgba(0,0,0,.3)}
 article.wcg-face .face-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
 article.wcg-face .face-arrow{position:absolute;z-index:5;width:7.6cqw;height:11cqw;background:linear-gradient(90deg,#fff1b8,#e1b54c 45%,#a8761d);
@@ -51,25 +52,25 @@ article.wcg-face .face-arrow{position:absolute;z-index:5;width:7.6cqw;height:11c
 article.wcg-face .face-arrow.right{right:-4.4cqw;top:50%;transform:translateY(-50%);clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
 article.wcg-face .face-arrow.left{left:-4.4cqw;top:50%;transform:translateY(-50%);clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
 article.wcg-face .face-arrow.up{top:-5.6cqw;left:50%;width:11cqw;height:7.6cqw;transform:translateX(-50%);background:linear-gradient(180deg,#fff1b8,#e1b54c 45%,#a8761d);clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
-article.wcg-face .face-text{position:relative;z-index:1;flex:1;min-height:0;display:flex;align-items:center;padding:1.6cqw 3cqw;overflow:hidden;
+article.wcg-face .face-text{position:relative;flex:1;min-height:0;display:flex;align-items:center;padding:1.6cqw 3cqw;overflow:hidden;
   border:.3cqw solid rgba(160,122,44,.5);border-radius:1.4cqw;background:rgba(255,253,246,.55)}
 article.wcg-face .face-compass{position:absolute;left:50%;top:50%;width:min(56cqw,92%);height:auto;aspect-ratio:1;transform:translate(-50%,-50%);fill:none;stroke:var(--gold-3);stroke-width:.8;opacity:.16;pointer-events:none}
 article.wcg-face .face-compass path{fill:rgba(160,122,44,.18)}
 article.wcg-face .face-text p{position:relative;margin:0;font-size:5.2cqw;line-height:1.42;font-weight:500;color:var(--ink);white-space:pre-line}
 article.wcg-face.text-m .face-text p{font-size:4.6cqw;line-height:1.36}article.wcg-face.text-l .face-text p{font-size:4cqw;line-height:1.32}article.wcg-face.text-xl .face-text p{font-size:3.5cqw;line-height:1.28}
-article.wcg-face .face-stats{position:relative;z-index:1;display:flex;align-items:baseline;justify-content:space-between;gap:1cqw;padding:1cqw 2cqw .6cqw;border-top:.35cqw solid rgba(160,122,44,.55);color:var(--ink-soft)}
+article.wcg-face .face-stats{position:relative;display:flex;align-items:baseline;justify-content:space-between;gap:1cqw;padding:1cqw 2cqw .6cqw;border-top:.35cqw solid rgba(160,122,44,.55);color:var(--ink-soft)}
 article.wcg-face .face-stats .face-star.mid{align-self:center}
 article.wcg-face .face-stats span{display:flex;align-items:baseline;gap:1cqw;white-space:nowrap}
 article.wcg-face .face-stats small{font-size:4cqw;font-weight:700}
 article.wcg-face .face-stats b{font-family:Georgia,"Noto Serif TC",serif;font-size:8.4cqw;line-height:1;font-weight:800;color:#20170a}
-article.wcg-face .face-foot{position:relative;z-index:1;display:flex;justify-content:space-between;padding:.8cqw 2cqw 0;border-top:.25cqw solid rgba(160,122,44,.45);font-size:3.3cqw;color:#7c6a48;font-family:system-ui,sans-serif;letter-spacing:.04em}
+article.wcg-face .face-foot{position:relative;display:flex;justify-content:space-between;padding:.8cqw 2cqw 0;border-top:.25cqw solid rgba(160,122,44,.45);font-size:3.3cqw;color:#7c6a48;font-family:system-ui,sans-serif;letter-spacing:.04em}
 
 /* Gallery / deck-builder tiles keep their old footprint (≈170 × 245). */
-.wcg-card.face-tile{width:176px;height:auto;padding:0;border:0;background:none;box-shadow:none;border-radius:12px;overflow:visible;display:block}
+.wcg-card.face-tile{width:188px;height:auto;padding:0;border:0;background:none;box-shadow:none;border-radius:12px;overflow:visible;display:block}
 .wcg-card.face-tile.card-hoverable::after{display:none}
 .wcg-card.face-tile .face-qty{position:absolute;right:16%;top:39%;z-index:8}
-.wcg-card.face-tile.is-playable .wcg-face{box-shadow:0 0 0 .5cqw #2a2112,0 0 0 1.4cqw #3ad6ad,0 1.6cqw 4cqw rgba(0,0,0,.55)}
-.wcg-card.face-tile.is-selected .wcg-face{box-shadow:0 0 0 .5cqw #2a2112,0 0 0 1.6cqw #ffe091,0 1.6cqw 4cqw rgba(0,0,0,.55)}
+.wcg-card.face-tile.is-playable .face-card{box-shadow:0 0 0 .5cqw #2a2112,0 0 0 1.4cqw #3ad6ad,0 1.6cqw 4cqw rgba(0,0,0,.55)}
+.wcg-card.face-tile.is-selected .face-card{box-shadow:0 0 0 .5cqw #2a2112,0 0 0 1.6cqw #ffe091,0 1.6cqw 4cqw rgba(0,0,0,.55)}
 .wcg-card.face-tile .btn{margin-top:6px}
 /* Large previews (gallery / deck builder / replay / battle detail). */
 .face-preview{width:min(340px,78vw);margin:0 auto 12px}
