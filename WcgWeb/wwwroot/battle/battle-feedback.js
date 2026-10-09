@@ -179,7 +179,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     }
     async function badge(el, text, tone = 'gold') {
         if (!el || !text) return;
-        const c = center(el), pill = place(node('div', 'event-badge', text), { x: c.x - 80, y: c.r.y - 30, width: 160, height: 28 });
+        const c = center(el), b = boardRect(), x = Math.max(b.x + 4, Math.min(c.x - 80, b.x + b.width - 164));
+        const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: 160, height: 28 });
         pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
         await animate(pill, [
             { opacity: 0, transform: 'translateY(10px) scale(.6)' },
