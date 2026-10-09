@@ -77,6 +77,10 @@ article.wcg-face:not([data-will=order]) .face-star.tl{left:.9cqw;top:.9cqw}artic
 article.wcg-face:not([data-will=order]) .face-star.bl{left:.9cqw;bottom:.9cqw}article.wcg-face:not([data-will=order]) .face-star.br{right:.9cqw;bottom:.9cqw}
 article.wcg-face:not([data-will=order]) .face-compass{stroke-width:1.2}
 article.wcg-face:not([data-will=order]) .face-spark{--spark-glow:var(--orn-glow)}
+/* Two-line names: repeat the name gradient per line so the second line keeps the bright top of the gradient. */
+article.wcg-face:not([data-will=order]) .face-name{background-size:100% 1.08em;background-repeat:repeat-y}
+/* Keep the footer text clear of the larger corner ornaments. */
+article.wcg-face:not([data-will=order]) .face-foot{padding-left:6cqw;padding-right:6cqw}
 /* Fury: charred obsidian with ember cracks, molten bronze frame, flame ornaments. */
 article.wcg-face[data-will=wrath]{--accent:#ff7a3c;--gold-1:#ffd08c;--gold-2:#e07a2c;--gold-3:#a8481c;--gold-4:#55190a;--ink:#f8e6d6;--ink-soft:#eab595;
   --face-bg:radial-gradient(85% 45% at 50% 104%,rgba(255,96,24,.34),transparent 70%),radial-gradient(60% 35% at 15% 8%,rgba(255,130,50,.16),transparent 70%),
