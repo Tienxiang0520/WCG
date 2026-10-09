@@ -5,7 +5,7 @@
 <section class="deck-print-overlay @(Color ? "full-color" : "ink-saving")" role="dialog" aria-modal="true" aria-label="@L["實體牌組列印預覽"]" tabindex="-1" @ref="Root">
     <div class="print-controls">
         <div class="print-control-heading"><h1>@L["列印實體牌組"]</h1><button class="btn btn-outline-light" data-print-close @onclick="Close" disabled="@Printing">@L["返回編輯"]</button></div>
-        <p>@Plan.Name · 50 張牌 · 6 頁卡牌@(Tools ? "＋2 張生命計數卡" : "")@(Rules ? "，另附 1 頁速查表" : "")</p>
+        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] : "")@(Rules ? L["，另附 1 頁速查表"] : "")</p>
         <div class="print-options">
             <fieldset><legend>@L["卡面樣式"]</legend>
                 <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Color = true" disabled="@Printing" /> @L["彩色圖文"]</label>
@@ -15,26 +15,26 @@
             <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單（1 頁）"]</label>
         </div>
         <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿虛線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
-        <div class="print-control-actions"><button class="btn btn-info" @onclick="Print" disabled="@(Printing || Module == null)">@(Printing ? "正在準備列印…" : "列印／存成 PDF")</button><span role="status">@Status</span></div>
-        <p class="print-screen-note">預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。若 PDF 頁數超過 @(Rules ? 7 : 6) 頁，請檢查紙張、縮放與頁首頁尾。</p>
+        <div class="print-control-actions"><button class="btn btn-info" @onclick="Print" disabled="@(Printing || Module == null)">@L[Printing ? "正在準備列印…" : "列印／存成 PDF"]</button><span role="status">@L.Text(Status)</span></div>
+        <p class="print-screen-note">@L.F("預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。若 PDF 頁數超過 {0} 頁，請檢查紙張、縮放與頁首頁尾。", Rules ? 7 : 6)</p>
     </div>
     <div class="print-pages">
         @for (var pageIndex = 0; pageIndex < Plan.Pages.Count; pageIndex++)
         {
             var page = Plan.Pages[pageIndex];
-            <section class="print-sheet card-sheet" aria-label="@($"卡牌第 {pageIndex + 1} 頁")">
-                <div class="print-page-heading"><span>魂誓 · @Plan.Name</span><span>卡牌 @(pageIndex + 1) / @Plan.Pages.Count</span></div>
+            <section class="print-sheet card-sheet" aria-label="@L.F("卡牌第 {0} 頁", pageIndex + 1)">
+                <div class="print-page-heading"><span>@L["魂誓"] · @L.Text(Plan.Name)</span><span>@L.F("卡牌 {0} / {1}", pageIndex + 1, Plan.Pages.Count)</span></div>
                 <div class="print-card-grid">
                     @foreach (var card in page)
                     {
                         <article class="print-card" style="--will-color:@card.WillColor" data-card-id="@card.Id">
-                            <header class="print-card-header"><h2 class="print-card-title">@card.Name</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
-                            <p class="print-card-meta">@card.Will · @card.Type</p>
+                            <header class="print-card-header"><h2 class="print-card-title">@L.CardName(card.Id, card.Name)</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
+                            <p class="print-card-meta">@L.Text(card.Will) · @L.Text(card.Type)</p>
                             @if (Color)
                             {
-                                <img class="print-card-art" src="@($"print-art/{card.Id}.jpg")" alt="@card.Name" loading="eager" decoding="async" />
+                                <img class="print-card-art" src="@($"print-art/{card.Id}.jpg")" alt="@L.CardName(card.Id, card.Name)" loading="eager" decoding="async" />
                             }
-                            <div class="print-card-text">@(string.IsNullOrWhiteSpace(card.Text) ? "無異能" : card.Text)</div>
+                            <div class="print-card-text">@(string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text))</div>
                             @if (card.IsMonster)
                             {
                                 <div class="print-card-stats"><span>@L["力量"] <b>@card.PP</b> PP</span><span>@L["傷害"] <b>@card.DP</b> DP</span></div>
@@ -47,7 +47,7 @@
                         @for (var player = 1; player <= 2; player++)
                         {
                             <article class="print-card life-card">
-                                <h2>玩家 @player · 生命</h2><p>@L["開局 7 點 · 回復上限 7"]</p>
+                                <h2>@L.F("玩家 {0} · 生命", player)</h2><p>@L["開局 7 點 · 回復上限 7"]</p>
                                 <div class="life-counts">@for (var life = 7; life >= 0; life--) { <span>@life</span> }</div>
                                 <p>@L["用硬幣或小物標示目前生命。"]<br />@L["降至 0 點立即敗北。"]</p>
                                 <div class="print-ruler">@L["50 mm 校準線"]</div>
@@ -64,11 +64,11 @@
             <section class="print-sheet reference-sheet" aria-label="@L["規則速查表與牌組清單"]">
                 <h2 class="print-reference-title">@L["魂誓 · 規則速查表"]</h2>
                 <div class="print-rules"><GameRulesContent /></div>
-                <h3 class="print-list-title">@Plan.Name · 主色 @Plan.MainWill · 50 張</h3>
+                <h3 class="print-list-title">@L.Text(Plan.Name) · @L.F("主色 {0}", Plan.MainWill) · @L["50 張"]</h3>
                 <div class="print-deck-list">
                     @foreach (var group in Plan.Cards.GroupBy(c => c.Id))
                     {
-                        <div><span>@group.First().Name</span><strong>× @group.Count()</strong></div>
+                        <div><span>@L.CardName(group.First().Id, group.First().Name)</span><strong>× @group.Count()</strong></div>
                     }
                 </div>
                 <p class="print-reference-note">@L["生命計數卡不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄，與冰凍橫置分開辨識。"]</p>

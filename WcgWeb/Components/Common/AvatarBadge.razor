@@ -5,7 +5,7 @@
 @* Player identity chip with quick access to the avatar picker. *@
 <button type="button" class="avatar-badge @Class" title="@L["更換頭像"]" aria-label="@L["你的頭像 · 點擊更換"]" @onclick="() => Open = true">
     <span class="avatar-badge-face"><img src="@Profile.AvatarUrl" alt="" draggable="false" /></span>
-    <span class="avatar-badge-text"><strong>@Name</strong><small>@(Caption ?? "更換頭像")</small></span>
+    <span class="avatar-badge-text"><strong>@L[Name]</strong><small>@L[Caption ?? "更換頭像"]</small></span>
 </button>
 @if (Open)
 {

@@ -1,14 +1,14 @@
 @namespace WcgWeb.Components.Common
 <section class="hand-dock" aria-label="@L["我的手牌"]">
-    <div class="dock-heading"><strong>手牌 @Engine.Player.Hand.Count</strong><span>@L["點選或拖曳卡片"]</span><label><input type="checkbox" @bind="ConfirmEnergy" /> @L["填能量確認"]</label></div>
+    <div class="dock-heading"><strong>@L.F("手牌 {0}", Engine.Player.Hand.Count)</strong><span>@L["點選或拖曳卡片"]</span><label><input type="checkbox" @bind="ConfirmEnergy" /> @L["填能量確認"]</label></div>
     @if (Selected is { } card && Engine.Player.Hand.Contains(card))
     {
         var problem = Engine.GetPlayProblem(Engine.Player, card);
         <section class="hand-selection" aria-label="@L["選取的手牌"]" aria-live="polite">
-            <div><strong>@card.Card.Name · @card.Card.TotalCost 費</strong><button class="btn btn-sm btn-outline-secondary" @onclick="Clear">@L["取消選牌"]</button></div>
+            <div><strong>@L.CardName(card.Card) · @L.F("{0} 費", card.Card.TotalCost)</strong><button class="btn btn-sm btn-outline-secondary" @onclick="Clear">@L["取消選牌"]</button></div>
             <p>@card.Card.Text</p>
             <div class="hand-selection-actions">
-                <button class="btn btn-success" disabled="@(Busy || problem != "")" @onclick="() => Use(card)">@(card.Card.IsMonster ? "召喚" : "施放") · @card.Card.TotalCost 費</button>
+                <button class="btn btn-success" disabled="@(Busy || problem != "")" @onclick="() => Use(card)">@L[card.Card.IsMonster ? "召喚" : "施放"] · @L.F("{0} 費", card.Card.TotalCost)</button>
                 <button class="btn btn-outline-info" disabled="@(Busy || !Engine.CanPlayEnergy(Engine.Player, card))" @onclick="() => Fill(card)">@L["填能量"]</button>
                 <button class="btn btn-outline-secondary" @onclick="() => OnInspect.InvokeAsync(card.Card)">@L["查看詳情"]</button>
             </div>
@@ -19,7 +19,7 @@
         @foreach (var c in Engine.Player.Hand)
         {
             bool playable = !Busy && Engine.CanPlayCard(Engine.Player, c);
-            <article @key="c.InstanceId" class="hand-fan-card @(playable ? "playable" : "unplayable") @(Selected == c ? "chosen" : "")" data-drag-kind="hand" data-drag-id="@c.InstanceId" role="button" tabindex="0" aria-label="@($"選取手牌：{c.Card.Name}，{c.Card.TotalCost} 費")" aria-pressed="@(Selected == c)" @onclick="() => Select(c)" @onkeydown="e => KeyDown(e, c)">
+            <article @key="c.InstanceId" class="hand-fan-card @(playable ? "playable" : "unplayable") @(Selected == c ? "chosen" : "")" data-drag-kind="hand" data-drag-id="@c.InstanceId" role="button" tabindex="0" aria-label="@L.F("選取手牌：{0}，{1} 費", L.CardName(c.Card), c.Card.TotalCost)" aria-pressed="@(Selected == c)" @onclick="() => Select(c)" @onkeydown="e => KeyDown(e, c)">
                 <CardItem Card="c.Card" IsPlayable="playable" IsSelected="@(Selected == c)" />
             </article>
         }
@@ -30,7 +30,7 @@
 {
     <div class="card-detail-backdrop" @onclick="() => EnergyCandidate = null">
         <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["確認填能量"]" @onclick:stopPropagation="true">
-            <h2>將「@energy.Card.Name」填為能量？</h2><p>@L["這張牌會背面放入能量區，不能再當手牌使用；不抽牌。"]</p>
+            <h2>@L.F("將「{0}」填為能量？", L.CardName(energy.Card))</h2><p>@L["這張牌會背面放入能量區，不能再當手牌使用；不抽牌。"]</p>
             <button class="btn btn-info" disabled="@(Busy || !Engine.CanPlayEnergy(Engine.Player, energy))" @onclick="() => CommitEnergy(energy)">@L["確認填能量"]</button>
             <button class="btn btn-outline-secondary" @onclick="() => EnergyCandidate = null">@L["取消"]</button>
         </section>

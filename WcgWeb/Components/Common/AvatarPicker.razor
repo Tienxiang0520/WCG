@@ -35,7 +35,7 @@
     </div>
     @if (Toast != null)
     {
-        <div class="wcg-toast @(ToastError ? "error" : "success")" data-sfx-quiet="@(ToastError ? null : "true")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@Toast</span><button type="button" class="wcg-toast-close" aria-label="@L["關閉提示"]" @onclick="() => Toast = null">✕</button></div>
+        <div class="wcg-toast @(ToastError ? "error" : "success")" data-sfx-quiet="@(ToastError ? null : "true")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@L.Text(Toast)</span><button type="button" class="wcg-toast-close" aria-label="@L["關閉提示"]" @onclick="() => Toast = null">✕</button></div>
     }
 </section>
 

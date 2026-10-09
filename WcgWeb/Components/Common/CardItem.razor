@@ -5,7 +5,7 @@
     
     <!-- Header -->
     <div class="card-header-bar">
-        <span class="card-title" title="@Card.Name">@Card.Name</span>
+        <span class="card-title" title="@L.CardName(Card)">@L.CardName(Card)</span>
         <div class="card-cost-gem" title="@L["通用費用"]"><span class="gem-icon">@Card.TotalCost</span></div>
     </div>
 
@@ -15,17 +15,17 @@
         {
             <div class="position-absolute top-0 end-0 m-1" style="z-index: 5;">
                 <span class="badge @(QuantityInDeck >= 4 && !Card.IsEnergy ? "bg-danger" : "bg-primary") rounded-pill shadow-sm" style="font-size: 0.65rem; padding: 2px 6px;">
-                    @(Card.IsEnergy ? $"{QuantityInDeck} 張" : $"{QuantityInDeck}/4")
+                    @(Card.IsEnergy ? L.F("{0} 張", QuantityInDeck) : $"{QuantityInDeck}/4")
                 </span>
             </div>
         }
         <CardArt Card="Card" />
         @foreach (var arrow in Card.Arrows)
         {
-            <span class="card-art-arrow @arrow" aria-label="@(arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格")">@(arrow == "left" ? "←" : arrow == "right" ? "→" : "↑")</span>
+            <span class="card-art-arrow @arrow" aria-label="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]">@(arrow == "left" ? "←" : arrow == "right" ? "→" : "↑")</span>
         }
         <div class="card-type-strip">
-            @Card.Type · @Card.Will
+            @L.CardType(Card.Type) · @L.Will(Card.Will)
         </div>
     </div>
 
@@ -48,7 +48,7 @@
         }
         else
         {
-            <div style="font-size: 0.72rem; line-height: 1.25;">@Card.Text</div>
+            <div style="font-size: 0.72rem; line-height: 1.25;">@L.CardText(Card)</div>
         }
     </div>
 
@@ -71,7 +71,7 @@
     {
         <button class="btn btn-sm btn-success w-100 mt-1 py-0 fw-bold" style="font-size:0.75rem;"
                 @onclick="HandlePlayClick" @onclick:stopPropagation="true">
-            @(Card.IsMonster ? "召喚" : "施放")
+            @L[Card.IsMonster ? "召喚" : "施放"]
         </button>
     }
 </div>

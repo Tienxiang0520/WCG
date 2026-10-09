@@ -34,10 +34,10 @@
     <!-- Bottom: PP & DP -->
     <div class="card-footer-stats mt-auto">
         <div class="stat-badge-pp @(Monster.CurrentPP > (Monster.Card.PP ?? 0) ? "bg-success border-success" : (Monster.CurrentPP < (Monster.Card.PP ?? 0) ? "bg-dark border-danger" : ""))"
-             title="戰鬥力量值 PP：@(Monster.CurrentPP)">
+             title="@L.F("戰鬥力量值 PP：{0}", Monster.CurrentPP)">
             ⚔️ @Monster.CurrentPP
         </div>
-        <div class="stat-badge-dp" title="玩家傷害值 DP：@(Monster.CurrentDP)">
+        <div class="stat-badge-dp" title="@L.F("玩家傷害值 DP：{0}", Monster.CurrentDP)">
             ❤️ @Monster.CurrentDP
         </div>
     </div>

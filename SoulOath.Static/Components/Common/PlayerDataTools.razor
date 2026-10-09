@@ -16,7 +16,7 @@
         <button class="btn btn-warning" @onclick="Import">@L["確認取代並匯入"]</button>
         <button class="btn btn-secondary ms-2" @onclick="() => Pending = null">@L["取消"]</button>
     }
-    <p class="mt-3" role="status">@Message</p>
+    <p class="mt-3" role="status">@L.Text(Message)</p>
 </section>
 @code {
     private string? Pending;

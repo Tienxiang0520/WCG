@@ -68,6 +68,9 @@ public sealed class Localizer
     public string CardName(CardDefinition? card) => card == null ? "" : IsEnglish ? LocalizationCatalog.CardName(card.Id, card.Name) : card.Name;
     public string CardName(string id, string zhName) => IsEnglish ? LocalizationCatalog.CardName(id, zhName) : zhName;
     public string CardText(CardDefinition? card) => card == null ? "" : IsEnglish ? LocalizationCatalog.CardText(card.Id, card.Text) : card.Text;
+    public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, zhText) : zhText;
+    public string CardName(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardName(card.CardId, card.Name);
+    public string CardText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardText(card.CardId, card.Text);
     public string Will(string? will) => Text(will);
     public string CardType(string? type) => Text(type);
     // Official and ranked decks are translated by id while they keep their original name; player-named decks stay as typed.
@@ -88,6 +91,7 @@ public static class LocalizationCatalog
         public Dictionary<string, CardEntry> Cards = new(StringComparer.Ordinal);
         public Dictionary<string, string> CardNamesByZh = new(StringComparer.Ordinal);
         public Dictionary<string, DeckEntry> Decks = new(StringComparer.Ordinal);
+        public Dictionary<string, string> DeckTextByZh = new(StringComparer.Ordinal);
         public List<Template> Templates = [];
     }
     private static readonly ConcurrentDictionary<string, string> cache = new(StringComparer.Ordinal);
@@ -119,6 +123,7 @@ public static class LocalizationCatalog
             foreach (var deck in decks.RootElement.EnumerateObject())
                 result.Decks[deck.Name] = new(deck.Value.GetProperty("name").GetString() ?? "", deck.Value.GetProperty("description").GetString() ?? "",
                     deck.Value.GetProperty("zhName").GetString() ?? "", deck.Value.GetProperty("zhDescription").GetString() ?? "");
+        foreach (var deck in result.Decks.Values) { result.DeckTextByZh.TryAdd(deck.ZhName, deck.Name); result.DeckTextByZh.TryAdd(deck.ZhDescription, deck.Description); }
         // Keys with {0}, {1}… also match run-time text such as engine logs; longer fixed text wins.
         foreach (var (key, value) in result.Ui)
         {
@@ -151,6 +156,7 @@ public static class LocalizationCatalog
         string result;
         if (d.Ui.TryGetValue(zh, out var exact)) result = exact;
         else if (d.CardNamesByZh.TryGetValue(zh, out var card)) result = card;
+        else if (d.DeckTextByZh.TryGetValue(zh, out var deckText)) result = deckText;
         else result = Compose(zh, depth) ?? zh;
         if (cache.Count < 20000) cache[zh] = result;
         return result;

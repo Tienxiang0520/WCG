@@ -473,7 +473,9 @@
                 var q = SearchText.Trim();
                 list = list.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                                        c.Text.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase));
+                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardName(c).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardText(c).Contains(q, StringComparison.OrdinalIgnoreCase));
             }
 
             return list.OrderBy(c => c.IsEnergy ? 0 : 1)

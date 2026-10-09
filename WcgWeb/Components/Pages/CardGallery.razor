@@ -7,7 +7,7 @@
     <header class="page-hero compact">
         <div class="page-hero-text">
             <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="book" Size="14" />@L["完整卡牌圖鑑"]</p>
-            <h1>五大意志 · @CardDb.AllCards.Count 張卡牌</h1>
+            <h1>@L.F("五大意志 · {0} 張卡牌", CardDb.AllCards.Count)</h1>
         </div>
         <label class="search-field large">
             <WcgWeb.Components.Common.Icon Name="search" Size="18" />
@@ -44,7 +44,7 @@
                 {
                     string k = kw;
                     <button class="filter-chip @(SelectedKeyword == k ? "on" : "")" aria-pressed="@(SelectedKeyword == k ? "true" : "false")"
-                            @onclick="() => ToggleKeyword(k)">@k</button>
+                            @onclick="() => ToggleKeyword(k)">@L[k]</button>
                 }
             </div>
         </div>
@@ -76,11 +76,11 @@
 {
     <div class="card-detail-backdrop" @onclick="() => Inspect = null">
         <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
-            <h2>@inspected.Name</h2>
+            <h2>@L.CardName(inspected)</h2>
             <WcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
-            <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
+            <p>@inspected.Id · @L.CardType(inspected.Type) · @L.F("{0} 通用費用", inspected.TotalCost)</p>
             @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
-            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
+            <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? L["無異能"] : L.CardText(inspected))</p>
             <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>
@@ -128,7 +128,9 @@
                 var q = SearchText.Trim();
                 list = list.Where(c => c.Name.Contains(q, StringComparison.OrdinalIgnoreCase) ||
                                        c.Text.Contains(q, StringComparison.OrdinalIgnoreCase) ||
-                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase));
+                                       c.Id.Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardName(c).Contains(q, StringComparison.OrdinalIgnoreCase) ||
+                                       L.CardText(c).Contains(q, StringComparison.OrdinalIgnoreCase));
             }
 
             return list.OrderBy(c => c.IsEnergy ? 0 : 1)
