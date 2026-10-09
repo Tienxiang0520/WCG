@@ -142,7 +142,7 @@
                         }
                         @if (prediction.PlayerDamage > 0)
                         { <p>@(PreviewTarget == null ? "攻擊傷害" : "貫穿傷害")：@prediction.PlayerDamage 點@(PreviewTarget == null ? $"，生命 {Engine.Computer.Hp} → {Math.Max(0, Engine.Computer.Hp - prediction.PlayerDamage)}" : "（須存活至後續結算）")</p> }
-                        <small>@L["僅預覽交戰；離場與其他能力可能追加效果，生命歸零會停止後續結算。"]</small>
+                        <small>@L["僅預覽交戰；陣亡與其他能力可能追加效果，生命歸零會停止後續結算。"]</small>
                         @if (TouchInput) { <button class="btn btn-danger" disabled="@VisualBusy" @onclick="() => ConfirmAttack(match, revision)">@L["確認攻擊"]</button> }
                     </section>
                 }

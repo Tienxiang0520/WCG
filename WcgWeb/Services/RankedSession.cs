@@ -16,9 +16,11 @@ public sealed partial class RankedSession
     private readonly TimeProvider clock;
     private readonly string rules;
     private readonly string priorIdentifierRules;
-    private readonly CardDatabase currentCards, priorBalanceCards, priorArrowCards;
-    private readonly string priorBalanceRules, priorBalanceIdentifierRules;
-    private readonly string priorArrowRules, priorArrowIdentifierRules;
+    private readonly CardDatabase currentCards;
+    // Earlier card catalogs, newest first. A saved match resumes and replays with the catalog and engine rules it started on.
+    private sealed record CatalogEra(string Rules, string IdentifierRules, CardDatabase Cards, bool LimitFactionTriggers, bool LegacyCardRules);
+    private readonly CatalogEra[] priorEras;
+    private CatalogEra? PriorEra(string matchRules) => priorEras.FirstOrDefault(e => e.Rules == matchRules || e.IdentifierRules == matchRules);
     private RankedProfile profile = new();
     private readonly DeckService deckService;
     public GameEngine Engine { get; }
@@ -35,15 +37,15 @@ public sealed partial class RankedSession
         rules = Fingerprint(catalog);
         priorIdentifierRules = Fingerprint(catalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         currentCards = cards;
-        priorBalanceCards = CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards);
-        var priorCatalog = JsonSerializer.Serialize(priorBalanceCards.AllCards);
-        priorBalanceRules = Fingerprint(priorCatalog);
-        priorBalanceIdentifierRules = Fingerprint(priorCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
+        CatalogEra Era(CardDatabase db, bool limit)
+        {
+            var json = JsonSerializer.Serialize(db.AllCards);
+            return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, true);
+        }
+        // Matches started before the card-text clarity update keep the old wording and the old engine behaviour (LegacyCardRules).
         // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
-        priorArrowCards = CardBalanceHistory.BeforeArrowCards(cards);
-        var arrowCatalog = JsonSerializer.Serialize(priorArrowCards.AllCards);
-        priorArrowRules = Fingerprint(arrowCatalog);
-        priorArrowIdentifierRules = Fingerprint(arrowCatalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
+        priorEras = [Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
+            Era(CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards), true)];
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try
         {
@@ -120,9 +122,8 @@ public sealed partial class RankedSession
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
         if (match.Rules != rules && match.Rules != priorIdentifierRules)
         {
-            if (match.Rules == priorArrowRules || match.Rules == priorArrowIdentifierRules) Engine.UseMatchCatalog(priorArrowCards, false);
-            else if (match.Rules == priorBalanceRules || match.Rules == priorBalanceIdentifierRules) Engine.UseMatchCatalog(priorBalanceCards, true);
-            else throw new InvalidOperationException("存檔對局使用不同規則版本。");
+            var era = PriorEra(match.Rules) ?? throw new InvalidOperationException("存檔對局使用不同規則版本。");
+            Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }
         Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier;

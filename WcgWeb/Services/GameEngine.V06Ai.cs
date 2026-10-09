@@ -15,13 +15,13 @@ public partial class GameEngine
                 double Position(ChoiceOption o){var slot=int.Parse(o.Id[5..]);var score=0d;
                     if(card?.Arrows.Contains("right")==true)score+=p.Field.Any(m=>m.Slot==slot+1)?5:slot<4?1:-4;
                     if(card?.Arrows.Contains("left")==true)score+=p.Field.Any(m=>m.Slot==slot-1)?5:slot>0?1:-4;
-                    // 147's up arrow shields the enemy; every other up arrow harms the monster straight ahead.
-                    if(card?.Arrows.Contains("up")==true)score+=e.Field.Any(m=>m.Slot==4-slot)?(card.Id=="WCG-147"?-6:6):0;
+                    // Old 147's up arrow shielded the enemy; now it strips the enemy's shield like every other up arrow harms the monster ahead.
+                    if(card?.Arrows.Contains("up")==true)score+=e.Field.Any(m=>m.Slot==4-slot)?(card.Id=="WCG-147"&&LegacyCardRules?-6:6):0;
                     score+=p.Field.Count(m=>m.Card.Arrows.Contains("right")&&m.Slot==slot-1||m.Card.Arrows.Contains("left")&&m.Slot==slot+1)*3;
                     return score;}
                 return SelectChoice(choice.Options.OrderByDescending(Position).First());}
             if(choice.Title.Contains("翻開"))return SelectChoice(choice.Options.FirstOrDefault(o=>o.Id!="SKIP")??choice.Options[0]);
-            var option=choice.Options.OrderByDescending(o=>o.Id=="KEEP"?100:o.Id=="SKIP"?-100:o.PreviewCard is {} c?(c.PP??0)/500d+c.TotalCost:0).First();
+            var option=choice.Options.OrderByDescending(o=>o.Id=="KEEP"?100:o.Id=="SKIP"?-100:o.Id=="DISPEL_OPT"?(DispelWorth(p)?0:-200):o.PreviewCard is {} c?(c.PP??0)/500d+c.TotalCost:0).First();
             return SelectChoice(option);
         }
         if(CurrentPendingTarget is {} target)
@@ -51,6 +51,18 @@ public partial class GameEngine
             victim=GetAttackTargets(m).FirstOrDefault(x=>m.HasPoison||m.CurrentPP==x.CurrentPP);if(victim!=null)return Attack(p,m,victim);
         }
         return EndTurn();
+    }
+    // Optional 112／134 dispel: worth it only when some target helps us (enemy buffs or Wards, our own silence or shackles).
+    private bool DispelWorth(PlayerState p)=>DispelTargets(p).Any(x=>DispelScore(p,x)>0);
+    private IEnumerable<MonsterInstance> DispelTargets(PlayerState p)
+    {var e=GetOpponent(p);return p.Field.Concat(e.Field).Where(x=>x.Attachments.Count>0||x.IsSilenced).Concat(p.Structures.Concat(e.Structures).Where(x=>!x.IsSet));}
+    private double DispelScore(PlayerState p,MonsterInstance x)
+    {
+        var mine=p.Field.Contains(x)||p.Structures.Contains(x);
+        if(!x.IsUnit)return mine?-3:3+x.Card.TotalCost*.5;
+        var theirs=x.Attachments.Count(a=>a.OwnerId!=p.Id);var ours=x.Attachments.Count-theirs;
+        var value=mine?theirs*2-ours*2+(x.IsSilenced?2:0):theirs*2-ours*2-(x.IsSilenced?2:0);
+        return value==0?-1:value+(x.CurrentPP/1000d);
     }
     public bool PlayEnchantment(PlayerState p,CardInstance c)=>Change(()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));
     private void SpellDamage(PlayerState source,PlayerState target,int amount)

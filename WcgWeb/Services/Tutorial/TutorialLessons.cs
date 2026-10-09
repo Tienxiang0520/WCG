@@ -216,32 +216,32 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "triggers", Icon = "bolt", Title = "進場、離場與非付費召喚",
-            Summary = "認識進場與離場效果、免費召喚，以及效果依序結算的方式。",
-            Topics = ["進場效果", "離場效果", "非付費召喚不觸發進場", "效果依序結算"],
+            Id = "triggers", Icon = "bolt", Title = "進場、陣亡與非付費召喚",
+            Summary = "認識進場與陣亡效果、免費召喚，以及效果依序結算的方式。",
+            Topics = ["進場效果", "陣亡效果", "非付費召喚不觸發進場", "效果依序結算"],
             Scene = new(
                 new() { Hand = ["WCG-047", "WCG-003", "WCG-007"], Deck = Deck(), Energy = 4, Board = [new("WCG-083", 4)] },
                 new() { Deck = Deck(), Energy = 1, Graveyard = ["WCG-101"], Board = [new("WCG-158", 0), new("WCG-132", 1), new("WCG-043", 3)] }),
             Steps =
             [
                 new() { Title = "觸發效果", Spot = ["hand"],
-                    Text = "「進場」在付費召喚後觸發；「離場」在怪物離開戰場時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。" },
+                    Text = "「進場」在付費召喚後觸發；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。" },
                 new() { Title = "進場：免費召喚", Spot = ["hand:WCG-047", "dialog"], Allow = [Play("WCG-047"), Slot(), ChooseCard("WCG-003")],
                     Done = e => OnField(e.Player, "WCG-047") && OnField(e.Player, "WCG-003") && Settled(e),
                     Text = "召喚「繁衍蜂群」。它的進場讓你從手牌免費召喚 1 張費用 1 以下的怪物：選「熔岩地精」，再為兩隻怪物各選一個空格。",
                     Hint = "請召喚「繁衍蜂群」，並用進場效果免費召喚「熔岩地精」。" },
                 new() { Title = "非付費召喚", Spot = ["own-card:WCG-003"],
-                    Text = "「熔岩地精」是被效果召喚的，沒有支付費用，所以不會觸發它的進場效果；離場效果則照常有效。" },
-                new() { Title = "離場效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), Pick("WCG-132")],
+                    Text = "「熔岩地精」是被效果免費召喚的，所以不會觸發它的進場效果；陣亡效果則照常有效。" },
+                new() { Title = "陣亡效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), Pick("WCG-132")],
                     Done = e => !OnField(e.Computer, "WCG-132") && !OnField(e.Player, "WCG-083") && Settled(e),
-                    Text = "讓「腐爛食屍鬼」（500）攻擊「白銀持戟禁衛」（2200）。它會被消滅並觸發離場：選擇消滅「腐肉食腐蛛」。",
-                    Hint = "請用「腐爛食屍鬼」攻擊「白銀持戟禁衛」，離場時選擇「腐肉食腐蛛」。" },
+                    Text = "讓「腐爛食屍鬼」（500）攻擊「白銀持戟禁衛」（2200）。它會被消滅並觸發陣亡：選擇消滅「腐肉食腐蛛」。",
+                    Hint = "請用「腐爛食屍鬼」攻擊「白銀持戟禁衛」，陣亡時選擇「腐肉食腐蛛」。" },
                 new() { Title = "進場：消滅", Spot = ["hand:WCG-007", "enemy-card:WCG-043"], Allow = [Play("WCG-007"), Slot(), Pick("WCG-043")],
                     Done = e => !OnField(e.Computer, "WCG-043") && OnField(e.Player, "WCG-007") && Settled(e),
                     Text = "召喚「狂血投擲者」，它的進場會消滅 PP 最低且在 500 以下的敵方怪物：「孢子幼芽」。",
                     Hint = "請召喚「狂血投擲者」並選擇「孢子幼芽」。" },
                 new() { Title = "本課重點",
-                    Text = "對手的「孢子幼芽」離場時也觸發了自己的效果。付費召喚才會觸發進場；被消滅、犧牲或返回手牌都算離場；同時發生的多個效果會依序結算。" }
+                    Text = "對手的「孢子幼芽」陣亡時也觸發了自己的效果。付費召喚才會觸發進場；被消滅或犧牲都算陣亡，移回手牌不算；同時發生的多個效果會依序結算。" }
             ]
         },
         new()
@@ -344,7 +344,7 @@ public static class TutorialLessons
                     Text = "現在用 2000 PP 的「淡水狂鱷」攻擊失去聖盾的「鐵壁騎士」。",
                     Hint = "請用「淡水狂鱷」攻擊「鐵壁騎士」。" },
                 new() { Title = "本課重點",
-                    Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：下一次交戰 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
+                    Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：直到下一次攻擊或交戰結束的 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
             ]
         },
         new()
@@ -358,7 +358,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "額外代價", Spot = ["hand:WCG-006"],
-                    Text = "有些卡除了能量，還要付「額外代價」：犧牲己方怪物、隨機棄手牌或扣除生命。代價在效果之前支付，犧牲不算被消滅。" },
+                    Text = "有些卡除了能量，還要付「額外代價」：犧牲己方怪物、隨機棄手牌或失去生命。代價在效果之前支付；犧牲也算被消滅，會觸發陣亡與「每當…被消滅」的效果。" },
                 new() { Title = "犧牲", Spot = ["hand:WCG-006", "own-card:WCG-101"], Allow = [Play("WCG-006"), Pick("WCG-101")],
                     Done = e => e.Computer.Hp == 2 && Settled(e),
                     Text = "打出「怒意沸騰」，選擇犧牲「巡邏輕步兵」，對電腦造成 2 點傷害。",

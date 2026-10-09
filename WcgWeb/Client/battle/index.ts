@@ -636,8 +636,8 @@ class Board {
     showPreview(attacker:string,target:string){
         const entry=this.state?.player.field.find(m=>m.card.instanceId===attacker)?.targets.find(t=>t.id===target);
         if(!entry?.preview)return;const p=entry.preview;
-        if(target==='face'){this.status.textContent=`攻擊預覽：電腦生命 ${this.state!.computer.hp} → ${Math.max(0,this.state!.computer.hp-p.playerDamage)}。宣告觸發與離場能力另行結算。`;return;}
-        this.status.textContent=`交戰預覽 → ${entry.label}：己方${p.attackerDies?'消滅':p.attackerShieldBreaks?'消耗一層聖盾':'存活'}、敵方${p.defenderDies?'消滅':p.defenderShieldBreaks?'消耗一層聖盾':'存活'}${p.playerDamage?'，玩家傷害 '+p.playerDamage:''}。離場能力另行結算。`;
+        if(target==='face'){this.status.textContent=`攻擊預覽：電腦生命 ${this.state!.computer.hp} → ${Math.max(0,this.state!.computer.hp-p.playerDamage)}。宣告觸發與陣亡能力另行結算。`;return;}
+        this.status.textContent=`交戰預覽 → ${entry.label}：己方${p.attackerDies?'消滅':p.attackerShieldBreaks?'消耗一層聖盾':'存活'}、敵方${p.defenderDies?'消滅':p.defenderShieldBreaks?'消耗一層聖盾':'存活'}${p.playerDamage?'，玩家傷害 '+p.playerDamage:''}。陣亡能力另行結算。`;
     }
     finishPresentation(){if(this.presentation)this.metrics.turns.push({phase:'ready',side:this.presentation.side,turn:this.presentation.turn});this.presentation=null;}
     turnText(){

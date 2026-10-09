@@ -6,8 +6,10 @@ public partial class GameEngine
     public AttackPresentation? LastAttack {get;private set;}
     public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&(m.IsSilenced||!m.Card.CannotAttack);
     public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
-    {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-059"||m.CurrentPP>1300)).ToArray();return taunts.Length>0?taunts:all;}
-    public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-059"||m.CurrentPP>1300));
+    {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
+    public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
+    // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>1300)&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage);
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
     {if(d==null)return new(false,false,false,false,a.CurrentDP);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
@@ -26,7 +28,9 @@ public partial class GameEngine
     });
     private void FinishAttack(PlayerState p,MonsterInstance a)
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;
-        if(changed&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>x.CurrentPP<=500),x=>KillBatch([x],a.Card.Name));}
+        // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.
+        if(!LegacyCardRules)a.NextCombatBonus=0;
+        if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>x.CurrentPP<=500),x=>KillBatch([x],a.Card.Name));}
     private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d)
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP);return;}if(!e.Field.Contains(d))return;
