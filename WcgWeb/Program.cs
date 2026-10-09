@@ -16,7 +16,7 @@ builder.Services.AddScoped<BattleBridge>();
 builder.Services.AddScoped<BattleCoordinator>();
 builder.Services.AddSingleton<RankedStore>();
 builder.Services.AddSingleton<PlayerProfileStore>();
-builder.Services.AddSingleton<Localizer>();
+builder.Services.AddScoped<Localizer>(); // per circuit: browser-language detection is per visitor; the saved choice lives in the shared profile
 builder.Services.AddSingleton<RankedDecks>();
 builder.Services.AddSingleton<RankedSession>(sp => new RankedSession(
     sp.GetRequiredService<CardDatabase>(), sp.GetRequiredService<IWebHostEnvironment>(),

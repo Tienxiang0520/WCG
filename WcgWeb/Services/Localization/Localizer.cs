@@ -11,7 +11,7 @@ namespace WcgWeb.Services;
 // Interface language. The game itself (engine, saves, replays, card data) always works with the canonical
 // 繁體中文 identifiers; this layer only changes what is displayed. Keys are the zh-Hant source strings
 // (gettext style), so 繁體中文 needs no table and every key has exactly one English entry in i18n/en.json.
-public sealed class Localizer
+public sealed class Localizer : IDisposable
 {
     public const string Chinese = "zh-Hant", English = "en";
     public static readonly IReadOnlyList<(string Id, string Name)> Languages = [(Chinese, "繁體中文"), (English, "English")];
@@ -22,9 +22,12 @@ public sealed class Localizer
     public Localizer(PlayerProfileStore profile)
     {
         this.profile = profile;
-        profile.Changed += () => { if (current != Language) { current = Language; Changed?.Invoke(); } };
+        profile.Changed += ProfileChanged;
         current = Language;
     }
+    private void ProfileChanged() { if (current != Language) { current = Language; Changed?.Invoke(); } }
+    // The server registers one Localizer per circuit (browser detection is per visitor) over the shared profile.
+    public void Dispose() => profile.Changed -= ProfileChanged;
     private string current;
 
     public static string? Normalize(string? value) => value switch { Chinese => Chinese, English => English, _ => null };

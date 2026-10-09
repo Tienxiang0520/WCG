@@ -3,7 +3,7 @@
 <div class="top-row navbar navbar-dark">
     <a class="navbar-brand" href="" aria-label="@L["魂誓首頁"]">
         <span class="brand-mark" aria-hidden="true"><WcgWeb.Components.Common.Icon Name="sigil" Size="22" /></span>
-        <span class="brand-text"><b>@L["魂誓"]</b><small>SOUL OATH</small></span>
+        <span class="brand-text"><b>@L["魂誓"]</b>@if (!L.IsEnglish) { <small>SOUL OATH</small> }</span>
     </a>
     <button class="sidebar-toggle" type="button" @onclick="OnToggle"
             aria-label="@L[Collapsed ? "展開側邊欄" : "收合側邊欄"]"
