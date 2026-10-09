@@ -108,7 +108,7 @@ ARCHETYPES = [
        cards={81:4,83:4,87:4,93:4,97:2,90:4,194:2,175:2,192:4,100:2,132:4,82:4,199:4,148:2,89:4},
        down=[82,89,93,87,199,81],
        var=[(148,193,"噬魂死靈術士"),(175,99,"幽冥巨龍"),(90,86,"衰竭詛咒"),(132,85,"苦痛契約者")]),
-  dict(key="ABYSS-ASSASSIN", will="深淵", name="暗影刺殺", style="控制", tiers=(2,3,4,5),
+  dict(key="ABYSS-ASSASSIN", will="深淵", name="暗影刺殺", style="控制", tiers=(4,5),
        text="裂箭、汲取與彗星逐一點殺，幽冥巨龍靠死亡回血。",
        cards={82:4,84:2,86:4,94:4,140:2,89:4,91:4,99:2,100:2,123:2,81:4,87:4,113:4,199:4,159:4},
        down=[94,82,91,86,199,81],
@@ -128,6 +128,7 @@ ARCHETYPES = [
 # 每個流派只在 tiers 列出的牌位出現（不再自動繼承低牌位流派）。
 # 依 2026-10-09 分級電腦模擬（tools/RankedCheck 搭配 --all-tiers）決定：
 # 較弱的連動與控制流派只留在低牌位；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師，冰封堡壘在鑽石與大師。
+# 強度矩陣（--matrix）顯示暗影刺殺在黃金、白金遠強於同池流派，改為只在鑽石與大師。
 TIER_GATES = {a["key"]: tuple(a["tiers"]) for a in ARCHETYPES}
 for _key, _tiers in TIER_GATES.items():
     if not _tiers or any(t not in range(6) for t in _tiers): raise SystemExit(f"{_key} 牌位設定不正確")
