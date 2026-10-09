@@ -71,6 +71,25 @@
 .ink-saving .print-card-header, .ink-saving .print-cost { border-color: #222; }
 .ink-saving .print-card-meta { color: #111; }
 .ink-saving .print-card-text { font-size: 10pt; line-height: 1.55; padding: 3mm 0; }
+/* White colour print: small unaltered artwork, dark text and a thin faction-coloured frame instead of a filled background. */
+.white-color .white-print-card { border: .25mm solid var(--will-color); background: white; }
+.white-color .white-print-card.has-up { padding-top: 4.5mm; }
+.white-color .print-card-header { border-bottom-width: .35mm; }
+.white-color .print-card-text { font-size: 9.5pt; line-height: 1.35; padding: .5mm 0; }
+.white-color .print-card-stats { font-size: 8.5pt; }
+.white-color .print-card-stats b { font-size: 12pt; }
+.white-color .print-card-meta { font-size: 8pt; }
+.white-print-art-wrap { position: relative; flex: 0 0 auto; }
+.white-print-art { display: block; width: 100%; height: 24mm; object-fit: contain; background: white; border: .15mm solid #777; }
+.white-print-card.long-text .white-print-art { height: 18mm; }
+.white-print-arrow { position: absolute; z-index: 2; background: var(--will-color); }
+.white-print-arrow.left, .white-print-arrow.right { width: 3mm; height: 4mm; top: 50%; transform: translateY(-50%); }
+.white-print-arrow.left { left: -2.3mm; clip-path: polygon(100% 0, 0 50%, 100% 100%, 78% 50%); }
+.white-print-arrow.right { right: -2.3mm; clip-path: polygon(0 0, 100% 50%, 0 100%, 22% 50%); }
+.white-print-arrow.up, .white-print-arrow.down { width: 4mm; height: 3mm; left: 50%; transform: translateX(-50%); }
+.white-print-arrow.up { top: .4mm; clip-path: polygon(50% 0, 100% 100%, 50% 78%, 0 100%); }
+.white-print-arrow.down { bottom: .4mm; clip-path: polygon(0 0, 50% 22%, 100% 0, 50% 100%); }
+.white-color .crop-marks path { stroke-width: .18; }
 .life-card h2 { font-size: 12pt; font-weight: 700; margin: 0; }
 .life-card p { font-size: 8pt; line-height: 1.4; margin: 0; }
 .life-counts { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; margin: 2mm 0; flex: 1; }

@@ -2,21 +2,26 @@
 @inject IJSRuntime JS
 @implements IAsyncDisposable
 
-<section class="deck-print-overlay @(Color ? "full-color" : "ink-saving")" role="dialog" aria-modal="true" aria-label="@L["實體牌組列印預覽"]" tabindex="-1" @ref="Root">
+<section class="deck-print-overlay @StyleClass" role="dialog" aria-modal="true" aria-label="@L["實體牌組列印預覽"]" tabindex="-1" @ref="Root">
     <div class="print-controls">
         <div class="print-control-heading"><h1>@L["列印實體牌組"]</h1><button class="btn btn-outline-light" data-print-close @onclick="Close" disabled="@Printing">@L["返回編輯"]</button></div>
-        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] : "")@(Rules ? L["，另附 1 頁速查表"] : "")</p>
+        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
         <div class="print-options">
             <fieldset><legend>@L["卡面樣式"]</legend>
-                <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Color = true" disabled="@Printing" /> @L["彩色圖文"]</label>
-                <label><input type="radio" name="print-style" checked="@(!Color)" @onchange="() => Color = false" disabled="@Printing" /> @L["省墨文字（不印圖片）"]</label>
+                <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Style = PrintStyle.Color" disabled="@Printing" /> @L["彩色圖文"]</label>
+                <label><input type="radio" name="print-style" checked="@WhiteColor" @onchange="() => Style = PrintStyle.WhiteColor" disabled="@Printing" /> @L["白底彩色（小卡圖、黑字）"]</label>
+                <label><input type="radio" name="print-style" checked="@(Style == PrintStyle.Text)" @onchange="() => Style = PrintStyle.Text" disabled="@Printing" /> @L["省墨文字（不印圖片）"]</label>
             </fieldset>
             <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡"]</label>
-            <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單（1 頁）"]</label>
+            <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單"]</label>
         </div>
         <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
+        @if (WhiteColor)
+        {
+            <p class="print-screen-note">@L["白底彩色保留小卡圖與意志色，文字使用黑色並加大。先用一般紙、一般品質試印一頁，再依實際效果調整印表機設定。"]</p>
+        }
         <div class="print-control-actions"><button class="btn btn-info" @onclick="Print" disabled="@(Printing || Module == null)">@L[Printing ? "正在準備列印…" : "列印／存成 PDF"]</button><span role="status">@L.Text(Status)</span></div>
-        <p class="print-screen-note">@L.F("預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。若 PDF 頁數超過 {0} 頁，請檢查紙張、縮放與頁首頁尾。", Rules ? 7 : 6)</p>
+        <p class="print-screen-note">@L["預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。卡牌共 6 頁；附錄頁數依語言與不同卡名數量增加。若卡牌部分超過 6 頁，請檢查紙張、縮放與頁首頁尾。"]</p>
     </div>
     <div class="print-pages">
         @for (var pageIndex = 0; pageIndex < Plan.Pages.Count; pageIndex++)
@@ -37,10 +42,27 @@
                         }
                         else
                         {
-                            <article class="print-card" style="--will-color:@card.WillColor" data-card-id="@card.Id">
+                            <article class="@PlainClass(card)" style="--will-color:@card.WillColor" data-card-id="@card.Id">
+                                @if (WhiteColor)
+                                {
+                                    @foreach (var arrow in card.ArrowList.Where(a => a is "up" or "down"))
+                                    {
+                                        <span class="white-print-arrow @arrow" role="img" aria-label="@ArrowLabel(arrow)"></span>
+                                    }
+                                }
                                 <header class="print-card-header"><h2 class="print-card-title">@L.CardName(card.Id, card.Name)</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
                                 <p class="print-card-meta">@L.Text(card.Will) · @L.Text(card.Type)</p>
-                                <div class="print-card-text">@(string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text))</div>
+                                @if (WhiteColor)
+                                {
+                                    <div class="white-print-art-wrap">
+                                        <img class="white-print-art" src="@card.PrintArt" alt="@L.CardName(card.Id, card.Name)" loading="eager" decoding="async" />
+                                        @foreach (var arrow in card.ArrowList.Where(a => a is "left" or "right"))
+                                        {
+                                            <span class="white-print-arrow @arrow" role="img" aria-label="@ArrowLabel(arrow)"></span>
+                                        }
+                                    </div>
+                                }
+                                <div class="print-card-text">@PrintedText(card)</div>
                                 @if (card.IsMonster)
                                 {
                                     <div class="print-card-stats"><span>@L["力量"] <b>@card.PP</b> PP</span><span>@L["傷害"] <b>@card.DP</b> DP</span></div>
@@ -92,8 +114,23 @@
     private ElementReference Root;
     private IJSObjectReference? Module;
     private string? PreviewId;
-    private bool Color = true, Rules = true, Tools = true, Printing;
+    private enum PrintStyle { Color, WhiteColor, Text }
+    private PrintStyle Style = PrintStyle.Color;
+    private bool Color => Style == PrintStyle.Color;
+    private bool WhiteColor => Style == PrintStyle.WhiteColor;
+    private string StyleClass => Style switch { PrintStyle.Color => "full-color", PrintStyle.WhiteColor => "white-color", _ => "ink-saving" };
+    private bool Rules = true, Tools = true, Printing;
     private string Status = "";
+    private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
+    private string PrintedText(PrintedCard card)
+    {
+        var text = string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text);
+        return WhiteColor ? ArrowPrefix.Replace(text, "").Trim() : text;
+    }
+    private string PlainClass(PrintedCard card) => "print-card" + (WhiteColor ? " white-print-card" +
+        (PrintedText(card).Length > (L.IsEnglish ? 160 : 70) ? " long-text" : "") +
+        (card.ArrowList.Contains("up") ? " has-up" : "") : "");
+    private string ArrowLabel(string arrow) => L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"];
     // Corner crop marks drawn in the 2 mm gutter around each 63 × 88 mm card (viewBox in mm, origin = card corner).
     private static readonly RenderFragment CropMarks = __builder =>
     {
