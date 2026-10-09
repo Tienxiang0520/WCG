@@ -597,3 +597,31 @@
 .event-showcase>strong{font-size:16px}
 .event-showcase .event-text{position:relative;z-index:2;margin-top:auto;padding:8px 9px;border-radius:7px;background:rgba(9,11,17,.82);color:#efe6d2;font-size:12px;line-height:1.35;max-height:42%;overflow:hidden}
 @media(max-width:700px){.event-badge{font-size:11px;height:24px!important}.event-ff{font-size:11px}.event-showcase .event-text{font-size:10.5px}.event-stat{font-size:18px}}
+/* ===== Card-face redesign: condensed physical look for board and hand (sizes and hit areas unchanged) ===== */
+.event-showcase.wcg-face{box-shadow:none!important;padding:0!important;filter:drop-shadow(0 0 22px rgba(255,214,122,.45)) drop-shadow(0 18px 40px rgba(0,0,0,.6))}
+/* Board: full-art window inside an ivory rim and gold double line; name on a parchment plate. */
+.field-card{background:linear-gradient(160deg,#fbf6e9,#e9dcc0);box-shadow:inset 0 0 0 1.5px #e4c574,inset 0 0 0 2.5px #7a5a1e,inset 0 0 0 5px #f3ead4,0 0 0 1px rgba(20,14,4,.8),0 8px 18px rgba(0,0,0,.6)}
+.field-card.enemy-card{box-shadow:inset 0 0 0 1.5px #e0b48a,inset 0 0 0 2.5px #7a3a22,inset 0 0 0 5px #f1e4d6,0 0 0 1px rgba(20,8,4,.8),0 8px 18px rgba(0,0,0,.6)}
+.tapped .field-card{background:linear-gradient(160deg,#e9e1cc,#cfc2a5)}
+.field-card .card-art-layer{inset:5px;border-radius:7px;box-shadow:0 0 0 1px #c9a24b}
+.field-card>strong{color:#5a3f12;text-shadow:none;background:linear-gradient(180deg,#fdf8ea,#efe2c2);box-shadow:0 0 0 1px #c9a24b,0 2px 5px rgba(0,0,0,.45);font-family:"Noto Serif TC","Songti TC",Georgia,serif;font-weight:700}
+.field-stats b{color:#2b2010;text-shadow:none;font-family:Georgia,"Noto Serif TC",serif}
+.field-stats b:first-child{background:radial-gradient(circle at 40% 35%,#fffdf6,#f1e3c4 70%,#dcc394);box-shadow:0 0 0 1.5px #a07a2c,inset 0 0 0 2px #fff3cc,0 0 0 2.5px #f6e3a6,0 3px 8px rgba(0,0,0,.55);color:#8a2a1d}
+.field-stats b:last-child{background:radial-gradient(circle at 40% 35%,#fffdf6,#f1e3c4 70%,#dcc394);box-shadow:0 0 0 1.5px #a07a2c,inset 0 0 0 2px #fff3cc,0 0 0 2.5px #f6e3a6,0 3px 8px rgba(0,0,0,.55);color:#24457e}
+.is-poisonous .field-stats b:first-child{box-shadow:0 0 0 1.5px #5aa23c,0 0 0 3px #b8ff9e,0 0 10px rgba(109,255,90,.6)}
+/* Direction arrows: gold triangles on the card edges (same positions as before, so enemy cards still mirror). */
+.arrowmark{background:linear-gradient(90deg,#fff1b8,#e1b54c 45%,#a8761d);filter:drop-shadow(0 0 1px #3a2a0a) drop-shadow(0 0 5px rgba(255,226,140,.85))}
+.arrowmark.left{clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
+.arrowmark.right{clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
+.arrowmark.up{clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%);background:linear-gradient(180deg,#fff1b8,#e1b54c 45%,#a8761d)}
+/* Hand: ivory parchment card, gold rim, cost medallion (kept top-left so it stays visible in the fan). */
+.v06-hand-card:not(.card-back){color:#3a2c18;border:2px solid #c9a24b;background:radial-gradient(120% 60% at 30% 10%,rgba(255,255,255,.7),transparent 60%),linear-gradient(165deg,#fbf6e9,#f0e6cf 60%,#e6d8bb);box-shadow:inset 0 0 0 1px #fff6d8,inset 0 0 0 2px #a07a2c,0 0 0 1px rgba(20,14,4,.85),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card:not(.card-back)>strong{color:#7a5618;font-family:"Noto Serif TC","Songti TC",Georgia,serif;font-weight:700}
+.v06-hand-card:not(.card-back)>small{color:#6a5634;font-weight:600;letter-spacing:.04em}
+.v06-hand-card:not(.card-back) p{color:#3a2c18}
+.v06-hand-card:not(.card-back) .stats{color:#2b2010;font-family:Georgia,"Noto Serif TC",serif;font-weight:800;border-top:1px solid rgba(160,122,44,.55);padding-top:3px}
+.v06-hand-card .hand-art-layer{box-shadow:0 0 0 1px #fff6d8,0 0 0 2.5px #c9a24b,0 0 0 3px #6d4f17}
+.v06-hand-card .mana{color:#2b2010;text-shadow:none;font-family:Georgia,"Noto Serif TC",serif;background:radial-gradient(circle at 40% 35%,#fffdf6,#f3ead4 70%,#e5d6b2);box-shadow:0 0 0 2px #f7e4a8,0 0 0 3.5px #a07a2c,0 3px 8px rgba(0,0,0,.55)}
+.v06-hand-card.available:not(.card-back){border-color:#5fd3bd;box-shadow:inset 0 0 0 1px #fff6d8,inset 0 0 0 2px #a07a2c,0 0 16px rgba(95,211,189,.55),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card.set-ready:not(.card-back){border-color:#ffe08a}
+.v06-hand-card .hand-availability{color:#f3dca3}

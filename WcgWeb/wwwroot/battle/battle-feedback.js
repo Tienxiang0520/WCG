@@ -4,7 +4,11 @@ import { planSteps, batchSpeed, isSpellCard, keywordOf } from './effect-plan.js'
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
 const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
     '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
-    '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand' };
+    '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
+    '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
+    '中立': 'Neutral', '深淵': 'Abyss', '狂怒': 'Fury', '理智': 'Reason', '生機': 'Life', '秩序': 'Order' };
+const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
+const STAR = 'M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z';
 // Fast-forward survives across the batches of one computer turn and resets when the player's turn begins.
 let fastForward = 1;
 export function resetFastForward() { fastForward = 1; }
@@ -57,6 +61,33 @@ export function bindFeedback(root, sound = null, fx = null) {
     function place(el, rect) {
         Object.assign(el.style, { position: 'fixed', left: `${rect.x}px`, top: `${rect.y}px`, width: `${rect.width}px`, height: `${rect.height}px`, bottom: 'auto', margin: '0', transform: 'none', transformOrigin: 'center', pointerEvents: 'none', transition: 'none' });
         layer.append(el); return el;
+    }
+    // Full card face for the spell showcase; mirrors Components/Common/CardFace.razor (styles in card-face.css).
+    function faceCard(card) {
+        const svg = (cls, view, inner) => { const el = document.createElementNS?.('http://www.w3.org/2000/svg', 'svg') ?? node('i', cls); if (el.setAttribute) { el.setAttribute('class', cls); el.setAttribute('viewBox', view); el.setAttribute('aria-hidden', 'true'); el.innerHTML = inner; } return el; };
+        const star = cls => svg(`face-star ${cls}`, '0 0 20 20', `<path d="${STAR}"/>`);
+        const outer = node('article', 'wcg-face'); outer.dataset.will = WILL_KEYS[card.will] ?? 'neutral'; outer.dataset.cardId = card.cardId ?? '';
+        const body = node('div', 'face-card'); outer.append(body);
+        body.append(svg('face-frame', '0 0 63 88', '<rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner"/>'));
+        for (const c of ['tl', 'tr', 'bl', 'br', 'top', 'bottom', 'head']) body.append(star(c));
+        const head = node('header', 'face-head'), name = node('h3', 'face-name'), cost = node('span', 'face-cost');
+        name.append(svg('face-spark', '0 0 20 20', `<path d="${STAR}"/>`), node('span', '', card.name ?? ''));
+        cost.append(node('b', '', String(card.cost ?? 0)), node('small', '', t('費'))); head.append(name, cost);
+        const band = node('div', 'face-band'); band.append(node('span', '', t(card.will ?? '')), node('i', '', '・'), node('span', '', t(card.type ?? '')));
+        const art = node('div', 'face-art');
+        if (/^WCG-\d{3}$/.test(card.cardId ?? '')) { const img = node('img', 'card-illustration'); img.src = `card-art/${card.cardId}.webp`; img.alt = ''; img.draggable = false; art.append(img); }
+        for (const a of card.arrows ?? []) art.append(node('span', `face-arrow ${a}`));
+        const text = node('div', 'face-text'); const plain = String(card.text ?? '').replace(/【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*/g, '').trim();
+        text.append(node('p', '', plain || t('無異能'))); if (plain.length > 60) outer.className += plain.length > 110 ? ' text-l' : ' text-m';
+        body.append(head, band, art, text);
+        if (card.pp != null) {
+            const stats = node('div', 'face-stats'), pp = node('span', 'pp'), dp = node('span', 'dp');
+            pp.append(node('small', '', t('力量')), node('b', '', String(card.pp)), node('small', '', 'PP'));
+            dp.append(node('small', '', t('傷害')), node('b', '', String(card.dp ?? 1)), node('small', '', 'DP'));
+            stats.append(pp, star('mid'), dp); body.append(stats);
+        }
+        const foot = node('footer', 'face-foot'); foot.append(node('span', '', t('魂誓')), node('span', '', card.cardId ?? '')); body.append(foot);
+        return outer;
     }
     function publicCard(card) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
@@ -210,10 +241,9 @@ export function bindFeedback(root, sound = null, fx = null) {
     function boardRect() { const r = root.querySelector('.battlefield')?.getBoundingClientRect?.() ?? root.getBoundingClientRect(); return r; }
     // Spells: the card is shown large in the centre, then shrinks to a corner and stays as the source of its effects.
     async function showSpell(ev) {
-        const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 1.36;
-        const card = publicCard(ev.card); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
+        const r = boardRect(), w = Math.min(250, r.width * .56), h = w * 88 / 63;
+        const card = ev.card ? faceCard(ev.card) : publicCard(null); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
         if (ev.side === 'computer') card.className += ' enemy-card';
-        if (ev.card?.text) card.append(node('p', 'event-text', ev.card.text));
         place(card, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2, width: w, height: h });
         void sound?.play('spell');
         const hero0 = hero(ev.side), from = hero0 ? center(hero0) : { x: r.x + r.width / 2, y: r.y + r.height };
