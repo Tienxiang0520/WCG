@@ -402,9 +402,12 @@ export function bindFeedback(root, sound = null, fx = null) {
     function skipControls() {
         const r = root.getBoundingClientRect();
         const catcher = place(node('button', 'event-skip'), { x: r.x, y: r.y, width: r.width, height: r.height });
+        // place() disables pointer input on visual effects; these two controls must receive it.
+        catcher.style.pointerEvents = 'auto';
         catcher.type = 'button'; catcher.setAttribute('aria-label', t('點擊快轉')); catcher.title = t('點擊快轉');
         const b = boardRect(), w = b.width < 600 ? 92 : 120, h = b.width < 600 ? 26 : 32;
         const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + b.width - w - 8, y: b.y + 6, width: w, height: h });
+        ff.style.pointerEvents = 'auto';
         ff.type = 'button';
         // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
         const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };

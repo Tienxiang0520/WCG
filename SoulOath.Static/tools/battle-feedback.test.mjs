@@ -8,7 +8,8 @@ function harness(t) {
         constructor(tag = 'div') { this.tag = tag; this.style = {}; this.attributes = {}; this.dataset = {}; this.children = []; this.textContent = ''; this.inert = false; }
         getAttributeNames() { return ['b-test']; }
         setAttribute(k, v) { this.attributes[k] = v; }
-        addEventListener() { }
+        addEventListener(type, callback) { (this.listeners ??= {})[type] = callback; }
+        click() { assert.notEqual(this.style.pointerEvents, 'none', 'control must accept pointer input'); this.listeners?.click?.({stopPropagation(){}}); }
         append(...els) { for (const el of els) { el.parent = this; this.children.push(el); } }
         remove() { if (this.parent) this.parent.children = this.parent.children.filter(x => x !== this); }
         getBoundingClientRect() { return { x: 10, y: 20, width: 160, height: 200 }; }
@@ -121,10 +122,16 @@ test('fast-forward shortens the remaining animations and is offered as a button 
     const layer=h.body.children[0];
     assert.ok(descendants(layer).some(el=>el.className==='event-ff'),'fast-forward button');
     assert.ok(descendants(layer).some(el=>el.className==='event-skip'),'tap anywhere on the board');
-    h.feedback.clear();h.record.length=0;h.feedback.fastForward();
-    await h.settle(h.feedback.present(h.state,h.state,events));
-    const fast=h.record.find(r=>r.el.dataset.wcgEffect==='damage').options.duration;
-    assert.ok(fast<=normal/3+1,`${fast} vs ${normal}`);
+    const normalHeal=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
+    h.feedback.clear();h.record.length=0;
+    const pending=h.feedback.present(h.state,h.state,events),fastLayer=h.body.children[0];
+    const button=descendants(fastLayer).find(el=>el.className==='event-ff');
+    button.click();assert.equal(fastLayer.attributes['data-fast'],'3');
+    const catcher=descendants(fastLayer).find(el=>el.className==='event-skip');
+    catcher.click();assert.equal(fastLayer.attributes['data-fast'],'12');
+    await h.settle(pending);
+    const fast=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
+    assert.ok(fast<=normalHeal/12+1,`${fast} vs ${normalHeal}`);
     h.feedback.clear();resetFastForward();
 });
 test('a deploy ability badges its source before its result, and keyword statuses from the snapshot are badged', async t=>{
