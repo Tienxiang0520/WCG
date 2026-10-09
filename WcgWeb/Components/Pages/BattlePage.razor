@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="lobby-actions">
-                        <button class="btn btn-primary btn-lg" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />開始訓練</button>
+                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />開始訓練</button>
                         @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">載入保存場面</button>}
                     </div>
                     @if(ToolNotice!=""){<p class="field-note" role="status">@ToolNotice</p>}

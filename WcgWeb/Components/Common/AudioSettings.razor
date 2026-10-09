@@ -1,0 +1,88 @@
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+<section class="audio-settings" aria-labelledby="audio-settings-title">
+    <h2 id="audio-settings-title">音效</h2>
+    <div class="audio-row audio-master">
+        <div>
+            <h3 id="sound-enabled-label">開啟音效</h3>
+            <p id="sound-enabled-help">介面、天梯與對戰共用的總開關。對戰畫面右上角的喇叭也會同步切換。</p>
+        </div>
+        <button type="button" class="audio-switch" role="switch" aria-checked="@(Enabled ? "true" : "false")"
+                aria-labelledby="sound-enabled-label" aria-describedby="sound-enabled-help" disabled="@(!Loaded)" @onclick="ToggleEnabled">
+            <span class="audio-track" aria-hidden="true"><span></span></span>
+            <span>@(Enabled ? "開啟" : "靜音")</span>
+        </button>
+    </div>
+    @foreach (var (key, label, help) in Channels)
+    {
+        var value = Volume(key);
+        <div class="audio-row audio-slider @(Enabled ? "" : "muted")">
+            <label for="@($"volume-{key}")">
+                <span class="audio-label">@label</span>
+                <small>@help</small>
+            </label>
+            <div class="audio-control">
+                <input id="@($"volume-{key}")" type="range" min="0" max="100" step="5" value="@value" style="--fill:@(value)%" disabled="@(!Loaded)"
+                       aria-valuetext="@($"{value}%")" @oninput="e => SetVolume(key, e.Value)" />
+                <output for="@($"volume-{key}")">@value%</output>
+                <button type="button" class="audio-preview" disabled="@(!Loaded || !Enabled)" aria-label="@($"試聽{label}")" @onclick="() => Preview(key)"><Icon Name="play" Size="14" /></button>
+            </div>
+        </div>
+    }
+    <p class="audio-note">音效素材為 Kenney 的 CC0 授權素材，已隨網站打包，不會從外部載入。瀏覽器需要先點擊或按鍵一次才會出聲。</p>
+</section>
+
+@code {
+    private static readonly (string Key, string Label, string Help)[] Channels =
+    [
+        ("master", "主音量", "所有音效的整體大小"),
+        ("ui", "介面音效", "按鈕、切換頁面、提示、天梯結算"),
+        ("battle", "對戰音效", "出牌、攻擊、受傷、回合與勝負"),
+    ];
+    private IJSObjectReference? Module;
+    private bool Loaded, Enabled = true;
+    private readonly Dictionary<string, double> Volumes = new() { ["master"] = .8, ["ui"] = .6, ["battle"] = .9 };
+    private int Volume(string key) => (int)Math.Round(Volumes.GetValueOrDefault(key) * 100);
+
+    private sealed record AudioState(bool Enabled, double Master, double Ui, double Battle);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/wcg-audio.js");
+            Apply(await Module.InvokeAsync<AudioState>("readAudioSettings"));
+            Loaded = true;
+        }
+        catch (JSException) { }
+        StateHasChanged();
+    }
+    private void Apply(AudioState s) { Enabled = s.Enabled; Volumes["master"] = s.Master; Volumes["ui"] = s.Ui; Volumes["battle"] = s.Battle; }
+    private async Task ToggleEnabled()
+    {
+        if (Module == null) return;
+        try { Enabled = await Module.InvokeAsync<bool>("saveAudioEnabled", !Enabled); }
+        catch (JSException) { }
+    }
+    private async Task SetVolume(string key, object? raw)
+    {
+        if (Module == null || !double.TryParse(raw?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var percent)) return;
+        Volumes[key] = Math.Clamp(percent / 100, 0, 1);
+        try { Apply(await Module.InvokeAsync<AudioState>("saveAudioVolume", key, Volumes[key])); }
+        catch (JSException) { }
+    }
+    private async Task Preview(string key)
+    {
+        if (Module == null) return;
+        try { await Module.InvokeVoidAsync("previewAudio", key); }
+        catch (JSException) { }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (Module == null) return;
+        try { await Module.DisposeAsync(); }
+        catch (JSDisconnectedException) { }
+    }
+}

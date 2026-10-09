@@ -18,7 +18,7 @@
             InitialResponse="Initial" Ready="Ready" Changed="Changed" SessionAction="SessionAction" />
         @if (State?.IsOver == true && Profile.Result is { } result)
         {
-            <section class="ranked-result @(result.Won ? "won" : "lost")" role="status" aria-label="天梯結算">
+            <section class="ranked-result @(result.Won ? "won" : "lost")" data-sfx-show="@ResultCues(result.Before, result.After)" role="status" aria-label="天梯結算">
                 <p class="ranked-kicker">@result.Season 賽季</p><div class="ranked-result-emblem"><RankEmblem Tier="@RankedRules.Tier(result.After)" /></div><h2>@(result.Won ? "天梯勝利" : "本局敗北")</h2>
                 <strong class="ranked-result-stars">@(result.After > result.Before ? "★ ＋1" : result.After < result.Before ? "★ －1" : "牌位保護 · 星數不變")</strong>
                 <p>@RankedRules.Label(result.Before) → @RankedRules.Label(result.After)</p>
@@ -64,7 +64,7 @@ else
                 {
                     <h3 class="panel-title">有一場尚未完成的對局</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
                     @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@ongoing.ComputerDeck.Description</p> }
-                    <button class="btn btn-primary btn-lg" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />繼續對局</button>
+                    <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />繼續對局</button>
                     <p class="ranked-help">離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。</p>
                 }
                 else
@@ -81,7 +81,7 @@ else
                         <p>@RankedDecks.Strategy(RankedRules.Tier(Profile.Stars))</p>
                         <p class="ranked-help">本牌位對手池：@Opponents.Summary(RankedRules.Tier(Profile.Stars))</p>
                     </div>
-                    <button class="btn btn-primary btn-lg" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />開始天梯對戰</button>
+                    <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />開始天梯對戰</button>
                     <p class="ranked-help">先後手隨機；對手由同牌位牌組池抽選，不會連續遇到同一流派，每場另隨機微調 0～2 組卡牌。</p>
                 }
             </section>
@@ -97,6 +97,10 @@ else
     </div>
 }
 @code {
+    // Result stingers: tier change outranks a single star change (played after the battle victory/defeat stinger).
+    private static string ResultCues(int before, int after) =>
+        RankedRules.Tier(after) > RankedRules.Tier(before) ? "starGain rankUp" : RankedRules.Tier(after) < RankedRules.Tier(before) ? "starLoss rankDown" : after > before ? "starGain" : after < before ? "starLoss" : "";
+
     private RankedProfile Profile = new();
     private List<Deck> Available = [];
     private string SelectedDeck = "", Notice = "";

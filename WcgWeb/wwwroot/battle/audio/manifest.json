@@ -3,96 +3,460 @@
     "file": "card-slide-1.ogg",
     "pack": "casino-audio",
     "sha256": "006cf9822d15d7063f8899e56041f41646df30adb6fbd8b974ee5d5420012690",
-    "duration": 0.600771
+    "duration": 0.600771,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8833
   },
   {
     "file": "card-place-1.ogg",
     "pack": "casino-audio",
     "sha256": "d8f26c33a665dcbdcc6f632f6050bc9dd548feb0d4942d4547615926d3926810",
-    "duration": 0.689116
+    "duration": 0.689116,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 9624
   },
   {
     "file": "card-shove-1.ogg",
     "pack": "casino-audio",
     "sha256": "1ea667aa6795d5f14239192116ebcbd8f3f47eb1c7faaf2ec56844b9067b8b06",
-    "duration": 0.765873
+    "duration": 0.765873,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 10690
   },
   {
     "file": "card-slide-4.ogg",
     "pack": "casino-audio",
     "sha256": "b9c82bcdbe6b7d00a06e2546bd2683a9ab082ca5fd090a42882f33eddd925b7f",
-    "duration": 0.45941
+    "duration": 0.45941,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 7912
   },
   {
     "file": "card-fan-1.ogg",
     "pack": "casino-audio",
     "sha256": "7a9758ccad8899baef1b9f60b4064e4baa724a548293832fdaea07e6e07e638d",
-    "duration": 0.720816
+    "duration": 0.720816,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 12489
   },
   {
     "file": "impactSoft_heavy_000.ogg",
     "pack": "impact-sounds",
     "sha256": "49e7ca88743fca974bb8676ea138b751cfd8f9033b5e7af8736c2a215d6edbc1",
-    "duration": 0.505102
+    "duration": 0.505102,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6570
   },
   {
     "file": "impactPunch_medium_000.ogg",
     "pack": "impact-sounds",
     "sha256": "486988aa2d6440ffc4c62a0e8ccf3c23673ba84424bd4723378d451b7255eb5c",
-    "duration": 0.430544
+    "duration": 0.430544,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8800
   },
   {
     "file": "impactGlass_light_003.ogg",
     "pack": "impact-sounds",
     "sha256": "765290ce32fa108c939a0dbd6fbacbcd05abde622b57b708eb8a64058ef4225a",
-    "duration": 0.209592
+    "duration": 0.209592,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6618
   },
   {
     "file": "click_001.ogg",
     "pack": "interface-sounds",
     "sha256": "ccfb7fa0cccdd9faec0eb16033c732b1e308d139d80f799161495d58f7adcdb9",
-    "duration": 0.100023
+    "duration": 0.100023,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 4876
   },
   {
     "file": "glass_001.ogg",
     "pack": "interface-sounds",
     "sha256": "183eebee20eb0a532b0b85104d139cbf2673eb66d95c3cc733ac9ea98362e7e8",
-    "duration": 0.278435
+    "duration": 0.278435,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6103
   },
   {
     "file": "confirmation_001.ogg",
     "pack": "interface-sounds",
     "sha256": "063564703b6094d70718a3e787a55cc9141611e4ecd6b6637f8828f79b4a8c3a",
-    "duration": 0.289841
+    "duration": 0.289841,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8968
   },
   {
     "file": "confirmation_004.ogg",
     "pack": "interface-sounds",
     "sha256": "568967a3d9f8a8f6af54ea01729c4882284308f2a27d78c07ffd7ee0d6951661",
-    "duration": 0.490408
+    "duration": 0.490408,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 12391
   },
   {
     "file": "back_001.ogg",
     "pack": "interface-sounds",
     "sha256": "07db973f79f6ae0f2edc34561e7592e24d0577455919fb602cb8ecc0da991dcf",
-    "duration": 0.063878
+    "duration": 0.063878,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6997
   },
   {
     "file": "error_002.ogg",
     "pack": "interface-sounds",
     "sha256": "76810ec365f41078fd0507101da5bb7b8730fe011dde43908329fdabd8575e79",
-    "duration": 0.164558
+    "duration": 0.164558,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 7369
   },
   {
     "file": "pluck_001.ogg",
     "pack": "interface-sounds",
     "sha256": "be97ec4893a02d6eccfb678daa76c83e34cb2583b834ec2593d2641def739fa4",
-    "duration": 0.102426
+    "duration": 0.102426,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6317
   },
   {
     "file": "impactWood_heavy_000.ogg",
     "pack": "impact-sounds",
     "sha256": "15ff82332f342c30e469215539e1cc57e11b221aa2cf7e11e811d313a9927f3d",
-    "duration": 0.313039
+    "duration": 0.313039,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6233
+  },
+  {
+    "file": "rollover2.ogg",
+    "pack": "ui-audio",
+    "sha256": "d0bc0fcba496d73df1da8c145e5330df75f87ab5a4f33a9b71461b006b5c338e",
+    "duration": 0.057324,
+    "source": "https://kenney.nl/assets/ui-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 4701
+  },
+  {
+    "file": "bookFlip2.ogg",
+    "pack": "rpg-audio",
+    "sha256": "3409042acbfaebc24c1a6327dc073e36f9250841712e96c5040da566a97df73c",
+    "duration": 0.430438,
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 12393
+  },
+  {
+    "file": "select_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "aec0c31ea934a35936ae0d2ab8fac8123c93aa5647f935853a58dbaf90278b7a",
+    "duration": 0.043288,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 5468
+  },
+  {
+    "file": "toggle_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "ca1d2dde5f0b286abac4f070e23edab8f30927c8a533665cdf2ac6492a415e49",
+    "duration": 0.13932,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 7369
+  },
+  {
+    "file": "toggle_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "1f564f5520cfa0764028ce245ad97599d3ece8f0ab504554c403af92ac72b900",
+    "duration": 0.13932,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8056
+  },
+  {
+    "file": "card-place-2.ogg",
+    "pack": "casino-audio",
+    "sha256": "903d5050718595e87864dd755643b476ab1a5533080dcc2dddc72570d33ba9f8",
+    "duration": 0.459388,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8046
+  },
+  {
+    "file": "card-slide-2.ogg",
+    "pack": "casino-audio",
+    "sha256": "e674a1679ec87b507047fe012d068ad2c412125f56186f0e732684705c2a6888",
+    "duration": 0.584082,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 9042
+  },
+  {
+    "file": "confirmation_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "33b17a9a9a2397c62b285c52c33a907fdffb476909c99e42dde603f6a7a8b12c",
+    "duration": 0.539002,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 14169
+  },
+  {
+    "file": "open_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "24ff224fe2c09c6aed1b41249825382dc74cf324b887ff279d8494912ce2beee",
+    "duration": 0.313787,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 14975
+  },
+  {
+    "file": "close_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "bc4279d2bb2bf86592473eab6a8eab55e51b54a8619315000dbd780a83b102d8",
+    "duration": 0.313787,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 14752
+  },
+  {
+    "file": "pluck_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "c977fe249ff42d1c93a552b33abc13a8399df3879fa510475426e5c4bbac1da9",
+    "duration": 0.164558,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6941
+  },
+  {
+    "file": "jingles_PIZZI10.ogg",
+    "pack": "music-jingles",
+    "sha256": "baf50beffc4cc2dbb92c9d596a22732a8b5249c7648b681c0df6d0af6c561478",
+    "duration": 0.797211,
+    "source": "https://kenney.nl/assets/music-jingles",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 14004
+  },
+  {
+    "file": "drawKnife1.ogg",
+    "pack": "rpg-audio",
+    "sha256": "276403e72c3b71c47bc24db3083970c23f8e5551ffa78f436f83483c56f3f0bb",
+    "duration": 0.399708,
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 11134
+  },
+  {
+    "file": "jingles_PIZZI02.ogg",
+    "pack": "music-jingles",
+    "sha256": "4967dc3cd31257716f455ef50f8980378726ce086954c7a5563c0c57ee129e3e",
+    "duration": 0.955737,
+    "source": "https://kenney.nl/assets/music-jingles",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 16360
+  },
+  {
+    "file": "jingles_PIZZI01.ogg",
+    "pack": "music-jingles",
+    "sha256": "3f8f2534a297d19386c233a7ee4fa8737cc40870dd206010263760e1983dde46",
+    "duration": 1.002358,
+    "source": "https://kenney.nl/assets/music-jingles",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 16579
+  },
+  {
+    "file": "jingles_PIZZI04.ogg",
+    "pack": "music-jingles",
+    "sha256": "f98fa4af012d443da636a2d90f2926adc2384ec833851918f88426be9a25acf9",
+    "duration": 0.564127,
+    "source": "https://kenney.nl/assets/music-jingles",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 11052
+  },
+  {
+    "file": "jingles_PIZZI05.ogg",
+    "pack": "music-jingles",
+    "sha256": "017e600a154f504039b302b4848a5ad5870248280b4320b037f1d82324988bf5",
+    "duration": 0.536122,
+    "source": "https://kenney.nl/assets/music-jingles",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 10291
+  },
+  {
+    "file": "glass_002.ogg",
+    "pack": "interface-sounds",
+    "sha256": "08e972c73e53c91d6d310e107e80db60edce78ae47225889a028e628a6f3da49",
+    "duration": 0.125306,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 4917
+  },
+  {
+    "file": "minimize_005.ogg",
+    "pack": "interface-sounds",
+    "sha256": "4e6792a98c75d3ff187c0c55561c38c569e02c64757ebebb98831cfe84e3e172",
+    "duration": 0.526372,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 19501
+  },
+  {
+    "file": "card-shove-2.ogg",
+    "pack": "casino-audio",
+    "sha256": "8e95c1d3ae94b5b91bc663432ad7c3bf4e03a541c22ec10fa51c65fe0e29054b",
+    "duration": 0.766848,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 10445
+  },
+  {
+    "file": "impactPlate_light_000.ogg",
+    "pack": "impact-sounds",
+    "sha256": "6e797cf8a5bfc52d7ed5eb47c227974c1cf2a674954fec5b539cea7d62c7282c",
+    "duration": 0.542426,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 10474
+  },
+  {
+    "file": "impactWood_medium_000.ogg",
+    "pack": "impact-sounds",
+    "sha256": "1723a9fd25103ed41af06054814e84e65f4a772bac86ab2dc927da93d9592ff5",
+    "duration": 0.332676,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6575
+  },
+  {
+    "file": "chips-stack-1.ogg",
+    "pack": "casino-audio",
+    "sha256": "12bf175b9afcea112175b241ad3336c6244ac5fdcdff8b5942ecc03f2225e0c4",
+    "duration": 0.287483,
+    "source": "https://kenney.nl/assets/casino-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 6469
+  },
+  {
+    "file": "knifeSlice.ogg",
+    "pack": "rpg-audio",
+    "sha256": "4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f",
+    "duration": 0.599542,
+    "source": "https://kenney.nl/assets/rpg-audio",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 15532
+  },
+  {
+    "file": "impactPunch_heavy_001.ogg",
+    "pack": "impact-sounds",
+    "sha256": "f92f5cb6ba4ff2766497292ffd90865654317eeca976f5652e0708dbdcdc0dd9",
+    "duration": 0.535941,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 10861
+  },
+  {
+    "file": "impactGlass_medium_001.ogg",
+    "pack": "impact-sounds",
+    "sha256": "d3d806cb3012c9ddd87010b30295ccb74d6d8b690077d19e67afd09a9d8feb03",
+    "duration": 0.543356,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 8605
+  },
+  {
+    "file": "maximize_004.ogg",
+    "pack": "interface-sounds",
+    "sha256": "59c7a24b204be24d2a44a86d1e4d18c2cf51fa0446967a14b2590e8fb3afaf34",
+    "duration": 0.417959,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 17723
+  },
+  {
+    "file": "impactGlass_heavy_002.ogg",
+    "pack": "impact-sounds",
+    "sha256": "4978654ac840ad519692d5d5ba48a8101cabce13b9a577be73ad589185e5e9ed",
+    "duration": 0.247166,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 7661
+  },
+  {
+    "file": "impactMetal_heavy_001.ogg",
+    "pack": "impact-sounds",
+    "sha256": "83554049f81f4db9209379e103c30bfa63f65c42189a03f300b045c2c82e23ae",
+    "duration": 0.359274,
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 7279
+  },
+  {
+    "file": "tick_001.ogg",
+    "pack": "interface-sounds",
+    "sha256": "9d057b918024c787bbe6c00beed13a7ef72a3fa0c259add3cef36582792f4230",
+    "duration": 0.02322,
+    "source": "https://kenney.nl/assets/interface-sounds",
+    "author": "Kenney (Kenney Vleugels, kenney.nl)",
+    "license": "CC0-1.0",
+    "bytes": 4497
   }
 ]

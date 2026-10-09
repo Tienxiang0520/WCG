@@ -5,7 +5,10 @@ import { motionReduced } from './battle-fx.js';
 export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, priorInert = false, locked = false;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
-    let publicUnits = new Map();
+    let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
+    const shielded = (units, id) => !!units.get(id)?.status?.some(x => String(x).startsWith('聖盾'));
+    // A holy shield that was up before this batch and is gone afterwards (unit still alive) shattered in combat.
+    const shieldBroke = id => !!id && shielded(priorUnits, id) && nextUnits.has(id) && !shielded(nextUnits, id);
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
     function node(tag, className, text = '') {
         const el = document.createElement(tag); el.className = className; el.textContent = text;
@@ -105,7 +108,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         const amount = Number(String(text).replace(/[^\d]/g, '')) || 1;
         const nearTop = r.y < 90, top = face ? r.y + r.height / 2 - 32 : nearTop ? r.y + r.height + 26 : r.y - 14, drift = face && nearTop ? -1 : 1;
         const pop = place(node('div', `event-number ${heal ? 'healing' : ''} ${amount >= 3 ? 'big' : ''}`, text), { x: r.x + r.width / 2 - 60, y: top, width: 120, height: 64 });
-        void sound?.play(heal ? 'heal' : 'damage');
+        void sound?.play(heal ? 'heal' : face ? 'faceHit' : 'damage');
         pop.dataset.wcgEffect = heal ? 'heal' : 'damage';
         if (heal) void fx?.burst(el, { color: '#9dffc9', count: 12, spread: 60, size: 6, rise: 50, duration: 760 });
         else {
@@ -125,11 +128,12 @@ export function bindFeedback(root, sound = null, fx = null) {
         const source = visual(ev.instanceId), destination = ev.targetId ? visual(ev.targetId) : hero(ev.side === 'player' ? 'computer' : 'player');
         if (!source || !destination) return;
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
+        for (const id of [ev.targetId, ev.instanceId]) if (shieldBroke(id)) void sound?.play('shieldBreak', ev.side === 'player' ? 0 : .3);
         if (ev.side === 'player') { await flash(destination); return; } // Player already lunged (with contact sparks) on release.
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
         const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; hide(source);
         const dx = to.x + to.width / 2 - from.x - from.width / 2, dy = to.y + to.height / 2 - from.y - from.height / 2;
-        void sound?.play('attack', .23);
+        void sound?.play('swing'); void sound?.play('attack', .23);
         // Wind-up, fast lunge that stops just short of the target, then recoil home.
         await animate(moving, [
             { transform: 'translate(0,0) scale(1)' },
@@ -164,6 +168,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         const banner = place(node('div', 'event-banner'), messageRect);
         const played = new Set();
         publicUnits = new Map([...previous.player.field, ...previous.computer.field, ...next.player.field, ...next.computer.field].map(m => [m.card.instanceId, m]));
+        priorUnits = new Map([...previous.player.field, ...previous.computer.field].map(m => [m.card.instanceId, m]));
+        nextUnits = new Map([...next.player.field, ...next.computer.field].map(m => [m.card.instanceId, m]));
         // Next public field provides fixed destinations; old public field preserves departing sources.
         const locations = new Map([...previous.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...previous.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]]), ...next.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...next.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]])]);
         const destination = id => { const location = locations.get(id); return location ? slot(...location) : null; };
@@ -180,7 +186,7 @@ export function bindFeedback(root, sound = null, fx = null) {
                     hide(hand(ev.instanceId));
                     if (ev.side === 'computer') {
                         const isField = destination(ev.instanceId), moving = originCard(ev.side, ev.card);
-                        void sound?.play(isField ? 'place' : 'spell', .35);
+                        void sound?.play(isField ? 'place' : String(ev.card?.type ?? '').includes('結界') ? 'field' : 'spell', .35);
                         const spellTarget = isField ? null : visual(ev.targetId) ?? root.querySelector('.battlefield');
                         await fly(moving, isField ?? spellTarget, !!isField);
                         if (isField) ghosts.set(ev.instanceId, moving);
@@ -198,11 +204,13 @@ export function bindFeedback(root, sound = null, fx = null) {
                         }
                         hide(hand(ev.instanceId));
                         void fx?.slam(target, ev.type === 'set' ? 0 : ev.card?.cost ?? 1);
+                        void sound?.play(ev.type === 'set' ? 'set' : 'summon');
+                        if (ev.type === 'summon' && nextUnits.get(ev.instanceId)?.status?.includes('嘲諷')) void sound?.play('taunt', .15);
                         await flash(target, '#93ffc0');
                     }
                 } else if (ev.type === 'energy') {
-                    if (ev.side === 'computer') { void sound?.play('energy', .35); await fly(originCard(ev.side, null), hero(ev.side)); }
-                    else { const zone = root.querySelector('.energy-zone'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
+                    if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); await fly(originCard(ev.side, null), hero(ev.side)); }
+                    else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
                 } else if (ev.type === 'trigger' || ev.type === 'status' || ev.type === 'reveal') {
                     void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
                     void fx?.ring(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1', .7);
@@ -219,7 +227,7 @@ export function bindFeedback(root, sound = null, fx = null) {
                 }
                 else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
                 else if (ev.type === 'gameover') {
-                    void sound?.play('gameover');
+                    void sound?.play(ev.side === 'player' ? 'defeat' : 'victory');
                     // The gameover event names the losing side.
                     void fx?.banner(ev.side === 'player' ? '敗北' : '勝利', ev.side === 'player' ? 'defeat' : 'victory', 1800);
                     // Portrait finish: the loser's frame cracks with dust, the winner's sparkles gold.

@@ -14,7 +14,7 @@
         {
             var value = PlayerAvatars.BuiltInPrefix + avatar.Id;
             <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@avatar.Label"
-                    class="avatar-option @(Profile.Avatar == value ? "selected" : "")" disabled="@(Busy || Cropping)" @onclick="() => Choose(value)">
+                    class="avatar-option @(Profile.Avatar == value ? "selected" : "")" data-sfx="avatar" disabled="@(Busy || Cropping)" @onclick="() => Choose(value)">
                 <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@avatar.Label</span>
             </button>
         }
@@ -29,13 +29,13 @@
         <label class="avatar-zoom">縮放<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom aria-label="縮放" /></label>
         <p class="avatar-help">拖曳移動圖片，雙指或滑桿縮放。圓圈內就是頭像。</p>
         <div class="avatar-actions">
-            <button type="button" class="btn btn-primary" disabled="@Busy" @onclick="ConfirmCrop">使用這張頭像</button>
+            <button type="button" class="btn btn-primary" data-sfx="avatar" disabled="@Busy" @onclick="ConfirmCrop">使用這張頭像</button>
             <button type="button" class="btn btn-outline-secondary" disabled="@Busy" @onclick="CancelCrop">取消</button>
         </div>
     </div>
     @if (Toast != null)
     {
-        <div class="wcg-toast @(ToastError ? "error" : "success")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
+        <div class="wcg-toast @(ToastError ? "error" : "success")" data-sfx-quiet="@(ToastError ? null : "true")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
     }
 </section>
 

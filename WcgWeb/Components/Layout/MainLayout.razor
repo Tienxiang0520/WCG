@@ -36,6 +36,13 @@
             await motion.InvokeVoidAsync("applyMotionAttribute");
         }
         catch (JSException) { }
+        // Page-wide interface sounds (clicks, navigation, toggles, toasts, dialogs) share one audio manager with battles.
+        try
+        {
+            await using var audio = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/wcg-audio.js");
+            await audio.InvokeVoidAsync("installGlobalAudio");
+        }
+        catch (JSException) { }
     }
 
     public async ValueTask DisposeAsync()
