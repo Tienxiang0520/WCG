@@ -34,7 +34,7 @@ article.wcg-face .face-head{position:relative;display:flex;align-items:center;ga
 article.wcg-face .face-name{flex:1;min-width:0;margin:0;display:flex;align-items:center;gap:1.4cqw;font-size:8.4cqw;line-height:1.08;font-weight:700;letter-spacing:.02em;
   background:var(--name-fill);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none}
 article.wcg-face .face-name span{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
-article.wcg-face .face-name .face-spark{flex:none;width:5.4cqw;height:5.4cqw;fill:var(--gold-2);filter:drop-shadow(0 0 .5cqw var(--orn-glow))}
+article.wcg-face .face-name .face-spark{flex:none;width:5.4cqw;height:5.4cqw;fill:var(--gold-2);filter:drop-shadow(0 0 .5cqw var(--spark-glow,#fff3c4))}
 article.wcg-face .face-cost{flex:none;position:relative;display:flex;align-items:baseline;justify-content:center;width:15.5cqw;height:15.5cqw;margin:-1.2cqw -1.4cqw 0 0;border-radius:50%;
   background:var(--medal-bg);color:var(--medal-ink);font-family:Georgia,"Noto Serif TC",serif;
   box-shadow:0 0 0 .7cqw var(--medal-ring),0 0 0 1.5cqw var(--gold-3),0 0 0 1.9cqw var(--medal-halo),0 .8cqw 2cqw rgba(0,0,0,.35);padding-top:3.4cqw;box-sizing:border-box}
@@ -72,10 +72,11 @@ article.wcg-face:not([data-will=order]) .face-star.tr{transform:scaleX(-1)}
 article.wcg-face:not([data-will=order]) .face-star.bl{transform:scaleY(-1)}
 article.wcg-face:not([data-will=order]) .face-star.br{transform:scale(-1)}
 article.wcg-face:not([data-will=order]) .face-star.tl,article.wcg-face:not([data-will=order]) .face-star.tr,
-article.wcg-face:not([data-will=order]) .face-star.bl,article.wcg-face:not([data-will=order]) .face-star.br{width:7cqw;height:7cqw;left:auto;right:auto;top:auto;bottom:auto}
+article.wcg-face:not([data-will=order]) .face-star.bl,article.wcg-face:not([data-will=order]) .face-star.br{width:9cqw;height:9cqw;left:auto;right:auto;top:auto;bottom:auto}
 article.wcg-face:not([data-will=order]) .face-star.tl{left:.9cqw;top:.9cqw}article.wcg-face:not([data-will=order]) .face-star.tr{right:.9cqw;top:.9cqw}
 article.wcg-face:not([data-will=order]) .face-star.bl{left:.9cqw;bottom:.9cqw}article.wcg-face:not([data-will=order]) .face-star.br{right:.9cqw;bottom:.9cqw}
 article.wcg-face:not([data-will=order]) .face-compass{stroke-width:1.2}
+article.wcg-face:not([data-will=order]) .face-spark{--spark-glow:var(--orn-glow)}
 /* Fury: charred obsidian with ember cracks, molten bronze frame, flame ornaments. */
 article.wcg-face[data-will=wrath]{--accent:#ff7a3c;--gold-1:#ffd08c;--gold-2:#e07a2c;--gold-3:#a8481c;--gold-4:#55190a;--ink:#f8e6d6;--ink-soft:#eab595;
   --face-bg:radial-gradient(85% 45% at 50% 104%,rgba(255,96,24,.34),transparent 70%),radial-gradient(60% 35% at 15% 8%,rgba(255,130,50,.16),transparent 70%),
