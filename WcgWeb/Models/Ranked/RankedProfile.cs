@@ -2,7 +2,8 @@ namespace WcgWeb.Models.Ranked;
 
 public sealed class RankedProfile
 {
-    public int Version { get; set; } = 1;
+    // 2 = tiered ranked AI (GameEngine.RankedAiVersion 4). Version 1 saves are archived and reset on load.
+    public int Version { get; set; } = RankedRules.ProfileVersion;
     public string Season { get; set; } = "";
     public int Stars { get; set; }
     public int BestStars { get; set; }
@@ -33,6 +34,7 @@ public sealed class RankedMatch
 public record RankedAction(string Type, int Source = -1, int TargetSide = -1, int Target = -1, int Choice = -1, int RulesVersion = 1);
 public static class RankedRules
 {
+    public const int ProfileVersion = 2;
     public static readonly string[] Tiers = ["青銅", "白銀", "黃金", "白金", "鑽石", "大師"];
     public static int Tier(int stars) => Math.Min(5, Math.Max(0, stars) / 15);
     public static string Label(int stars) => Tier(stars) == 5 ? $"大師 · {stars - 75} 星" : $"{Tiers[Tier(stars)]} {new[] { "III", "II", "I" }[(stars % 15) / 5]}";

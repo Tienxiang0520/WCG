@@ -18,7 +18,7 @@ public partial class GameEngine
     }
     private Random _random;
     public int AiLevel { get; set; } = -1;
-    internal void SetReplaySeed(int seed) => _random = new Random(seed);
+    internal void SetReplaySeed(int seed) { _random = new Random(seed); _aiSeed = seed; }
     private readonly object _gate = new();
     private readonly LinkedList<Action> _effects = new();
     private int _mutationDepth;

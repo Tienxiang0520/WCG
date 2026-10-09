@@ -93,6 +93,23 @@ public sealed class PlayerProfileTests : IDisposable
         Assert.Throws<InvalidDataException>(() => PlayerBackupValidator.Validate(Backup("{\"Avatar\":\"data:text/html;base64,PGI+aGk8L2I+aGVsbG8gd29ybGQ=\"}"), cards, opponents));
         Assert.Throws<InvalidDataException>(() => PlayerBackupValidator.Validate(Backup("not json"), cards, opponents));
     }
+    [Fact] public void AvatarAndTieredRankedSaveCoexistInOneSaveAndBackup()
+    {
+        var data = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb/Data"));
+        var cards = new CardDatabase(File.ReadAllText(Path.Combine(data, "cards.json")), File.ReadAllText(Path.Combine(data, "preset_decks.json")));
+        var opponents = new RankedDecks(cards, File.ReadAllText(Path.Combine(data, "ranked_decks.json")));
+        var avatar = JsonSerializer.Serialize(new PlayerProfile { Avatar = Url("webp", Webp) });
+        // An old (v1) ranked save next to an avatar: the backup is accepted and the ranked reset leaves the avatar alone.
+        var oldRanked = "{\"Version\":1,\"Season\":\"2026-10\",\"Stars\":7,\"Wins\":7}";
+        PlayerBackupValidator.Validate(JsonSerializer.Serialize(new { format = "soul-oath-local", version = 1, data = new Dictionary<string, string> { ["ranked"] = oldRanked, ["profile"] = avatar }, preferences = new { } }), cards, opponents);
+        var storage = new MemoryStorage(); storage.Values["ranked"] = oldRanked; storage.Values["profile"] = avatar;
+        var ranked = new RankedStore(storage); var loaded = ranked.Load();
+        Assert.True(ranked.ResetOnLoad); ranked.Save(loaded);
+        Assert.Contains($"\"Version\": {WcgWeb.Models.Ranked.RankedRules.ProfileVersion}", storage.Values["ranked"]);
+        Assert.Equal(avatar, storage.Values["profile"]);
+        var profile = new PlayerProfileStore(storage); Assert.True(profile.IsCustom);
+        profile.Reset(); Assert.Equal(0, new RankedStore(storage).Load().Stars);
+    }
     [Fact] public void ServerHostKeepsAvatarInItsOwnPlayerFile()
     {
         Directory.CreateDirectory(Path.Combine(root, "Data"));
