@@ -597,3 +597,63 @@
 .event-showcase>strong{font-size:16px}
 .event-showcase .event-text{position:relative;z-index:2;margin-top:auto;padding:8px 9px;border-radius:7px;background:rgba(9,11,17,.82);color:#efe6d2;font-size:12px;line-height:1.35;max-height:42%;overflow:hidden}
 @media(max-width:700px){.event-badge{font-size:11px;height:24px!important}.event-ff{font-size:11px}.event-showcase .event-text{font-size:10.5px}.event-stat{font-size:18px}}
+/* ===== Card-face redesign: condensed physical look for board and hand (sizes and hit areas unchanged) ===== */
+.event-showcase.wcg-face{box-shadow:none!important;padding:0!important;filter:drop-shadow(0 0 22px rgba(255,214,122,.45)) drop-shadow(0 18px 40px rgba(0,0,0,.6))}
+/* Compact faces share the full face's will themes (card-face.css). Order is the physical ivory/gold look;
+   the other wills set the same variables. Board: full-art window inside a rim; name on a plate. Hand: themed card body. */
+.field-card,.v06-hand-card{--c-bg:linear-gradient(160deg,#fbf6e9,#e9dcc0);--c-rim1:#e4c574;--c-rim2:#7a5a1e;--c-rim3:#f3ead4;--c-edge:rgba(20,14,4,.8);--c-metal:#c9a24b;--c-metal-dark:#a07a2c;--c-metal-deep:#6d4f17;--c-metal-light:#f6e3a6;--c-glint:#fff6d8;
+  --c-plate:linear-gradient(180deg,#fdf8ea,#efe2c2);--c-plate-ink:#5a3f12;--c-medal:radial-gradient(circle at 40% 35%,#fffdf6,#f1e3c4 70%,#dcc394);--c-medal-ink:#2b2010;--c-pp:#8a2a1d;--c-dp:#24457e;
+  --c-hand-bg:radial-gradient(120% 60% at 30% 10%,rgba(255,255,255,.7),transparent 60%),linear-gradient(165deg,#fbf6e9,#f0e6cf 60%,#e6d8bb);--c-ink:#3a2c18;--c-ink-soft:#6a5634;--c-name:#7a5618;--c-line:rgba(160,122,44,.55);
+  --c-arrow-1:#fff1b8;--c-arrow-2:#e1b54c;--c-arrow-3:#a8761d;--c-arrow-glow:rgba(255,226,140,.85);--c-arrow-edge:#3a2a0a;--c-tapped:linear-gradient(160deg,#e9e1cc,#cfc2a5)}
+.field-card.enemy-card[data-will=order],.field-card.enemy-card:not([data-will]){--c-rim1:#e0b48a;--c-rim2:#7a3a22;--c-rim3:#f1e4d6;--c-edge:rgba(20,8,4,.8)}
+[data-will=wrath]{--c-bg:linear-gradient(165deg,#3a1a12,#1b0d0a);--c-rim1:#ffb070;--c-rim2:#7a240c;--c-rim3:#2a120b;--c-edge:rgba(12,3,2,.9);--c-metal:#e07a2c;--c-metal-dark:#a8481c;--c-metal-deep:#55190a;--c-metal-light:#ffd08c;--c-glint:#ffcf9a;
+  --c-plate:linear-gradient(180deg,#3b1810,#1d0b07);--c-plate-ink:#ffcf9a;--c-medal:radial-gradient(circle at 40% 35%,#ffbe72,#d2541e 60%,#701b08);--c-medal-ink:#fff8ee;--c-pp:#fff3e4;--c-dp:#ffe2c4;
+  --c-hand-bg:radial-gradient(85% 40% at 50% 104%,rgba(255,96,24,.3),transparent 70%),repeating-linear-gradient(62deg,transparent 0 9px,rgba(255,96,32,.1) 9px 10px,transparent 10px 23px),linear-gradient(165deg,#2c1612,#1b0d0a 55%,#110706);
+  --c-ink:#f8e6d6;--c-ink-soft:#eab595;--c-name:#ffb86a;--c-line:rgba(224,122,44,.55);--c-arrow-1:#ffe4a6;--c-arrow-2:#ff8a2a;--c-arrow-3:#b5341a;--c-arrow-glow:rgba(255,110,30,.85);--c-arrow-edge:#1a0502;--c-tapped:linear-gradient(165deg,#24120d,#120806)}
+[data-will=reason]{--c-bg:linear-gradient(160deg,#22305e,#0d1430);--c-rim1:#e6ecff;--c-rim2:#435078;--c-rim3:#16204a;--c-edge:rgba(4,6,20,.9);--c-metal:#c6d0e6;--c-metal-dark:#8592b2;--c-metal-deep:#434e6c;--c-metal-light:#ffffff;--c-glint:#e8eeff;
+  --c-plate:linear-gradient(180deg,#1f2c5a,#0d1430);--c-plate-ink:#e8eeff;--c-medal:radial-gradient(circle at 40% 35%,#4a6fd0,#1f377e 65%,#0f1a45);--c-medal-ink:#f3f6ff;--c-pp:#ffffff;--c-dp:#d6e2ff;
+  --c-hand-bg:radial-gradient(90% 60% at 30% 12%,rgba(120,160,255,.22),transparent 65%),repeating-linear-gradient(0deg,rgba(150,180,255,.055) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,rgba(150,180,255,.055) 0 1px,transparent 1px 12px),linear-gradient(160deg,#1a2650,#111a38 55%,#0a1028);
+  --c-ink:#ebf0ff;--c-ink-soft:#b3c2ea;--c-name:#d6e2ff;--c-line:rgba(180,196,236,.5);--c-arrow-1:#ffffff;--c-arrow-2:#bccaff;--c-arrow-3:#5a72c6;--c-arrow-glow:rgba(150,190,255,.85);--c-arrow-edge:#060a20;--c-tapped:linear-gradient(160deg,#151d3c,#0a0f24)}
+[data-will=vitality]{--c-bg:linear-gradient(170deg,#7a5532,#3b2717);--c-rim1:#d4e8a0;--c-rim2:#3e5a1c;--c-rim3:#5a3d24;--c-edge:rgba(20,12,4,.9);--c-metal:#94b752;--c-metal-dark:#5b7a2e;--c-metal-deep:#2d4214;--c-metal-light:#e2efb4;--c-glint:#eef6cc;
+  --c-plate:linear-gradient(180deg,#f2f7e2,#dbe8bf);--c-plate-ink:#2f4416;--c-medal:radial-gradient(circle at 40% 35%,#a3d570,#52852b 65%,#2a4614);--c-medal-ink:#fcffef;--c-pp:#fffbea;--c-dp:#eaffd0;
+  --c-hand-bg:radial-gradient(75% 40% at 12% 102%,rgba(112,176,70,.42),transparent 70%),repeating-linear-gradient(93deg,transparent 0 5px,rgba(40,22,8,.2) 5px 6px,rgba(120,80,40,.09) 6px 11px),linear-gradient(170deg,#6e4c2d,#513621 55%,#3b2717);
+  --c-ink:#f6eedc;--c-ink-soft:#d9e6b6;--c-name:#d6eda0;--c-line:rgba(168,206,116,.55);--c-arrow-1:#f4ffcc;--c-arrow-2:#a9d65b;--c-arrow-3:#4b7a26;--c-arrow-glow:rgba(190,240,120,.85);--c-arrow-edge:#142008;--c-tapped:linear-gradient(170deg,#5a4028,#2e1f12)}
+[data-will=abyss]{--c-bg:linear-gradient(165deg,#2a1638,#09050e);--c-rim1:#d2c8da;--c-rim2:#3c2c4a;--c-rim3:#1a0f24;--c-edge:rgba(4,2,7,.92);--c-metal:#9d90a8;--c-metal-dark:#6a5c78;--c-metal-deep:#2c2236;--c-metal-light:#ddd4e2;--c-glint:#ece4f2;
+  --c-plate:linear-gradient(180deg,#2c1840,#120a1a);--c-plate-ink:#ead8ff;--c-medal:radial-gradient(circle at 40% 35%,#62358f,#2e1548 65%,#12081d);--c-medal-ink:#f6eeff;--c-pp:#fcf6ff;--c-dp:#e6d6ff;
+  --c-hand-bg:radial-gradient(70% 45% at 50% 48%,rgba(130,60,190,.24),transparent 70%),repeating-radial-gradient(circle at 50% 118%,transparent 0 14px,rgba(160,100,210,.07) 14px 15px),linear-gradient(165deg,#1f1129,#130a1b 55%,#09050e);
+  --c-ink:#efe5f8;--c-ink-soft:#c8afe2;--c-name:#d8bdf6;--c-line:rgba(170,150,190,.45);--c-arrow-1:#f3eaff;--c-arrow-2:#ad8ed4;--c-arrow-3:#573a7e;--c-arrow-glow:rgba(180,120,255,.85);--c-arrow-edge:#09040e;--c-tapped:linear-gradient(165deg,#180d22,#07040b)}
+[data-will=neutral]{--c-bg:linear-gradient(160deg,#7a7c80,#46484c);--c-rim1:#ececea;--c-rim2:#383938;--c-rim3:#5e6064;--c-edge:rgba(16,17,18,.9);--c-metal:#abaca8;--c-metal-dark:#7a7b78;--c-metal-deep:#383938;--c-metal-light:#ececea;--c-glint:#f4f4f2;
+  --c-plate:linear-gradient(180deg,#eeeeea,#d4d5d0);--c-plate-ink:#2a2c2f;--c-medal:radial-gradient(circle at 40% 35%,#a2a4a7,#6c6e72 65%,#3e4044);--c-medal-ink:#ffffff;--c-pp:#ffffff;--c-dp:#eef1f6;
+  --c-hand-bg:radial-gradient(100% 60% at 28% 12%,rgba(255,255,255,.14),transparent 60%),repeating-linear-gradient(135deg,rgba(0,0,0,.05) 0 2px,transparent 2px 6px),linear-gradient(160deg,#6e7074,#57595d 55%,#46484c);
+  --c-ink:#f4f4f0;--c-ink-soft:#d6d7d2;--c-name:#ffffff;--c-line:rgba(210,210,205,.5);--c-arrow-1:#ffffff;--c-arrow-2:#cacbc7;--c-arrow-3:#76777a;--c-arrow-glow:rgba(235,235,230,.7);--c-arrow-edge:#151617;--c-tapped:linear-gradient(160deg,#5a5c60,#3a3c40)}
+.field-card{background:var(--c-bg);box-shadow:inset 0 0 0 1.5px var(--c-rim1),inset 0 0 0 2.5px var(--c-rim2),inset 0 0 0 5px var(--c-rim3),0 0 0 1px var(--c-edge),0 8px 18px rgba(0,0,0,.6)}
+.tapped .field-card{background:var(--c-tapped)}
+.field-card .card-art-layer{inset:5px;border-radius:7px;box-shadow:0 0 0 1px var(--c-metal)}
+.field-card>strong{color:var(--c-plate-ink);text-shadow:none;background:var(--c-plate);box-shadow:0 0 0 1px var(--c-metal),0 2px 5px rgba(0,0,0,.45);font-family:"Noto Serif TC","Songti TC",Georgia,serif;font-weight:700}
+.field-stats b{color:var(--c-medal-ink);text-shadow:none;font-family:Georgia,"Noto Serif TC",serif}
+.field-stats b:first-child,.field-stats b:last-child{background:var(--c-medal);box-shadow:0 0 0 1.5px var(--c-metal-dark),inset 0 0 0 2px var(--c-glint),0 0 0 2.5px var(--c-metal-light),0 3px 8px rgba(0,0,0,.55)}
+.field-stats b:first-child{color:var(--c-pp)}.field-stats b:last-child{color:var(--c-dp)}
+.is-poisonous .field-stats b:first-child{box-shadow:0 0 0 1.5px #5aa23c,0 0 0 3px #b8ff9e,0 0 10px rgba(109,255,90,.6)}
+/* Direction arrows: will-coloured triangles on the card edges (same positions as before, so enemy cards still mirror). */
+.arrowmark{background:linear-gradient(90deg,var(--c-arrow-1),var(--c-arrow-2) 45%,var(--c-arrow-3));filter:drop-shadow(0 0 1px var(--c-arrow-edge)) drop-shadow(0 0 5px var(--c-arrow-glow))}
+.arrowmark.left{clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
+.arrowmark.right{clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
+.arrowmark.up{clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%);background:linear-gradient(180deg,var(--c-arrow-1),var(--c-arrow-2) 45%,var(--c-arrow-3))}
+/* Hand: themed card body, metal rim, cost medallion (kept top-left so it stays visible in the fan). */
+.v06-hand-card:not(.card-back){color:var(--c-ink);border:2px solid var(--c-metal);background:var(--c-hand-bg);box-shadow:inset 0 0 0 1px var(--c-glint),inset 0 0 0 2px var(--c-metal-dark),0 0 0 1px var(--c-edge),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card:not(.card-back)>strong{color:var(--c-name);font-family:"Noto Serif TC","Songti TC",Georgia,serif;font-weight:700}
+.v06-hand-card:not(.card-back)>small{color:var(--c-ink-soft);font-weight:600;letter-spacing:.04em}
+.v06-hand-card:not(.card-back) p{color:var(--c-ink)}
+.v06-hand-card:not(.card-back) .stats{color:var(--c-ink);font-family:Georgia,"Noto Serif TC",serif;font-weight:800;border-top:1px solid var(--c-line);padding-top:3px}
+.v06-hand-card .hand-art-layer{box-shadow:0 0 0 1px var(--c-glint),0 0 0 2.5px var(--c-metal),0 0 0 3px var(--c-metal-deep)}
+.v06-hand-card .mana{color:var(--c-medal-ink);text-shadow:none;font-family:Georgia,"Noto Serif TC",serif;background:var(--c-medal);box-shadow:0 0 0 2px var(--c-metal-light),0 0 0 3.5px var(--c-metal-dark),0 3px 8px rgba(0,0,0,.55)}
+.v06-hand-card.available:not(.card-back){border-color:#5fd3bd;box-shadow:inset 0 0 0 1px var(--c-glint),inset 0 0 0 2px var(--c-metal-dark),0 0 16px rgba(95,211,189,.55),0 8px 18px rgba(0,0,0,.6)}
+.v06-hand-card.set-ready:not(.card-back){border-color:#ffe08a}
+.v06-hand-card:not(.card-back) .hand-availability{background:#3a2c18;color:#f6e3a6}
+.v06-hand-card.available:not(.card-back) .hand-availability{background:#1d6b52;color:#eafff5}
+.v06-hand-card.set-ready:not(.card-back) .hand-availability{background:#6d5420;color:#fff1c4}
+@media(max-width:600px){
+.field-card{box-shadow:inset 0 0 0 1px var(--c-rim1),inset 0 0 0 1.5px var(--c-rim2),inset 0 0 0 3px var(--c-rim3),0 0 0 1px var(--c-edge),0 4px 10px rgba(0,0,0,.6)}
+.field-card .card-art-layer{inset:3px;border-radius:5px}
+.field-stats b:first-child,.field-stats b:last-child{box-shadow:0 0 0 1px var(--c-metal-dark),0 0 0 2px var(--c-metal-light),0 2px 5px rgba(0,0,0,.55)}
+}

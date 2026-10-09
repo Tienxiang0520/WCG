@@ -101,6 +101,18 @@ test('a spell is showcased large with its text, then its effect travels from the
     assert.match(text(show),/裁決之光.*消滅 1 隻敵怪/);
     h.feedback.clear();assert.equal(h.body.children.length,0);
 });
+test('the spell showcase is the full physical card face: cost medallion, will·type band, arrows as triangles, set line', async t=>{
+    resetFastForward();
+    const h=harness(t),spell={instanceId:'ward',cardId:'WCG-061',name:'銀色誓言衛',type:'法術',will:'秩序',cost:2,text:'【箭頭：→】右側相鄰格的己方怪物具有聖盾。',arrows:['right']};
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'ward',card:spell,order:0}]));
+    const show=h.record.find(r=>r.el.dataset.wcgEffect==='showcase').el,all=descendants(show),cls=c=>all.filter(el=>String(el.className).split(' ').includes(c));
+    assert.match(show.className,/wcg-face/);assert.equal(show.dataset.will,'order');
+    assert.match(text(cls('face-cost')[0]),/2.*費/);assert.match(text(cls('face-band')[0]),/秩序.*法術/);
+    assert.equal(cls('face-arrow').length,1);assert.match(cls('face-arrow')[0].className,/right/);
+    assert.match(text(cls('face-text')[0]),/^ *右側相鄰格/,'the arrow prefix is drawn, not printed');
+    assert.match(text(cls('face-foot')[0]),/魂誓.*WCG-061/);
+    h.feedback.clear();
+});
 test('fast-forward shortens the remaining animations and is offered as a button and a board-wide tap', async t=>{
     resetFastForward();
     const h=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];

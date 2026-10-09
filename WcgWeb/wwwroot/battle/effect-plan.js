@@ -13,7 +13,7 @@ export const BADGE_KEYWORDS = ['聖盾', '嘲諷', '沉默', '劇毒', '貫穿',
 const SOURCE_TYPES = new Set(['effect', 'trigger']);
 const TARGETED = new Set(['death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
-export const isSpellCard = card => !!card && !/怪物|結界/.test(String(card.type ?? ''));
+export const isSpellCard = card => !!card && /^法術/.test(String(card.type ?? ''));
 export function keywordOf(status) { return BADGE_KEYWORDS.find(k => String(status).startsWith(k)) ?? null; }
 function units(snapshot) {
     const map = new Map();

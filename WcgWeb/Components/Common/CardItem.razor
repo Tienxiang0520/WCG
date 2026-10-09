@@ -1,72 +1,15 @@
 @namespace WcgWeb.Components.Common
 
-<div class="wcg-card will-@Card.Will @(IsPlayable ? "is-playable" : "") @(IsSelected ? "is-selected" : "") card-hoverable @(Compact ? "compact-card" : "")"
+<div class="wcg-card face-tile will-@Card.Will @(IsPlayable ? "is-playable" : "") @(IsSelected ? "is-selected" : "") card-hoverable @(Compact ? "compact-card" : "")"
      @onclick="HandleCardClick">
-    
-    <!-- Header -->
-    <div class="card-header-bar">
-        <span class="card-title" title="@L.CardName(Card)">@L.CardName(Card)</span>
-        <div class="card-cost-gem" title="@L["通用費用"]"><span class="gem-icon">@Card.TotalCost</span></div>
-    </div>
-
-    <!-- Art Box -->
-    <div class="card-art-box">
+    <CardFace Card="Card">
         @if (QuantityInDeck >= 0)
         {
-            <div class="position-absolute top-0 end-0 m-1" style="z-index: 5;">
-                <span class="badge @(QuantityInDeck >= 4 && !Card.IsEnergy ? "bg-danger" : "bg-primary") rounded-pill shadow-sm" style="font-size: 0.65rem; padding: 2px 6px;">
-                    @(Card.IsEnergy ? L.F("{0} 張", QuantityInDeck) : $"{QuantityInDeck}/4")
-                </span>
-            </div>
+            <span class="face-qty badge @(QuantityInDeck >= 4 && !Card.IsEnergy ? "bg-danger" : "bg-primary") rounded-pill shadow-sm" style="font-size: 0.65rem; padding: 2px 6px;">
+                @(Card.IsEnergy ? L.F("{0} 張", QuantityInDeck) : $"{QuantityInDeck}/4")
+            </span>
         }
-        <CardArt Card="Card" />
-        @foreach (var arrow in Card.Arrows)
-        {
-            <span class="card-art-arrow @arrow" aria-label="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]">@(arrow == "left" ? "←" : arrow == "right" ? "→" : "↑")</span>
-        }
-        <div class="card-type-strip">
-            @L.CardType(Card.Type) · @L.Will(Card.Will)
-        </div>
-    </div>
-
-    <!-- Text / Ability Box -->
-    <div class="card-text-box">
-        @if (Card.IsMonster)
-        {
-            <div class="mb-1 d-flex flex-wrap gap-1">
-                @if (Card.HasTaunt) { <span class="badge bg-secondary badge-status">@L["嘲諷"]</span> }
-                @if (Card.HasCharge) { <span class="badge bg-danger badge-status">@L["衝鋒"]</span> }
-                @if (Card.HasTrample) { <span class="badge bg-danger badge-status">@L["貫穿"]</span> }
-                @if (Card.HasDivineShield) { <span class="badge bg-warning text-dark badge-status">@L["聖盾"]</span> }
-                @if (Card.HasStealth) { <span class="badge bg-info text-dark badge-status">@L["潛伏"]</span> }
-                @if (Card.HasPoison) { <span class="badge bg-success badge-status">@L["劇毒"]</span> }
-            </div>
-        }
-        @if (string.IsNullOrWhiteSpace(Card.Text))
-        {
-            <div class="text-muted text-center fst-italic" style="font-size:0.68rem; margin:auto;">@L["（純白凡骨）"]</div>
-        }
-        else
-        {
-            <div style="font-size: 0.72rem; line-height: 1.25;">@L.CardText(Card)</div>
-        }
-    </div>
-
-    <!-- Footer Stats (Monster only) -->
-    @if (Card.IsMonster)
-    {
-        <div class="card-footer-stats">
-            <div class="stat-badge-pp" title="@L["力量值 PP (戰鬥消滅判定)"]">
-                <small>PP</small>@(Card.PP?.ToString() ?? "0")
-            </div>
-            <div class="stat-badge-dp" title="@L["傷害值 DP (對玩家本體傷害)"]">
-                <small>DP</small>@(Card.DP?.ToString() ?? "1")
-            </div>
-        </div>
-    }
-
-
-
+    </CardFace>
     @if (ShowPlayButton && IsPlayable)
     {
         <button class="btn btn-sm btn-success w-100 mt-1 py-0 fw-bold" style="font-size:0.75rem;"

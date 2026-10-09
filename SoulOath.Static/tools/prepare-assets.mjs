@@ -18,7 +18,7 @@ if (!existsSync(resolve(root, 'WcgWeb/wwwroot/battle/board.js'))
 }
 const printArt = spawnSync('python3', [resolve(root, 'WcgWeb/tools/prepare-print-art.py')], { stdio: 'inherit' });
 if (printArt.status !== 0) process.exit(printArt.status ?? 1);
-for (const name of ['app.css','wcg.css','favicon.png','sidebar.js','i18n.js','battle-drag.js','deck-print.css','deck-print.js','print-art','lib','battle']) {
+for (const name of ['app.css','wcg.css','favicon.png','sidebar.js','i18n.js','battle-drag.js','deck-print.css','card-face.css','deck-print.js','print-art','lib','battle']) {
     await cp(resolve(root,'WcgWeb/wwwroot',name),resolve(project,'wwwroot',name),{recursive:true});
 }
 await mkdir(resolve(project,'wwwroot/data'),{recursive:true});

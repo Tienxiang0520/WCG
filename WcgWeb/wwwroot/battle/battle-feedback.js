@@ -4,7 +4,13 @@ import { planSteps, batchSpeed, isSpellCard, keywordOf } from './effect-plan.js'
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
 const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
     '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
-    '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand' };
+    '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
+    '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
+    '中立': 'Neutral', '深淵': 'Abyss', '狂怒': 'Fury', '理智': 'Reason', '生機': 'Life', '秩序': 'Order' };
+const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
+const STAR = 'M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z';
+// Per-will ornaments (corner, name spark, gem, emblem) — keep in sync with Services/CardFaceThemes.cs (CardFaceTests checks).
+const FACE_THEMES = {"order": {"corner": "M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z", "spark": "M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z", "gem": "M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z", "emblem": "<circle cx=\"50\" cy=\"50\" r=\"44\"/><circle cx=\"50\" cy=\"50\" r=\"31\"/><circle cx=\"50\" cy=\"50\" r=\"6\"/><path d=\"M50 2 56 44 98 50 56 56 50 98 44 56 2 50 44 44Z\"/><path d=\"M50 18 53 47 82 50 53 53 50 82 47 53 18 50 47 47Z\" transform=\"rotate(45 50 50)\"/>"}, "wrath": {"corner": "M1 1 19 3 13 6 17 9 9 9 11 13 6 12 3 19Z", "spark": "M10 0C13 5 17 8 16 13 15 17 12 20 10 20 8 20 5 17 4 13 4 10 7 8 8 4 10 8 11 10 10 0Z", "gem": "M10 1 15 8 12 19 8 19 5 8Z", "emblem": "<circle cx=\"50\" cy=\"50\" r=\"45\"/><path d=\"M50 6C62 26 78 34 74 62 72 80 60 92 50 94 40 92 28 80 26 62 24 46 36 40 40 24 46 36 44 46 50 52 58 40 56 22 50 6Z\"/><path d=\"M8 30 30 40 22 52 40 58M92 70 70 60 78 48 60 42\"/>"}, "reason": {"corner": "M1 1H14V3H3V14H1ZM5 5H11V6.6H6.6V11H5ZM9 9H12V12H9Z", "spark": "M10 1 18 5.5V14.5L10 19 2 14.5V5.5ZM10 5 5.5 7.5V12.5L10 15 14.5 12.5V7.5Z", "gem": "M10 2 18 10 10 18 2 10ZM10 6 6 10 10 14 14 10Z", "emblem": "<circle cx=\"50\" cy=\"50\" r=\"45\"/><circle cx=\"50\" cy=\"50\" r=\"36\"/><path d=\"M50 14 81 68H19ZM50 86 19 32H81Z\"/><circle cx=\"50\" cy=\"50\" r=\"10\"/><path d=\"M50 5V14M50 86V95M5 50H14M86 50H95\"/>"}, "vitality": {"corner": "M1 19C1 9 5 3 13 1 10 4 9 7 9 10 12 7 16 6 19 7 15 9 12 12 11 16 8 14 5 15 1 19Z", "spark": "M3 17C3 8 9 3 18 2 18 11 12 17 3 17ZM5 15 15 5 14.4 4.4 4.4 14.4Z", "gem": "M10 1C16 5 17 12 10 19 3 12 4 5 10 1Z", "emblem": "<circle cx=\"50\" cy=\"50\" r=\"45\"/><path d=\"M50 8C78 26 84 60 50 92 16 60 22 26 50 8Z\"/><path d=\"M50 14V88M50 40 68 28M50 54 72 42M50 68 66 58M50 40 32 28M50 54 28 42M50 68 34 58\"/>"}, "abyss": {"corner": "M1 1 19 5 9 6 12 9 7 8 6 12 5 7 4 19Z", "spark": "M1 10Q10 1 19 10 10 19 1 10ZM10 6.5Q12.2 10 10 13.5 7.8 10 10 6.5Z", "gem": "M10 1 13 8 19 10 13 12 10 19 7 12 1 10 7 8Z", "emblem": "<path d=\"M8 50Q50 12 92 50 50 88 8 50Z\"/><circle cx=\"50\" cy=\"50\" r=\"15\"/><path d=\"M50 37Q57 50 50 63 43 50 50 37Z\"/><path d=\"M22 68Q12 84 28 94M78 68Q88 84 72 94M50 78Q44 90 54 98M30 30Q18 18 24 6M70 30Q82 18 76 6\"/>"}, "neutral": {"corner": "M10 3A7 7 0 1 1 9.99 3ZM10 6A4 4 0 1 0 10.01 6Z", "spark": "M10 3A7 7 0 1 1 9.99 3Z", "gem": "M10 4A6 6 0 1 1 9.99 4Z", "emblem": "<circle cx=\"50\" cy=\"50\" r=\"44\"/><circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 22 78 50 50 78 22 50Z\"/><circle cx=\"50\" cy=\"8\" r=\"3\"/><circle cx=\"50\" cy=\"92\" r=\"3\"/><circle cx=\"8\" cy=\"50\" r=\"3\"/><circle cx=\"92\" cy=\"50\" r=\"3\"/>"}};
 // Fast-forward survives across the batches of one computer turn and resets when the player's turn begins.
 let fastForward = 1;
 export function resetFastForward() { fastForward = 1; }
@@ -57,6 +63,35 @@ export function bindFeedback(root, sound = null, fx = null) {
     function place(el, rect) {
         Object.assign(el.style, { position: 'fixed', left: `${rect.x}px`, top: `${rect.y}px`, width: `${rect.width}px`, height: `${rect.height}px`, bottom: 'auto', margin: '0', transform: 'none', transformOrigin: 'center', pointerEvents: 'none', transition: 'none' });
         layer.append(el); return el;
+    }
+    // Full card face for the spell showcase; mirrors Components/Common/CardFace.razor (styles in card-face.css).
+    function faceCard(card) {
+        const svg = (cls, view, inner) => { const el = document.createElementNS?.('http://www.w3.org/2000/svg', 'svg') ?? node('i', cls); if (el.setAttribute) { el.setAttribute('class', cls); el.setAttribute('viewBox', view); el.setAttribute('aria-hidden', 'true'); el.innerHTML = inner; } return el; };
+        const will = WILL_KEYS[card.will] ?? 'neutral', theme = FACE_THEMES[will];
+        const star = cls => svg(`face-star ${cls}`, '0 0 20 20', `<path d="${['tl', 'tr', 'bl', 'br'].includes(cls) ? theme.corner : theme.gem}"/>`);
+        const outer = node('article', 'wcg-face'), nameLen = [...String(card.name ?? '')].reduce((n, c) => n + (c.charCodeAt(0) > 0x2e80 ? 2 : 1), 0);
+        if (nameLen > 15) outer.className += nameLen > 24 ? ' name-xl' : ' name-l'; outer.dataset.will = will; outer.dataset.cardId = card.cardId ?? '';
+        const body = node('div', 'face-card'); outer.append(body);
+        body.append(svg('face-frame', '0 0 63 88', '<rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner"/>'));
+        for (const c of ['tl', 'tr', 'bl', 'br', 'top', 'bottom', 'head']) body.append(star(c));
+        const head = node('header', 'face-head'), name = node('h3', 'face-name'), cost = node('span', 'face-cost');
+        name.append(svg('face-spark', '0 0 20 20', `<path d="${theme.spark}"/>`), node('span', '', card.name ?? ''));
+        cost.append(node('b', '', String(card.cost ?? 0)), node('small', '', t('費'))); head.append(name, cost);
+        const band = node('div', 'face-band'); band.append(node('span', '', t(card.will ?? '')), node('i', '', '・'), node('span', '', t(card.type ?? '')));
+        const art = node('div', 'face-art');
+        if (/^WCG-\d{3}$/.test(card.cardId ?? '')) { const img = node('img', 'card-illustration'); img.src = `card-art/${card.cardId}.webp`; img.alt = ''; img.draggable = false; art.append(img); }
+        for (const a of card.arrows ?? []) art.append(node('span', `face-arrow ${a}`));
+        const text = node('div', 'face-text'); text.append(svg('face-compass face-emblem', '0 0 100 100', theme.emblem)); const plain = String(card.text ?? '').replace(/【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*/g, '').trim();
+        text.append(node('p', '', plain || t('無異能'))); if (plain.length > 60) outer.className += plain.length > 110 ? ' text-l' : ' text-m';
+        body.append(head, band, art, text);
+        if (card.pp != null) {
+            const stats = node('div', 'face-stats'), pp = node('span', 'pp'), dp = node('span', 'dp');
+            pp.append(node('small', '', t('力量')), node('b', '', String(card.pp)), node('small', '', 'PP'));
+            dp.append(node('small', '', t('傷害')), node('b', '', String(card.dp ?? 1)), node('small', '', 'DP'));
+            stats.append(pp, star('mid'), dp); body.append(stats);
+        }
+        const foot = node('footer', 'face-foot'); foot.append(node('span', '', t('魂誓')), node('span', '', card.cardId ?? '')); body.append(foot);
+        return outer;
     }
     function publicCard(card) {
         const el = node('div', `event-card ${card ? '' : 'event-card-back'}`);
@@ -210,10 +245,9 @@ export function bindFeedback(root, sound = null, fx = null) {
     function boardRect() { const r = root.querySelector('.battlefield')?.getBoundingClientRect?.() ?? root.getBoundingClientRect(); return r; }
     // Spells: the card is shown large in the centre, then shrinks to a corner and stays as the source of its effects.
     async function showSpell(ev) {
-        const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 1.36;
-        const card = publicCard(ev.card); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
+        const r = boardRect(), w = Math.min(250, r.width * .56), h = w * 88 / 63;
+        const card = ev.card ? faceCard(ev.card) : publicCard(null); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
         if (ev.side === 'computer') card.className += ' enemy-card';
-        if (ev.card?.text) card.append(node('p', 'event-text', ev.card.text));
         place(card, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2, width: w, height: h });
         void sound?.play('spell');
         const hero0 = hero(ev.side), from = hero0 ? center(hero0) : { x: r.x + r.width / 2, y: r.y + r.height };

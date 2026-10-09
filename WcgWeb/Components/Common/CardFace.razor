@@ -1,0 +1,72 @@
+@namespace WcgWeb.Components.Common
+@using WcgWeb.Models.Battle
+@* Full physical-style card face: name, cost medallion, will·type band, art window with direction triangles,
+   effect box with emblem watermark, PP/DP footer, set name + card number. Order is the physical reference
+   (ivory parchment, gold frame); every other will has its own frame theme (card-face.css [data-will]) and
+   ornaments (CardFaceThemes). Pure CSS/SVG; sizes are container-relative so one markup serves every size. *@
+<article class="wcg-face @LengthClass @NameClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText"><div class="face-card">
+    <svg class="face-frame" viewBox="0 0 63 88" preserveAspectRatio="none" aria-hidden="true">
+        <rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner" />
+    </svg>
+    @foreach (var star in Stars)
+    {
+        <svg class="face-star @star" viewBox="0 0 20 20" aria-hidden="true"><path d="@(star is "tl" or "tr" or "bl" or "br" ? Theme.Corner : Theme.Gem)" /></svg>
+    }
+    <header class="face-head">
+        <h3 class="face-name"><svg class="face-spark" viewBox="0 0 20 20" aria-hidden="true"><path d="@Theme.Spark" /></svg><span>@NameText</span></h3>
+        <span class="face-cost" title="@L["費"]"><b>@Cost</b><small>@L["費"]</small></span>
+    </header>
+    <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
+    <div class="face-art">
+        <CardImage CardId="@Id" Loading="@Loading" />
+        @foreach (var arrow in Arrows ?? [])
+        {
+            <span class="face-arrow @arrow" title="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]" role="img" aria-label="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]"></span>
+        }
+    </div>
+    <div class="face-text">
+        <svg class="face-compass face-emblem" viewBox="0 0 100 100" aria-hidden="true">@((MarkupString)Theme.Emblem)</svg>
+        <p>@(string.IsNullOrWhiteSpace(TextValue) ? L["無異能"] : TextValue)</p>
+    </div>
+    @if (PP != null)
+    {
+        <div class="face-stats">
+            <span class="pp"><small>@L["力量"]</small><b>@PP</b><small>PP</small></span>
+            <svg class="face-star mid" viewBox="0 0 20 20" aria-hidden="true"><path d="@Theme.Gem" /></svg>
+            <span class="dp"><small>@L["傷害"]</small><b>@DP</b><small>DP</small></span>
+        </div>
+    }
+    <footer class="face-foot"><span>@L["魂誓"]</span><span>@Id</span></footer>
+    </div>@ChildContent
+</article>
+@code {
+    [Parameter] public CardDefinition? Card { get; set; }
+    [Parameter] public BattleCard? Battle { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Loading { get; set; } = "lazy";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    private static readonly string[] Stars = ["tl", "tr", "bl", "br", "top", "bottom", "head"];
+    private string Id => Card?.Id ?? Battle?.CardId ?? "";
+    private string Will => Card?.Will ?? Battle?.Will ?? "";
+    private string Type => Card?.Type ?? Battle?.Type ?? "";
+    private int Cost => Card?.TotalCost ?? Battle?.Cost ?? 0;
+    private int? PP => Card != null ? (Card.IsMonster ? Card.PP ?? 0 : null) : Battle?.PP;
+    private int? DP => Card != null ? (Card.IsMonster ? Card.DP ?? 1 : null) : Battle?.DP;
+    private string[]? Arrows => Card?.Arrows ?? Battle?.Arrows;
+    private string NameText => Card != null ? L.CardName(Card) : L.CardName(Battle);
+    // The arrow prefix ("【箭頭：→】" / "[Arrow: →]") is drawn as gold triangles on the art instead.
+    private string TextValue => ArrowPrefix.Replace(Card != null ? L.CardText(Card) : L.CardText(Battle), "").Trim();
+    private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
+    private string WillKey => CardFaceThemes.Key(Will);
+    private CardFaceThemes.Theme Theme => CardFaceThemes.For(WillKey);
+    private string NameClass { get { var n = NameText.Sum(c => c > 0x2E80 ? 2 : 1); return n > 24 ? "name-xl" : n > 15 ? "name-l" : ""; } }
+    // Longer (usually English) effect text steps the font down so it stays inside the box.
+    private string LengthClass
+    {
+        get
+        {
+            var text = TextValue ?? ""; var weight = text.Sum(c => c > 0x2E80 ? 2 : 1);
+            return weight > 190 ? "text-xl" : weight > 130 ? "text-l" : weight > 80 ? "text-m" : "";
+        }
+    }
+}
