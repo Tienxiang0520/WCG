@@ -76,4 +76,34 @@ public class CardFaceTests
         Assert.Contains("<b>3</b>", html);
         Assert.Contains("<p>測試文字</p>", html);
     }
+
+    [Theory]
+    [InlineData("WCG-061", "order")] [InlineData("WCG-005", "wrath")] [InlineData("WCG-021", "reason")]
+    [InlineData("WCG-049", "vitality")] [InlineData("WCG-085", "abyss")] [InlineData("WCG-101", "neutral")]
+    public async Task EachWillGetsItsOwnFrameOrnaments(string id, string will)
+    {
+        var html = await Render(Localizer.English, new() { ["Card"] = Cards.GetCard(id) });
+        var theme = CardFaceThemes.For(will);
+        Assert.Contains($"data-will=\"{will}\"", html);
+        Assert.Contains($"<path d=\"{theme.Corner}\"", html);
+        Assert.Contains(theme.Emblem, html);
+        // Only Order keeps the physical card's four-point stars and compass.
+        Assert.Equal(will == "order", html.Contains(CardFaceThemes.Star));
+    }
+
+    [Fact]
+    public void ThemesAreDistinctAndTheShowcaseScriptUsesTheSameShapes()
+    {
+        Assert.Equal(6, CardFaceThemes.All.Count);
+        Assert.Equal(6, CardFaceThemes.All.Values.Select(t => t.Emblem).Distinct().Count());
+        Assert.Equal(6, CardFaceThemes.All.Values.Select(t => t.Corner).Distinct().Count());
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb/wwwroot"));
+        var js = File.ReadAllText(Path.Combine(root, "battle/battle-feedback.js"));
+        var json = Regex.Match(js, @"const FACE_THEMES = (\{.*\});").Groups[1].Value;
+        var parsed = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json)!;
+        foreach (var (key, t) in CardFaceThemes.All)
+            Assert.Equal(new[] { t.Corner, t.Spark, t.Gem, t.Emblem }, new[] { parsed[key]["corner"], parsed[key]["spark"], parsed[key]["gem"], parsed[key]["emblem"] });
+        var css = File.ReadAllText(Path.Combine(root, "card-face.css"));
+        foreach (var key in CardFaceThemes.All.Keys.Where(k => k != "order")) Assert.Contains($"article.wcg-face[data-will={key}]{{", css);
+    }
 }

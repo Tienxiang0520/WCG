@@ -1,18 +1,19 @@
 @namespace WcgWeb.Components.Common
 @using WcgWeb.Models.Battle
-@* Full physical-style card face (ivory parchment, gold frame, cost medallion, will·type band, art window with
-   gold direction triangles, effect box with compass watermark, PP/DP footer, set name + card number).
-   Pure CSS/SVG; sizes are container-relative so the same markup works from gallery tiles to the large preview. *@
+@* Full physical-style card face: name, cost medallion, will·type band, art window with direction triangles,
+   effect box with emblem watermark, PP/DP footer, set name + card number. Order is the physical reference
+   (ivory parchment, gold frame); every other will has its own frame theme (card-face.css [data-will]) and
+   ornaments (CardFaceThemes). Pure CSS/SVG; sizes are container-relative so one markup serves every size. *@
 <article class="wcg-face @LengthClass @NameClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText"><div class="face-card">
     <svg class="face-frame" viewBox="0 0 63 88" preserveAspectRatio="none" aria-hidden="true">
         <rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner" />
     </svg>
     @foreach (var star in Stars)
     {
-        <svg class="face-star @star" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg>
+        <svg class="face-star @star" viewBox="0 0 20 20" aria-hidden="true"><path d="@(star is "tl" or "tr" or "bl" or "br" ? Theme.Corner : Theme.Gem)" /></svg>
     }
     <header class="face-head">
-        <h3 class="face-name"><svg class="face-spark" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg><span>@NameText</span></h3>
+        <h3 class="face-name"><svg class="face-spark" viewBox="0 0 20 20" aria-hidden="true"><path d="@Theme.Spark" /></svg><span>@NameText</span></h3>
         <span class="face-cost" title="@L["費"]"><b>@Cost</b><small>@L["費"]</small></span>
     </header>
     <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
@@ -24,17 +25,14 @@
         }
     </div>
     <div class="face-text">
-        <svg class="face-compass" viewBox="0 0 100 100" aria-hidden="true">
-            <circle cx="50" cy="50" r="44" /><circle cx="50" cy="50" r="31" /><circle cx="50" cy="50" r="6" />
-            <path d="M50 2 56 44 98 50 56 56 50 98 44 56 2 50 44 44Z" /><path d="M50 18 53 47 82 50 53 53 50 82 47 53 18 50 47 47Z" transform="rotate(45 50 50)" />
-        </svg>
+        <svg class="face-compass face-emblem" viewBox="0 0 100 100" aria-hidden="true">@((MarkupString)Theme.Emblem)</svg>
         <p>@(string.IsNullOrWhiteSpace(TextValue) ? L["無異能"] : TextValue)</p>
     </div>
     @if (PP != null)
     {
         <div class="face-stats">
             <span class="pp"><small>@L["力量"]</small><b>@PP</b><small>PP</small></span>
-            <svg class="face-star mid" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z" /></svg>
+            <svg class="face-star mid" viewBox="0 0 20 20" aria-hidden="true"><path d="@Theme.Gem" /></svg>
             <span class="dp"><small>@L["傷害"]</small><b>@DP</b><small>DP</small></span>
         </div>
     }
@@ -59,7 +57,8 @@
     // The arrow prefix ("【箭頭：→】" / "[Arrow: →]") is drawn as gold triangles on the art instead.
     private string TextValue => ArrowPrefix.Replace(Card != null ? L.CardText(Card) : L.CardText(Battle), "").Trim();
     private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
-    private string WillKey => Will switch { "狂怒" => "wrath", "理智" => "reason", "生機" => "vitality", "秩序" => "order", "深淵" => "abyss", _ => "neutral" };
+    private string WillKey => CardFaceThemes.Key(Will);
+    private CardFaceThemes.Theme Theme => CardFaceThemes.For(WillKey);
     private string NameClass { get { var n = NameText.Sum(c => c > 0x2E80 ? 2 : 1); return n > 24 ? "name-xl" : n > 15 ? "name-l" : ""; } }
     // Longer (usually English) effect text steps the font down so it stays inside the box.
     private string LengthClass
