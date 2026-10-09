@@ -7,13 +7,13 @@
 @inject DeckService DeckSvc
 @inject IJSRuntime Js
 
-<PageTitle>對戰 - 魂誓</PageTitle>
+<PageTitle>@L["對戰 - 魂誓"]</PageTitle>
 @{ var match = Engine.MatchId; var revision = Engine.Revision; }
 <div @ref="DragRoot" class="battle-page @(Engine.CurrentPhase != TurnPhase.NotStarted ? "in-game" : "")" @onkeydown="PageKey">
     <header class="battle-heading">
-        <div><h1>魂誓</h1><p>50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 7 點生命</p></div>
-        <a href="/battle" class="btn btn-outline-info">新版對戰</a>
-        <a href="/deckbuilder" class="btn btn-outline-info">編輯牌組</a>
+        <div><h1>@L["魂誓"]</h1><p>@L["50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 7 點生命"]</p></div>
+        <a href="/battle" class="btn btn-outline-info">@L["新版對戰"]</a>
+        <a href="/deckbuilder" class="btn btn-outline-info">@L["編輯牌組"]</a>
     </header>
     @if (!string.IsNullOrEmpty(Notice))
     {
@@ -22,21 +22,21 @@
     @if (Engine.CurrentPhase == TurnPhase.NotStarted)
     {
         <section class="battle-panel setup-panel">
-            <h2>準備對局</h2>
-            <label for="player-deck">你的牌組</label>
+            <h2>@L["準備對局"]</h2>
+            <label for="player-deck">@L["你的牌組"]</label>
             <select id="player-deck" class="form-select" @bind="PlayerDeckId">
                 @foreach (var deck in Decks)
                 { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
             </select>
-            <label for="computer-deck">電腦牌組</label>
+            <label for="computer-deck">@L["電腦牌組"]</label>
             <select id="computer-deck" class="form-select" @bind="ComputerDeckId">
                 @foreach (var deck in Decks)
                 { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
             </select>
-            <label for="starter">先攻</label>
-            <select id="starter" class="form-select" @bind="Starter"><option value="player">玩家先攻</option><option value="computer">電腦先攻</option><option value="random">隨機</option></select>
-            <p>起手 7 張、不換牌。先攻第一回合不抽牌。每個自己的回合可填一張能量，不抽牌。</p>
-            <button class="btn btn-primary btn-lg" @onclick="() => Start(match, revision)">開始對戰</button>
+            <label for="starter">@L["先攻"]</label>
+            <select id="starter" class="form-select" @bind="Starter"><option value="player">@L["玩家先攻"]</option><option value="computer">@L["電腦先攻"]</option><option value="random">@L["隨機"]</option></select>
+            <p>@L["起手 7 張、不換牌。先攻第一回合不抽牌。每個自己的回合可填一張能量，不抽牌。"]</p>
+            <button class="btn btn-primary btn-lg" @onclick="() => Start(match, revision)">@L["開始對戰"]</button>
         </section>
     }
     else
@@ -44,16 +44,16 @@
         <div class="battle-toolbar" aria-live="polite">
             <strong>第 @Engine.TurnNumber 回合 · @PhaseLabel</strong>
             <span>@(Engine.DecisionPlayerId == "computer" && !Engine.IsOver ? "電腦正在評估出牌與攻擊…" : "")</span>
-            <label><input type="checkbox" @bind="FastAi" /> 加快電腦動作</label>
-            <button class="btn btn-sm btn-outline-danger" disabled="@Engine.IsOver" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "surrender"))'>投降</button>
-            <button class="btn btn-sm btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "reset"))'>返回房間</button>
+            <label><input type="checkbox" @bind="FastAi" /> @L["加快電腦動作"]</label>
+            <button class="btn btn-sm btn-outline-danger" disabled="@Engine.IsOver" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "surrender"))'>@L["投降"]</button>
+            <button class="btn btn-sm btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "reset"))'>@L["返回房間"]</button>
         </div>
         @if (Engine.IsOver)
         {
             <div class="alert @(Engine.Player.HasLost ? "alert-danger" : "alert-success")" role="status">
                 <h2>@(Engine.Player.HasLost ? "本局敗北" : "本局獲勝")</h2>
                 <p>@(Engine.Player.HasLost ? Engine.Player.LossReason : Engine.Computer.LossReason)</p>
-                <button class="btn btn-primary" @onclick="() => Start(match, revision)">同牌組再玩一局</button>
+                <button class="btn btn-primary" @onclick="() => Start(match, revision)">@L["同牌組再玩一局"]</button>
             </div>
         }
         <div class="battle-layout">
@@ -66,15 +66,15 @@
                         @if (!mine && SelectedAttacker is { } faceAttacker)
                         {
                             <button data-drop-zone="face" class="btn btn-danger mb-2" disabled="@(VisualBusy || !Engine.CanAttackPlayer(faceAttacker))" @onpointerenter="e => HoverTarget(null, e)" @onfocus="() => ShowPreview(null)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => AttackClick(null, match, revision)">攻擊電腦玩家 · @faceAttacker.CurrentDP 傷害</button>
-                            @if (!Engine.CanAttackPlayer(faceAttacker)) { <small>先處理敵方嘲諷。</small> }
+                            @if (!Engine.CanAttackPlayer(faceAttacker)) { <small>@L["先處理敵方嘲諷。"]</small> }
                         }
-                        <div class="energy-summary" data-drop-zone="@(mine ? "energy" : null)">能量：可用 <strong>@side.AvailableEnergy</strong> / 總數 @side.TotalEnergy · 已支付 @side.EnergyZone.Count(e => e.IsTapped) · 聖盾保留 @side.AttachedEnergy
+                        <div class="energy-summary" data-drop-zone="@(mine ? "energy" : null)">@L["能量：可用"] <strong>@side.AvailableEnergy</strong> / 總數 @side.TotalEnergy · 已支付 @side.EnergyZone.Count(e => e.IsTapped) · 聖盾保留 @side.AttachedEnergy
                             @if (mine) { <span> · 本回合填能量：@(side.HasFilledEnergyThisTurn ? "已使用" : "尚未使用")</span> }
                         </div>
                         <div class="energy-row" role="region" data-drop-zone="@(mine ? "energy" : null)" aria-label="@(side.Name + "背面能量")">
                             @foreach (var energy in side.EnergyZone)
                             { <div @key="energy.InstanceId" class="energy-back @(energy.IsTapped ? "tapped" : "")" title="@(energy.IsTapped ? "已橫置使用" : "直立可用")">◆<span>@(energy.IsTapped ? "已用" : "可用")</span></div> }
-                            @if (side.EnergyZone.Count == 0) { <span class="text-muted">尚無能量</span> }
+                            @if (side.EnergyZone.Count == 0) { <span class="text-muted">@L["尚無能量"]</span> }
                         </div>
                         <div class="field-grid" role="region" data-drop-zone="@(mine ? "summon" : null)" aria-label="@(side.Name + "戰場")">
                             @foreach (var monster in side.Field)
@@ -90,10 +90,10 @@
                                     @if (monster.HasShield) { <small class="status-detail">◆ 保留 @monster.ShieldCount 張背面能量</small> }
                                     @if (monster.IsFrozen) { <small class="status-detail">@FreezeLabel(monster, side)</small> }
                                     @if (monster.SilenceSpell is { } attached) { <button class="btn btn-sm btn-outline-warning" @onclick:stopPropagation="true" @onclick="() => Inspect = attached.Card">附著：@attached.Card.Name</button> }
-                                    <button class="btn btn-sm btn-outline-secondary" @onclick:stopPropagation="true" @onclick="() => Inspect = monster.Card">查看卡片</button>
+                                    <button class="btn btn-sm btn-outline-secondary" @onclick:stopPropagation="true" @onclick="() => Inspect = monster.Card">@L["查看卡片"]</button>
                                 </article>
                             }
-                            @for (int i = side.Field.Count; i < 5; i++) { <div class="empty-slot">空位</div> }
+                            @for (int i = side.Field.Count; i < 5; i++) { <div class="empty-slot">@L["空位"]</div> }
                         </div>
                         <details class="graveyard"><summary>墓地（@side.Graveyard.Count 張）</summary>
                             @foreach (var card in side.Graveyard) { <button @key="card.InstanceId" class="btn btn-sm btn-outline-secondary m-1" @onclick="() => Inspect = card.Card">@card.Card.Name</button> }
@@ -102,7 +102,7 @@
                 }
                 @if (Engine.CurrentPendingChoice is { OwnerId: "player" } choice)
                 {
-                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="region" aria-label="待選擇效果">
+                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="region" aria-label="@L["待選擇效果"]">
                         <h2>@choice.Title</h2><p>@choice.Description</p>
                         <div class="choice-grid">
                             @foreach (var option in choice.Options)
@@ -114,27 +114,27 @@
                                 </button>
                             }
                         </div>
-                        @if (choice.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>取消，保留卡牌與能量</button> }
+                        @if (choice.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>@L["取消，保留卡牌與能量"]</button> }
                     </section>
                 }
                 @if (Engine.CurrentPendingTarget is { OwnerId: "player" } target)
                 {
-                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="status"><h2>@target.Title</h2><p>點選戰場上亮起的合法目標。</p>
-                        @if (target.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>取消，保留卡牌與能量</button> }
+                    <section @onclick:stopPropagation="true" class="battle-panel pending-panel" role="status"><h2>@target.Title</h2><p>@L["點選戰場上亮起的合法目標。"]</p>
+                        @if (target.CanCancel) { <button class="btn btn-outline-secondary" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "cancel"))'>@L["取消，保留卡牌與能量"]</button> }
                     </section>
                 }
                 <div class="battle-controls" @onclick:stopPropagation="true">
                     @if (Engine.CurrentPhase == TurnPhase.MainPhase && Engine.ActivePlayer.Id == "player" && !Engine.IsWaiting && !Engine.IsOver)
                     {
                         @if (SelectedAttacker is { } attacking)
-                        { <span>【@attacking.Card.Name】：點敵方怪物或「攻擊電腦玩家」。</span><button class="btn btn-outline-secondary" @onclick="ClearAttack">取消選取</button> }
-                        else { <span>拖己方怪物到敵方目標即可攻擊，也可點選。手牌可拖到己方戰場或能量區。</span> }
-                        <button class="btn btn-primary" disabled="@VisualBusy" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "end"))'>結束回合</button>
+                        { <span>【@attacking.Card.Name】：點敵方怪物或「攻擊電腦玩家」。</span><button class="btn btn-outline-secondary" @onclick="ClearAttack">@L["取消選取"]</button> }
+                        else { <span>@L["拖己方怪物到敵方目標即可攻擊，也可點選。手牌可拖到己方戰場或能量區。"]</span> }
+                        <button class="btn btn-primary" disabled="@VisualBusy" @onclick='() => Run(match, revision, new(Guid.NewGuid(), match, revision, "end"))'>@L["結束回合"]</button>
                     }
                 </div>
                 @if (SelectedAttacker is { } a && Preview is { } prediction)
                 {
-                    <section class="attack-preview battle-panel" aria-label="交戰預覽" aria-live="polite" @onclick:stopPropagation="true">
+                    <section class="attack-preview battle-panel" aria-label="@L["交戰預覽"]" aria-live="polite" @onclick:stopPropagation="true">
                         <strong>@a.Card.Name → @(PreviewTarget?.Card.Name ?? "電腦玩家")</strong>
                         @if (PreviewTarget != null)
                         {
@@ -142,13 +142,13 @@
                         }
                         @if (prediction.PlayerDamage > 0)
                         { <p>@(PreviewTarget == null ? "攻擊傷害" : "貫穿傷害")：@prediction.PlayerDamage 點@(PreviewTarget == null ? $"，生命 {Engine.Computer.Hp} → {Math.Max(0, Engine.Computer.Hp - prediction.PlayerDamage)}" : "（須存活至後續結算）")</p> }
-                        <small>僅預覽交戰；離場與其他能力可能追加效果，生命歸零會停止後續結算。</small>
-                        @if (TouchInput) { <button class="btn btn-danger" disabled="@VisualBusy" @onclick="() => ConfirmAttack(match, revision)">確認攻擊</button> }
+                        <small>@L["僅預覽交戰；離場與其他能力可能追加效果，生命歸零會停止後續結算。"]</small>
+                        @if (TouchInput) { <button class="btn btn-danger" disabled="@VisualBusy" @onclick="() => ConfirmAttack(match, revision)">@L["確認攻擊"]</button> }
                     </section>
                 }
 
             </main>
-            <aside class="battle-panel log-panel"><details open><summary>對戰紀錄 · 可收合</summary>
+            <aside class="battle-panel log-panel"><details open><summary>@L["對戰紀錄 · 可收合"]</summary>
                 @foreach (var group in Engine.Logs.Take(50).GroupBy(l => l.ActionNumber))
                 {
                     <section class="log-group"><small>行動 @group.Key</small>
@@ -175,13 +175,13 @@
     @if (Inspect is { } inspected)
     {
         <div class="card-detail-backdrop" @onclick="() => Inspect = null">
-            <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+            <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
                 <h2>@inspected.Name</h2>
                 <WcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
                 <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
                 @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
                 <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
-                <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+                <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
             </section>
         </div>
     }

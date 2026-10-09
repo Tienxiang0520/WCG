@@ -5,7 +5,7 @@
 @implements IDisposable
 
 <div class="replay-shade">
-<section class="replay-viewer" role="dialog" aria-modal="true" aria-label="對局回顧">
+<section class="replay-viewer" role="dialog" aria-modal="true" aria-label="@L["對局回顧"]">
     <header class="replay-head">
         <div class="replay-title">
             <p class="replay-kicker">對局回顧@(Record is { } rec ? " · " + RankedRules.Tiers[Math.Clamp(rec.Tier, 0, RankedRules.Tiers.Length - 1)] + " · " + (rec.PlayerFirst ? "先攻" : "後攻") : "")</p>
@@ -15,11 +15,11 @@
                 <p class="replay-sub"><span class="replay-badge @(r.Won ? "won" : "lost")">@(r.Won ? "勝利" : "敗北")</span>@RankedRules.Label(r.Before) → @RankedRules.Label(r.After) · @r.Turns 回合</p>
             }
         </div>
-        <button type="button" class="replay-close" data-sfx="back" aria-label="關閉回顧" @onclick="Close"><Icon Name="close" Size="18" /><span>關閉</span></button>
+        <button type="button" class="replay-close" data-sfx="back" aria-label="@L["關閉回顧"]" @onclick="Close"><Icon Name="close" Size="18" /><span>@L["關閉"]</span></button>
     </header>
     @if (Replay == null)
     {
-        <div class="replay-loading" role="status"><span class="replay-spinner"></span>正在依照種子重新模擬對局…</div>
+        <div class="replay-loading" role="status"><span class="replay-spinner"></span>@L["正在依照種子重新模擬對局…"]</div>
     }
     else
     {
@@ -34,18 +34,18 @@
                     <div class="replay-divider"><span>@(s.ActivePlayerId == "player" ? "你的回合" : "電腦回合")</span></div>
                     @Row(s.Player, true)
                     @Hero(s.Player, true, s)
-                    <div class="replay-hand" aria-label="你的手牌">
-                        <span class="replay-zone">手牌</span>
-                        @if (s.Hand.Length == 0) { <span class="replay-empty">（無）</span> }
+                    <div class="replay-hand" aria-label="@L["你的手牌"]">
+                        <span class="replay-zone">@L["手牌"]</span>
+                        @if (s.Hand.Length == 0) { <span class="replay-empty">@L["（無）"]</span> }
                         @foreach (var h in s.Hand) { @Chip(h.Card, "hand") }
                     </div>
                 </div>
                 <aside class="replay-side">
                     <div class="replay-step-card" aria-live="polite">
-                        <p class="replay-step-meta">步驟 <b class="wcg-num">@Index</b> / <span class="wcg-num">@(Replay.Steps.Count - 1)</span> · 第 @step.Turn 回合</p>
+                        <p class="replay-step-meta">@L["步驟"] <b class="wcg-num">@Index</b> / <span class="wcg-num">@(Replay.Steps.Count - 1)</span> · 第 @step.Turn 回合</p>
                         <p class="replay-step-title"><span class="replay-actor @step.Actor">@ActorLabel(step.Actor)</span>@ActionLabel(step.Action)</p>
                         <ul class="replay-events">
-                            @if (step.Events.Length == 0) { <li class="replay-empty">（沒有公開事件）</li> }
+                            @if (step.Events.Length == 0) { <li class="replay-empty">@L["（沒有公開事件）"]</li> }
                             @foreach (var ev in step.Events.Take(24)) { <li>@Line(ev)</li> }
                         </ul>
                         @if (s.IsOver) { <p class="replay-outcome">@s.Outcome</p> }
@@ -54,29 +54,29 @@
                         @foreach (var side in new[] { s.Player, s.Computer })
                         {
                             <div class="replay-grave"><span class="replay-zone">@(side.Id == "player" ? "我方墓地" : "敵方墓地") <small class="wcg-num">@side.Graveyard.Length</small></span>
-                                @if (side.Graveyard.Length == 0) { <span class="replay-empty">（無）</span> }
+                                @if (side.Graveyard.Length == 0) { <span class="replay-empty">@L["（無）"]</span> }
                                 @foreach (var c in side.Graveyard) { @Chip(c, "grave") }
                             </div>
                         }
                     </div>
                     <details class="replay-log">
-                        <summary>完整紀錄（至目前步驟）</summary>
+                        <summary>@L["完整紀錄（至目前步驟）"]</summary>
                         <ol>
                             @foreach (var (n, ev) in Log().Take(120)) { <li><small class="wcg-num">#@n</small>@Line(ev)</li> }
                         </ol>
                     </details>
                 </aside>
             </div>
-            <footer class="replay-controls" aria-label="回顧控制">
-                <input type="range" class="replay-scrub" min="0" max="@(Replay.Steps.Count - 1)" value="@Index" aria-label="步驟" @onchange="Scrub" />
+            <footer class="replay-controls" aria-label="@L["回顧控制"]">
+                <input type="range" class="replay-scrub" min="0" max="@(Replay.Steps.Count - 1)" value="@Index" aria-label="@L["步驟"]" @onchange="Scrub" />
                 <div class="replay-buttons">
-                    <button type="button" data-sfx="back" aria-label="回到開局" title="回到開局" disabled="@(Index == 0)" @onclick="() => Go(0)"><Icon Name="skip-back" Size="18" /></button>
-                    <button type="button" data-sfx="select" aria-label="上一步" title="上一步" disabled="@(Index == 0)" @onclick="() => Go(Index - 1)"><Icon Name="chevron-left" Size="20" /></button>
+                    <button type="button" data-sfx="back" aria-label="@L["回到開局"]" title="@L["回到開局"]" disabled="@(Index == 0)" @onclick="() => Go(0)"><Icon Name="skip-back" Size="18" /></button>
+                    <button type="button" data-sfx="select" aria-label="@L["上一步"]" title="@L["上一步"]" disabled="@(Index == 0)" @onclick="() => Go(Index - 1)"><Icon Name="chevron-left" Size="20" /></button>
                     <button type="button" class="replay-play" data-sfx="@(Playing ? "toggleOff" : "toggleOn")" aria-label="@(Playing ? "暫停" : "播放")" aria-pressed="@(Playing ? "true" : "false")" disabled="@(Replay.Steps.Count < 2)" @onclick="TogglePlay"><Icon Name="@(Playing ? "pause" : "play")" Size="22" /><span>@(Playing ? "暫停" : "播放")</span></button>
-                    <button type="button" data-sfx="select" aria-label="下一步" title="下一步" disabled="@(Index >= Replay.Steps.Count - 1)" @onclick="() => Go(Index + 1)"><Icon Name="chevron-right" Size="20" /></button>
-                    <button type="button" data-sfx="select" aria-label="跳到結局" title="跳到結局" disabled="@(Index >= Replay.Steps.Count - 1)" @onclick="() => Go(Replay.Steps.Count - 1)"><Icon Name="skip-forward" Size="18" /></button>
+                    <button type="button" data-sfx="select" aria-label="@L["下一步"]" title="@L["下一步"]" disabled="@(Index >= Replay.Steps.Count - 1)" @onclick="() => Go(Index + 1)"><Icon Name="chevron-right" Size="20" /></button>
+                    <button type="button" data-sfx="select" aria-label="@L["跳到結局"]" title="@L["跳到結局"]" disabled="@(Index >= Replay.Steps.Count - 1)" @onclick="() => Go(Replay.Steps.Count - 1)"><Icon Name="skip-forward" Size="18" /></button>
                 </div>
-                <div class="replay-speed segmented" role="radiogroup" aria-label="播放速度">
+                <div class="replay-speed segmented" role="radiogroup" aria-label="@L["播放速度"]">
                     @foreach (var sp in Speeds) { <button type="button" role="radio" aria-checked="@(Speed == sp ? "true" : "false")" class="@(Speed == sp ? "on" : "")" @onclick="() => Speed = sp">@(sp)×</button> }
                 </div>
             </footer>

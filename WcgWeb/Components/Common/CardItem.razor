@@ -6,7 +6,7 @@
     <!-- Header -->
     <div class="card-header-bar">
         <span class="card-title" title="@Card.Name">@Card.Name</span>
-        <div class="card-cost-gem" title="通用費用"><span class="gem-icon">@Card.TotalCost</span></div>
+        <div class="card-cost-gem" title="@L["通用費用"]"><span class="gem-icon">@Card.TotalCost</span></div>
     </div>
 
     <!-- Art Box -->
@@ -34,17 +34,17 @@
         @if (Card.IsMonster)
         {
             <div class="mb-1 d-flex flex-wrap gap-1">
-                @if (Card.HasTaunt) { <span class="badge bg-secondary badge-status">嘲諷</span> }
-                @if (Card.HasCharge) { <span class="badge bg-danger badge-status">衝鋒</span> }
-                @if (Card.HasTrample) { <span class="badge bg-danger badge-status">貫穿</span> }
-                @if (Card.HasDivineShield) { <span class="badge bg-warning text-dark badge-status">聖盾</span> }
-                @if (Card.HasStealth) { <span class="badge bg-info text-dark badge-status">潛伏</span> }
-                @if (Card.HasPoison) { <span class="badge bg-success badge-status">劇毒</span> }
+                @if (Card.HasTaunt) { <span class="badge bg-secondary badge-status">@L["嘲諷"]</span> }
+                @if (Card.HasCharge) { <span class="badge bg-danger badge-status">@L["衝鋒"]</span> }
+                @if (Card.HasTrample) { <span class="badge bg-danger badge-status">@L["貫穿"]</span> }
+                @if (Card.HasDivineShield) { <span class="badge bg-warning text-dark badge-status">@L["聖盾"]</span> }
+                @if (Card.HasStealth) { <span class="badge bg-info text-dark badge-status">@L["潛伏"]</span> }
+                @if (Card.HasPoison) { <span class="badge bg-success badge-status">@L["劇毒"]</span> }
             </div>
         }
         @if (string.IsNullOrWhiteSpace(Card.Text))
         {
-            <div class="text-muted text-center fst-italic" style="font-size:0.68rem; margin:auto;">（純白凡骨）</div>
+            <div class="text-muted text-center fst-italic" style="font-size:0.68rem; margin:auto;">@L["（純白凡骨）"]</div>
         }
         else
         {
@@ -56,10 +56,10 @@
     @if (Card.IsMonster)
     {
         <div class="card-footer-stats">
-            <div class="stat-badge-pp" title="力量值 PP (戰鬥消滅判定)">
+            <div class="stat-badge-pp" title="@L["力量值 PP (戰鬥消滅判定)"]">
                 <small>PP</small>@(Card.PP?.ToString() ?? "0")
             </div>
-            <div class="stat-badge-dp" title="傷害值 DP (對玩家本體傷害)">
+            <div class="stat-badge-dp" title="@L["傷害值 DP (對玩家本體傷害)"]">
                 <small>DP</small>@(Card.DP?.ToString() ?? "1")
             </div>
         </div>

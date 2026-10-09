@@ -13,20 +13,20 @@
     <aside class="tour-card @(Finished ? "finished" : "")" aria-label="@($"教學導覽：{lesson.Title}")" aria-live="polite">
         <header class="coach-head">
             <p class="coach-eyebrow"><Icon Name="@lesson.Icon" Size="14" /><span>教學導覽 · @lesson.Title</span></p>
-            <a class="coach-exit" data-sfx="back" href="tutorial" aria-label="離開導覽，回到教學列表" title="離開導覽"><Icon Name="close" Size="16" /></a>
+            <a class="coach-exit" data-sfx="back" href="tutorial" aria-label="@L["離開導覽，回到教學列表"]" title="@L["離開導覽"]"><Icon Name="close" Size="16" /></a>
         </header>
         <ol class="tour-dots" aria-hidden="true">@for (var i = 0; i < lesson.Tour.Length; i++) { <li class="@(Finished || i < Index ? "done" : i == Index ? "on" : "")"></li> }</ol>
         @if (Finished)
         {
             var next = TutorialLessons.NextAfter(lesson.Id) ?? TutorialLessons.All.FirstOrDefault(l => !Profile.TutorialDone(l.Id));
             <section class="coach-body coach-complete" data-sfx-show="starGain" data-sfx-delay="0.1" role="status">
-                <p class="coach-step">導覽完成</p>
+                <p class="coach-step">@L["導覽完成"]</p>
                 <h2><Icon Name="star" Size="20" />@lesson.Title</h2>
-                <p class="coach-text">這一課已標記完成。隨時可以從側邊選單的「教學」重新查看。</p>
+                <p class="coach-text">@L["這一課已標記完成。隨時可以從側邊選單的「教學」重新查看。"]</p>
                 <div class="coach-actions">
                     @if (next != null && next.Id != lesson.Id) { <a class="btn btn-primary" data-sfx="nav" href="@next.Href"><Icon Name="play" Size="16" />下一課：@next.Title</a> }
-                    <a class="btn btn-outline-primary" data-sfx="back" href="tutorial">回到課程列表</a>
-                    <button type="button" class="coach-more" @onclick="Close">關閉</button>
+                    <a class="btn btn-outline-primary" data-sfx="back" href="tutorial">@L["回到課程列表"]</a>
+                    <button type="button" class="coach-more" @onclick="Close">@L["關閉"]</button>
                 </div>
             </section>
         }
@@ -34,15 +34,15 @@
         {
             var pending = step.Check != null && !Passed(step);
             <section class="coach-body" @key="Index" data-sfx-show="tab" data-sfx-delay="0">
-                <p class="coach-step">第 <b class="wcg-num">@(Index + 1)</b> / @lesson.Tour.Length 步 · @(step.Check != null ? "動手做" : "說明")</p>
+                <p class="coach-step">@L["第"] <b class="wcg-num">@(Index + 1)</b> / @lesson.Tour.Length 步 · @(step.Check != null ? "動手做" : "說明")</p>
                 <h2>@step.Title</h2>
                 <p class="coach-text">@step.Text</p>
                 @if (step.Check != null)
                 {
-                    <p class="tour-check @(pending ? "" : "ok")">@if (pending) { <Icon Name="spark" Size="14" /><span>完成這個動作後會自動前往下一步</span> } else { <Icon Name="check" Size="14" /><span>完成！</span> }</p>
+                    <p class="tour-check @(pending ? "" : "ok")">@if (pending) { <Icon Name="spark" Size="14" /><span>@L["完成這個動作後會自動前往下一步"]</span> } else { <Icon Name="check" Size="14" /><span>@L["完成！"]</span> }</p>
                 }
                 <div class="coach-actions">
-                    @if (Index > 0) { <button type="button" class="btn btn-outline-primary" data-sfx="back" @onclick="Back"><Icon Name="chevron-left" Size="16" />上一步</button> }
+                    @if (Index > 0) { <button type="button" class="btn btn-outline-primary" data-sfx="back" @onclick="Back"><Icon Name="chevron-left" Size="16" />@L["上一步"]</button> }
                     <button type="button" class="btn btn-primary coach-next" data-sfx="select" disabled="@pending" @onclick="Forward">@(Index == lesson.Tour.Length - 1 ? "完成導覽" : "下一步")<Icon Name="chevron-right" Size="16" /></button>
                 </div>
             </section>

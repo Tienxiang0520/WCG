@@ -17,18 +17,18 @@
         @if (Monster.IsTaunt)
         {
             <div class="position-absolute top-0 end-0 p-1">
-                <span class="badge bg-secondary shadow-sm" style="font-size:0.6rem;">🛡️嘲諷</span>
+                <span class="badge bg-secondary shadow-sm" style="font-size:0.6rem;">@L["🛡️嘲諷"]</span>
             </div>
         }
     </div>
 
     <!-- Keyword Chips & Triggers -->
     <div class="d-flex flex-wrap gap-1 justify-content-center mb-1" style="min-height: 18px;">
-        @if (Monster.HasCharge) { <span class="badge bg-danger p-1" style="font-size:0.55rem;">衝鋒</span> }
-        @if (Monster.HasTrample) { <span class="badge bg-warning text-dark p-1" style="font-size:0.55rem;">貫穿</span> }
-        @if (Monster.HasPoison) { <span class="badge bg-success p-1" style="font-size:0.55rem;">劇毒</span> }
-        @if (Monster.HasSummoningSickness && !Monster.HasCharge) { <span class="badge bg-dark text-muted p-1" style="font-size:0.55rem;">💤失調</span> }
-        @if (Monster.HasAttacked) { <span class="badge bg-secondary p-1" style="font-size:0.55rem;">已攻擊</span> }
+        @if (Monster.HasCharge) { <span class="badge bg-danger p-1" style="font-size:0.55rem;">@L["衝鋒"]</span> }
+        @if (Monster.HasTrample) { <span class="badge bg-warning text-dark p-1" style="font-size:0.55rem;">@L["貫穿"]</span> }
+        @if (Monster.HasPoison) { <span class="badge bg-success p-1" style="font-size:0.55rem;">@L["劇毒"]</span> }
+        @if (Monster.HasSummoningSickness && !Monster.HasCharge) { <span class="badge bg-dark text-muted p-1" style="font-size:0.55rem;">@L["💤失調"]</span> }
+        @if (Monster.HasAttacked) { <span class="badge bg-secondary p-1" style="font-size:0.55rem;">@L["已攻擊"]</span> }
     </div>
 
     <!-- Bottom: PP & DP -->

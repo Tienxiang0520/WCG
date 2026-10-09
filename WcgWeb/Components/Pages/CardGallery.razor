@@ -1,18 +1,18 @@
 @page "/cards"
 @inject CardDatabase CardDb
 
-<PageTitle>卡牌圖鑑 - 魂誓</PageTitle>
+<PageTitle>@L["卡牌圖鑑 - 魂誓"]</PageTitle>
 
 <div class="container-fluid py-3 gallery-page">
     <header class="page-hero compact">
         <div class="page-hero-text">
-            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="book" Size="14" />完整卡牌圖鑑</p>
+            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="book" Size="14" />@L["完整卡牌圖鑑"]</p>
             <h1>五大意志 · @CardDb.AllCards.Count 張卡牌</h1>
         </div>
         <label class="search-field large">
             <WcgWeb.Components.Common.Icon Name="search" Size="18" />
-            <input type="text" class="form-control" aria-label="搜尋卡片"
-                   placeholder="搜尋名稱、效果或卡牌編號…"
+            <input type="text" class="form-control" aria-label="@L["搜尋卡片"]"
+                   placeholder="@L["搜尋名稱、效果或卡牌編號…"]"
                    @bind="SearchText" @bind:event="oninput" />
         </label>
     </header>
@@ -20,26 +20,26 @@
         <div class="card-body py-3 filter-panel">
             <!-- Will Filters -->
             <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
-                <span class="filter-label">意志</span>
-                <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SelectedWill = ""'>全部 <small>@CardDb.AllCards.Count</small></button>
-                <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" @onclick='() => SelectedWill = "狂怒"'><i class="will-dot"></i>狂怒 <small>@CardDb.AllCards.Count(c => c.Will == "狂怒")</small></button>
-                <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" @onclick='() => SelectedWill = "理智"'><i class="will-dot"></i>理智 <small>@CardDb.AllCards.Count(c => c.Will == "理智")</small></button>
-                <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" @onclick='() => SelectedWill = "生機"'><i class="will-dot"></i>生機 <small>@CardDb.AllCards.Count(c => c.Will == "生機")</small></button>
-                <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" @onclick='() => SelectedWill = "秩序"'><i class="will-dot"></i>秩序 <small>@CardDb.AllCards.Count(c => c.Will == "秩序")</small></button>
-                <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" @onclick='() => SelectedWill = "深淵"'><i class="will-dot"></i>深淵 <small>@CardDb.AllCards.Count(c => c.Will == "深淵")</small></button>
-                <button class="filter-chip will-chip will-neutral @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SelectedWill = "中立"'><i class="will-dot"></i>中立 <small>@CardDb.AllCards.Count(c => c.Will == "中立")</small></button>
+                <span class="filter-label">@L["意志"]</span>
+                <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SelectedWill = ""'>@L["全部"] <small>@CardDb.AllCards.Count</small></button>
+                <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" @onclick='() => SelectedWill = "狂怒"'><i class="will-dot"></i>@L["狂怒"] <small>@CardDb.AllCards.Count(c => c.Will == "狂怒")</small></button>
+                <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" @onclick='() => SelectedWill = "理智"'><i class="will-dot"></i>@L["理智"] <small>@CardDb.AllCards.Count(c => c.Will == "理智")</small></button>
+                <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" @onclick='() => SelectedWill = "生機"'><i class="will-dot"></i>@L["生機"] <small>@CardDb.AllCards.Count(c => c.Will == "生機")</small></button>
+                <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" @onclick='() => SelectedWill = "秩序"'><i class="will-dot"></i>@L["秩序"] <small>@CardDb.AllCards.Count(c => c.Will == "秩序")</small></button>
+                <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" @onclick='() => SelectedWill = "深淵"'><i class="will-dot"></i>@L["深淵"] <small>@CardDb.AllCards.Count(c => c.Will == "深淵")</small></button>
+                <button class="filter-chip will-chip will-neutral @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SelectedWill = "中立"'><i class="will-dot"></i>@L["中立"] <small>@CardDb.AllCards.Count(c => c.Will == "中立")</small></button>
             </div>
 
             <!-- Type Filters & Keyword Filters -->
             <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
-                <span class="filter-label">類型</span>
-                <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SelectedType = ""'>全部</button>
-                <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SelectedType = "怪物"'>怪物 <small>@CardDb.AllCards.Count(c => c.Type == "怪物")</small></button>
-                <button class="filter-chip @(SelectedType == "法術" ? "on" : "")" aria-pressed="@(SelectedType == "法術" ? "true" : "false")" @onclick='() => SelectedType = "法術"'>法術 <small>@CardDb.AllCards.Count(c => c.IsSpell)</small></button>
-                <button class="filter-chip @(SelectedType == "結界" ? "on" : "")" aria-pressed="@(SelectedType == "結界" ? "true" : "false")" @onclick='() => SelectedType = "結界"'>結界 <small>@CardDb.AllCards.Count(c=>c.IsEnchantment)</small></button>
+                <span class="filter-label">@L["類型"]</span>
+                <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SelectedType = ""'>@L["全部"]</button>
+                <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SelectedType = "怪物"'>@L["怪物"] <small>@CardDb.AllCards.Count(c => c.Type == "怪物")</small></button>
+                <button class="filter-chip @(SelectedType == "法術" ? "on" : "")" aria-pressed="@(SelectedType == "法術" ? "true" : "false")" @onclick='() => SelectedType = "法術"'>@L["法術"] <small>@CardDb.AllCards.Count(c => c.IsSpell)</small></button>
+                <button class="filter-chip @(SelectedType == "結界" ? "on" : "")" aria-pressed="@(SelectedType == "結界" ? "true" : "false")" @onclick='() => SelectedType = "結界"'>@L["結界"] <small>@CardDb.AllCards.Count(c=>c.IsEnchantment)</small></button>
 
                 <div class="vr mx-2"></div>
-                <span class="filter-label">關鍵字</span>
+                <span class="filter-label">@L["關鍵字"]</span>
                 @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "聖盾", "箭頭", "反擊", "沉默" })
                 {
                     string k = kw;
@@ -55,8 +55,8 @@
         @if (FilteredCards.Count == 0)
         {
             <div class="text-center py-5 text-muted">
-                <h4>沒有找到匹配的卡牌</h4>
-                <p>請嘗試清除關鍵字或更換篩選條件</p>
+                <h4>@L["沒有找到匹配的卡牌"]</h4>
+                <p>@L["請嘗試清除關鍵字或更換篩選條件"]</p>
             </div>
         }
         else
@@ -75,13 +75,13 @@
 @if (Inspect is { } inspected)
 {
     <div class="card-detail-backdrop" @onclick="() => Inspect = null">
-        <section class="card-detail" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+        <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
             <h2>@inspected.Name</h2>
             <WcgWeb.Components.Common.CardArt Card="inspected" CssClass="detail-illustration" />
             <p>@inspected.Id · @inspected.Type · @inspected.TotalCost 通用費用</p>
             @if (inspected.IsMonster) { <p>@inspected.PP PP · @inspected.DP DP</p> }
             <p>@(string.IsNullOrWhiteSpace(inspected.Text) ? "無異能" : inspected.Text)</p>
-            <button class="btn btn-primary" @onclick="() => Inspect = null">關閉詳情</button>
+            <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>
 }

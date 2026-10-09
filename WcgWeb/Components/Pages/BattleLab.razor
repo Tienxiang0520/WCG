@@ -15,20 +15,20 @@
 <div class="@(Prototype ? "phaser-page in-game" : "phaser-page")">
     @if(Prototype)
     {
-        <header class="battle-heading"><h1>@(ShieldPrototype ? "聖盾疊加試玩" : AttackPrototype ? "攻擊操作試玩" : SpellPrototype ? "法術施放試玩" : "怪物出牌試玩")</h1><a class="btn btn-outline-secondary" href="@(SpellPrototype ? "/animation-lab" : "/spell-lab")">@(SpellPrototype ? "怪物出牌" : "法術施放")</a><a class="btn btn-outline-secondary" href="/battle">正式對戰</a></header>
+        <header class="battle-heading"><h1>@(ShieldPrototype ? "聖盾疊加試玩" : AttackPrototype ? "攻擊操作試玩" : SpellPrototype ? "法術施放試玩" : "怪物出牌試玩")</h1><a class="btn btn-outline-secondary" href="@(SpellPrototype ? "/animation-lab" : "/spell-lab")">@(SpellPrototype ? "怪物出牌" : "法術施放")</a><a class="btn btn-outline-secondary" href="/battle">@L["正式對戰"]</a></header>
         <div class="battle-toolbar"><strong>@(AttackPrototype ? "拖曳場上怪物瞄準，放開後出擊；Esc 取消" : SpellPrototype ? "拖曳法術到施放區，再依提示選目標或效果" : "拖曳手牌到亮起的空位，或選牌後按召喚")</strong>
-            @if(ShieldPrototype){<select aria-label="聖盾測試能量" @onchange="ChangeShieldEnergy"><option value="6">6 點可用能量：巨像不帶盾</option><option value="7">7 點可用能量：巨像可帶盾</option></select>}
-            @if(AttackPrototype){<select aria-label="攻擊測試場景" @onchange="ChangeAttackCase">
-                <option value="survive">擊倒目標並返回</option><option value="mutual">同歸於盡</option><option value="shield">打破聖盾</option><option value="face">直接攻擊玩家</option>
+            @if(ShieldPrototype){<select aria-label="@L["聖盾測試能量"]" @onchange="ChangeShieldEnergy"><option value="6">@L["6 點可用能量：巨像不帶盾"]</option><option value="7">@L["7 點可用能量：巨像可帶盾"]</option></select>}
+            @if(AttackPrototype){<select aria-label="@L["攻擊測試場景"]" @onchange="ChangeAttackCase">
+                <option value="survive">@L["擊倒目標並返回"]</option><option value="mutual">@L["同歸於盡"]</option><option value="shield">@L["打破聖盾"]</option><option value="face">@L["直接攻擊玩家"]</option>
             </select>}
-            <button class="btn btn-primary" @onclick="Reset" disabled="@(!Loaded)">重設測試場景</button></div>
+            <button class="btn btn-primary" @onclick="Reset" disabled="@(!Loaded)">@L["重設測試場景"]</button></div>
     }
     else
     {
-        <h1>對戰操作實驗室</h1>
-        <p>固定測試場景，使用獨立引擎。可練習拖曳、嘲諷、法術目標、抉擇、牌庫檢視、附著狀態及取消；不會改變正式對局或牌組。這不是普通開局。</p>
-        <button class="btn btn-primary" @onclick="Reset" disabled="@(!Loaded)">重設測試場景</button>
-        <a class="btn btn-outline-secondary" href="/battle">真實對戰</a>
+        <h1>@L["對戰操作實驗室"]</h1>
+        <p>@L["固定測試場景，使用獨立引擎。可練習拖曳、嘲諷、法術目標、抉擇、牌庫檢視、附著狀態及取消；不會改變正式對局或牌組。這不是普通開局。"]</p>
+        <button class="btn btn-primary" @onclick="Reset" disabled="@(!Loaded)">@L["重設測試場景"]</button>
+        <a class="btn btn-outline-secondary" href="/battle">@L["真實對戰"]</a>
     }
     <BattleBoard @ref="Board" Presenter="Presenter" Source="Bridge" Driver="Coordinator" Ready="Ready" />
 </div>
