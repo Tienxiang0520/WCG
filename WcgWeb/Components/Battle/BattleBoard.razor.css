@@ -537,3 +537,23 @@
 .match-header .header-label{display:none}
 
 }
+/* Taunt shield: the card body becomes the shield. Art and backgrounds are laid over the frame box and clipped
+   to a polygon running through the middle of the frame band, so nothing pokes outside the shield outline. */
+.field-card.has-taunt,.event-card.has-taunt,.tapped .field-card.has-taunt{background:transparent;box-shadow:none;border-color:transparent}
+.field-card.has-taunt.enemy-card{box-shadow:none}
+.has-taunt{--taunt-clip:polygon(10% 2%,90% 2%,98% 10%,98% 81%,91% 90%,60.5% 90%,50% 97%,39.5% 90%,9% 90%,2% 81%,2% 10%)}
+.field-card.has-taunt>.card-art-layer,.event-card.has-taunt>.card-art-layer,.field-card.has-taunt>.field-card-back{inset:auto;left:-6px;top:-6px;width:calc(100% + 12px);height:calc(100% + 16px);border-radius:0;clip-path:var(--taunt-clip)}
+.field-card.has-taunt>.card-art-layer::before,.event-card.has-taunt>.card-art-layer::before{content:"";position:absolute;inset:0;z-index:-1;background:#0b0d13}
+.field-card.has-taunt>.card-art-layer{background:#0b0d13}
+.field-card.has-taunt.attack-ready::after{display:none}
+.has-taunt.action-ready>.taunt-frame{filter:drop-shadow(0 0 5px rgba(95,211,189,.75)) drop-shadow(0 0 10px rgba(95,211,189,.5))}
+.has-taunt>.field-stats{bottom:14px}
+/* Ready glow and holy-shield bubble follow the shield outline instead of drawing a rectangle. */
+.field-card.has-taunt.action-ready{box-shadow:none!important}
+.has-taunt.has-shield::before{display:none}
+.has-taunt.has-shield>.taunt-frame{filter:drop-shadow(0 0 2px #ffe58a) drop-shadow(0 0 8px #ffe58acc) drop-shadow(0 0 16px #ffe58a77)}
+.has-taunt.has-shield.action-ready>.taunt-frame{filter:drop-shadow(0 0 2px #ffe58a) drop-shadow(0 0 7px #ffe58acc) drop-shadow(0 0 16px rgba(95,211,189,.85))}
+@media(max-width:600px){
+.field-card.has-taunt>.card-art-layer,.event-card.has-taunt>.card-art-layer,.field-card.has-taunt>.field-card-back{left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 10px)}
+.has-taunt>.field-stats{bottom:6px}
+}
