@@ -39,7 +39,7 @@
     </div>
     <div class="face-text">
         <svg class="face-compass face-emblem" viewBox="0 0 100 100" aria-hidden="true">@((MarkupString)Theme.Emblem)</svg>
-        <p>@(string.IsNullOrWhiteSpace(TextValue) ? L["無異能"] : TextValue)</p>
+        <p>@TextValue</p>
     </div>
     @if (PP != null)
     {
@@ -70,7 +70,7 @@
     private string[]? Arrows => Card?.Arrows ?? Battle?.Arrows;
     private string NameText => Card != null ? L.CardName(Card) : L.CardName(Battle);
     // The arrow prefix ("【箭頭：→】" / "[Arrow: →]") is drawn as gold triangles on the art instead.
-    private string TextValue => ArrowPrefix.Replace(Card != null ? L.CardText(Card) : L.CardText(Battle), "").Trim();
+    private string TextValue => ArrowPrefix.Replace(Card != null ? L.FaceText(Card) : L.FaceText(Battle), "").Trim();
     private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
     private string ArrowClass => string.Join(" ", (Arrows ?? []).Where(a => a is "up" or "down").Select(a => "has-" + a));
     private string ArrowLabel(string arrow) => L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"];

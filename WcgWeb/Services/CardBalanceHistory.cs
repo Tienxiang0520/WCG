@@ -5,8 +5,12 @@ namespace WcgWeb.Services;
 
 internal static class CardBalanceHistory
 {
+    // Catalog before the card-text clarity update (152 cards reworded; 147 136 178 141 changed effect, 147 PP 1200→1000).
+    internal static CardDatabase BeforeCardText(CardDatabase current) => Override(current, "WcgWeb.Balance.BeforeCardText");
+
     // Catalog before the arrow-card expansion (9 cards gained positional arrows and some PP changed).
-    internal static CardDatabase BeforeArrowCards(CardDatabase current) => Override(current, "WcgWeb.Balance.BeforeArrowCards");
+    // Applied on top of the pre-card-text catalog so its fingerprint matches the original release.
+    internal static CardDatabase BeforeArrowCards(CardDatabase current) => Override(BeforeCardText(current), "WcgWeb.Balance.BeforeArrowCards");
 
     // Catalog before faction triggers became unlimited. Applied on top of the pre-arrow catalog so its fingerprint matches the original release.
     internal static CardDatabase BeforeUnlimitedFactionTriggers(CardDatabase current)

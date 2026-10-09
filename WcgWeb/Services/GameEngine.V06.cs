@@ -29,9 +29,15 @@ public partial class GameEngine
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.Will=="狂怒")*300 : 0)+ArrowPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasDivineShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
-                || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit));
+                || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
+                    && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Owner(source)!=p));
+            // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have holy shield from any source.
+            if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
         }
     }
+    private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
+        Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Id == "WCG-147" && source.Card.Arrows.Contains("up")
+            && Owner(source) != owner && unit.Slot == 4 - source.Slot);
     // Only these arrows hand out holy shield; the other arrow cards link slots for their own effects.
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the holy-shield arrows.
@@ -66,7 +72,7 @@ public partial class GameEngine
         {
             case "WCG-125": CardChoice(p,"選擇置底卡，其餘留在牌庫頂",p.Deck.Take(2),c=>Pay(()=>{p.Deck.Remove(c);p.Deck.Add(c);}));break;
             case "WCG-126":Pay(()=>p.NextCreatureDiscount++);break;
-            case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1));KillBatch([x],"犧牲",false);}));break;
+            case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1));KillBatch([x],"犧牲",!LegacyCardRules);}));break;
             case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);DrawMany(p,1);}));break;
             case "WCG-151":PickMonster(p,"選擇 PP 800 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>x.CurrentPP<=800),x=>Pay(()=>KillBatch([x],m.Card.Name)));break;
         }
@@ -74,6 +80,14 @@ public partial class GameEngine
     });
     private void DestroyStructure(MonsterInstance m)
     { if(!Alive(m))return;var p=Owner(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:"摧毀結界／蓋牌"); }
+    // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
+    private void OptionalDispel(PlayerState p,MonsterInstance source)
+    {
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced)
+            .Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
+        if(Targetable(p,all).Count==0)return;
+        Ask(p,$"【{source.Card.Name}】進場：要驅散附著或摧毀結界嗎？",[new(){Id="DISPEL_OPT",Title="選擇驅散或摧毀目標"},new(){Id="SKIP",Title="不發動"}],o=>{if(o.Id=="DISPEL_OPT")Dispel(p);});
+    }
     private void Dispel(PlayerState p,bool structures=true)
     {
         var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced);
@@ -104,7 +118,7 @@ public partial class GameEngine
         var e=GetOpponent(p);switch(m.Card.Id)
         {
             case "WCG-130": Resolve(()=>DrawMany(p,1),()=>CardChoice(p,"選擇手牌置底",p.Hand,c=>{p.Hand.Remove(c);p.Deck.Add(c);}));break;
-            case "WCG-134": Dispel(p);break;
+            case "WCG-134": if(LegacyCardRules)Dispel(p);else OptionalDispel(p,m);break;
             case "WCG-138":TapEnemyEnergy(e);break;
             case "WCG-145":Ask(p,"逆流法師抉擇",[new(){Id="DISPEL",Title="驅散附著"},new(){Id="READY",Title="轉直立己方怪物"}],o=>{if(o.Id=="DISPEL")Dispel(p,false);else PickMonster(p,"選擇橫置己方怪物",p.Field.Where(x=>x.IsTapped),ReadyMonster);});break;
             case "WCG-161": Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>x!=m).ToArray(),m.Card.Name),()=>{foreach(var x in p.Structures.Concat(e.Structures).Where(x=>!x.IsSet).ToArray())DestroyStructure(x);foreach(var c in p.Hand.ToArray()){p.Hand.Remove(c);p.Graveyard.Add(c);}});break;
@@ -118,7 +132,7 @@ public partial class GameEngine
             case "WCG-187":if(p.Field.Any(x=>x!=m&&x.Card.Will=="生機"))FreeFaction(p,2,"生機");break;
             case "WCG-188":Heal(p,p.Field.Count(x=>x!=m&&x.Card.Will=="生機"));break;
             case "WCG-191":if(p.Field.Any(x=>x!=m&&x.Card.Will=="秩序"))Resolve(()=>PickMonster(p,"選擇 PP 2000 以上敵怪",e.Field.Where(x=>x.CurrentPP>=2000),x=>KillBatch([x],m.Card.Name)),()=>Heal(p,1));break;
-            case "WCG-193":Ask(p,"可犧牲其他深淵怪物抽2張",[new(){Id="YES",Title="犧牲並抽牌"},new(){Id="SKIP",Title="不犧牲"}],o=>{if(o.Id=="YES")PickMonster(p,"選擇深淵祭品",p.Field.Where(x=>x!=m&&x.Card.Will=="深淵"),x=>{Resolve(()=>DrawMany(p,2));KillBatch([x],"犧牲",false);});});break;
+            case "WCG-193":Ask(p,"可犧牲其他深淵怪物抽2張",[new(){Id="YES",Title="犧牲並抽牌"},new(){Id="SKIP",Title="不犧牲"}],o=>{if(o.Id=="YES")PickMonster(p,"選擇深淵祭品",p.Field.Where(x=>x!=m&&x.Card.Will=="深淵"),x=>{Resolve(()=>DrawMany(p,2));KillBatch([x],"犧牲",!LegacyCardRules);});});break;
             case "WCG-194":var ready=p.Field.Any(x=>x!=m&&x.Card.Will=="深淵");FreeFaction(p,3,"深淵",true,x=>{if(ready)ReadyMonster(x);});break;
         }
     }

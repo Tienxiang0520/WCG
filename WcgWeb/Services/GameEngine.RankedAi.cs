@@ -220,6 +220,7 @@ public partial class GameEngine
             if (o.Id is "SUMMON") return p.Occupied < 5 ? 9 : -10;
             if (o.Id is "LOOT" or "DRAW") return p.Deck.Count > 3 ? 4 : -90;
             if (o.Id is "YES") return p.Deck.Count > 4 ? 6 : -10;
+            if (o.Id is "DISPEL_OPT") return DispelWorth(p) ? 6 : -60;
             if (o.Id is "DISPEL") return e.Field.Any(m => m.Attachments.Count > 0) ? 6 : -1;
             if (o.Id is "READY") return 4;
             if (o.PreviewCard is not { } c) return 0;
@@ -237,6 +238,7 @@ public partial class GameEngine
         if (legal.Count == 0) return false;
         if (AiLevel == 0) return SelectTarget(Pick(legal, 30));
         if (!prof.SmartTargets) return ExecuteV06Ai();
+        if (!LegacyCardRules && pending.Title == "選擇驅散目標") return SelectTarget(legal.OrderByDescending(m => DispelScore(p, m)).First());
         var cost = pending.Title.Contains("犧牲") || pending.Title.Contains("祭品") || pending.Title.Contains("代價");
         var friendly = cost || pending.Title.Contains("附著聖盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
         MonsterInstance target;

@@ -114,6 +114,17 @@ test('the spell showcase is the full physical card face: cost medallion, will·t
     assert.match(text(cls('face-foot')[0]),/魂誓.*WCG-061/);
     h.feedback.clear();
 });
+test('vanilla text (無。 / None.) leaves the effect box blank but keeps the will emblem', async t=>{
+    for(const plain of ['無。','None.']){
+        resetFastForward();
+        const h=harness(t),spell={instanceId:'v',cardId:'WCG-101',name:'白板',type:'法術',will:'中立',cost:1,text:plain,arrows:[]};
+        await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'v',card:spell,order:0}]));
+        const show=h.record.find(r=>r.el.dataset.wcgEffect==='showcase').el,all=descendants(show),box=all.filter(el=>String(el.className).split(' ').includes('face-text'))[0];
+        assert.ok(box,'the box itself stays');assert.equal(text(box).trim(),'');
+        assert.ok(descendants(box).some(el=>String(el.className?.baseVal??el.className).includes('face-emblem')));
+        h.feedback.clear();
+    }
+});
 test('fast-forward shortens the remaining animations and is offered as a button and a board-wide tap', async t=>{
     resetFastForward();
     const h=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];

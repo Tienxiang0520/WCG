@@ -86,7 +86,9 @@ export function bindFeedback(root, sound = null, fx = null) {
             else if (a === 'up' || a === 'down') { body.append(node('span', `face-arrow ${a}`)); outer.classList.add(`has-${a}`); }
         }
         const text = node('div', 'face-text'); text.append(svg('face-compass face-emblem', '0 0 100 100', theme.emblem)); const plain = String(card.text ?? '').replace(/【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*/g, '').trim();
-        text.append(node('p', '', plain || t('無異能'))); if (plain.length > 60) outer.className += plain.length > 110 ? ' text-l' : ' text-m';
+        // Vanilla cards (無。 / None.) keep an empty text box with only the will emblem.
+        const shown = /^(無。?|None\.?)$/.test(plain) ? '' : plain;
+        text.append(node('p', '', shown)); if (plain.length > 60) outer.className += plain.length > 110 ? ' text-l' : ' text-m';
         body.append(head, band, art, text);
         if (card.pp != null) {
             const stats = node('div', 'face-stats'), pp = node('span', 'pp'), dp = node('span', 'dp');

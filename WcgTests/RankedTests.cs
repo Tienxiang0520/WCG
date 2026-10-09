@@ -89,7 +89,7 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void BalanceUpdatePreservesActiveOldMatchAndUsesNewRulesOnNextMatch()
     {
-        var oldCards=Overlay(Overlay(cards,"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
+        var oldCards=Overlay(Overlay(Overlay(cards,"balance-before-card-text.json"),"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
         var deck=DeckService.Copy(oldCards.PresetDecks[1]);deck.CardIds.RemoveRange(0,4);deck.CardIds.AddRange(Enumerable.Repeat("WCG-185",4));
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(oldSession.Start(deck).Success);
@@ -115,14 +115,18 @@ public sealed class RankedTests : IDisposable
     [Fact] public void HistoricCatalogsReproduceTheReleasedFingerprints()
     {
         // Ranked saves store a hash of the catalog; the overlays must rebuild the exact released catalogs or old matches stop resuming.
-        var beforeArrows=Overlay(cards,"balance-before-arrow-cards.json");
+        var beforeText=Overlay(cards,"balance-before-card-text.json");
+        // origin/main 43615fc (before 卡牌文字白話化).
+        Assert.Equal("E5FF04DB722205E91C3D52DD688EE435F60B40E07B0E445C1B3F05DEA02D6557",Hash(beforeText));
+        Assert.NotEqual(Hash(beforeText),Hash(cards));
+        var beforeArrows=Overlay(beforeText,"balance-before-arrow-cards.json");
         Assert.Equal("3664E96255F2DBC34CDF76D9BB5760AAD8F97A0E153FFF94F9CC95BCF97EA2CE",Hash(beforeArrows));
         Assert.Equal("4ED3BFBD9FD5B5D2EFB919883D80442392F1B27B160F17119C1EFB0FF235A194",Hash(Overlay(beforeArrows,"balance-before-unlimited-faction-triggers.json")));
         Assert.NotEqual(Hash(beforeArrows),Hash(cards));
     }
     [Fact] public void ArrowExpansionPreservesActivePreArrowMatchAndReplays()
     {
-        var oldCards=Overlay(cards,"balance-before-arrow-cards.json");
+        var oldCards=Overlay(Overlay(cards,"balance-before-card-text.json"),"balance-before-arrow-cards.json");
         Assert.Empty(oldCards.GetCard("WCG-005")!.Arrows);Assert.Equal("衝鋒。",oldCards.GetCard("WCG-005")!.Text);
         var deck=DeckService.Copy(oldCards.PresetDecks[0]);
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
@@ -141,6 +145,24 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
         var rider=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-005").Card;
         Assert.Equal(["left","right"],rider.Arrows);
+    }
+    [Fact] public void CardTextUpdatePreservesActiveOldMatchWithLegacyRulesAndReplays()
+    {
+        var oldCards=Overlay(cards,"balance-before-card-text.json");
+        Assert.Equal(1200,oldCards.GetCard("WCG-147")!.PP);Assert.StartsWith("離場：",oldCards.GetCard("WCG-003")!.Text);
+        var deck=DeckService.Copy(oldCards.PresetDecks[0]);
+        var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(oldSession.Start(deck).Success);
+        var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+        oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
+        var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));var stars=oldSession.Read().Stars;
+        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
+        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));Assert.Equal(stars,restored.Read().Stars);
+        Assert.True(CardTextClarityTests.IsLegacy(restored.Engine));
+        Assert.True(Send(restored,"surrender").Success);
+        var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
+        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
     }
     [Fact] public void CorruptSaveIsPreservedAndBlocksRankedOnly()
     {

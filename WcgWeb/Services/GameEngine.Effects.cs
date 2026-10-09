@@ -7,7 +7,7 @@ public partial class GameEngine
     {
         if (!Alive(m) || m.IsSilenced) return;
         // Presentation only: lets the client badge the source before the deploy results play.
-        if (m.Card.Text.Contains("進場")) Present("effect", p, m.InstanceId, card: m.Card, label: "進場能力");
+        if (m.Card.Text.Contains("進場：")) Present("effect", p, m.InstanceId, card: m.Card, label: "進場能力");
         var enemy = GetOpponent(p);
         switch (m.Card.Id)
         {
@@ -50,7 +50,7 @@ public partial class GameEngine
             case "WCG-091": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 500).ToArray(), m.Card.Name); break;
             case "WCG-100": Resolve(() => Heal(p, 2), () => Recover(p, int.MaxValue, 1)); break;
             case "WCG-105": KillBatch(p.Field.Concat(enemy.Field).Where(x => x != m && x.CurrentPP <= 500).ToArray(), m.Card.Name); break;
-            case "WCG-112": Dispel(p); break;
+            case "WCG-112": if (LegacyCardRules) Dispel(p); else OptionalDispel(p, m); break;
             case "WCG-117": PickLowest(p, enemy.Field.Where(x => x.CurrentPP <= 1000), x => KillBatch(new[] { x }, m.Card.Name)); break;
             default: ExtraDeploy(p,m); break;
             // Remaining monsters are printed keywords, plain stats, continuous/event or death abilities.
@@ -191,7 +191,7 @@ public partial class GameEngine
     {
         if (m.IsSilenced) return;
         if (m.Card.Id is "WCG-003" or "WCG-016" or "WCG-025" or "WCG-103" or "WCG-043" or "WCG-108" or "WCG-080" or "WCG-083" or "WCG-093" or "WCG-097")
-            Present("trigger", p, m.InstanceId, card: m.Card, label: "離場能力");
+            Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
         var enemy = GetOpponent(p);
         switch (m.Card.Id)
         {
@@ -200,12 +200,12 @@ public partial class GameEngine
             case "WCG-025": case "WCG-103": DrawMany(p, 1); break;
             case "WCG-043": case "WCG-108": Recover(p, 1, 1, grave); break;
             case "WCG-080": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 1000).ToArray(), m.Card.Name); break;
-            case "WCG-083": PickMonster(p, "腐爛食屍鬼離場：選擇 PP 500 以下敵怪", enemy.Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-083": PickMonster(p, "腐爛食屍鬼陣亡：選擇 PP 500 以下敵怪", enemy.Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-093": Revive(p, 2, grave, optional: true); break;
             case "WCG-131":FreeHand(p,2,1);break;
             case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>x.CurrentPP<=700).ToArray(),m.Card.Name);break;
             case "WCG-172":TopEnergy(p);break;
-            case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, 3, grave)); break;
+            case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, 3, grave, optional: !LegacyCardRules)); break;
         }
     }
 }

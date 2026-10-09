@@ -8,12 +8,15 @@ public partial class GameEngine
 {
     private CardDatabase _cardDb;
     internal bool LimitFactionTriggers { get; private set; }
-    internal void UseMatchCatalog(CardDatabase catalog, bool limitFactionTriggers)
+    // Ranked matches started before the card-text clarity update replay with the old engine wording:
+    // sacrifice not counting as destroyed, mandatory 097/112/134 choices and the old 136/141/147/178 effects.
+    internal bool LegacyCardRules { get; private set; }
+    internal void UseMatchCatalog(CardDatabase catalog, bool limitFactionTriggers, bool legacyCardRules = false)
     {
         lock (_gate)
         {
             if (CurrentPhase != TurnPhase.NotStarted) throw new InvalidOperationException("不能在對局中切換卡牌平衡。");
-            _cardDb = catalog; LimitFactionTriggers = limitFactionTriggers;
+            _cardDb = catalog; LimitFactionTriggers = limitFactionTriggers; LegacyCardRules = legacyCardRules;
         }
     }
     private Random _random;
@@ -226,6 +229,7 @@ public partial class GameEngine
             "WCG-076" => enemy.Where(m => m.CurrentPP >= 1700),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => enemy,
             "WCG-036" or "WCG-135" => p.Field,
+            "WCG-141" when !LegacyCardRules => p.Field,
             "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-168" or "WCG-165" => p.Field.Concat(enemy),
             "WCG-143" => p.Field.Concat(enemy).Where(m => m.IsTapped),
             "WCG-167" => p.Field.Where(m => m.IsTapped),
@@ -302,7 +306,7 @@ public partial class GameEngine
         if (id == "WCG-164" && target != null) target.IsTapped = true;
         if (id == "WCG-165") { Damage(p, 1); if (IsOver) return; }
         if (id == "WCG-169" && target != null) KillBatch([target], "消滅代價");
-        if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: false);
+        if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: !LegacyCardRules);
         if (id == "WCG-096") { Damage(p, 1); if (IsOver) return; }
         // Cost-caused death triggers precede the original card effect.
         _effects.AddLast(() =>
