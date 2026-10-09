@@ -3,55 +3,47 @@
 
 <PageTitle>卡牌圖鑑 - 魂誓</PageTitle>
 
-<div class="container-fluid py-3">
-    <div class="card bg-dark text-white border-secondary mb-3 shadow">
-        <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-            <h4 class="mb-0">📖 卡牌圖鑑庫 (共 @CardDb.AllCards.Count 張卡牌)</h4>
-            <div class="d-flex align-items-center gap-2">
-                <input type="text" class="form-control bg-dark text-white border-secondary"
-                       placeholder="🔍 搜尋名稱、效果或卡牌編號..."
-                       style="width: 280px;"
-                       @bind="SearchText" @bind:event="oninput" />
-            </div>
+<div class="container-fluid py-3 gallery-page">
+    <header class="page-hero compact">
+        <div class="page-hero-text">
+            <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="book" Size="14" />完整卡牌圖鑑</p>
+            <h1>五大意志 · @CardDb.AllCards.Count 張卡牌</h1>
         </div>
-
-        <div class="card-body py-2 border-bottom border-secondary">
+        <label class="search-field large">
+            <WcgWeb.Components.Common.Icon Name="search" Size="18" />
+            <input type="text" class="form-control" aria-label="搜尋卡片"
+                   placeholder="搜尋名稱、效果或卡牌編號…"
+                   @bind="SearchText" @bind:event="oninput" />
+        </label>
+    </header>
+    <div class="card bg-dark text-white border-secondary mb-4 shadow filter-card">
+        <div class="card-body py-3 filter-panel">
             <!-- Will Filters -->
-            <div class="d-flex flex-wrap gap-2 align-items-center mb-2 filter-row">
-                <span class="text-muted small me-2">意志派系:</span>
-                <button class="btn btn-sm @(SelectedWill == "" ? "btn-light" : "btn-outline-secondary")"
-                        @onclick='() => SelectedWill = ""'>全部 (@CardDb.AllCards.Count)</button>
-                <button class="btn btn-sm @(SelectedWill == "狂怒" ? "btn-danger" : "btn-outline-danger")"
-                        @onclick='() => SelectedWill = "狂怒"'>🔴 狂怒 (@CardDb.AllCards.Count(c => c.Will == "狂怒"))</button>
-                <button class="btn btn-sm @(SelectedWill == "理智" ? "btn-primary" : "btn-outline-primary")"
-                        @onclick='() => SelectedWill = "理智"'>🔵 理智 (@CardDb.AllCards.Count(c => c.Will == "理智"))</button>
-                <button class="btn btn-sm @(SelectedWill == "生機" ? "btn-success" : "btn-outline-success")"
-                        @onclick='() => SelectedWill = "生機"'>🟢 生機 (@CardDb.AllCards.Count(c => c.Will == "生機"))</button>
-                <button class="btn btn-sm @(SelectedWill == "秩序" ? "btn-warning" : "btn-outline-warning")"
-                        @onclick='() => SelectedWill = "秩序"'>🟡 秩序 (@CardDb.AllCards.Count(c => c.Will == "秩序"))</button>
-                <button class="btn btn-sm @(SelectedWill == "深淵" ? "btn-secondary text-info" : "btn-outline-info")"
-                        @onclick='() => SelectedWill = "深淵"'>🟣 深淵 (@CardDb.AllCards.Count(c => c.Will == "深淵"))</button>
-                <button class="btn btn-sm @(SelectedWill == "中立" ? "btn-secondary" : "btn-outline-secondary")"
-                        @onclick='() => SelectedWill = "中立"'>⚪ 中立 (@CardDb.AllCards.Count(c => c.Will == "中立"))</button>
+            <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
+                <span class="filter-label">意志</span>
+                <button class="filter-chip @(SelectedWill == "" ? "on" : "")" aria-pressed="@(SelectedWill == "" ? "true" : "false")" @onclick='() => SelectedWill = ""'>全部 <small>@CardDb.AllCards.Count</small></button>
+                <button class="filter-chip will-chip will-wrath @(SelectedWill == "狂怒" ? "on" : "")" aria-pressed="@(SelectedWill == "狂怒" ? "true" : "false")" @onclick='() => SelectedWill = "狂怒"'><i class="will-dot"></i>狂怒 <small>@CardDb.AllCards.Count(c => c.Will == "狂怒")</small></button>
+                <button class="filter-chip will-chip will-reason @(SelectedWill == "理智" ? "on" : "")" aria-pressed="@(SelectedWill == "理智" ? "true" : "false")" @onclick='() => SelectedWill = "理智"'><i class="will-dot"></i>理智 <small>@CardDb.AllCards.Count(c => c.Will == "理智")</small></button>
+                <button class="filter-chip will-chip will-vitality @(SelectedWill == "生機" ? "on" : "")" aria-pressed="@(SelectedWill == "生機" ? "true" : "false")" @onclick='() => SelectedWill = "生機"'><i class="will-dot"></i>生機 <small>@CardDb.AllCards.Count(c => c.Will == "生機")</small></button>
+                <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" @onclick='() => SelectedWill = "秩序"'><i class="will-dot"></i>秩序 <small>@CardDb.AllCards.Count(c => c.Will == "秩序")</small></button>
+                <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" @onclick='() => SelectedWill = "深淵"'><i class="will-dot"></i>深淵 <small>@CardDb.AllCards.Count(c => c.Will == "深淵")</small></button>
+                <button class="filter-chip will-chip will-neutral @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SelectedWill = "中立"'><i class="will-dot"></i>中立 <small>@CardDb.AllCards.Count(c => c.Will == "中立")</small></button>
             </div>
 
             <!-- Type Filters & Keyword Filters -->
-            <div class="d-flex flex-wrap gap-2 align-items-center filter-row">
-                <span class="text-muted small me-2">卡牌類型:</span>
-                <button class="btn btn-sm @(SelectedType == "" ? "btn-light" : "btn-outline-secondary")"
-                        @onclick='() => SelectedType = ""'>全部</button>
-                <button class="btn btn-sm @(SelectedType == "怪物" ? "btn-info" : "btn-outline-info")"
-                        @onclick='() => SelectedType = "怪物"'>⚔️ 怪物 (@CardDb.AllCards.Count(c => c.Type == "怪物"))</button>
-                <button class="btn btn-sm @(SelectedType == "法術" ? "btn-warning" : "btn-outline-warning")"
-                        @onclick='() => SelectedType = "法術"'>✨ 法術 (@CardDb.AllCards.Count(c => c.IsSpell))</button>
-                <button class="btn btn-sm btn-outline-success" @onclick='() => SelectedType = "結界"'>結界 (@CardDb.AllCards.Count(c=>c.IsEnchantment))</button>
+            <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
+                <span class="filter-label">類型</span>
+                <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SelectedType = ""'>全部</button>
+                <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SelectedType = "怪物"'>怪物 <small>@CardDb.AllCards.Count(c => c.Type == "怪物")</small></button>
+                <button class="filter-chip @(SelectedType == "法術" ? "on" : "")" aria-pressed="@(SelectedType == "法術" ? "true" : "false")" @onclick='() => SelectedType = "法術"'>法術 <small>@CardDb.AllCards.Count(c => c.IsSpell)</small></button>
+                <button class="filter-chip @(SelectedType == "結界" ? "on" : "")" aria-pressed="@(SelectedType == "結界" ? "true" : "false")" @onclick='() => SelectedType = "結界"'>結界 <small>@CardDb.AllCards.Count(c=>c.IsEnchantment)</small></button>
 
-                <div class="vr mx-2 text-secondary"></div>
-                <span class="text-muted small me-2">關鍵字:</span>
+                <div class="vr mx-2"></div>
+                <span class="filter-label">關鍵字</span>
                 @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "聖盾", "箭頭", "反擊", "沉默" })
                 {
                     string k = kw;
-                    <button class="btn btn-sm @(SelectedKeyword == k ? "btn-light" : "btn-outline-secondary")"
+                    <button class="filter-chip @(SelectedKeyword == k ? "on" : "")" aria-pressed="@(SelectedKeyword == k ? "true" : "false")"
                             @onclick="() => ToggleKeyword(k)">@k</button>
                 }
             </div>
@@ -73,9 +65,7 @@
             {
                 <div class="gallery-entry" @key="card.Id">
                     <WcgWeb.Components.Common.CardItem Card="@card" OnCardClicked="() => Inspect = card" />
-                    <div class="text-center mt-1 text-muted" style="font-size:0.7rem;">
-                        #@card.Id
-                    </div>
+                    <div class="gallery-id">#@card.Id</div>
                 </div>
             }
         }

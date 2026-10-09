@@ -8,6 +8,11 @@ export function bind(root, dotnet) {
     const fx = createFx(root);
     const feedback = bindFeedback(root, sound, fx);
     applyMotionAttribute();
+    // Soft tick when the end-turn button starts suggesting the turn is done (no legal moves left).
+    const endTurnWatch = new MutationObserver(records => {
+        for (const r of records) if (r.target.classList?.contains('end-turn') && r.target.classList.contains('no-moves') && !String(r.oldValue ?? '').includes('no-moves')) void sound.play('timer');
+    });
+    endTurnWatch.observe(root, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
     let gesture = null, aim = null, hovered = null;
     let pendingDrop = null, flight = null;
     let frame = 0, suppressClick = false, disposed = false;
@@ -185,7 +190,9 @@ export function bind(root, dotnet) {
         const duration = reduced ? 120 : attack ? 420 : 340;
         const animation = clone.animate(frames, { duration, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
         const spell = !source.classList.contains('card-back') && source.dataset.cardType?.startsWith('法術');
-        void sound.play(attack ? 'attack' : zone === 'energy' ? 'energy' : spell ? 'spell' : 'place', attack ? .18 : .25);
+        const fieldCard = !source.classList.contains('card-back') && source.dataset.cardType?.includes('結界');
+        if (attack) void sound.play('swing');
+        void sound.play(attack ? 'attack' : zone === 'energy' ? 'energy' : source.classList.contains('card-back') ? 'set' : spell ? 'spell' : fieldCard ? 'field' : 'place', attack ? .18 : .25);
         // Decorative contact effects; the drop itself is still resolved by the engine afterwards.
         const contact = setTimeout(() => {
             if (disposed) return;
@@ -201,5 +208,5 @@ export function bind(root, dotnet) {
         readMotion: () => motionReduced(),
         // Cycles to the opposite of the current effective state and remembers it on this device.
         toggleMotion: () => { saveMotionSetting(motionReduced() ? 'full' : 'reduced'); if (motionReduced()) fx.clear(); return motionReduced(); },
-        motionSetting: () => readMotionSetting(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); fx.dispose(); untilt(); root.removeEventListener('pointermove', hoverTilt); root.removeEventListener('pointerleave', leave); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerdown', liftDown); document.removeEventListener('pointerup', liftUp); document.removeEventListener('pointercancel', liftUp); liftUp(); viewport?.removeEventListener('resize', fitViewport); removeEventListener('resize', fitViewport); html.style.removeProperty('--wcg-vh'); delete html.dataset.wcgVh; root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
+        motionSetting: () => readMotionSetting(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; endTurnWatch.disconnect(); feedback.dispose(); fx.dispose(); untilt(); root.removeEventListener('pointermove', hoverTilt); root.removeEventListener('pointerleave', leave); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerdown', liftDown); document.removeEventListener('pointerup', liftUp); document.removeEventListener('pointercancel', liftUp); liftUp(); viewport?.removeEventListener('resize', fitViewport); removeEventListener('resize', fitViewport); html.style.removeProperty('--wcg-vh'); delete html.dataset.wcgVh; root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
 }

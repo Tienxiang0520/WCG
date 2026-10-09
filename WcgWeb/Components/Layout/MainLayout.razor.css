@@ -12,14 +12,20 @@
 }
 main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: clip; }
 .sidebar {
-    position: relative;
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: linear-gradient(180deg, rgba(14, 17, 25, .92), rgba(9, 11, 17, .92));
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid var(--wcg-line);
+    padding-top: env(safe-area-inset-top);
 }
 .sidebar-resizer { display: none; }
 @media (min-width: 641px) {
     .page { flex-direction: row; align-items: flex-start; }
     .sidebar {
-        --sidebar-width: 250px;
+        --sidebar-width: 248px;
         width: clamp(200px, var(--sidebar-width), min(360px, 45vw));
         flex-shrink: 0;
         display: flex;
@@ -28,6 +34,11 @@ main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: c
         height: 100dvh;
         position: sticky;
         top: 0;
+        border-bottom: 0;
+        background:
+            radial-gradient(420px 300px at 0% 0%, rgba(214, 180, 108, .08), transparent 70%),
+            linear-gradient(180deg, var(--wcg-bg-1), var(--wcg-bg-0));
+        box-shadow: inset -1px 0 0 var(--wcg-line), 12px 0 40px rgba(0, 0, 0, .25);
     }
     .sidebar-resizer {
         display: block;
@@ -41,19 +52,21 @@ main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: c
         z-index: 2;
     }
     .sidebar-resizer:hover, .sidebar-resizer:focus-visible, .resizing .sidebar-resizer {
-        background: rgba(138, 202, 255, .65);
+        background: linear-gradient(180deg, transparent, rgba(214, 180, 108, .65), transparent);
         outline: none;
     }
     .resizing { user-select: none; }
-    .sidebar-collapsed .sidebar { width: 64px; }
+    .sidebar-collapsed .sidebar { width: 72px; }
     .sidebar-collapsed .sidebar-resizer { display: none; }
     .sidebar-collapsed .sidebar ::deep .brand-text,
-    .sidebar-collapsed .sidebar ::deep .nav-label { display: none; }
-    .sidebar-collapsed .sidebar ::deep .top-row { flex-direction: column; padding: .5rem; }
+    .sidebar-collapsed .sidebar ::deep .nav-label,
+    .sidebar-collapsed .sidebar ::deep .nav-footer { display: none; }
+    .sidebar-collapsed .sidebar ::deep .top-row { flex-direction: column; padding: .65rem .5rem; }
     .sidebar-collapsed .sidebar ::deep .sidebar-toggle { margin-left: 0; }
-    .sidebar-collapsed .sidebar ::deep .nav-item { padding-left: .4rem; padding-right: .4rem; }
-    .sidebar-collapsed .sidebar ::deep .nav-link { justify-content: center; padding: .5rem; }
-    article { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    .sidebar-collapsed .sidebar ::deep .nav { padding-left: .5rem; padding-right: .5rem; }
+    .sidebar-collapsed .sidebar ::deep .nav-link { justify-content: center; padding: .45rem; }
+    .sidebar-collapsed .sidebar ::deep .nav-link::before { left: -.5rem; }
+    article { padding-left: 2rem !important; padding-right: 2rem !important; }
 }
 #blazor-error-ui {
     color-scheme: light only;
@@ -75,6 +88,3 @@ main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: c
         right: 0.75rem;
         top: 0.5rem;
     }
-
-
-/* Sidebar release: responsive resize and collapse. */

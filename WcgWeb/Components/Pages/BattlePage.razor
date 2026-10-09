@@ -15,20 +15,53 @@
     @if (Notice != "") { <p class="alert alert-warning" role="status">@Notice</p> }
     @if (State?.Phase == "NotStarted")
     {
-        <section class="battle-panel setup-panel">
-            <div class="setup-heading"><h2>訓練場</h2><WcgWeb.Components.Common.AvatarBadge Caption="訓練者 · 點擊換頭像" /></div>
-            <p>指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。</p>
-            <label for="phaser-player">你的牌組</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
-                @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
-            </select>
-            <label for="phaser-computer">電腦牌組</label><select id="phaser-computer" class="form-select" @bind="ComputerDeck">
-                @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
-            </select>
-            <label for="phaser-starter">先攻</label><select id="phaser-starter" class="form-select" @bind="First"><option value="player">玩家先攻</option><option value="computer">電腦先攻</option><option value="random">隨機</option></select>
-            <p>50 張牌組、7 點生命；起手 7 張。每回合可將一張手牌背面填為能量，不抽牌。</p>
-            <button class="btn btn-primary btn-lg" disabled="@(Sending || !Interactive)" @onclick="Start">開始訓練</button>
-            @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">載入保存場面</button>}
-            @if(ToolNotice!=""){<p role="status">@ToolNotice</p>}
+        <section class="lobby">
+            <header class="page-hero">
+                <div class="page-hero-text">
+                    <p class="eyebrow"><WcgWeb.Components.Common.Icon Name="swords" Size="14" />訓練場</p>
+                    <h1>磨練你的每一張牌</h1>
+                    <p class="lead">指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。</p>
+                </div>
+                <WcgWeb.Components.Common.AvatarBadge Class="large" Caption="訓練者 · 點擊換頭像" />
+            </header>
+            <div class="lobby-grid">
+                <section class="wcg-panel battle-panel setup-panel" aria-labelledby="setup-title">
+                    <h2 id="setup-title" class="panel-title">準備對局</h2>
+                    <div class="field-grid-2">
+                        <div class="wcg-field"><label for="phaser-player">你的牌組</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
+                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
+                        </select></div>
+                        <div class="wcg-field"><label for="phaser-computer">電腦牌組</label><select id="phaser-computer" class="form-select" @bind="ComputerDeck">
+                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }
+                        </select></div>
+                    </div>
+                    <div class="wcg-field"><span class="field-label" id="phaser-starter-label">先攻</span>
+                        <div class="segmented" role="radiogroup" aria-labelledby="phaser-starter-label">
+                            @foreach (var (value, label) in new[] { ("player", "玩家先攻"), ("computer", "電腦先攻"), ("random", "隨機") })
+                            { <button type="button" role="radio" aria-checked="@(First == value ? "true" : "false")" class="@(First == value ? "on" : "")" @onclick="() => First = value">@label</button> }
+                        </div>
+                    </div>
+                    <div class="lobby-actions">
+                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />開始訓練</button>
+                        @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">載入保存場面</button>}
+                    </div>
+                    @if(ToolNotice!=""){<p class="field-note" role="status">@ToolNotice</p>}
+                </section>
+                <aside class="wcg-panel lobby-facts" aria-label="對局規則速覽">
+                    <h2 class="panel-title">對局速覽</h2>
+                    <dl class="fact-grid">
+                        <div><dt>牌組</dt><dd><b class="wcg-num">50</b>張</dd></div>
+                        <div><dt>生命</dt><dd><b class="wcg-num">7</b>點</dd></div>
+                        <div><dt>起手</dt><dd><b class="wcg-num">7</b>張</dd></div>
+                        <div><dt>填能量</dt><dd><b class="wcg-num">1</b>張／回合</dd></div>
+                    </dl>
+                    <p class="field-note">每回合可將一張手牌背面填為能量，不抽牌。</p>
+                    <nav class="lobby-links" aria-label="其他模式">
+                        <a href="ranked"><WcgWeb.Components.Common.Icon Name="trophy" Size="18" /><span><b>天梯</b><small>對手隨牌位變強</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
+                        <a href="deckbuilder"><WcgWeb.Components.Common.Icon Name="cards" Size="18" /><span><b>牌組構築室</b><small>組出你的 50 張</small></span><WcgWeb.Components.Common.Icon Name="chevron-right" Size="16" /></a>
+                    </nav>
+                </aside>
+            </div>
         </section>
     }
     @if (State != null && State.Phase != "NotStarted")

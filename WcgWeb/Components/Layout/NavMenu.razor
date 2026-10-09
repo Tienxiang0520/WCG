@@ -1,14 +1,15 @@
 <div class="top-row navbar navbar-dark">
-    <a class="navbar-brand fw-bold" href="" aria-label="魂誓首頁">
-        <span aria-hidden="true">🔮</span><span class="brand-text">魂誓</span>
+    <a class="navbar-brand" href="" aria-label="魂誓首頁">
+        <span class="brand-mark" aria-hidden="true"><WcgWeb.Components.Common.Icon Name="sigil" Size="22" /></span>
+        <span class="brand-text"><b>魂誓</b><small>SOUL OATH</small></span>
     </a>
     <button class="sidebar-toggle" type="button" @onclick="OnToggle"
             aria-label="@(Collapsed ? "展開側邊欄" : "收合側邊欄")"
             aria-expanded="@(!Collapsed ? "true" : "false")" aria-controls="main-navigation"
-            title="@(Collapsed ? "展開側邊欄" : "收合側邊欄")">@(Collapsed ? "›" : "‹")</button>
+            title="@(Collapsed ? "展開側邊欄" : "收合側邊欄")"><WcgWeb.Components.Common.Icon Name="@(Collapsed ? "chevron-right" : "chevron-left")" Size="16" /></button>
     <button class="mobile-toggle" type="button" @onclick="ToggleMobileMenu"
             aria-label="@(mobileMenuOpen ? "收合選單" : "展開選單")"
-            aria-expanded="@(mobileMenuOpen ? "true" : "false")" aria-controls="main-navigation">☰</button>
+            aria-expanded="@(mobileMenuOpen ? "true" : "false")" aria-controls="main-navigation"><WcgWeb.Components.Common.Icon Name="@(mobileMenuOpen ? "close" : "menu")" Size="22" /></button>
 </div>
 
 <div id="main-navigation" class="nav-scrollable @(mobileMenuOpen ? "mobile-open" : "")">
@@ -18,12 +19,13 @@
             <div class="nav-item">
                 <NavLink class="nav-link" href="@item.Href" Match="@item.Match" title="@item.Label"
                          aria-label="@item.Label" @onclick="CloseMobileMenu">
-                    <span class="nav-icon" aria-hidden="true">@item.Icon</span>
+                    <span class="nav-icon" aria-hidden="true"><WcgWeb.Components.Common.Icon Name="@item.Icon" Size="19" /></span>
                     <span class="nav-label">@item.Label</span>
                 </NavLink>
             </div>
         }
     </nav>
+    <p class="nav-footer"><span>v0.6</span><span>五大意志 · 單人卡牌對戰</span></p>
 </div>
 
 @code {
@@ -34,11 +36,11 @@
     private void CloseMobileMenu() => mobileMenuOpen = false;
     private readonly (string Href, string Icon, string Label, NavLinkMatch Match)[] menuItems =
     [
-        ("", "⚔️", "訓練場", NavLinkMatch.All),
-        ("ranked", "🏆", "天梯", NavLinkMatch.Prefix),
-        ("deckbuilder", "🃏", "牌組構築室", NavLinkMatch.Prefix),
-        ("cards", "📖", "完整卡牌圖鑑", NavLinkMatch.Prefix),
-        ("rules", "📜", "官方遊戲規則", NavLinkMatch.Prefix),
-        ("settings", "⚙️", "設定", NavLinkMatch.Prefix)
+        ("", "swords", "訓練場", NavLinkMatch.All),
+        ("ranked", "trophy", "天梯", NavLinkMatch.Prefix),
+        ("deckbuilder", "cards", "牌組構築室", NavLinkMatch.Prefix),
+        ("cards", "book", "完整卡牌圖鑑", NavLinkMatch.Prefix),
+        ("rules", "scroll", "官方遊戲規則", NavLinkMatch.Prefix),
+        ("settings", "gear", "設定", NavLinkMatch.Prefix)
     ];
 }

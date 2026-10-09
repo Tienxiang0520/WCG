@@ -382,4 +382,61 @@ public sealed class RankedTests : IDisposable
     }
     public void Dispose(){if(Directory.Exists(dir))Directory.Delete(dir,true);}
     private sealed class TestClock:TimeProvider {public DateTimeOffset Now = new(2026,10,4,0,0,0,TimeSpan.Zero); public override DateTimeOffset GetUtcNow()=>Now;}
+
+    static object PublicShape(BattleSnapshot s) => new { s.Turn, s.IsOver, s.Outcome,
+        sides = new[] { s.Player, s.Computer }.Select(p => new { p.Hp, p.DeckCount, p.HandCount, p.TotalEnergy,
+            field = p.Field.OrderBy(m => m.Slot).Select(m => new { m.Card.CardId, m.PP, m.DP, m.Slot, m.IsSet }), grave = p.Graveyard.Select(c => c.CardId) }),
+        hand = s.Hand.Select(h => h.Card.CardId) };
+    [Fact] public async Task FinishedMatchesAreRecordedAndReplayToTheSameFinalState()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);var lease=s.Coordinator.Attach();s.Coordinator.Fast=true;
+        for(int round=0;round<3&&!s.Engine.IsOver;round++)
+        {
+            if(s.Engine.DecisionPlayerId=="player")
+            {
+                if(s.Bridge.Snapshot().Pending!=null||s.Engine.Player.Hand.Count==0)break;
+                Assert.True(Send(s,"energy",s.Engine.Player.Hand[0].InstanceId).Success);Assert.True(Send(s,"end").Success);
+            }
+            for(int n=0;n<200&&!s.Engine.IsOver&&s.Engine.DecisionPlayerId=="computer";n++)
+            {
+                s.Coordinator.Resync(lease);using var cancel=new CancellationTokenSource(TimeSpan.FromSeconds(10));
+                await s.Coordinator.DriveAsync(lease,r=>{Assert.True(r.Success,r.Message);cancel.Cancel();return Task.CompletedTask;},cancel.Token);
+            }
+        }
+        if(!s.Engine.IsOver)Assert.True(Send(s,"surrender").Success);
+        var live=JsonSerializer.Serialize(PublicShape(s.Bridge.Snapshot()));
+        var profile=s.Read();var record=Assert.Single(profile.Records!);
+        Assert.Equal(profile.Result!.MatchId,record.Id);Assert.Equal(s.Engine.TurnNumber,record.Turns);Assert.NotNull(record.StartedAt);Assert.NotNull(record.EndedAt);
+        Assert.Equal(profile.Match!.Actions,RankedRecord.Decode(record.Actions));Assert.Equal(profile.Match.ComputerDeck.CardIds,record.ComputerDeck.CardIds);Assert.Equal(profile.Match.ComputerDeck.Name,record.ComputerDeck.Name);Assert.NotEmpty(record.Archetype);
+        var replay=Session().BuildReplay(record.Id);Assert.Empty(replay.Error);
+        Assert.Equal(profile.Match.Actions.Count+1,replay.Steps.Count);
+        Assert.Equal(live,JsonSerializer.Serialize(PublicShape(replay.Steps[^1].State)));
+        // Replays are deterministic and never touch the live engine or save.
+        var again=s.BuildReplay(record.Id);Assert.Equal(live,JsonSerializer.Serialize(PublicShape(again.Steps[^1].State)));
+        Assert.Equal(RankedRules.ProfileVersion,s.Read().Version);
+        Assert.Contains("\"Records\"",File.ReadAllText(store.Path));
+    }
+    [Fact] public void HistoryIsCappedAndStaysSmall()
+    {
+        var s=Session();
+        for(int i=0;i<RankedRules.MaxRecords+3;i++){Assert.True(s.Start(cards.PresetDecks[i%2]).Success);Assert.True(Send(s,"surrender").Success);}
+        var records=s.Read().Records!;Assert.Equal(RankedRules.MaxRecords,records.Count);Assert.Equal(s.Read().Match!.Id,records[^1].Id);
+        Assert.True(new FileInfo(store.Path).Length<400_000,$"save is {new FileInfo(store.Path).Length} bytes");
+    }
+    [Fact] public void OlderSavesWithoutRecordsLoadAndALastSettledMatchIsListed()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);Assert.True(Send(s,"surrender").Success);
+        var p=s.Read();p.Records=null;store.Save(p);
+        var json=File.ReadAllText(store.Path);Assert.DoesNotContain("\"StartedAt\": null",json.Replace("\"Records\": null",""),StringComparison.Ordinal);
+        var restored=Session();Assert.Empty(restored.Error);var record=Assert.Single(restored.Read().Records!);Assert.Equal(p.Match!.Id,record.Id);Assert.Null(record.EndedAt);
+        Assert.Empty(restored.BuildReplay(record.Id).Error);
+    }
+    [Fact] public void CorruptHistoryEntriesAreDroppedWithoutBlockingRanked()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);Assert.True(Send(s,"surrender").Success);
+        var p=s.Read();p.Records!.Add(new(){Id=Guid.NewGuid(),Season=p.Season,Tier=9,PlayerDeck=new(),ComputerDeck=new(),Actions="x"});
+        p.Records.Add(new(){Id=Guid.NewGuid(),Season=p.Season,Tier=1,PlayerDeck=new(),ComputerDeck=new(),Actions="bad"});store.Save(p);
+        var restored=Session();Assert.Empty(restored.Error);Assert.Single(restored.Read().Records!);
+        Assert.NotEmpty(restored.BuildReplay(Guid.NewGuid()).Error);
+    }
 }

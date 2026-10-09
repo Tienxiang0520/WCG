@@ -19,6 +19,7 @@ public sealed partial class RankedSession
     private readonly CardDatabase currentCards, priorBalanceCards;
     private readonly string priorBalanceRules, priorBalanceIdentifierRules;
     private RankedProfile profile = new();
+    private readonly DeckService deckService;
     public GameEngine Engine { get; }
     public BattleBridge Bridge { get; }
     public BattleCoordinator Coordinator { get; }
@@ -28,7 +29,7 @@ public sealed partial class RankedSession
     public RankedSession(CardDatabase cards, DeckService decks, RankedStore store, RankedDecks opponents,
         ILogger<BattleCoordinator> logger, TimeProvider? clock = null)
     {
-        this.store = store; this.opponents = opponents; this.clock = clock ?? TimeProvider.System;
+        this.store = store; this.opponents = opponents; deckService = decks; this.clock = clock ?? TimeProvider.System;
         var catalog = JsonSerializer.Serialize(cards.AllCards);
         rules = Fingerprint(catalog);
         priorIdentifierRules = Fingerprint(catalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
@@ -46,7 +47,7 @@ public sealed partial class RankedSession
                 store.Save(profile);
                 ResetNotice = "天梯電腦已改為依牌位分級。舊版進度已封存到歷季成績，本季從青銅 III 重新開始；未完成的舊對局不計勝負。";
             }
-            Restore(); RefreshSeason();
+            Restore(); BackfillRecord(); RefreshSeason();
         }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
         { logger.LogWarning(ex, "Ranked save could not be restored"); Error = "天梯存檔暫時無法載入，原檔已保留。"; }
@@ -76,7 +77,7 @@ public sealed partial class RankedSession
             var tier = RankedRules.Tier(profile.Stars); var seed = Random.Shared.Next();
             var previousOpponent = profile.Match?.ComputerDeck?.Id;
             profile.Match = new() { Season = profile.Season, Seed = seed, Tier = tier, PlayerFirst = Random.Shared.Next(2) == 0,
-                Rules = rules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed), previousOpponent) };
+                Rules = rules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed), previousOpponent), StartedAt = clock.GetUtcNow() };
             profile.SelectedDeck = deck.Id; profile.Result = null;
             try { Restore(); store.Save(profile); }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
@@ -92,7 +93,8 @@ public sealed partial class RankedSession
         var target = side < 0 ? -1 : (side == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToList().FindIndex(m => m.InstanceId == c.TargetId);
         return new(c.Type, source, side, target, Engine.CurrentPendingChoice?.Options.FindIndex(o => o.Id == c.OptionId) ?? -1, RulesVersion: GameEngine.RankedAiVersion);
     }
-    private BattleCommand Decode(RankedAction a)
+    private BattleCommand Decode(RankedAction a) => Decode(Engine, a);
+    private static BattleCommand Decode(GameEngine Engine, RankedAction a)
     {
         if (a.Source < -1 || a.TargetSide is < -1 or > 1 || a.Target < -1 || a.Choice < -1 ||
             a.Source >= (a.Type is "attack" or "activate" ? Engine.Player.Occupied : Engine.Player.Hand.Count) ||
@@ -164,6 +166,7 @@ public sealed partial class RankedSession
             if (won) profile.Wins++; else profile.Losses++;
             profile.Match.Settled = true;
             profile.Result = new(profile.Match.Id, profile.Match.Season, won, previous, profile.Stars, response.State.Outcome);
+            AddRecord(profile.Match, profile.Result, Engine.TurnNumber, clock.GetUtcNow());
             RankedRules.Advance(profile, clock.GetUtcNow());
         }
         try { store.Save(profile); }

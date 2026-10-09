@@ -1,0 +1,22 @@
+@namespace WcgWeb.Components.Common
+@using WcgWeb.Models.Battle
+@* Read-only card preview shared by 對局回顧 and 對戰紀錄; closes back to whatever opened it. *@
+@if (Card is { } card)
+{
+    <div class="preview-shade" @onclick="Close">
+        <section class="card-preview" role="dialog" aria-modal="true" aria-label="卡片詳情" @onclick:stopPropagation="true">
+            <button type="button" class="preview-close" data-sfx="back" aria-label="關閉卡片" @onclick="Close"><Icon Name="close" Size="18" /><span>關閉</span></button>
+            <div class="preview-art"><CardImage CardId="@card.CardId" Loading="eager" /></div>
+            <small>@card.CardId · @card.Type@(card.Will != "" ? " · " + card.Will : "")</small>
+            <h3>@card.Name</h3>
+            <b>@card.Cost 費@(card.PP != null ? $" · {card.PP} PP · {card.DP} DP" : "")</b>
+            <p>@card.Text</p>
+            @if (card.Arrows?.Length > 0) { <p>箭頭 @string.Join(" ", card.Arrows.Select(a => a == "left" ? "←" : a == "right" ? "→" : "↑"))</p> }
+        </section>
+    </div>
+}
+@code {
+    [Parameter] public BattleCard? Card { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    private Task Close() => OnClose.InvokeAsync();
+}

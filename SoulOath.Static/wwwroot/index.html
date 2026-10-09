@@ -11,24 +11,26 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <script type="importmap"></script>
     <style>
-        body{background:#14161d;color:#e6eef8}
-        .startup{padding:3rem;max-width:40rem;margin:10vh auto}
-        .startup h1{font-size:2rem}.startup p{color:#a6bcd2}
-        .startup-download{display:flex;align-items:center;gap:1rem;max-width:26rem;margin-top:1.4rem}
-        .startup-download progress{appearance:none;-webkit-appearance:none;flex:1;min-width:0;height:.85rem;border:0;border-radius:1rem;overflow:hidden;background:#2b3545}
-        .startup-download progress::-webkit-progress-bar{background:#2b3545;border-radius:1rem}
-        .startup-download progress::-webkit-progress-value{background:#67b7ef;border-radius:1rem;transition:width .15s ease-out}
-        .startup-download progress::-moz-progress-bar{background:#67b7ef;border-radius:1rem}
-        #startup-percentage{min-width:3.5rem;text-align:right;font-variant-numeric:tabular-nums;color:#b8dafa}
-        .startup-detail{font-size:.85rem;margin-top:.65rem}.startup.failed p{color:#efb0bb}.startup.failed progress::-webkit-progress-value{background:#db8293}
-        .startup.failed progress::-moz-progress-bar{background:#db8293}
+        body{margin:0;background:#090b11 radial-gradient(900px 500px at 50% 0%,rgba(214,180,108,.1),transparent 65%);color:#ece5d6;font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+        .startup{box-sizing:border-box;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.5rem;text-align:center}
+        .startup-mark{display:grid;place-items:center;width:72px;height:72px;margin-bottom:1.2rem;border-radius:20px;color:#f3dca3;background:#141822;box-shadow:inset 0 0 0 1px rgba(214,180,108,.5),0 0 40px rgba(214,180,108,.18)}
+        .startup h1{margin:0;font-family:"Noto Serif TC","Songti TC","PMingLiU",serif;font-size:2.2rem;letter-spacing:.3em;text-indent:.3em;color:#f3dca3}
+        .startup-sub{margin:.4rem 0 1.6rem;font-size:.7rem;letter-spacing:.42em;color:#847f76}
+        .startup p{color:#b9b3a6;margin:.4rem 0}
+        .startup-download{display:flex;align-items:center;gap:1rem;width:min(26rem,100%);margin-top:1rem}
+        .startup-download progress{appearance:none;-webkit-appearance:none;flex:1;min-width:0;height:.5rem;border:0;border-radius:1rem;overflow:hidden;background:#1a1f2c}
+        .startup-download progress::-webkit-progress-bar{background:#1a1f2c;border-radius:1rem}
+        .startup-download progress::-webkit-progress-value{background:linear-gradient(90deg,#a97f37,#f2d898);border-radius:1rem;transition:width .15s ease-out}
+        .startup-download progress::-moz-progress-bar{background:linear-gradient(90deg,#a97f37,#f2d898);border-radius:1rem}
+        #startup-percentage{min-width:3.5rem;text-align:right;font-variant-numeric:tabular-nums;color:#f3dca3;font-weight:700}
+        .startup-detail{font-size:.8rem;color:#847f76!important;margin-top:.8rem!important}.startup.failed p{color:#f2a59e}.startup.failed progress::-webkit-progress-value{background:#e4685f}
+        .startup.failed progress::-moz-progress-bar{background:#e4685f}
         @media(prefers-reduced-motion:reduce){.startup-download progress::-webkit-progress-value{transition:none}}
-        @media(max-width:480px){.startup{padding:1.5rem}}
-        #blazor-error-ui{display:none;position:fixed;bottom:0;background:#44212e;color:#fff;padding:1rem;width:100%;z-index:2000}
+        #blazor-error-ui{display:none;position:fixed;bottom:0;background:#3a1f1f;color:#fff;padding:1rem;width:100%;z-index:2000}
     </style>
 </head>
 <body>
-    <div id="app"><main class="startup"><h1>🔮 魂誓</h1><p id="startup-status" role="status">正在檢查遊戲資源…</p><div class="startup-download"><progress id="startup-progress" value="0" max="100" aria-label="遊戲下載進度"></progress><span id="startup-percentage" aria-hidden="true">0%</span></div><p id="startup-detail" class="startup-detail">首次開啟會下載全部卡圖與音效，完成後自動進入。</p></main></div>
+    <div id="app"><main class="startup"><div class="startup-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7L12 2.5Z"/><path d="M12 6.5 16.8 9.2v5.6L12 17.5l-4.8-2.7V9.2L12 6.5Z"/><path d="M12 6.5v11M7.2 9.2l9.6 5.6M16.8 9.2l-9.6 5.6"/></svg></div><h1>魂誓</h1><p class="startup-sub">SOUL OATH</p><p id="startup-status" role="status">正在檢查遊戲資源…</p><div class="startup-download"><progress id="startup-progress" value="0" max="100" aria-label="遊戲下載進度"></progress><span id="startup-percentage" aria-hidden="true">0%</span></div><p id="startup-detail" class="startup-detail">首次開啟會下載全部卡圖與音效，完成後自動進入。</p></main></div>
     <div id="blazor-error-ui" role="alert">載入發生錯誤。<a href="." class="reload">重新整理</a></div>
     <noscript>請開啟瀏覽器 JavaScript，才能進行魂誓對戰。</noscript>
     <script src="startup.js"></script>
