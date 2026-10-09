@@ -6,6 +6,8 @@ public partial class GameEngine
     private void Deploy(PlayerState p, MonsterInstance m)
     {
         if (!Alive(m) || m.IsSilenced) return;
+        // Presentation only: lets the client badge the source before the deploy results play.
+        if (m.Card.Text.Contains("進場")) Present("effect", p, m.InstanceId, card: m.Card, label: "進場能力");
         var enemy = GetOpponent(p);
         switch (m.Card.Id)
         {
