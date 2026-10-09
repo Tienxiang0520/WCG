@@ -1,0 +1,8 @@
+{
+  "name": "wcg-i18n-scan",
+  "private": true,
+  "type": "module",
+  "description": "English-mode Playwright scan: no untranslated 繁體中文 and no console errors.",
+  "scripts": { "flow": "node flow.mjs", "ranked": "node ranked.mjs" },
+  "devDependencies": { "playwright-core": "^1.64.0" }
+}
