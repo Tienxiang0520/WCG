@@ -444,6 +444,8 @@ body {
 .setup-panel { max-width:660px; margin:25px auto; }
 .setup-panel label { display:block; margin:16px 0 7px; }
 .setup-panel p { margin:20px 0; line-height:1.7; }
+.setup-heading { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; }
+.setup-heading h2 { margin:0; }
 .card-detail-backdrop { position:fixed; inset:0; background:#020610cb; z-index:1100; display:grid; place-items:center; padding:20px; }
 .card-detail { width:min(500px,100%); max-height:90vh; overflow:auto; background:#1d3049; border:1px solid #6d8dad; border-radius:15px; padding:24px; }
 .card-detail p { font-size:1rem; line-height:1.8; }
@@ -697,3 +699,4 @@ html[data-wcg-motion="reduced"] *, html[data-wcg-motion="reduced"] *::before, ht
 @media (max-width:419.98px) { .deck-catalog-entry .wcg-card { zoom:.94; } }
 @media (max-width:389.98px) { .gallery-entry .wcg-card { zoom:.92; } .deck-catalog-entry .wcg-card { zoom:.86; } }
 @media (min-width:420px) and (max-width:600px) { .deck-catalog-entry .wcg-card { zoom:1; } }
+.wcg-toast.error { background:#3a1f1f; color:#ffd9d3; border-color:#ff8c81; box-shadow:0 12px 32px #000a, 0 0 18px #ff8c8133; }

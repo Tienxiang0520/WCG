@@ -5,6 +5,7 @@
 @inject IJSRuntime JS
 @inject BattleBridge Bridge
 @inject BattleCoordinator Coordinator
+@inject PlayerProfileStore Profile
 @if(State is {} s)
 {
 <section class="v06-board @(Training?"training":"") @(Dragging!=null?"dragging":"") @(s.ActivePlayerId=="player"?"turn-player":"turn-computer") @(MotionReduced?"motion-reduced":"")" aria-label="v0.6 卡牌戰場" @ref="BoardElement">
@@ -39,7 +40,7 @@
         </div>
     }
     </div>
-    <div class="player hero @HeroClass(s,s.Player,true)" aria-label="你的頭像 · 生命 @s.Player.Hp / 7">@HeroFace(s.Player,true)<div class="hero-meta"><strong>你</strong><small>牌庫 @s.Player.DeckCount</small></div></div>
+    <div class="player hero @HeroClass(s,s.Player,true)" role="button" tabindex="0" title="點擊更換頭像" aria-label="你的頭像 · 生命 @s.Player.Hp / 7 · 點擊更換頭像" @onclick="()=>AvatarOpen=true" @onkeydown='e=>{if(e.Key=="Enter"||e.Key==" ")AvatarOpen=true;}'>@HeroFace(s.Player,true)<div class="hero-meta"><strong>你</strong><small>牌庫 @s.Player.DeckCount</small></div></div>
     <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy"><strong>能量 <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>拖手牌到這裡填能量</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"")"></i>}</div></aside>
     <aside class="turn-controls"><button class="end-turn @(NoMovesLeft?"no-moves":"")" title="@(NoMovesLeft?"沒有可用的行動了":"")" disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>結束回合</button><button @onclick="()=>ShowHistory=true">紀錄／墓地</button></aside>
     <div class="v06-hand" aria-label="扇形手牌">
@@ -61,6 +62,7 @@
     @if(!Busy&&!Presenting&&s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@targetPending.Title：點選亮起的卡片選擇目標 @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>取消</button>}</div>}
     @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="填能量確認"><h3>填能量</h3><p>將「@s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card.Name」轉為能量？不抽牌。</p><button @onclick='()=>Send("energy",energyId,force:true)'>確認填能量</button><button @onclick="CancelEnergy">取消</button></section></div>}
     @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="卡片詳情" @onclick:stopPropagation="true">@foreach(var arrow in card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}<button class="close-dialog" @onclick="()=>Detail=null">關閉</button><div class="detail-art-layer"><CardImage CardId="@card.CardId" Loading="eager" /></div><small>@card.CardId · @card.Type · @card.Will</small><h2>@card.Name</h2><b>@card.Cost 費 @if(card.PP!=null){<span> · @card.PP PP · @card.DP DP</span>}</b><p>@card.Text</p>@if(card.Arrows?.Length>0){<p>箭頭 @string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))</p>}@if(s.Player.Field.Concat(s.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){@if(own.Card.PP!=null){<p>目前數值：@own.PP PP · @own.DP DP</p>}<p>@string.Join(" · ",own.Status)</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@a.Name：@a.Text</p>}@if(own.Attachment!=null){<p class="attachment">沉默：@own.Attachment.Name · @own.Attachment.Text</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>發動結界</button>}}@if(CanAct&&s.Pending==null&&EnergyCandidate==null&&s.Hand.Any(h=>h.Card.InstanceId==card.InstanceId)){<button class="detail-set-toggle" @onclick="()=>ToggleSetFromDetail(card.InstanceId)">@(SetModes.Contains(card.InstanceId)?"翻回正面":"切換為蓋牌")</button>}<small>關閉後拖曳卡片進行操作。</small></section></div>}
+    @if(AvatarOpen){<div class="modal-shade" @onclick="()=>AvatarOpen=false"><section class="v06-dialog avatar-dialog" role="dialog" aria-label="選擇頭像" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>AvatarOpen=false">完成</button><h3>選擇頭像</h3><AvatarPicker /></section></div>}
     @if(ShowHistory){<div class="modal-shade" @onclick="()=>ShowHistory=false"><section class="v06-dialog" role="dialog" aria-label="對戰紀錄與墓地" @onclick:stopPropagation="true"><button @onclick="()=>ShowHistory=false">關閉</button><h3>雙方墓地</h3>@foreach(var side in new[]{s.Player,s.Computer}){<p>@(side.Id=="player"?"我方":"敵方")：@string.Join("、",side.Graveyard.Select(c=>c.Name))</p>}<h3>對戰紀錄</h3>@foreach(var line in History.Take(60)){<p>@line</p>}</section></div>}
 </section>
 }
@@ -80,7 +82,7 @@
     [Parameter] public bool TrainingAiPaused {get;set;}
     [Parameter] public EventCallback OpenTraining {get;set;}
     private BattleSnapshot? State;
-    private bool Busy,Presenting,Disposed,ShowHistory;
+    private bool Busy,Presenting,Disposed,ShowHistory,AvatarOpen;
     private Guid? EnergyCandidate,Dragging;
     private string DragKind="";
     private HashSet<Guid> SetModes=[];
@@ -108,7 +110,7 @@
         var cards=side.Field.Where(m=>!m.IsSet).Select(m=>m.Card).Concat(side.Graveyard).Concat(mine?s.Hand.Select(h=>h.Card):[]);
         return cards.Select(c=>c.Will).Where(w=>!string.IsNullOrEmpty(w)&&w!="中立").GroupBy(w=>w).OrderByDescending(g=>g.Count()).ThenBy(g=>g.Key,StringComparer.Ordinal).Select(g=>g.Key).FirstOrDefault();
     }
-    private RenderFragment HeroFace(BattleSide side,bool mine)=>@<div class="hero-face"><div class="hero-portrait"><img src="battle/avatars/@(mine?"player":"computer").svg" alt="" draggable="false" /></div><span class="hero-crack" aria-hidden="true"></span><b class="hero-hp hp-value" @key="side.Hp" title="生命 @side.Hp / 7">@side.Hp</b></div>;
+    private RenderFragment HeroFace(BattleSide side,bool mine)=>@<div class="hero-face"><div class="hero-portrait"><img class="@(mine&&Profile.IsCustom?"custom":"")" src="@(mine?Profile.AvatarUrl:"battle/avatars/computer.svg")" alt="" draggable="false" /></div><span class="hero-crack" aria-hidden="true"></span><b class="hero-hp hp-value" @key="side.Hp" title="生命 @side.Hp / 7">@side.Hp</b></div>;
     private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
     private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
@@ -119,7 +121,8 @@
     private string HandLabel(BattleHand h,bool back)=>!CanAct?"等待行動":back?(h.CanSet?"可蓋牌 · 0費":"目前不能蓋牌"):h.CanPlay?"可出牌":h.CanSet?"只能蓋牌":"不可出牌";
     private string HandHint(BattleHand h,bool back)=>!CanAct?"等待你的行動時再出牌":back?(h.CanSet?"背面拖入己方空格，以0費蓋牌":"己方沒有可用格位或正在選擇效果"):h.CanPlay?"拖到亮起的合法位置出牌":h.Problem+(h.CanSet?"；右鍵可切換蓋牌，0費放入己方空格":"");
     private static string FanStyle(int i,int n){var offset=i-(n-1)/2.0;var angle=offset*Math.Min(5,34.0/Math.Max(1,n-1));return FormattableString.Invariant($"--offset:{offset:0.##};--step:min(100px,calc((100vw - 470px) / {Math.Max(1,n-1)}));--angle:{angle:0.##}deg;--rise:{Math.Abs(offset)*Math.Min(6,25.0/Math.Max(1,n-1)):0.##}px;--order:{i+1};--gaps:{Math.Max(1,n-1)}");}
-    protected override void OnInitialized()=>State=InitialResponse?.State??EffectiveBridge.Snapshot();
+    protected override void OnInitialized(){State=InitialResponse?.State??EffectiveBridge.Snapshot();Profile.Changed+=AvatarChanged;}
+    private void AvatarChanged()=>_=InvokeAsync(()=>{if(!Disposed)StateHasChanged();});
     protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);SoundEnabled=await DragBinding.InvokeAsync<bool>("readSound");MotionReduced=await DragBinding.InvokeAsync<bool>("readMotion");StateHasChanged();if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
     private async Task ToggleMotion(){if(DragBinding!=null)MotionReduced=await DragBinding.InvokeAsync<bool>("toggleMotion");}
     private async Task ToggleSound(){if(DragBinding!=null)SoundEnabled=await DragBinding.InvokeAsync<bool>("toggleSound");}
@@ -194,5 +197,5 @@
         }
         finally{Presenting=false;if(!Disposed)StateHasChanged();}
     }
-    public async ValueTask DisposeAsync(){Disposed=true;if(DragBinding!=null){await DragBinding.InvokeVoidAsync("dispose");await DragBinding.DisposeAsync();}Self?.Dispose();if(DragModule!=null)await DragModule.DisposeAsync();if(Preferences!=null)await Preferences.DisposeAsync();}
+    public async ValueTask DisposeAsync(){Disposed=true;Profile.Changed-=AvatarChanged;if(DragBinding!=null){await DragBinding.InvokeVoidAsync("dispose");await DragBinding.DisposeAsync();}Self?.Dispose();if(DragModule!=null)await DragModule.DisposeAsync();if(Preferences!=null)await Preferences.DisposeAsync();}
 }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="霜牙狼頭像">
+  <defs><radialGradient id="g" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#3b5566"/><stop offset="1" stop-color="#111c24"/></radialGradient></defs>
+  <circle cx="48" cy="48" r="45" fill="url(#g)" stroke="#a8d4ea" stroke-width="4"/>
+  <path d="M22 14L36 34L48 30L60 34L74 14L72 44L80 60L48 86L16 60L24 44Z" fill="#8fa3b0"/>
+  <path d="M27 22L36 36L30 40ZM69 22L60 36L66 40Z" fill="#3a4a55"/>
+  <path d="M30 50L48 86L66 50L60 46L48 50L36 46Z" fill="#e7eef2"/>
+  <path d="M34 48L42 50M62 48L54 50" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>
+  <path d="M42 68H54L48 76Z" fill="#1d262c"/>
+  <path d="M40 78L44 82M56 78L52 82" stroke="#1d262c" stroke-width="2" stroke-linecap="round"/>
+  <path d="M48 30V44" stroke="#5a6d79" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

@@ -401,3 +401,14 @@
 .v06-board .battle-message{top:96px}
 .v06-board .battlefield,.v06-board .target-banner{top:112px}
 }
+/* Own portrait opens the avatar picker. */
+.player.hero{cursor:pointer}
+.player.hero:focus-visible .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}
+.player.hero:focus-visible{outline:2px solid #8dcaff;outline-offset:2px}
+.dragging .player.hero{pointer-events:none}
+@media(hover:hover){.v06-board:not(.dragging) .player.hero:hover .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}}
+.hero-portrait img.custom{transform:none}
+.avatar-dialog{width:min(560px,100%)}
+.avatar-dialog ::deep .avatar-picker{width:100%}
+/* Phone: the hint sits just under the opponent portrait, so it steps aside while a face-attack glow is showing. */
+@media(max-width:600px){.v06-board .battle-message{transition:opacity .15s}.v06-board.dragging .battle-message{opacity:0}}

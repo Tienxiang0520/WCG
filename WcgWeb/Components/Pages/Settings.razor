@@ -1,3 +1,4 @@
+@using WcgWeb.Components.Common
 @page "/settings"
 @inject IJSRuntime JS
 @implements IAsyncDisposable
@@ -5,7 +6,7 @@
 <PageTitle>設定 - 魂誓</PageTitle>
 <section class="settings-page">
     <h1>設定</h1>
-    <p class="settings-note">調整對戰操作習慣，選擇會儲存在這個瀏覽器。</p>
+    <p class="settings-note">調整頭像與對戰操作習慣，選擇會儲存在這個瀏覽器。</p>
     <section class="settings-panel" aria-labelledby="operation-settings">
         <h2 id="operation-settings">操作</h2>
         <div class="setting-row">
@@ -20,6 +21,10 @@
                 <span>@(ConfirmEnergy ? "開啟" : "關閉")</span>
             </button>
         </div>
+    </section>
+    <section class="settings-panel" aria-labelledby="avatar-settings">
+        <h2 id="avatar-settings">玩家頭像</h2>
+        <AvatarPicker />
     </section>
     <p class="settings-status" role="status">@Status</p>
 </section>

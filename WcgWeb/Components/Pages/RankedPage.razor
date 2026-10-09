@@ -32,6 +32,7 @@ else
     <div class="ranked-lobby">
         <header><p class="ranked-eyebrow">單人天梯 · @Profile.Season</p><h1>挑戰下一個牌位</h1><p>每一場對局，往上多走一顆星。</p></header>
         @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
+        <div class="ranked-identity"><AvatarBadge Class="large" Caption="@($"{RankedRules.Label(Profile.Stars)} · 點擊換頭像")" /></div>
         <section class="ranked-card" aria-label="目前牌位">
             <RankEmblem Tier="@RankedRules.Tier(Profile.Stars)" />
             <div><p>目前牌位</p><h2>@RankedRules.Label(Profile.Stars)</h2>

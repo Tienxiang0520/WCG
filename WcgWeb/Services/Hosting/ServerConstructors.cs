@@ -30,3 +30,8 @@ public sealed partial class RankedSession
     public RankedSession(CardDatabase cards, IWebHostEnvironment env, RankedStore store, RankedDecks opponents,
         ILogger<BattleCoordinator> logger, TimeProvider? clock = null) : this(cards, new DeckService(cards, env), store, opponents, logger, clock) { }
 }
+public sealed partial class PlayerProfileStore
+{
+    public PlayerProfileStore(IWebHostEnvironment env) : this(new FilePlayerStorage(new Dictionary<string, string>
+        { ["profile"] = System.IO.Path.Combine(env.ContentRootPath, "Data", "player_profile.json") })) { }
+}

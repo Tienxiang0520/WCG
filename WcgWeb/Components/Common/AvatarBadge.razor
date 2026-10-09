@@ -1,0 +1,28 @@
+@namespace WcgWeb.Components.Common
+@implements IDisposable
+@inject PlayerProfileStore Profile
+
+@* Player identity chip with quick access to the avatar picker. *@
+<button type="button" class="avatar-badge @Class" title="更換頭像" aria-label="你的頭像 · 點擊更換" @onclick="() => Open = true">
+    <span class="avatar-badge-face"><img src="@Profile.AvatarUrl" alt="" draggable="false" /></span>
+    <span class="avatar-badge-text"><strong>@Name</strong><small>@(Caption ?? "更換頭像")</small></span>
+</button>
+@if (Open)
+{
+    <div class="avatar-modal-shade" @onclick="() => Open = false">
+        <section class="avatar-modal" role="dialog" aria-label="選擇頭像" @onclick:stopPropagation="true">
+            <header><h2>選擇頭像</h2><button type="button" class="btn btn-sm btn-outline-light" @onclick="() => Open = false">完成</button></header>
+            <AvatarPicker />
+        </section>
+    </div>
+}
+
+@code {
+    [Parameter] public string Name { get; set; } = "你";
+    [Parameter] public string? Caption { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    private bool Open;
+    protected override void OnInitialized() => Profile.Changed += Refresh;
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+    public void Dispose() => Profile.Changed -= Refresh;
+}
