@@ -52,6 +52,17 @@
 .print-face-cell article.wcg-face .face-arrow.right { right: -4.1cqw; }
 .print-face-cell article.wcg-face .face-art { box-shadow: 0 0 0 .55cqw var(--art-rim), 0 0 0 1.2cqw var(--gold-2), 0 0 0 1.5cqw var(--gold-4); }
 .print-face-cell article.wcg-face .face-cost { box-shadow: 0 0 0 .7cqw var(--medal-ring), 0 0 0 1.5cqw var(--gold-3), 0 0 0 1.9cqw var(--medal-halo); }
+/* Chrome's PDF/print backend drops mask-composite and background-clip:text (the frame ring became a wash over the whole
+   card and names faded), so the print face draws the frame as the card background under an inset parchment layer
+   and gives names a solid colour from the will's name gradient. */
+.print-face-cell article.wcg-face > .face-card { background: linear-gradient(135deg, var(--gold-1), var(--gold-2) 30%, var(--gold-4) 52%, var(--gold-2) 70%, var(--gold-1)); }
+.print-face-cell article.wcg-face > .face-card::before { inset: 1.9cqw; border: 0; border-radius: calc(2.6mm - 1.9cqw); background: var(--face-bg); -webkit-mask: none; mask: none; }
+.print-face-cell article.wcg-face .face-name { background: none; color: var(--print-name, #8e6620); -webkit-text-fill-color: currentColor; }
+.print-face-cell article.wcg-face[data-will=wrath] { --print-name: #ffa047; }
+.print-face-cell article.wcg-face[data-will=reason] { --print-name: #dbe5ff; }
+.print-face-cell article.wcg-face[data-will=vitality] { --print-name: #cfe69a; }
+.print-face-cell article.wcg-face[data-will=abyss] { --print-name: #d4bdf0; }
+.print-face-cell article.wcg-face[data-will=neutral] { --print-name: #f0f0ec; }
 /* Minimum print sizes: long (English) effects never drop below ≈6.6 pt, footer ≈6 pt. */
 .print-face-cell article.wcg-face.text-xl .face-text p { font-size: 3.7cqw; line-height: 1.22; }
 .print-face-cell article.wcg-face .face-foot { font-size: 3.4cqw; }
@@ -77,6 +88,7 @@
 @media (max-width: 600px) { .print-controls { padding: 1rem; } .print-control-heading { align-items: start; } .print-control-heading h1 { font-size: 1.2rem; } .print-sheet { margin-left: 0; } }
 @page { size: A4 portrait; margin: 6mm; }
 @media print {
+    html:has(.deck-print-overlay) { background: white !important; }
     body:has(.deck-print-overlay), body:has(.deck-print-overlay) .page, body:has(.deck-print-overlay) main,
     body:has(.deck-print-overlay) main > article { display: block !important; width: auto !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; background: white !important; color: #111 !important; }
     body:has(.deck-print-overlay) .sidebar, body:has(.deck-print-overlay) main > article > :not(.deck-print-overlay), body:has(.deck-print-overlay) #blazor-error-ui { display: none !important; }

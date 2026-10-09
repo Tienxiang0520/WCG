@@ -37,8 +37,13 @@ export async function printDeck(root) {
         catch { throw new Error(`卡圖「${image.alt}」載入失敗，請稍後再試或選擇省墨文字版。`); }
         if (!image.naturalWidth) throw new Error('卡圖尚未載入。');
     }));
-    const overflow = [...root.querySelectorAll('.print-card-title,.print-card-text,.print-face .face-text,.print-face .face-name span')]
-        .find(element => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1);
+    // The card face's effect box also holds an absolutely positioned emblem, so measure its paragraph instead of scrollHeight.
+    const overflow = [...root.querySelectorAll('.print-card-title,.print-card-text')]
+        .find(element => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1)
+        ?? [...root.querySelectorAll('.print-face .face-text > p')].find(text => {
+            const inner = text.getBoundingClientRect(), box = text.parentElement.getBoundingClientRect();
+            return inner.top < box.top - 1 || inner.bottom > box.bottom + 1;
+        });
     if (overflow) throw new Error('卡牌文字超出列印範圍，請選擇省墨文字版後再試。');
     window.print();
 }
