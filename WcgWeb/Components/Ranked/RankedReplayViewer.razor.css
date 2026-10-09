@@ -108,3 +108,5 @@
     .replay-speed { justify-self: center; }
     .replay-buttons .replay-play span { display: none; }
 }
+/* English card names are longer: allow two lines instead of an ellipsis. */
+:root:lang(en) .replay-name { white-space: normal; overflow: hidden; text-overflow: clip; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; font-size: .62rem; line-height: 1.1; }
