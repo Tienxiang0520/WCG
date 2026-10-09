@@ -50,6 +50,8 @@
 .print-face-cell article.wcg-face .face-star.bottom { bottom: .2cqw; }
 .print-face-cell article.wcg-face .face-arrow.left { left: -4.1cqw; }
 .print-face-cell article.wcg-face .face-arrow.right { right: -4.1cqw; }
+.print-face-cell article.wcg-face > .face-card > .face-arrow.up { top: .3cqw; height: 7.2cqw; width: 11cqw; }
+.print-face-cell article.wcg-face > .face-card > .face-arrow.down { bottom: .3cqw; height: 7.2cqw; width: 11cqw; }
 .print-face-cell article.wcg-face .face-art { box-shadow: 0 0 0 .55cqw var(--art-rim), 0 0 0 1.2cqw var(--gold-2), 0 0 0 1.5cqw var(--gold-4); }
 .print-face-cell article.wcg-face .face-cost { box-shadow: 0 0 0 .7cqw var(--medal-ring), 0 0 0 1.5cqw var(--gold-3), 0 0 0 1.9cqw var(--medal-halo); }
 /* Chrome's PDF/print backend drops mask-composite and background-clip:text (the frame ring became a wash over the whole

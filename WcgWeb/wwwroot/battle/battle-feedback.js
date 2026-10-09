@@ -80,7 +80,11 @@ export function bindFeedback(root, sound = null, fx = null) {
         const band = node('div', 'face-band'); band.append(node('span', '', t(card.will ?? '')), node('i', '', '・'), node('span', '', t(card.type ?? '')));
         const art = node('div', 'face-art');
         if (/^WCG-\d{3}$/.test(card.cardId ?? '')) { const img = node('img', 'card-illustration'); img.src = `card-art/${card.cardId}.webp`; img.alt = ''; img.draggable = false; art.append(img); }
-        for (const a of card.arrows ?? []) art.append(node('span', `face-arrow ${a}`));
+        // Left/right on the side edges at the art's height; up/down centred on the card's outer top/bottom edge.
+        for (const a of card.arrows ?? []) {
+            if (a === 'left' || a === 'right') art.append(node('span', `face-arrow ${a}`));
+            else if (a === 'up' || a === 'down') { body.append(node('span', `face-arrow ${a}`)); outer.classList.add(`has-${a}`); }
+        }
         const text = node('div', 'face-text'); text.append(svg('face-compass face-emblem', '0 0 100 100', theme.emblem)); const plain = String(card.text ?? '').replace(/【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*/g, '').trim();
         text.append(node('p', '', plain || t('無異能'))); if (plain.length > 60) outer.className += plain.length > 110 ? ' text-l' : ' text-m';
         body.append(head, band, art, text);
@@ -109,7 +113,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             art.append(image); el.append(art);
         }
         for (const direction of card.arrows ?? []) {
-            if (['left', 'right', 'up'].includes(direction)) el.append(node('span', `arrowmark ${direction}`));
+            if (['left', 'right', 'up', 'down'].includes(direction)) el.append(node('span', `arrowmark ${direction}`));
         }
         el.append(node('strong', '', card.name));
         if (card.pp != null) {
