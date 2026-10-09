@@ -33,7 +33,7 @@ ARCHETYPES = [
        cards={181:4,182:4,156:4,9:4,5:4,11:2,15:4,16:4,124:2,180:4,17:4,20:2,7:4,2:4},
        down=[156,9,7,2,17,182,15,16],
        var=[(124,195,"熔火爆炸陷阱"),(11,136,"狂戰士斥候"),(20,18,"地獄戰狂"),(15,110,"狼騎兵先遣隊")]),
-  dict(key="WRATH-SCORCH", will="狂怒", name="焦土控場", style="控制", tiers=(3,4,5),
+  dict(key="WRATH-SCORCH", will="狂怒", name="焦土控場", style="控制", tiers=(2,3,4,5),
        text="狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
        cards={1:4,7:4,2:4,4:4,12:2,17:4,151:2,16:4,20:2,15:2,156:4,170:2,65:4,69:4,66:4},
        down=[17,2,7,69,4,16],
@@ -129,6 +129,7 @@ ARCHETYPES = [
 # 依 2026-10-09 分級電腦模擬（tools/RankedCheck 搭配 --all-tiers）決定：
 # 較弱的連動與控制流派只留在低牌位；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師，冰封堡壘在鑽石與大師。
 # 強度矩陣（--matrix）顯示暗影刺殺在黃金、白金遠強於同池流派，改為只在鑽石與大師。
+# 黃金的流派原與白銀相同，改讓焦土控場從黃金開始出現。
 TIER_GATES = {a["key"]: tuple(a["tiers"]) for a in ARCHETYPES}
 for _key, _tiers in TIER_GATES.items():
     if not _tiers or any(t not in range(6) for t in _tiers): raise SystemExit(f"{_key} 牌位設定不正確")

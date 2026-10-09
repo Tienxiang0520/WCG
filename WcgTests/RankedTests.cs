@@ -216,6 +216,8 @@ public sealed class RankedTests : IDisposable
             Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains(key)));
         Assert.Equal([4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-GLACIER")));
         Assert.Equal([4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ABYSS-ASSASSIN")));
+        Assert.Equal([2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-SCORCH")));
+        Assert.False(keys[2].SetEquals(keys[1]));
         // 較弱的連動與控制流派不會出現在高牌位，高牌位不再是低牌位的超集合。
         Assert.DoesNotContain("REASON-ARCANE",keys[3]);Assert.DoesNotContain("ABYSS-SOULFEAST",keys[3]);
         Assert.DoesNotContain("REASON-ORACLE",keys[4]);Assert.DoesNotContain("WRATH-WARBAND",keys[5]);
