@@ -19,12 +19,12 @@
     font-family: "Noto Sans CJK TC", "Noto Sans TC", sans-serif;
     font-weight: 400; font-style: normal; text-align: left;
 }
-.print-page-heading { height: 5mm; display: flex; justify-content: space-between; align-items: start; gap: 4mm; font-size: 7pt; line-height: 4mm; }
+.print-page-heading { height: 6.5mm; display: flex; justify-content: space-between; align-items: start; gap: 4mm; font-size: 7pt; line-height: 4mm; }
 .print-page-heading span:first-child { white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 .print-page-heading span:last-child { flex-shrink: 0; }
 .print-card-grid { display: grid; grid-template-columns: repeat(3, 63mm); grid-template-rows: repeat(3, 88mm); gap: 2mm; width: 193mm; height: 268mm; }
 .print-card {
-    box-sizing: border-box; width: 63mm; height: 88mm; border: .2mm dashed #888; padding: 2.5mm;
+    position: relative; box-sizing: border-box; width: 63mm; height: 88mm; border: .2mm dashed #bbb; padding: 2.5mm;
     display: flex; flex-direction: column; gap: 1mm; background: white; color: #111;
     break-inside: avoid; page-break-inside: avoid; min-width: 0; min-height: 0;
 }
@@ -33,12 +33,41 @@
 .print-cost { width: 7.5mm; height: 7.5mm; flex-shrink: 0; border: .3mm solid var(--will-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11pt; font-weight: 700; }
 .print-cost span { font-size: 6pt; margin-left: .3mm; }
 .print-card-meta { font-size: 7.8pt; font-weight: 700; line-height: 4mm; height: 4mm; margin: 0; color: var(--will-color); }
-.print-card-art { width: 100%; height: 29mm; flex-shrink: 0; object-fit: cover; border: .15mm solid #bbb; }
 .print-card-text { flex: 1; min-height: 0; font-size: 8.3pt; line-height: 1.4; white-space: pre-wrap; overflow-wrap: anywhere; }
 .print-card-stats { display: flex; justify-content: space-between; align-items: center; border-top: .2mm solid #777; padding-top: .8mm; font-size: 7.6pt; flex-shrink: 0; }
 .print-card-stats b { font-size: 10.5pt; }
 .print-card-footer { display: flex; justify-content: space-between; gap: 2mm; font-size: 6.5pt; line-height: 3mm; color: #444; margin: 0; flex-shrink: 0; }
-.print-page-footer { height: 4mm; font-size: 6.5pt; line-height: 4mm; text-align: center; }
+.print-page-footer { height: 4mm; margin-top: 2.5mm; font-size: 6.5pt; line-height: 4mm; text-align: center; }
+/* Crop marks: hairline ticks in the 2 mm gutter at each card corner (the card itself is exactly 63 × 88 mm). */
+.crop-marks { position: absolute; left: -2mm; top: -2mm; width: 67mm; height: 92mm; overflow: visible; pointer-events: none; z-index: 10; }
+.crop-marks path { fill: none; stroke: #000; stroke-width: .12; vector-effect: none; }
+/* Full-colour cell: the in-game CardFace scaled to the card (1cqw = 0.63 mm, body text 5.2cqw ≈ 9.3 pt). */
+.print-face-cell { border: 0; padding: 0; display: block; background: transparent; }
+.print-face-cell article.wcg-face { width: 63mm; height: 88mm; aspect-ratio: auto; border-radius: 2.6mm; }
+/* Keep everything inside the trim box: no outer drop shadow, edge drawn inset, ornaments/arrows pulled in from the bleed. */
+.print-face-cell article.wcg-face > .face-card { box-shadow: inset 0 0 0 .5cqw var(--edge); border-radius: 2.6mm; }
+.print-face-cell article.wcg-face .face-star.top { top: .2cqw; }
+.print-face-cell article.wcg-face .face-star.bottom { bottom: .2cqw; }
+.print-face-cell article.wcg-face .face-arrow.left { left: -4.1cqw; }
+.print-face-cell article.wcg-face .face-arrow.right { right: -4.1cqw; }
+.print-face-cell article.wcg-face > .face-card > .face-arrow.up { top: .3cqw; height: 7.2cqw; width: 11cqw; }
+.print-face-cell article.wcg-face > .face-card > .face-arrow.down { bottom: .3cqw; height: 7.2cqw; width: 11cqw; }
+.print-face-cell article.wcg-face .face-art { box-shadow: 0 0 0 .55cqw var(--art-rim), 0 0 0 1.2cqw var(--gold-2), 0 0 0 1.5cqw var(--gold-4); }
+.print-face-cell article.wcg-face .face-cost { box-shadow: 0 0 0 .7cqw var(--medal-ring), 0 0 0 1.5cqw var(--gold-3), 0 0 0 1.9cqw var(--medal-halo); }
+/* Chrome's PDF/print backend drops mask-composite and background-clip:text (the frame ring became a wash over the whole
+   card and names faded), so the print face draws the frame as the card background under an inset parchment layer
+   and gives names a solid colour from the will's name gradient. */
+.print-face-cell article.wcg-face > .face-card { background: linear-gradient(135deg, var(--gold-1), var(--gold-2) 30%, var(--gold-4) 52%, var(--gold-2) 70%, var(--gold-1)); }
+.print-face-cell article.wcg-face > .face-card::before { inset: 1.9cqw; border: 0; border-radius: calc(2.6mm - 1.9cqw); background: var(--face-bg); -webkit-mask: none; mask: none; }
+.print-face-cell article.wcg-face .face-name { background: none; color: var(--print-name, #8e6620); -webkit-text-fill-color: currentColor; }
+.print-face-cell article.wcg-face[data-will=wrath] { --print-name: #ffa047; }
+.print-face-cell article.wcg-face[data-will=reason] { --print-name: #dbe5ff; }
+.print-face-cell article.wcg-face[data-will=vitality] { --print-name: #cfe69a; }
+.print-face-cell article.wcg-face[data-will=abyss] { --print-name: #d4bdf0; }
+.print-face-cell article.wcg-face[data-will=neutral] { --print-name: #f0f0ec; }
+/* Minimum print sizes: long (English) effects never drop below ≈6.6 pt, footer ≈6 pt. */
+.print-face-cell article.wcg-face.text-xl .face-text p { font-size: 3.7cqw; line-height: 1.22; }
+.print-face-cell article.wcg-face .face-foot { font-size: 3.4cqw; }
 .ink-saving .print-card-header, .ink-saving .print-cost { border-color: #222; }
 .ink-saving .print-card-meta { color: #111; }
 .ink-saving .print-card-text { font-size: 10pt; line-height: 1.55; padding: 3mm 0; }
@@ -59,15 +88,18 @@
 .print-deck-list strong { flex-shrink: 0; }
 .print-reference-note { font-size: 7.5pt; line-height: 1.5; margin: 3mm 0 0; }
 @media (max-width: 600px) { .print-controls { padding: 1rem; } .print-control-heading { align-items: start; } .print-control-heading h1 { font-size: 1.2rem; } .print-sheet { margin-left: 0; } }
-@page { size: A4 portrait; margin: 8.5mm; }
+@page { size: A4 portrait; margin: 6mm; }
 @media print {
+    html:has(.deck-print-overlay) { background: white !important; color-scheme: light !important; }
     body:has(.deck-print-overlay), body:has(.deck-print-overlay) .page, body:has(.deck-print-overlay) main,
     body:has(.deck-print-overlay) main > article { display: block !important; width: auto !important; min-height: 0 !important; height: auto !important; padding: 0 !important; margin: 0 !important; overflow: visible !important; background: white !important; color: #111 !important; }
     body:has(.deck-print-overlay) .sidebar, body:has(.deck-print-overlay) main > article > :not(.deck-print-overlay), body:has(.deck-print-overlay) #blazor-error-ui { display: none !important; }
     .deck-print-overlay { position: static !important; overflow: visible !important; background: white !important; color: #111 !important; }
     .print-controls { display: none !important; }
     .print-pages { padding: 0; overflow: visible; }
-    .print-sheet { width: 193mm; min-height: 0; padding: 0; margin: 0; box-shadow: none; break-after: page; page-break-after: always; break-inside: avoid; page-break-inside: avoid; }
+    .print-sheet { width: 198mm; min-height: 0; padding: 0 2.5mm; margin: 0; box-shadow: none; break-after: page; page-break-after: always; break-inside: avoid; page-break-inside: avoid; }
     .print-sheet:last-child { break-after: auto; page-break-after: auto; }
-    .print-card, .print-sheet { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .print-sheet, .print-sheet *, .print-sheet *::before, .print-sheet *::after { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    .print-card { break-inside: avoid; page-break-inside: avoid; }
+    .print-face-cell .crop-marks path { stroke-width: .1; }
 }

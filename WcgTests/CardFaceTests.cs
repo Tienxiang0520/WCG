@@ -106,4 +106,22 @@ public class CardFaceTests
         var css = File.ReadAllText(Path.Combine(root, "card-face.css"));
         foreach (var key in CardFaceThemes.All.Keys.Where(k => k != "order")) Assert.Contains($"article.wcg-face[data-will={key}]{{", css);
     }
+
+    [Theory]
+    [InlineData("zh-Hant")] [InlineData("en")]
+    public async Task UpArrowSitsOnTheCardsTopEdgeWhileSideArrowsStayOnTheSides(string language)
+    {
+        // 聖堂仲裁護衛 has ← and ↑: ← stays on the art's outer side, ↑ moves from the art window to the card's top edge.
+        var html = await Render(language, new() { ["Card"] = Cards.GetCard("WCG-147") });
+        Assert.Matches(new Regex("<article class=\"wcg-face[^\"]*has-up"), html);
+        var art = Regex.Match(html, "<div class=\"face-art\">.*?</div>", RegexOptions.Singleline).Value;
+        Assert.Contains("face-arrow left", art);
+        Assert.DoesNotContain("face-arrow up", art);
+        Assert.Matches(new Regex("<span class=\"face-arrow up\"[^>]*></span>\\s*<header class=\"face-head\">"), html);
+        var css = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb/wwwroot/card-face.css")));
+        Assert.Contains("article.wcg-face>.face-card>.face-arrow.up{top:", css);
+        Assert.Contains("article.wcg-face.has-up .face-star.top", css);
+        var js = File.ReadAllText(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb/wwwroot/battle/battle-feedback.js")));
+        Assert.Contains("body.append(node('span', `face-arrow ${a}`)); outer.classList.add(`has-${a}`)", js);
+    }
 }

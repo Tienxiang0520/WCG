@@ -14,7 +14,7 @@
             <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡"]</label>
             <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單（1 頁）"]</label>
         </div>
-        <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿虛線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
+        <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
         <div class="print-control-actions"><button class="btn btn-info" @onclick="Print" disabled="@(Printing || Module == null)">@L[Printing ? "正在準備列印…" : "列印／存成 PDF"]</button><span role="status">@L.Text(Status)</span></div>
         <p class="print-screen-note">@L.F("預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。若 PDF 頁數超過 {0} 頁，請檢查紙張、縮放與頁首頁尾。", Rules ? 7 : 6)</p>
     </div>
@@ -27,20 +27,28 @@
                 <div class="print-card-grid">
                     @foreach (var card in page)
                     {
-                        <article class="print-card" style="--will-color:@card.WillColor" data-card-id="@card.Id">
-                            <header class="print-card-header"><h2 class="print-card-title">@L.CardName(card.Id, card.Name)</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
-                            <p class="print-card-meta">@L.Text(card.Will) · @L.Text(card.Type)</p>
-                            @if (Color)
-                            {
-                                <img class="print-card-art" src="@($"print-art/{card.Id}.jpg")" alt="@L.CardName(card.Id, card.Name)" loading="eager" decoding="async" />
-                            }
-                            <div class="print-card-text">@(string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text))</div>
-                            @if (card.IsMonster)
-                            {
-                                <div class="print-card-stats"><span>@L["力量"] <b>@card.PP</b> PP</span><span>@L["傷害"] <b>@card.DP</b> DP</span></div>
-                            }
-                            <footer class="print-card-footer"><span>@L["魂誓"]</span><span>@card.Id</span></footer>
-                        </article>
+                        @if (Color)
+                        {
+                            @* Full-colour print uses the in-game CardFace (per-will frame, ornaments, arrow triangles) with the 300 dpi print art. *@
+                            <div class="print-card print-face-cell" data-card-id="@card.Id">
+                                <CardFace Battle="card.Face" ArtSrc="@card.PrintArt" Loading="eager" Class="print-face" />
+                                @CropMarks
+                            </div>
+                        }
+                        else
+                        {
+                            <article class="print-card" style="--will-color:@card.WillColor" data-card-id="@card.Id">
+                                <header class="print-card-header"><h2 class="print-card-title">@L.CardName(card.Id, card.Name)</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
+                                <p class="print-card-meta">@L.Text(card.Will) · @L.Text(card.Type)</p>
+                                <div class="print-card-text">@(string.IsNullOrWhiteSpace(card.Text) ? L["無異能"] : L.CardText(card.Id, card.Text))</div>
+                                @if (card.IsMonster)
+                                {
+                                    <div class="print-card-stats"><span>@L["力量"] <b>@card.PP</b> PP</span><span>@L["傷害"] <b>@card.DP</b> DP</span></div>
+                                }
+                                <footer class="print-card-footer"><span>@L["魂誓"]</span><span>@card.Id</span></footer>
+                                @CropMarks
+                            </article>
+                        }
                     }
                     @if (Tools && pageIndex == Plan.Pages.Count - 1)
                     {
@@ -52,11 +60,12 @@
                                 <p>@L["用硬幣或小物標示目前生命。"]<br />@L["降至 0 點立即敗北。"]</p>
                                 <div class="print-ruler">@L["50 mm 校準線"]</div>
                                 <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
+                                @CropMarks
                             </article>
                         }
                     }
                 </div>
-                <footer class="print-page-footer">@L["63 × 88 mm · A4 · 100% 列印 · 虛線為裁切邊界"]</footer>
+                <footer class="print-page-footer">@L["63 × 88 mm · A4 · 100% 列印 · 沿四角裁切線裁切"]</footer>
             </section>
         }
         @if (Rules)
@@ -85,6 +94,13 @@
     private string? PreviewId;
     private bool Color = true, Rules = true, Tools = true, Printing;
     private string Status = "";
+    // Corner crop marks drawn in the 2 mm gutter around each 63 × 88 mm card (viewBox in mm, origin = card corner).
+    private static readonly RenderFragment CropMarks = __builder =>
+    {
+        <svg class="crop-marks" viewBox="-2 -2 67 92" aria-hidden="true">
+            <path d="M-2 0H-.4M0 -2V-.4M63.4 0H65M63 -2V-.4M-2 88H-.4M0 88.4V90M63.4 88H65M63 88.4V90" />
+        </svg>
+    };
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;

@@ -52,7 +52,14 @@ article.wcg-face .face-arrow{position:absolute;z-index:5;width:8.6cqw;height:13c
   filter:drop-shadow(0 0 .25cqw var(--arrow-edge)) drop-shadow(0 0 .25cqw var(--arrow-edge)) drop-shadow(0 0 1.4cqw var(--arrow-glow))}
 article.wcg-face .face-arrow.right{right:-5.6cqw;top:50%;transform:translateY(-50%);clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
 article.wcg-face .face-arrow.left{left:-5.6cqw;top:50%;transform:translateY(-50%);clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
-article.wcg-face .face-arrow.up{top:-3.2cqw;left:50%;width:13cqw;height:8.6cqw;transform:translateX(-50%);background:linear-gradient(180deg,var(--arrow-1),var(--arrow-2) 45%,var(--arrow-3));clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+/* Up/down: centred on the card's outer top/bottom edge (same overhang as the side arrows); they replace the top/bottom gem
+   and the head/foot get a little extra room so two-line names never touch the up arrow. */
+article.wcg-face>.face-card>.face-arrow.up,article.wcg-face>.face-card>.face-arrow.down{left:50%;width:12cqw;height:8cqw;transform:translateX(-50%);background:linear-gradient(180deg,var(--arrow-1),var(--arrow-2) 45%,var(--arrow-3))}
+article.wcg-face>.face-card>.face-arrow.up{top:-1.4cqw;clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%)}
+article.wcg-face>.face-card>.face-arrow.down{bottom:-1.4cqw;clip-path:polygon(0 0,50% 22%,100% 0,50% 100%);background:linear-gradient(0deg,var(--arrow-1),var(--arrow-2) 45%,var(--arrow-3))}
+article.wcg-face.has-up .face-star.top,article.wcg-face.has-down .face-star.bottom{display:none}
+article.wcg-face.has-up>.face-card{padding-top:7.4cqw}
+article.wcg-face.has-down>.face-card{padding-bottom:5.6cqw}
 article.wcg-face .face-text{position:relative;flex:1;min-height:0;display:flex;align-items:center;padding:1.6cqw 3cqw;overflow:hidden;
   border:.3cqw solid var(--line);border-radius:1.4cqw;background:var(--text-bg)}
 article.wcg-face .face-compass{position:absolute;left:50%;top:50%;width:min(56cqw,92%);height:auto;aspect-ratio:1;transform:translate(-50%,-50%);fill:none;stroke:var(--emblem);stroke-width:.8;opacity:var(--emblem-op);pointer-events:none}

@@ -22,7 +22,8 @@
 .arrowmark{position:absolute;z-index:4;color:#c2f0ff;font-weight:bold;font-size:24px;text-shadow:0 0 6px #258bbc;background:#122831;border-radius:4px;line-height:1}
 .arrowmark.left{left:-13px;top:42%}
 .arrowmark.right{right:-13px;top:42%}
-.arrowmark.up{top:-12px;left:45%}
+.arrowmark.up{top:-12px;left:50%;transform:translateX(-50%)}
+.arrowmark.down{bottom:-12px;left:50%;transform:translateX(-50%)}
 .legal{outline:2px solid #9cf4bc!important;box-shadow:0 0 20px #64df8580!important;background-color:#41684e55!important}
 .player{position:absolute;bottom:118px;left:50%;transform:translateX(-50%);margin:0;z-index:3}
 .energy-zone{position:absolute;left:20px;bottom:18px;z-index:4;border:2px solid #648fbc;border-radius:14px;padding:14px;width:135px;background:#14283dcc;display:flex;flex-direction:column;gap:8px}
@@ -92,7 +93,8 @@
 .arrowmark.up{clip-path:polygon(50% 0,100% 75%,70% 75%,70% 100%,30% 100%,30% 75%,0 75%)}
 .enemy-card .arrowmark.left{left:auto;right:-13px;transform:rotate(180deg)}
 .enemy-card .arrowmark.right{right:auto;left:-13px;transform:rotate(180deg)}
-.enemy-card .arrowmark.up{top:auto;bottom:-12px;transform:rotate(180deg)}
+.enemy-card .arrowmark.up{top:auto;bottom:-12px;transform:translateX(-50%) rotate(180deg)}
+.enemy-card .arrowmark.down{bottom:auto;top:-12px;transform:translateX(-50%) rotate(180deg)}
 .card-detail{position:relative;overflow:visible}.card-detail .arrowmark{width:32px;height:32px}
 
 .drop-hover{outline:3px solid #adffd0!important;box-shadow:0 0 30px #74eb9da0!important}.drop-rejected{outline:2px solid #ff8c81!important}
@@ -259,9 +261,9 @@
 .field-stats{left:3px;right:3px;bottom:3px;font-size:12px}
 .field-stats b{padding:2px 3px;min-width:17px}
 .arrowmark,.card-detail .arrowmark{width:15px;height:15px}
-.arrowmark.left{left:-7px}.arrowmark.right{right:-7px}.arrowmark.up{top:-7px}
-.enemy-card .arrowmark.left{right:-7px}.enemy-card .arrowmark.right{left:-7px}.enemy-card .arrowmark.up{bottom:-7px}
-.card-detail .arrowmark.left{left:-10px}.card-detail .arrowmark.right{right:-10px}.card-detail .arrowmark.up{top:-10px}
+.arrowmark.left{left:-7px}.arrowmark.right{right:-7px}.arrowmark.up{top:-7px}.arrowmark.down{bottom:-7px}
+.enemy-card .arrowmark.left{right:-7px}.enemy-card .arrowmark.right{left:-7px}.enemy-card .arrowmark.up{bottom:-7px}.enemy-card .arrowmark.down{top:-7px}
+.card-detail .arrowmark.left{left:-10px}.card-detail .arrowmark.right{right:-10px}.card-detail .arrowmark.up{top:-10px}.card-detail .arrowmark.down{bottom:-10px}
 .taunt-frame{left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 10px)}
 .has-shield::before{inset:-4px;border-radius:11px}
 .field-card.attack-ready::after{inset:-3px;border-radius:10px;box-shadow:0 0 10px 2px #6cffaa}
@@ -639,6 +641,7 @@
 .arrowmark.left{clip-path:polygon(100% 0,0 50%,100% 100%,78% 50%)}
 .arrowmark.right{clip-path:polygon(0 0,100% 50%,0 100%,22% 50%)}
 .arrowmark.up{clip-path:polygon(50% 0,100% 100%,50% 78%,0 100%);background:linear-gradient(180deg,var(--c-arrow-1),var(--c-arrow-2) 45%,var(--c-arrow-3))}
+.arrowmark.down{clip-path:polygon(0 0,50% 22%,100% 0,50% 100%);background:linear-gradient(0deg,var(--c-arrow-1),var(--c-arrow-2) 45%,var(--c-arrow-3))}
 /* Hand: themed card body, metal rim, cost medallion (kept top-left so it stays visible in the fan). */
 .v06-hand-card:not(.card-back){color:var(--c-ink);border:2px solid var(--c-metal);background:var(--c-hand-bg);box-shadow:inset 0 0 0 1px var(--c-glint),inset 0 0 0 2px var(--c-metal-dark),0 0 0 1px var(--c-edge),0 8px 18px rgba(0,0,0,.6)}
 .v06-hand-card:not(.card-back)>strong{color:var(--c-name);font-family:"Noto Serif TC","Songti TC",Georgia,serif;font-weight:700}
