@@ -38,7 +38,7 @@ public partial class GameEngine
     public int ActualCost(PlayerState p, CardDefinition card) => Math.Max(card.IsMonster && p.NextCreatureDiscount>0 ? 1 : 0,
         card.TotalCost-(card.Id=="WCG-160" ? 7-p.Hp : 0)-(card.IsMonster ? p.NextCreatureDiscount : 0));
     private void Attach(PlayerState p, CardInstance card, MonsterInstance target, int? expire = null)
-    { if(!Alive(target)) return; p.Graveyard.Remove(card); target.Attachments.Add(new(card,p.Id,expire)); RefreshBoard(); }
+    { if(!Alive(target)) return; p.Graveyard.Remove(card); target.Attachments.Add(new(card,p.Id,expire)); RefreshBoard(); Present("attach",p,card.InstanceId,target.InstanceId,card:card.Card,label:"附著"); }
     private void ReadyMonster(MonsterInstance m) { if(!Alive(m))return; m.IsTapped=false;m.HasAttacked=false;m.HasSummoningSickness=false; }
     private void SummonStructure(PlayerState p, CardInstance c)
     { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場"); }
@@ -49,6 +49,7 @@ public partial class GameEngine
     public bool Activate(PlayerState p, MonsterInstance m)=>Change(()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
+        Present("effect",p,m.InstanceId,card:m.Card,label:"發動結界");
         void Pay(Action effect){m.IsTapped=true;effect();}
         switch(m.Card.Id)
         {

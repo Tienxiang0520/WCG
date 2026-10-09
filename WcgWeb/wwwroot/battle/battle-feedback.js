@@ -1,13 +1,19 @@
 import { motionReduced } from './battle-fx.js';
+import { planSteps, batchSpeed, isSpellCard, keywordOf } from './effect-plan.js';
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
-const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat' };
+const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
+    '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
+    '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand' };
+// Fast-forward survives across the batches of one computer turn and resets when the player's turn begins.
+let fastForward = 1;
+export function resetFastForward() { fastForward = 1; }
 const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) || zh;
 
 // Present only public engine events. Keep the old board until this batch completes.
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
-    let layer = null, disposed = false, priorInert = false, locked = false;
+    let layer = null, disposed = false, priorInert = false, locked = false, speed = 1, pauser = null, banner = null, showcase = null;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
     const shielded = (units, id) => !!units.get(id)?.status?.some(x => String(x).startsWith('聖盾'));
@@ -22,7 +28,7 @@ export function bindFeedback(root, sound = null, fx = null) {
     function clear() {
         for (const animation of animations) animation.cancel(); animations.clear();
         for (const [el, visibility] of hidden) el.style.visibility = visibility;
-        hidden.clear(); ghosts.clear(); layer?.remove(); layer = null;
+        hidden.clear(); ghosts.clear(); layer?.remove(); layer = null; pauser = null; banner = null; showcase = null;
         publicUnits.clear();
         if (locked) root.inert = priorInert;
         locked = false;
@@ -34,7 +40,7 @@ export function bindFeedback(root, sound = null, fx = null) {
     async function animate(el, frames, duration, easing = 'ease-out') {
         if (disposed || !el) return;
         const reduced = motionReduced();
-        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration, easing, fill: 'forwards' });
+        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration / (speed * fastForward), easing, fill: 'forwards' });
         animations.add(animation);
         try { await animation.finished; } catch { /* Leaving the board cancels the visual batch. */ }
         finally { animations.delete(animation); }
@@ -164,12 +170,210 @@ export function bindFeedback(root, sound = null, fx = null) {
         } else await animate(departing, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 0, transform: 'translateY(35px) rotate(7deg) scale(.55)' }], 420);
         departing.remove(); ghosts.get(ev.instanceId)?.remove(); ghosts.delete(ev.instanceId);
     }
+    // ---- sequenced effect presentation -------------------------------------------------------------
+    function center(el) { const r = el.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2, r }; }
+    async function pause(ms) {
+        if (disposed || motionReduced() || speed * fastForward >= 8 || !layer) return;
+        if (!pauser) { pauser = node('i', 'event-pause'); layer.append(pauser); }
+        await animate(pauser, [{ opacity: 0 }, { opacity: 0 }], ms);
+    }
+    async function badge(el, text, tone = 'gold') {
+        if (!el || !text) return;
+        const c = center(el), pill = place(node('div', 'event-badge', text), { x: c.x - 80, y: c.r.y - 30, width: 160, height: 28 });
+        pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
+        await animate(pill, [
+            { opacity: 0, transform: 'translateY(10px) scale(.6)' },
+            { opacity: 1, transform: 'translateY(-4px) scale(1.12)', offset: .2 },
+            { opacity: 1, transform: 'translateY(-6px) scale(1)', offset: .75 },
+            { opacity: 0, transform: 'translateY(-16px) scale(.96)' }], 900, 'cubic-bezier(.2,.8,.3,1)');
+        pill.remove();
+    }
+    // A beam from the effect source to what it affects; `orb` sends a projectile instead (damage / attach).
+    async function beam(from, to, color = '#ffd77a', orb = false) {
+        if (!from || !to || from === to) return;
+        const a = center(from), b = center(to), dx = b.x - a.x, dy = b.y - a.y, length = Math.hypot(dx, dy);
+        if (length < 4) return;
+        if (orb) {
+            const ball = place(node('div', 'event-orb'), { x: a.x - 14, y: a.y - 14, width: 28, height: 28 });
+            ball.style.background = `radial-gradient(circle, #fff 0 18%, ${color} 45%, transparent 72%)`; ball.dataset.wcgEffect = 'projectile';
+            await animate(ball, [{ transform: 'translate(0,0) scale(.6)', opacity: .4 }, { transform: `translate(${dx * .5}px,${dy * .5 - 40}px) scale(1.15)`, opacity: 1, offset: .55 }, { transform: `translate(${dx}px,${dy}px) scale(.9)`, opacity: 1 }], 420, 'cubic-bezier(.4,0,.6,1)');
+            ball.remove(); void fx?.burst(to, { color, count: 14, spread: 70, size: 6 });
+            return;
+        }
+        const ray = place(node('div', 'event-beam'), { x: a.x, y: a.y - 3, width: length, height: 6 });
+        const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+        ray.style.transformOrigin = '0 50%'; ray.style.background = `linear-gradient(90deg, ${color}00, ${color} 30%, #fff 50%, ${color} 70%, ${color}cc)`; ray.dataset.wcgEffect = 'beam';
+        await animate(ray, [{ transform: `rotate(${angle}deg) scaleX(0)`, opacity: 1 }, { transform: `rotate(${angle}deg) scaleX(1)`, opacity: 1, offset: .55 }, { transform: `rotate(${angle}deg) scaleX(1)`, opacity: 0 }], 460, 'cubic-bezier(.3,.7,.3,1)');
+        ray.remove();
+    }
+    function boardRect() { const r = root.querySelector('.battlefield')?.getBoundingClientRect?.() ?? root.getBoundingClientRect(); return r; }
+    // Spells: the card is shown large in the centre, then shrinks to a corner and stays as the source of its effects.
+    async function showSpell(ev) {
+        const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 1.36;
+        const card = publicCard(ev.card); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
+        if (ev.side === 'computer') card.className += ' enemy-card';
+        if (ev.card?.text) card.append(node('p', 'event-text', ev.card.text));
+        place(card, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2, width: w, height: h });
+        void sound?.play('spell');
+        const hero0 = hero(ev.side), from = hero0 ? center(hero0) : { x: r.x + r.width / 2, y: r.y + r.height };
+        const ox = from.x - (r.x + r.width / 2), oy = from.y - (r.y + r.height / 2);
+        await animate(card, [{ opacity: 0, transform: `translate(${ox * .6}px,${oy * .6}px) scale(.35)` }, { opacity: 1, transform: 'translate(0,0) scale(1.06)', offset: .7 }, { opacity: 1, transform: 'translate(0,0) scale(1)' }], 460, 'cubic-bezier(.2,.8,.3,1)');
+        void fx?.ring(card, '#ffe2a6', 1.1); void fx?.burst(card, { color: '#ffe8b0', count: 18, spread: 110, size: 6 });
+        await pause(720);
+        const dx = (ev.side === 'player' ? 1 : -1) * (r.width / 2 - w * .35), dy = (ev.side === 'player' ? 1 : -1) * r.height * .18;
+        await animate(card, [{ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx}px,${dy}px) scale(.48)` }], 300, 'cubic-bezier(.4,0,.2,1)');
+        showcase?.remove(); showcase = card;
+    }
+    function dropShowcase() { showcase?.remove(); showcase = null; }
+    function sourceOf(step) { return step.fromShowcase ? showcase : visual(step.from); }
+    function handZone(side) { return side === 'player' ? root.querySelector('.v06-hand') ?? hero('player') : hero('computer'); }
+    async function cardTo(side, card, destination, faceDown = false) {
+        const start = hero(side); if (!start || !destination) return;
+        const r = start.getBoundingClientRect(), el = publicCard(faceDown ? null : card);
+        place(el, { x: r.x + r.width / 2 - 45, y: r.y + r.height / 2 - 60, width: 90, height: 120 });
+        await fly(el, destination);
+    }
+    async function runEvent(step, state) {
+        const ev = step.ev, from = step.from ? sourceOf(step) : null;
+        const { destination, played } = state;
+        if (ev.type === 'attack') await attack(ev);
+        else if (ev.type === 'damage' && ev.amount > 0) { if (from) await beam(from, hero(ev.side), '#ff8a5c', true); await number(hero(ev.side), `−${ev.amount}`); }
+        else if (ev.type === 'heal' && ev.amount > 0) { if (from) await beam(from, hero(ev.side), '#8dffbd'); await number(hero(ev.side), `+${ev.amount}`, true); }
+        else if (ev.type === 'death') {
+            const target = visual(ev.instanceId);
+            if (from && target) { await beam(from, target, '#ff7a6a', true); void fx?.impact(target, from, .7); }
+            if (keywordOf(ev.label)) await badge(target, t(keywordOf(ev.label)), keywordOf(ev.label));
+            await death(ev);
+        }
+        else if (ev.type === 'play') {
+            hide(hand(ev.instanceId));
+            if (ev.side === 'computer') {
+                const isField = destination(ev.instanceId), moving = originCard(ev.side, ev.card);
+                void sound?.play(isField ? 'place' : String(ev.card?.type ?? '').includes('結界') ? 'field' : 'spell', .35);
+                const spellTarget = isField ? null : visual(ev.targetId) ?? root.querySelector('.battlefield');
+                await fly(moving, isField ?? spellTarget, !!isField);
+                if (isField) ghosts.set(ev.instanceId, moving);
+                else { void fx?.ring(spellTarget, '#b9e6ff', .6); void fx?.burst(spellTarget, { color: '#bfe9ff', count: 16, spread: 80, size: 6 }); }
+            }
+            played.add(ev.instanceId);
+        } else if (ev.type === 'summon' || ev.type === 'set') {
+            const target = destination(ev.instanceId);
+            if (target) {
+                if (!ghosts.has(ev.instanceId)) {
+                    const card = ev.side === 'computer' && !played.has(ev.instanceId) ? originCard(ev.side, ev.type === 'set' ? null : ev.card) : publicCard(ev.type === 'set' ? null : ev.card);
+                    if (ev.side === 'computer' && !played.has(ev.instanceId)) { void sound?.play('place', .35); await fly(card, target, true); }
+                    else place(card, target.getBoundingClientRect());
+                    ghosts.set(ev.instanceId, card);
+                }
+                hide(hand(ev.instanceId));
+                void fx?.slam(target, ev.type === 'set' ? 0 : ev.card?.cost ?? 1);
+                void sound?.play(ev.type === 'set' ? 'set' : 'summon');
+                if (ev.type === 'summon' && nextUnits.get(ev.instanceId)?.status?.includes('嘲諷')) void sound?.play('taunt', .15);
+                await flash(target, '#93ffc0');
+            }
+        } else if (ev.type === 'energy') {
+            if (from) await beam(from, ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
+            if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); await fly(originCard(ev.side, null), hero(ev.side)); }
+            else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
+        } else if (ev.type === 'status' || ev.type === 'reveal') {
+            const target = visual(ev.instanceId) ?? hero(ev.side);
+            if (from) await beam(from, target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1');
+            void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
+            void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), keywordOf(ev.label) ? badge(target, t(keywordOf(ev.label)), keywordOf(ev.label)) : null]);
+        } else if (ev.type === 'attach') {
+            const target = visual(ev.targetId);
+            void sound?.play('glass');
+            if (from ?? hero(ev.side)) await beam(from ?? hero(ev.side), target, '#ffe08a', true);
+            void fx?.ring(target, '#ffe08a', .8);
+            await Promise.all([flash(target, '#ffe08a'), badge(target, t('附著'), 'attach')]);
+        } else if (ev.type === 'bounce') {
+            const source = visual(ev.instanceId);
+            if (from && source) await beam(from, source, '#9fd8ff');
+            if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, handZone(ev.side)); }
+        } else if (ev.type === 'turn') {
+            if (ev.side === 'player') { void sound?.play('turn'); fastForward = 1; }
+            void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
+            await flash(hero(ev.side), '#9edcff');
+        }
+        else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') {
+            if (from) void fx?.glow(from, '#9edcff', 260);
+            void sound?.play('draw');
+            await cardTo(ev.side, ev.card, handZone(ev.side), ev.type === 'draw' && !ev.card);
+        }
+        else if (ev.type === 'discard') {
+            const inHand = hand(ev.instanceId), el = inHand ? place(inHand.cloneNode(true), inHand.getBoundingClientRect()) : null;
+            if (inHand) hide(inHand);
+            void sound?.play('draw');
+            if (el) { el.dataset.wcgEffect = 'discard'; await animate(el, [{ opacity: 1, transform: 'translateY(0) rotate(0)', filter: 'none' }, { opacity: 0, transform: 'translateY(-60px) rotate(-14deg) scale(.8)', filter: 'grayscale(1) brightness(.6)' }], 520); el.remove(); }
+            else await cardTo(ev.side, ev.card, hero(ev.side));
+        }
+        else if (ev.type === 'gameover') {
+            void sound?.play(ev.side === 'player' ? 'defeat' : 'victory');
+            // The gameover event names the losing side.
+            void fx?.banner(t(ev.side === 'player' ? '敗北' : '勝利'), ev.side === 'player' ? 'defeat' : 'victory', 1800);
+            // Portrait finish: the loser's frame cracks with dust, the winner's sparkles gold.
+            const loser = hero(ev.side), winner = hero(ev.side === 'player' ? 'computer' : 'player');
+            const loserFace = loser?.querySelector?.('.hero-face') ?? loser, winnerFace = winner?.querySelector?.('.hero-face') ?? winner;
+            if (loserFace) { void fx?.impact(loserFace, null, .9); void fx?.burst(loserFace, { color: '#9aa3ad', count: 16, spread: 70, size: 14, kind: 'dust', origin: 'bottom' }); }
+            if (winnerFace) { void fx?.ring(winnerFace, '#ffd65a', 1.4); void fx?.burst(winnerFace, { color: '#ffe08a', count: 22, spread: 90, size: 6, rise: 50, duration: 900 }); }
+            await flash(hero(ev.side), '#ffe5a1');
+        }
+        else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
+    }
+    async function runStep(step, state) {
+        if (step.kind === 'showcase') { banner.textContent = `${t(step.ev.side === 'player' ? '我方' : '電腦')} · ${step.ev.label || ''} · ${step.ev.card?.name ?? ''}`; hide(hand(step.ev.instanceId)); state.played.add(step.ev.instanceId); await showSpell(step.ev); return; }
+        if (step.kind === 'source') {
+            const ev = step.ev, el = visual(ev.instanceId) ?? hero(ev.side);
+            banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
+            void sound?.play('trigger'); void fx?.ring(el, '#ffe5a1', .9); void fx?.glow(el, '#ffd77a', 360);
+            await Promise.all([flash(el, '#ffe5a1'), badge(el, ev.label, 'source')]);
+            return;
+        }
+        if (step.kind === 'badge') {
+            const el = visual(step.target); if (!el) return;
+            if (step.from) await beam(visual(step.from), el, step.keyword === '聖盾' ? '#ffe08a' : '#ffd77a');
+            if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
+            void fx?.ring(el, step.keyword === '沉默' ? '#c49bff' : '#ffe08a', .6);
+            await badge(el, t(step.keyword), step.keyword);
+            return;
+        }
+        if (step.kind === 'stat') {
+            const el = visual(step.target); if (!el) return;
+            const up = step.delta > 0, c = center(el);
+            const pop = place(node('div', `event-stat ${up ? 'up' : 'down'}`, `${up ? '+' : '−'}${Math.abs(step.delta)} PP`), { x: c.x - 70, y: c.r.y + c.r.height * .35, width: 140, height: 34 });
+            pop.dataset.wcgEffect = 'stat'; void sound?.play(up ? 'heal' : 'damage', 0);
+            void fx?.glow(el, up ? '#9dffc9' : '#ff8a7a', 320);
+            await animate(pop, [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1.15)', offset: .25 }, { opacity: 1, transform: 'translateY(-10px) scale(1)', offset: .7 }, { opacity: 0, transform: 'translateY(-28px)' }], 760);
+            pop.remove(); return;
+        }
+        if (step.kind === 'tap') {
+            const el = visual(step.target); if (!el) return;
+            void sound?.play('flip');
+            await Promise.all([animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420), badge(el, t(step.tapped ? '橫置' : '直立'), 'tap')]);
+            return;
+        }
+        const ev = step.ev;
+        banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
+        if (ev.type === 'turn' || ev.type === 'attack' || (ev.type === 'play' && !isSpellCard(ev.card))) dropShowcase();
+        await runEvent(step, state);
+    }
+    function skipControls() {
+        const r = root.getBoundingClientRect();
+        const catcher = place(node('button', 'event-skip'), { x: r.x, y: r.y, width: r.width, height: r.height });
+        catcher.type = 'button'; catcher.setAttribute('aria-label', t('點擊快轉')); catcher.title = t('點擊快轉');
+        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: r.x + r.width - 132, y: r.y + 8, width: 120, height: 34 });
+        ff.type = 'button';
+        // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
+        const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };
+        catcher.addEventListener('click', faster); ff.addEventListener('click', faster);
+    }
     async function present(previous, next, events) {
         clear(); if (disposed || !events.length) return;
         priorInert = root.inert; root.inert = true; locked = true;
         layer = node('div', 'battle-feedback-layer'); layer.setAttribute('aria-hidden', 'true'); document.body.append(layer);
         const messageRect = root.querySelector('.battle-message').getBoundingClientRect();
-        const banner = place(node('div', 'event-banner'), messageRect);
+        banner = place(node('div', 'event-banner'), messageRect);
         const played = new Set();
         publicUnits = new Map([...previous.player.field, ...previous.computer.field, ...next.player.field, ...next.computer.field].map(m => [m.card.instanceId, m]));
         priorUnits = new Map([...previous.player.field, ...previous.computer.field].map(m => [m.card.instanceId, m]));
@@ -177,74 +381,20 @@ export function bindFeedback(root, sound = null, fx = null) {
         // Next public field provides fixed destinations; old public field preserves departing sources.
         const locations = new Map([...previous.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...previous.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]]), ...next.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...next.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]])]);
         const destination = id => { const location = locations.get(id); return location ? slot(...location) : null; };
+        const steps = planSteps(previous, next, events);
+        speed = batchSpeed(steps.length);
+        if (steps.length > 1 || steps.some(s => s.kind !== 'event')) skipControls();
         try {
-            for (const ev of [...events].sort((a, b) => a.order - b.order)) {
+            for (const [index, step] of steps.entries()) {
                 if (disposed) break;
-                layer.dataset.wcgEvent = ev.type; layer.dataset.wcgEventSide = ev.side;
-                banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
-                if (ev.type === 'attack') await attack(ev);
-                else if (ev.type === 'damage' && ev.amount > 0) await number(hero(ev.side), `−${ev.amount}`);
-                else if (ev.type === 'heal' && ev.amount > 0) await number(hero(ev.side), `+${ev.amount}`, true);
-                else if (ev.type === 'death') await death(ev);
-                else if (ev.type === 'play') {
-                    hide(hand(ev.instanceId));
-                    if (ev.side === 'computer') {
-                        const isField = destination(ev.instanceId), moving = originCard(ev.side, ev.card);
-                        void sound?.play(isField ? 'place' : String(ev.card?.type ?? '').includes('結界') ? 'field' : 'spell', .35);
-                        const spellTarget = isField ? null : visual(ev.targetId) ?? root.querySelector('.battlefield');
-                        await fly(moving, isField ?? spellTarget, !!isField);
-                        if (isField) ghosts.set(ev.instanceId, moving);
-                        else { void fx?.ring(spellTarget, '#b9e6ff', .6); void fx?.burst(spellTarget, { color: '#bfe9ff', count: 16, spread: 80, size: 6 }); }
-                    }
-                    played.add(ev.instanceId);
-                } else if (ev.type === 'summon' || ev.type === 'set') {
-                    const target = destination(ev.instanceId);
-                    if (target) {
-                        if (!ghosts.has(ev.instanceId)) {
-                            const card = ev.side === 'computer' && !played.has(ev.instanceId) ? originCard(ev.side, ev.type === 'set' ? null : ev.card) : publicCard(ev.type === 'set' ? null : ev.card);
-                            if (ev.side === 'computer' && !played.has(ev.instanceId)) { void sound?.play('place', .35); await fly(card, target, true); }
-                            else place(card, target.getBoundingClientRect());
-                            ghosts.set(ev.instanceId, card);
-                        }
-                        hide(hand(ev.instanceId));
-                        void fx?.slam(target, ev.type === 'set' ? 0 : ev.card?.cost ?? 1);
-                        void sound?.play(ev.type === 'set' ? 'set' : 'summon');
-                        if (ev.type === 'summon' && nextUnits.get(ev.instanceId)?.status?.includes('嘲諷')) void sound?.play('taunt', .15);
-                        await flash(target, '#93ffc0');
-                    }
-                } else if (ev.type === 'energy') {
-                    if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); await fly(originCard(ev.side, null), hero(ev.side)); }
-                    else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
-                } else if (ev.type === 'trigger' || ev.type === 'status' || ev.type === 'reveal') {
-                    void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
-                    void fx?.ring(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1', .7);
-                    await flash(visual(ev.instanceId) ?? hero(ev.side), '#ffe5a1');
-                } else if (ev.type === 'bounce') {
-                    const source = visual(ev.instanceId);
-                    if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, hero(ev.side)); }
-                } else if (ev.type === 'turn') {
-                    // Player pressed the mechanical button already; sound again only when their next turn begins.
-                    if (ev.side === 'player') void sound?.play('turn');
-                    // Non-blocking banner; input unlocks on the normal snapshot commit.
-                    void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
-                    await flash(hero(ev.side), '#9edcff');
-                }
-                else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') { void sound?.play('draw'); await flash(hero(ev.side), '#9edcff'); }
-                else if (ev.type === 'gameover') {
-                    void sound?.play(ev.side === 'player' ? 'defeat' : 'victory');
-                    // The gameover event names the losing side.
-                    void fx?.banner(t(ev.side === 'player' ? '敗北' : '勝利'), ev.side === 'player' ? 'defeat' : 'victory', 1800);
-                    // Portrait finish: the loser's frame cracks with dust, the winner's sparkles gold.
-                    const loser = hero(ev.side), winner = hero(ev.side === 'player' ? 'computer' : 'player');
-                    const loserFace = loser?.querySelector?.('.hero-face') ?? loser, winnerFace = winner?.querySelector?.('.hero-face') ?? winner;
-                    if (loserFace) { void fx?.impact(loserFace, null, .9); void fx?.burst(loserFace, { color: '#9aa3ad', count: 16, spread: 70, size: 14, kind: 'dust', origin: 'bottom' }); }
-                    if (winnerFace) { void fx?.ring(winnerFace, '#ffd65a', 1.4); void fx?.burst(winnerFace, { color: '#ffe08a', count: 22, spread: 90, size: 6, rise: 50, duration: 900 }); }
-                    await flash(hero(ev.side), '#ffe5a1');
-                }
-                else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
+                layer.dataset.wcgEvent = step.ev?.type ?? step.kind; layer.dataset.wcgEventSide = step.ev?.side ?? '';
+                layer.dataset.wcgStep = String(index);
+                await runStep(step, { destination, played });
+                if (index < steps.length - 1) await pause(step.kind === 'event' && step.ev.type === 'pay' ? 60 : 170);
             }
+            dropShowcase();
         } catch (error) { clear(); throw error; }
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
-    return { present, clear, dispose() { disposed = true; clear(); fx?.clear(); } };
+    return { present, clear, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };
 }

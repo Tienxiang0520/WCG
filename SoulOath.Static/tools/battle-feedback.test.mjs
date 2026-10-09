@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { bindFeedback } from '../../WcgWeb/wwwroot/battle/battle-feedback.js';
+import { bindFeedback, resetFastForward } from '../../WcgWeb/wwwroot/battle/battle-feedback.js';
 
 function harness(t) {
     const running = [], record = [];
@@ -89,4 +89,42 @@ test('disposing during presentation cancels animation and restores an existing i
     const h=harness(t);h.root.inert=true;
     const pending=h.feedback.present(h.state,h.state,[{type:'damage',side:'player',amount:1,order:0}]);
     h.feedback.dispose();await pending;assert.equal(h.root.inert,true);assert.equal(h.body.children.length,0);
+});
+test('a spell is showcased large with its text, then its effect travels from the showcase to the target', async t=>{
+    resetFastForward();
+    const h=harness(t);h.unit.getBoundingClientRect=()=>({x:420,y:300,width:100,height:140});const spell={instanceId:'bolt',cardId:'WCG-012',name:'裁決之光',type:'法術',text:'消滅 1 隻敵怪。',arrows:[]};
+    await h.settle(h.feedback.present({player:{field:[]},computer:{field:[{card:{instanceId:'dead',name:'x'},slot:0,status:[]}]}},h.state,[
+        {type:'play',side:'player',instanceId:'bolt',card:spell,order:0},{type:'death',side:'computer',instanceId:'dead',label:'裁決之光',order:1}]));
+    const effects=h.record.map(r=>r.el.dataset.wcgEffect).filter(Boolean);
+    assert.deepEqual([...new Set(effects)],['showcase','projectile','death']);
+    const show=h.record.find(r=>r.el.dataset.wcgEffect==='showcase').el;
+    assert.match(text(show),/裁決之光.*消滅 1 隻敵怪/);
+    h.feedback.clear();assert.equal(h.body.children.length,0);
+});
+test('fast-forward shortens the remaining animations and is offered as a button and a board-wide tap', async t=>{
+    resetFastForward();
+    const h=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];
+    await h.settle(h.feedback.present(h.state,h.state,events));
+    const normal=h.record.find(r=>r.el.dataset.wcgEffect==='damage').options.duration;
+    const layer=h.body.children[0];
+    assert.ok(descendants(layer).some(el=>el.className==='event-ff'),'fast-forward button');
+    assert.ok(descendants(layer).some(el=>el.className==='event-skip'),'tap anywhere on the board');
+    h.feedback.clear();h.record.length=0;h.feedback.fastForward();
+    await h.settle(h.feedback.present(h.state,h.state,events));
+    const fast=h.record.find(r=>r.el.dataset.wcgEffect==='damage').options.duration;
+    assert.ok(fast<=normal/3+1,`${fast} vs ${normal}`);
+    h.feedback.clear();resetFastForward();
+});
+test('a deploy ability badges its source before its result, and keyword statuses from the snapshot are badged', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['聖盾','直立'],pp:1500}]},computer:{field:[]}};
+    await h.settle(h.feedback.present(before,after,[{type:'effect',side:'player',instanceId:'dead',label:'進場能力',order:0},{type:'heal',side:'player',amount:1,order:1}]));
+    const effects=h.record.map(r=>r.el.dataset.wcgEffect).filter(Boolean);
+    assert.ok(effects.indexOf('badge')<effects.indexOf('heal'),effects.join());
+    const badges=h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent);
+    assert.deepEqual(badges,['進場能力','聖盾']);
+    assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='stat'&&r.el.textContent==='+500 PP'));
+    h.feedback.clear();
 });
