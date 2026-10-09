@@ -40,7 +40,7 @@
 .page:has(.phaser-page.in-game) > .sidebar,.page:has(.phaser-page.in-game) > main > .top-row { display:none!important; }
 .page:has(.phaser-page.in-game) > main { max-width:100%;width:100%; }
 .page:has(.phaser-page.in-game) > main > article { padding:0!important; }
-.phaser-page.in-game { max-width:none;height:100dvh;padding:6px;display:flex;flex-direction:column;gap:4px;min-height:0; }
+.phaser-page.in-game { max-width:none;height:100vh;height:100svh;height:100dvh;padding:6px;display:flex;flex-direction:column;gap:4px;min-height:0; }
 .phaser-page.in-game .battle-heading { display:flex;align-items:center;justify-content:space-between;flex:0 0 36px;gap:8px; }
 .phaser-page.in-game .battle-heading h1 { font-size:18px;margin:0; }
 .phaser-page.in-game .battle-toolbar { flex:0 0 40px;margin:0;padding:0 8px;gap:8px;display:flex;align-items:center;justify-content:space-between; }
@@ -105,3 +105,7 @@
 @keyframes wcg-aim-lock{from{scale:1.8;opacity:0}to{scale:1;opacity:1}}
 html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-core,html[data-wcg-motion="reduced"] .wcg-aim .wcg-aim-spin{animation:none}
 @media(max-width:600px){.wcg-fx-banner span,.wcg-fx-banner.computer span{font-size:24px;padding:9px 20px;letter-spacing:.12em}.wcg-fx-banner.victory span,.wcg-fx-banner.defeat span{font-size:32px}.wcg-aim .wcg-aim-glow{stroke-width:9}}
+/* In a match the page never scrolls, so phone browser bars stay put; the board fits what is visible. */
+html:has(.phaser-page.in-game), html:has(.phaser-page.in-game) body { overflow:hidden; overscroll-behavior:none; }
+html[data-wcg-vh] .phaser-page.in-game { height:var(--wcg-vh); }
+.phaser-page.in-game { padding:max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left)); box-sizing:border-box; }

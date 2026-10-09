@@ -240,7 +240,7 @@
    Top: header, opponent, prompt. Middle: two five-slot rows sized from the width.
    Bottom: energy / your portrait / end turn, then the full-width hand fan. Desktop and landscape are unchanged. */
 @media(max-width:600px){
-.v06-board{min-width:0;padding:6px 8px;border-radius:14px;font-size:12px;--card-width:min(116px,29vw);--hand-h:calc(var(--card-width) * 1.38);--dock:calc(var(--hand-h) + 76px)}
+.v06-board{min-width:0;padding:6px 8px;border-radius:14px;font-size:12px;--card-width:min(116px,29vw);--hand-h:calc(var(--card-width) * 1.38);--peek:calc(var(--hand-h) * .54);--raise:calc(var(--hand-h) - var(--peek) + 8px);--dock:calc(var(--peek) + 70px)}
 .match-header{gap:4px;font-size:11px;flex-wrap:nowrap;min-width:0}
 .match-header>span{font-size:0;margin-right:auto;flex:1 1 0}
 .turn-chip{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 7px;font-size:11px}
@@ -267,17 +267,18 @@
 .field-card.attack-ready::after{inset:-3px;border-radius:10px;box-shadow:0 0 10px 2px #6cffaa}
 .drop-hover.vacant::after{inset:6px;font-size:9px;border-radius:6px}
 /* Control strip: energy (left), your portrait (centre), end turn + log (right). */
-.player{bottom:calc(var(--hand-h) + 22px);padding:5px 12px;gap:8px;font-size:12px;white-space:nowrap}
-.energy-zone{left:6px;bottom:calc(var(--hand-h) + 14px);width:auto;min-width:74px;padding:5px 8px;gap:3px;border-radius:10px;border-width:1.5px}
+.player{bottom:calc(var(--peek) + 18px);padding:5px 12px;gap:8px;font-size:12px;white-space:nowrap}
+.energy-zone{left:6px;bottom:calc(var(--peek) + 10px);width:auto;min-width:74px;padding:5px 8px;gap:3px;border-radius:10px;border-width:1.5px}
 .energy-zone strong{font-size:12px;white-space:nowrap}
 .energy-zone>span{display:none}
 .energy-dots{gap:3px;max-width:86px}
 .energy-dots i{width:6px;height:11px}
-.turn-controls{right:6px;bottom:calc(var(--hand-h) + 14px);gap:4px;align-items:stretch}
+.turn-controls{right:6px;bottom:calc(var(--peek) + 10px);gap:4px;align-items:stretch}
 .end-turn{padding:8px 10px!important;font-size:12px;min-height:36px}
 .turn-controls button:not(.end-turn){padding:4px 8px;font-size:10px}
 /* Hand: full-width fan, whole cards visible; tap opens the zoomed card, drag aims. */
-.v06-hand{bottom:14px;height:var(--hand-h)}
+/* Hearthstone-style tuck: only the top ~54% of each card peeks above the bottom edge. */
+.v06-hand{bottom:calc(var(--peek) - var(--hand-h));height:var(--hand-h)}
 .v06-hand-card{--mstep:min(64px,calc((100vw - 46px - var(--card-width)) / var(--gaps)));transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5));bottom:calc(-.4 * var(--rise));height:var(--hand-h);padding:8px 6px 6px;gap:2px;border-width:2px;border-radius:9px;transform-origin:50% 100%}
 .v06-hand-card>strong{font-size:10px;padding-left:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .v06-hand-card>p,.v06-hand-card>small{display:none}
@@ -291,7 +292,9 @@
 .back-emblem{padding:6px 10px;font-size:13px;margin-bottom:4px}
 .card-back>small{display:block;font-size:8px;text-align:center}
 .card-back>small+small{display:none}
-.v06-hand-card:hover,.v06-hand-card:focus-visible,.dragging .v06-hand-card:hover{height:var(--hand-h);transform:translateX(calc(var(--offset) * var(--mstep))) translateY(-10px) rotate(0) scale(1.04)}
+.v06-hand-card:hover,.dragging .v06-hand-card:hover{height:var(--hand-h);transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5))}
+/* Touching (or keyboard-focusing) a card raises it fully; it stays up while you aim a drag. */
+.v06-board .v06-hand-card.lifted,.v06-board .v06-hand-card:focus-visible{height:var(--hand-h);z-index:100;transform:translateX(calc(var(--offset) * var(--mstep))) translateY(calc(-1 * var(--raise))) rotate(0) scale(1.06);box-shadow:0 10px 26px #000c;transition:transform .14s ease-out,box-shadow .2s}
 .v06-hand-card:hover .hand-art-layer,.v06-hand-card:focus-visible .hand-art-layer{height:calc(var(--card-width) * .5)}
 .hand-hint{display:none}
 @keyframes hand-deal{from{translate:0 90px;opacity:0}to{translate:0 0;opacity:1}}
@@ -307,6 +310,16 @@
 .event-banner{font-size:11px}
 /* Lighter ambience on phones. */
 .board-ambience::after{display:none}
+}
+/* Narrow window with a mouse: hovering raises the tucked card the same way. */
+@media(max-width:600px) and (hover:hover){.v06-board:not(.dragging) .v06-hand-card:hover{z-index:100;transform:translateX(calc(var(--offset) * var(--mstep))) translateY(calc(-1 * var(--raise))) rotate(0) scale(1.06)}}
+/* Short visible area (address bar + navigation bar): compress the top strip. */
+@media(max-width:600px) and (max-height:720px){
+.match-header button{min-height:30px;padding-top:4px;padding-bottom:4px}
+.v06-board .opponent{top:40px;padding:3px 10px}
+.v06-board .battle-message{top:68px;height:14px;font-size:10px}
+.v06-board .battlefield{top:84px}
+.v06-board .target-banner{top:84px}
 }
 @media(max-width:400px){.match-header{gap:3px}.match-header button{padding:6px 5px}.turn-chip{padding:3px 6px}}
 /* Touch devices never get a sticky hover lift after a tap. */

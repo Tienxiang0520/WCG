@@ -117,6 +117,23 @@ export function bind(root, dotnet) {
     function click(e) { if (suppressClick) { e.preventDefault(); e.stopImmediatePropagation(); suppressClick = false; } }
     function key(e) { if (e.key === 'Escape') cancel(); }
     function leave() { untilt(); }
+    // Touch: pressing a tucked hand card raises it fully until the finger lifts (tap still opens the zoom).
+    let lifted = null;
+    function liftDown(e) {
+        if (e.pointerType === 'mouse' || e.target.closest?.('.modal-shade')) return;
+        const card = e.target.closest?.('.v06-hand-card');
+        if (!card || !root.contains(card)) return;
+        lifted?.classList.remove('lifted'); lifted = card; card.classList.add('lifted');
+    }
+    function liftUp() { lifted?.classList.remove('lifted'); lifted = null; }
+    // Size the board to the area the browser actually shows (address bar and navigation bar excluded).
+    const html = document.documentElement, viewport = globalThis.visualViewport;
+    function fitViewport() {
+        const h = viewport && Math.abs((viewport.scale ?? 1) - 1) < .01 ? viewport.height : innerHeight;
+        if (h > 0) { html.style.setProperty('--wcg-vh', `${Math.round(h)}px`); html.dataset.wcgVh = ''; }
+    }
+    fitViewport(); viewport?.addEventListener('resize', fitViewport); addEventListener('resize', fitViewport);
+    root.addEventListener('pointerdown', liftDown); document.addEventListener('pointerup', liftUp); document.addEventListener('pointercancel', liftUp);
     root.addEventListener('pointerdown', down); root.addEventListener('click', click, true);
     root.addEventListener('pointermove', hoverTilt); root.addEventListener('pointerleave', leave);
     document.addEventListener('pointermove', move, { passive: false }); document.addEventListener('pointerup', up, { passive: false });
@@ -181,5 +198,5 @@ export function bind(root, dotnet) {
         readMotion: () => motionReduced(),
         // Cycles to the opposite of the current effective state and remembers it on this device.
         toggleMotion: () => { saveMotionSetting(motionReduced() ? 'full' : 'reduced'); if (motionReduced()) fx.clear(); return motionReduced(); },
-        motionSetting: () => readMotionSetting(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); fx.dispose(); untilt(); root.removeEventListener('pointermove', hoverTilt); root.removeEventListener('pointerleave', leave); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
+        motionSetting: () => readMotionSetting(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; feedback.dispose(); fx.dispose(); untilt(); root.removeEventListener('pointermove', hoverTilt); root.removeEventListener('pointerleave', leave); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerdown', liftDown); document.removeEventListener('pointerup', liftUp); document.removeEventListener('pointercancel', liftUp); liftUp(); viewport?.removeEventListener('resize', fitViewport); removeEventListener('resize', fitViewport); html.style.removeProperty('--wcg-vh'); delete html.dataset.wcgVh; root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };
 }

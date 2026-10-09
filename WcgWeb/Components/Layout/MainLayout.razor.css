@@ -6,6 +6,9 @@
     min-height: 100dvh;
     width: 100%;
     overflow-x: clip;
+    /* viewport-fit=cover: keep content clear of notches and rounded corners. */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
 }
 main { flex: 1; min-width: 0; max-width: 100%; overflow-x: hidden; overflow-x: clip; }
 .sidebar {
