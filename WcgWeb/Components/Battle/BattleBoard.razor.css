@@ -68,7 +68,7 @@
 .v06-hand{bottom:-102px}
 .v06-hand-card p{font-size:10px}
 }
-@media(max-width:700px){.v06-board{min-width:600px}
+@media(min-width:601px) and (max-width:700px){.v06-board{min-width:600px}
 .opponent{top:52px}
 .battle-message{top:88px;font-size:12px}
 .battlefield{top:118px}
@@ -150,3 +150,265 @@
 .has-taunt.action-ready{border-color:transparent!important;box-shadow:none}
 .has-taunt.action-ready>.taunt-frame{filter:drop-shadow(0 0 5px #6cffaaa0) drop-shadow(0 0 9px #6cffaa70)}
 @media(max-width:1000px){.training .opponent{top:52px}.training .battle-message{top:88px}.training .battlefield{top:118px}}
+
+/* ==== Game feel: ambience, juice and feedback (2026-10-09). Visual only; rules and input locks are untouched. ==== */
+.board-ambience{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;border-radius:inherit;transition:box-shadow .8s ease}
+.board-ambience::before,.board-ambience::after{content:"";position:absolute;inset:-25%;background-image:radial-gradient(2px 2px at 12% 18%,#ffe9b380,transparent 70%),radial-gradient(1.6px 1.6px at 64% 42%,#bfefff70,transparent 70%),radial-gradient(1.2px 1.2px at 38% 82%,#fff3d060,transparent 70%),radial-gradient(2.2px 2.2px at 86% 66%,#9fe8d060,transparent 70%);background-size:310px 270px;opacity:.55;animation:mote-drift 46s linear infinite;will-change:transform}
+.board-ambience::after{background-size:430px 390px;opacity:.35;animation-duration:71s;animation-direction:reverse}
+@keyframes mote-drift{from{transform:translate3d(0,0,0)}to{transform:translate3d(-310px,-270px,0)}}
+.turn-player .board-ambience{box-shadow:inset 0 -70px 110px -60px #74f0b04d,inset 0 0 160px #0007}
+.turn-computer .board-ambience{box-shadow:inset 0 70px 110px -60px #ff9b6a40,inset 0 0 160px #0007}
+.turn-chip{display:inline-block;padding:3px 10px;border-radius:999px;background:#0f222b;border:1px solid #5d7a74;animation:chip-in .45s cubic-bezier(.2,.8,.3,1.3) both}
+.turn-chip.mine{color:#c9ffe0;border-color:#79e3aa;box-shadow:0 0 12px #6cffaa40}
+.turn-chip.theirs{color:#ffd9bd;border-color:#d99a6c;box-shadow:0 0 12px #ff9b6a33}
+@keyframes chip-in{from{opacity:0;translate:0 -8px;scale:.9}to{opacity:1;translate:0 0;scale:1}}
+
+/* Buttons: hover lift, press squash. */
+.v06-board button{transition:transform .12s ease,background-color .15s,box-shadow .15s,border-color .15s,filter .15s}
+.v06-board button:not(:disabled):hover{transform:translateY(-1px);background-color:#35525f;border-color:#a9c2bd;box-shadow:0 4px 12px #0007}
+.v06-board button:not(:disabled):active{transform:translateY(1px) scale(.96);box-shadow:0 1px 3px #0007;filter:brightness(.92)}
+.v06-board button:focus-visible{outline:2px solid #ffe3a0;outline-offset:2px}
+.motion-toggle{font-size:12px}
+
+/* Portraits: active side, life bump on change, danger pulse when low. */
+.hero{transition:border-color .4s,box-shadow .4s}
+.hero.is-active{border-color:#e9d58f;box-shadow:0 0 0 1px #e9d58f55,0 0 24px #e9d58f40,0 3px 12px #0006}
+.hp-value{display:inline-block;animation:hp-bump .5s cubic-bezier(.2,.8,.3,1.5) both}
+.low-hp .hp-value{color:#ff8f86;animation:hp-bump .5s cubic-bezier(.2,.8,.3,1.5) both,low-hp 1.3s .5s ease-in-out infinite}
+@keyframes hp-bump{0%{scale:1.6;filter:brightness(2)}100%{scale:1;filter:none}}
+@keyframes low-hp{50%{scale:1.12;text-shadow:0 0 12px #ff4c3b}}
+
+/* Hand: dealt-in arrival, smooth fan reflow, cursor tilt with sheen, breathing playable glow. */
+.v06-hand-card{transition:transform .28s cubic-bezier(.2,.8,.3,1),box-shadow .2s,height .2s,filter .2s;animation:hand-deal .46s cubic-bezier(.2,.8,.3,1.1) both;animation-delay:calc(var(--order) * 35ms)}
+@keyframes hand-deal{from{translate:0 140px;opacity:0}to{translate:0 0;opacity:1}}
+.v06-hand-card:hover,.v06-hand-card:focus-visible{transform:translateX(calc(var(--offset) * var(--step))) translateY(-130px) perspective(800px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) scale(1.2);transition:transform .14s ease-out,box-shadow .2s,height .2s}
+.dragging .v06-hand-card:hover{transform:translateX(calc(var(--offset) * var(--step))) rotate(var(--angle))}
+.hand-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;opacity:0;transition:opacity .2s;background:radial-gradient(circle at var(--shine-x,50%) var(--shine-y,10%),#ffffff59,#ffffff14 30%,transparent 55%)}
+.v06-hand-card:hover .hand-shine{opacity:1}.dragging .hand-shine{opacity:0!important}
+.v06-hand-card.available::after,.v06-hand-card.set-ready::after{content:"";position:absolute;inset:-4px;border-radius:16px;pointer-events:none;box-shadow:0 0 16px 3px #6cffaa;opacity:.25;animation:breathe 2.2s ease-in-out infinite}
+.v06-hand-card.set-ready::after{box-shadow:0 0 16px 3px #ffde7b}
+@keyframes breathe{50%{opacity:.85}}
+
+/* Drag targeting: legal zones pulse while aiming. */
+.dragging .legal{animation:legal-pulse .9s ease-in-out infinite alternate}
+@keyframes legal-pulse{from{outline-offset:1px}to{outline-offset:6px}}
+
+/* Field: readiness pulse, taunt breathe, shield bubble, silence desaturation. */
+.field-card{transition:filter .3s,border-color .3s}
+.tapped .field-card{filter:brightness(.86) saturate(.8)}
+.field-card.attack-ready::after{content:"";position:absolute;inset:-4px;border-radius:16px;pointer-events:none;z-index:3;box-shadow:0 0 18px 3px #6cffaa;opacity:.3;animation:breathe 1.6s ease-in-out infinite}
+.field-card.attack-ready:hover{transform:translateY(-3px);transition:transform .15s}
+.has-taunt>.taunt-frame{animation:taunt-breathe 2.8s ease-in-out infinite}
+@keyframes taunt-breathe{50%{scale:1.018}}
+.has-shield::before{content:"";position:absolute;inset:-6px;border-radius:18px;pointer-events:none;z-index:3;border:2px solid #ffe58acc;box-shadow:0 0 14px #ffe58a88,inset 0 0 18px #ffe58a55;background:radial-gradient(ellipse at 50% 0%,#fff6c840,transparent 60%);animation:shield-shimmer 2.6s ease-in-out infinite}
+@keyframes shield-shimmer{50%{opacity:.55}}
+.is-silenced .card-art-layer{filter:grayscale(.85) brightness(.75)}
+.is-poisonous .field-stats b:first-child{color:#b8ff9e;box-shadow:0 0 8px #6dff5a80}
+
+/* Energy crystals fill in, spent ones dim and shrink; counter bumps on change. */
+.energy-dots i{background:linear-gradient(#d6f3ff,#47a9ec);transition:opacity .35s,transform .35s,box-shadow .35s;animation:crystal-in .55s cubic-bezier(.2,.8,.3,1.6) both}
+.energy-dots i.spent{transform:scale(.78);opacity:.22}
+@keyframes crystal-in{0%{scale:0;filter:brightness(3)}60%{scale:1.35}100%{scale:1;filter:none}}
+.energy-count{display:inline-block;animation:hp-bump .45s cubic-bezier(.2,.8,.3,1.5) both}
+
+/* End turn: glows once nothing playable remains (presentation hint only). */
+.end-turn.no-moves:not(:disabled){border-color:#fff0b8!important;animation:end-turn-glow 1.2s ease-in-out infinite alternate}
+@keyframes end-turn-glow{from{box-shadow:0 0 6px #ffd76a66}to{box-shadow:0 0 22px 4px #ffd76acc}}
+
+/* Dialogs and prompts pop in. */
+.modal-shade{animation:shade-in .18s ease-out both}
+.v06-dialog{animation:dialog-pop .28s cubic-bezier(.2,.8,.3,1.25) both}
+.choice-list button{transition:transform .12s,border-color .15s,background-color .15s}
+.choice-list button:not(:disabled):hover{border-color:#ffe3a0;background-color:#3a5764}
+.target-banner{animation:banner-drop .3s cubic-bezier(.2,.8,.3,1.2) both}
+@keyframes shade-in{from{opacity:0}}
+@keyframes dialog-pop{from{opacity:0;scale:.9;translate:0 12px}}
+@keyframes banner-drop{from{opacity:0;translate:-0px -14px}}
+.event-number{font-size:42px;-webkit-text-stroke:1.5px #4a0f06;letter-spacing:.02em}.event-number.healing{-webkit-text-stroke:1.5px #0d3b24}.event-number.big{font-size:54px}
+
+/* One switch disables every looping or decorative CSS motion in the board. */
+.motion-reduced *,.motion-reduced *::before,.motion-reduced *::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+.motion-reduced .board-ambience::before,.motion-reduced .board-ambience::after{animation:none!important}
+@media(max-width:700px){.turn-chip,.match-header button{white-space:nowrap}.turn-chip{padding:2px 7px}.motion-label{display:none}}
+
+/* Touch vs mouse wording for the same actions. */
+.hint-touch{display:none}
+@media(hover:none) and (pointer:coarse){.hint-mouse{display:none}.hint-touch{display:inline}}
+.detail-set-toggle{background:#5c4c24!important;border-color:#ffe5a1!important}
+
+/* ==== Phone portrait (≤600px wide): stacked layout without a forced minimum width. ====
+   Top: header, opponent, prompt. Middle: two five-slot rows sized from the width.
+   Bottom: energy / your portrait / end turn, then the full-width hand fan. Desktop and landscape are unchanged. */
+@media(max-width:600px){
+.v06-board{min-width:0;padding:6px 8px;border-radius:14px;font-size:12px;--card-width:min(116px,29vw);--hand-h:calc(var(--card-width) * 1.38);--peek:calc(var(--hand-h) * .54);--raise:calc(var(--hand-h) - var(--peek) + 8px);--dock:calc(var(--peek) + 70px)}
+.match-header{gap:4px;font-size:11px;flex-wrap:nowrap;min-width:0}
+.match-header>span{font-size:0;margin-right:auto;flex:1 1 0}
+.turn-chip{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 7px;font-size:11px}
+.match-header button{flex:none;padding:6px 7px;min-height:32px;font-size:11px;white-space:nowrap}
+.motion-label{display:none}
+.v06-board .opponent{top:44px;gap:8px;padding:4px 12px;font-size:12px;max-width:calc(100% - 16px);white-space:nowrap}
+.hero small{font-size:10px}
+.v06-board .battle-message{top:76px;left:8px;right:8px;height:16px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v06-board .battlefield{top:96px;bottom:var(--dock);left:6px;right:6px;padding:0;justify-content:center;gap:clamp(12px,4vh,40px)}
+.v06-row{gap:5px;height:auto;max-height:48%;align-items:stretch}
+.v06-slot{aspect-ratio:5/8.2;max-height:100%;border-radius:9px;min-width:0}
+.slot-number{font-size:8px;top:3px;left:4px}
+.empty{font-size:16px}
+.field-card{padding:4px 3px 22px;border-radius:8px;border-width:1.5px;gap:2px}
+.field-card strong,.field-card>strong{font-size:9px;line-height:1.2;padding:1px 2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-stats{left:3px;right:3px;bottom:3px;font-size:12px}
+.field-stats b{padding:2px 3px;min-width:17px}
+.arrowmark,.card-detail .arrowmark{width:15px;height:15px}
+.arrowmark.left{left:-7px}.arrowmark.right{right:-7px}.arrowmark.up{top:-7px}
+.enemy-card .arrowmark.left{right:-7px}.enemy-card .arrowmark.right{left:-7px}.enemy-card .arrowmark.up{bottom:-7px}
+.card-detail .arrowmark.left{left:-10px}.card-detail .arrowmark.right{right:-10px}.card-detail .arrowmark.up{top:-10px}
+.taunt-frame{left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 10px)}
+.has-shield::before{inset:-4px;border-radius:11px}
+.field-card.attack-ready::after{inset:-3px;border-radius:10px;box-shadow:0 0 10px 2px #6cffaa}
+.drop-hover.vacant::after{inset:6px;font-size:9px;border-radius:6px}
+/* Control strip: energy (left), your portrait (centre), end turn + log (right). */
+.player{bottom:calc(var(--peek) + 18px);padding:5px 12px;gap:8px;font-size:12px;white-space:nowrap}
+.energy-zone{left:6px;bottom:calc(var(--peek) + 10px);width:auto;min-width:74px;padding:5px 8px;gap:3px;border-radius:10px;border-width:1.5px}
+.energy-zone strong{font-size:12px;white-space:nowrap}
+.energy-zone>span{display:none}
+.energy-dots{gap:3px;max-width:86px}
+.energy-dots i{width:6px;height:11px}
+.turn-controls{right:6px;bottom:calc(var(--peek) + 10px);gap:4px;align-items:stretch}
+.end-turn{padding:8px 10px!important;font-size:12px;min-height:36px}
+.turn-controls button:not(.end-turn){padding:4px 8px;font-size:10px}
+/* Hand: full-width fan, whole cards visible; tap opens the zoomed card, drag aims. */
+/* Hearthstone-style tuck: only the top ~54% of each card peeks above the bottom edge. */
+.v06-hand{bottom:calc(var(--peek) - var(--hand-h));height:var(--hand-h)}
+.v06-hand-card{--mstep:min(64px,calc((100vw - 46px - var(--card-width)) / var(--gaps)));transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5));bottom:calc(-.4 * var(--rise));height:var(--hand-h);padding:8px 6px 6px;gap:2px;border-width:2px;border-radius:9px;transform-origin:50% 100%}
+.v06-hand-card>strong{font-size:10px;padding-left:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v06-hand-card>p,.v06-hand-card>small{display:none}
+.v06-hand-card .hand-art-layer{height:calc(var(--card-width) * .5);margin:2px 0}
+.v06-hand-card .stats{font-size:9px;white-space:nowrap}
+.v06-hand-card .mana{width:22px;height:22px;line-height:22px;font-size:14px;left:-5px;top:-5px;border-width:1.5px}
+.v06-hand-card .arrowmark{display:none}
+.hand-availability{font-size:8px;padding:2px 3px;white-space:nowrap;overflow:hidden}
+.v06-hand-card.available::after,.v06-hand-card.set-ready::after{inset:-3px;border-radius:11px;box-shadow:0 0 10px 2px #6cffaa}
+.v06-hand-card.set-ready::after{box-shadow:0 0 10px 2px #ffde7b}
+.back-emblem{padding:6px 10px;font-size:13px;margin-bottom:4px}
+.card-back>small{display:block;font-size:8px;text-align:center}
+.card-back>small+small{display:none}
+.v06-hand-card:hover,.dragging .v06-hand-card:hover{height:var(--hand-h);transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5))}
+/* Touching (or keyboard-focusing) a card raises it fully; it stays up while you aim a drag. */
+.v06-board .v06-hand-card.lifted,.v06-board .v06-hand-card:focus-visible{height:var(--hand-h);z-index:100;transform:translateX(calc(var(--offset) * var(--mstep))) translateY(calc(-1 * var(--raise))) rotate(0) scale(1.06);box-shadow:0 10px 26px #000c;transition:transform .14s ease-out,box-shadow .2s}
+.v06-hand-card:hover .hand-art-layer,.v06-hand-card:focus-visible .hand-art-layer{height:calc(var(--card-width) * .5)}
+.hand-hint{display:none}
+@keyframes hand-deal{from{translate:0 90px;opacity:0}to{translate:0 0;opacity:1}}
+/* Dialogs fit the phone. */
+.modal-shade{padding:10px}
+.v06-dialog{max-width:100%;max-height:88%;padding:14px;gap:8px;border-radius:12px}
+.card-detail{max-width:min(340px,100%)}
+.detail-art-layer{height:min(170px,32vh)}
+.v06-dialog button{min-height:40px}
+.target-banner{top:96px;font-size:12px;padding:6px 8px}
+/* Fixed overlays: smaller numbers so they stay within the screen. */
+.event-number{font-size:32px}.event-number.big{font-size:40px}
+.event-banner{font-size:11px}
+/* Lighter ambience on phones. */
+.board-ambience::after{display:none}
+}
+/* Narrow window with a mouse: hovering raises the tucked card the same way. */
+@media(max-width:600px) and (hover:hover){.v06-board:not(.dragging) .v06-hand-card:hover{z-index:100;transform:translateX(calc(var(--offset) * var(--mstep))) translateY(calc(-1 * var(--raise))) rotate(0) scale(1.06)}}
+/* Short visible area (address bar + navigation bar): compress the top strip. */
+@media(max-width:600px) and (max-height:720px){
+.match-header button{min-height:30px;padding-top:4px;padding-bottom:4px}
+.v06-board .opponent{top:40px;padding:3px 10px}
+.v06-board .battle-message{top:68px;height:14px;font-size:10px}
+.v06-board .battlefield{top:84px}
+.v06-board .target-banner{top:84px}
+}
+@media(max-width:400px){.match-header{gap:3px}.match-header button{padding:6px 5px}.turn-chip{padding:3px 6px}}
+/* Touch devices never get a sticky hover lift after a tap. */
+@media(hover:none){.v06-hand-card:hover .hand-shine{opacity:0}.field-card.attack-ready:hover{transform:none}}
+
+/* ==== Hero portraits (2026-10-09): framed avatar, HP gem, will tint, face-attack target. Presentation only. ==== */
+.hero{--portrait:60px;--tint:#8fb3ad;gap:10px;padding:5px 18px 5px 5px;border-radius:999px;border-color:color-mix(in srgb,var(--tint) 55%,#829189);background:linear-gradient(90deg,color-mix(in srgb,var(--tint) 24%,#1c3039),#1c3039 72%)}
+.hero.will-狂怒{--tint:#e63946}.hero.will-理智{--tint:#3a86ff}.hero.will-生機{--tint:#2ec4b6}.hero.will-秩序{--tint:#ffb703}.hero.will-深淵{--tint:#9d4edd}
+.hero-face{position:relative;flex:none;width:var(--portrait);height:var(--portrait);transition:transform .2s}
+.hero-portrait{position:absolute;inset:0;border-radius:50%;overflow:hidden;border:3px solid var(--tint);background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--tint) 45%,transparent),#0c1a22 75%);box-shadow:0 0 0 2px #000a,0 4px 12px #000a,inset 0 0 12px #000a;transition:box-shadow .25s,filter .4s,border-color .3s}
+.hero-portrait img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.14);pointer-events:none}
+.hero .hero-hp{position:absolute;right:-7px;bottom:-5px;z-index:2;box-sizing:border-box;min-width:calc(var(--portrait) * .46);height:calc(var(--portrait) * .46);padding:0 3px;border-radius:50% 50% 46% 46%/58% 58% 42% 42%;background:radial-gradient(circle at 35% 28%,#ffb2a3,#d2301f 55%,#6d0f09);border:2px solid #ffe2b0;color:#fff;font:900 calc(var(--portrait) * .27)/calc(var(--portrait) * .42 - 4px) system-ui,sans-serif;text-align:center;text-shadow:0 1px 2px #000;box-shadow:0 2px 6px #000b}
+.hero-meta{display:flex;flex-direction:column;align-items:flex-start;line-height:1.3;min-width:0}
+.hero-meta strong{font-size:14px;color:#fff4db}
+.hero-meta small{white-space:nowrap}
+/* Damage stages: hairline crack at 4 HP, deep crack and red pulse at 2 HP. */
+.hero-crack{position:absolute;inset:0;z-index:1;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .4s;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M52 4L45 28L57 40L41 58L50 73L39 96M57 40L76 49L93 43M45 28L24 22L8 30M41 58L19 66M50 73L68 82' fill='none' stroke='%23fff1e8' stroke-width='3' stroke-linejoin='round' stroke-linecap='round'/%3E%3Cpath d='M52 4L45 28L57 40L41 58L50 73L39 96M57 40L76 49' fill='none' stroke='%23300805' stroke-width='1.2' transform='translate(1.5 1)'/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.hurt .hero-crack{opacity:.4}
+.low-hp .hero-crack{opacity:.95}
+.low-hp .hero-portrait{border-color:#ff5a4a;animation:portrait-danger 1.1s ease-in-out infinite alternate}
+@keyframes portrait-danger{from{box-shadow:0 0 0 2px #000a,0 0 6px #ff3b2b66,inset 0 0 12px #000a}to{box-shadow:0 0 0 2px #000a,0 0 22px 5px #ff3b2bbb,inset 0 0 18px #ff3b2b88}}
+.hero.is-active .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 18px #e9d58f99,inset 0 0 12px #000a}
+/* Face attack: legal face glows, hovered face locks on, and the hit area grows while aiming. */
+.battle-message{pointer-events:none}
+.dragging .opponent.hero{z-index:6}
+.dragging .opponent.hero::before{content:"";position:absolute;inset:-18px -30px;border-radius:22px}
+.opponent.hero.legal .hero-portrait{border-color:#9cf4bc;box-shadow:0 0 0 3px #9cf4bc,0 0 24px 6px #64df85b0,inset 0 0 12px #000a;animation:face-ready .8s ease-in-out infinite alternate}
+@keyframes face-ready{to{box-shadow:0 0 0 5px #9cf4bc,0 0 34px 10px #64df85d0,inset 0 0 12px #000a}}
+.opponent.hero.drop-hover{scale:1.07;transition:scale .15s}
+.opponent.hero.drop-hover .hero-face::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:3px dashed #ffb27a;pointer-events:none;animation:face-lock 1.6s linear infinite}
+@keyframes face-lock{to{rotate:360deg}}
+.face-blocked .hero-portrait{filter:grayscale(.65) brightness(.7)}
+.hero-blocked{position:absolute;left:50%;top:calc(100% + 4px);translate:-50% 0;z-index:5;background:#3a1f1fee;border:1px solid #ff8c81;color:#ffd3cc;font-size:11px;padding:2px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;animation:banner-drop .2s ease-out both}
+/* End of match: the loser greys out and cracks, the winner gets a turning gold halo. */
+.defeated .hero-portrait{filter:grayscale(1) brightness(.55);border-color:#6d7480}
+.defeated .hero-crack{opacity:1}
+.defeated .hero-face{animation:hero-defeat .9s cubic-bezier(.3,.1,.6,1) both}
+@keyframes hero-defeat{0%{transform:none}15%{transform:translateX(-4px) rotate(-4deg)}30%{transform:translateX(4px) rotate(3deg)}45%{transform:translateX(-2px)}100%{transform:translateY(3px) rotate(-6deg) scale(.94)}}
+.victorious .hero-face::before{content:"";position:absolute;inset:-9px;border-radius:50%;pointer-events:none;background:conic-gradient(#ffd65a00,#ffd65a,#fff6cf,#ffd65a00 38%,#ffd65a 68%,#ffd65a00);-webkit-mask:radial-gradient(circle,transparent 62%,#000 64%);mask:radial-gradient(circle,transparent 62%,#000 64%);animation:face-lock 3.2s linear infinite}
+.victorious .hero-portrait{border-color:#ffd65a;box-shadow:0 0 0 2px #000a,0 0 26px 6px #ffd65aaa,inset 0 0 12px #000a}
+
+/* Desktop / tablet positions: room for the taller portraits. */
+.v06-board .opponent{top:6px;padding-right:20px}
+.v06-board .battle-message{top:80px}
+.v06-board .battlefield{top:104px;bottom:188px}
+.v06-board .player{bottom:112px}
+@media(max-width:1000px){.v06-board .hero{--portrait:50px}.v06-board.training .opponent{top:50px}.v06-board.training .battle-message{top:114px}.v06-board.training .battlefield{top:136px}}
+@media(min-width:601px) and (max-width:700px){.v06-board .opponent{top:50px}.v06-board .battle-message{top:114px}.v06-board .battlefield{top:136px}}
+/* Landscape phones (short): opponent sits in the header row, hand tucks further, portraits shrink. */
+@media(min-width:601px) and (max-height:520px){
+.v06-board{padding:6px 12px}
+.v06-board .hero{--portrait:36px;padding:3px 12px 3px 3px;gap:7px}
+.v06-board .hero-meta strong{font-size:12px}.v06-board .hero-meta small{font-size:10px}.v06-board .hero-deck{display:none}
+.v06-board .opponent,.v06-board.training .opponent{top:5px}
+.v06-board .battle-message,.v06-board.training .battle-message{top:50px;height:16px;font-size:11px}
+.v06-board .battlefield,.v06-board.training .battlefield{top:68px;bottom:142px}
+.v06-board .player{bottom:96px}
+.v06-board .v06-hand{bottom:-122px}
+.v06-board .energy-zone,.v06-board .turn-controls{bottom:10px}
+.v06-board .energy-zone{padding:7px}.v06-board .energy-zone>span{display:none}
+.match-header{gap:6px;font-size:12px}.match-header button{padding:5px 9px;white-space:nowrap}.motion-label{display:none}
+/* Hovered cards rise less so they never cover the header. */
+.v06-board:not(.dragging) .v06-hand-card:hover,.v06-board .v06-hand-card:focus-visible{height:240px;transform:translateX(calc(var(--offset) * var(--step))) translateY(-88px) perspective(800px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) scale(1.08)}
+}
+/* Phone portrait. */
+@media(max-width:600px){
+.v06-board .hero{--portrait:54px;padding:3px 12px 3px 3px;gap:7px}
+.v06-board .hero-meta strong{font-size:12px}.v06-board .hero-meta small{font-size:10px;line-height:1.25}
+.v06-board .opponent{top:42px;padding:3px 12px 3px 3px;max-width:calc(100% - 16px)}
+.v06-board .battle-message{top:106px}
+.v06-board .battlefield{top:124px;bottom:var(--dock)}
+.v06-board .target-banner{top:124px}
+.v06-board .player{--portrait:52px;bottom:calc(var(--peek) + 8px);padding:3px 12px 3px 3px}
+.v06-board .hero .hero-hp{right:-6px;bottom:-4px}
+.hero-blocked{font-size:10px;padding:1px 6px}
+}
+@media(max-width:600px) and (max-height:720px){
+.v06-board .opponent{top:38px}.v06-board .hero{--portrait:50px}
+.v06-board .battle-message{top:96px}
+.v06-board .battlefield,.v06-board .target-banner{top:112px}
+}
+/* Own portrait opens the avatar picker. */
+.player.hero{cursor:pointer}
+.player.hero:focus-visible .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}
+.player.hero:focus-visible{outline:2px solid #8dcaff;outline-offset:2px}
+.dragging .player.hero{pointer-events:none}
+@media(hover:hover){.v06-board:not(.dragging) .player.hero:hover .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}}
+.hero-portrait img.custom{transform:none}
+.avatar-dialog{width:min(560px,100%)}
+.avatar-dialog ::deep .avatar-picker{width:100%}
+/* Phone: the hint sits just under the opponent portrait, so it steps aside while a face-attack glow is showing. */
+@media(max-width:600px){.v06-board .battle-message{transition:opacity .15s}.v06-board.dragging .battle-message{opacity:0}}

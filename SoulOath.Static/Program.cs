@@ -14,6 +14,7 @@ builder.Services.AddSingleton(database);
 builder.Services.AddSingleton(rankedDecks);
 builder.Services.AddSingleton<IPlayerStorage, BrowserPlayerStorage>();
 builder.Services.AddSingleton<DeckService>();
+builder.Services.AddSingleton<PlayerProfileStore>();
 builder.Services.AddSingleton<GameEngine>();
 builder.Services.AddSingleton<BattleBridge>();
 builder.Services.AddSingleton<BattleCoordinator>();

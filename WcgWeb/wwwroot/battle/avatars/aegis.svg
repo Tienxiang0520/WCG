@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="金曜聖騎頭像">
+  <defs><radialGradient id="g" cx=".5" cy=".3" r=".75"><stop offset="0" stop-color="#8a6512"/><stop offset="1" stop-color="#2b1f06"/></radialGradient></defs>
+  <circle cx="48" cy="48" r="45" fill="url(#g)" stroke="#ffd166" stroke-width="4"/>
+  <g stroke="#ffe7a3" stroke-width="2.5" stroke-linecap="round" opacity=".7"><path d="M48 4V12M20 16L26 22M76 16L70 22M8 44H16M80 44H88"/></g>
+  <path d="M18 86Q22 62 48 60Q74 62 78 86" fill="#b38712"/>
+  <path d="M28 30Q48 14 68 30L66 58L48 72L30 58Z" fill="#e8e1cf" stroke="#7a5a10" stroke-width="2.5"/>
+  <path d="M34 42H62V47H34Z" fill="#2b1f06"/>
+  <path d="M48 20V64" stroke="#ffb703" stroke-width="4"/>
+  <path d="M38 26L48 18L58 26" fill="none" stroke="#ffb703" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M30 70L48 78L66 70L62 88H34Z" fill="#ffd166"/>
+  <path d="M48 72L52 79L48 86L44 79Z" fill="#fff4cf"/>
+</svg>

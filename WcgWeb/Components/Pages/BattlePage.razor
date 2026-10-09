@@ -16,7 +16,7 @@
     @if (State?.Phase == "NotStarted")
     {
         <section class="battle-panel setup-panel">
-            <h2>訓練場</h2>
+            <div class="setup-heading"><h2>訓練場</h2><WcgWeb.Components.Common.AvatarBadge Caption="訓練者 · 點擊換頭像" /></div>
             <p>指定卡片、布置戰場、調整生命與能量，反覆測試效果。電腦預設暫停，可隨時恢復自動行動。</p>
             <label for="phaser-player">你的牌組</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
                 @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name</option> }

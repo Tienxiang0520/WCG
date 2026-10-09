@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="烈焰狂戰士頭像">
+  <defs><radialGradient id="g" cx=".5" cy=".38" r=".7"><stop offset="0" stop-color="#7a2418"/><stop offset="1" stop-color="#2a0c0c"/></radialGradient></defs>
+  <circle cx="48" cy="48" r="45" fill="url(#g)" stroke="#ff7a4f" stroke-width="4"/>
+  <path d="M26 30Q30 12 40 20Q42 8 50 16Q58 6 60 20Q70 12 70 30Z" fill="#ffb347"/>
+  <path d="M32 28Q36 18 42 23Q46 14 50 22Q56 14 58 24Q64 20 64 28Z" fill="#ffe08a"/>
+  <path d="M18 84Q22 62 48 61Q74 62 78 84" fill="#8c2a1f"/>
+  <path d="M31 31Q48 22 65 31L62 54L48 67L34 54Z" fill="#d89a76"/>
+  <path d="M33 40L44 43M63 40L52 43" stroke="#2a0c0c" stroke-width="4" stroke-linecap="round"/>
+  <path d="M37 51Q48 47 59 51L57 56Q48 53 39 56Z" fill="#5b1a12"/>
+  <path d="M41 33L46 49M58 34L54 46" stroke="#e63946" stroke-width="3" stroke-linecap="round"/>
+  <path d="M30 72L48 80L66 72L62 88H34Z" fill="#e63946"/>
+  <path d="M40 74L48 70L56 74" fill="none" stroke="#ffd08a" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="星辰賢者頭像">
+  <defs><radialGradient id="g" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#2a4b8f"/><stop offset="1" stop-color="#0d1633"/></radialGradient></defs>
+  <circle cx="48" cy="48" r="45" fill="url(#g)" stroke="#6fa8ff" stroke-width="4"/>
+  <circle cx="22" cy="26" r="1.8" fill="#cfe2ff"/><circle cx="74" cy="22" r="1.4" fill="#cfe2ff"/><circle cx="78" cy="50" r="1.6" fill="#cfe2ff"/>
+  <path d="M48 6L70 40H26Z" fill="#3a86ff" stroke="#bcd6ff" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="48" cy="26" r="4" fill="#fff6c9"/>
+  <path d="M18 86Q20 60 48 58Q76 60 78 86" fill="#23458a"/>
+  <path d="M33 40H63L61 56L48 66L35 56Z" fill="#e3c4a3"/>
+  <path d="M38 47H45M51 47H58" stroke="#13204a" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M36 57Q48 80 60 57L57 72L48 82L39 72Z" fill="#dfe7f5"/>
+  <path d="M30 72H66" stroke="#9cc3ff" stroke-width="3"/>
+  <path d="M40 40L56 40" stroke="#bcd6ff" stroke-width="3" stroke-linecap="round"/>
+</svg>

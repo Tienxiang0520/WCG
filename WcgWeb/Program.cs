@@ -5,7 +5,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+    .AddInteractiveServerComponents()
+    // A cropped avatar (at most 300 KB of text) is sent from the browser in one message.
+    .AddHubOptions(options => options.MaximumReceiveMessageSize = 512 * 1024);
 
 builder.Services.AddSingleton<CardDatabase>();
 builder.Services.AddScoped<DeckService>();
@@ -13,6 +15,7 @@ builder.Services.AddScoped<GameEngine>();
 builder.Services.AddScoped<BattleBridge>();
 builder.Services.AddScoped<BattleCoordinator>();
 builder.Services.AddSingleton<RankedStore>();
+builder.Services.AddSingleton<PlayerProfileStore>();
 builder.Services.AddSingleton<RankedDecks>();
 builder.Services.AddSingleton<RankedSession>(sp => new RankedSession(
     sp.GetRequiredService<CardDatabase>(), sp.GetRequiredService<IWebHostEnvironment>(),

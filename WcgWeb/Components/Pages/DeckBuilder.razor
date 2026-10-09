@@ -2,6 +2,7 @@
 @inject CardDatabase CardDb
 @inject DeckService DeckSvc
 @inject NavigationManager Nav
+@implements IDisposable
 
 <PageTitle>牌組構築 - 魂誓</PageTitle>
 @if (DeckSvc.LastStorageError != null) { <div class="alert alert-warning m-3" role="alert">@DeckSvc.LastStorageError</div> }
@@ -29,7 +30,7 @@
                         <span class="small text-white-50">顯示 @FilteredCards.Count 種卡片 · 點卡面查看，使用 ＋／－ 調整張數</span>
                     </div>
                     <!-- Will Filters -->
-                    <div class="d-flex flex-wrap gap-1 align-items-center mb-2">
+                    <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
                         <span class="text-muted small me-2">意志:</span>
                         <button class="btn btn-sm @(SelectedWill == "" ? "btn-light" : "btn-outline-secondary")"
                                 @onclick='() => SetWillFilter("")'>全部</button>
@@ -48,7 +49,7 @@
                     </div>
 
                     <!-- Type & Cost Filters -->
-                    <div class="d-flex flex-wrap gap-1 align-items-center">
+                    <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
                         <span class="text-muted small me-2">類型:</span>
                         <button class="btn btn-sm @(SelectedType == "" ? "btn-light" : "btn-outline-secondary")"
                                 @onclick='() => SetTypeFilter("")'>全部</button>
@@ -83,7 +84,7 @@
                     }
                     else
                     {
-                        <div class="d-flex flex-wrap gap-3 justify-content-start">
+                        <div class="d-flex flex-wrap gap-3 justify-content-start card-grid">
                             @foreach (var card in FilteredCards)
                             {
                                 int inDeck = CurrentDeck.CardIds.Count(id => id == card.Id);
@@ -93,7 +94,7 @@
                                         QuantityInDeck="@inDeck"
                                         OnCardClicked="@(() => Inspect = card)" />
                                     <div class="d-flex flex-wrap gap-1 justify-content-center align-items-center mt-2">
-                                        <span class="badge bg-secondary" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
+                                        <span class="badge bg-secondary count-bump" @key="inDeck" aria-label="@(card.Name + "在牌組中的張數")">×@inDeck</span>
                                         <button class="btn btn-sm btn-outline-light" aria-label="@("查看卡片：" + card.Name)" @onclick="() => Inspect = card">查看</button>
                                         <button class="btn btn-sm btn-outline-danger" aria-label="@("移除一張：" + card.Name)" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-xs btn-outline-light py-0 px-2 small"
@@ -111,11 +112,13 @@
                     }
                 </div>
             </div>
+            @* Phones stack the deck under 199 cards: this pill sticks to the screen bottom while browsing the catalog and stops above the deck panel. *@
+            <a class="deck-jump @(CurrentDeck.CardIds.Count == 50 ? "complete" : "")" href="deckbuilder#deck-panel" aria-label="@($"跳到編輯牌組，目前 {CurrentDeck.CardIds.Count} / 50 張")">🃏 牌組 <b>@CurrentDeck.CardIds.Count</b>/50</a>
         </div>
 
         <!-- Right Column: Current Deck Builder & Stats -->
-        <div class="col-lg-4">
-            <div class="card bg-dark text-white border-secondary shadow sticky-top" style="top: 15px;">
+        <div class="col-lg-4" id="deck-panel">
+            <div class="card bg-dark text-white border-secondary shadow sticky-top deck-panel-card" style="top: 15px;">
                 <div class="card-header bg-dark border-secondary">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="mb-0">🃏 編輯牌組</h5>
@@ -174,15 +177,13 @@
                     }
                     @if (!string.IsNullOrEmpty(ValidationErrorMessage))
                     {
-                        <div class="alert alert-danger py-1 px-2 small mt-2 mb-0">
+                        <div class="alert alert-danger py-1 px-2 small mt-2 mb-0 wcg-attention" @key="ValidationErrorMessage">
                             ⚠️ @ValidationErrorMessage
                         </div>
                     }
                     @if (SavedMessage != null)
                     {
-                        <div class="alert alert-success py-1 px-2 small mt-2 mb-0">
-                            ✅ @SavedMessage
-                        </div>
+                        <div class="wcg-toast success" role="status" aria-live="polite" @key="ToastId"><span>✅ @SavedMessage</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => SavedMessage = null">✕</button></div>
                     }
                 </div>
 
@@ -202,7 +203,7 @@
                             {
                                 var card = group.Card;
                                 int count = group.Count;
-                                <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2">
+                                <div class="list-group-item bg-dark text-white border-secondary d-flex justify-content-between align-items-center py-1 px-2 deck-line" @key="card.Id">
                                     <div class="d-flex align-items-center gap-2 overflow-hidden">
                                         <span class="badge @(card.IsEnergy ? "bg-success" : (card.IsMonster ? "bg-info" : "bg-warning text-dark"))" style="font-size:0.68rem;">
                                             @(card.IsEnergy ? "能" : $"{card.TotalCost}費")
@@ -214,7 +215,7 @@
                                     <div class="d-flex align-items-center gap-1">
                                         <button class="btn btn-sm btn-outline-danger py-0 px-2"
                                                 @onclick="() => RemoveCardFromDeck(card)">-</button>
-                                        <span class="fw-bold px-1 small" style="min-width: 20px; text-align: center;">
+                                        <span class="fw-bold px-1 small count-bump" @key="count" style="min-width: 20px; text-align: center;">
                                             @count
                                         </span>
                                         <button class="btn btn-sm btn-outline-success py-0 px-2"
@@ -381,6 +382,25 @@
 
     private string? ValidationErrorMessage { get; set; }
     private string? SavedMessage { get; set; }
+    private int ToastId;
+    private CancellationTokenSource? ToastTimer;
+
+    // One success message: a toast that hides itself after a few seconds (also in reduced-motion mode).
+    private void ShowSaved(string text)
+    {
+        SavedMessage = text; ToastId++;
+        ToastTimer?.Cancel(); ToastTimer?.Dispose();
+        ToastTimer = new CancellationTokenSource();
+        _ = HideSavedLater(ToastId, ToastTimer.Token);
+    }
+
+    private async Task HideSavedLater(int id, CancellationToken token)
+    {
+        try { await Task.Delay(4200, token); } catch (TaskCanceledException) { return; }
+        await InvokeAsync(() => { if (ToastId == id && SavedMessage != null) { SavedMessage = null; StateHasChanged(); } });
+    }
+
+    public void Dispose() { ToastTimer?.Cancel(); ToastTimer?.Dispose(); ToastTimer = null; }
 
     protected override void OnInitialized()
     {
@@ -569,7 +589,7 @@
         try
         {
             DeckSvc.SaveDeck(CurrentDeck);
-            SavedMessage = $"牌組【{CurrentDeck.Name}】已成功儲存並驗證 50 張。";
+            ShowSaved($"牌組【{CurrentDeck.Name}】已成功儲存並驗證 50 張。");
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         { SavedMessage = null; ValidationErrorMessage = $"儲存失敗：{ex.Message}"; }
@@ -583,7 +603,7 @@
         {
             DeckSvc.DeleteDeck(id, version);
             if (CurrentDeck.Id == id) CreateNewDeck();
-            SavedMessage = "牌組已刪除。";
+            ShowSaved("牌組已刪除。");
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
         { SavedMessage = null; ValidationErrorMessage = $"刪除失敗：{ex.Message}"; }

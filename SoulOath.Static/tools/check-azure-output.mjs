@@ -6,7 +6,7 @@ async function inspect(folder){
     for(const entry of await readdir(folder,{withFileTypes:true})){
         const path=resolve(folder,entry.name);
         const name=relative(directory,path).replaceAll('\\','/');
-        if(/(?:^|\/)(?:\.git|\.openai|\.runtime|node_modules|玩家存檔備份|\.env(?:\..*)?|custom_decks\.json|ranked\.json)(?:\/|$)/.test(name))
+        if(/(?:^|\/)(?:\.git|\.openai|\.runtime|node_modules|玩家存檔備份|\.env(?:\..*)?|custom_decks\.json|ranked\.json|player_profile\.json)(?:\/|$)/.test(name))
             throw new Error(`Local-only data in public package: ${name}`);
         if(entry.isDirectory())await inspect(path);
         else if(entry.isFile()){bytes+=(await stat(path)).size;files++;}

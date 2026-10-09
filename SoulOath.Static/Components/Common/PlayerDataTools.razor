@@ -4,7 +4,7 @@
 @inject RankedDecks Opponents
 <section class="settings-panel" aria-labelledby="local-data-title">
     <h2 id="local-data-title">本機存檔</h2>
-    <p>牌組、天梯進度與設定只存在這個瀏覽器。清除網站資料或更換裝置前，請先匯出備份。</p>
+    <p>牌組、天梯進度、玩家頭像與設定只存在這個瀏覽器。清除網站資料或更換裝置前，請先匯出備份。</p>
     <div class="d-flex flex-wrap gap-2">
         <button class="btn btn-outline-info" @onclick="Export">匯出存檔</button>
         <label class="btn btn-outline-light mb-0">選擇備份<InputFile OnChange="Stage" accept="application/json,.json" class="d-none" /></label>
@@ -12,7 +12,7 @@
     @if (Pending != null)
     {
         <p class="mt-3">@Summary</p>
-        <p>匯入會取代目前本機的牌組、天梯進度與設定。請先匯出目前存檔。</p>
+        <p>匯入會取代目前本機的牌組、天梯進度、頭像與設定。請先匯出目前存檔。</p>
         <button class="btn btn-warning" @onclick="Import">確認取代並匯入</button>
         <button class="btn btn-secondary ms-2" @onclick="() => Pending = null">取消</button>
     }

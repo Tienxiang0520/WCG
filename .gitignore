@@ -31,6 +31,7 @@ WcgWeb/wwwroot/print-art/
 **/TestResults/
 **/Data/custom_decks.json
 **/Data/ranked.json
+**/Data/player_profile.json
 WcgWeb/wwwroot/battle/board.js
 WcgWeb/wwwroot/battle/preferences.js
 .env

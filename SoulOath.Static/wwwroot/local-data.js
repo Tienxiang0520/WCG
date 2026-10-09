@@ -14,7 +14,7 @@
     function preference(name) {
         return localStorage.getItem(name) ?? (name === 'wcg.confirmEnergy' ? localStorage.getItem(legacyEnergyKey) : null);
     }
-    const allowed = new Set(['decks', 'ranked']);
+    const allowed = new Set(['decks', 'ranked', 'profile']);
     let canWrite = false;
     let release;
     const ready = new Promise(resolve => {
@@ -93,7 +93,7 @@
             const backup = parseBackup(text);
             const decks = backup.data.decks ? JSON.parse(backup.data.decks) : [];
             if (!Array.isArray(decks)) throw new Error('牌組備份格式不正確。');
-            return `${decks.length} 套自訂牌組${backup.data.ranked ? '、天梯進度' : ''}與本機設定。`;
+            return `${decks.length} 套自訂牌組${backup.data.ranked ? '、天梯進度' : ''}${backup.data.profile ? '、玩家頭像' : ''}與本機設定。`;
         },
         importBackup(text) {
             requireWriter();

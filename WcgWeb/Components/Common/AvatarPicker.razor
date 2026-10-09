@@ -1,0 +1,122 @@
+@namespace WcgWeb.Components.Common
+@implements IAsyncDisposable
+@inject PlayerProfileStore Profile
+@inject IJSRuntime JS
+
+@* Avatar picker: built-in pictures, or a local image cropped to a circle in the browser (never uploaded to a server). *@
+<section class="avatar-picker" @ref="Root">
+    <div class="avatar-current">
+        <img src="@Profile.AvatarUrl" alt="目前頭像" draggable="false" />
+        <div><strong>目前頭像</strong><small>@Profile.Label</small></div>
+    </div>
+    <div class="avatar-grid" role="radiogroup" aria-label="內建頭像" hidden="@Cropping">
+        @foreach (var avatar in PlayerAvatars.BuiltIn)
+        {
+            var value = PlayerAvatars.BuiltInPrefix + avatar.Id;
+            <button type="button" role="radio" aria-checked="@(Profile.Avatar == value ? "true" : "false")" aria-label="@avatar.Label"
+                    class="avatar-option @(Profile.Avatar == value ? "selected" : "")" disabled="@(Busy || Cropping)" @onclick="() => Choose(value)">
+                <img src="@PlayerAvatars.Url(value)" alt="" draggable="false" /><span>@avatar.Label</span>
+            </button>
+        }
+    </div>
+    <div class="avatar-actions" hidden="@Cropping">
+        <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")">上傳圖片<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
+        <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Profile.IsDefault)" @onclick="Reset">恢復預設</button>
+    </div>
+    <p class="avatar-help" hidden="@Cropping">支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。</p>
+    <div class="avatar-crop" hidden="@(!Cropping)" aria-label="裁切頭像">
+        <div class="avatar-crop-stage" data-crop-stage tabindex="0" aria-label="拖曳調整位置，方向鍵微調，加減號縮放"><canvas></canvas><span class="avatar-crop-mask" aria-hidden="true"></span></div>
+        <label class="avatar-zoom">縮放<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom aria-label="縮放" /></label>
+        <p class="avatar-help">拖曳移動圖片，雙指或滑桿縮放。圓圈內就是頭像。</p>
+        <div class="avatar-actions">
+            <button type="button" class="btn btn-primary" disabled="@Busy" @onclick="ConfirmCrop">使用這張頭像</button>
+            <button type="button" class="btn btn-outline-secondary" disabled="@Busy" @onclick="CancelCrop">取消</button>
+        </div>
+    </div>
+    @if (Toast != null)
+    {
+        <div class="wcg-toast @(ToastError ? "error" : "success")" role="@(ToastError ? "alert" : "status")" aria-live="polite" @key="ToastId"><span>@(ToastError ? "⚠️" : "✅") @Toast</span><button type="button" class="wcg-toast-close" aria-label="關閉提示" @onclick="() => Toast = null">✕</button></div>
+    }
+</section>
+
+@code {
+    [Parameter] public EventCallback Saved { get; set; }
+    private ElementReference Root;
+    private IJSObjectReference? Module, Cropper;
+    private DotNetObjectReference<AvatarPicker>? Self;
+    private bool Ready, Busy, Cropping, ToastError;
+    private string? Toast;
+    private int ToastId;
+    private CancellationTokenSource? ToastTimer;
+
+    protected override void OnInitialized() => Profile.Changed += Refresh;
+    private void Refresh() => _ = InvokeAsync(StateHasChanged);
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        if (Profile.LastError != null) Show("頭像存檔無法讀取，已改用預設頭像：" + Profile.LastError, true);
+        try
+        {
+            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/avatar-crop.js");
+            Self = DotNetObjectReference.Create(this);
+            Cropper = await Module.InvokeAsync<IJSObjectReference>("attach", Root, Self);
+            Ready = true;
+        }
+        catch (JSException) { Show("這個瀏覽器無法上傳圖片，仍可選擇內建頭像。", true); }
+        catch (JSDisconnectedException) { return; }
+        StateHasChanged();
+    }
+    [JSInvokable] public Task CropOpened() => InvokeAsync(() => { Cropping = true; Toast = null; StateHasChanged(); });
+    [JSInvokable] public Task AvatarError(string message) => InvokeAsync(() => { Show(message, true); StateHasChanged(); });
+    private async Task Choose(string value) => await Save(value, "已更換頭像。");
+    private async Task Reset() => await Save(PlayerAvatars.Default, "已恢復預設頭像。");
+    private async Task ConfirmCrop()
+    {
+        if (Cropper == null) return;
+        Busy = true;
+        try
+        {
+            var url = await Cropper.InvokeAsync<string>("confirm");
+            Cropping = false;
+            await Save(url, "已使用上傳的頭像。");
+        }
+        catch (JSException ex) { Show("無法裁切圖片：" + ex.Message.Split('\n')[0], true); }
+        finally { Busy = false; }
+    }
+    private async Task CancelCrop()
+    {
+        Cropping = false;
+        if (Cropper != null) { try { await Cropper.InvokeVoidAsync("cancel"); } catch (JSException) { } }
+    }
+    private async Task Save(string value, string message)
+    {
+        Busy = true;
+        try { Profile.SetAvatar(value); Show(message, false); await Saved.InvokeAsync(); }
+        catch (Exception ex) when (ex is InvalidDataException or IOException or InvalidOperationException) { Show("頭像未儲存：" + ex.Message, true); }
+        finally { Busy = false; }
+    }
+    private void Show(string message, bool error)
+    {
+        Toast = message; ToastError = error; ToastId++;
+        ToastTimer?.Cancel(); ToastTimer?.Dispose(); ToastTimer = new();
+        _ = HideLater(ToastId, ToastTimer.Token);
+    }
+    private async Task HideLater(int id, CancellationToken token)
+    {
+        try { await Task.Delay(ToastDelay, token); } catch (TaskCanceledException) { return; }
+        await InvokeAsync(() => { if (ToastId == id) { Toast = null; StateHasChanged(); } });
+    }
+    private int ToastDelay => ToastError ? 6000 : 3600;
+    public async ValueTask DisposeAsync()
+    {
+        Profile.Changed -= Refresh;
+        ToastTimer?.Cancel(); ToastTimer?.Dispose();
+        try
+        {
+            if (Cropper != null) { await Cropper.InvokeVoidAsync("dispose"); await Cropper.DisposeAsync(); }
+            if (Module != null) await Module.DisposeAsync();
+        }
+        catch (Exception ex) when (ex is JSDisconnectedException or JSException or ObjectDisposedException) { }
+        Self?.Dispose();
+    }
+}

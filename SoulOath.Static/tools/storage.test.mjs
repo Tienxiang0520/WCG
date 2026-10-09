@@ -90,3 +90,14 @@ test('conflicting old and new preferences leave the existing save intact',async(
     assert.throws(()=>b.api.importBackup(backup({decks:'[]'},{[legacyPreferenceKey]:'false','wcg.confirmEnergy':'true'})),/衝突/);
     assert.equal(b.map.get(playerKey),original);b.close();
 });
+test('player avatar is saved as its own section, exported and restored with the backup',async()=>{
+    const b=await browser();b.api.write('decks','[]',null);
+    const avatar=JSON.stringify({Avatar:'data:image/webp;base64,UklGRh4AAABXRUJQVlA4IAECAwQFBgcICQoLDA=='});
+    b.api.write('profile',avatar,null);assert.equal(b.api.read('profile'),avatar);assert.equal(b.api.read('decks'),'[]');
+    b.api.exportBackup();const exported=JSON.parse(await b.sandbox.exportedBlob.text());
+    assert.equal(exported.data.profile,avatar);assert.match(b.api.inspectBackup(JSON.stringify(exported)),/玩家頭像/);
+    const fresh=await browser();fresh.api.importBackup(JSON.stringify(exported));assert.equal(fresh.api.read('profile'),avatar);
+    // A backup made before avatars existed still imports and simply has no profile.
+    const old=await browser();old.api.importBackup(backup({decks:'[]'}));assert.equal(old.api.read('profile'),null);
+    b.close();fresh.close();old.close();
+});

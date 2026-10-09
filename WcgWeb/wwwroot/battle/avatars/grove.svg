@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="林語德魯伊頭像">
+  <defs><radialGradient id="g" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#1f6b5d"/><stop offset="1" stop-color="#0b2722"/></radialGradient></defs>
+  <circle cx="48" cy="48" r="45" fill="url(#g)" stroke="#5ee0cc" stroke-width="4"/>
+  <path d="M18 86Q22 62 48 60Q74 62 78 86" fill="#3e6b3a"/>
+  <path d="M30 32Q48 20 66 32L63 55L48 67L33 55Z" fill="#cfa77f"/>
+  <path d="M24 34Q22 18 38 16Q48 8 58 16Q74 18 72 34Q64 24 48 26Q32 24 24 34Z" fill="#6b4a2b"/>
+  <path d="M28 22Q20 12 30 8Q32 18 28 22ZM68 22Q76 12 66 8Q64 18 68 22ZM48 14Q44 4 48 2Q52 4 48 14Z" fill="#7ee08a"/>
+  <path d="M36 28Q30 20 38 18Q40 24 36 28ZM60 28Q66 20 58 18Q56 24 60 28Z" fill="#2ec4b6"/>
+  <path d="M37 43Q41 40 45 43M51 43Q55 40 59 43" fill="none" stroke="#1d2b1a" stroke-width="3" stroke-linecap="round"/>
+  <path d="M41 55Q48 59 55 55" fill="none" stroke="#6b4433" stroke-width="3" stroke-linecap="round"/>
+  <path d="M34 70Q48 80 62 70" fill="none" stroke="#7ee08a" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="48" cy="78" r="4" fill="#2ec4b6" stroke="#d6fff8" stroke-width="1.5"/>
+</svg>

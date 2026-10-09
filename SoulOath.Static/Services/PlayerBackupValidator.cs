@@ -18,6 +18,7 @@ public static class PlayerBackupValidator
             if (cards.PresetDecks.Any(d => d.Id == deck.Id)) throw new InvalidDataException("自訂牌組不可覆蓋官方預組。");
         }
         if (decks.LastStorageError != null) throw new InvalidDataException(decks.LastStorageError);
+        if (values.TryGetValue("profile", out var avatarProfile)) PlayerProfileStore.Parse(avatarProfile);
         if (!values.ContainsKey("ranked")) return;
         var store = new RankedStore(storage);
         var profile = store.Load();
