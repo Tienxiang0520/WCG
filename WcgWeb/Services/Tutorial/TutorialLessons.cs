@@ -162,6 +162,32 @@ public static class TutorialLessons
         },
         new()
         {
+            Id = "arrows", Icon = "compass", Title = "箭頭與站位",
+            Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭攻擊正對面的敵人。",
+            Topics = ["箭頭 ← → ↑", "相鄰格光環", "正對面同列格", "五大意志的箭頭"],
+            Scene = new(
+                new() { Hand = ["WCG-005", "WCG-156"], Deck = Deck(), Energy = 5, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-132", 0), new("WCG-155", 2)] }),
+            Steps =
+            [
+                new() { Title = "箭頭連結格位", Spot = ["face", "own"],
+                    Text = "卡圖邊緣的金色三角就是箭頭：← → 連到己方左右相鄰格，↑ 連到正對面的敵方格。每張卡用箭頭做的事不同，看效果文字就知道。" },
+                new() { Title = "左右光環", Spot = ["hand:WCG-005", "own:2"], Allow = [Play("WCG-005"), Slot(2)],
+                    Done = e => Unit(e.Player, "WCG-005")?.Slot == 2,
+                    Text = "「突擊狼騎兵」的 ← → 讓左右相鄰的己方怪物交戰時 PP +200。把它放在第 3 格，夾在「巡邏輕步兵」和「淡水狂鱷」中間。",
+                    Hint = "請把「突擊狼騎兵」放在第 3 格。" },
+                new() { Title = "站在中間最划算", Spot = ["own-card:WCG-101", "own-card:WCG-154"],
+                    Text = "兩側隊友都變強了：700→900、1500→1700。放在邊格只能照顧一側；來源被沉默或離場，加成立刻消失。" },
+                new() { Title = "正對面", Spot = ["hand:WCG-156", "own:4", "enemy-card:WCG-132"], Allow = [Play("WCG-156"), Slot(4)],
+                    Done = e => !OnField(e.Computer, "WCG-132") && Settled(e),
+                    Text = "「荒原巨槌食人魔」的 ↑ 進場時消滅正對面 PP 800 以下的敵方怪物。己方第 5 格正對敵方第 1 格的「腐肉食腐蛛」，把它放在第 5 格。",
+                    Hint = "請把「荒原巨槌食人魔」放在第 5 格（腐肉食腐蛛的正對面）。" },
+                new() { Title = "本課重點",
+                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ↑ 劈砍正對面，理智依站位抽牌或橫置對手，生機用光環培育隊友，秩序用箭頭分配聖盾，深淵與中立壓低正對面敵怪的 PP。" }
+            ]
+        },
+        new()
+        {
             Id = "spells", Icon = "spark", Title = "法術：目標、抉擇與回復",
             Summary = "施放指定目標的法術、從抉擇效果二選一、棄牌與回復生命。",
             Topics = ["指定目標法術", "抽牌", "抉擇", "棄牌", "回復生命（上限 7）", "法術進墓地"],
