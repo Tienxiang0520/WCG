@@ -18,7 +18,14 @@
     </header>
     <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
     <div class="face-art">
-        <CardImage CardId="@Id" Loading="@Loading" />
+        @if (ArtSrc != null)
+        {
+            <img class="card-illustration" src="@ArtSrc" alt="@NameText" loading="@Loading" decoding="async" />
+        }
+        else
+        {
+            <CardImage CardId="@Id" Loading="@Loading" />
+        }
         @foreach (var arrow in Arrows ?? [])
         {
             <span class="face-arrow @arrow" title="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]" role="img" aria-label="@L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"]"></span>
@@ -44,6 +51,8 @@
     [Parameter] public BattleCard? Battle { get; set; }
     [Parameter] public string Class { get; set; } = "";
     [Parameter] public string Loading { get; set; } = "lazy";
+    // Overrides the screen art (card-art/{id}.webp), e.g. the 300 dpi print-art/{id}.jpg on the print sheet.
+    [Parameter] public string? ArtSrc { get; set; }
     [Parameter] public RenderFragment? ChildContent { get; set; }
     private static readonly string[] Stars = ["tl", "tr", "bl", "br", "top", "bottom", "head"];
     private string Id => Card?.Id ?? Battle?.CardId ?? "";

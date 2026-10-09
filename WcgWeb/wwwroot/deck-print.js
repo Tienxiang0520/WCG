@@ -37,7 +37,7 @@ export async function printDeck(root) {
         catch { throw new Error(`卡圖「${image.alt}」載入失敗，請稍後再試或選擇省墨文字版。`); }
         if (!image.naturalWidth) throw new Error('卡圖尚未載入。');
     }));
-    const overflow = [...root.querySelectorAll('.print-card-title,.print-card-text')]
+    const overflow = [...root.querySelectorAll('.print-card-title,.print-card-text,.print-face .face-text,.print-face .face-name span')]
         .find(element => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1);
     if (overflow) throw new Error('卡牌文字超出列印範圍，請選擇省墨文字版後再試。');
     window.print();
