@@ -47,6 +47,10 @@ test('a unit tapped by its own attack is not shown as an effect tap', () => {
     const steps = planSteps(snap([unit('a', 0)]), snap([unit('a', 0, { tapped: true })]), [{ type: 'attack', side: 'player', instanceId: 'a', order: 0 }]);
     assert.deepEqual(kinds(steps), ['attack']);
 });
+test('units readied at the start of a turn are not badged as effect taps', () => {
+    const steps = planSteps(snap([unit('a', 0, { tapped: true })]), snap([unit('a', 0)]), [{ type: 'turn', side: 'player', order: 0 }]);
+    assert.deepEqual(kinds(steps), ['turn']);
+});
 test('helpers: aura rule, keyword parsing, spell detection and long-batch pacing', () => {
     const up = { card: card('s', { text: '正對面同列格的敵方怪物具有聖盾', arrows: ['up'] }), slot: 1, side: 'player', status: [] };
     const all = new Map([['s', up]]);
