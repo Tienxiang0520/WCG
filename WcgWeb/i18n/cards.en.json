@@ -22,7 +22,7 @@
  "WCG-005": {
   "zh": "突擊狼騎兵",
   "name": "Raiding Wolf Rider",
-  "text": "Charge."
+  "text": "Charge. [Arrow: ← →] Your monsters in the adjacent left and right slots get +200 PP in combat."
  },
  "WCG-006": {
   "zh": "怒意沸騰",
@@ -102,7 +102,7 @@
  "WCG-021": {
   "zh": "秘法學徒",
   "name": "Arcane Apprentice",
-  "text": "Deploy: Draw 1 card."
+  "text": "[Arrow: ← →] Deploy: Draw 1 card. If both adjacent slots hold your monsters, draw 1 more."
  },
  "WCG-022": {
   "zh": "伺機待發",
@@ -162,7 +162,7 @@
  "WCG-033": {
   "zh": "秘法竊取者",
   "name": "Arcane Thief",
-  "text": "Deploy: If your opponent has more cards in hand than you, draw 1 card."
+  "text": "[Arrow: ↑] Deploy: If an enemy monster is directly opposite, tap it. Otherwise, draw 1 card."
  },
  "WCG-034": {
   "zh": "思維超載",
@@ -272,7 +272,7 @@
  "WCG-055": {
   "zh": "沼澤巨鱷",
   "name": "Swamp Crocodile",
-  "text": "None."
+  "text": "[Arrow: ← →] Your monsters in the adjacent left and right slots get +300 PP in combat."
  },
  "WCG-056": {
   "zh": "生態同調",
@@ -422,7 +422,7 @@
  "WCG-085": {
   "zh": "苦痛契約者",
   "name": "Pain Pactbearer",
-  "text": "Deploy: Deal 1 damage to yourself."
+  "text": "[Arrow: ↑] Deploy: Deal 1 damage to yourself. The enemy monster directly opposite gets -300 PP in combat."
  },
  "WCG-086": {
   "zh": "衰竭詛咒",
@@ -567,7 +567,7 @@
  "WCG-114": {
   "zh": "雪人巨獸",
   "name": "Yeti Behemoth",
-  "text": "None."
+  "text": "[Arrow: ↑] The enemy monster directly opposite gets -300 PP in combat."
  },
  "WCG-115": {
   "zh": "阿古斯防衛者",
@@ -777,12 +777,12 @@
  "WCG-156": {
   "zh": "荒原巨槌食人魔",
   "name": "Wasteland Maul Ogre",
-  "text": "None."
+  "text": "[Arrow: ↑] Deploy: Destroy the enemy monster directly opposite if it has 800 PP or less."
  },
  "WCG-157": {
   "zh": "蒼翠古樹衛士",
   "name": "Verdant Elder Warden",
-  "text": "None."
+  "text": "[Arrow: →] Your monster in the adjacent right slot gets +500 PP in combat."
  },
  "WCG-158": {
   "zh": "白銀持戟禁衛",
@@ -792,7 +792,7 @@
  "WCG-159": {
   "zh": "冥界骸骨巨獸",
   "name": "Underworld Bone Behemoth",
-  "text": "None."
+  "text": "[Arrow: ↑] Leave: Destroy the enemy monster directly opposite if it has 2000 PP or less."
  },
  "WCG-160": {
   "zh": "血肉熔爐巨怪",

@@ -87,7 +87,7 @@ public sealed class LocalizationTests
         var texts = TutorialLessons.All.SelectMany(l => new[] { l.Title, l.Summary }.Concat(l.Topics)
             .Concat(l.Steps.SelectMany(s => new[] { s.Title, s.Text, s.Hint }))
             .Concat(l.Tour.SelectMany(t => new[] { t.Title, t.Text })));
-        Assert.Equal(13, TutorialLessons.All.Count);
+        Assert.Equal(14, TutorialLessons.All.Count);
         AllEnglish(texts, "tutorial");
     }
 
