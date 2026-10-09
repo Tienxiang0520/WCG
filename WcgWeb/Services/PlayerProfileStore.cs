@@ -51,6 +51,9 @@ public sealed class PlayerProfile
     // Optional since the tutorial update; older saves simply have no tutorial progress.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
     public TutorialProgress? Tutorial { get; set; }
+    // Optional since the English update: "zh-Hant" or "en"; missing means no choice yet (default 繁體中文).
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public string? Language { get; set; }
 }
 
 // First-visit answer (started / skipped; empty = not answered yet) and the lessons finished at least once.
@@ -91,17 +94,20 @@ public sealed partial class PlayerProfileStore(IPlayerStorage storage)
         if (profile == null) throw new InvalidDataException("頭像存檔格式不正確。");
         profile.Avatar = PlayerAvatars.Normalize(profile.Avatar);
         profile.Tutorial = TutorialProgress.Normalize(profile.Tutorial);
+        profile.Language = Localizer.Normalize(profile.Language);
         return profile;
     }
     private TutorialProgress? tutorial;
     private bool tutorialReadOnly;
     public TutorialProgress Tutorial { get { if (avatar == null) _ = Avatar; return tutorial ??= new(); } }
+    private string? language;
+    public string? Language { get { if (avatar == null) _ = Avatar; return language; } }
     private string Load()
     {
-        try { LastError = null; var profile = Parse(storage.Read(Key)); tutorial = profile.Tutorial ?? new(); tutorialReadOnly = false; return profile.Avatar; }
+        try { LastError = null; var profile = Parse(storage.Read(Key)); tutorial = profile.Tutorial ?? new(); language = profile.Language; tutorialReadOnly = false; return profile.Avatar; }
         catch (Exception ex) when (ex is InvalidDataException or IOException) { LastError = ex.Message; tutorial = new(); tutorialReadOnly = true; return PlayerAvatars.Default; }
     }
-    public void Reload() { avatar = null; tutorial = null; _ = Avatar; Changed?.Invoke(); }
+    public void Reload() { avatar = null; tutorial = null; language = null; _ = Avatar; Changed?.Invoke(); }
     public void SetAvatar(string value)
     {
         var normalized = PlayerAvatars.Normalize(value);
@@ -109,12 +115,33 @@ public sealed partial class PlayerProfileStore(IPlayerStorage storage)
         {
             var current = storage.Read(Key);
             // Keep the tutorial progress stored next to the avatar.
-            TutorialProgress? kept = null;
-            try { kept = Parse(current).Tutorial; } catch (InvalidDataException) { }
-            storage.Write(Key, JsonSerializer.Serialize(new PlayerProfile { Avatar = normalized, Tutorial = kept }), current);
+            TutorialProgress? kept = null; string? keptLanguage = null;
+            try { var old = Parse(current); kept = old.Tutorial; keptLanguage = old.Language; } catch (InvalidDataException) { }
+            storage.Write(Key, JsonSerializer.Serialize(new PlayerProfile { Avatar = normalized, Tutorial = kept, Language = keptLanguage }), current);
+            language = keptLanguage ?? language;
             tutorial = kept ?? new(); tutorialReadOnly = false;
         }
         avatar = normalized; LastError = null;
+        Changed?.Invoke();
+    }
+    // Saved next to the avatar; a damaged profile is never overwritten, the choice then lasts for this visit only.
+    public void SetLanguage(string value)
+    {
+        if (Localizer.Normalize(value) is not { } normalized) return;
+        _ = Avatar;
+        lock (storage.Gate)
+        {
+            try
+            {
+                if (tutorialReadOnly) throw new InvalidDataException("頭像存檔無法讀取，語言設定只保留到關閉網站為止。");
+                var current = storage.Read(Key);
+                var profile = Parse(current);
+                profile.Language = normalized;
+                storage.Write(Key, JsonSerializer.Serialize(profile), current);
+            }
+            catch (Exception ex) when (ex is InvalidDataException or IOException) { LastError = ex.Message; }
+            language = normalized;
+        }
         Changed?.Invoke();
     }
     public bool TutorialDone(string lessonId) => Tutorial.Completed.Contains(lessonId);

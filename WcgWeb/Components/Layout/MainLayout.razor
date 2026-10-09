@@ -2,12 +2,13 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<div class="page @(sidebarCollapsed ? "sidebar-collapsed" : "")">
+@* Keyed by language: switching rebuilds the visible page once so every text follows the new language. *@
+<div class="page @(sidebarCollapsed ? "sidebar-collapsed" : "")" @key="L.Language">
     <div class="sidebar" @ref="sidebarElement">
         <NavMenu Collapsed="sidebarCollapsed" OnToggle="ToggleSidebar" />
-        <div class="sidebar-resizer" role="separator" aria-label="調整側邊欄寬度" aria-orientation="vertical"
+        <div class="sidebar-resizer" role="separator" aria-label="@L["調整側邊欄寬度"]" aria-orientation="vertical"
              aria-valuemin="200" aria-valuemax="360" aria-valuenow="250" tabindex="0"
-             title="拖曳調整寬度，或使用左右方向鍵" @ref="resizerElement"></div>
+             title="@L["拖曳調整寬度，或使用左右方向鍵"]" @ref="resizerElement"></div>
     </div>
 
     <main>
@@ -15,8 +16,8 @@
             @Body
         </article>
     </main>
+    <WcgWeb.Components.Tutorial.TutorialPrompt />
 </div>
-<WcgWeb.Components.Tutorial.TutorialPrompt />
 
 @code {
     private bool sidebarCollapsed;
@@ -24,9 +25,34 @@
     private ElementReference resizerElement;
     private IJSObjectReference? sidebarModule;
     private void ToggleSidebar() => sidebarCollapsed = !sidebarCollapsed;
+    private IJSObjectReference? i18nModule;
+    private string appliedLanguage = "";
+    protected override void OnInitialized() => L.Changed += LanguageChanged;
+    private void LanguageChanged() => _ = InvokeAsync(StateHasChanged);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            try
+            {
+                i18nModule = await JS.InvokeAsync<IJSObjectReference>("import", "./i18n.js");
+                if (!L.HasSavedChoice) L.Detect(await i18nModule.InvokeAsync<string[]>("browserLanguages"));
+            }
+            catch (JSException) { }
+        }
+        if (i18nModule != null && appliedLanguage != L.Language)
+        {
+            var rebuilt = appliedLanguage != "";
+            appliedLanguage = L.Language;
+            try
+            {
+                await i18nModule.InvokeVoidAsync("apply", appliedLanguage);
+                // The keyed layout was rebuilt: hook the new sidebar resizer up again.
+                if (rebuilt && sidebarModule != null) await sidebarModule.InvokeVoidAsync("attach", sidebarElement, resizerElement);
+            }
+            catch (JSException) { } catch (JSDisconnectedException) { }
+        }
         if (!firstRender) return;
         sidebarModule = await JS.InvokeAsync<IJSObjectReference>("import", "./sidebar.js");
         await sidebarModule.InvokeVoidAsync("attach", sidebarElement, resizerElement);
@@ -48,6 +74,8 @@
 
     public async ValueTask DisposeAsync()
     {
+        L.Changed -= LanguageChanged;
+        if (i18nModule != null) { try { await i18nModule.DisposeAsync(); } catch (JSDisconnectedException) { } }
         if (sidebarModule is null) return;
         try
         {
