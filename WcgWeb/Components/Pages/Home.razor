@@ -24,19 +24,13 @@
         <section class="battle-panel setup-panel">
             <h2>@L["準備對局"]</h2>
             <label for="player-deck">@L["你的牌組"]</label>
-            <select id="player-deck" class="form-select" @bind="PlayerDeckId">
-                @foreach (var deck in Decks)
-                { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
-            </select>
+            <WcgWeb.Components.Common.DeckPicker Id="player-deck" Label="@L["你的牌組"]" Decks="PlayerDecks" @bind-Value="PlayerDeckId" />
             <label for="computer-deck">@L["電腦牌組"]</label>
-            <select id="computer-deck" class="form-select" @bind="ComputerDeckId">
-                @foreach (var deck in Decks)
-                { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@deck.Name @(deck.IsValid(CardDb.GetCard, out _) ? ($"（50 張 · 主色 {deck.MainWill}）") : "（需重新編輯）")</option> }
-            </select>
+            <WcgWeb.Components.Common.DeckPicker Id="computer-deck" Label="@L["電腦牌組"]" Decks="Decks" @bind-Value="ComputerDeckId" ShowEditorLink="false" />
             <label for="starter">@L["先攻"]</label>
             <select id="starter" class="form-select" @bind="Starter"><option value="player">@L["玩家先攻"]</option><option value="computer">@L["電腦先攻"]</option><option value="random">@L["隨機"]</option></select>
             <p>@L["起手 7 張、不換牌。先攻第一回合不抽牌。每個自己的回合可填一張能量，不抽牌。"]</p>
-            <button class="btn btn-primary btn-lg" @onclick="() => Start(match, revision)">@L["開始對戰"]</button>
+            <button class="btn btn-primary btn-lg" disabled="@(!PlayerDecks.Any(d => d.Id == PlayerDeckId && d.IsValid(CardDb.GetCard, out _)))" @onclick="() => Start(match, revision)">@L["開始對戰"]</button>
         </section>
     }
     else
@@ -188,7 +182,7 @@
 </div>
 
 @code {
-    private List<Deck> Decks = new();
+    private List<Deck> Decks = new(), PlayerDecks = new();
     private string PlayerDeckId = "", ComputerDeckId = "", Starter = "player", Notice = "";
     private bool Disposed;
     private bool FastAi { get => Coordinator.Fast; set => Coordinator.Fast = value; }
@@ -221,9 +215,10 @@
 
     protected override void OnInitialized()
     {
+        PlayerDecks = DeckSvc.GetPlayerDecks(); var deckError = DeckSvc.LastStorageError;
         Decks = DeckSvc.GetAllAvailableDecks();
-        Notice = DeckSvc.LastStorageError ?? "";
-        PlayerDeckId = CardDb.PresetDecks[0].Id; ComputerDeckId = CardDb.PresetDecks[1].Id;
+        Notice = deckError ?? DeckSvc.LastStorageError ?? "";
+        PlayerDeckId = PlayerDecks.FirstOrDefault()?.Id ?? ""; ComputerDeckId = CardDb.PresetDecks[1].Id;
         Presenter = Coordinator.Attach();
         CaptureState();
         Engine.OnStateChanged += EngineChanged;

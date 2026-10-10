@@ -55,11 +55,10 @@ public partial class DeckBuilder
 
     protected override void OnInitialized()
     {
-        // Default to cloning the first preset deck so user immediately has a functional 50-card deck
-        if (CardDb.PresetDecks.Count > 0)
-        {
-            ClonePreset(CardDb.PresetDecks[0]);
-        }
+        var decks = DeckSvc.GetPlayerDecks();
+        if (decks.FirstOrDefault() is { } deck) LoadCustomDeck(deck);
+        else CreateNewDeck();
+        if (DeckSvc.LastStorageError is { } error) ValidationErrorMessage = error;
     }
 
     private void SetWillFilter(string will) => SelectedWill = will;

@@ -1316,5 +1316,13 @@
  "基礎電腦：照怪物優先順序出牌，偶爾失誤；節奏、巨獸、結界與回收流派加入": "Basic AI prioritizes monsters and occasionally makes mistakes; tempo, big-monster, Ward and recovery strategies join.",
  "進階電腦：評估交換與目標、會用直傷斬殺；清場、驅散與連擊流派加入": "Advanced AI scores trades and targets and uses lethal burn; board clears, dispel and repeated-attack strategies join.",
  "老練電腦：注意反撲、優先鋪場；抽牌、獻祭與鋪場保留完整主題": "Experienced AI considers retaliation and prioritizes board presence; draw, sacrifice and swarm strategies keep their themes.",
- "大師電腦：幾乎不失誤、三步攻擊規劃、先解嘲諷再斬殺；30 個流派使用完整牌表，白銀長城、誓約審判、荊棘毒牙只在此出現": "Master AI makes almost no mistakes, plans three attacks ahead and clears Taunt before lethal; all 30 strategies use full lists, with Silver Rampart, Oath Verdict and Thornfang appearing only here."
+ "大師電腦：幾乎不失誤、三步攻擊規劃、先解嘲諷再斬殺；30 個流派使用完整牌表，白銀長城、誓約審判、荊棘毒牙只在此出現": "Master AI makes almost no mistakes, plans three attacks ahead and clears Taunt before lethal; all 30 strategies use full lists, with Silver Rampart, Oath Verdict and Thornfang appearing only here.",
+ "選擇牌組": "Choose a deck",
+ "需重新編輯": "Needs editing",
+ "尚無自訂牌組，請到組牌頁建立或複製牌組。": "No custom decks yet. Create or copy one in the deck builder.",
+ "編輯或複製牌組": "Edit or copy decks",
+ "我的入門牌組": "My starter deck",
+ "以普通怪物、抽牌與簡單法術練習出牌和交戰，可自由修改。": "Practice playing cards and combat with basic creatures, card draw and simple spells. Edit freely.",
+ "可建立空白牌組，或複製下方牌組，儲存後即可出戰。": "Create an empty deck or copy one below. Save it to use it in battle.",
+ "複製後可修改與列印；儲存成自訂牌組後即可出戰。": "Copy to edit and print. Save as a custom deck to use it in battle."
 }

@@ -28,12 +28,12 @@
                 <section class="wcg-panel battle-panel setup-panel" aria-labelledby="setup-title">
                     <h2 id="setup-title" class="panel-title">@L["準備對局"]</h2>
                     <div class="field-grid-2">
-                        <div class="wcg-field"><label for="phaser-player">@L["你的牌組"]</label><select id="phaser-player" class="form-select" @bind="PlayerDeck">
-                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@L.DeckName(deck)</option> }
-                        </select></div>
-                        <div class="wcg-field"><label for="phaser-computer">@L["電腦牌組"]</label><select id="phaser-computer" class="form-select" @bind="ComputerDeck">
-                            @foreach (var deck in Decks) { <option value="@deck.Id" disabled="@(!deck.IsValid(CardDb.GetCard, out _))">@L.DeckName(deck)</option> }
-                        </select></div>
+                        <div class="wcg-field"><label for="phaser-player">@L["你的牌組"]</label>
+                            <WcgWeb.Components.Common.DeckPicker Id="phaser-player" Label="@L["你的牌組"]" Decks="PlayerDecks" @bind-Value="PlayerDeck" />
+                        </div>
+                        <div class="wcg-field"><label for="phaser-computer">@L["電腦牌組"]</label>
+                            <WcgWeb.Components.Common.DeckPicker Id="phaser-computer" Label="@L["電腦牌組"]" Decks="Decks" @bind-Value="ComputerDeck" ShowEditorLink="false" />
+                        </div>
                     </div>
                     <div class="wcg-field"><span class="field-label" id="phaser-starter-label">@L["先攻"]</span>
                         <div class="segmented" role="radiogroup" aria-labelledby="phaser-starter-label">
@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="lobby-actions">
-                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive)" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />@L["開始訓練"]</button>
+                        <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive || !PlayerDecks.Any(d => d.Id == PlayerDeck && d.IsValid(CardDb.GetCard, out _)))" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />@L["開始訓練"]</button>
                         @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">@L["載入保存場面"]</button>}
                     </div>
                     @if(ToolNotice!=""){<p class="field-note" role="status">@L.Text(ToolNotice)</p>}
@@ -125,7 +125,7 @@
         catch(Exception ex) when(ex is JSException or InvalidOperationException){ToolNotice=ex.Message;}
     }
     private async Task RestoreScene(){if(SavedScene==null)return;Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:SavedScene));LoadResources();}
-    private List<Deck> Decks = [];
+    private List<Deck> Decks = [], PlayerDecks = [];
     private string PlayerDeck = "", ComputerDeck = "", First = "player", Notice = "";
     private Guid Presenter;
     private BattleSnapshot? State;
@@ -139,8 +139,9 @@
         Engine=GameEngine.CreateTraining(CardDb);Bridge=new BattleBridge(Engine,DeckSvc);Coordinator=new BattleCoordinator(Bridge,Engine,Logger){AiPaused=true};
         if (Configuration["BattlePresentation:Mode"] == "legacy" && new Uri(Navigation.Uri).AbsolutePath == "/")
         { Navigation.NavigateTo("/legacy", replace: true); return; }
-        Decks = DeckSvc.GetAllAvailableDecks(); Notice = DeckSvc.LastStorageError ?? "";
-        PlayerDeck = CardDb.PresetDecks[0].Id; ComputerDeck = CardDb.PresetDecks[1].Id;
+        PlayerDecks = DeckSvc.GetPlayerDecks(); var deckError = DeckSvc.LastStorageError;
+        Decks = DeckSvc.GetAllAvailableDecks(); Notice = deckError ?? DeckSvc.LastStorageError ?? "";
+        PlayerDeck = PlayerDecks.FirstOrDefault()?.Id ?? ""; ComputerDeck = CardDb.PresetDecks[1].Id;
         Presenter = Coordinator.Attach(); State = Bridge.Snapshot();
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)

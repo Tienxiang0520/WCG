@@ -75,15 +75,13 @@ else
                     @if (Profile.Result is { } last)
                     { <p class="ranked-last @(last.Won ? "won" : "lost")">@L["上一場："]@L[last.Won ? "勝利 ＋1 星" : last.After == last.Before ? "敗北 · 牌位保護" : "敗北 －1 星"]@(Profile.Match is { } previous && previous.Id == last.MatchId ? " · " + L.F("對手 {0}", L.DeckName(previous.ComputerDeck)) : "")</p> }
                     <div class="wcg-field"><label for="ranked-deck">@L["出戰牌組"]</label>
-                    <select id="ranked-deck" class="form-select" @bind="SelectedDeck">
-                        @foreach (var deck in Available) { <option value="@deck.Id" disabled="@(!deck.IsValid(Cards.GetCard, out _))">@L.DeckName(deck)</option> }
-                    </select></div>
+                    <DeckPicker Id="ranked-deck" Label="@L["出戰牌組"]" Decks="Available" @bind-Value="SelectedDeck" /></div>
                     <div class="ranked-intel">
                         <p class="ranked-intel-title"><span class="tier-tag">@L[RankedRules.Tiers[RankedRules.Tier(Profile.Stars)]]</span>@L["對手情報"]</p>
                         <p>@L.Text(RankedDecks.Strategy(RankedRules.Tier(Profile.Stars)))</p>
                         <p class="ranked-help">@L["本牌位對手池："]@OpponentSummary(RankedRules.Tier(Profile.Stars))</p>
                     </div>
-                    <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Start"><Icon Name="swords" Size="18" />@L["開始天梯對戰"]</button>
+                    <button class="btn btn-primary btn-lg" data-sfx="matchFound" disabled="@(!Interactive || Busy || Ranked.Error != "" || !Available.Any(d => d.Id == SelectedDeck && d.IsValid(Cards.GetCard, out _)))" @onclick="Start"><Icon Name="swords" Size="18" />@L["開始天梯對戰"]</button>
                     <p class="ranked-help">@L["先後手隨機；對手由同牌位牌組池抽選，不會連續遇到同一流派，每場另隨機微調 0～2 組卡牌。"]</p>
                 }
             </section>
@@ -223,8 +221,8 @@ else
     private string SeasonEnd => DateTime.TryParse(Profile.Season + "-01", out var date) ? date.AddMonths(1).ToString("MM/dd 00:00") : "—";
     protected override void OnInitialized()
     {
-        Profile = Ranked.Read(); Available = Decks.GetAllAvailableDecks();
-        SelectedDeck = Available.Any(d => d.Id == Profile.SelectedDeck) ? Profile.SelectedDeck : Cards.PresetDecks[0].Id;
+        Profile = Ranked.Read(); Available = Decks.GetPlayerDecks();
+        SelectedDeck = Available.Any(d => d.Id == Profile.SelectedDeck) ? Profile.SelectedDeck : Available.FirstOrDefault()?.Id ?? "";
         Notice = Decks.LastStorageError ?? "";
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)

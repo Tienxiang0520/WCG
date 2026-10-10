@@ -71,6 +71,38 @@ public partial class DeckService
         lock (_gate) return Read().Select(Copy).ToList();
     }
 
+    // Only a genuinely new save gets a starter. Empty/deleted or unreadable saves are left intact.
+    public List<Deck> GetPlayerDecks()
+    {
+        lock (_gate)
+        {
+            var decks = Read();
+            if (lastRead != null || LastStorageError != null) return decks.Select(Copy).ToList();
+            var starter = CreateStarterDeck();
+            try
+            {
+                if (!starter.IsValid(_cardDb.GetCard, out var error)) throw new InvalidOperationException(error);
+                starter.Version = 1;
+                Write([starter]);
+                return [Copy(starter)];
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+            {
+                LastStorageError = $"入門牌組儲存失敗，原資料保留：{ex.Message}";
+                return [];
+            }
+        }
+    }
+
+    public static Deck CreateStarterDeck() => new()
+    {
+        Name = "我的入門牌組",
+        Description = "以普通怪物、抽牌與簡單法術練習出牌和交戰，可自由修改。",
+        MainWill = "狂怒",
+        CardIds = new[] { "101", "103", "106", "110", "003", "114", "116", "015", "007", "109", "121", "012", "014" }
+            .SelectMany((id, index) => Enumerable.Repeat($"WCG-{id}", index < 11 ? 4 : 3)).ToList()
+    };
+
     public IReadOnlyList<Deck> GetReferenceDecks() => ReferenceTemplates.Select(Copy).ToArray();
 
     public List<Deck> GetAllAvailableDecks() =>

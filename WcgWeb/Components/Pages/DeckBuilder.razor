@@ -112,7 +112,10 @@
                 </div>
             </div>
             @* Phones stack the deck under 199 cards: this pill sticks to the screen bottom while browsing the catalog and stops above the deck panel. *@
-            <a class="deck-jump @(CurrentDeck.CardIds.Count == 50 ? "complete" : "")" href="deckbuilder#deck-panel" aria-label="@L.F("跳到編輯牌組，目前 {0} / 50 張", CurrentDeck.CardIds.Count)"><WcgWeb.Components.Common.Icon Name="cards" Size="16" />@L["牌組"] <b>@CurrentDeck.CardIds.Count</b>/50</a>
+            @if (!ShowDeckSelectModal && Inspect == null && PrintPlan == null)
+            {
+                <a class="deck-jump @(CurrentDeck.CardIds.Count == 50 ? "complete" : "")" href="deckbuilder#deck-panel" aria-label="@L.F("跳到編輯牌組，目前 {0} / 50 張", CurrentDeck.CardIds.Count)"><WcgWeb.Components.Common.Icon Name="cards" Size="16" />@L["牌組"] <b>@CurrentDeck.CardIds.Count</b>/50</a>
+            }
         </div>
 
         <!-- Right Column: Current Deck Builder & Stats -->
@@ -265,14 +268,61 @@
     <!-- Deck Selection Modal -->
     @if (ShowDeckSelectModal)
     {
-        <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.8); z-index: 1060;">
+        <div class="modal fade show d-block deck-library-modal" tabindex="-1" role="dialog" aria-modal="true" aria-label="@L["選擇要編輯或載入的牌組"]" style="background: rgba(0, 0, 0, 0.8); z-index: 1060;">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark text-white border-secondary shadow-lg">
                     <div class="modal-header border-secondary">
                         <h5 class="modal-title">@L["選擇要編輯或載入的牌組"]</h5>
                         <button type="button" class="btn-close btn-close-white" @onclick="() => ShowDeckSelectModal = false"></button>
                     </div>
-                    <div class="modal-body p-4" style="max-height: 70vh; overflow-y: auto;">
+                    <div class="modal-body p-4">
+                        <!-- 2. Custom Decks -->
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <WcgWeb.Components.Common.Icon Name="cards" Size="18" Class="text-info" />
+                                <h5 class="text-info fw-bold mb-0">@L["我的自訂牌組"]</h5>
+                                <span class="badge bg-info text-dark">@L.F("{0} 套", DeckSvc.GetCustomDecks().Count)</span>
+                            </div>
+                            <button class="btn btn-sm btn-outline-success fw-bold" @onclick="() => { CreateNewDeck(); ShowDeckSelectModal = false; }">
+                                <WcgWeb.Components.Common.Icon Name="plus" Size="14" />@L["建立全新空白牌組"]
+                            </button>
+                        </div>
+
+                        @if (DeckSvc.GetCustomDecks().Count == 0)
+                        {
+                            <div class="p-4 text-center text-muted bg-secondary bg-opacity-10 rounded border border-secondary">
+                                <h6>@L["尚無儲存的自訂牌組"]</h6>
+                                <p class="small mb-0">@L["可建立空白牌組，或複製下方牌組，儲存後即可出戰。"]</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row g-3">
+                                @foreach (var cd in DeckSvc.GetCustomDecks())
+                                {
+                                    <div class="col-md-6">
+                                        <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
+                                            <div>
+                                                <div class="fw-bold text-light fs-6 mb-1">@L.Text(cd.Name)</div>
+                                                <div class="text-white-50 small mb-1">
+                                                    @L.F("包含 {0} 張卡牌", cd.CardIds.Count)
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-end gap-2 mt-2 pt-2 border-top border-secondary">
+                                                <button class="btn btn-sm btn-outline-danger px-2" title="@L["刪除此牌組"]" @onclick="() => DeleteCustomDeck(cd.Id, cd.Version)">
+                                                    <WcgWeb.Components.Common.Icon Name="trash" Size="14" />@L["刪除"]
+                                                </button>
+                                                <button class="btn btn-sm btn-primary fw-bold px-3" @onclick="() => { LoadCustomDeck(cd); ShowDeckSelectModal = false; }">
+                                                    @L["載入編輯"]
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <hr class="border-secondary my-4" />
                         <!-- 1. Official Presets -->
                         <div class="d-flex align-items-center gap-2 mb-3">
                             <WcgWeb.Components.Common.Icon Name="star" Size="18" Class="text-warning" />
@@ -303,7 +353,7 @@
 
                         <details class="mb-4 reference-decks">
                             <summary class="text-info fw-bold">@L.F("競技流派參考牌組（{0} 套）", DeckSvc.GetReferenceDecks().Count)</summary>
-                            <p class="text-white-50 small mt-2">@L["使用完整牌表，可直接試玩，也可複製後修改與列印；儲存時會建立自己的牌組。"]</p>
+                            <p class="text-white-50 small mt-2">@L["複製後可修改與列印；儲存成自訂牌組後即可出戰。"]</p>
                             <div class="row g-3">
                                 @foreach (var reference in DeckSvc.GetReferenceDecks())
                                 {
@@ -318,51 +368,6 @@
                             </div>
                         </details>
 
-                        <!-- 2. Custom Decks -->
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="d-flex align-items-center gap-2">
-                                <WcgWeb.Components.Common.Icon Name="cards" Size="18" Class="text-info" />
-                                <h5 class="text-info fw-bold mb-0">@L["我的自訂牌組"]</h5>
-                                <span class="badge bg-info text-dark">@L.F("{0} 套", DeckSvc.GetCustomDecks().Count)</span>
-                            </div>
-                            <button class="btn btn-sm btn-outline-success fw-bold" @onclick="() => { CreateNewDeck(); ShowDeckSelectModal = false; }">
-                                <WcgWeb.Components.Common.Icon Name="plus" Size="14" />@L["建立全新空白牌組"]
-                            </button>
-                        </div>
-
-                        @if (DeckSvc.GetCustomDecks().Count == 0)
-                        {
-                            <div class="p-4 text-center text-muted bg-secondary bg-opacity-10 rounded border border-secondary">
-                                <h6>@L["尚無儲存的自訂牌組"]</h6>
-                                <p class="small mb-0">@L["你可以點擊上方「複製並載入編輯」官方牌組，進行自訂調整並儲存！"]</p>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="row g-3">
-                                @foreach (var cd in DeckSvc.GetCustomDecks())
-                                {
-                                    <div class="col-md-6">
-                                        <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
-                                            <div>
-                                                <div class="fw-bold text-light fs-6 mb-1">@L.Text(cd.Name)</div>
-                                                <div class="text-white-50 small mb-1">
-                                                    @L.F("包含 {0} 張卡牌", cd.CardIds.Count)
-                                                </div>
-                                            </div>
-                                            <div class="d-flex justify-content-end gap-2 mt-2 pt-2 border-top border-secondary">
-                                                <button class="btn btn-sm btn-outline-danger px-2" title="@L["刪除此牌組"]" @onclick="() => DeleteCustomDeck(cd.Id, cd.Version)">
-                                                    <WcgWeb.Components.Common.Icon Name="trash" Size="14" />@L["刪除"]
-                                                </button>
-                                                <button class="btn btn-sm btn-primary fw-bold px-3" @onclick="() => { LoadCustomDeck(cd); ShowDeckSelectModal = false; }">
-                                                    @L["載入編輯"]
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        }
                     </div>
                     <div class="modal-footer border-secondary">
                         <button type="button" class="btn btn-secondary px-4" @onclick="() => ShowDeckSelectModal = false">@L["關閉"]</button>
