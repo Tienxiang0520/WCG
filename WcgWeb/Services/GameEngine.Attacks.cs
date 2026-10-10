@@ -62,7 +62,13 @@ public partial class GameEngine
         Ask(p,"玩家被宣告攻擊，可翻開1張蓋牌",sets.Select(x=>new ChoiceOption{Id=x.InstanceId.ToString(),Title=$"翻開第{x.Slot+1}格蓋牌"}).Append(new(){Id="SKIP",Title="不翻開"}),o=>
         {
             if(o.Id=="SKIP")return;var m=sets.First(x=>x.InstanceId.ToString()==o.Id);p.Structures.Remove(m);var c=new CardInstance(m.Card){InstanceId=m.InstanceId};p.Graveyard.Add(c);
-            Present("reveal",p,c.InstanceId,card:c.Card,label:"翻開蓋牌");if(!c.Card.IsCounter||!CanPayCost(p,c.Card,out var payment))return;
+            if(!c.Card.IsCounter){Present("reveal",p,c.InstanceId,card:c.Card,label:"翻開蓋牌");return;}
+            if(!CanPayCost(p,c.Card,out var payment))
+            {
+                var label=$"費用不足，反擊未發動（需要 {ActualCost(p,c.Card)}，可用 {p.AvailableEnergy}）；蓋牌已送墓地。";
+                Present("reveal",p,c.InstanceId,card:c.Card,label:label);Log(label,"action");return;
+            }
+            Present("reveal",p,c.InstanceId,card:c.Card,label:"翻開蓋牌");
             foreach(var x in payment)x.IsTapped=true;var e=GetOpponent(p);var power=attacker.CurrentPP;
             switch(c.Card.Id)
             {

@@ -24,6 +24,39 @@ public class BattleBridgeTests
         new(Guid.NewGuid(),engine.MatchId,engine.Revision,type,id,target,option);
     CardInstance Hand(string id){var c=new CardInstance(db.GetCard(id)!);engine.Player.Hand.Add(c);return c;}
     void Energy(){for(int i=0;i<12;i++)engine.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));}
+    [Theory][InlineData(0)][InlineData(1)][InlineData(2)]
+    public void CounterRevealReportsInsufficientEnergyWithoutChangingResolution(int available)
+    {
+        Assert.True(engine.EndTurn());
+        var attacker=Field(engine.Computer,"WCG-101");
+        var counter=new MonsterInstance(db.GetCard("WCG-199")!){IsSet=true,Slot=0};
+        engine.Player.Structures.Add(counter);
+        for(int i=0;i<3;i++)engine.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!){IsTapped=i>=available});
+        Assert.True(engine.Attack(engine.Computer,attacker));
+        var result=bridge.Submit(Cmd("choice",option:counter.InstanceId.ToString()));
+        Assert.True(result.Success);
+        Assert.Empty(engine.Player.Structures);
+        Assert.Single(engine.Player.Graveyard,c=>c.InstanceId==counter.InstanceId);
+        var reveal=Assert.Single(result.Events,e=>e.Type=="reveal");
+        if(available<2)
+        {
+            var message=$"費用不足，反擊未發動（需要 2，可用 {available}）；蓋牌已送墓地。";
+            Assert.Equal(message,reveal.Label);
+            Assert.Equal("WCG-199",reveal.Card!.CardId);
+            Assert.Contains(engine.Logs,l=>l.Message==message);
+            Assert.False(LocalizationCatalog.HasHan(LocalizationCatalog.Translate(message)));
+            Assert.Contains(attacker,engine.Computer.Field);
+            Assert.Equal(7-attacker.CurrentDP,engine.Player.Hp);
+            Assert.Equal(available,engine.Player.AvailableEnergy);
+        }
+        else
+        {
+            Assert.Equal("翻開蓋牌",reveal.Label);
+            Assert.DoesNotContain(attacker,engine.Computer.Field);
+            Assert.Equal(7,engine.Player.Hp);
+            Assert.Equal(0,engine.Player.AvailableEnergy);
+        }
+    }
     [Fact] public void DirectSpellTargetsRejectFriendlyAndStealthWithoutSpendingThenResolveEnemy()
     {
         Energy();var card=Hand("WCG-026");var own=Field(engine.Player,"WCG-101");
