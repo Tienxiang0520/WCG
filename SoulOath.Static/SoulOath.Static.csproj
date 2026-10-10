@@ -1,18 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+  <Import Project="../build/Wcg.SharedResources.props" />
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>WcgWeb</RootNamespace><PublishTrimmed>false</PublishTrimmed><JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault><OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="../WcgWeb/Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
-    <EmbeddedResource Include="../WcgWeb/Data/balance-before-arrow-cards.json" LogicalName="WcgWeb.Balance.BeforeArrowCards" />
-    <EmbeddedResource Include="../WcgWeb/Data/balance-before-card-text.json" LogicalName="WcgWeb.Balance.BeforeCardText" />
-    <EmbeddedResource Include="../WcgWeb/Data/balance-before-diversity.json" LogicalName="WcgWeb.Balance.BeforeDiversity" />
-    <EmbeddedResource Include="../WcgWeb/i18n/en.json" LogicalName="WcgWeb.I18n.en.json" />
-    <EmbeddedResource Include="../WcgWeb/i18n/cards.en.json" LogicalName="WcgWeb.I18n.cards.en.json" WithCulture="false" />
-    <EmbeddedResource Include="../WcgWeb/i18n/decks.en.json" LogicalName="WcgWeb.I18n.decks.en.json" WithCulture="false" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.12" PrivateAssets="all" />
+    <Compile Include="../WcgWeb/Components/Pages/DeckBuilder.razor.cs" Link="Components/Pages/DeckBuilder.razor.cs" />
     <Compile Include="../WcgWeb/Models/**/*.cs" Link="Models/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../WcgWeb/Services/**/*.cs" Exclude="../WcgWeb/Services/Hosting/**/*.cs" Link="Services/Shared/%(RecursiveDir)%(Filename)%(Extension)" />
     <RazorComponent Include="../WcgWeb/Components/**/*.razor"

@@ -10,11 +10,13 @@ public sealed partial class RankedDecks
     public record Entry(int Tier, Deck Deck, string Archetype = "", List<Variant>? Variants = null);
     public const int MaxVariantsPerMatch = 2;
     public IReadOnlyList<Entry> All { get; }
+    private readonly IReadOnlyList<Entry>[] pools;
     private readonly Func<string, CardDefinition?> getCard;
     public RankedDecks(CardDatabase cards, string json)
     {
         getCard = cards.GetCard;
-        All = JsonSerializer.Deserialize<List<Entry>>(json) ?? throw new InvalidDataException("天梯牌組資料為空。");
+        var entries = JsonSerializer.Deserialize<List<Entry>>(json) ?? throw new InvalidDataException("天梯牌組資料為空。");
+        All = entries.AsReadOnly();
         if (All.Select(e => e.Deck.Id).Distinct().Count() != All.Count) throw new InvalidDataException("天梯牌組 ID 重複。");
         foreach (var entry in All)
         {
@@ -24,9 +26,13 @@ public sealed partial class RankedDecks
                 if (Apply(entry.Deck, variant) is not { } changed || !IsLegal(changed, out _))
                     throw new InvalidDataException($"天梯牌組微調不合法：{entry.Deck.Name} / {variant.Name}");
         }
-        if (Enumerable.Range(0, 6).Any(t => All.Count(e => e.Tier == t) < 5)) throw new InvalidDataException("各牌位須至少五套對手牌組。");
+        // Preserve file order: seeded picks and their random call sequence depend on it.
+        pools = Enumerable.Range(0, 6)
+            .Select(t => (IReadOnlyList<Entry>)Array.AsReadOnly(entries.Where(e => e.Tier == t).ToArray()))
+            .ToArray();
+        if (pools.Any(pool => pool.Count < 5)) throw new InvalidDataException("各牌位須至少五套對手牌組。");
         // Archetypes are gated to specific tiers by the generator; every tier must still face all five wills.
-        if (Enumerable.Range(0, 6).Any(t => All.Where(e => e.Tier == t).Select(e => e.Deck.MainWill).Distinct().Count() < 5))
+        if (pools.Any(pool => pool.Select(e => e.Deck.MainWill).Distinct().Count() < 5))
             throw new InvalidDataException("各牌位對手須涵蓋五種意志。");
     }
     // Deck.Validate covers size, copies and factions; ranked data also keeps the off-color limit from 規則.md.
@@ -36,7 +42,7 @@ public sealed partial class RankedDecks
         if (deck.GetColorCounts(getCard).OffColor > Deck.MaxOffColorCards) { error = $"混色超過 {Deck.MaxOffColorCards} 張"; return false; }
         return true;
     }
-    public IReadOnlyList<Entry> Pool(int tier) => All.Where(e => e.Tier == tier).ToArray();
+    public IReadOnlyList<Entry> Pool(int tier) => tier >= 0 && tier < pools.Length ? pools[tier] : [];
     public Deck Pick(int tier, Random random, string? avoidDeckId = null)
     {
         var pool = Pool(tier);

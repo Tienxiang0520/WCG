@@ -58,11 +58,12 @@ public sealed class LocalizationTests
         }
     }
 
-    // Every literal handed to L[...], L.F(...) or L.Text(...) in the components that ship in both builds.
-    [Fact] public void EveryRazorLiteralIsTranslated()
+    // Include code-behind files so moving component logic does not reduce translation coverage.
+    [Fact] public void EveryComponentLiteralIsTranslated()
     {
         var files = new[] { "WcgWeb/Components", "SoulOath.Static/Components" }
-            .SelectMany(d => Directory.EnumerateFiles(Path.Combine(Repo, d), "*.razor", SearchOption.AllDirectories))
+            .SelectMany(d => Directory.EnumerateFiles(Path.Combine(Repo, d), "*", SearchOption.AllDirectories))
+            .Where(f => f.EndsWith(".razor", StringComparison.Ordinal) || f.EndsWith(".razor.cs", StringComparison.Ordinal))
             .Where(f => !f.EndsWith("Home.razor") && !f.EndsWith("BattleLab.razor")).ToList();
         Assert.True(files.Count > 20);
         var call = new Regex(@"\bL(?:\[|\.F\(|\.Text\()");

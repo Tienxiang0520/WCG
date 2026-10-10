@@ -30,4 +30,30 @@ public class DiversityBalanceTests
         var reference=decks.GetReferenceDecks()[0];Assert.Throws<ArgumentException>(()=>decks.SaveDeck(reference));Assert.Equal(0,storage.Writes);
         reference.Id=Guid.NewGuid().ToString();decks.SaveDeck(reference);Assert.Equal(1,storage.Writes);Assert.Single(decks.GetCustomDecks());Assert.Equal(30,decks.GetReferenceDecks().Count);
     }
+
+    [Fact] public void LookupReturnsIndependentCopiesAndKeepsCustomDeckPriority()
+    {
+        var cards = Cards();
+        var ranked = new RankedDecks(cards, File.ReadAllText(Path.Combine(Root, "Data/ranked_decks.json")));
+        var storage = new MemoryStorage();
+        var reference = ranked.Pool(5)[0].Deck;
+        var custom = DeckService.Copy(reference);
+        custom.Name = "玩家自己的名字";
+        // Existing saves can contain this ID. Lookup must retain its previous custom-first ordering.
+        storage.Values["decks"] = JsonSerializer.Serialize(new[] { custom });
+        var decks = new DeckService(cards, storage, ranked);
+
+        foreach (var source in new[] { custom, cards.PresetDecks[0], ranked.Pool(5)[1].Deck })
+        {
+            var copy = decks.GetDeck(source.Id)!;
+            Assert.Equal(source.Name, copy.Name);
+            copy.CardIds.Clear();
+            copy.Name = "暫時修改";
+            Assert.Equal(50, decks.GetDeck(source.Id)!.CardIds.Count);
+            Assert.Equal(source.Name, decks.GetDeck(source.Id)!.Name);
+        }
+        Assert.Null(decks.GetDeck("missing-deck"));
+        Assert.Equal(0, storage.Writes);
+        Assert.Equal(50, reference.CardIds.Count);
+    }
 }

@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-10",
+  "baselineCommit": "4174671",
+  "checks": {
+    "CardFingerprint": {
+      "before": "88C0C870C9CC1E0CEA81399269174E23D1A1E7649EA41F6BB91DCAE57EABA187",
+      "after": "88C0C870C9CC1E0CEA81399269174E23D1A1E7649EA41F6BB91DCAE57EABA187"
+    },
+    "PickFingerprint": {
+      "before": "198F1B622A29D3679725B6F292060FC11ED8B61B551A0D05151EA2F79221CC59",
+      "after": "198F1B622A29D3679725B6F292060FC11ED8B61B551A0D05151EA2F79221CC59"
+    },
+    "Resources": {
+      "before": [
+        "WcgWeb.Balance.BeforeArrowCards",
+        "WcgWeb.Balance.BeforeCardText",
+        "WcgWeb.Balance.BeforeDiversity",
+        "WcgWeb.Balance.BeforeUnlimitedFactionTriggers",
+        "WcgWeb.I18n.cards.en.json",
+        "WcgWeb.I18n.decks.en.json",
+        "WcgWeb.I18n.en.json"
+      ],
+      "after": [
+        "WcgWeb.Balance.BeforeArrowCards",
+        "WcgWeb.Balance.BeforeCardText",
+        "WcgWeb.Balance.BeforeDiversity",
+        "WcgWeb.Balance.BeforeUnlimitedFactionTriggers",
+        "WcgWeb.I18n.cards.en.json",
+        "WcgWeb.I18n.decks.en.json",
+        "WcgWeb.I18n.en.json"
+      ]
+    }
+  },
+  "lookupProbe": {
+    "policy": "Desktop .NET 10 Release, empty custom storage, last master reference deck; 200 warmup calls, 2000 measured calls. Single-run diagnostics, not browser or network performance. No player storage writes.",
+    "before": {
+      "Calls": 2000,
+      "AllocatedBytes": 73040040,
+      "Milliseconds": 82.0509
+    },
+    "after": {
+      "Calls": 2000,
+      "AllocatedBytes": 3024040,
+      "Milliseconds": 9.0565
+    }
+  }
+}

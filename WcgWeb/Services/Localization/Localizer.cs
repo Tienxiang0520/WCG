@@ -1,6 +1,5 @@
 using System.Collections.Concurrent;
 using System.Globalization;
-using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -86,7 +85,7 @@ public sealed class Localizer : IDisposable
     public string DeckDescription(Deck? deck) => deck == null ? "" : IsEnglish ? LocalizationCatalog.DeckDescription(deck.Id, deck.Description) : deck.Description;
 }
 
-public static class LocalizationCatalog
+public static partial class LocalizationCatalog
 {
     private sealed record CardEntry(string Name, string Text);
     private sealed record DeckEntry(string Name, string Description, string ZhName, string ZhDescription);
@@ -141,10 +140,10 @@ public static class LocalizationCatalog
         // Keys with {0}, {1}… also match run-time text such as engine logs; longer fixed text wins.
         foreach (var (key, value) in result.Ui)
         {
-            if (!Hole.IsMatch(key)) continue;
-            var parts = Hole.Split(key);
+            if (!Hole().IsMatch(key)) continue;
+            var parts = Hole().Split(key);
             if (parts.All(p => p.Length == 0)) continue;
-            var pattern = "^" + Hole.Replace(Regex.Escape(key).Replace("\\{", "{"), "(.*?)") + "$";
+            var pattern = "^" + Hole().Replace(Regex.Escape(key).Replace("\\{", "{"), "(.*?)") + "$";
             result.Templates.Add(new(new Regex(pattern, RegexOptions.CultureInvariant | RegexOptions.Singleline), value, parts.Sum(p => p.Length)));
         }
         result.Templates.Sort((a, b) => b.Weight.CompareTo(a.Weight));
@@ -155,7 +154,8 @@ public static class LocalizationCatalog
         var s = text.IndexOf(start, StringComparison.Ordinal); if (s >= 0) text = text[(s + start.Length)..];
         var e = text.IndexOf(end, StringComparison.Ordinal); return e > 0 ? text[..e] : text;
     }
-    private static readonly Regex Hole = new(@"\{(\d+)\}", RegexOptions.CultureInvariant);
+    [GeneratedRegex(@"\{(\d+)\}", RegexOptions.CultureInvariant)]
+    private static partial Regex Hole();
 
     public static string CardName(string id, string zhName) => data.Value.Cards.TryGetValue(id, out var c) && c.Name != "" ? c.Name : Translate(zhName);
     public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != "" ? c.Text : Translate(zhText);

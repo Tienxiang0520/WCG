@@ -21,7 +21,7 @@ public class CardTextClarityTests
     public CardTextClarityTests(){root=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb"));var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(root);cards=new(env.Object);}
     // Old ranked matches replay with LegacyCardRules; tests switch it on the same way UseMatchCatalog does.
     public static bool IsLegacy(GameEngine g)=>(bool)typeof(GameEngine).GetProperty("LegacyCardRules",BindingFlags.NonPublic|BindingFlags.Instance)!.GetValue(g)!;
-    public static void Legacy(GameEngine g)=>typeof(GameEngine).GetProperty("LegacyCardRules",BindingFlags.NonPublic|BindingFlags.Instance)!.SetValue(g,true);
+    internal static void Legacy(GameEngine g)=>typeof(GameEngine).GetProperty("LegacyCardRules",BindingFlags.NonPublic|BindingFlags.Instance)!.SetValue(g,true);
     private GameEngine Game(bool legacy=false){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);if(legacy)Legacy(g);g.Player.Hand.Clear();g.Computer.Hand.Clear();g.Player.Field.Clear();g.Computer.Field.Clear();for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));return g;}
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private MonsterInstance Unit(PlayerState p,int n,int slot){var m=new MonsterInstance(cards.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
