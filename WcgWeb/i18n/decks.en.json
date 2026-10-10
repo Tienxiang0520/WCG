@@ -79,9 +79,9 @@
  },
  "RANKED-0-ABYSS-SOULFEAST": {
   "zhName": "深淵・噬魂獻祭（連動）",
-  "zhDescription": "死靈術士與萬魂之井把犧牲換成手牌，守夜人同步鎖住對手能量。",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
   "name": "Abyss · Soul-Eating Offering (Combo)",
-  "description": "The Necromancer and the Well of Myriad Souls turn sacrifices into cards while the Nightwatch locks down enemy energy."
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-1-WRATH-BLITZ": {
   "zhName": "狂怒・燃血突擊（快攻）",
@@ -151,9 +151,9 @@
  },
  "RANKED-1-ABYSS-SOULFEAST": {
   "zhName": "深淵・噬魂獻祭（連動）",
-  "zhDescription": "死靈術士與萬魂之井把犧牲換成手牌，守夜人同步鎖住對手能量。",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
   "name": "Abyss · Soul-Eating Offering (Combo)",
-  "description": "The Necromancer and the Well of Myriad Souls turn sacrifices into cards while the Nightwatch locks down enemy energy."
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-1-ABYSS-AMBUSH": {
   "zhName": "深淵・深淵伏擊（快攻）",
@@ -235,9 +235,9 @@
  },
  "RANKED-2-ABYSS-SOULFEAST": {
   "zhName": "深淵・噬魂獻祭（連動）",
-  "zhDescription": "死靈術士與萬魂之井把犧牲換成手牌，守夜人同步鎖住對手能量。",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
   "name": "Abyss · Soul-Eating Offering (Combo)",
-  "description": "The Necromancer and the Well of Myriad Souls turn sacrifices into cards while the Nightwatch locks down enemy energy."
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-2-ABYSS-AMBUSH": {
   "zhName": "深淵・深淵伏擊（快攻）",
@@ -478,5 +478,371 @@
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
   "name": "Abyss · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
+ },
+ "RANKED-0-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-0-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-1-WRATH-REKINDLE": {
+  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
+  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
+ },
+ "RANKED-1-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-1-REASON-ECHO": {
+  "zhName": "理智・回音法陣（結界）",
+  "zhDescription": "回音塔循環低費法術，樞紐守衛解場、符文巨像逐步進攻。",
+  "name": "Reason · Echo Circle (Wards)",
+  "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
+ },
+ "RANKED-1-VITAL-ROOTS": {
+  "zhName": "生機・根鬚覺醒（能量）",
+  "zhDescription": "滋養與根鬚加速巨獸登場，再用轉直立效果連續進攻。",
+  "name": "Life · Awakened Roots (Ramp)",
+  "description": "Nourishment and Roots accelerate large monsters; untap effects let them attack again."
+ },
+ "RANKED-1-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-1-ORDER-EXPEDITION": {
+  "zhName": "秩序・聖光遠征（進攻）",
+  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "name": "Order · Radiant Expedition (Offense)",
+  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+ },
+ "RANKED-1-ABYSS-LOWLIFE": {
+  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
+  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
+ },
+ "RANKED-2-WRATH-REKINDLE": {
+  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
+  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
+ },
+ "RANKED-2-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-2-REASON-ECHO": {
+  "zhName": "理智・回音法陣（結界）",
+  "zhDescription": "回音塔循環低費法術，樞紐守衛解場、符文巨像逐步進攻。",
+  "name": "Reason · Echo Circle (Wards)",
+  "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
+ },
+ "RANKED-2-REASON-TIME": {
+  "zhName": "理智・時空突擊（連擊）",
+  "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
+  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
+ },
+ "RANKED-2-VITAL-ROOTS": {
+  "zhName": "生機・根鬚覺醒（能量）",
+  "zhDescription": "滋養與根鬚加速巨獸登場，再用轉直立效果連續進攻。",
+  "name": "Life · Awakened Roots (Ramp)",
+  "description": "Nourishment and Roots accelerate large monsters; untap effects let them attack again."
+ },
+ "RANKED-2-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-2-ORDER-EXPEDITION": {
+  "zhName": "秩序・聖光遠征（進攻）",
+  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "name": "Order · Radiant Expedition (Offense)",
+  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+ },
+ "RANKED-2-ORDER-PURIFY": {
+  "zhName": "秩序・淨化壁壘（驅散）",
+  "zhDescription": "壁壘抵擋法術傷害，驅邪工兵與破咒者拆除附著與結界。",
+  "name": "Order · Purifying Rampart (Dispel)",
+  "description": "The Rampart guards against spell damage; Sappers and Spellbreakers remove attachments and Wards."
+ },
+ "RANKED-2-ABYSS-PLAGUE": {
+  "zhName": "深淵・瘟疫復甦（清場）",
+  "zhDescription": "疫病與凋零重置場面，再由陣亡與復甦效果保留後續戰力。",
+  "name": "Abyss · Plague Revival (Board Clears)",
+  "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
+ },
+ "RANKED-2-ABYSS-LOWLIFE": {
+  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
+  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
+ },
+ "RANKED-3-REASON-ARCANE": {
+  "zhName": "理智・奧術控制（控制）",
+  "zhDescription": "質能瓦解與魔導樞紐守衛清場，抽牌堆出星穹領主。",
+  "name": "Reason · Arcane Control (Control)",
+  "description": "Mass Disruption and the Arcane Nexus Warden clear the board while card draw builds toward the Starvault Lord."
+ },
+ "RANKED-3-ABYSS-SOULFEAST": {
+  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
+  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
+ },
+ "RANKED-3-WRATH-REKINDLE": {
+  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
+  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
+ },
+ "RANKED-3-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-3-REASON-ECHO": {
+  "zhName": "理智・回音法陣（結界）",
+  "zhDescription": "回音塔循環低費法術，樞紐守衛解場、符文巨像逐步進攻。",
+  "name": "Reason · Echo Circle (Wards)",
+  "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
+ },
+ "RANKED-3-REASON-TIME": {
+  "zhName": "理智・時空突擊（連擊）",
+  "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
+  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
+ },
+ "RANKED-3-VITAL-ROOTS": {
+  "zhName": "生機・根鬚覺醒（能量）",
+  "zhDescription": "滋養與根鬚加速巨獸登場，再用轉直立效果連續進攻。",
+  "name": "Life · Awakened Roots (Ramp)",
+  "description": "Nourishment and Roots accelerate large monsters; untap effects let them attack again."
+ },
+ "RANKED-3-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-3-ORDER-EXPEDITION": {
+  "zhName": "秩序・聖光遠征（進攻）",
+  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "name": "Order · Radiant Expedition (Offense)",
+  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+ },
+ "RANKED-3-ORDER-PURIFY": {
+  "zhName": "秩序・淨化壁壘（驅散）",
+  "zhDescription": "壁壘抵擋法術傷害，驅邪工兵與破咒者拆除附著與結界。",
+  "name": "Order · Purifying Rampart (Dispel)",
+  "description": "The Rampart guards against spell damage; Sappers and Spellbreakers remove attachments and Wards."
+ },
+ "RANKED-3-ABYSS-PLAGUE": {
+  "zhName": "深淵・瘟疫復甦（清場）",
+  "zhDescription": "疫病與凋零重置場面，再由陣亡與復甦效果保留後續戰力。",
+  "name": "Abyss · Plague Revival (Board Clears)",
+  "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
+ },
+ "RANKED-3-ABYSS-LOWLIFE": {
+  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
+  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
+ },
+ "RANKED-4-REASON-ARCANE": {
+  "zhName": "理智・奧術控制（控制）",
+  "zhDescription": "質能瓦解與魔導樞紐守衛清場，抽牌堆出星穹領主。",
+  "name": "Reason · Arcane Control (Control)",
+  "description": "Mass Disruption and the Arcane Nexus Warden clear the board while card draw builds toward the Starvault Lord."
+ },
+ "RANKED-4-REASON-ORACLE": {
+  "zhName": "理智・占卜連鎖（連動）",
+  "zhDescription": "大量低費法術與學徒連鎖抽濾，讓符文巨像和樞紐守衛連續觸發。",
+  "name": "Reason · Divination Chain (Combo)",
+  "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
+ },
+ "RANKED-4-ABYSS-SOULFEAST": {
+  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
+  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
+ },
+ "RANKED-4-WRATH-REKINDLE": {
+  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
+  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
+ },
+ "RANKED-4-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-4-REASON-ECHO": {
+  "zhName": "理智・回音法陣（結界）",
+  "zhDescription": "回音塔循環低費法術，樞紐守衛解場、符文巨像逐步進攻。",
+  "name": "Reason · Echo Circle (Wards)",
+  "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
+ },
+ "RANKED-4-REASON-TIME": {
+  "zhName": "理智・時空突擊（連擊）",
+  "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
+  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
+ },
+ "RANKED-4-VITAL-ROOTS": {
+  "zhName": "生機・根鬚覺醒（能量）",
+  "zhDescription": "滋養與根鬚加速巨獸登場，再用轉直立效果連續進攻。",
+  "name": "Life · Awakened Roots (Ramp)",
+  "description": "Nourishment and Roots accelerate large monsters; untap effects let them attack again."
+ },
+ "RANKED-4-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-4-ORDER-EXPEDITION": {
+  "zhName": "秩序・聖光遠征（進攻）",
+  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "name": "Order · Radiant Expedition (Offense)",
+  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+ },
+ "RANKED-4-ORDER-PURIFY": {
+  "zhName": "秩序・淨化壁壘（驅散）",
+  "zhDescription": "壁壘抵擋法術傷害，驅邪工兵與破咒者拆除附著與結界。",
+  "name": "Order · Purifying Rampart (Dispel)",
+  "description": "The Rampart guards against spell damage; Sappers and Spellbreakers remove attachments and Wards."
+ },
+ "RANKED-4-ABYSS-PLAGUE": {
+  "zhName": "深淵・瘟疫復甦（清場）",
+  "zhDescription": "疫病與凋零重置場面，再由陣亡與復甦效果保留後續戰力。",
+  "name": "Abyss · Plague Revival (Board Clears)",
+  "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
+ },
+ "RANKED-4-ABYSS-LOWLIFE": {
+  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
+  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
+ },
+ "RANKED-5-WRATH-WARBAND": {
+  "zhName": "狂怒・戰鼓狂潮（中速）",
+  "zhDescription": "戰鼓手與百夫長堆疊狂怒戰團，靠點殺清出攻擊路線。",
+  "name": "Fury · War Drum Surge (Midrange)",
+  "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
+ },
+ "RANKED-5-WRATH-ASHFALL": {
+  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
+  "name": "Fury · Ashfall Chain (Combo)",
+  "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
+ },
+ "RANKED-5-REASON-ARCANE": {
+  "zhName": "理智・奧術控制（控制）",
+  "zhDescription": "質能瓦解與魔導樞紐守衛清場，抽牌堆出星穹領主。",
+  "name": "Reason · Arcane Control (Control)",
+  "description": "Mass Disruption and the Arcane Nexus Warden clear the board while card draw builds toward the Starvault Lord."
+ },
+ "RANKED-5-REASON-ORACLE": {
+  "zhName": "理智・占卜連鎖（連動）",
+  "zhDescription": "大量低費法術與學徒連鎖抽濾，讓符文巨像和樞紐守衛連續觸發。",
+  "name": "Reason · Divination Chain (Combo)",
+  "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
+ },
+ "RANKED-5-VITAL-SWARM": {
+  "zhName": "生機・森林鋪場（鋪場）",
+  "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
+  "name": "Life · Forest Swarm (Go-wide)",
+  "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
+ },
+ "RANKED-5-VITAL-STAMPEDE": {
+  "zhName": "生機・野性衝鋒（快攻）",
+  "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
+  "name": "Life · Wild Charge (Aggro)",
+  "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
+ },
+ "RANKED-5-ABYSS-SOULFEAST": {
+  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
+  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
+ },
+ "RANKED-5-WRATH-REKINDLE": {
+  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
+  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
+ },
+ "RANKED-5-WRATH-FORGE": {
+  "zhName": "狂怒・熔爐戰線（結界）",
+  "zhDescription": "熔火鍛爐清理小怪，血怒祭壇把交戰勝利轉為傷害。",
+  "name": "Fury · Forge Frontline (Wards)",
+  "description": "Molten Forge clears small monsters while Bloodrage Altar turns combat victories into damage."
+ },
+ "RANKED-5-REASON-ECHO": {
+  "zhName": "理智・回音法陣（結界）",
+  "zhDescription": "回音塔循環低費法術，樞紐守衛解場、符文巨像逐步進攻。",
+  "name": "Reason · Echo Circle (Wards)",
+  "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
+ },
+ "RANKED-5-REASON-TIME": {
+  "zhName": "理智・時空突擊（連擊）",
+  "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
+  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
+ },
+ "RANKED-5-VITAL-ROOTS": {
+  "zhName": "生機・根鬚覺醒（能量）",
+  "zhDescription": "滋養與根鬚加速巨獸登場，再用轉直立效果連續進攻。",
+  "name": "Life · Awakened Roots (Ramp)",
+  "description": "Nourishment and Roots accelerate large monsters; untap effects let them attack again."
+ },
+ "RANKED-5-VITAL-RECYCLE": {
+  "zhName": "生機・森靈回流（墓地）",
+  "zhDescription": "幼芽與殘破魔像回收小怪，巨蛋與喚獸師反覆重建戰線。",
+  "name": "Life · Forest Renewal (Graveyard)",
+  "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
+ },
+ "RANKED-5-ORDER-EXPEDITION": {
+  "zhName": "秩序・聖光遠征（進攻）",
+  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "name": "Order · Radiant Expedition (Offense)",
+  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+ },
+ "RANKED-5-ORDER-PURIFY": {
+  "zhName": "秩序・淨化壁壘（驅散）",
+  "zhDescription": "壁壘抵擋法術傷害，驅邪工兵與破咒者拆除附著與結界。",
+  "name": "Order · Purifying Rampart (Dispel)",
+  "description": "The Rampart guards against spell damage; Sappers and Spellbreakers remove attachments and Wards."
+ },
+ "RANKED-5-ABYSS-PLAGUE": {
+  "zhName": "深淵・瘟疫復甦（清場）",
+  "zhDescription": "疫病與凋零重置場面，再由陣亡與復甦效果保留後續戰力。",
+  "name": "Abyss · Plague Revival (Board Clears)",
+  "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
+ },
+ "RANKED-5-ABYSS-LOWLIFE": {
+  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
+  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  }
 }

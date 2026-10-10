@@ -10,7 +10,8 @@ builder.Services.AddRazorComponents()
     .AddHubOptions(options => options.MaximumReceiveMessageSize = 512 * 1024);
 
 builder.Services.AddSingleton<CardDatabase>();
-builder.Services.AddScoped<DeckService>();
+builder.Services.AddScoped<DeckService>(sp => new DeckService(sp.GetRequiredService<CardDatabase>(),
+    sp.GetRequiredService<IWebHostEnvironment>(), sp.GetRequiredService<RankedDecks>()));
 builder.Services.AddScoped<GameEngine>();
 builder.Services.AddScoped<BattleBridge>();
 builder.Services.AddScoped<BattleCoordinator>();

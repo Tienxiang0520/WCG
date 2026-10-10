@@ -1,0 +1,259 @@
+{
+  "date": "2026-10-10",
+  "baselineCommit": "50a37d0",
+  "policy": "Same AI for both sides, all unordered pairs, mirrored starting player and paired deterministic seeds. AI simulation, not human win rate; card/deck association is not causal.",
+  "decksSha256": "65527a5a7da8f25e22e9e75537273cfd8ad47fcb2cd26f0dd6386d3c3a5c76de",
+  "cardsSha256": "4a7670e0f884c9c92e87924d5cac1484508857e4ad03f1503552581b75e6d3fe",
+  "beforeCardsSha256": "74a9dbcdfd432694aec66fa58eaffc60c37659a62472f0297e1a198d4b516ef3",
+  "pairedSeeds": 32,
+  "seedBase": 900000,
+  "primaryAi": 5,
+  "gamesPerPrimaryRun": 27840,
+  "alternateAi": 3,
+  "alternateSeeds": 16,
+  "alternateGames": 13920,
+  "firstPlayerBefore": 0.6404094827586206,
+  "firstPlayerAfter": 0.6636494252873564,
+  "rows": [
+    {
+      "id": "RANKED-5-ORDER-VERDICT",
+      "name": "秩序・誓約審判（控制）",
+      "games": 1856,
+      "before": 0.7936,
+      "after": 0.6956,
+      "alternateAi3": 0.7004
+    },
+    {
+      "id": "RANKED-5-ABYSS-ASSASSIN",
+      "name": "深淵・暗影刺殺（控制）",
+      "games": 1856,
+      "before": 0.6956,
+      "after": 0.6703,
+      "alternateAi3": 0.6541
+    },
+    {
+      "id": "RANKED-5-VITAL-THORN",
+      "name": "生機・荊棘毒牙（中速）",
+      "games": 1856,
+      "before": 0.7645,
+      "after": 0.6676,
+      "alternateAi3": 0.6444
+    },
+    {
+      "id": "RANKED-5-ABYSS-PLAGUE",
+      "name": "深淵・瘟疫復甦（清場）",
+      "games": 1856,
+      "before": 0.5194,
+      "after": 0.6158,
+      "alternateAi3": 0.5162
+    },
+    {
+      "id": "RANKED-5-VITAL-BEHEMOTH",
+      "name": "生機・巨獸奔襲（巨獸）",
+      "games": 1856,
+      "before": 0.7117,
+      "after": 0.6045,
+      "alternateAi3": 0.6843
+    },
+    {
+      "id": "RANKED-5-WRATH-BLITZ",
+      "name": "狂怒・燃血突擊（快攻）",
+      "games": 1856,
+      "before": 0.5102,
+      "after": 0.5894,
+      "alternateAi3": 0.5819
+    },
+    {
+      "id": "RANKED-5-ORDER-EXPEDITION",
+      "name": "秩序・聖光遠征（進攻）",
+      "games": 1856,
+      "before": 0.5647,
+      "after": 0.5878,
+      "alternateAi3": 0.5603
+    },
+    {
+      "id": "RANKED-5-ORDER-RAMPART",
+      "name": "秩序・白銀長城（控制）",
+      "games": 1856,
+      "before": 0.6638,
+      "after": 0.5781,
+      "alternateAi3": 0.528
+    },
+    {
+      "id": "RANKED-5-ABYSS-REVENANT",
+      "name": "深淵・亡者交換（墓地）",
+      "games": 1856,
+      "before": 0.4639,
+      "after": 0.5776,
+      "alternateAi3": 0.486
+    },
+    {
+      "id": "RANKED-5-ORDER-AEGIS",
+      "name": "秩序・聖盾防線（防守）",
+      "games": 1856,
+      "before": 0.5776,
+      "after": 0.5668,
+      "alternateAi3": 0.4407
+    },
+    {
+      "id": "RANKED-5-ORDER-GROVE",
+      "name": "秩序・聖林守衛（中速）",
+      "games": 1856,
+      "before": 0.6277,
+      "after": 0.5593,
+      "alternateAi3": 0.7446
+    },
+    {
+      "id": "RANKED-5-ABYSS-AMBUSH",
+      "name": "深淵・深淵伏擊（快攻）",
+      "games": 1856,
+      "before": 0.4617,
+      "after": 0.5383,
+      "alternateAi3": 0.5259
+    },
+    {
+      "id": "RANKED-5-REASON-GLACIER",
+      "name": "理智・冰封堡壘（中速）",
+      "games": 1856,
+      "before": 0.5857,
+      "after": 0.5119,
+      "alternateAi3": 0.6681
+    },
+    {
+      "id": "RANKED-5-WRATH-ASHFALL",
+      "name": "狂怒・灰燼殉爆（連動）",
+      "games": 1856,
+      "before": 0.4278,
+      "after": 0.5054,
+      "alternateAi3": 0.5065
+    },
+    {
+      "id": "RANKED-5-REASON-FROST",
+      "name": "理智・霜焰節奏（節奏）",
+      "games": 1856,
+      "before": 0.4628,
+      "after": 0.5016,
+      "alternateAi3": 0.5108
+    },
+    {
+      "id": "RANKED-5-VITAL-ROOTS",
+      "name": "生機・根鬚覺醒（能量）",
+      "games": 1856,
+      "before": 0.6228,
+      "after": 0.4828,
+      "alternateAi3": 0.4472
+    },
+    {
+      "id": "RANKED-5-ORDER-PURIFY",
+      "name": "秩序・淨化壁壘（驅散）",
+      "games": 1856,
+      "before": 0.5393,
+      "after": 0.4801,
+      "alternateAi3": 0.4817
+    },
+    {
+      "id": "RANKED-5-ABYSS-SOULFEAST",
+      "name": "深淵・噬魂獻祭（連動）",
+      "games": 1856,
+      "before": 0.3427,
+      "after": 0.4461,
+      "alternateAi3": 0.4429
+    },
+    {
+      "id": "RANKED-5-VITAL-STAMPEDE",
+      "name": "生機・野性衝鋒（快攻）",
+      "games": 1856,
+      "before": 0.3772,
+      "after": 0.445,
+      "alternateAi3": 0.4332
+    },
+    {
+      "id": "RANKED-5-WRATH-WARBAND",
+      "name": "狂怒・戰鼓狂潮（中速）",
+      "games": 1856,
+      "before": 0.3411,
+      "after": 0.4343,
+      "alternateAi3": 0.4644
+    },
+    {
+      "id": "RANKED-5-WRATH-REKINDLE",
+      "name": "狂怒・復燃連擊（連擊）",
+      "games": 1856,
+      "before": 0.3448,
+      "after": 0.4289,
+      "alternateAi3": 0.3276
+    },
+    {
+      "id": "RANKED-5-REASON-TIME",
+      "name": "理智・時空突擊（連擊）",
+      "games": 1856,
+      "before": 0.3637,
+      "after": 0.424,
+      "alternateAi3": 0.4935
+    },
+    {
+      "id": "RANKED-5-WRATH-FORGE",
+      "name": "狂怒・熔爐戰線（結界）",
+      "games": 1856,
+      "before": 0.4203,
+      "after": 0.4138,
+      "alternateAi3": 0.3394
+    },
+    {
+      "id": "RANKED-5-REASON-ECHO",
+      "name": "理智・回音法陣（結界）",
+      "games": 1856,
+      "before": 0.4154,
+      "after": 0.3944,
+      "alternateAi3": 0.4591
+    },
+    {
+      "id": "RANKED-5-ABYSS-LOWLIFE",
+      "name": "深淵・殘血魔潮（殘血）",
+      "games": 1856,
+      "before": 0.3858,
+      "after": 0.3917,
+      "alternateAi3": 0.3265
+    },
+    {
+      "id": "RANKED-5-VITAL-SWARM",
+      "name": "生機・森林鋪場（鋪場）",
+      "games": 1856,
+      "before": 0.4504,
+      "after": 0.3874,
+      "alternateAi3": 0.3103
+    },
+    {
+      "id": "RANKED-5-WRATH-SCORCH",
+      "name": "狂怒・焦土控場（控制）",
+      "games": 1856,
+      "before": 0.4267,
+      "after": 0.3874,
+      "alternateAi3": 0.4925
+    },
+    {
+      "id": "RANKED-5-VITAL-RECYCLE",
+      "name": "生機・森靈回流（墓地）",
+      "games": 1856,
+      "before": 0.4768,
+      "after": 0.3804,
+      "alternateAi3": 0.3394
+    },
+    {
+      "id": "RANKED-5-REASON-ARCANE",
+      "name": "理智・奧術控制（控制）",
+      "games": 1856,
+      "before": 0.3798,
+      "after": 0.3755,
+      "alternateAi3": 0.4461
+    },
+    {
+      "id": "RANKED-5-REASON-ORACLE",
+      "name": "理智・占卜連鎖（連動）",
+      "games": 1856,
+      "before": 0.2823,
+      "after": 0.3583,
+      "alternateAi3": 0.444
+    }
+  ]
+}

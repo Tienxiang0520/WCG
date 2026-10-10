@@ -6,11 +6,12 @@ public partial class DeckService
 {
     private readonly CardDatabase _cardDb;
     private readonly IPlayerStorage _storage;
+    private readonly RankedDecks? _referenceDecks;
     private readonly object _gate;
     private string? lastRead;
     public string? LastStorageError { get; private set; }
-    public DeckService(CardDatabase cardDb, IPlayerStorage storage)
-    { _cardDb = cardDb; _storage = storage; _gate = storage.Gate; }
+    public DeckService(CardDatabase cardDb, IPlayerStorage storage, RankedDecks? referenceDecks = null)
+    { _cardDb = cardDb; _storage = storage; _gate = storage.Gate; _referenceDecks = referenceDecks; }
     private List<Deck> Read(bool strict = false)
     {
         try
@@ -39,13 +40,14 @@ public partial class DeckService
     }
     public static Deck Copy(Deck d) => new() { Id = d.Id, Name = d.Name, Description = d.Description, MainWill = d.MainWill, Version = d.Version, CardIds = new(d.CardIds) };
     public List<Deck> GetCustomDecks() { lock (_gate) return Read().Select(Copy).ToList(); }
-    public List<Deck> GetAllAvailableDecks() => GetCustomDecks().Concat(_cardDb.PresetDecks.Select(Copy)).ToList();
-    public Deck? GetDeck(string id) => GetCustomDecks().FirstOrDefault(d => d.Id == id) ?? _cardDb.PresetDecks.Where(d => d.Id == id).Select(Copy).FirstOrDefault();
+    public IReadOnlyList<Deck> GetReferenceDecks() => _referenceDecks?.Pool(5).Select(e => Copy(e.Deck)).ToArray() ?? [];
+    public List<Deck> GetAllAvailableDecks() => GetCustomDecks().Concat(_cardDb.PresetDecks.Select(Copy)).Concat(GetReferenceDecks()).ToList();
+    public Deck? GetDeck(string id) => GetCustomDecks().FirstOrDefault(d => d.Id == id) ?? _cardDb.PresetDecks.Where(d => d.Id == id).Select(Copy).FirstOrDefault() ?? GetReferenceDecks().FirstOrDefault(d => d.Id == id);
     public void SaveDeck(Deck deck)
     {
         if (string.IsNullOrWhiteSpace(deck.Id) || deck.Version < 0) throw new ArgumentException("牌組 ID 或版本不正確。");
         if (!deck.IsValid(_cardDb.GetCard, out var error)) throw new ArgumentException(error);
-        if (_cardDb.PresetDecks.Any(d => d.Id == deck.Id)) throw new ArgumentException("請複製預設牌組後另存。");
+        if (_cardDb.PresetDecks.Any(d => d.Id == deck.Id) || GetReferenceDecks().Any(d => d.Id == deck.Id)) throw new ArgumentException("請複製預設牌組後另存。");
         lock (_gate)
         {
             var decks = Read(true); var index = decks.FindIndex(d => d.Id == deck.Id);

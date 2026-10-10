@@ -1305,5 +1305,16 @@
  "選擇驅散或摧毀目標": "Choose a target to dispel or destroy",
  "不發動": "Don't activate",
  "離場傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury.",
- "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁離場再清場。": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board On Death."
+ "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁離場再清場。": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board On Death.",
+ "死靈術士與萬魂之井把犧牲換成手牌，守夜人同步鎖住對手能量。": "The Necromancer and the Well of Myriad Souls turn sacrifices into cards while the Nightwatch locks down enemy energy.",
+ "競技流派參考牌組（{0} 套）": "Competitive reference decks ({0})",
+ "使用完整牌表，可直接試玩，也可複製後修改與列印；儲存時會建立自己的牌組。": "Full decklists, ready to play. Copy to edit or print; saving creates your own deck.",
+ "連擊": "Repeated Attacks",
+ "進攻": "Offense",
+ "清場": "Board Clears",
+ "殘血": "Low Life",
+ "基礎電腦：照怪物優先順序出牌，偶爾失誤；節奏、巨獸、結界與回收流派加入": "Basic AI prioritizes monsters and occasionally makes mistakes; tempo, big-monster, Ward and recovery strategies join.",
+ "進階電腦：評估交換與目標、會用直傷斬殺；清場、驅散與連擊流派加入": "Advanced AI scores trades and targets and uses lethal burn; board clears, dispel and repeated-attack strategies join.",
+ "老練電腦：注意反撲、優先鋪場；抽牌、獻祭與鋪場保留完整主題": "Experienced AI considers retaliation and prioritizes board presence; draw, sacrifice and swarm strategies keep their themes.",
+ "大師電腦：幾乎不失誤、三步攻擊規劃、先解嘲諷再斬殺；30 個流派使用完整牌表，白銀長城、誓約審判、荊棘毒牙只在此出現": "Master AI makes almost no mistakes, plans three attacks ahead and clears Taunt before lethal; all 30 strategies use full lists, with Silver Rampart, Oath Verdict and Thornfang appearing only here."
 }

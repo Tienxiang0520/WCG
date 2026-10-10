@@ -301,6 +301,23 @@
 
                         <hr class="border-secondary my-4" />
 
+                        <details class="mb-4 reference-decks">
+                            <summary class="text-info fw-bold">@L.F("競技流派參考牌組（{0} 套）", DeckSvc.GetReferenceDecks().Count)</summary>
+                            <p class="text-white-50 small mt-2">@L["使用完整牌表，可直接試玩，也可複製後修改與列印；儲存時會建立自己的牌組。"]</p>
+                            <div class="row g-3">
+                                @foreach (var reference in DeckSvc.GetReferenceDecks())
+                                {
+                                    <div class="col-md-6">
+                                        <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3">
+                                            <strong>@L.DeckName(reference)</strong>
+                                            <p class="text-white-50 small mt-2">@L.DeckDescription(reference)</p>
+                                            <button class="btn btn-sm btn-outline-info" @onclick="() => { ClonePreset(reference); ShowDeckSelectModal = false; }">@L["複製並載入編輯"]</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </details>
+
                         <!-- 2. Custom Decks -->
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div class="d-flex align-items-center gap-2">

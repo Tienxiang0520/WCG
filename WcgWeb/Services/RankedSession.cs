@@ -37,14 +37,14 @@ public sealed partial class RankedSession
         rules = Fingerprint(catalog);
         priorIdentifierRules = Fingerprint(catalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         currentCards = cards;
-        CatalogEra Era(CardDatabase db, bool limit)
+        CatalogEra Era(CardDatabase db, bool limit, bool legacy = true)
         {
             var json = JsonSerializer.Serialize(db.AllCards);
-            return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, true);
+            return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, legacy);
         }
         // Matches started before the card-text clarity update keep the old wording and the old engine behaviour (LegacyCardRules).
         // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
-        priorEras = [Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
+        priorEras = [Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
             Era(CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards), true)];
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try

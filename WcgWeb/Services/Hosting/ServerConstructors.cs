@@ -10,8 +10,8 @@ public partial class CardDatabase
 }
 public partial class DeckService
 {
-    public DeckService(CardDatabase cards, IWebHostEnvironment env) : this(cards,
-        new FilePlayerStorage(new Dictionary<string, string> { ["decks"] = System.IO.Path.Combine(env.ContentRootPath, "Data", "custom_decks.json") })) { }
+    public DeckService(CardDatabase cards, IWebHostEnvironment env, RankedDecks? referenceDecks = null) : this(cards,
+        new FilePlayerStorage(new Dictionary<string, string> { ["decks"] = System.IO.Path.Combine(env.ContentRootPath, "Data", "custom_decks.json") }), referenceDecks) { }
 }
 public sealed partial class RankedDecks
 {
@@ -28,7 +28,7 @@ public sealed partial class RankedStore
 public sealed partial class RankedSession
 {
     public RankedSession(CardDatabase cards, IWebHostEnvironment env, RankedStore store, RankedDecks opponents,
-        ILogger<BattleCoordinator> logger, TimeProvider? clock = null) : this(cards, new DeckService(cards, env), store, opponents, logger, clock) { }
+        ILogger<BattleCoordinator> logger, TimeProvider? clock = null) : this(cards, new DeckService(cards, env, opponents), store, opponents, logger, clock) { }
 }
 public sealed partial class PlayerProfileStore
 {

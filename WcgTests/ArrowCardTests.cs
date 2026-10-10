@@ -35,7 +35,8 @@ public class ArrowCardTests
         // Only cards that already had an effect gained arrows.
         var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-arrow-cards.json")))!;
         Assert.All(prior,c=>Assert.NotEqual("無。",c.Text));
-        Assert.All(prior,c=>Assert.Equal(c.PP,cards.GetCard(c.Id)!.PP));
+        var beforeDiversity=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-diversity.json")))!.ToDictionary(c=>c.Id);
+        Assert.All(prior,c=>Assert.Equal(c.PP,beforeDiversity.GetValueOrDefault(c.Id,cards.GetCard(c.Id)!).PP));
     }
     [Theory] [InlineData(5,200)] [InlineData(49,200)]
     public void SideArrowsBoostBothAdjacentAllies(int id,int bonus)

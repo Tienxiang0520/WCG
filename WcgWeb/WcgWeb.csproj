@@ -11,6 +11,7 @@
     <EmbeddedResource Include="Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
     <EmbeddedResource Include="Data/balance-before-arrow-cards.json" LogicalName="WcgWeb.Balance.BeforeArrowCards" />
     <EmbeddedResource Include="Data/balance-before-card-text.json" LogicalName="WcgWeb.Balance.BeforeCardText" />
+    <EmbeddedResource Include="Data/balance-before-diversity.json" LogicalName="WcgWeb.Balance.BeforeDiversity" />
     <EmbeddedResource Include="i18n/en.json" LogicalName="WcgWeb.I18n.en.json" />
     <EmbeddedResource Include="i18n/cards.en.json" LogicalName="WcgWeb.I18n.cards.en.json" WithCulture="false" />
     <EmbeddedResource Include="i18n/decks.en.json" LogicalName="WcgWeb.I18n.decks.en.json" WithCulture="false" />
