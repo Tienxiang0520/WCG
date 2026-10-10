@@ -348,10 +348,12 @@
 .battle-message{pointer-events:none}
 .dragging .opponent.hero{z-index:6}
 .dragging .opponent.hero::before{content:"";position:absolute;inset:-18px -30px;border-radius:22px}
-.opponent.hero.legal .hero-portrait{border-color:#9cf4bc;box-shadow:0 0 0 3px #9cf4bc,0 0 24px 6px #64df85b0,inset 0 0 12px #000a;animation:face-ready .8s ease-in-out infinite alternate}
+.hero.legal .hero-portrait{border-color:#9cf4bc;box-shadow:0 0 0 3px #9cf4bc,0 0 24px 6px #64df85b0,inset 0 0 12px #000a;animation:face-ready .8s ease-in-out infinite alternate}
 @keyframes face-ready{to{box-shadow:0 0 0 5px #9cf4bc,0 0 34px 10px #64df85d0,inset 0 0 12px #000a}}
-.opponent.hero.drop-hover{scale:1.07;transition:scale .15s}
-.opponent.hero.drop-hover .hero-face::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:3px dashed #ffb27a;pointer-events:none;animation:face-lock 1.6s linear infinite}
+.hero.drop-hover{scale:1.07;transition:scale .15s}
+.hero.drop-hover .hero-face::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:3px dashed #ffb27a;pointer-events:none;animation:face-lock 1.6s linear infinite}
+.dragging .hero.legal{z-index:6}
+.dragging .hero.legal::before{content:"";position:absolute;inset:-18px -24px;border-radius:22px}
 @keyframes face-lock{to{rotate:360deg}}
 .face-blocked .hero-portrait{filter:grayscale(.65) brightness(.7)}
 .hero-blocked{position:absolute;left:50%;top:calc(100% + 4px);translate:-50% 0;z-index:5;background:#3a1f1fee;border:1px solid #ff8c81;color:#ffd3cc;font-size:11px;padding:2px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;animation:banner-drop .2s ease-out both}
@@ -407,7 +409,7 @@
 .player.hero{cursor:pointer}
 .player.hero:focus-visible .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}
 .player.hero:focus-visible{outline:2px solid #8dcaff;outline-offset:2px}
-.dragging .player.hero{pointer-events:none}
+.dragging .player.hero:not(.legal){pointer-events:none}
 @media(hover:hover){.v06-board:not(.dragging) .player.hero:hover .hero-portrait{box-shadow:0 0 0 2px #000a,0 0 16px #84dbc1aa,inset 0 0 12px #000a}}
 .hero-portrait img.custom{transform:none}
 .avatar-dialog{width:min(560px,100%)}

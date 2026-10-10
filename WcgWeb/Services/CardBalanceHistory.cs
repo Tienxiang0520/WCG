@@ -5,7 +5,8 @@ namespace WcgWeb.Services;
 
 internal static class CardBalanceHistory
 {
-    internal static CardDatabase BeforeDiversity(CardDatabase current) => Override(current, "WcgWeb.Balance.BeforeDiversity");
+    internal static CardDatabase BeforePlayerTargets(CardDatabase current) => Override(current, "WcgWeb.Balance.BeforePlayerTargets");
+    internal static CardDatabase BeforeDiversity(CardDatabase current) => Override(BeforePlayerTargets(current), "WcgWeb.Balance.BeforeDiversity");
     // Catalog before the card-text clarity update (152 cards reworded; 147 136 178 141 changed effect, 147 PP 1200→1000).
     internal static CardDatabase BeforeCardText(CardDatabase current) => Override(BeforeDiversity(current), "WcgWeb.Balance.BeforeCardText");
 

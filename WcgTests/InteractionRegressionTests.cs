@@ -27,7 +27,7 @@ public class InteractionRegressionTests
         for(int i=0;e.IsWaiting && i<100;i++)
         {
             if(e.CurrentPendingChoice is {} c) Assert.True(e.SelectChoice(c.Options.FirstOrDefault(x=>x.Id=="KEEP")??c.Options.First()));
-            else { var t=e.CurrentPendingTarget!;Assert.True(e.SelectTarget(e.Player.Field.Concat(e.Computer.Field).First(m=>t.Validator!(m)))); }
+            else { var t=e.CurrentPendingTarget!;if(t.PlayerValidator!=null){Assert.True(e.SelectPlayerTarget(e.Player));continue;}Assert.True(e.SelectTarget(e.Player.Field.Concat(e.Computer.Field).First(m=>t.Validator!(m)))); }
         }
         Assert.False(e.IsWaiting);
     }

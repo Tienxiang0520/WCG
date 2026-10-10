@@ -74,6 +74,7 @@ public sealed class RankedRecord
     }
 }
 // Positions are recorded before each action so regenerated instance IDs are never persisted as commands.
+// TargetSide: -1 none, 0/1 monster board, 2/3 player/computer hero (Target remains -1).
 public record RankedAction(string Type, int Source = -1, int TargetSide = -1, int Target = -1, int Choice = -1, int RulesVersion = 1);
 public static class RankedRules
 {

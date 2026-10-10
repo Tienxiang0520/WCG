@@ -1,6 +1,7 @@
 <Project>
   <!-- Both hosts must embed the same historical catalogs and translations with stable names. -->
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-player-targets.json" LogicalName="WcgWeb.Balance.BeforePlayerTargets" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-unlimited-faction-triggers.json" LogicalName="WcgWeb.Balance.BeforeUnlimitedFactionTriggers" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-arrow-cards.json" LogicalName="WcgWeb.Balance.BeforeArrowCards" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-card-text.json" LogicalName="WcgWeb.Balance.BeforeCardText" />

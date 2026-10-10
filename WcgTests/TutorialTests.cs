@@ -44,6 +44,12 @@ public class TutorialTests
         }
         if (e.CurrentPendingTarget is { OwnerId: "player" } pending)
         {
+            if (pending.PlayerValidator != null)
+            {
+                var allowed = step.Allow.FirstOrDefault(a => a.Type == "target" && a.TargetPlayer != null);
+                var player = allowed?.TargetPlayer == "player" ? e.Player : e.Computer;
+                return allowed != null && pending.PlayerValidator(player) ? Cmd(e, "target", target: e.TargetId(player)) : null;
+            }
             var all = e.Player.Board.Concat(e.Computer.Board).Where(m => pending.Validator?.Invoke(m) != false).ToList();
             foreach (var a in step.Allow.Where(a => a.Type == "target"))
                 if (all.FirstOrDefault(m => a.Target == null || m.Card.Id == a.Target) is { } m) return Cmd(e, "target", target: m.InstanceId);
@@ -59,7 +65,7 @@ public class TutorialTests
             switch (a.Type)
             {
                 case "energy": case "set": return Cmd(e, a.Type, Find(hand, a.Card));
-                case "play": return Cmd(e, "play", Find(hand, a.Card), a.Target == null ? null : Find(any, a.Target));
+                case "play": return Cmd(e, "play", Find(hand, a.Card), a.TargetPlayer != null ? e.TargetId(a.TargetPlayer == "player" ? e.Player : e.Computer) : a.Target == null ? null : Find(any, a.Target));
                 case "activate": return Cmd(e, "activate", Find(own, a.Card));
                 case "attack": return Cmd(e, "attack", Find(own, a.Card), a.Face ? null : Find(enemy, a.Target));
                 case "end": return Cmd(e, "end");

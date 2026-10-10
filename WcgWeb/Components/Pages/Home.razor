@@ -56,7 +56,7 @@
                 {
                     bool mine = side.Id == "player";
                     <section class="battle-panel" @key="side.Id">
-                        <div class="side-heading" data-drop-zone="@(mine ? null : "face")"><h2>@side.Name <span class="life-value">♥ @side.Hp / 7</span></h2><span>場上 @side.Field.Count / 5 · 牌庫 @side.Deck.Count · 手牌 @side.Hand.Count</span></div>
+                        <div class="side-heading" data-drop-zone="@(mine ? "p:player" : "face")" @onclick="() => LegacyPlayerTarget(side, match, revision)"><h2>@side.Name <span class="life-value">♥ @side.Hp / 7</span></h2><span>場上 @side.Field.Count / 5 · 牌庫 @side.Deck.Count · 手牌 @side.Hand.Count</span></div>
                         @if (!mine && SelectedAttacker is { } faceAttacker)
                         {
                             <button data-drop-zone="face" class="btn btn-danger mb-2" disabled="@(VisualBusy || !Engine.CanAttackPlayer(faceAttacker))" @onpointerenter="e => HoverTarget(null, e)" @onfocus="() => ShowPreview(null)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => AttackClick(null, match, revision)">攻擊電腦玩家 · @faceAttacker.CurrentDP 傷害</button>
@@ -252,7 +252,8 @@
             ClearAttack(); HandDock?.ClearSelection();
             if (card.Card.IsMonster && Engine.CanPlayCard(Engine.Player, card)) zones.Add("summon");
             if (Engine.CanPlayEnergy(Engine.Player, card)) zones.Add("energy");
-            label = card.Card.IsMonster ? $"{card.Card.Name}：戰場召喚 · 能量區填能量" : $"{card.Card.Name}：能量區填能量；施法仍用點選";
+            if (Engine.GetDirectPlayerTargets(Engine.Player, card).Count > 0) { zones.Add("p:player"); zones.Add("face"); }
+            label = Engine.GetDirectPlayerTargets(Engine.Player, card).Count > 0 ? $"{card.Card.Name}：拖向玩家頭像選擇回復對象" : card.Card.IsMonster ? $"{card.Card.Name}：戰場召喚 · 能量區填能量" : $"{card.Card.Name}：能量區填能量；施法仍用點選";
         }
         else return null;
         if (zones.Count == 0) return null;
@@ -287,9 +288,15 @@
         {
             var card = Engine.Player.Hand.FirstOrDefault(c => c.InstanceId == DragId);
             if (card != null && zone == "summon" && card.Card.IsMonster) Run(DragMatch, DragRevision, new(Guid.NewGuid(), DragMatch, DragRevision, "play", card.InstanceId));
+            else if (card != null && (zone is "p:player" or "face") && Engine.GetDirectPlayerTargets(Engine.Player, card).Count > 0) Run(DragMatch, DragRevision, new(Guid.NewGuid(), DragMatch, DragRevision, "play", card.InstanceId, zone == "p:player" ? GameEngine.PlayerTargetId : GameEngine.ComputerTargetId));
             else if (card != null && zone == "energy" && Engine.CanPlayEnergy(Engine.Player, card) && HandDock != null) await HandDock.FillDragged(card);
         }
         ClearAttack(); StateHasChanged();
+    }
+    private void LegacyPlayerTarget(PlayerState player, Guid match, long revision)
+    {
+        if (Engine.CurrentPendingTarget?.PlayerValidator?.Invoke(player) == true)
+            Run(match, revision, new(Guid.NewGuid(), match, revision, "target", TargetId: Engine.TargetId(player)));
     }
     [JSInvokable] public void CancelDrag() { Dragging = false; DragKind = null; ClearAttack(); StateHasChanged(); }
 

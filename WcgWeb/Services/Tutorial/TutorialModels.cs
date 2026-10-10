@@ -20,10 +20,12 @@ public sealed record TutorialScene(TutorialSide Player, TutorialSide Computer, i
 // One accepted player action. Card ids are matched against the instance the command names.
 // Option "SLOT:*" accepts any slot; OptionCard matches a choice that names a card instance.
 public sealed record TutorialAllow(string Type, string? Card = null, string? Target = null, bool Face = false,
-    string? Option = null, string? OptionCard = null)
+    string? Option = null, string? OptionCard = null, string? TargetPlayer = null)
 {
     public static TutorialAllow Energy(string? card = null) => new("energy", card);
     public static TutorialAllow Play(string card, string? target = null) => new("play", card, target);
+    public static TutorialAllow PlayPlayer(string card, string side) => new("play", card, TargetPlayer: side);
+    public static TutorialAllow PickPlayer(string side) => new("target", TargetPlayer: side);
     public static TutorialAllow Set(string card) => new("set", card);
     public static TutorialAllow Activate(string card) => new("activate", card);
     public static TutorialAllow Attack(string card, string? target = null) => new("attack", card, target, Face: target == null);

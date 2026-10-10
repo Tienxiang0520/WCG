@@ -1,5 +1,5 @@
 .deck-library-modal { display:flex !important; align-items:center; justify-content:center; padding:max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); }
 .deck-library-modal .modal-dialog { margin:0; width:100%; max-width:800px; min-height:0; }
-.deck-library-modal .modal-content { max-height:calc(var(--wcg-vh, 1dvh) * 100 - 48px); }
+.deck-library-modal .modal-content { max-height:calc(var(--wcg-vh, 100dvh) - 48px); }
 .deck-library-modal .modal-body { min-height:0; overflow-y:auto; overscroll-behavior:contain; }
 .deck-library-modal .modal-header,.deck-library-modal .modal-footer { flex-shrink:0; }

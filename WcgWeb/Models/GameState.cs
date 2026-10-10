@@ -172,6 +172,8 @@ public class PendingTarget
     public TargetRequirement TargetType { get; set; } = TargetRequirement.AnyMonster;
     public Func<MonsterInstance, bool>? Validator { get; set; }
     public Action<MonsterInstance> OnTargetSelected { get; set; } = null!;
+    public Func<PlayerState, bool>? PlayerValidator { get; set; }
+    public Action<PlayerState>? OnPlayerTargetSelected { get; set; }
 }
 
 public record GameActionResult(bool Success, string Code, string Message, Guid MatchId, long Revision);

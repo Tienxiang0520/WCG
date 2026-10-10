@@ -48,6 +48,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         var hand = engine.Player.Hand.FirstOrDefault(x => x.InstanceId == c.InstanceId);
         var monster = engine.Player.Board.FirstOrDefault(x => x.InstanceId == c.InstanceId);
         var target = engine.Player.Board.Concat(engine.Computer.Board).FirstOrDefault(x => x.InstanceId == c.TargetId);
+        var playerTarget = engine.PlayerTarget(c.TargetId);
         switch (c.Type)
         {
             case "start":
@@ -59,13 +60,13 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                 if (engine.IsOver || engine.CurrentPhase == TurnPhase.NotStarted) return false;
                 engine.Surrender(engine.Player); return true;
             case "energy": return hand != null && engine.PlayEnergy(engine.Player, hand);
-            case "play": return hand != null && (c.TargetId != null ? target != null && engine.CastSpellAt(engine.Player, hand, target) : hand.Card.IsMonster
+            case "play": return hand != null && (c.TargetId != null ? playerTarget != null ? engine.CastSpellAtPlayer(engine.Player, hand, playerTarget) : target != null && engine.CastSpellAt(engine.Player, hand, target) : hand.Card.IsMonster
                 ? engine.SummonMonster(engine.Player, hand) : hand.Card.IsEnchantment ? engine.PlayEnchantment(engine.Player,hand) : engine.CastSpell(engine.Player, hand));
             case "set": return hand != null && engine.SetCard(engine.Player,hand);
             case "activate": return monster != null && engine.Activate(engine.Player,monster);
             case "attack": return monster != null && (c.TargetId == null || target != null)
                 && engine.Attack(engine.Player, monster, target);
-            case "target": return target != null && engine.SelectTarget(target);
+            case "target": return playerTarget != null ? engine.SelectPlayerTarget(playerTarget) : target != null && engine.SelectTarget(target);
             case "choice":
                 var option = engine.CurrentPendingChoice?.Options.FirstOrDefault(x => x.Id == c.OptionId);
                 return option != null && engine.SelectChoice(option);
@@ -110,15 +111,17 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                     o.PreviewCard == null ? null : GameEngine.VisibleCard(o.PreviewCard, Guid.Empty))).ToArray(), [], c.SourceInstanceId);
         else if (engine.CurrentPendingTarget is { OwnerId: "player" } t)
             pending = new("target", t.Title, t.Description, t.CanCancel, [],
-                engine.Player.Board.Concat(engine.Computer.Board).Where(m => t.Validator?.Invoke(m) != false)
-                    .Select(m => m.InstanceId.ToString()).ToArray(), t.SourceInstanceId);
+                engine.Player.Board.Concat(engine.Computer.Board).Where(m => t.Validator != null && t.Validator(m))
+                    .Select(m => m.InstanceId.ToString()).Concat(new[] { engine.Player, engine.Computer }
+                        .Where(p => t.PlayerValidator?.Invoke(p) == true).Select(p => engine.TargetId(p).ToString())).ToArray(), t.SourceInstanceId);
         return new(engine.MatchId, engine.Revision, engine.TurnNumber, engine.CurrentPhase.ToString(),
             engine.DecisionPlayerId, engine.IsOver, !engine.IsOver ? "" : engine.Player.HasLost
                 ? $"本局敗北：{engine.Player.LossReason}" : $"本局獲勝：{engine.Computer.LossReason}",
             Side(engine.Player), Side(engine.Computer), engine.Player.Hand.Select(c => new BattleHand(
                 GameEngine.VisibleCard(c) with { Cost=engine.ActualCost(engine.Player,c.Card) }, engine.CanPlayCard(engine.Player, c), engine.CanPlayEnergy(engine.Player, c),
                 engine.GetPlayProblem(engine.Player, c), GameEngine.GetPlayPreparation(c.Card),
-                engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString()).ToArray(),
+                engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString())
+                    .Concat(engine.GetDirectPlayerTargets(engine.Player, c).Select(p => engine.TargetId(p).ToString())).ToArray(),
                 c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有聖盾資格仍需留能量保命。" : "",
                 engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
             // Old logs can contain an AI-only hand inspection. The new board uses public structured events.

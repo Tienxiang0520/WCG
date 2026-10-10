@@ -87,7 +87,7 @@ public sealed class Localizer : IDisposable
 
 public static partial class LocalizationCatalog
 {
-    private sealed record CardEntry(string Name, string Text);
+    private sealed record CardEntry(string Name, string Text, string? ZhText = null);
     private sealed record DeckEntry(string Name, string Description, string ZhName, string ZhDescription);
     private sealed record Template(Regex Pattern, string English, int Weight);
 
@@ -122,7 +122,8 @@ public static partial class LocalizationCatalog
         using (var cards = JsonDocument.Parse(Resource("WcgWeb.I18n.cards.en.json")))
             foreach (var card in cards.RootElement.EnumerateObject())
             {
-                var entry = new CardEntry(card.Value.GetProperty("name").GetString() ?? "", card.Value.GetProperty("text").GetString() ?? "");
+                var entry = new CardEntry(card.Value.GetProperty("name").GetString() ?? "", card.Value.GetProperty("text").GetString() ?? "",
+                    card.Value.TryGetProperty("zh_text", out var zhText) ? zhText.GetString() : null);
                 result.Cards[card.Name] = entry;
                 if (card.Value.TryGetProperty("zh", out var zh) && zh.GetString() is { Length: > 0 } zhName) result.CardNamesByZh[zhName] = entry.Name;
             }
@@ -158,7 +159,9 @@ public static partial class LocalizationCatalog
     private static partial Regex Hole();
 
     public static string CardName(string id, string zhName) => data.Value.Cards.TryGetValue(id, out var c) && c.Name != "" ? c.Name : Translate(zhName);
-    public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != "" ? c.Text : Translate(zhText);
+    // Cards whose targeting changed pin the translated source text; historic cards use their own wording.
+    public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != ""
+        && (c.ZhText == null || c.ZhText == zhText) ? c.Text : Translate(zhText);
     public static string DeckName(string id, string name) =>
         data.Value.Decks.TryGetValue(id, out var d) && (name == d.ZhName || name == d.Name) ? d.Name : Translate(name);
     public static string DeckDescription(string id, string text) =>

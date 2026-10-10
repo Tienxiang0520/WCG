@@ -202,7 +202,7 @@
  "WCG-041": {
   "zh": "利爪巨鹿",
   "name": "Clawed Stag",
-  "text": "Deploy: Choose One: Restore 1 life; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Restore 1 life to yourself; or draw 1 card, then discard 1 card."
  },
  "WCG-042": {
   "zh": "野性之力",
@@ -247,7 +247,8 @@
  "WCG-050": {
   "zh": "甦生之雨",
   "name": "Reviving Rain",
-  "text": "Restore 2 life."
+  "text": "Choose either player and restore 2 life to them.",
+  "zh_text": "選擇任一玩家，回復其 2 點生命。"
  },
  "WCG-051": {
   "zh": "猛毒荊棘蜥",
@@ -282,7 +283,7 @@
  "WCG-057": {
   "zh": "遠古守護者",
   "name": "Ancient Guardian",
-  "text": "Taunt. Deploy: Restore 1 life."
+  "text": "Taunt. Deploy: Restore 1 life to yourself."
  },
  "WCG-058": {
   "zh": "萬物復甦",
@@ -307,7 +308,7 @@
  "WCG-062": {
   "zh": "保護之手",
   "name": "Hand of Protection",
-  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life."
+  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself."
  },
  "WCG-063": {
   "zh": "聖印侍從",
@@ -327,7 +328,8 @@
  "WCG-066": {
   "zh": "王者賜福",
   "name": "Blessing of Kings",
-  "text": "Restore 2 life, then draw 1 card."
+  "text": "Choose either player and restore 2 life to them, then you draw 1 card.",
+  "zh_text": "選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。"
  },
  "WCG-067": {
   "zh": "正義裁判官",
@@ -347,12 +349,13 @@
  "WCG-070": {
   "zh": "崇高奉獻",
   "name": "Noble Devotion",
-  "text": "Restore 1 life."
+  "text": "Choose either player and restore 1 life to them.",
+  "zh_text": "選擇任一玩家，回復其 1 點生命。"
  },
  "WCG-071": {
   "zh": "祈光神官",
   "name": "Lightcaller Priest",
-  "text": "Whenever an enemy monster attacks one of your Taunt monsters, restore 1 life."
+  "text": "Whenever an enemy monster attacks one of your Taunt monsters, restore 1 life to yourself."
  },
  "WCG-072": {
   "zh": "淨化聖光",
@@ -372,7 +375,7 @@
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Holy Shield. Deploy: Restore 1 life."
+  "text": "Holy Shield. Deploy: Restore 1 life to yourself."
  },
  "WCG-076": {
   "zh": "誓約封禁",
@@ -387,7 +390,7 @@
  "WCG-078": {
   "zh": "聖光普照",
   "name": "Radiant Dawn",
-  "text": "Destroy all enemy monsters with 700 PP or less, then restore 1 life."
+  "text": "Destroy all enemy monsters with 700 PP or less, then restore 1 life to yourself."
  },
  "WCG-079": {
   "zh": "日耀聖堂巨像",
@@ -432,7 +435,7 @@
  "WCG-087": {
   "zh": "墓穴行屍",
   "name": "Crypt Walker",
-  "text": "Deploy: If you have 5 or more cards in your graveyard, restore 1 life."
+  "text": "Deploy: If you have 5 or more cards in your graveyard, restore 1 life to yourself."
  },
  "WCG-088": {
   "zh": "恐懼吞噬",
@@ -467,7 +470,7 @@
  "WCG-094": {
   "zh": "靈魂汲取",
   "name": "Soul Drain",
-  "text": "Destroy 1 enemy monster and restore 1 life."
+  "text": "Destroy 1 enemy monster and restore 1 life to yourself."
  },
  "WCG-095": {
   "zh": "縛魂巨怪",
@@ -492,12 +495,12 @@
  "WCG-099": {
   "zh": "幽冥巨龍",
   "name": "Netherwyrm",
-  "text": "Whenever another monster (on either side) is destroyed, restore 1 life."
+  "text": "Whenever another monster (on either side) is destroyed, restore 1 life to yourself."
  },
  "WCG-100": {
   "zh": "深淵之主·瑪爾加尼斯",
   "name": "Abyss Lord, Malganis",
-  "text": "Taunt. Deploy: Restore 2 life, then put another monster card from your graveyard into your hand."
+  "text": "Taunt. Deploy: Restore 2 life to yourself, then put another monster card from your graveyard into your hand."
  },
  "WCG-101": {
   "zh": "巡邏輕步兵",
@@ -527,7 +530,7 @@
  "WCG-106": {
   "zh": "日怒壁壘",
   "name": "Sunfury Bulwark",
-  "text": "Deploy: Restore 1 life."
+  "text": "Deploy: Restore 1 life to yourself."
  },
  "WCG-107": {
   "zh": "飛刀投擲手",
@@ -807,7 +810,7 @@
  "WCG-162": {
   "zh": "遠古泰坦·世界樹之靈",
   "name": "Ancient Titan, Spirit of the World Tree",
-  "text": "Taunt. Deploy: Restore 3 life and draw 2 cards."
+  "text": "Taunt. Deploy: Restore 3 life to yourself and draw 2 cards."
  },
  "WCG-163": {
   "zh": "時空之主·克羅諾斯",
@@ -852,7 +855,7 @@
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt. Holy Shield. Deploy: Restore 2 life."
+  "text": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself."
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -877,7 +880,7 @@
  "WCG-176": {
   "zh": "神聖至高審判",
   "name": "Supreme Holy Judgment",
-  "text": "Destroy all monsters on both sides with 1500 PP or more. Restore 2 life."
+  "text": "Destroy all monsters on both sides with 1500 PP or more. Restore 2 life to yourself."
  },
  "WCG-177": {
   "zh": "機械工廠巨像",
@@ -937,7 +940,7 @@
  "WCG-188": {
   "zh": "萬靈樹精長老",
   "name": "Elder of the Myriad Dryads",
-  "text": "Taunt. Deploy: Restore 1 life for each other [Life] monster you have."
+  "text": "Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have."
  },
  "WCG-189": {
   "zh": "聖堂集結號角",
@@ -947,12 +950,12 @@
  "WCG-190": {
   "zh": "白銀軍團旗手",
   "name": "Silver Legion Standard-Bearer",
-  "text": "Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life."
+  "text": "Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life to yourself."
  },
  "WCG-191": {
   "zh": "聖光大審判官",
   "name": "Grand Inquisitor of Holy Light",
-  "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life."
+  "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life to yourself."
  },
  "WCG-192": {
   "zh": "冥河引魂術",
@@ -987,7 +990,7 @@
  "WCG-198": {
   "zh": "神聖救贖誓約",
   "name": "Oath of Holy Redemption",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life, and give 1 of your monsters Holy Shield (attach this card to it)."
+  "text": "[Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life to yourself, and give 1 of your monsters Holy Shield (attach this card to it)."
  },
  "WCG-199": {
   "zh": "亡魂索命陷阱",

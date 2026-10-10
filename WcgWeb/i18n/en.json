@@ -1324,5 +1324,14 @@
  "我的入門牌組": "My starter deck",
  "以普通怪物、抽牌與簡單法術練習出牌和交戰，可自由修改。": "Practice playing cards and combat with basic creatures, card draw and simple spells. Edit freely.",
  "可建立空白牌組，或複製下方牌組，儲存後即可出戰。": "Create an empty deck or copy one below. Save it to use it in battle.",
- "複製後可修改與列印；儲存成自訂牌組後即可出戰。": "Copy to edit and print. Save as a custom deck to use it in battle."
+ "複製後可修改與列印；儲存成自訂牌組後即可出戰。": "Copy to edit and print. Save as a custom deck to use it in battle.",
+ "選擇此玩家作為目標": "Choose this player as the target",
+ "你的頭像 · 生命 {0} / 7": "Your portrait · life {0} / 7",
+ "選擇要回復生命的玩家（尚未扣費，可取消）": "Choose a player to heal (not paid yet; can cancel)",
+ "{0}：點選亮起的頭像或卡片選擇目標": "{0}: Choose a highlighted portrait or card as the target",
+ "「甦生之雨」能回復任一玩家 2 點生命。這一步請拖向自己的頭像。生命上限是 7，超過的部分不會累積。": "Rejuvenating Rain restores 2 life to either player. In this step, drag it to your own portrait. Life is capped at 7; excess healing is lost.",
+ "請將「甦生之雨」拖向自己的頭像，或施放後點選自己的頭像。": "Drag Rejuvenating Rain to your portrait, or cast it and choose your portrait.",
+ "回復 2 點生命。": "Restore 2 life.",
+ "回復 2 點生命，然後抽 1 張牌。": "Restore 2 life, then draw 1 card.",
+ "回復 1 點生命。": "Restore 1 life."
 }

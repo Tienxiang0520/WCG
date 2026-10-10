@@ -18,7 +18,8 @@ public class DiversityBalanceTests
     {
         var cards=Cards();var before=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root,"Data/balance-before-diversity.json")))!;
         Assert.Equal(32,before.Count);
-        foreach(var old in before){var current=cards.GetCard(old.Id)!;Assert.Equal(old.Text,current.Text);Assert.Equal(old.Keywords,current.Keywords);Assert.Equal(old.Arrows,current.Arrows);
+        var priorTargets=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root,"Data/balance-before-player-targets.json")))!.ToDictionary(c=>c.Id);
+        foreach(var old in before){var current=priorTargets.GetValueOrDefault(old.Id)??cards.GetCard(old.Id)!;Assert.Equal(old.Text,current.Text);Assert.Equal(old.Keywords,current.Keywords);Assert.Equal(old.Arrows,current.Arrows);
             Assert.Equal(old.Type,current.Type);Assert.Equal(old.Will,current.Will);Assert.True(old.PP!=current.PP||old.DP!=current.DP||old.TotalCost!=current.TotalCost);Assert.Equal(current.TotalCost,current.CostGen);}
     }
     [Fact] public void ReferenceDecksArePlayableCopiesAndDoNotWritePlayerData()

@@ -30,7 +30,7 @@ public class CardTextClarityTests
 
     [Fact] public void CardTextsUseTheNewGlossary()
     {
-        Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("離場",c.Text);Assert.DoesNotContain("犧牲不算",c.Text);Assert.DoesNotContain("敵方全場",c.Text);Assert.DoesNotContain("不支付費用",c.Text);foreach(var t in new[]{"生命傷害","回復己方","己方玩家","全場所有","或者"})Assert.DoesNotContain(t,c.Text);});
+        Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("離場",c.Text);Assert.DoesNotContain("犧牲不算",c.Text);Assert.DoesNotContain("敵方全場",c.Text);Assert.DoesNotContain("不支付費用",c.Text);foreach(var t in new[]{"生命傷害","己方玩家","全場所有","或者"})Assert.DoesNotContain(t,c.Text);});
         Assert.All(cards.AllCards.Where(c=>Regex.IsMatch(c.Text,"免費召喚(至多 )?\\d")),c=>Assert.Contains("不觸發進場",c.Text));
         Assert.All(cards.AllCards.Where(c=>c.IsCounter),c=>Assert.StartsWith("【反擊】敵方怪物攻擊你時翻開：",c.Text));
         foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("直到它下一次攻擊或交戰結束",cards.GetCard(id)!.Text);
@@ -63,7 +63,8 @@ public class CardTextClarityTests
     {
         var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-card-text.json")))!;
         Assert.Equal(152,prior.Count);
-        Assert.All(prior,p=>Assert.NotEqual(p.Text,cards.GetCard(p.Id)!.Text));
+        var beforeTargets=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-player-targets.json")))!.ToDictionary(c=>c.Id);
+        Assert.All(prior,p=>Assert.NotEqual(p.Text,(beforeTargets.GetValueOrDefault(p.Id)??cards.GetCard(p.Id)!).Text));
         Assert.Equal(1200,prior.Single(p=>p.Id=="WCG-147").PP);
         Assert.DoesNotContain(prior,p=>p.Text=="無。");
     }

@@ -6,6 +6,11 @@ namespace WcgWeb.Services;
 // Presentation owns cancellable AI pacing; the engine never starts background tasks.
 public partial class GameEngine
 {
+    // Stable target IDs use the existing command/journal fields without conflating heroes with monsters.
+    public static readonly Guid PlayerTargetId = new("00000000-0000-0000-0000-000000000001");
+    public static readonly Guid ComputerTargetId = new("00000000-0000-0000-0000-000000000002");
+    public Guid TargetId(PlayerState player) => player == Player ? PlayerTargetId : ComputerTargetId;
+    public PlayerState? PlayerTarget(Guid? id) => id == PlayerTargetId ? Player : id == ComputerTargetId ? Computer : null;
     private CardDatabase _cardDb;
     internal bool LimitFactionTriggers { get; private set; }
     // Ranked matches started before the card-text clarity update replay with the old engine wording:
@@ -190,8 +195,15 @@ public partial class GameEngine
     public bool SelectTarget(MonsterInstance target) => Change(() =>
     {
         var pending = CurrentPendingTarget;
-        if (pending == null || !Alive(target) || pending.Validator?.Invoke(target) == false || IsOver) return Fail("此目標不合法或已離場。");
+        if (pending == null || pending.OnTargetSelected == null || !Alive(target) || pending.Validator?.Invoke(target) == false || IsOver) return Fail("此目標不合法或已離場。");
         CurrentPendingTarget = null; pending.OnTargetSelected(target); return true;
+    });
+    public bool SelectPlayerTarget(PlayerState target) => Change(() =>
+    {
+        var pending = CurrentPendingTarget;
+        if (pending?.OnPlayerTargetSelected == null || pending.PlayerValidator?.Invoke(target) != true || IsOver)
+            return Fail("此目標不合法或已離場。");
+        CurrentPendingTarget = null; pending.OnPlayerTargetSelected(target); return true;
     });
     public bool CancelTargetOrChoice() => Change(() =>
     {
@@ -262,17 +274,37 @@ public partial class GameEngine
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
     // Describe the first step before payment using the same predicates as BeginPlay.
     private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096";
+    // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
+    private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
+        card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
-        : NeedsSpellTarget(card.Id) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
+        : NeedsSpellTarget(card.Id) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
     public bool SummonMonster(PlayerState p, CardInstance c) => Change(() => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
     public bool CastSpell(PlayerState p, CardInstance c) => Change(() => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
         c.Card.IsSpell && NeedsSpellTarget(c.Card.Id) && CanPlayCard(p, c) ? SpellTargets(p, c.Card) : [];
     public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => Change(() =>
         GetDirectPlayTargets(p, c).Contains(target) ? BeginPlay(p, c, initialTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
-    private bool BeginPlay(PlayerState p, CardInstance c, string mode = "", MonsterInstance? initialTarget = null)
+    public IReadOnlyList<PlayerState> GetDirectPlayerTargets(PlayerState p, CardInstance c) =>
+        c.Card.IsSpell && NeedsPlayerSpellTarget(c.Card) && CanPlayCard(p, c) ? [Player, Computer] : [];
+    public bool CastSpellAtPlayer(PlayerState p, CardInstance c, PlayerState target) => Change(() =>
+        GetDirectPlayerTargets(p, c).Contains(target) ? BeginPlay(p, c, initialPlayerTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
+    private bool BeginPlay(PlayerState p, CardInstance c, string mode = "", MonsterInstance? initialTarget = null, PlayerState? initialPlayerTarget = null)
     {
         var problem = GetPlayProblem(p, c); if (problem != "") return Fail(problem);
+        if (NeedsPlayerSpellTarget(c.Card))
+        {
+            if (initialPlayerTarget != null) CommitPlay(p, c, null, null, mode, initialPlayerTarget);
+            else
+            {
+                CurrentPendingTarget = new() { OwnerId = p.Id, Title = "選擇要回復生命的玩家（尚未扣費，可取消）",
+                    CanCancel = true, SourceInstanceId = c.InstanceId,
+                    PlayerValidator = t => GetDirectPlayerTargetsForSelection(p, c).Contains(t),
+                    OnPlayerTargetSelected = t => CommitPlay(p, c, null, null, mode, t) };
+                Present("target", p, label: p == Player ? CurrentPendingTarget.Title : "電腦選擇目標");
+            }
+            return true;
+        }
         if (c.Card.Id == "WCG-046" && mode == "")
         {
             var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張牌，然後棄 1 張手牌" } };
@@ -291,13 +323,17 @@ public partial class GameEngine
         else WithTarget(null);
         return true;
     }
-    private void CommitPlay(PlayerState p, CardInstance c, MonsterInstance? target, MonsterInstance? sacrifice, string mode)
+    // Pending selection itself makes CanPlayCard false; validate candidates without that waiting-state check.
+    private IReadOnlyList<PlayerState> GetDirectPlayerTargetsForSelection(PlayerState p, CardInstance c) =>
+        NeedsPlayerSpellTarget(c.Card) && p.Hand.Contains(c) ? [Player, Computer] : [];
+    private void CommitPlay(PlayerState p, CardInstance c, MonsterInstance? target, MonsterInstance? sacrifice, string mode, PlayerState? playerTarget = null)
     {
-        if (GetPlayProblem(p, c) != "" || (target != null && !SpellTargets(p, c.Card).Contains(target)) || (sacrifice != null && !p.Field.Contains(sacrifice)))
+        if (GetPlayProblem(p, c) != "" || (target != null && !SpellTargets(p, c.Card).Contains(target)) || (sacrifice != null && !p.Field.Contains(sacrifice))
+            || (NeedsPlayerSpellTarget(c.Card) && (playerTarget == null || !GetDirectPlayerTargetsForSelection(p, c).Contains(playerTarget))))
         { Fail("卡牌或代價已失效，未扣費。"); return; }
         CanPayCost(p, c.Card, out var payment); foreach (var e in payment) e.IsTapped = true;
         Present("pay", p, amount: payment.Count, label: "支付能量");
-        Present("play", p, c.InstanceId, target?.InstanceId, card: c.Card, label: c.Card.IsMonster ? "打出怪物" : "施放法術");
+        Present("play", p, c.InstanceId, playerTarget != null ? TargetId(playerTarget) : target?.InstanceId, card: c.Card, label: c.Card.IsMonster ? "打出怪物" : "施放法術");
         var id = c.Card.Id;
         if (id is "WCG-084" or "WCG-095") RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
         p.Hand.Remove(c);
@@ -313,7 +349,7 @@ public partial class GameEngine
         {
             if (c.Card.IsMonster) Summon(p, c, true);
             else if (c.Card.IsEnchantment) SummonStructure(p, c);
-            else { Log($"【{p.Name}】施放【{c.Card.Name}】。", "action"); Spell(p, c, target, mode); UsedSpell(p, c.Card); }
+            else { Log($"【{p.Name}】施放【{c.Card.Name}】。", "action"); Spell(p, c, target, mode, playerTarget); UsedSpell(p, c.Card); }
         });
     }
     private void Summon(PlayerState p, CardInstance c, bool paid)

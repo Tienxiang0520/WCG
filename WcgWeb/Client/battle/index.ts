@@ -4,6 +4,7 @@ import type {Card,Command,Event,Hand,Monster,Receiver,Response,State,Target} fro
 
 const colors:Record<string,number>={'狂怒':0xee7955,'理智':0x67baff,'生機':0x8fd2a5,'秩序':0xe3ca83,'深淵':0xc49cec,'中立':0xa9b5c5};
 const font='"Noto Sans CJK TC", "Microsoft JhengHei", sans-serif';
+const playerTargetId='00000000-0000-0000-0000-000000000001',computerTargetId='00000000-0000-0000-0000-000000000002';
 function el<K extends keyof HTMLElementTagNameMap>(tag:K,text='',cls=''):HTMLElementTagNameMap[K]{const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n;}
 function button(text:string,run:()=>void,disabled=false){const b=el('button',text,'battle-client-button');b.type='button';b.disabled=disabled;b.onclick=run;return b;}
 
@@ -123,6 +124,8 @@ class BattleScene extends Phaser.Scene {
         this.add.rectangle(w/2,l.playerField,5*(l.cardWidth+8),l.fieldHeight,0x142a2e).setStrokeStyle(1,0x426b64);
         this.visualHp.set('computer',s.computer.hp);this.visualHp.set('player',s.player.hp);
         this.zones.set('face',this.heroZone('computer'));
+        this.zones.set(playerTargetId,this.heroZone('player'));
+        this.zones.set(computerTargetId,this.heroZone('computer'));
         this.drawHero('computer');this.drawHero('player');
         this.zones.set('play',{x:w/2,y:l.playerField,width:5*(l.cardWidth+8),height:l.fieldHeight});
         this.zones.set('energy',this.energyZone('player'));
@@ -312,10 +315,12 @@ class BattleScene extends Phaser.Scene {
         this.text(infoX,this.compact?z.y-15:z.y-57,side==='player'?'玩家':'電腦',14,'#d6e6ef');
         this.sideLabels.set(side,this.text(infoX,this.compact?z.y+9:z.y+55,'',12,'#9bb3c5'));
         this.hp(side,this.visualHp.get(side)??7);
-        if(side==='computer')this.add.zone(z.x,z.y,z.width,z.height).setDepth(22).setInteractive({useHandCursor:true})
-            .on('pointerover',()=>{if(this.selected&&!this.owner.busy)this.owner.showPreview(this.selected,'face');})
+        this.add.zone(z.x,z.y,z.width,z.height).setDepth(22).setInteractive({useHandCursor:true})
+            .on('pointerover',()=>{if(side==='computer'&&this.selected&&!this.owner.busy)this.owner.showPreview(this.selected,'face');})
             .on('pointerup',(pointer:Phaser.Input.Pointer)=>{if(pointer.downElement!==this.game.canvas||pointer.upElement!==this.game.canvas)return;const s=this.owner.state;
-                if(s&&!s.pending&&!this.owner.busy&&!this.drag&&performance.now()>this.suppressUntil&&this.selected&&s.player.field.find(m=>m.card.instanceId===this.selected)?.targets.some(t=>t.id==='face'))this.owner.intent('attack',this.selected);
+                const target=side==='player'?playerTargetId:computerTargetId;
+                if(s?.pending?.targets.includes(target)&&!this.owner.busy&&!this.drag){this.owner.intent('target',undefined,target);return;}
+                if(side==='computer'&&s&&!s.pending&&!this.owner.busy&&!this.drag&&performance.now()>this.suppressUntil&&this.selected&&s.player.field.find(m=>m.card.instanceId===this.selected)?.targets.some(t=>t.id==='face'))this.owner.intent('attack',this.selected);
             });
     }
     attackMetric(phase:string,id:string){const p=this.pieces.get(id);if(!p)return;

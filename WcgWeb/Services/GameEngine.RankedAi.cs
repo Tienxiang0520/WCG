@@ -234,6 +234,7 @@ public partial class GameEngine
 
     private bool TieredTarget(PlayerState p, PlayerState e, PendingTarget pending, AiProfile prof)
     {
+        if (pending.PlayerValidator != null) return SelectPlayerTarget(p);
         var legal = p.Board.Concat(e.Board).Where(m => pending.Validator?.Invoke(m) != false).ToList();
         if (legal.Count == 0) return false;
         if (AiLevel == 0) return SelectTarget(Pick(legal, 30));

@@ -122,11 +122,13 @@ public sealed class TutorialSession : IDisposable
                 return allow.Card == null || CardOf(command.InstanceId) == allow.Card;
             case "play":
                 if (allow.Card != null && CardOf(command.InstanceId) != allow.Card) return false;
+                if (allow.TargetPlayer != null) return command.TargetId == null || Engine.PlayerTarget(command.TargetId)?.Id == allow.TargetPlayer;
                 return command.TargetId == null || allow.Target == null || CardOf(command.TargetId) == allow.Target;
             case "attack":
                 if (allow.Card != null && CardOf(command.InstanceId) != allow.Card) return false;
                 return allow.Face ? command.TargetId == null : command.TargetId != null && (allow.Target == null || CardOf(command.TargetId) == allow.Target);
             case "target":
+                if (allow.TargetPlayer != null) return Engine.PlayerTarget(command.TargetId)?.Id == allow.TargetPlayer;
                 return allow.Target == null || CardOf(command.TargetId) == allow.Target;
             case "choice":
                 var option = command.OptionId ?? "";

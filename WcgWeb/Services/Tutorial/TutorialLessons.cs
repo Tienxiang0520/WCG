@@ -206,10 +206,10 @@ public static class TutorialLessons
                     Done = e => e.Player.Graveyard.Any(c => c.Card.Id == "WCG-046") && e.Player.Graveyard.Count >= 3 && Settled(e),
                     Text = "「自然之怒」是抉擇法術，打出時二選一。場上已沒有 PP 500 以下的敵怪，請選「抽 1 張牌，然後棄 1 張手牌」，再棄掉剛抽到的「巡邏輕步兵」或「淡水狂鱷」（留下「甦生之雨」）。",
                     Hint = "請打出「自然之怒」，選擇抽 1 棄 1，並棄掉剛抽到的怪物。" },
-                new() { Title = "回復生命", Spot = ["hand:WCG-050", "hero"], Allow = [Play("WCG-050")],
+                new() { Title = "回復生命", Spot = ["hand:WCG-050", "hero"], Allow = [PlayPlayer("WCG-050", "player"), PickPlayer("player")],
                     Done = e => e.Player.Hp == 6,
-                    Text = "「甦生之雨」回復 2 點生命。生命上限是 7，超過的部分不會累積。",
-                    Hint = "請打出「甦生之雨」。" },
+                    Text = "「甦生之雨」能回復任一玩家 2 點生命。這一步請拖向自己的頭像。生命上限是 7，超過的部分不會累積。",
+                    Hint = "請將「甦生之雨」拖向自己的頭像，或施放後點選自己的頭像。" },
                 new() { Title = "本課重點",
                     Text = "常見法術效果：直接傷害、消滅、抽牌、回復、返回手牌、橫置或直立怪物、附著在怪物上。所有費用都是通用能量，任何意志的卡都能用同一池能量支付。" }
             ]

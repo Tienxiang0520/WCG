@@ -44,7 +44,7 @@ public sealed partial class RankedSession
         }
         // Matches started before the card-text clarity update keep the old wording and the old engine behaviour (LegacyCardRules).
         // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
-        priorEras = [Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
+        priorEras = [Era(CardBalanceHistory.BeforePlayerTargets(cards), false, false), Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
             Era(CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards), true)];
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try
@@ -97,20 +97,23 @@ public sealed partial class RankedSession
     {
         var source = c.Type is "attack" or "activate" ? Engine.Player.Board.OrderBy(m=>m.Slot).ToList().FindIndex(m => m.InstanceId == c.InstanceId)
             : Engine.Player.Hand.FindIndex(m => m.InstanceId == c.InstanceId);
-        var side = Engine.Player.Board.Any(m => m.InstanceId == c.TargetId) ? 0 : Engine.Computer.Board.Any(m => m.InstanceId == c.TargetId) ? 1 : -1;
-        var target = side < 0 ? -1 : (side == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToList().FindIndex(m => m.InstanceId == c.TargetId);
+        var side = c.TargetId == GameEngine.PlayerTargetId ? 2 : c.TargetId == GameEngine.ComputerTargetId ? 3
+            : Engine.Player.Board.Any(m => m.InstanceId == c.TargetId) ? 0 : Engine.Computer.Board.Any(m => m.InstanceId == c.TargetId) ? 1 : -1;
+        var target = side is < 0 or >= 2 ? -1 : (side == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToList().FindIndex(m => m.InstanceId == c.TargetId);
         return new(c.Type, source, side, target, Engine.CurrentPendingChoice?.Options.FindIndex(o => o.Id == c.OptionId) ?? -1, RulesVersion: GameEngine.RankedAiVersion);
     }
     private BattleCommand Decode(RankedAction a) => Decode(Engine, a);
     private static BattleCommand Decode(GameEngine Engine, RankedAction a)
     {
-        if (a.Source < -1 || a.TargetSide is < -1 or > 1 || a.Target < -1 || a.Choice < -1 ||
+        if (a.Source < -1 || a.TargetSide is < -1 or > 3 || a.Target < -1 || a.Choice < -1 ||
             a.Source >= (a.Type is "attack" or "activate" ? Engine.Player.Occupied : Engine.Player.Hand.Count) ||
-            (a.TargetSide >= 0 && (a.Target < 0 || a.Target >= (a.TargetSide == 0 ? Engine.Player : Engine.Computer).Occupied)) ||
+            (a.TargetSide is 0 or 1 && (a.Target < 0 || a.Target >= (a.TargetSide == 0 ? Engine.Player : Engine.Computer).Occupied)) ||
+            (a.TargetSide >= 2 && (a.Target != -1 || a.Type is not ("play" or "target"))) ||
             (a.Choice >= 0 && (Engine.CurrentPendingChoice == null || a.Choice >= Engine.CurrentPendingChoice.Options.Count)))
             throw new InvalidDataException("對局操作位置無效。");
         Guid? source = a.Source < 0 ? null : a.Type is "attack" or "activate" ? Engine.Player.Board.OrderBy(m=>m.Slot).ToArray()[a.Source].InstanceId : Engine.Player.Hand[a.Source].InstanceId;
-        Guid? target = a.TargetSide < 0 ? null : (a.TargetSide == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToArray()[a.Target].InstanceId;
+        Guid? target = a.TargetSide switch { -1 => null, 2 => GameEngine.PlayerTargetId, 3 => GameEngine.ComputerTargetId,
+            _ => (a.TargetSide == 0 ? Engine.Player : Engine.Computer).Board.OrderBy(m=>m.Slot).ToArray()[a.Target].InstanceId };
         var option = a.Choice < 0 ? null : Engine.CurrentPendingChoice!.Options[a.Choice].Id;
         return new(Guid.NewGuid(), Engine.MatchId, Engine.Revision, a.Type, source, target, option);
     }

@@ -108,7 +108,7 @@ public partial class GameEngine
             var c = remaining.First(c => c.InstanceId.ToString() == o.Id); remaining.Remove(c); p.Deck.Add(c); OrderBottom(p, remaining);
         });
     }
-    private void Spell(PlayerState p, CardInstance source, MonsterInstance? target, string mode)
+    private void Spell(PlayerState p, CardInstance source, MonsterInstance? target, string mode, PlayerState? playerTarget = null)
     {
         var enemy = GetOpponent(p);
         var c = source.Card;
@@ -123,8 +123,8 @@ public partial class GameEngine
             case "WCG-062": case "WCG-074":
                 Resolve(() => { if (target != null && CanShield(target)) Attach(p, source, target); },
                     () => { if (c.Id == "WCG-062") Heal(p, 1); else DrawMany(p, 1); }); break;
-            case "WCG-066": Resolve(() => Heal(p, 2), () => DrawMany(p, 1)); break;
-            case "WCG-070": Heal(p, 1); break;
+            case "WCG-066": Resolve(() => Heal(playerTarget ?? p, 2), () => DrawMany(p, 1)); break;
+            case "WCG-070": Heal(playerTarget ?? p, 1); break;
             case "WCG-072": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
             case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1); }); break;
             case "WCG-008": KillBatch(p.Field.Concat(enemy.Field).Where(m => m.CurrentPP <= 500).ToArray(), c.Name); break;
@@ -146,7 +146,7 @@ public partial class GameEngine
                 Ask(p, "野性之力抉擇", options, o => { if (o.Id == "DRAW") DrawMany(p, 1); else FreeHand(p, 1, 1); }); break;
             case "WCG-044":
                 if (p.Deck.Count > 0) { var energy = p.Deck[0]; p.Deck.RemoveAt(0); energy.IsTapped = true; p.EnergyZone.Add(energy); Present("energy", p, energy.InstanceId, label: "額外背面能量"); Log("滋養萌發：額外能量背面橫置進場。"); } break;
-            case "WCG-050": Heal(p, 2); break;
+            case "WCG-050": Heal(playerTarget ?? p, 2); break;
             case "WCG-052": FreeHand(p, 2, 2); break;
             case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;

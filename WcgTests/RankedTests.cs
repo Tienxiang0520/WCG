@@ -89,7 +89,7 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void BalanceUpdatePreservesActiveOldMatchAndUsesNewRulesOnNextMatch()
     {
-        var oldCards=Overlay(Overlay(Overlay(Overlay(cards,"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
+        var oldCards=Overlay(Overlay(Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
         var deck=DeckService.Copy(oldCards.PresetDecks[1]);deck.CardIds.RemoveRange(0,4);deck.CardIds.AddRange(Enumerable.Repeat("WCG-185",4));
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(oldSession.Start(deck).Success);
@@ -112,9 +112,65 @@ public sealed class RankedTests : IDisposable
         return new(JsonSerializer.Serialize(current.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
     }
     static string Hash(CardDatabase c)=>Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(c.AllCards))));
+    private static Deck HealingDeck()
+    {
+        var deck = DeckService.CreateStarterDeck();
+        deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-050" : id).ToList();
+        return deck;
+    }
+    [Fact] public void PlayerHealingJournalResumesAndReplaysBothHeroTargets()
+    {
+        foreach (var target in new[] { GameEngine.PlayerTargetId, GameEngine.ComputerTargetId })
+        {
+            store.Save(new() { Season = "2026-10", Stars = 22, BestStars = 22, SeasonBest = 22 });
+            var session = Session(); Assert.True(session.Start(HealingDeck()).Success);
+            var profile = session.Read(); profile.Match!.PlayerFirst = true;
+            // Find a deterministic opening containing the existing four-copy healing spell.
+            for (var seed = 0; seed < 50; seed++)
+            {
+                profile.Match.Seed = seed; store.Save(profile); session = Session();
+                if (session.Engine.Player.Hand.Any(c => c.Card.Id == "WCG-050")) break;
+            }
+            var healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-050");
+            var lease = session.Coordinator.Attach(); session.Coordinator.AiPaused = true;
+            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c != healing).InstanceId).Success);
+            Assert.True(Send(session, "end").Success);
+            for (var i = 0; session.Engine.DecisionPlayerId == "computer" && i < 100; i++)
+            {
+                var step = session.Coordinator.StepAi(lease); Assert.True(step.Success);
+                session.Coordinator.Acknowledge(lease, step.State.MatchId, step.State.Revision, step.BatchId);
+            }
+            Assert.Equal("player", session.Engine.DecisionPlayerId);
+            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-050").InstanceId).Success);
+            healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-050");
+            Assert.True(Send(session, "play", healing.InstanceId).Success);
+            var pending = Session(); Assert.Empty(pending.Error); Assert.NotNull(pending.Engine.CurrentPendingTarget?.PlayerValidator);
+            Assert.True(Send(pending, "target", target: target).Success);
+            Assert.Equal(target == GameEngine.PlayerTargetId ? 2 : 3, pending.Read().Match!.Actions.Last().TargetSide);
+            var shape = JsonSerializer.Serialize(StateShape(pending.Engine));
+            var restored = Session(); Assert.Empty(restored.Error); Assert.Equal(22, restored.Read().Stars);
+            Assert.Equal(shape, JsonSerializer.Serialize(StateShape(restored.Engine)));
+            Assert.True(Send(restored, "surrender").Success);
+            Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        }
+    }
+    [Fact] public void PrePlayerTargetMatchKeepsOldHealingAndRankAfterUpgrade()
+    {
+        var prior = Overlay(cards, "balance-before-player-targets.json");
+        Assert.Equal("88C0C870C9CC1E0CEA81399269174E23D1A1E7649EA41F6BB91DCAE57EABA187", Hash(prior));
+        store.Save(new() { Season = "2026-10", Stars = 22, BestStars = 22, SeasonBest = 22 });
+        var old = new RankedSession(prior, env, store, new RankedDecks(prior, env), NullLogger<BattleCoordinator>.Instance, clock);
+        Assert.True(old.Start(HealingDeck()).Success);
+        var before = JsonSerializer.Serialize(StateShape(old.Engine));
+        var current = Session(); Assert.Empty(current.Error); Assert.NotEmpty(current.BalanceNotice);
+        Assert.Equal(22, current.Read().Stars); Assert.Equal(before, JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.Equal("回復 2 點生命。", current.Engine.Player.Hand.Concat(current.Engine.Player.Deck).First(c => c.Card.Id == "WCG-050").Card.Text);
+        Assert.True(Send(current, "surrender").Success);
+        Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+    }
     [Fact] public void DiversityUpdateResumesPostClarityMatchWithoutEnablingLegacyEffects()
     {
-        var prior=Overlay(cards,"balance-before-diversity.json");
+        var prior=Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json");
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
         var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
         var deck=DeckService.Copy(prior.PresetDecks[0]);Assert.True(old.Start(deck).Success);
@@ -132,7 +188,7 @@ public sealed class RankedTests : IDisposable
     [Fact] public void HistoricCatalogsReproduceTheReleasedFingerprints()
     {
         // Ranked saves store a hash of the catalog; the overlays must rebuild the exact released catalogs or old matches stop resuming.
-        var beforeText=Overlay(Overlay(cards,"balance-before-diversity.json"),"balance-before-card-text.json");
+        var beforeText=Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json");
         // origin/main 43615fc (before 卡牌文字白話化).
         Assert.Equal("E5FF04DB722205E91C3D52DD688EE435F60B40E07B0E445C1B3F05DEA02D6557",Hash(beforeText));
         Assert.NotEqual(Hash(beforeText),Hash(cards));
@@ -143,7 +199,7 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void ArrowExpansionPreservesActivePreArrowMatchAndReplays()
     {
-        var oldCards=Overlay(Overlay(Overlay(cards,"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json");
+        var oldCards=Overlay(Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json");
         Assert.Empty(oldCards.GetCard("WCG-005")!.Arrows);Assert.Equal("衝鋒。",oldCards.GetCard("WCG-005")!.Text);
         var deck=DeckService.Copy(oldCards.PresetDecks[0]);
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
@@ -165,7 +221,7 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void CardTextUpdatePreservesActiveOldMatchWithLegacyRulesAndReplays()
     {
-        var oldCards=Overlay(Overlay(cards,"balance-before-diversity.json"),"balance-before-card-text.json");
+        var oldCards=Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json");
         Assert.Equal(1200,oldCards.GetCard("WCG-147")!.PP);Assert.StartsWith("離場：",oldCards.GetCard("WCG-003")!.Text);
         var deck=DeckService.Copy(oldCards.PresetDecks[0]);
         var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
