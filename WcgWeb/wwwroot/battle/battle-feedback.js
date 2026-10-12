@@ -268,10 +268,14 @@ export function bindFeedback(root, sound = null, fx = null) {
     function dropShowcase() { showcase?.remove(); showcase = null; }
     function sourceOf(step) { return step.fromShowcase ? showcase : visual(step.from); }
     function handZone(side) { return side === 'player' ? root.querySelector('.v06-hand') ?? hero('player') : hero('computer'); }
-    async function cardTo(side, card, destination, faceDown = false) {
+    async function cardTo(side, card, destination, faceDown = false, fromDeck = false) {
         const start = hero(side); if (!start || !destination) return;
         const r = start.getBoundingClientRect(), el = publicCard(faceDown ? null : card);
-        place(el, { x: r.x + r.width / 2 - 45, y: r.y + r.height / 2 - 60, width: 90, height: 120 });
+        const board = boardRect();
+        const origin = fromDeck ? { x: board.x + board.width - 90, y: board.y + Math.max(0, board.height - 120) * (side === 'player' ? .8 : .1) }
+            : { x: r.x + r.width / 2 - 45, y: r.y + r.height / 2 - 60 };
+        if (fromDeck) el.dataset.wcgDrawOrigin = 'right-deck';
+        place(el, { ...origin, width: 90, height: 120 });
         await fly(el, destination);
     }
     async function runEvent(step, state) {
@@ -340,7 +344,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') {
             if (from) void fx?.glow(from, '#9edcff', 260);
             void sound?.play('draw');
-            await cardTo(ev.side, ev.card, handZone(ev.side), ev.type === 'draw' && !ev.card);
+            await cardTo(ev.side, ev.card, handZone(ev.side), ev.type === 'draw' && !ev.card, ev.type === 'draw');
         }
         else if (ev.type === 'discard') {
             const inHand = hand(ev.instanceId), el = inHand ? place(inHand.cloneNode(true), inHand.getBoundingClientRect()) : null;

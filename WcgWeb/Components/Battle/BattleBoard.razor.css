@@ -193,6 +193,9 @@
 
 /* Drag targeting: legal zones pulse while aiming. */
 .dragging .legal{animation:legal-pulse .9s ease-in-out infinite alternate}
+.free-cast-ready .battlefield{outline:2px solid #9cf4bc;box-shadow:inset 0 0 24px #64df8540;border-radius:14px}
+.v06-hand-card[data-wcg-held]{box-shadow:0 16px 30px #000a;opacity:.92}
+.v06-hand-card[data-wcg-held][data-ready="true"]{opacity:1;outline:2px solid #9cf4bc;box-shadow:0 10px 30px #64df8560}
 @keyframes legal-pulse{from{outline-offset:1px}to{outline-offset:6px}}
 
 /* Field: readiness pulse, taunt breathe, shield bubble, silence desaturation. */

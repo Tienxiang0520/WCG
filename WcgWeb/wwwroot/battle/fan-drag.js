@@ -1,6 +1,7 @@
 import { createBattleAudio } from "./battle-audio.js";
 import { bindFeedback } from "./battle-feedback.js";
 import { applyMotionAttribute, createFx, motionReduced, readMotionSetting, saveMotionSetting } from "./battle-fx.js";
+import { freeCastReady, releaseZone } from "./drag-intent.js";
 
 // All gestures share the same aiming, destination feedback and cancellation lifecycle.
 export function bind(root, dotnet) {
@@ -13,7 +14,7 @@ export function bind(root, dotnet) {
         for (const r of records) if (r.target.classList?.contains('end-turn') && r.target.classList.contains('no-moves') && !String(r.oldValue ?? '').includes('no-moves')) void sound.play('timer');
     });
     endTurnWatch.observe(root, { subtree: true, attributes: true, attributeFilter: ['class'], attributeOldValue: true });
-    let gesture = null, aim = null, hovered = null;
+    let gesture = null, aim = null, held = null, hovered = null;
     let pendingDrop = null, flight = null;
     let frame = 0, suppressClick = false, disposed = false;
     const call = (method, ...args) => { if (!disposed) return dotnet.invokeMethodAsync(method, ...args).catch(() => {}); };
@@ -39,7 +40,9 @@ export function bind(root, dotnet) {
     }
     function cleanup() {
         cancelAnimationFrame(frame); frame = 0; clearHover();
-        aim?.remove(); root.classList.remove('aiming');
+        aim?.remove(); held?.remove(); held = null;
+        if (gesture?.visibility != null) gesture.source.style.visibility = gesture.visibility;
+        root.classList.remove('aiming', 'free-cast-ready');
         aim = gesture = null;
     }
     function down(e) {
@@ -47,7 +50,7 @@ export function bind(root, dotnet) {
         const source = e.target.closest('[data-drag-kind]');
         if (!source || !root.contains(source) || !source.dataset.dragKind) return;
         const origin = visibleOrigin(source);
-        gesture = { id: source.dataset.dragId, kind: source.dataset.dragKind, source,
+        gesture = { id: source.dataset.dragId, kind: source.dataset.dragKind, mode: source.dataset.dragKind === 'attack' ? 'target' : source.dataset.dragMode ?? 'place', source,
             x: e.clientX, y: e.clientY, originX: origin.x, originY: origin.y,
             currentX: e.clientX, currentY: e.clientY, pointer: e.pointerId, started: false };
     }
@@ -58,19 +61,37 @@ export function bind(root, dotnet) {
         const destination = hit?.closest('[data-drop-zone]');
         return destination && root.contains(destination) ? destination : null;
     }
+    function castPoint(x, y) {
+        const board = root.getBoundingClientRect();
+        const handTop = root.querySelector('.v06-hand')?.getBoundingClientRect().top ?? board.bottom;
+        const onHero = [...root.querySelectorAll('.hero')].some(el => { const r = el.getBoundingClientRect(); return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; });
+        const control = document.elementsFromPoint(x, y).some(el => !held?.contains(el) && el.closest?.('.match-header,.turn-controls,.modal-shade'));
+        return { x, y, startY: gesture.y, handTop, board, blocked: onHero || control };
+    }
     function draw() {
         if (!gesture?.started) return;
         const { currentX: px, currentY: py } = gesture;
         const { x: originX, y: originY } = visibleOrigin(gesture.source);
         const destination = destinationAt(px, py);
-        const valid = destination?.classList.contains('legal') ?? false;
-        if (hovered !== destination) { clearHover(); hovered = destination; }
+        // An untargeted cast has an area, not a selected creature or slot.
+        const free = gesture.mode === 'free' && destination?.dataset.dropZone !== 'energy';
+        const hoverDestination = free ? null : destination;
+        const valid = hoverDestination?.classList.contains('legal') ?? false;
+        if (hovered !== hoverDestination) { clearHover(); hovered = hoverDestination; }
         hovered?.classList.toggle('drop-hover', valid);
         hovered?.classList.toggle('drop-rejected', !valid);
         if (hovered && valid && hovered.dataset.dropZone === 'own' && !hovered.dataset.target)
             { const n = Number(hovered.dataset.slot) + 1, set = gesture.source.classList.contains('card-back');
                 hovered.dataset.dropPreview = document.documentElement.lang === 'en' ? `Slot ${n} · ${set ? 'Set face-down, 0 cost' : 'Enter'}` : `第 ${n} 格 · ${set ? '蓋牌 0費' : '進場'}`; }
         else hovered?.removeAttribute('data-drop-preview');
+        if (held) {
+            const ready = free && freeCastReady(castPoint(px, py));
+            root.classList.toggle('free-cast-ready', ready);
+            held.dataset.ready = String(ready || valid);
+            held.style.left = `${px - gesture.heldWidth / 2}px`;
+            held.style.top = `${py - gesture.heldHeight * .6}px`;
+            frame = requestAnimationFrame(draw); return;
+        }
         const color = valid ? '#9cf4bc' : destination ? '#ff8c81' : '#ffce79';
         aim.dataset.state = valid ? 'valid' : destination ? 'invalid' : 'free';
         for (const path of aim.querySelectorAll('path[data-aim]')) path.setAttribute('stroke', color);
@@ -89,16 +110,29 @@ export function bind(root, dotnet) {
         gesture.started = true; pendingDrop = null;
         document.getSelection()?.removeAllRanges();
         try { root.setPointerCapture(e.pointerId); } catch { /* Capture may be unavailable after an interrupted gesture. */ }
-        aim = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        aim.setAttribute('aria-hidden', 'true'); aim.setAttribute('data-wcg-aim', gesture.kind);
-        Object.assign(aim.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '2147482999', filter: 'drop-shadow(0 2px 4px #000a)' });
-        aim.setAttribute('class', 'wcg-aim');
-        // Glow underlay + flowing dashed core + a reticle that locks on when hovering a legal drop.
-        aim.innerHTML = '<defs><marker id="wcg-aim-tip" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 Z" fill="#ffce79" /></marker></defs>'
-            + '<path data-aim class="wcg-aim-glow" fill="none" stroke="#ffce79" stroke-width="12" stroke-linecap="round" />'
-            + '<path data-aim class="wcg-aim-core" fill="none" stroke="#ffce79" stroke-width="5" stroke-linecap="round" marker-end="url(#wcg-aim-tip)" />'
-            + '<g data-reticle class="wcg-aim-reticle" fill="none" stroke="#ffce79" stroke-width="3"><g class="wcg-aim-spin"><circle r="22" stroke-dasharray="26 8.5" /><path d="M -32 0 H -15 M 15 0 H 32 M 0 -32 V -15 M 0 15 V 32" /></g></g>';
-        document.body.append(aim); root.classList.add('aiming'); untilt();
+        if (gesture.mode !== 'target') {
+            held = gesture.source.cloneNode(true);
+            held.removeAttribute('data-drag-kind'); held.removeAttribute('data-drag-id'); held.removeAttribute('tabindex');
+            held.setAttribute('aria-hidden', 'true'); held.dataset.wcgHeld = gesture.mode;
+            held.classList.remove('lifted');
+            const r = gesture.source.getBoundingClientRect();
+            gesture.heldWidth = Math.min(r.width, 170); gesture.heldHeight = Math.min(r.height, 240);
+            Object.assign(held.style, { position: 'fixed', bottom: 'auto', width: `${gesture.heldWidth}px`, height: `${gesture.heldHeight}px`, margin: '0', transform: 'none', translate: 'none', animation: 'none', opacity: '1', transition: 'none', pointerEvents: 'none', zIndex: '2147482999', visibility: 'visible' });
+            gesture.visibility = gesture.source.style.visibility; gesture.source.style.visibility = 'hidden';
+            document.body.append(held);
+        } else {
+            aim = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            aim.setAttribute('aria-hidden', 'true'); aim.setAttribute('data-wcg-aim', gesture.kind);
+            Object.assign(aim.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '2147482999', filter: 'drop-shadow(0 2px 4px #000a)' });
+            aim.setAttribute('class', 'wcg-aim');
+            // Glow underlay + flowing dashed core + a reticle that locks on when hovering a legal drop.
+            aim.innerHTML = '<defs><marker id="wcg-aim-tip" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 Z" fill="#ffce79" /></marker></defs>'
+                + '<path data-aim class="wcg-aim-glow" fill="none" stroke="#ffce79" stroke-width="12" stroke-linecap="round" />'
+                + '<path data-aim class="wcg-aim-core" fill="none" stroke="#ffce79" stroke-width="5" stroke-linecap="round" marker-end="url(#wcg-aim-tip)" />'
+                + '<g data-reticle class="wcg-aim-reticle" fill="none" stroke="#ffce79" stroke-width="3"><g class="wcg-aim-spin"><circle r="22" stroke-dasharray="26 8.5" /><path d="M -32 0 H -15 M 15 0 H 32 M 0 -32 V -15 M 0 15 V 32" /></g></g>';
+            document.body.append(aim);
+        }
+        root.classList.add('aiming'); untilt();
         call('BeginDrag', gesture.kind, gesture.id);
         draw();
     }
@@ -113,14 +147,17 @@ export function bind(root, dotnet) {
         if (!gesture || gesture.pointer !== e.pointerId) return;
         if (!gesture.started) { cleanup(); return; }
         e.preventDefault(); suppressClick = true;
-        const destination = destinationAt(e.clientX, e.clientY);
+        const hit = destinationAt(e.clientX, e.clientY);
+        const zone = releaseZone(gesture.mode, castPoint(e.clientX, e.clientY), hit?.dataset.dropZone ?? null);
+        const destination = zone === 'cast' ? root.querySelector('.battlefield') : zone ? hit : null;
         const { kind, id } = gesture;
         // Capture first; the managed rules decide whether this drop can animate.
         if (destination) {
-            pendingDrop = { source: gesture.source, clone: gesture.source.cloneNode(true), kind,
-                from: gesture.source.getBoundingClientRect(), to: (destination.querySelector?.('.hero-face') ?? destination).getBoundingClientRect(), zone: destination.dataset.dropZone };
+            const visual = held ?? gesture.source;
+            pendingDrop = { source: gesture.source, clone: visual.cloneNode(true), kind,
+                from: visual.getBoundingClientRect(), to: (destination.querySelector?.('.hero-face') ?? destination).getBoundingClientRect(), zone };
         }
-        if (destination) call('DropCard', kind, id, destination.dataset.dropZone, Number(destination.dataset.slot ?? -1), destination.dataset.target ?? '');
+        if (destination) call('DropCard', kind, id, zone, zone === 'cast' ? -1 : Number(destination.dataset.slot ?? -1), zone === 'cast' ? '' : destination.dataset.target ?? '');
         else call('EndDrag');
         cleanup();
         setTimeout(() => { suppressClick = false; }, 0);

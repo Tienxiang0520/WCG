@@ -921,6 +921,7 @@
  "翻回正面": "Flip face-up",
  "翻開": "Reveal",
  "翻開第{0}格蓋牌": "Reveal set card in slot {0}",
+ "拉出手牌後放開施放，拉回手牌取消": "Pull out of your hand and release to cast; return to your hand to cancel",
  "翻開蓋牌": "Reveal set card",
  "費用不足，反擊未發動（需要 {0}，可用 {1}）；蓋牌已送墓地。": "Not enough energy; Counter did not activate (need {0}, available {1}); the set card went to the graveyard.",
  "翻開蓋牌！": "Reveal your set card!",

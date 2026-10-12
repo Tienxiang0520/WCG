@@ -50,6 +50,20 @@ test('enemy energy stays face down and input unlocks only after snapshot commit'
     assert.equal(descendants(flying.el).filter(el=>el.tag==='img').length,0,'hidden energy must not request card artwork');
     assert.equal(h.root.inert,true);h.feedback.clear();assert.equal(h.root.inert,false);assert.equal(h.body.children.length,0);
 });
+test('draws start at the right deck edge; opponent draws never expose artwork', async t=>{
+    const h=harness(t);
+    h.root.selectors['.battlefield'].getBoundingClientRect=()=>({x:100,y:120,width:900,height:400});
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'draw',side:'player',order:0,card:{cardId:'WCG-121',name:'冒險者行囊'}},{type:'draw',side:'computer',order:1}]));
+    const draws=h.record.filter(r=>r.el.dataset.wcgDrawOrigin==='right-deck');
+    assert.equal(draws.length,2);
+    assert.equal(draws[0].el.style.left,'910px');
+    assert.equal(draws[0].el.style.top,'344px');
+    assert.equal(draws[1].el.style.left,'910px');
+    assert.equal(draws[1].el.style.top,'148px');
+    assert.match(text(draws[1].el),/背面卡片/);
+    assert.equal(descendants(draws[1].el).filter(el=>el.tag==='img').length,0);
+    h.feedback.clear();
+});
 test('public AI play carries artwork, values and opponent-facing arrows together', async t=>{
     const h=harness(t),card={cardId:'WCG-147',name:'聖堂仲裁護衛',pp:1500,dp:1,arrows:['left','up']};
     await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'computer',instanceId:'guard',order:0,card}]));
