@@ -1,0 +1,5 @@
+.special-ruling{border-bottom:1px solid #b9c7bc33;margin:8px 0;padding-bottom:8px}
+.special-ruling summary{cursor:pointer;min-height:44px;box-sizing:border-box;padding:12px 4px;font-weight:600;line-height:1.5;overflow-wrap:anywhere}
+.special-ruling summary:focus-visible{outline:2px solid #b8dfcf;outline-offset:2px;border-radius:4px}
+.special-ruling p{line-height:1.75;overflow-wrap:anywhere}
+.rulings-note{font-size:.9em;opacity:.8;margin-top:20px}
