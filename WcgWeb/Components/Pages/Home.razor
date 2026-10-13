@@ -62,7 +62,7 @@
                             <button data-drop-zone="face" class="btn btn-danger mb-2" disabled="@(VisualBusy || !Engine.CanAttackPlayer(faceAttacker))" @onpointerenter="e => HoverTarget(null, e)" @onfocus="() => ShowPreview(null)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => AttackClick(null, match, revision)">攻擊電腦玩家 · @faceAttacker.CurrentDP 傷害</button>
                             @if (!Engine.CanAttackPlayer(faceAttacker)) { <small>@L["先處理敵方嘲諷。"]</small> }
                         }
-                        <div class="energy-summary" data-drop-zone="@(mine ? "energy" : null)">@L["能量：可用"] <strong>@side.AvailableEnergy</strong> / 總數 @side.TotalEnergy · 已支付 @side.EnergyZone.Count(e => e.IsTapped) · 聖盾保留 @side.AttachedEnergy
+                        <div class="energy-summary" data-drop-zone="@(mine ? "energy" : null)">@L["能量：可用"] <strong>@side.AvailableEnergy</strong> / 總數 @side.TotalEnergy · 已支付 @side.EnergyZone.Count(e => e.IsTapped) · 能量護盾保留 @side.AttachedEnergy
                             @if (mine) { <span> · 本回合填能量：@(side.HasFilledEnergyThisTurn ? "已使用" : "尚未使用")</span> }
                         </div>
                         <div class="energy-row" role="region" data-drop-zone="@(mine ? "energy" : null)" aria-label="@(side.Name + "背面能量")">
@@ -74,15 +74,14 @@
                             @foreach (var monster in side.Field)
                             {
                                 bool selectable = FieldSelectable(monster);
-                                <article data-drag-kind="@(mine ? "monster" : null)" data-drag-id="@monster.InstanceId" data-drop-zone="@(mine ? null : $"m:{monster.InstanceId}")" @key="monster.InstanceId" class="field-unit @(SelectedAttacker == monster ? "selected" : "") @(selectable ? "selectable" : SelectedAttacker != null && !mine ? "target-dim" : "") @(monster.IsFrozen ? "frozen" : "") @(monster.HasShield ? "shielded" : "") @(Engine.LastAttack is { } hit && hit.ActionNumber == Engine.Revision && hit.AttackerId == monster.InstanceId ? "attack-lunge" : "")">
+                                <article data-drag-kind="@(mine ? "monster" : null)" data-drag-id="@monster.InstanceId" data-drop-zone="@(mine ? null : $"m:{monster.InstanceId}")" @key="monster.InstanceId" class="field-unit @(SelectedAttacker == monster ? "selected" : "") @(selectable ? "selectable" : SelectedAttacker != null && !mine ? "target-dim" : "") @(monster.HasShield ? "shielded" : "") @(Engine.LastAttack is { } hit && hit.ActionNumber == Engine.Revision && hit.AttackerId == monster.InstanceId ? "attack-lunge" : "")">
                                     <button class="field-action" disabled="@(!selectable)" @onpointerenter="e => HoverTarget(monster, e)" @onfocus="() => ShowPreview(monster)" @onpointerdown="PointerDown" @onclick:stopPropagation="true" @onclick="() => FieldClick(monster, match, revision)">
                                         <WcgWeb.Components.Common.CardArt Card="monster.Card" CssClass="field-illustration" />
                                         <strong>@monster.Card.Name</strong><span>@monster.CurrentPP PP · @monster.CurrentDP DP</span>
-                                        <small>@(monster.IsTaunt ? "嘲諷 · " : "")@(monster.HasShield ? $"聖盾 ×{monster.ShieldCount} · " : "")@(monster.IsFrozen ? "冰凍 · " : "")@(monster.IsStealthed ? "背面潛伏 · " : "")@(monster.IsSilenced ? "沉默 · " : "")@MonsterReadiness(monster)</small>
+                                        <small>@(monster.IsTaunt ? "嘲諷 · " : "")@(monster.HasShield ? $"能量護盾 ×{monster.ShieldCount} · " : "")@(monster.IsStealthed ? "背面潛伏 · " : "")@(monster.IsSilenced ? "沉默 · " : "")@MonsterReadiness(monster)</small>
                                         @if (selectable) { <span class="action-hint">@FieldHint(monster)</span> }
                                     </button>
                                     @if (monster.HasShield) { <small class="status-detail">◆ 保留 @monster.ShieldCount 張背面能量</small> }
-                                    @if (monster.IsFrozen) { <small class="status-detail">@FreezeLabel(monster, side)</small> }
                                     @if (monster.SilenceSpell is { } attached) { <button class="btn btn-sm btn-outline-warning" @onclick:stopPropagation="true" @onclick="() => Inspect = attached.Card">附著：@attached.Card.Name</button> }
                                     <button class="btn btn-sm btn-outline-secondary" @onclick:stopPropagation="true" @onclick="() => Inspect = monster.Card">@L["查看卡片"]</button>
                                 </article>
@@ -316,7 +315,7 @@
                 foreach (var (id, old) in PreviousField)
                 {
                     if (!current.TryGetValue(id, out var m)) Feedback.Add($"{old.Name} 離開戰場");
-                    else if (old.Shield > m.ShieldCount) Feedback.Add($"{old.Name} 消耗聖盾 · 能量返還");
+                    else if (old.Shield > m.ShieldCount) Feedback.Add($"{old.Name} 消耗能量護盾 · 能量返還");
                 }
                 foreach (var m in current.Values.Where(m => !PreviousField.ContainsKey(m.InstanceId))) Feedback.Add($"{m.Card.Name} 進場");
                 var drawn = Engine.Player.Hand.Count(c => !PreviousHand.Contains(c.InstanceId));
@@ -354,9 +353,8 @@
     }
     private void ClearAttack() { SelectedAttacker = null; PreviewTarget = null; Preview = null; }
     private void PageKey(KeyboardEventArgs e) { if (e.Key == "Escape") { ClearAttack(); Inspect = null; } }
-    private static string Outcome(bool dies, bool shield) => dies ? "消滅" : shield ? "聖盾破裂，存活；返還 1 張可用能量" : "存活";
-    private string MonsterReadiness(MonsterInstance m) => m.HasAttacked ? "已攻擊" : m.IsFrozen ? "不能主動攻擊" : !m.IsSilenced && m.Card.CannotAttack ? "不能攻擊" : m.HasSummoningSickness && !m.HasCharge ? "召喚醉意" : "可攻擊";
-    private string FreezeLabel(MonsterInstance m, PlayerState side) => m.FrozenUntilTurn == Engine.TurnNumber ? $"{side.Name} 本回合結束解凍" : $"{side.Name} 下個回合結束解凍";
+    private static string Outcome(bool dies, bool shield) => dies ? "消滅" : shield ? "能量護盾破裂，存活；返還 1 張可用能量" : "存活";
+    private string MonsterReadiness(MonsterInstance m) => m.HasAttacked ? "已攻擊" : !m.IsSilenced && m.Card.CannotAttack ? "不能攻擊" : m.HasSummoningSickness && !m.HasCharge ? "召喚醉意" : "可攻擊";
     private void PointerDown(PointerEventArgs e) => TouchInput = e.PointerType == "touch";
     private void HoverTarget(MonsterInstance? target, PointerEventArgs e) { if (e.PointerType != "touch") { TouchInput = false; ShowPreview(target); } }
     private void ShowPreview(MonsterInstance? target)

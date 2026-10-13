@@ -5,11 +5,11 @@
 //   event     the engine event itself (attack, summon, death, damage …); `from` names the effect source, if any
 //   showcase  a spell is enlarged in the centre before its effects resolve
 //   source    a passive / trigger / deploy ability: the source card flashes with a badge
-//   badge     a keyword or status appears on a unit (嘲諷, 聖盾, 沉默 …), optionally with a beam from an aura source
+//   badge     a keyword or status appears on a unit (嘲諷, 能量護盾, 沉默 …), optionally with a beam from an aura source
 //   stat      a unit's PP changed (buff / debuff)
 //   tap       a unit was tapped or readied by an effect (not by attacking)
 
-export const BADGE_KEYWORDS = ['聖盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
+export const BADGE_KEYWORDS = ['能量護盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
 const SOURCE_TYPES = new Set(['effect', 'trigger']);
 const TARGETED = new Set(['death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
@@ -23,7 +23,7 @@ function units(snapshot) {
 function keywords(unit) { return new Set((unit?.status ?? []).map(keywordOf).filter(Boolean)); }
 
 // Arrow auras use the engine rule: ← / → reach the same side's neighbouring slot, ↑ reaches the facing enemy slot.
-export function auraSource(target, all, keyword = '聖盾') {
+export function auraSource(target, all, keyword = '能量護盾') {
     for (const source of all.values()) {
         if (source === target || source.card?.instanceId === target.card?.instanceId) continue;
         if (!String(source.card?.text ?? '').includes(keyword) || (source.status ?? []).some(s => String(s).startsWith('沉默'))) continue;
@@ -62,7 +62,7 @@ export function planSteps(previous, next, events) {
             const unit = after.get(ev.instanceId);
             for (const k of keywords(unit)) {
                 badged.add(`${ev.instanceId}:${k}`);
-                steps.push({ kind: 'badge', target: ev.instanceId, keyword: k, from: k === '聖盾' && unit ? auraSource(unit, after) : null });
+                steps.push({ kind: 'badge', target: ev.instanceId, keyword: k, from: k === '能量護盾' && unit ? auraSource(unit, after) : null });
             }
         }
     }
@@ -73,7 +73,7 @@ export function planSteps(previous, next, events) {
         const was = keywords(old);
         for (const k of keywords(unit)) {
             if (was.has(k) || badged.has(`${id}:${k}`)) continue;
-            steps.push({ kind: 'badge', target: id, keyword: k, from: k === '聖盾' ? auraSource(unit, after) : null });
+            steps.push({ kind: 'badge', target: id, keyword: k, from: k === '能量護盾' ? auraSource(unit, after) : null });
         }
         const delta = (Number(unit.pp) || 0) - (Number(old.pp) || 0);
         if (delta && Number.isFinite(delta)) steps.push({ kind: 'stat', target: id, delta });

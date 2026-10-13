@@ -17,6 +17,5 @@ public partial class GameEngine
         if(!Alive(m)||m.IsSilenced)return;p.Graveyard.Remove(spell);m.SilenceSpell=spell;m.SilenceOwnerId=p.Id;m.IsSilenced=true;RefreshBoard();
         Present("status",Owner(m),m.InstanceId,card:m.Card,label:"沉默");
     }
-    private void Freeze(MonsterInstance m){if(Alive(m))m.IsTapped=true;}
     private void ReleaseShield(MonsterInstance m,bool all=true) { }
 }

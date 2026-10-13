@@ -69,8 +69,8 @@ public sealed class Localizer : IDisposable
 
     public string CardName(CardDefinition? card) => card == null ? "" : IsEnglish ? LocalizationCatalog.CardName(card.Id, card.Name) : card.Name;
     public string CardName(string id, string zhName) => IsEnglish ? LocalizationCatalog.CardName(id, zhName) : zhName;
-    public string CardText(CardDefinition? card) => card == null ? "" : IsEnglish ? LocalizationCatalog.CardText(card.Id, card.Text) : card.Text;
-    public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, zhText) : zhText;
+    public string CardText(CardDefinition? card) => card == null ? "" : CardText(card.Id, card.Text);
+    public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, CardDefinition.NormalizeShieldName(zhText)) : CardDefinition.NormalizeShieldName(zhText);
     public string CardName(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardName(card.CardId, card.Name);
     public string CardText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardText(card.CardId, card.Text);
     // Text shown on card faces and detail panels: vanilla cards ("無。" / "None.") leave the box blank. Search keeps using CardText.
@@ -81,8 +81,8 @@ public sealed class Localizer : IDisposable
     public string Will(string? will) => Text(will);
     public string CardType(string? type) => Text(type);
     // Official and ranked decks are translated by id while they keep their original name; player-named decks stay as typed.
-    public string DeckName(Deck? deck) => deck == null ? "" : IsEnglish ? LocalizationCatalog.DeckName(deck.Id, deck.Name) : deck.Name;
-    public string DeckDescription(Deck? deck) => deck == null ? "" : IsEnglish ? LocalizationCatalog.DeckDescription(deck.Id, deck.Description) : deck.Description;
+    public string DeckName(Deck? deck) => deck == null ? "" : IsEnglish ? LocalizationCatalog.DeckName(deck.Id, deck.Name) : LocalizationCatalog.ChineseDeckName(deck.Id, deck.Name);
+    public string DeckDescription(Deck? deck) => deck == null ? "" : IsEnglish ? LocalizationCatalog.DeckDescription(deck.Id, deck.Description) : LocalizationCatalog.ChineseDeckDescription(deck.Id, deck.Description);
 }
 
 public static partial class LocalizationCatalog
@@ -162,10 +162,13 @@ public static partial class LocalizationCatalog
     // Cards whose targeting changed pin the translated source text; historic cards use their own wording.
     public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != ""
         && (c.ZhText == null || c.ZhText == zhText) ? c.Text : Translate(zhText);
+    private static string CurrentDeckText(string text) => CardDefinition.NormalizeShieldName(text).Replace("冰凍、回手", "橫置、回手", StringComparison.Ordinal).Replace("理智冰凍配", "理智橫置配", StringComparison.Ordinal);
+    public static string ChineseDeckName(string id, string name) => data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(name) == d.ZhName || name == d.Name) ? d.ZhName : name;
+    public static string ChineseDeckDescription(string id, string text) => data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(text) == d.ZhDescription || text == d.Description) ? d.ZhDescription : text;
     public static string DeckName(string id, string name) =>
-        data.Value.Decks.TryGetValue(id, out var d) && (name == d.ZhName || name == d.Name) ? d.Name : Translate(name);
+        data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(name) == d.ZhName || name == d.Name) ? d.Name : Translate(name);
     public static string DeckDescription(string id, string text) =>
-        data.Value.Decks.TryGetValue(id, out var d) && (text == d.ZhDescription || text == d.Description) ? d.Description : Translate(text);
+        data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(text) == d.ZhDescription || text == d.Description) ? d.Description : Translate(text);
 
     // Exact text, a card name, a known template (arguments translated recursively), or a few joined pieces.
     // Anything else (player-entered names, numbers) is returned unchanged.

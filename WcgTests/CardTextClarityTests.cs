@@ -41,6 +41,20 @@ public class CardTextClarityTests
         Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
         Assert.Equal(10,cards.AllCards.Count(c=>c.IsVanilla));
     }
+    [Fact] public void EnergyShieldKeywordRecognizesCurrentAndHistoricalCards()
+    {
+        Assert.All(cards.AllCards,c=>
+        {
+            Assert.DoesNotContain("聖盾",c.Text);
+            Assert.DoesNotContain("聖盾",c.Keywords);
+            Assert.DoesNotContain("冰凍",c.Keywords);
+        });
+        Assert.True(cards.GetCard("WCG-063")!.HasEnergyShield);
+        var old=CounterHistory.BeforeEnergyShield(cards).GetCard("WCG-063")!;
+        Assert.Contains("聖盾",old.Keywords);
+        Assert.True(old.HasEnergyShield);
+    }
+
     [Fact] public void RankedDeckDescriptionsUseTheNewGlossaryAndOldSavedTextStillTranslates()
     {
         var root=Path.Combine(AppContext.BaseDirectory,"..","..","..","..");
@@ -204,7 +218,7 @@ public class CardTextClarityTests
             Assert.Matches("<p></p>", FaceText(await Render<CardFace>(language, new() { ["Battle"] = battle })));
         }
         var effect = FaceText(await Render<CardFace>(language, new() { ["Card"] = cards.GetCard("WCG-147") }));
-        Assert.Contains(language == "zh" ? "失去聖盾" : "loses Holy Shield", effect);
+        Assert.Contains(language == "zh" ? "失去能量護盾" : "loses Energy Shield", effect);
     }
     [Fact] public void FaceTextBlanksVanillaButSearchTextKeepsIt()
     {

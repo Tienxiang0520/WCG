@@ -118,7 +118,7 @@ test('a spell is showcased large with its text, then its effect travels from the
 });
 test('the spell showcase is the full physical card face: cost medallion, will·type band, arrows as triangles, set line', async t=>{
     resetFastForward();
-    const h=harness(t),spell={instanceId:'ward',cardId:'WCG-061',name:'銀色誓言衛',type:'法術',will:'秩序',cost:2,text:'【箭頭：→】右側相鄰格的己方怪物具有聖盾。',arrows:['right']};
+    const h=harness(t),spell={instanceId:'ward',cardId:'WCG-061',name:'銀色誓言衛',type:'法術',will:'秩序',cost:2,text:'【箭頭：→】右側相鄰格的己方怪物具有能量護盾。',arrows:['right']};
     await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'ward',card:spell,order:0}]));
     const show=h.record.find(r=>r.el.dataset.wcgEffect==='showcase').el,all=descendants(show),cls=c=>all.filter(el=>String(el.className).split(' ').includes(c));
     assert.match(show.className,/wcg-face/);assert.equal(show.dataset.will,'order');
@@ -163,12 +163,12 @@ test('a deploy ability badges its source before its result, and keyword statuses
     resetFastForward();
     const h=harness(t);
     const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000}]},computer:{field:[]}};
-    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['聖盾','直立'],pp:1500}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['能量護盾','直立'],pp:1500}]},computer:{field:[]}};
     await h.settle(h.feedback.present(before,after,[{type:'effect',side:'player',instanceId:'dead',label:'進場能力',order:0},{type:'heal',side:'player',amount:1,order:1}]));
     const effects=h.record.map(r=>r.el.dataset.wcgEffect).filter(Boolean);
     assert.ok(effects.indexOf('badge')<effects.indexOf('heal'),effects.join());
     const badges=h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent);
-    assert.deepEqual(badges,['進場能力','聖盾']);
+    assert.deepEqual(badges,['進場能力','能量護盾']);
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='stat'&&r.el.textContent==='+500 PP'));
     h.feedback.clear();
 });

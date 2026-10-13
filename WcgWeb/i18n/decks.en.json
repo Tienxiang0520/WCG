@@ -1,33 +1,33 @@
 {
  "PRESET-WRATH": {
   "zhName": "v0.6 狂怒試玩",
-  "zhDescription": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+  "zhDescription": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
   "name": "v0.6 Fury Trial",
-  "description": "Trial deck for the new fixed slots, energy Holy Shields and new mechanics; competitive balance not yet verified."
+  "description": "Trial deck for the new fixed slots, energy Energy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-REASON": {
   "zhName": "v0.6 理智試玩",
-  "zhDescription": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+  "zhDescription": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
   "name": "v0.6 Reason Trial",
-  "description": "Trial deck for the new fixed slots, energy Holy Shields and new mechanics; competitive balance not yet verified."
+  "description": "Trial deck for the new fixed slots, energy Energy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-VITALITY": {
   "zhName": "v0.6 生機試玩",
-  "zhDescription": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+  "zhDescription": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
   "name": "v0.6 Life Trial",
-  "description": "Trial deck for the new fixed slots, energy Holy Shields and new mechanics; competitive balance not yet verified."
+  "description": "Trial deck for the new fixed slots, energy Energy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-ORDER": {
   "zhName": "v0.6 秩序試玩",
-  "zhDescription": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+  "zhDescription": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
   "name": "v0.6 Order Trial",
-  "description": "Trial deck for the new fixed slots, energy Holy Shields and new mechanics; competitive balance not yet verified."
+  "description": "Trial deck for the new fixed slots, energy Energy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-ABYSS": {
   "zhName": "v0.6 深淵試玩",
-  "zhDescription": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+  "zhDescription": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
   "name": "v0.6 Abyss Trial",
-  "description": "Trial deck for the new fixed slots, energy Holy Shields and new mechanics; competitive balance not yet verified."
+  "description": "Trial deck for the new fixed slots, energy Energy Shields and new mechanics; competitive balance not yet verified."
  },
  "RANKED-0-WRATH-BLITZ": {
   "zhName": "狂怒・燃血突擊（快攻）",
@@ -66,10 +66,10 @@
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-0-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-0-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -103,9 +103,9 @@
  },
  "RANKED-1-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
-  "zhDescription": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+  "zhDescription": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
   "name": "Reason · Frostflame Tempo (Tempo)",
-  "description": "Freezing, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
+  "description": "Tapping, bounces and Taunt Energy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-1-REASON-ARCANE": {
   "zhName": "理智・奧術控制（控制）",
@@ -138,10 +138,10 @@
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-1-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-1-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -187,9 +187,9 @@
  },
  "RANKED-2-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
-  "zhDescription": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+  "zhDescription": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
   "name": "Reason · Frostflame Tempo (Tempo)",
-  "description": "Freezing, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
+  "description": "Tapping, bounces and Taunt Energy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-2-REASON-ARCANE": {
   "zhName": "理智・奧術控制（控制）",
@@ -222,10 +222,10 @@
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-2-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-2-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -271,9 +271,9 @@
  },
  "RANKED-3-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
-  "zhDescription": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+  "zhDescription": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
   "name": "Reason · Frostflame Tempo (Tempo)",
-  "description": "Freezing, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
+  "description": "Tapping, bounces and Taunt Energy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-3-REASON-ORACLE": {
   "zhName": "理智・占卜連鎖（連動）",
@@ -300,10 +300,10 @@
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-3-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-3-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -343,15 +343,15 @@
  },
  "RANKED-4-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
-  "zhDescription": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+  "zhDescription": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
   "name": "Reason · Frostflame Tempo (Tempo)",
-  "description": "Freezing, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
+  "description": "Tapping, bounces and Taunt Energy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-4-REASON-GLACIER": {
   "zhName": "理智・冰封堡壘（中速）",
-  "zhDescription": "理智冰凍配秩序嘲諷聖盾，穩住場面再逐步推進。",
+  "zhDescription": "理智橫置配秩序嘲諷能量護盾，穩住場面再逐步推進。",
   "name": "Reason · Frozen Fortress (Midrange)",
-  "description": "Reason freezing with Order Taunt and Holy Shield stabilizes the board, then pushes forward step by step."
+  "description": "Reason tapping with Order Taunt and Energy Shield stabilizes the board, then pushes forward step by step."
  },
  "RANKED-4-VITAL-SWARM": {
   "zhName": "生機・森林鋪場（鋪場）",
@@ -372,16 +372,16 @@
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-4-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-4-ORDER-GROVE": {
   "zhName": "秩序・聖林守衛（中速）",
-  "zhDescription": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
+  "zhDescription": "秩序能量護盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
   "name": "Order · Sacred Grove Guard (Midrange)",
-  "description": "Order Holy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
+  "description": "Order Energy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
  },
  "RANKED-4-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -415,15 +415,15 @@
  },
  "RANKED-5-REASON-FROST": {
   "zhName": "理智・霜焰節奏（節奏）",
-  "zhDescription": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+  "zhDescription": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
   "name": "Reason · Frostflame Tempo (Tempo)",
-  "description": "Freezing, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
+  "description": "Tapping, bounces and Taunt Energy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-5-REASON-GLACIER": {
   "zhName": "理智・冰封堡壘（中速）",
-  "zhDescription": "理智冰凍配秩序嘲諷聖盾，穩住場面再逐步推進。",
+  "zhDescription": "理智橫置配秩序嘲諷能量護盾，穩住場面再逐步推進。",
   "name": "Reason · Frozen Fortress (Midrange)",
-  "description": "Reason freezing with Order Taunt and Holy Shield stabilizes the board, then pushes forward step by step."
+  "description": "Reason tapping with Order Taunt and Energy Shield stabilizes the board, then pushes forward step by step."
  },
  "RANKED-5-VITAL-BEHEMOTH": {
   "zhName": "生機・巨獸奔襲（巨獸）",
@@ -438,10 +438,10 @@
   "description": "Poisonous small monsters complement high-PP Taunt, with Abyss Rift Arrows for removal."
  },
  "RANKED-5-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
-  "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
-  "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
+  "zhName": "秩序・能量護盾防線（防守）",
+  "zhDescription": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  "name": "Order · Energy Shield Line (Defense)",
+  "description": "Arrows and attached spells stack Energy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-5-ORDER-RAMPART": {
   "zhName": "秩序・白銀長城（控制）",
@@ -457,9 +457,9 @@
  },
  "RANKED-5-ORDER-GROVE": {
   "zhName": "秩序・聖林守衛（中速）",
-  "zhDescription": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
+  "zhDescription": "秩序能量護盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
   "name": "Order · Sacred Grove Guard (Midrange)",
-  "description": "Order Holy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
+  "description": "Order Energy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
  },
  "RANKED-5-ABYSS-REVENANT": {
   "zhName": "深淵・亡者交換（墓地）",
@@ -523,9 +523,9 @@
  },
  "RANKED-1-ORDER-EXPEDITION": {
   "zhName": "秩序・聖光遠征（進攻）",
-  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "zhDescription": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
   "name": "Order · Radiant Expedition (Offense)",
-  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+  "description": "Energy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-1-ABYSS-LOWLIFE": {
   "zhName": "深淵・殘血魔潮（殘血）",
@@ -571,9 +571,9 @@
  },
  "RANKED-2-ORDER-EXPEDITION": {
   "zhName": "秩序・聖光遠征（進攻）",
-  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "zhDescription": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
   "name": "Order · Radiant Expedition (Offense)",
-  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+  "description": "Energy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-2-ORDER-PURIFY": {
   "zhName": "秩序・淨化壁壘（驅散）",
@@ -643,9 +643,9 @@
  },
  "RANKED-3-ORDER-EXPEDITION": {
   "zhName": "秩序・聖光遠征（進攻）",
-  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "zhDescription": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
   "name": "Order · Radiant Expedition (Offense)",
-  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+  "description": "Energy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-3-ORDER-PURIFY": {
   "zhName": "秩序・淨化壁壘（驅散）",
@@ -721,9 +721,9 @@
  },
  "RANKED-4-ORDER-EXPEDITION": {
   "zhName": "秩序・聖光遠征（進攻）",
-  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "zhDescription": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
   "name": "Order · Radiant Expedition (Offense)",
-  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+  "description": "Energy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-4-ORDER-PURIFY": {
   "zhName": "秩序・淨化壁壘（驅散）",
@@ -823,9 +823,9 @@
  },
  "RANKED-5-ORDER-EXPEDITION": {
   "zhName": "秩序・聖光遠征（進攻）",
-  "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+  "zhDescription": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
   "name": "Order · Radiant Expedition (Offense)",
-  "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
+  "description": "Energy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-5-ORDER-PURIFY": {
   "zhName": "秩序・淨化壁壘（驅散）",

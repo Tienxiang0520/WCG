@@ -2,7 +2,7 @@
   {
     "Id": "PRESET-WRATH",
     "Name": "v0.6 狂怒試玩",
-    "Description": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+    "Description": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
     "MainWill": "狂怒",
     "CardIds": [
       "WCG-003",
@@ -60,7 +60,7 @@
   {
     "Id": "PRESET-REASON",
     "Name": "v0.6 理智試玩",
-    "Description": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+    "Description": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
     "MainWill": "理智",
     "CardIds": [
       "WCG-023",
@@ -118,7 +118,7 @@
   {
     "Id": "PRESET-VITALITY",
     "Name": "v0.6 生機試玩",
-    "Description": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+    "Description": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
     "MainWill": "生機",
     "CardIds": [
       "WCG-041",
@@ -176,7 +176,7 @@
   {
     "Id": "PRESET-ORDER",
     "Name": "v0.6 秩序試玩",
-    "Description": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+    "Description": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
     "MainWill": "秩序",
     "CardIds": [
       "WCG-061",
@@ -234,7 +234,7 @@
   {
     "Id": "PRESET-ABYSS",
     "Name": "v0.6 深淵試玩",
-    "Description": "新版固定站位、能量聖盾與新機制試玩預組；尚未驗證競技平衡。",
+    "Description": "新版固定站位、能量護盾與新機制試玩預組；尚未驗證競技平衡。",
     "MainWill": "深淵",
     "CardIds": [
       "WCG-081",

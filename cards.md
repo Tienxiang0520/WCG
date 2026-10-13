@@ -11,7 +11,7 @@ source: WcgWeb/Data/cards.json
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
-> 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
+> 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
 類型：怪物 117 張、法術 69 張、法術（反擊） 5 張、結界 8 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
@@ -53,7 +53,7 @@ source: WcgWeb/Data/cards.json
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Warsong Command** — Look at the top 3 cards of your deck. Put 1 [Fury] monster card and 1 [Fury] spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 1200 | 1 | — | 進場：若己方場上有其他【狂怒】怪物，你目前在場的所有【狂怒】怪物（含此怪物）本回合 PP +300。 | **Crimson Oath Drummer** — Deploy: If you have another [Fury] monster, all your [Fury] monsters currently in play (including this one) get +300 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 4 | 1800 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
-| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If it has 1500 PP or more, also deal 1 damage to the enemy player. |
+| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] After taking damage from an enemy monster, if it is still on the board: Destroy it and reverse this damage. If it had 1500 PP or more, also deal 1 damage to the enemy player. |
 
 ## 理智（Reason，33 張）
 
@@ -69,7 +69,7 @@ source: WcgWeb/Data/cards.json
 | WCG-028 | 奧術靈感 | 法術 | 3 | — | — | — | 抽 2 張牌。 | **Arcane Insight** — Draw 2 cards. |
 | WCG-029 | 冰霜魔導師 | 怪物 | 4 | 1700 | 1 | — | 每當此怪物交戰後，若雙方都還在場：將對手怪物橫置；若它已橫置，改為抽 1 張牌。 | **Frost Magus** — Whenever this monster survives combat and so does the other monster: tap that monster; if it is already tapped, draw 1 card instead. |
 | WCG-030 | 預言秘術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張加入手牌，其餘依任意順序放到牌庫底。 | **Prophetic Arts** — Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom in any order. |
-| WCG-031 | 鏡像護衛 | 怪物 | 2 | 1200 | 1 | — | 嘲諷；聖盾。 | **Mirror Guard** — Taunt. Holy Shield. |
+| WCG-031 | 鏡像護衛 | 怪物 | 2 | 1200 | 1 | — | 嘲諷；能量護盾。 | **Mirror Guard** — Taunt. Energy Shield. |
 | WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1700 以下的敵方怪物。 | **Mass Disruption** — Destroy 1 enemy monster with 1700 PP or less. |
 | WCG-033 | 秘法竊取者 | 怪物 | 4 | 1200 | 1 | ↑ | 【箭頭：↑】進場：將正對面直立的敵方怪物橫置；若正對面沒有直立的敵方怪物，改為抽 1 張牌。 | **Arcane Thief** — [Arrow: ↑] Deploy: Tap the untapped enemy monster directly opposite. If there is no untapped enemy monster directly opposite, draw 1 card instead. |
 | WCG-034 | 思維超載 | 法術 | 4 | — | — | — | 抽 3 張牌。 | **Mind Overload** — Draw 3 cards. |
@@ -91,7 +91,7 @@ source: WcgWeb/Data/cards.json
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 500 | 1 | — | 進場：檢視牌庫頂 3 張，選 1 張法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Stargazing Diviner** — Deploy: Look at the top 3 cards of your deck. Put 1 spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 將 1 隻直立的敵方怪物橫置；若選的是已橫置的敵方怪物，改為將它移回手牌。若你場上有【理智】卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap 1 untapped enemy monster. If you choose an already tapped enemy monster instead, return it to its hand. If you have a [Reason] card in play, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 5 | 2200 | 1 | — | 每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 1000 以下的敵方怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, destroy 1 enemy monster with 1000 PP or less. |
-| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, then draw 1 card. |
+| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] After taking damage from an enemy card: Reverse this damage, then draw 1 card. |
 
 ## 生機（Life，33 張）
 
@@ -129,46 +129,46 @@ source: WcgWeb/Data/cards.json
 | WCG-186 | 母樹共鳴 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【生機】怪物牌加入手牌，其餘依任意順序放到牌庫底；若你場上有【生機】結界，再抽 1 張牌。 | **Mother Tree Resonance** — Look at the top 3 cards of your deck. Put 1 [Life] monster card among them into your hand and the rest on the bottom in any order. If you have a [Life] Ward, draw 1 more card. |
 | WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 1500 | 1 | — | 進場：若己方場上有其他【生機】怪物，你可以從手牌免費召喚 1 隻費用 2 以下的【生機】怪物（不觸發進場）。 | **Verdant Beastcaller** — Deploy: If you have another [Life] monster, you may summon a [Life] monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 2500 | 1 | — | 嘲諷；進場：你場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have. |
-| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] Reveal when an enemy monster attacks you: Negate the attack. You may summon a [Life] monster that costs 3 or less from your hand for free (its Deploy does not trigger). |
+| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger). |
 
 ## 秩序（Order，34 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| WCG-061 | 銀色誓言衛 | 怪物 | 2 | 1000 | 1 | → | 【箭頭：→】右側相鄰的己方怪物具有聖盾。 | **Silver Oath Guard** — [Arrow: →] Your adjacent monster on the right has Holy Shield. |
-| WCG-062 | 保護之手 | 法術 | 2 | — | — | — | 使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。 | **Hand of Protection** — Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself. |
-| WCG-063 | 聖印侍從 | 怪物 | 1 | 800 | 1 | — | 聖盾。 | **Sigil Squire** — Holy Shield. |
+| WCG-061 | 銀色誓言衛 | 怪物 | 2 | 1000 | 1 | → | 【箭頭：→】右側相鄰的己方怪物具有能量護盾。 | **Silver Oath Guard** — [Arrow: →] Your adjacent monster on the right has Energy Shield. |
+| WCG-062 | 保護之手 | 法術 | 2 | — | — | — | 使 1 隻己方怪物獲得能量護盾（將此卡附著其上），然後回復己方 1 點生命。 | **Hand of Protection** — Give 1 of your monsters Energy Shield (attach this card to it), then restore 1 life to yourself. |
+| WCG-063 | 聖印侍從 | 怪物 | 1 | 800 | 1 | — | 能量護盾。 | **Sigil Squire** — Energy Shield. |
 | WCG-064 | 謙遜戒律 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的敵方怪物。 | **Edict of Humility** — Destroy 1 enemy monster that costs 2 or less. |
 | WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 1400 | 1 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
 | WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。 | **Blessing of Kings** — Choose either player and restore 2 life to them, then you draw 1 card. |
 | WCG-067 | 正義裁判官 | 怪物 | 4 | 1500 | 1 | — | 進場：將 1 隻費用 2 以下的敵方怪物移回手牌。 | **Righteous Arbiter** — Deploy: Return 1 enemy monster that costs 2 or less to its hand. |
 | WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 消滅所有 PP 700 以下的敵方怪物。 | **Divine Judgment** — Destroy all enemy monsters with 700 PP or less. |
-| WCG-069 | 鐵壁騎士 | 怪物 | 3 | 1600 | 1 | — | 嘲諷；聖盾。 | **Bulwark Knight** — Taunt. Holy Shield. |
+| WCG-069 | 鐵壁騎士 | 怪物 | 3 | 1600 | 1 | — | 嘲諷；能量護盾。 | **Bulwark Knight** — Taunt. Energy Shield. |
 | WCG-070 | 崇高奉獻 | 法術 | 1 | — | — | — | 選擇任一玩家，回復其 1 點生命。 | **Noble Devotion** — Choose either player and restore 1 life to them. |
 | WCG-071 | 祈光神官 | 怪物 | 2 | 800 | 1 | — | 每當敵方怪物攻擊你的嘲諷怪物，回復己方 1 點生命。 | **Lightcaller Priest** — Whenever an enemy monster attacks one of your Taunt monsters, restore 1 life to yourself. |
 | WCG-072 | 淨化聖光 | 法術 | 3 | — | — | — | 沉默 1 隻尚未被沉默的怪物，然後抽 1 張牌。 | **Purifying Light** — Silence 1 monster that is not already silenced, then draw 1 card. |
-| WCG-073 | 榮耀護衛官 | 怪物 | 4 | 2300 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。 | **Glory Warden** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield. |
-| WCG-074 | 堅壁祈願 | 法術 | 2 | — | — | — | 使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。 | **Prayer of the Bulwark** — Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card. |
-| WCG-075 | 破邪大天使 | 怪物 | 5 | 2700 | 2 | — | 聖盾；進場：回復己方 1 點生命。 | **Evil-Breaker Archangel** — Holy Shield. Deploy: Restore 1 life to yourself. |
+| WCG-073 | 榮耀護衛官 | 怪物 | 4 | 2300 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有能量護盾。 | **Glory Warden** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Energy Shield. |
+| WCG-074 | 堅壁祈願 | 法術 | 2 | — | — | — | 使 1 隻己方怪物獲得能量護盾（將此卡附著其上），然後抽 1 張牌。 | **Prayer of the Bulwark** — Give 1 of your monsters Energy Shield (attach this card to it), then draw 1 card. |
+| WCG-075 | 破邪大天使 | 怪物 | 5 | 2700 | 2 | — | 能量護盾；進場：回復己方 1 點生命。 | **Evil-Breaker Archangel** — Energy Shield. Deploy: Restore 1 life to yourself. |
 | WCG-076 | 誓約封禁 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 1700 以上的敵方怪物。 | **Oathbound Seal** — Destroy 1 enemy monster with 1700 PP or more. |
 | WCG-077 | 秩序聖裁者 | 怪物 | 4 | 2000 | 1 | — | 進場：消滅 1 隻 PP 2300 以上的敵方怪物。 | **Order Adjudicator** — Deploy: Destroy 1 enemy monster with 2300 PP or more. |
 | WCG-078 | 聖光普照 | 法術 | 4 | — | — | — | 消滅所有 PP 700 以下的敵方怪物，然後回復己方 1 點生命。 | **Radiant Dawn** — Destroy all enemy monsters with 700 PP or less, then restore 1 life to yourself. |
-| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 4000 | 1 | — | 嘲諷；聖盾。 | **Sunblaze Temple Colossus** — Taunt. Holy Shield. |
-| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 3000 | 2 | — | 聖盾；陣亡：消滅所有 PP 1000 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Holy Shield. On Death: Destroy all enemy monsters with 1000 PP or less. |
+| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 4000 | 1 | — | 嘲諷；能量護盾。 | **Sunblaze Temple Colossus** — Taunt. Energy Shield. |
+| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 3000 | 2 | — | 能量護盾；陣亡：消滅所有 PP 1000 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Energy Shield. On Death: Destroy all enemy monsters with 1000 PP or less. |
 | WCG-127 | 守誓者壁壘 | 結界 | 3 | — | — | — | 只要你場上有直立的怪物，敵方法術對你造成的傷害 -1。 | **Oathkeeper's Rampart** — While you have an untapped monster, damage enemy spells deal to you is reduced by 1. |
 | WCG-129 | 白銀哨衛 | 怪物 | 1 | 1200 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
 | WCG-142 | 誓言枷鎖 | 法術 | 3 | — | — | — | 將 1 隻怪物橫置並把此卡附著其上：附著期間它不能攻擊，回合開始時也不會轉為直立。 | **Shackles of Oath** — Tap 1 monster and attach this card to it. While attached, it can't attack and doesn't untap at the start of turns. |
-| WCG-147 | 聖堂仲裁護衛 | 怪物 | 3 | 1000 | 1 | ←↑ | 【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。 | **Temple Arbiter Guard** — [Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield. |
+| WCG-147 | 聖堂仲裁護衛 | 怪物 | 3 | 1000 | 1 | ←↑ | 【箭頭：← ↑】左側相鄰的己方怪物具有能量護盾；正對面的敵方怪物失去能量護盾。 | **Temple Arbiter Guard** — [Arrow: ← ↑] Your adjacent monster on the left has Energy Shield. The enemy monster directly opposite loses Energy Shield. |
 | WCG-152 | 禁魔石像 | 怪物 | 2 | 1200 | 0 | — | 嘲諷；不能成為法術的目標。 | **Spellward Statue** — Taunt. Can't be targeted by spells. |
 | WCG-158 | 白銀持戟禁衛 | 怪物 | 2 | 1800 | 0 | — | 無。 | **Silver Halberd Guard** — None. |
 | WCG-168 | 正義壓制 | 法術 | 0 | — | — | — | 使 1 隻怪物 PP -500，直到它下一次攻擊或交戰結束。 | **Righteous Suppression** — 1 monster gets -500 PP until its next attack or combat ends. |
-| WCG-171 | 聖光審判巨神 | 怪物 | 7 | 3000 | 2 | — | 嘲諷；聖盾；進場：回復己方 2 點生命。 | **Holy Light Judgment Colossus** — Taunt. Holy Shield. Deploy: Restore 2 life to yourself. |
+| WCG-171 | 聖光審判巨神 | 怪物 | 7 | 3000 | 2 | — | 嘲諷；能量護盾；進場：回復己方 2 點生命。 | **Holy Light Judgment Colossus** — Taunt. Energy Shield. Deploy: Restore 2 life to yourself. |
 | WCG-176 | 神聖至高審判 | 法術 | 8 | — | — | — | 消滅雙方所有 PP 1500 以上的怪物；回復己方 2 點生命。 | **Supreme Holy Judgment** — Destroy all monsters on both sides with 1500 PP or more. Restore 2 life to yourself. |
-| WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 3200 | 2 | — | 嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。 | **Radiant Supreme Archangel, Amansul** — Taunt. Holy Shield. Deploy: Restore your life to its maximum (7). |
-| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Temple Rally Horn** — Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it). |
+| WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 3200 | 2 | — | 嘲諷；能量護盾；進場：將你的生命回復至上限（7 點）。 | **Radiant Supreme Archangel, Amansul** — Taunt. Energy Shield. Deploy: Restore your life to its maximum (7). |
+| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。 | **Temple Rally Horn** — Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Energy Shield (attach this card to it). |
 | WCG-190 | 白銀軍團旗手 | 怪物 | 4 | 1400 | 1 | — | 嘲諷；每當 1 隻【秩序】怪物進入你的場上（含此怪物與免費召喚），回復己方 1 點生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life to yourself. |
 | WCG-191 | 聖光大審判官 | 怪物 | 6 | 2600 | 1 | — | 嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 2000 以上的敵方怪物，並回復己方 1 點生命。 | **Grand Inquisitor of Holy Light** — Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life to yourself. |
-| WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life to yourself, and give 1 of your monsters Holy Shield (attach this card to it). |
+| WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Energy Shield by attaching this card to it. |
 
 ## 深淵（Abyss，33 張）
 
@@ -196,7 +196,7 @@ source: WcgWeb/Data/cards.json
 | WCG-100 | 深淵之主·瑪爾加尼斯 | 怪物 | 6 | 2800 | 2 | — | 嘲諷；進場：回復己方 2 點生命，然後從你的墓地將另 1 張怪物牌加入手牌。 | **Abyss Lord, Malganis** — Taunt. Deploy: Restore 2 life to yourself, then put another monster card from your graveyard into your hand. |
 | WCG-128 | 萬魂之井 | 結界 | 1 | — | — | — | 橫置此卡並犧牲 1 隻己方怪物：抽 1 張牌。 | **Well of Myriad Souls** — Tap this card and sacrifice 1 of your monsters: draw 1 card. |
 | WCG-132 | 腐肉食腐蛛 | 怪物 | 1 | 500 | 0 | — | 劇毒。 | **Carrion Spider** — Poison. |
-| WCG-138 | 暗影伏擊者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：橫置對手 1 點未用的能量（本回合對手不能用它支付聖盾或反擊）。 | **Shadow Ambusher** — Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Holy Shield or Counters this turn). |
+| WCG-138 | 暗影伏擊者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：橫置對手 1 點未用的能量（本回合對手不能用它支付能量護盾或反擊）。 | **Shadow Ambusher** — Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Energy Shield or Counters this turn). |
 | WCG-140 | 湮滅契約 | 法術 | 2 | — | — | — | 消滅 1 隻怪物；它的控制者抽 1 張牌。 | **Pact of Oblivion** — Destroy 1 monster; its controller draws 1 card. |
 | WCG-148 | 墓園守夜人 | 怪物 | 2 | 1100 | 1 | — | 每當己方另 1 隻怪物被消滅，橫置對手 1 點未用的能量。 | **Graveyard Nightwatch** — Whenever another of your monsters is destroyed, tap 1 of your opponent's unused energy. |
 | WCG-159 | 冥界骸骨巨獸 | 怪物 | 5 | 2500 | 1 | — | 無。 | **Underworld Bone Behemoth** — None. |
@@ -206,7 +206,7 @@ source: WcgWeb/Data/cards.json
 | WCG-192 | 冥河引魂術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【深淵】怪物牌加入手牌，其餘送入墓地。 | **Styx Soulguide Rite** — Look at the top 3 cards of your deck. Put 1 [Abyss] monster card among them into your hand and the rest into your graveyard. |
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 1000 | 2 | — | 進場：你可以犧牲 1 隻其他的己方【深淵】怪物；若如此做，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another of your [Abyss] monsters; if you do, draw 2 cards. |
 | WCG-194 | 冥府復甦領主 | 怪物 | 6 | 2500 | 1 | — | 進場：你可以從墓地免費召喚 1 隻費用 3 以下的【深淵】怪物（不觸發進場）；若你場上原本就有其他【深淵】怪物，它本回合可以攻擊。 | **Netherworld Revival Lord** — Deploy: You may summon an [Abyss] monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). If you already had another [Abyss] monster, it can attack this turn. |
-| WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If your graveyard has an [Abyss] monster, also put a monster that costs 2 or less from your graveyard into your hand. |
+| WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand. |
 
 ## 中立（Neutral，32 張）
 
@@ -235,7 +235,7 @@ source: WcgWeb/Data/cards.json
 | WCG-121 | 冒險者行囊 | 法術 | 1 | — | — | — | 抽 1 張牌。 | **Adventurer's Pack** — Draw 1 card. |
 | WCG-122 | 傭兵號召 | 法術 | 2 | — | — | — | 檢視牌庫頂 5 張，選 1 張怪物牌加入手牌，其餘依任意順序放到牌庫底。 | **Call to Arms** — Look at the top 5 cards of your deck. Put a monster card among them into your hand and the rest on the bottom in any order. |
 | WCG-123 | 終焉彗星 | 法術 | 5 | — | — | — | 消滅 1 隻敵方怪物，並對敵方玩家造成 1 點傷害。 | **Doomsday Comet** — Destroy 1 enemy monster and deal 1 damage to the enemy player. |
-| WCG-133 | 厚甲石像鬼 | 怪物 | 2 | 1300 | 0 | — | 嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。 | **Armored Gargoyle** — Taunt. While you have 3 or less life, this monster has Holy Shield. |
+| WCG-133 | 厚甲石像鬼 | 怪物 | 2 | 1300 | 0 | — | 嘲諷；只要你的生命在 3 點以下，此怪物具有能量護盾。 | **Armored Gargoyle** — Taunt. While you have 3 or less life, this monster has Energy Shield. |
 | WCG-134 | 巡林驅邪工兵 | 怪物 | 2 | 800 | 1 | — | 進場：你可以選 1 隻怪物，移除它的所有附著卡並解除沉默；或摧毀 1 個結界（雙方皆可選）。 | **Exorcist Ranger Sapper** — Deploy: You may choose 1 monster and remove all cards attached to it and its Silence; or destroy 1 Ward (either side). |
 | WCG-149 | 靈魂集市 | 結界 | 2 | — | — | — | 橫置此卡：將 1 張手牌放到牌庫底，然後抽 1 張牌。 | **Soul Bazaar** — Tap this card: put 1 card from your hand on the bottom of your deck, then draw 1 card. |
 | WCG-150 | 自爆發條偶 | 怪物 | 2 | 700 | 0 | — | 陣亡：消滅雙方所有 PP 700 以下的怪物。 | **Self-Destructing Clockwork** — On Death: Destroy all monsters on both sides with 700 PP or less. |

@@ -30,12 +30,12 @@ test('attacks and new turns end the previous source so combat results are not at
         { type: 'death', side: 'computer', instanceId: 'b', label: '交戰', order: 2 }]);
     assert.deepEqual(kinds(steps), ['source:trigger', 'attack', 'death']);
 });
-test('summoned keywords badge once; an arrow aura names the neighbour that grants holy shield', () => {
-    const guard = unit('guard', 1, {}, { text: '嘲諷；【箭頭：← →】左右兩側相鄰格的己方怪物具有聖盾。', arrows: ['left', 'right'] });
+test('summoned keywords badge once; an arrow aura names the neighbour that grants energy shield', () => {
+    const guard = unit('guard', 1, {}, { text: '嘲諷；【箭頭：← →】左右兩側相鄰格的己方怪物具有能量護盾。', arrows: ['left', 'right'] });
     const before = snap([guard, unit('ally', 2)]);
-    const after = snap([{ ...guard, status: ['嘲諷', '直立'] }, unit('ally', 2, { status: ['聖盾', '直立'] }), unit('new', 0, { status: ['聖盾', '直立'] })]);
+    const after = snap([{ ...guard, status: ['嘲諷', '直立'] }, unit('ally', 2, { status: ['能量護盾', '直立'] }), unit('new', 0, { status: ['能量護盾', '直立'] })]);
     const steps = planSteps(before, after, [{ type: 'summon', side: 'player', instanceId: 'new', card: card('new'), order: 0 }]);
-    assert.deepEqual(kinds(steps), ['summon', 'badge:聖盾<guard', 'badge:嘲諷', 'badge:聖盾<guard']);
+    assert.deepEqual(kinds(steps), ['summon', 'badge:能量護盾<guard', 'badge:嘲諷', 'badge:能量護盾<guard']);
 });
 test('silence status events are not badged twice; pp changes and effect taps come from the snapshot diff', () => {
     const before = snap([unit('x', 0), unit('y', 1)]);
@@ -52,12 +52,12 @@ test('units readied at the start of a turn are not badged as effect taps', () =>
     assert.deepEqual(kinds(steps), ['turn']);
 });
 test('helpers: aura rule, keyword parsing, spell detection and long-batch pacing', () => {
-    const up = { card: card('s', { text: '正對面同列格的敵方怪物具有聖盾', arrows: ['up'] }), slot: 1, side: 'player', status: [] };
+    const up = { card: card('s', { text: '正對面同列格的敵方怪物具有能量護盾', arrows: ['up'] }), slot: 1, side: 'player', status: [] };
     const all = new Map([['s', up]]);
     assert.equal(auraSource({ card: card('t'), slot: 3, side: 'computer' }, all), 's');
     assert.equal(auraSource({ card: card('t'), slot: 2, side: 'computer' }, all), null);
     assert.equal(auraSource({ card: card('t'), slot: 3, side: 'computer' }, new Map([['s', { ...up, status: ['沉默'] }]])), null);
-    assert.equal(keywordOf('聖盾（附著）'), '聖盾'); assert.equal(keywordOf('直立'), null);
+    assert.equal(keywordOf('能量護盾（附著）'), '能量護盾'); assert.equal(keywordOf('直立'), null);
     assert.equal(isSpellCard({ type: '法術（反擊）' }), true); assert.equal(isSpellCard({ type: '結界' }), false);
     assert.equal(batchSpeed(3), 1); assert.ok(batchSpeed(20) > batchSpeed(10));
 });

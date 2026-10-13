@@ -555,7 +555,7 @@
 .field-card.has-taunt.attack-ready::after{display:none}
 .has-taunt.action-ready>.taunt-frame{filter:drop-shadow(0 0 5px rgba(95,211,189,.75)) drop-shadow(0 0 10px rgba(95,211,189,.5))}
 .has-taunt>.field-stats{bottom:14px}
-/* Ready glow and holy-shield bubble follow the shield outline instead of drawing a rectangle. */
+/* Ready glow and energy-shield bubble follow the shield outline instead of drawing a rectangle. */
 .field-card.has-taunt.action-ready{box-shadow:none!important}
 .has-taunt.has-shield::before{display:none}
 .has-taunt.has-shield>.taunt-frame{filter:drop-shadow(0 0 2px #ffe58a) drop-shadow(0 0 8px #ffe58acc) drop-shadow(0 0 16px #ffe58a77)}

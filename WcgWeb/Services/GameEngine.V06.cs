@@ -27,20 +27,20 @@ public partial class GameEngine
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => a.Card.Card.Id == "WCG-135" ? 500 : a.Card.Card.Id == "WCG-141" ? 700 : 0)+unit.NextCombatBonus+unit.TurnBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.Will=="狂怒")*300 : 0)+ArrowPower(p,unit));
-            unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasDivineShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
+            unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
                     && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Owner(source)!=p));
-            // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have holy shield from any source.
+            // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
             if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
         }
     }
     private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Id == "WCG-147" && source.Card.Arrows.Contains("up")
             && Owner(source) != owner && unit.Slot == 4 - source.Slot);
-    // Only these arrows hand out holy shield; the other arrow cards link slots for their own effects.
+    // Only these arrows hand out energy shield; the other arrow cards link slots for their own effects.
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
-    // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the holy-shield arrows.
+    // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
     { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
@@ -162,7 +162,7 @@ public partial class GameEngine
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>x.CurrentPP>=1500).ToArray(),c.Card.Name),()=>Heal(p,2));break;
             case "WCG-180":SearchTwoKinds(p);break;
             case "WCG-186":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.Will=="生機"),()=>{if(p.Structures.Any(x=>!x.IsSet&&x.Card.Will=="生機"))DrawMany(p,1);});break;
-            case "WCG-189":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.Will=="秩序"),()=>{if(p.Field.Any(x=>x.Card.Will=="秩序"))PickMonster(p,"選擇附著聖盾怪物",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x));});break;
+            case "WCG-189":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.Will=="秩序"),()=>{if(p.Field.Any(x=>x.Card.Will=="秩序"))PickMonster(p,"選擇附著能量護盾怪物",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x));});break;
             case "WCG-192":MillSearch(p);break;
             default:throw new InvalidOperationException($"未實作卡牌 {c.Card.Id}");
         }

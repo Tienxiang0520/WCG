@@ -108,7 +108,7 @@ try:
             choices=s['choices']
             chosen=next((c for c in choices if '確認填能量' in c['text']),None)
             if chosen is None:
-                chosen=next((c for c in choices if '聖盾' in c['text'] and ('支付' in c['text'] or '使用' in c['text'])),choices[0])
+                chosen=next((c for c in choices if '能量護盾' in c['text'] and ('支付' in c['text'] or '使用' in c['text'])),choices[0])
             action('choice '+chosen['text'],'find','nth',str(chosen['index']),'.v06-dialog button','click')
             continue
         if s['target']:

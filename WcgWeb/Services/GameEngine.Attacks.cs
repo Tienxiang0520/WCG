@@ -57,7 +57,7 @@ public partial class GameEngine
     private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish)
     {
         var p=Owner(m);if(!hit||!m.HasShield||p.AvailableEnergy==0){finish(false);return;}
-        Ask(p,$"【{m.Card.Name}】將被交戰消滅，橫置1點能量保命？",[new(){Id="SHIELD",Title="橫置1點能量使用聖盾"},new(){Id="SKIP",Title="不使用，接受消滅"}],o=>
+        Ask(p,$"【{m.Card.Name}】將被交戰消滅，橫置1點能量保命？",[new(){Id="SHIELD",Title="橫置1點能量使用能量護盾"},new(){Id="SKIP",Title="不使用，接受消滅"}],o=>
         {var use=o.Id=="SHIELD"&&p.AvailableEnergy>0;if(use){p.EnergyZone.First(c=>!c.IsTapped).IsTapped=true;Present("status",p,m.InstanceId,card:m.Card,label:"橫置能量保命");}finish(use);});
     }
     private void Counter(PlayerState p,MonsterInstance attacker,AttackContext ctx)
@@ -79,7 +79,7 @@ public partial class GameEngine
                 case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1,c.Card);});break;
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
-                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著聖盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
+                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
                 case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.Will=="深淵"))Recover(p,2,1);});break;
             }
             UsedSpell(p,c.Card);

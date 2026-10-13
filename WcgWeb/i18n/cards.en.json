@@ -152,7 +152,7 @@
  "WCG-031": {
   "zh": "鏡像護衛",
   "name": "Mirror Guard",
-  "text": "Taunt. Holy Shield."
+  "text": "Taunt. Energy Shield."
  },
  "WCG-032": {
   "zh": "質能瓦解",
@@ -303,17 +303,17 @@
  "WCG-061": {
   "zh": "銀色誓言衛",
   "name": "Silver Oath Guard",
-  "text": "[Arrow: →] Your adjacent monster on the right has Holy Shield."
+  "text": "[Arrow: →] Your adjacent monster on the right has Energy Shield."
  },
  "WCG-062": {
   "zh": "保護之手",
   "name": "Hand of Protection",
-  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself."
+  "text": "Give 1 of your monsters Energy Shield (attach this card to it), then restore 1 life to yourself."
  },
  "WCG-063": {
   "zh": "聖印侍從",
   "name": "Sigil Squire",
-  "text": "Holy Shield."
+  "text": "Energy Shield."
  },
  "WCG-064": {
   "zh": "謙遜戒律",
@@ -344,7 +344,7 @@
  "WCG-069": {
   "zh": "鐵壁騎士",
   "name": "Bulwark Knight",
-  "text": "Taunt. Holy Shield."
+  "text": "Taunt. Energy Shield."
  },
  "WCG-070": {
   "zh": "崇高奉獻",
@@ -365,17 +365,17 @@
  "WCG-073": {
   "zh": "榮耀護衛官",
   "name": "Glory Warden",
-  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield."
+  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Energy Shield."
  },
  "WCG-074": {
   "zh": "堅壁祈願",
   "name": "Prayer of the Bulwark",
-  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card."
+  "text": "Give 1 of your monsters Energy Shield (attach this card to it), then draw 1 card."
  },
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Holy Shield. Deploy: Restore 1 life to yourself."
+  "text": "Energy Shield. Deploy: Restore 1 life to yourself."
  },
  "WCG-076": {
   "zh": "誓約封禁",
@@ -395,12 +395,12 @@
  "WCG-079": {
   "zh": "日耀聖堂巨像",
   "name": "Sunblaze Temple Colossus",
-  "text": "Taunt. Holy Shield."
+  "text": "Taunt. Energy Shield."
  },
  "WCG-080": {
   "zh": "光輝聖皇·弗丁",
   "name": "Radiant Holy Emperor, Fordin",
-  "text": "Holy Shield. On Death: Destroy all enemy monsters with 1000 PP or less."
+  "text": "Energy Shield. On Death: Destroy all enemy monsters with 1000 PP or less."
  },
  "WCG-081": {
   "zh": "虛空夜行魔",
@@ -665,7 +665,7 @@
  "WCG-133": {
   "zh": "厚甲石像鬼",
   "name": "Armored Gargoyle",
-  "text": "Taunt. While you have 3 or less life, this monster has Holy Shield."
+  "text": "Taunt. While you have 3 or less life, this monster has Energy Shield."
  },
  "WCG-134": {
   "zh": "巡林驅邪工兵",
@@ -690,7 +690,7 @@
  "WCG-138": {
   "zh": "暗影伏擊者",
   "name": "Shadow Ambusher",
-  "text": "Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Holy Shield or Counters this turn)."
+  "text": "Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Energy Shield or Counters this turn)."
  },
  "WCG-139": {
   "zh": "次元回溯",
@@ -735,7 +735,7 @@
  "WCG-147": {
   "zh": "聖堂仲裁護衛",
   "name": "Temple Arbiter Guard",
-  "text": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield."
+  "text": "[Arrow: ← ↑] Your adjacent monster on the left has Energy Shield. The enemy monster directly opposite loses Energy Shield."
  },
  "WCG-148": {
   "zh": "墓園守夜人",
@@ -855,7 +855,7 @@
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself."
+  "text": "Taunt. Energy Shield. Deploy: Restore 2 life to yourself."
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -895,7 +895,7 @@
  "WCG-179": {
   "zh": "光輝至高大天使·阿曼蘇爾",
   "name": "Radiant Supreme Archangel, Amansul",
-  "text": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7)."
+  "text": "Taunt. Energy Shield. Deploy: Restore your life to its maximum (7)."
  },
  "WCG-180": {
   "zh": "戰歌號令",
@@ -945,7 +945,7 @@
  "WCG-189": {
   "zh": "聖堂集結號角",
   "name": "Temple Rally Horn",
-  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it)."
+  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Energy Shield (attach this card to it)."
  },
  "WCG-190": {
   "zh": "白銀軍團旗手",
@@ -993,8 +993,8 @@
  "WCG-198": {
   "zh": "神聖救贖誓約",
   "name": "Oath of Holy Redemption",
-  "text": "[Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Holy Shield by attaching this card to it.",
-  "zh_text": "【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
+  "text": "[Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Energy Shield by attaching this card to it.",
+  "zh_text": "【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。"
  },
  "WCG-199": {
   "zh": "亡魂索命陷阱",

@@ -46,8 +46,6 @@ public class MonsterInstance
     public bool HasSummoningSickness { get; set; }
     public bool IsSilenced { get; set; }
     public bool IsStealthed { get; set; }
-    public int? FrozenUntilTurn { get; set; }
-    public bool IsFrozen => FrozenUntilTurn.HasValue;
     public bool IsTaunt => !IsSilenced && Card.HasTaunt;
     public bool HasCharge => !IsSilenced && Card.HasCharge || Attachments.Any(a => a.Card.Card.Id == "WCG-141");
     public bool HasPoison => !IsSilenced && Card.HasPoison;

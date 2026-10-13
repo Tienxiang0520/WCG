@@ -30,7 +30,7 @@ public sealed class RankedTests : IDisposable
         e.TurnNumber, e.CurrentTurnPlayerId, e.CurrentPhase, e.DecisionPlayerId,
         sides = new[] {e.Player,e.Computer}.Select(p=>new {p.Hp,p.HasLost,p.HasFilledEnergyThisTurn,
             hand=p.Hand.Select(c=>c.Card.Id),deck=p.Deck.Select(c=>c.Card.Id),energy=p.EnergyZone.Select(c=>new {c.Card.Id,c.IsTapped}),
-            field=p.Field.Select(m=>new {m.Card.Id,m.CurrentPP,m.CurrentDP,m.HasAttacked,m.HasSummoningSickness,m.IsFrozen,m.IsSilenced,m.IsStealthed,m.ShieldCount}),
+            field=p.Field.Select(m=>new {m.Card.Id,m.CurrentPP,m.CurrentDP,m.HasAttacked,m.HasSummoningSickness,m.IsSilenced,m.IsStealthed,m.ShieldCount}),
             grave=p.Graveyard.Select(c=>c.Card.Id)}),
         choice=e.CurrentPendingChoice?.Options.Select(o=>new{o.Title,Card=o.PreviewCard?.Id}),target=e.CurrentPendingTarget?.Title };
     [Theory]
@@ -235,6 +235,27 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
         Assert.Equal(3,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
     }
+    [Fact] public void EnergyShieldRenamePreservesActiveMatchAndItsReplay()
+    {
+        var prior=CounterHistory.BeforeEnergyShield(cards);
+        // Fingerprint read from the deployed pre-rename version; design notes also participate in the hash.
+        Assert.Equal("B480EB9937F9EF5760C83B3AB13A6AC39310ABF96F99A29D44154EF2A91FE887",Hash(prior));
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var before=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
+        var restored=Session();Assert.Empty(restored.Error);Assert.Equal(22,restored.Read().Stars);
+        Assert.True(restored.Engine.DamageCounters);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
+        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.Equal(oldRules,restored.Read().Match!.Rules);
+        Assert.True(Send(restored,"surrender").Success);
+        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        Assert.True(restored.Start(deck).Success);Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
+    }
+
     [Fact] public void HistoricCatalogsReproduceTheReleasedFingerprints()
     {
         // Ranked saves store a hash of the catalog; the overlays must rebuild the exact released catalogs or old matches stop resuming.

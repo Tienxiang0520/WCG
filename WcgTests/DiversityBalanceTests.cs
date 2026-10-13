@@ -16,7 +16,7 @@ public class DiversityBalanceTests
     }
     [Fact] public void NumericRebalanceLeavesCardEffectsAndKeywordsUnchanged()
     {
-        var cards=Cards();var before=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root,"Data/balance-before-diversity.json")))!;
+        var cards=CounterHistory.BeforeEnergyShield(Cards());var before=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root,"Data/balance-before-diversity.json")))!;
         Assert.Equal(32,before.Count);
         var priorTargets=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root,"Data/balance-before-player-targets.json")))!.ToDictionary(c=>c.Id);
         foreach(var old in before){var current=priorTargets.GetValueOrDefault(old.Id)??cards.GetCard(old.Id)!;Assert.Equal(old.Text,current.Text);Assert.Equal(old.Keywords,current.Keywords);Assert.Equal(old.Arrows,current.Arrows);

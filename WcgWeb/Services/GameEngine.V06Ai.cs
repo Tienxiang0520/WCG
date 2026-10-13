@@ -29,7 +29,7 @@ public partial class GameEngine
         {
             if (target.PlayerValidator != null) return SelectPlayerTarget(p);
             var all=p.Board.Concat(e.Board).Where(m=>target.Validator?.Invoke(m)!=false).ToArray();
-            var friendly=target.Title.Contains("犧牲")||target.Title.Contains("附著聖盾")||target.Title.Contains("己方怪物");
+            var friendly=target.Title.Contains("犧牲")||target.Title.Contains("附著能量護盾")||target.Title.Contains("己方怪物");
             var selected=all.OrderByDescending(m=>(p.Board.Contains(m)==friendly?20:0)+(target.Title.Contains("犧牲")?-m.CurrentPP:m.CurrentPP)/500d).FirstOrDefault();
             return selected!=null&&SelectTarget(selected);
         }

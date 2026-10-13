@@ -81,7 +81,7 @@ public sealed class IdentifierMigrationTests
     static string StateShape(GameEngine e)=>JsonSerializer.Serialize(new{e.TurnNumber,e.CurrentTurnPlayerId,e.CurrentPhase,e.DecisionPlayerId,
         sides=new[]{e.Player,e.Computer}.Select(p=>new{p.Hp,p.HasLost,p.HasFilledEnergyThisTurn,
             hand=p.Hand.Select(c=>c.Card.Id),deck=p.Deck.Select(c=>c.Card.Id),energy=p.EnergyZone.Select(c=>new{c.Card.Id,c.IsTapped}),
-            field=p.Field.Select(m=>new{m.Card.Id,m.CurrentPP,m.CurrentDP,m.HasAttacked,m.HasSummoningSickness,m.IsFrozen,m.IsSilenced,m.IsStealthed,m.ShieldCount}),grave=p.Graveyard.Select(c=>c.Card.Id)})});
+            field=p.Field.Select(m=>new{m.Card.Id,m.CurrentPP,m.CurrentDP,m.HasAttacked,m.HasSummoningSickness,m.IsSilenced,m.IsStealthed,m.ShieldCount}),grave=p.Graveyard.Select(c=>c.Card.Id)})});
     sealed class MemoryStorage:IPlayerStorage
     {
         public object Gate{get;}=new();public Dictionary<string,string> Values{get;}=new();

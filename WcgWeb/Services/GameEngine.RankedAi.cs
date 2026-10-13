@@ -41,7 +41,7 @@ public partial class GameEngine
 
     private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0);
-    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasDivineShield ? 2 : 0)
+    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0)
         : 3 + c.TotalCost * .6;
 
     private bool ExecuteTieredAi()
@@ -243,7 +243,7 @@ public partial class GameEngine
         if (!prof.SmartTargets) return ExecuteV06Ai();
         if (!LegacyCardRules && pending.Title == "選擇驅散目標") return SelectTarget(legal.OrderByDescending(m => DispelScore(p, m)).First());
         var cost = pending.Title.Contains("犧牲") || pending.Title.Contains("祭品") || pending.Title.Contains("代價");
-        var friendly = cost || pending.Title.Contains("附著聖盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
+        var friendly = cost || pending.Title.Contains("附著能量護盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
         MonsterInstance target;
         if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
         else if (friendly) target = legal.OrderByDescending(m => (p.Board.Contains(m) ? 20 : 0) + BodyValue(m)).First();

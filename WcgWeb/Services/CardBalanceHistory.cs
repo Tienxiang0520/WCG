@@ -5,7 +5,10 @@ namespace WcgWeb.Services;
 
 internal static class CardBalanceHistory
 {
-    internal static CardDatabase BeforeDamageCounters(CardDatabase current) => Override(current, "WcgWeb.Balance.BeforeDamageCounters");
+    internal static CardDatabase BeforeEnergyShield(CardDatabase current) =>
+        current.AllCards.Any(c => c.Text.Contains("能量護盾", StringComparison.Ordinal) || c.Keywords.Contains("能量護盾"))
+            ? Override(current, "WcgWeb.Balance.BeforeEnergyShield") : current;
+    internal static CardDatabase BeforeDamageCounters(CardDatabase current) => Override(BeforeEnergyShield(current), "WcgWeb.Balance.BeforeDamageCounters");
     internal static CardDatabase BeforePlayerTargets(CardDatabase current) => Override(BeforeDamageCounters(current), "WcgWeb.Balance.BeforePlayerTargets");
     internal static CardDatabase BeforeDiversity(CardDatabase current) => Override(BeforePlayerTargets(current), "WcgWeb.Balance.BeforeDiversity");
     // Catalog before the card-text clarity update (152 cards reworded; 147 136 178 141 changed effect, 147 PP 1200→1000).

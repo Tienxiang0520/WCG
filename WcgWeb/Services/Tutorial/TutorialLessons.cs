@@ -72,7 +72,7 @@ public static class TutorialLessons
                     Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到電腦頭像，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-014")] },
                 new() { Title = "勝利！",
-                    Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、聖盾與各種關鍵字。" }
+                    Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、能量護盾與各種關鍵字。" }
             ]
         },
         new()
@@ -137,34 +137,34 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "shield", Icon = "shield", Title = "聖盾與箭頭",
-            Summary = "聖盾要付能量才會生效；學會用箭頭把聖盾交給相鄰的隊友。",
-            Topics = ["聖盾", "橫置能量保命", "箭頭 ← → ↑", "固定格位"],
+            Id = "shield", Icon = "shield", Title = "能量護盾與箭頭",
+            Summary = "能量護盾要付能量才會生效；學會用箭頭把能量護盾交給相鄰的隊友。",
+            Topics = ["能量護盾", "橫置能量保命", "箭頭 ← → ↑", "固定格位"],
             Scene = new(
                 new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-155", 1)] }),
             Steps =
             [
-                new() { Title = "聖盾", Spot = ["own-card:WCG-154"],
-                    Text = "具聖盾的怪物即將在交戰中被消滅時，控制者可以橫置 1 點直立能量讓它存活。每次都要付能量，沒有能量就保不住。" },
+                new() { Title = "能量護盾", Spot = ["own-card:WCG-154"],
+                    Text = "具能量護盾的怪物即將在交戰中被消滅時，控制者可以橫置 1 點直立能量讓它存活。每次都要付能量，沒有能量就保不住。" },
                 new() { Title = "放對格位", Spot = ["hand:WCG-061", "own:1"], Allow = [Play("WCG-061"), Slot(1)],
                     Done = e => Unit(e.Player, "WCG-061")?.Slot == 1,
                     Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-061"), CardEffect("WCG-061"), CardName("WCG-154")],
                     Hint = "請把「{0}」放在第 2 格（{1}左邊）。", HintValues = [CardName("WCG-061"), CardName("WCG-154")] },
                 new() { Title = "箭頭", Spot = ["own-card:WCG-061", "own-card:WCG-154"],
-                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了聖盾。", TextValues = [CardName("WCG-154")] },
+                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了能量護盾。", TextValues = [CardName("WCG-154")] },
                 new() { Title = "付能量保命", Spot = ["own-card:WCG-154", "enemy-card:WCG-155", "dialog"], Allow = [Attack("WCG-154", "WCG-155"), Choose("SHIELD")],
                     Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true } && e.Player.AvailableEnergy == 1 && Settled(e),
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，出現提示時選擇「橫置1點能量使用聖盾」。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-155"), EnemyPP("WCG-155")],
-                    Hint = "請攻擊「{0}」，並選擇使用聖盾。", HintValues = [CardName("WCG-155")] },
+                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，出現提示時選擇「橫置1點能量使用能量護盾」。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-155"), EnemyPP("WCG-155")],
+                    Hint = "請攻擊「{0}」，並選擇使用能量護盾。", HintValues = [CardName("WCG-155")] },
                 new() { Title = "本課重點",
-                    Text = "聖盾只防交戰中的消滅，不擋法術消滅、犧牲或返回手牌。有的怪物天生具有聖盾，也有附著法術或結界能給予聖盾；沉默會讓怪物失去自身的聖盾。" }
+                    Text = "能量護盾只防交戰中的消滅，不擋法術消滅、犧牲或返回手牌。有的怪物天生具有能量護盾，也有附著法術或結界能給予能量護盾；沉默會讓怪物失去自身的能量護盾。" }
             ]
         },
         new()
         {
             Id = "arrows", Icon = "compass", Title = "箭頭與站位",
-            Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭影響正對面的敵人。",
+            Summary = "箭頭不只給能量護盾：用左右箭頭強化相鄰隊友，用上箭頭影響正對面的敵人。",
             Topics = ["箭頭 ← → ↑", "相鄰格光環", "正對面同列格", "五大意志的箭頭"],
             Scene = new(
                 new() { Hand = ["WCG-005", "WCG-033"], Deck = Deck(), Energy = 6, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
@@ -184,7 +184,7 @@ public static class TutorialLessons
                     Text = "「{0}」的效果：{1} 己方第 5 格正對敵方第 1 格的「{2}」，把它放在第 5 格。", TextValues = [CardName("WCG-033"), CardEffect("WCG-033"), CardName("WCG-132")],
                     Hint = "請把「{0}」放在第 5 格（{1}的正對面）。", HintValues = [CardName("WCG-033"), CardName("WCG-132")] },
                 new() { Title = "本課重點",
-                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ← → 帶隊衝鋒，理智依站位抽牌或橫置對手，生機用嘲諷守住戰線並強化兩側，秩序用箭頭分配聖盾，深淵壓低正對面敵怪的 PP。" }
+                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ← → 帶隊衝鋒，理智依站位抽牌或橫置對手，生機用嘲諷守住戰線並強化兩側，秩序用箭頭分配能量護盾，深淵壓低正對面敵怪的 PP。" }
             ]
         },
         new()
@@ -249,7 +249,7 @@ public static class TutorialLessons
         {
             Id = "keywords", Icon = "flame", Title = "劇毒、貫穿與衝鋒",
             Summary = "三個戰鬥關鍵字：以小博大的劇毒、打穿到玩家的貫穿、即刻出擊的衝鋒。",
-            Topics = ["劇毒", "貫穿", "衝鋒", "冰凍與潛伏（目前卡池未使用）"],
+            Topics = ["劇毒", "貫穿", "衝鋒"],
             Scene = new(
                 new() { Hand = ["WCG-110"], Deck = Deck(), Energy = 3, Board = [new("WCG-051", 0), new("WCG-053", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-154", 2), new("WCG-157", 4)] }),
@@ -274,7 +274,7 @@ public static class TutorialLessons
                     Text = "用「{0}」攻擊電腦頭像。", TextValues = [CardName("WCG-110")],
                     Hint = "請把「{0}」拖到電腦頭像。", HintValues = [CardName("WCG-110")] },
                 new() { Title = "本課重點",
-                    Text = "關鍵字會被沉默移除。規則書另保留「冰凍」與「潛伏」兩個關鍵字，但目前 199 張卡池中沒有卡牌使用它們。" }
+                    Text = "關鍵字會被沉默移除。出手前請先確認卡片目前具有的能力。" }
             ]
         },
         new()
@@ -317,8 +317,8 @@ public static class TutorialLessons
         new()
         {
             Id = "status", Icon = "eye", Title = "附著、沉默與狀態",
-            Summary = "用附著法術強化怪物，用沉默拔掉嘲諷與聖盾，再一舉擊破。",
-            Topics = ["附著法術", "沉默", "驅散", "PP 加成", "電腦使用聖盾"],
+            Summary = "用附著法術強化怪物，用沉默拔掉嘲諷與能量護盾，再一舉擊破。",
+            Topics = ["附著法術", "沉默", "驅散", "PP 加成", "電腦使用能量護盾"],
             Scene = new(
                 new() { Hand = ["WCG-135", "WCG-072"], Deck = Deck(), Energy = 6, Board = [new("WCG-154", 2)] },
                 new() { Hp = 3, Deck = Deck(), Energy = 2, Board = [new("WCG-069", 2)] }),
@@ -334,11 +334,11 @@ public static class TutorialLessons
                     Text = "「{0}」（{1} PP）的效果：{2} 就算你打贏它，電腦也能橫置能量保住它。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
                 new() { Title = "沉默", Spot = ["hand:WCG-072", "enemy-card:WCG-069"], Allow = [Play("WCG-072", "WCG-069"), Pick("WCG-069")],
                     Done = e => Unit(e.Computer, "WCG-069") is { IsSilenced: true } && Settled(e),
-                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與聖盾。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
+                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與能量護盾。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-072"), CardName("WCG-069")] },
                 new() { Title = "擊破", Spot = ["own-card:WCG-154", "enemy-card:WCG-069"], Allow = [Attack("WCG-154", "WCG-069")],
                     Done = e => !OnField(e.Computer, "WCG-069"),
-                    Text = "現在用 {0} PP 的「{1}」攻擊失去聖盾的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
+                    Text = "現在用 {0} PP 的「{1}」攻擊失去能量護盾的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-069")] },
                 new() { Title = "本課重點",
                     Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：直到下一次攻擊或交戰結束的 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
@@ -386,7 +386,7 @@ public static class TutorialLessons
                 new("建立空白牌組", "按「新建」開始一副全新的牌組。", ".deck-panel-card .card-footer .btn-outline-secondary", "deck-new"),
                 new("選擇主色", "從「主色」選單選一個意志作為這副牌的主色。", "#main-will", "deck-main"),
                 new("單色或雙色", "單色只放主色與中立；雙色可再加一個副色。卡牌庫會自動只顯示這副牌能放入的卡，鎖住的意志會顯示鎖頭。", ".color-mode"),
-                new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、聖盾與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
+                new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、能量護盾與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
                 new("加入卡片", "按任一張卡下方的「＋ 加入」，把它放進牌組。點卡面可以查看完整效果。", ".add-card-btn", "deck-add"),
                 new("張數與統計", "牌組面板會即時顯示張數進度、派系數與怪物／法術比例。湊滿 50 張才能儲存與出戰。", ".deck-panel-card .card-header"),
                 new("載入、儲存與列印", "「選擇 / 載入牌組」可以複製官方五套預設牌組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。", ".deck-panel-card .card-footer")

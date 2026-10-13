@@ -652,8 +652,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-0-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -1506,7 +1506,7 @@
     "Deck": {
       "Id": "RANKED-1-REASON-FROST",
       "Name": "理智・霜焰節奏（節奏）",
-      "Description": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+      "Description": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-023",
@@ -2175,8 +2175,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-1-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -3148,7 +3148,7 @@
     "Deck": {
       "Id": "RANKED-1-ORDER-EXPEDITION",
       "Name": "秩序・聖光遠征（進攻）",
-      "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+      "Description": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-005",
@@ -3796,7 +3796,7 @@
     "Deck": {
       "Id": "RANKED-2-REASON-FROST",
       "Name": "理智・霜焰節奏（節奏）",
-      "Description": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+      "Description": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-023",
@@ -4465,8 +4465,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-2-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -5568,7 +5568,7 @@
     "Deck": {
       "Id": "RANKED-2-ORDER-EXPEDITION",
       "Name": "秩序・聖光遠征（進攻）",
-      "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+      "Description": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-005",
@@ -6432,7 +6432,7 @@
     "Deck": {
       "Id": "RANKED-3-REASON-FROST",
       "Name": "理智・霜焰節奏（節奏）",
-      "Description": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+      "Description": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-023",
@@ -7112,8 +7112,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-3-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -8237,7 +8237,7 @@
     "Deck": {
       "Id": "RANKED-3-ORDER-EXPEDITION",
       "Name": "秩序・聖光遠征（進攻）",
-      "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+      "Description": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-005",
@@ -9101,7 +9101,7 @@
     "Deck": {
       "Id": "RANKED-4-REASON-FROST",
       "Name": "理智・霜焰節奏（節奏）",
-      "Description": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+      "Description": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-023",
@@ -9447,7 +9447,7 @@
     "Deck": {
       "Id": "RANKED-4-REASON-GLACIER",
       "Name": "理智・冰封堡壘（中速）",
-      "Description": "理智冰凍配秩序嘲諷聖盾，穩住場面再逐步推進。",
+      "Description": "理智橫置配秩序嘲諷能量護盾，穩住場面再逐步推進。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-024",
@@ -9889,8 +9889,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-4-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -10009,7 +10009,7 @@
     "Deck": {
       "Id": "RANKED-4-ORDER-GROVE",
       "Name": "秩序・聖林守衛（中速）",
-      "Description": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
+      "Description": "秩序能量護盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-041",
@@ -11230,7 +11230,7 @@
     "Deck": {
       "Id": "RANKED-4-ORDER-EXPEDITION",
       "Name": "秩序・聖光遠征（進攻）",
-      "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+      "Description": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-005",
@@ -12094,7 +12094,7 @@
     "Deck": {
       "Id": "RANKED-5-REASON-FROST",
       "Name": "理智・霜焰節奏（節奏）",
-      "Description": "冰凍、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
+      "Description": "橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-023",
@@ -12440,7 +12440,7 @@
     "Deck": {
       "Id": "RANKED-5-REASON-GLACIER",
       "Name": "理智・冰封堡壘（中速）",
-      "Description": "理智冰凍配秩序嘲諷聖盾，穩住場面再逐步推進。",
+      "Description": "理智橫置配秩序嘲諷能量護盾，穩住場面再逐步推進。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-024",
@@ -12990,8 +12990,8 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-5-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
-      "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
+      "Name": "秩序・能量護盾防線（防守）",
+      "Description": "箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-061",
@@ -13326,7 +13326,7 @@
     "Deck": {
       "Id": "RANKED-5-ORDER-GROVE",
       "Name": "秩序・聖林守衛（中速）",
-      "Description": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
+      "Description": "秩序能量護盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-041",
@@ -14547,7 +14547,7 @@
     "Deck": {
       "Id": "RANKED-5-ORDER-EXPEDITION",
       "Name": "秩序・聖光遠征（進攻）",
-      "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+      "Description": "能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-005",

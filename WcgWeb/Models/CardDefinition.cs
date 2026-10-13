@@ -62,10 +62,10 @@ public class CardDefinition
     [JsonIgnore] public bool CannotAttack => IsMonster && Id == "WCG-120";
     [JsonIgnore] public bool HasTaunt => Keywords.Contains("嘲諷");
     [JsonIgnore] public bool HasCharge => Keywords.Contains("衝鋒");
-    [JsonIgnore] public bool HasDivineShield => Keywords.Contains("聖盾");
+    public static string NormalizeShieldName(string text) => text.Replace("聖盾", "能量護盾", StringComparison.Ordinal).Replace("能量能量護盾", "能量護盾", StringComparison.Ordinal);
+    [JsonIgnore] public bool HasEnergyShield => Keywords.Contains("能量護盾") || Keywords.Contains("聖盾"); // Historical catalogue compatibility.
     [JsonIgnore] public bool HasTrample => Keywords.Contains("貫穿");
     [JsonIgnore] public bool HasPoison => Keywords.Contains("劇毒");
-    [JsonIgnore] public bool HasFreeze => false;
     [JsonIgnore] public bool HasStealth => false;
     [JsonIgnore] public bool HasSilence => IsSpell && Id == "WCG-072";
 
