@@ -25,8 +25,9 @@ public class BattleBridgeTests
     CardInstance Hand(string id){var c=new CardInstance(db.GetCard(id)!);engine.Player.Hand.Add(c);return c;}
     void Energy(){for(int i=0;i<12;i++)engine.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));}
     [Theory][InlineData(0)][InlineData(1)][InlineData(2)]
-    public void CounterRevealReportsInsufficientEnergyWithoutChangingResolution(int available)
+    public void LegacyCounterRevealReportsInsufficientEnergyWithoutChangingResolution(int available)
     {
+        CounterHistory.RestartOld(engine,db);
         Assert.True(engine.EndTurn());
         var attacker=Field(engine.Computer,"WCG-101");
         var counter=new MonsterInstance(db.GetCard("WCG-199")!){IsSet=true,Slot=0};

@@ -38,7 +38,7 @@ public static class TutorialLessons
                     Hint = "這一步請把「冒險者行囊」拖到能量區。" },
                 new() { Title = "召喚怪物", Spot = ["hand:WCG-101", "own:2"], Allow = [Play("WCG-101"), Slot()],
                     Done = e => OnField(e.Player, "WCG-101"),
-                    Text = "出牌時要橫置與費用相同數量的能量。把「巡邏輕步兵」（費用 1）拖到己方任一空格。場上 5 個格位由怪物、結界與蓋牌共用，放下後不能換位。",
+                    Text = "出牌時要橫置與費用相同數量的能量。把「巡邏輕步兵」（費用 1）拖到己方任一空格。場上 5 個格位由怪物與結界共用，放下後不能換位。",
                     Hint = "請把「巡邏輕步兵」拖到己方空格。" },
                 new() { Title = "剛進場會橫置", Spot = ["own-card:WCG-101"],
                     Text = "剛召喚的怪物會橫置，這回合不能攻擊。只有具「衝鋒」的怪物以直立狀態進場，可以立刻攻擊。" },
@@ -278,9 +278,9 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "traps", Icon = "sigil", Title = "結界與蓋牌反擊",
-            Summary = "放置並發動結界、背面蓋牌，在被攻擊時翻開反擊法術。",
-            Topics = ["結界（主動／被動）", "發動結界", "蓋牌（0 費）", "被攻擊時翻開", "反擊法術", "電腦回合"],
+            Id = "traps", Icon = "sigil", Title = "結界與手牌反擊",
+            Summary = "放置並發動結界，受到傷害後從手牌選擇反擊。",
+            Topics = ["結界（主動／被動）", "發動結界", "反擊留在手牌", "傷害來源與條件", "反擊法術", "電腦回合"],
             Scene = new(
                 new() { Hand = ["WCG-151", "WCG-195", "WCG-101"], Deck = Deck(), Energy = 6 },
                 new() { Deck = Deck(), Board = [new("WCG-154", 0), new("WCG-101", 1)] }),
@@ -297,24 +297,20 @@ public static class TutorialLessons
                     Done = e => !OnField(e.Computer, "WCG-101"),
                     Text = "點一下場上的「熔火鍛爐」打開詳情，按「發動結界」，再點選敵方「巡邏輕步兵」消滅它。",
                     Hint = "請發動「熔火鍛爐」，選擇「巡邏輕步兵」。" },
-                new() { Title = "蓋牌", Spot = ["hand:WCG-195"],
-                    Text = "任何手牌都能以 0 費背面蓋在己方空格。當你被宣告攻擊時，可以翻開 1 張蓋牌：若是付得起的反擊法術就會發動，否則只會進入墓地。反擊法術不能正常施放。" },
-                new() { Title = "蓋下反擊法術", Spot = ["hand:WCG-195"], Allow = [Set("WCG-195"), Slot()],
-                    Done = e => e.Player.Structures.Any(m => m.IsSet && m.Card.Id == "WCG-195"),
-                    Text = "對「熔火爆炸陷阱」按右鍵（手機請點牌放大後按「切換為蓋牌」）切換成背面，再拖到己方空格。",
-                    Hint = "請把「熔火爆炸陷阱」切換為蓋牌，再拖到己方空格。" },
+                new() { Title = "反擊留在手牌", Spot = ["hand:WCG-195"],
+                    Text = "反擊牌不用蓋牌，也不能在行動階段正常施放。受到生命傷害後，手牌中符合傷害來源、目標與費用條件的反擊牌才會出現發動選擇；你也可以略過。保留「熔火爆炸陷阱」與 2 點直立能量。" },
                 new() { Title = "結束回合", Spot = ["end"], Allow = [End()],
                     Done = e => e.CurrentTurnPlayerId == "computer",
                     Text = "能量還留著 3 點，足夠支付反擊法術。按「結束回合」。",
                     Hint = "請按「結束回合」。" },
-                new() { Title = "翻開蓋牌！", Spot = ["dialog"], Allow = [ChooseCard("WCG-195")],
+                new() { Title = "從手牌反擊！", Spot = ["dialog"], Allow = [ChooseCard("WCG-195")],
                     Done = e => !OnField(e.Computer, "WCG-154") && Settled(e),
-                    Text = "電腦會宣告攻擊你。出現提示時，選擇翻開你的蓋牌。",
-                    Hint = "請選擇翻開蓋牌。" },
+                    Text = "電腦攻擊你後先扣血，再出現反擊選擇。選擇手牌的「熔火爆炸陷阱」發動；它只對造成傷害且仍在場的敵方怪物生效。",
+                    Hint = "請選擇「熔火爆炸陷阱」發動反擊。" },
                 new() { Title = "回到你的回合", Spot = ["face"], Done = e => e.CurrentTurnPlayerId == "player" && Settled(e),
-                    Text = "反擊成功！「熔火爆炸陷阱」消滅了攻擊者，且它的 PP 在 1500 以上，對電腦造成 1 點傷害。電腦正在結束回合……" },
+                    Text = "反擊成功！「熔火爆炸陷阱」消滅了攻擊者並抵銷剛才的扣血，且它的 PP 在 1500 以上，對電腦造成 1 點傷害。電腦正在結束回合……" },
                 new() { Title = "本課重點",
-                    Text = "蓋牌不會透露身分，對手只看得到背面。被動結界（例如「血怒祭壇」）會在條件達成時自動觸發；可以用驅散效果摧毀結界。" }
+                    Text = "反擊依卡文限制傷害來源；怪物反擊不能對法術生效。法術、被動與陣亡傷害也有反擊機會，但仍需手牌中的反擊符合條件。被動結界（例如「血怒祭壇」）會在條件達成時自動觸發；可以用驅散效果摧毀結界。" }
             ]
         },
         new()

@@ -975,26 +975,31 @@
  "WCG-195": {
   "zh": "熔火爆炸陷阱",
   "name": "Molten Blast Trap",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Destroy that monster. If it has 1500 PP or more, also deal 1 damage to the enemy player."
+  "text": "[Counter] After taking damage from an enemy monster, if it is still on the board: Destroy it and reverse this damage. If it had 1500 PP or more, also deal 1 damage to the enemy player.",
+  "zh_text": "【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。"
  },
  "WCG-196": {
   "zh": "維度時空屏障",
   "name": "Dimensional Time Barrier",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Negate the attack, then draw 1 card."
+  "text": "[Counter] After taking damage from an enemy card: Reverse this damage, then draw 1 card.",
+  "zh_text": "【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。"
  },
  "WCG-197": {
   "zh": "叢林守護伏擊",
   "name": "Jungle Guardian Ambush",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Negate the attack. You may summon a [Life] monster that costs 3 or less from your hand for free (its Deploy does not trigger)."
+  "text": "[Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger).",
+  "zh_text": "【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。"
  },
  "WCG-198": {
   "zh": "神聖救贖誓約",
   "name": "Oath of Holy Redemption",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life to yourself, and give 1 of your monsters Holy Shield (attach this card to it)."
+  "text": "[Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Holy Shield by attaching this card to it.",
+  "zh_text": "【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
  },
  "WCG-199": {
   "zh": "亡魂索命陷阱",
   "name": "Vengeful Spirit Trap",
-  "text": "[Counter] Reveal when an enemy monster attacks you: Destroy that monster. If your graveyard has an [Abyss] monster, also put a monster that costs 2 or less from your graveyard into your hand."
+  "text": "[Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand.",
+  "zh_text": "【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。"
  }
 }

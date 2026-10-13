@@ -24,7 +24,7 @@ public partial class GameEngine
         var ctx=new AttackContext();var e=GetOpponent(p);
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
-            ()=>{if(d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled)ResolveAttack(p,a,d);},()=>FinishAttack(p,a));return true;
+            ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled)ResolveAttack(p,a,d);},()=>FinishAttack(p,a));return true;
     });
     private void FinishAttack(PlayerState p,MonsterInstance a)
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;
@@ -33,15 +33,19 @@ public partial class GameEngine
         if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>x.CurrentPP<=500),x=>KillBatch([x],a.Card.Name));}
     private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d)
     {
-        if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP);return;}if(!e.Field.Contains(d))return;
+        if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
         var ap=a.CurrentPP;var dp=d.CurrentPP;var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
         Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh,b=>dsaved=b),()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();
-            Resolve(()=>{if(Alive(a)&&kills.Contains(d)&&a.HasTrample&&ap-dp>=700)Damage(e,1);},
-                ()=>{foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(d)){Damage(e,1);}
-                    foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a)){Damage(p,1);}},
+            Resolve(()=>{if(Alive(a)&&kills.Contains(d)&&a.HasTrample&&ap-dp>=700)Damage(e,1,new(p,a.Card,a,"attack"));},
+                ()=>{
+                    var triggers = new List<Action>();
+                    foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(d))triggers.Add(()=>Damage(e,1,new(p,x.Card,x,"passive")));
+                    foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a))triggers.Add(()=>Damage(p,1,new(e,x.Card,x,"passive")));
+                    if(DamageCounters) Resolve(triggers.ToArray()); else foreach(var trigger in triggers)trigger();
+                },
                 ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;});
             KillBatch(dead,"交戰");
         });
@@ -49,7 +53,7 @@ public partial class GameEngine
     private void Survived(PlayerState p,MonsterInstance m,MonsterInstance other,bool defending)
     {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id=="WCG-109")DrawMany(p,1);
         if(m.Card.Id=="WCG-029"&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
-        if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1);}
+        if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1,new(p,m.Card,m,"passive"));}
     private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish)
     {
         var p=Owner(m);if(!hit||!m.HasShield||p.AvailableEnergy==0){finish(false);return;}
@@ -72,7 +76,7 @@ public partial class GameEngine
             foreach(var x in payment)x.IsTapped=true;var e=GetOpponent(p);var power=attacker.CurrentPP;
             switch(c.Card.Id)
             {
-                case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1);});break;
+                case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1,c.Card);});break;
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
                 case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著聖盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
@@ -91,7 +95,7 @@ public partial class GameEngine
             if (m.Card.Id == "WCG-120") effects.Add(() =>
             {
                 if (!Alive(m) || m.IsSilenced) return; var enemy = GetOpponent(p);
-                if (enemy.Field.Count == 0) Damage(enemy, 1); else PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name));
+                if (enemy.Field.Count == 0) Damage(enemy, 1, new(p,m.Card,m,"passive")); else PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name));
             });
             if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
         }

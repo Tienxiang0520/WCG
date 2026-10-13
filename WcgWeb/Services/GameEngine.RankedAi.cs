@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Bump when ranked AI decisions change; RankedSession stores it with every journal action.
-    public const int RankedAiVersion = 4;
+    public const int RankedAiVersion = 5;
     private int _aiSeed;
     // Ranked replays seed this through SetReplaySeed; simulations may seed it directly.
     public void SeedRankedAi(int seed) => _aiSeed = seed;
@@ -63,7 +63,7 @@ public partial class GameEngine
                 : p.Hand.OrderBy(c => c.Card.IsCounter ? 10 : 0).ThenByDescending(c => c.Card.TotalCost).First();
             return PlayEnergy(p, energy);
         }
-        if (prof.UseCounters && p.Occupied < 5 && !p.Structures.Any(x => x.IsSet) && (!prof.ScoredPlays || e.Field.Count > 0 || TurnNumber > 4))
+        if (!DamageCounters && prof.UseCounters && p.Occupied < 5 && !p.Structures.Any(x => x.IsSet) && (!prof.ScoredPlays || e.Field.Count > 0 || TurnNumber > 4))
         {
             var reaction = p.Hand.FirstOrDefault(c => c.Card.IsCounter && p.AvailableEnergy >= c.Card.TotalCost);
             if (reaction != null) return SetCard(p, reaction);
@@ -206,6 +206,8 @@ public partial class GameEngine
     {
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
+        if (choice.Title == "受到傷害，可從手牌發動反擊")
+            return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
         if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));

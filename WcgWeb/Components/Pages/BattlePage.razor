@@ -82,7 +82,7 @@
                     @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@L.FaceText(card)</p>}
                     <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>@L["加入手牌"]</button>
                     <label>@L["布置格位"]<select aria-label="@L["布置格位"]" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">@L.F("第 {0} 格", i+1) @(SelectedSide.Field.Any(m=>m.Slot==i)?L["（已有卡片）"]:"")</option>}</select></label>
-                    <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>@L["直接擺放"]</button><button @onclick='()=>Edit("training-enter")'>@L["進場並觸發效果"]</button><button @onclick='()=>Edit("training-set")'>@L["背面蓋牌"]</button></div>
+                    <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>@L["直接擺放"]</button><button @onclick='()=>Edit("training-enter")'>@L["進場並觸發效果"]</button>@if(!Engine.DamageCounters){<button @onclick='()=>Edit("training-set")'>@L["背面蓋牌"]</button>}</div>
                     <small>@L["直接擺放不觸發進場或召喚效果；進場測試不扣費。已有卡片的格位不會被覆蓋。"]</small>
                     <legend>@L["生命與能量"]</legend>
                     <label>@L["生命（0–7）"]<input aria-label="@L["生命"]" type="number" min="0" max="7" @bind="Hp" @bind:event="oninput" /></label>

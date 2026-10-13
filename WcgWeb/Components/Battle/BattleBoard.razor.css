@@ -665,3 +665,6 @@
 .field-card .card-art-layer{inset:3px;border-radius:5px}
 .field-stats b:first-child,.field-stats b:last-child{box-shadow:0 0 0 1px var(--c-metal-dark),0 0 0 2px var(--c-metal-light),0 2px 5px rgba(0,0,0,.55)}
 }
+
+/* Counter choices show their text without making the dialog wider than the viewport. */
+.counter-card-text { display:block; white-space:normal; overflow-wrap:anywhere; text-align:left; line-height:1.5; margin-top:.5rem; }

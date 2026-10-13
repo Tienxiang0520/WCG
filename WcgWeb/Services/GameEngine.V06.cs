@@ -60,7 +60,7 @@ public partial class GameEngine
     private void SummonStructure(PlayerState p, CardInstance c)
     { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場"); }
     public bool SetCard(PlayerState p, CardInstance c) => Change(()=>
-    { if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
+    { if(DamageCounters)return Fail("現行規則不使用蓋牌；反擊牌留在手牌。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
     { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>x.CurrentPP<=800),_=>false });
     public bool Activate(PlayerState p, MonsterInstance m)=>Change(()=>
@@ -157,7 +157,7 @@ public partial class GameEngine
             case "WCG-166":CardChoice(p,"選擇另一張手牌置底",p.Hand,x=>{p.Hand.Remove(x);p.Deck.Add(x);DrawMany(p,1);});break;
             case "WCG-167":if(t!=null)ReadyMonster(t);break;
             case "WCG-168":if(t!=null)t.NextCombatBonus-=500;break;
-            case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>x.CurrentPP<=1500).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2);});break;
+            case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>x.CurrentPP<=1500).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2,c.Card);});break;
             case "WCG-173":Resolve(()=>{foreach(var x in p.Field.Concat(e.Field).ToArray())Bounce(x);},()=>DrawMany(p,2));break;
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>x.CurrentPP>=1500).ToArray(),c.Card.Name),()=>Heal(p,2));break;
             case "WCG-180":SearchTwoKinds(p);break;

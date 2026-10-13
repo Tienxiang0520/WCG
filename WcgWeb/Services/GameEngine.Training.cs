@@ -50,6 +50,15 @@ public partial class GameEngine
                 || !ValidTrainingSide(scene.Player,"player") || !ValidTrainingSide(scene.Computer,"computer")
                 || scene.Phase==TurnPhase.MainPhase && (scene.Player.HasLost || scene.Computer.HasLost || scene.Player.Hp==0 || scene.Computer.Hp==0)
                 || scene.Phase==TurnPhase.GameOver && !scene.Player.HasLost && !scene.Computer.HasLost) return Fail("測試場面資料不合法。");
+            if(DamageCounters)
+            {
+                if(new[]{scene.Player,scene.Computer}.Any(p=>p.Hand.Count+p.Structures.Count(m=>m.IsSet)>200))return Fail("舊測試場面的蓋牌轉回手牌後超出可保存範圍。");
+                // Scene saves describe test fixtures, not historical ranked matches. Apply current rules
+                // without losing the cards that occupied face-down slots in an older fixture.
+                foreach(var restoredSide in new[]{scene.Player,scene.Computer})
+                    foreach(var set in restoredSide.Structures.Where(m=>m.IsSet).ToArray())
+                    { restoredSide.Structures.Remove(set);restoredSide.Hand.Add(new(set.Card){InstanceId=set.InstanceId}); }
+            }
             ClearMatch(); Player=scene.Player; Computer=scene.Computer; Computer.IsAi=true; Player.IsAi=false;
             CurrentTurnPlayerId=scene.Active; TurnNumber=scene.Turn; CurrentPhase=scene.Phase; _random=new Random(scene.Seed);
             Log("已還原測試場面。","action"); return true;
@@ -74,6 +83,7 @@ public partial class GameEngine
         }
         var card=_cardDb.GetCard(edit.CardId??"");if(card==null)return Fail("請選擇卡片。");
         if(type=="training-hand") { if(side.Hand.Count>=30)return Fail("測試手牌最多30張。");side.Hand.Add(new(card));return true; }
+        if(type=="training-set"&&DamageCounters)return Fail("現行規則不使用蓋牌；請將反擊牌加入手牌。");
         if(type is not ("training-place" or "training-enter" or "training-set")) return Fail("不支援此訓練操作。");
         if(edit.Slot<0 || edit.Slot>4 || side.Board.Any(m=>m.Slot==edit.Slot))return Fail("請選擇空的格位。");
         if(type!="training-set" && !card.IsMonster && !card.IsEnchantment)return Fail("正面格位僅能放怪物或結界；法術可加入手牌或背面蓋牌。");

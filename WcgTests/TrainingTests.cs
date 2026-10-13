@@ -25,7 +25,17 @@ public class TrainingTests
         Assert.True(Edit(b,"training-enter",new(CardId:"WCG-013",Slot:1)).Success);Assert.Equal(6,g.Player.Hp);Assert.Equal(6,g.Computer.Hp);Assert.Empty(g.Player.EnergyZone);
         var revision=g.Revision;Assert.False(Edit(b,"training-place",new(CardId:"WCG-101",Slot:0)).Success);Assert.Equal(revision,g.Revision);Assert.Equal(2,g.Player.Occupied);
         Assert.False(Edit(b,"training-place",new(CardId:"WCG-014",Slot:2)).Success);
-        Assert.True(Edit(b,"training-set",new(Side:"computer",CardId:"WCG-195",Slot:2)).Success);Assert.True(g.Computer.Structures.Single().IsSet);Assert.Equal("SET",b.Snapshot().Computer.Field.Single().Card.CardId);
+        Assert.False(Edit(b,"training-set",new(Side:"computer",CardId:"WCG-195",Slot:2)).Success);Assert.Empty(g.Computer.Structures);Assert.True(Edit(b,"training-hand",new(Side:"computer",CardId:"WCG-195")).Success);Assert.Contains(g.Computer.Hand,c=>c.Card.Id=="WCG-195");
+    }
+    [Fact]public void OldSceneSetCardsReturnToHandWithoutLosingCards()
+    {
+        var(old,oldBridge)=Game();CounterHistory.RestartOld(old,cards);
+        Assert.True(Edit(oldBridge,"training-set",new(Side:"player",CardId:"WCG-195",Slot:2)).Success);
+        var id=old.Player.Structures.Single().InstanceId;var scene=old.ExportTrainingScene();
+        var(current,bridge)=Game();Assert.True(Edit(bridge,"training-restore",new(Scene:scene)).Success);
+        Assert.True(current.DamageCounters);Assert.Empty(current.Player.Structures);
+        var returned=current.Player.Hand.Single(c=>c.InstanceId==id);Assert.Same(cards.GetCard("WCG-195"),returned.Card);
+        Assert.Contains("受到",returned.Card.Text);Assert.DoesNotContain("IsSet\":true",current.ExportTrainingScene());
     }
     [Fact]public void SceneRestoresAttachmentsBasePowerResourcesAndCanonicalCardsRepeatedly()
     {

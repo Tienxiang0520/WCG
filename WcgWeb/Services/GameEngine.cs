@@ -105,10 +105,22 @@ public partial class GameEngine
     private PlayerState Owner(MonsterInstance m) => Player.Board.Contains(m) ? Player : Computer;
     public PlayerState GetOpponent(PlayerState p) => ReferenceEquals(p, Player) ? Computer : Player;
     private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); }
-    private void Damage(PlayerState p, int amount)
+    private void Damage(PlayerState p, int amount, DamageSource? source = null)
     {
         if (IsOver || amount <= 0) return;
-        p.Hp = Math.Max(0, p.Hp - amount); Present("damage", p, amount: amount, label: "生命傷害"); Log($"【{p.Name}】受到 {amount} 點傷害，目前 {p.Hp}。", "danger"); CheckLethal(p);
+        var lost = Math.Min(p.Hp, amount);
+        p.Hp = Math.Max(0, p.Hp - amount); Present("damage", p, amount: amount, label: "生命傷害"); Log($"【{p.Name}】受到 {amount} 點傷害，目前 {p.Hp}。", "danger");
+        if (!DamageCounters) { CheckLethal(p); return; }
+        var context = new DamageContext(p, lost, source);
+        _reactionDepth++;
+        Resolve(() => DamageReaction(context), () => FinishDamageReaction(context));
+    }
+    // Paying life is a cost, not damage, and never creates a reaction window.
+    private void PayLife(PlayerState p, int amount)
+    {
+        p.Hp = Math.Max(0, p.Hp - amount);
+        Present("damage", p, amount: amount, label: "支付生命代價");
+        CheckLethal(p);
     }
     private void Lose(PlayerState p, string reason)
     { p.HasLost = true; p.LossReason = reason; CurrentPhase = TurnPhase.GameOver; Present("gameover", p, label: reason); Log($"【{p.Name}】敗北：{reason}", "victory"); }
@@ -144,7 +156,7 @@ public partial class GameEngine
         MatchId = Guid.NewGuid(); Revision = 0; TurnNumber = 1; LastAttack = null; plannedSlots.Clear();
         Player = new() { Id = "player", Name = "玩家" }; Computer = new() { Id = "computer", Name = "電腦", IsAi = true };
         CurrentTurnPlayerId = ""; CurrentPhase = TurnPhase.NotStarted;
-        CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); Logs.Clear(); _presentation.Clear(); RevealedCards = []; RevealTitle = "";
+        CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); Logs.Clear(); _reactionDepth = 0; _presentation.Clear(); RevealedCards = []; RevealTitle = "";
     }
     public void ResetToNotStarted() => Change(() => { ClearMatch(); return true; });
     public void Surrender(PlayerState p) => Change(() => { if (!IsCurrent(p) || IsOver || CurrentPhase == TurnPhase.NotStarted) return false; Lose(p, "投降"); return true; });
@@ -261,7 +273,7 @@ public partial class GameEngine
         if (!c.Card.IsMonster && !c.Card.IsSpell && !c.Card.IsEnchantment) return "不支援此卡牌類型。";
         if ((c.Card.IsMonster || c.Card.IsEnchantment) && p.Occupied >= 5) return "場上已滿（最多 5 隻）。";
         if (!CanPayCost(p, c.Card, out _)) return $"可用能量不足，需要 {ActualCost(p,c.Card)}。";
-        if (c.Card.IsCounter) return "反擊法術須先蓋牌，於玩家被攻擊時發動。";
+        if (c.Card.IsCounter) return DamageCounters ? "反擊法術留在手牌；受到傷害且符合卡文條件時，可選擇支付費用發動。" : "反擊法術須先蓋牌，於玩家被攻擊時發動。";
         if(c.Card.Id=="WCG-166" && p.Hand.Count<2)return "需有另一張手牌可置底。";
         var discard = c.Card.Id == "WCG-095" ? 2 : c.Card.Id == "WCG-084" ? 1 : 0;
         if (p.Hand.Count - 1 < discard) return $"需要另外 {discard} 張手牌支付棄牌代價。";
@@ -340,10 +352,10 @@ public partial class GameEngine
         if (c.Card.IsMonster && p.NextCreatureDiscount > 0) p.NextCreatureDiscount = 0;
         if (c.Card.IsSpell) p.Graveyard.Add(c);
         if (id == "WCG-164" && target != null) target.IsTapped = true;
-        if (id == "WCG-165") { Damage(p, 1); if (IsOver) return; }
+        if (id == "WCG-165") { PayLife(p, 1); if (IsOver) return; }
         if (id == "WCG-169" && target != null) KillBatch([target], "消滅代價");
         if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: !LegacyCardRules);
-        if (id == "WCG-096") { Damage(p, 1); if (IsOver) return; }
+        if (id == "WCG-096") { PayLife(p, 1); if (IsOver) return; }
         // Cost-caused death triggers precede the original card effect.
         _effects.AddLast(() =>
         {

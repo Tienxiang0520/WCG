@@ -106,8 +106,58 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
         Assert.Empty(Session().Error);
     }
+    [Fact] public void DamageCounterUpgradePreservesOldMatchAndNextMatchUsesHandCounters()
+    {
+        var oldCards=CounterHistory.Before(cards);
+        var old=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(old.Start(oldCards.PresetDecks[0]).Success);Assert.False(old.Engine.DamageCounters);
+        var before=JsonSerializer.Serialize(StateShape(old.Engine));
+        var restored=Session();Assert.Empty(restored.Error);Assert.False(restored.Engine.DamageCounters);
+        Assert.NotEmpty(restored.BalanceNotice);Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.True(Send(restored,"surrender").Success);Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        Assert.True(restored.Start(cards.PresetDecks[0]).Success);Assert.True(restored.Engine.DamageCounters);
+        Assert.True(Session().Engine.DamageCounters);Assert.Empty(Session().Error);
+    }
+    [Fact] public void CurrentPendingHandCounterRestoresAndItsChoiceIsJournaled()
+    {
+        var deck=DeckService.Copy(cards.PresetDecks[0]);
+        // Keep the legal Fury starter, replace a playset with barriers for a two-faction reaction fixture.
+        deck.CardIds.RemoveRange(0,4);deck.CardIds.AddRange(Enumerable.Repeat("WCG-196",4));
+        var session=Session();Assert.True(session.Start(deck).Success);
+        var saved=session.Read();saved.Match!.PlayerFirst=true;
+        // Select a deterministic opening containing a counter; no live engine state is edited.
+        var seed=Enumerable.Range(1,200).First(seed=>
+        {
+            var preview=new GameEngine(cards,new Random(seed));preview.StartGame(deck,saved.Match.ComputerDeck,true);
+            return preview.Player.Hand.Any(c=>c.Card.IsCounter);
+        });
+        saved.Match.Seed=seed;store.Save(saved);session=Session();
+        var lease=session.Coordinator.Attach();session.Coordinator.AiPaused=true;
+        for(var n=0;n<300&&!session.Engine.IsOver;n++)
+        {
+            var engine=session.Engine;
+            if(engine.CurrentPendingChoice is {OwnerId:"player"} choice && choice.Title=="受到傷害，可從手牌發動反擊")
+            {
+                var before=JsonSerializer.Serialize(StateShape(engine));var restored=Session();Assert.Empty(restored.Error);
+                Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));Assert.True(restored.Engine.IsWaiting);
+                Assert.True(restored.Engine.DamageCounters);Assert.True(Send(restored,"choice",option:"SKIP").Success);
+                var after=JsonSerializer.Serialize(StateShape(restored.Engine));Assert.Equal(after,JsonSerializer.Serialize(StateShape(Session().Engine)));
+                Assert.Equal(5,restored.Read().Match!.Actions.Last().RulesVersion);return;
+            }
+            if(engine.DecisionPlayerId=="computer"){session.Coordinator.Resync(lease);Assert.True(session.Coordinator.StepAi(lease).Success);continue;}
+            if(engine.CurrentPendingChoice is {} other){Assert.True(Send(session,"choice",option:other.Options.First().Id).Success);continue;}
+            if(!engine.Player.HasFilledEnergyThisTurn)
+            {
+                var fill=engine.Player.Hand.FirstOrDefault(c=>!c.Card.IsCounter);
+                if(fill!=null){Assert.True(Send(session,"energy",fill.InstanceId).Success);continue;}
+            }
+            Assert.True(Send(session,"end").Success);
+        }
+        Assert.Fail("Fixture never reached a legal hand counter window.");
+    }
     CardDatabase Overlay(CardDatabase current,string file)
     {
+        current=CounterHistory.Before(current);
         var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(env.ContentRootPath,"Data",file)))!.ToDictionary(c=>c.Id);
         return new(JsonSerializer.Serialize(current.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
     }

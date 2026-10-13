@@ -123,8 +123,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                 engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString())
                     .Concat(engine.GetDirectPlayerTargets(engine.Player, c).Select(p => engine.TargetId(p).ToString())).ToArray(),
                 c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有聖盾資格仍需留能量保命。" : "",
-                engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
+                !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
             // Old logs can contain an AI-only hand inspection. The new board uses public structured events.
-            [], engine.RevealedCards.ToArray(), engine.RevealTitle, engine.CurrentTurnPlayerId);
+            [], engine.RevealedCards.ToArray(), engine.RevealTitle, engine.CurrentTurnPlayerId, engine.DamageCounters);
     }
 }

@@ -20,6 +20,7 @@ public partial class GameEngine
                     score+=p.Field.Count(m=>m.Card.Arrows.Contains("right")&&m.Slot==slot-1||m.Card.Arrows.Contains("left")&&m.Slot==slot+1)*3;
                     return score;}
                 return SelectChoice(choice.Options.OrderByDescending(Position).First());}
+            if(choice.Title=="受到傷害，可從手牌發動反擊")return SelectChoice(choice.Options.First(o=>o.Id!="SKIP"));
             if(choice.Title.Contains("翻開"))return SelectChoice(choice.Options.FirstOrDefault(o=>o.Id!="SKIP")??choice.Options[0]);
             var option=choice.Options.OrderByDescending(o=>o.Id=="KEEP"?100:o.Id=="SKIP"?-100:o.Id=="DISPEL_OPT"?(DispelWorth(p)?0:-200):o.PreviewCard is {} c?(c.PP??0)/500d+c.TotalCost:0).First();
             return SelectChoice(option);
@@ -39,7 +40,7 @@ public partial class GameEngine
         {var energy=p.Hand.OrderBy(c=>c.Card.IsCounter?10:0).ThenByDescending(c=>c.Card.TotalCost).First();return PlayEnergy(p,energy);}
         // Keep real reaction cards and energy for the opponent; never read opponent set identities.
         var reaction=p.Hand.FirstOrDefault(c=>c.Card.IsCounter&&p.AvailableEnergy>=c.Card.TotalCost);
-        if(reaction!=null&&p.Occupied<5&&!p.Structures.Any(x=>x.IsSet))return SetCard(p,reaction);
+        if(!DamageCounters&&reaction!=null&&p.Occupied<5&&!p.Structures.Any(x=>x.IsSet))return SetCard(p,reaction);
         var active=p.Structures.FirstOrDefault(x=>CanActivate(p,x));if(active!=null)return Activate(p,active);
         var playable=p.Hand.Where(c=>CanPlayCard(p,c)).Where(c=>!(c.Card.Id=="WCG-019"&&p.Hp<=2||c.Card.Id=="WCG-165"&&p.Hp<=1||c.Card.Id=="WCG-085"&&p.Hp<=1))
             .OrderByDescending(c=>c.Card.IsMonster).ThenBy(c=>ActualCost(p,c.Card)).FirstOrDefault(c=>!p.Structures.Any(x=>x.IsSet)&&!p.Field.Any(m=>m.HasShield)||p.AvailableEnergy-ActualCost(p,c.Card)>=1||p.Hand.Count<3);
@@ -66,6 +67,6 @@ public partial class GameEngine
         return value==0?-1:value+(x.CurrentPP/1000d);
     }
     public bool PlayEnchantment(PlayerState p,CardInstance c)=>Change(()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));
-    private void SpellDamage(PlayerState source,PlayerState target,int amount)
-    {if(source!=target&&target.Field.Any(x=>!x.IsTapped))amount-=target.Structures.Count(x=>!x.IsSet&&x.Card.Id=="WCG-127");Damage(target,Math.Max(0,amount));}
+    private void SpellDamage(PlayerState source,PlayerState target,int amount, CardDefinition card)
+    {if(source!=target&&target.Field.Any(x=>!x.IsTapped))amount-=target.Structures.Count(x=>!x.IsSet&&x.Card.Id=="WCG-127");Damage(target,Math.Max(0,amount),new(source,card,null,card.IsCounter?"counter":"spell"));}
 }

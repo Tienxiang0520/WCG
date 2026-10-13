@@ -19,7 +19,7 @@ public partial class GameEngine
                 { if (o.Id == "LOOT") Loot(p); else PickMonster(p, "選擇 PP 500 以下敵怪", enemy.Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, m.Card.Name)); });
                 break;
             case "WCG-007": PickLowest(p, enemy.Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, m.Card.Name)); break;
-            case "WCG-013": Resolve(() => Damage(enemy, 1), () => Damage(p, 1)); break;
+            case "WCG-013": Resolve(() => Damage(enemy, 1, new(p,m.Card,m,"deploy")), () => Damage(p, 1, new(p,m.Card,m,"deploy"))); break;
             case "WCG-015": if (enemy.Field.Count > p.Field.Count) DrawMany(p, 1); break;
             case "WCG-020": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 1300).ToArray(), m.Card.Name); break;
             case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
@@ -45,7 +45,7 @@ public partial class GameEngine
             case "WCG-073": break;
             case "WCG-057": case "WCG-075": case "WCG-106": Heal(p, 1); break;
             case "WCG-077": PickMonster(p, "選擇 PP 2300 以上敵怪", enemy.Field.Where(x => x.CurrentPP >= 2300), x => KillBatch(new[] { x }, m.Card.Name)); break;
-            case "WCG-085": Damage(p, 1); break;
+            case "WCG-085": Damage(p, 1, new(p,m.Card,m,"deploy")); break;
             case "WCG-087": if (p.Graveyard.Count >= 5) Heal(p, 1); break;
             case "WCG-091": KillBatch(enemy.Field.Where(x => x.CurrentPP <= 500).ToArray(), m.Card.Name); break;
             case "WCG-100": Resolve(() => Heal(p, 2), () => Recover(p, int.MaxValue, 1)); break;
@@ -116,8 +116,8 @@ public partial class GameEngine
         switch (c.Id)
         {
             case "WCG-004": case "WCG-048": Resolve(KillTarget, () => DrawMany(p, 1)); break;
-            case "WCG-006": SpellDamage(p,enemy, 2); break;
-            case "WCG-014": SpellDamage(p,enemy, 1); break;
+            case "WCG-006": SpellDamage(p,enemy, 2,c); break;
+            case "WCG-014": SpellDamage(p,enemy, 1,c); break;
             case "WCG-046": if (mode == "KILL") KillTarget(); else Loot(p); break;
             case "WCG-054": Search(p, 5, x => x.Card.IsMonster, 2); break;
             case "WCG-062": case "WCG-074":
@@ -126,12 +126,12 @@ public partial class GameEngine
             case "WCG-066": Resolve(() => Heal(playerTarget ?? p, 2), () => DrawMany(p, 1)); break;
             case "WCG-070": Heal(playerTarget ?? p, 1); break;
             case "WCG-072": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
-            case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1); }); break;
+            case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1,c); }); break;
             case "WCG-008": KillBatch(p.Field.Concat(enemy.Field).Where(m => m.CurrentPP <= 500).ToArray(), c.Name); break;
             case "WCG-010": DrawMany(p, Math.Min(2, p.Field.Count)); break;
             case "WCG-064": case "WCG-012": case "WCG-032": case "WCG-076": case "WCG-082": case "WCG-084": case "WCG-088": KillTarget(); break;
-            case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1)); break;
-            case "WCG-019": Resolve(() => Damage(p, 2), () => DrawMany(p, 2)); break;
+            case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
+            case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, 2)); break;
             case "WCG-022": Search(p, 3, x => x.Card.IsSpell, optional: true); break;
             case "WCG-024": if(target!=null&&Alive(target)){if(target.IsTapped)Loot(p);else target.IsTapped=true;} break;
             case "WCG-026": if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); break;
@@ -195,7 +195,7 @@ public partial class GameEngine
         var enemy = GetOpponent(p);
         switch (m.Card.Id)
         {
-            case "WCG-003": Damage(enemy, 1); break;
+            case "WCG-003": Damage(enemy, 1, new(p,m.Card,m,"death")); break;
             case "WCG-016": PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-025": case "WCG-103": DrawMany(p, 1); break;
             case "WCG-043": case "WCG-108": Recover(p, 1, 1, grave); break;

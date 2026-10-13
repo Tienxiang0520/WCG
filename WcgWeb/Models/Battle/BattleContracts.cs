@@ -24,6 +24,6 @@ public record BattleEvent(Guid Id, long Revision, int Order, string Type, string
     Guid? InstanceId, Guid? TargetId, int Amount, BattleCard? Card, string Label);
 public record BattleSnapshot(Guid MatchId, long Revision, int Turn, string Phase, string DecisionPlayerId,
     bool IsOver, string Outcome, BattleSide Player, BattleSide Computer, BattleHand[] Hand,
-    BattlePending? Pending, string[] Logs, BattleCard[] RevealedCards, string RevealTitle, string ActivePlayerId);
+    BattlePending? Pending, string[] Logs, BattleCard[] RevealedCards, string RevealTitle, string ActivePlayerId, bool DamageCounters = true);
 public record BattleResponse(bool Success, string Code, string Message, Guid BatchId,
     BattleSnapshot State, BattleEvent[] Events);

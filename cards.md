@@ -53,7 +53,7 @@ source: WcgWeb/Data/cards.json
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Warsong Command** — Look at the top 3 cards of your deck. Put 1 [Fury] monster card and 1 [Fury] spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 1200 | 1 | — | 進場：若己方場上有其他【狂怒】怪物，你目前在場的所有【狂怒】怪物（含此怪物）本回合 PP +300。 | **Crimson Oath Drummer** — Deploy: If you have another [Fury] monster, all your [Fury] monsters currently in play (including this one) get +300 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 4 | 1800 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
-| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方怪物攻擊你時翻開：消滅該怪物；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If it has 1500 PP or more, also deal 1 damage to the enemy player. |
+| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If it has 1500 PP or more, also deal 1 damage to the enemy player. |
 
 ## 理智（Reason，33 張）
 
@@ -91,7 +91,7 @@ source: WcgWeb/Data/cards.json
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 500 | 1 | — | 進場：檢視牌庫頂 3 張，選 1 張法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Stargazing Diviner** — Deploy: Look at the top 3 cards of your deck. Put 1 spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 將 1 隻直立的敵方怪物橫置；若選的是已橫置的敵方怪物，改為將它移回手牌。若你場上有【理智】卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap 1 untapped enemy monster. If you choose an already tapped enemy monster instead, return it to its hand. If you have a [Reason] card in play, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 5 | 2200 | 1 | — | 每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 1000 以下的敵方怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, destroy 1 enemy monster with 1000 PP or less. |
-| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方怪物攻擊你時翻開：使本次攻擊無效，然後抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, then draw 1 card. |
+| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, then draw 1 card. |
 
 ## 生機（Life，33 張）
 
@@ -129,7 +129,7 @@ source: WcgWeb/Data/cards.json
 | WCG-186 | 母樹共鳴 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【生機】怪物牌加入手牌，其餘依任意順序放到牌庫底；若你場上有【生機】結界，再抽 1 張牌。 | **Mother Tree Resonance** — Look at the top 3 cards of your deck. Put 1 [Life] monster card among them into your hand and the rest on the bottom in any order. If you have a [Life] Ward, draw 1 more card. |
 | WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 1500 | 1 | — | 進場：若己方場上有其他【生機】怪物，你可以從手牌免費召喚 1 隻費用 2 以下的【生機】怪物（不觸發進場）。 | **Verdant Beastcaller** — Deploy: If you have another [Life] monster, you may summon a [Life] monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 2500 | 1 | — | 嘲諷；進場：你場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have. |
-| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方怪物攻擊你時翻開：使本次攻擊無效；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] Reveal when an enemy monster attacks you: Negate the attack. You may summon a [Life] monster that costs 3 or less from your hand for free (its Deploy does not trigger). |
+| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] Reveal when an enemy monster attacks you: Negate the attack. You may summon a [Life] monster that costs 3 or less from your hand for free (its Deploy does not trigger). |
 
 ## 秩序（Order，34 張）
 
@@ -168,7 +168,7 @@ source: WcgWeb/Data/cards.json
 | WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Temple Rally Horn** — Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it). |
 | WCG-190 | 白銀軍團旗手 | 怪物 | 4 | 1400 | 1 | — | 嘲諷；每當 1 隻【秩序】怪物進入你的場上（含此怪物與免費召喚），回復己方 1 點生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life to yourself. |
 | WCG-191 | 聖光大審判官 | 怪物 | 6 | 2600 | 1 | — | 嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 2000 以上的敵方怪物，並回復己方 1 點生命。 | **Grand Inquisitor of Holy Light** — Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life to yourself. |
-| WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方怪物攻擊你時翻開：使本次攻擊無效，回復己方 2 點生命，並使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life to yourself, and give 1 of your monsters Holy Shield (attach this card to it). |
+| WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] Reveal when an enemy monster attacks you: Negate the attack, restore 2 life to yourself, and give 1 of your monsters Holy Shield (attach this card to it). |
 
 ## 深淵（Abyss，33 張）
 
@@ -206,7 +206,7 @@ source: WcgWeb/Data/cards.json
 | WCG-192 | 冥河引魂術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【深淵】怪物牌加入手牌，其餘送入墓地。 | **Styx Soulguide Rite** — Look at the top 3 cards of your deck. Put 1 [Abyss] monster card among them into your hand and the rest into your graveyard. |
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 1000 | 2 | — | 進場：你可以犧牲 1 隻其他的己方【深淵】怪物；若如此做，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another of your [Abyss] monsters; if you do, draw 2 cards. |
 | WCG-194 | 冥府復甦領主 | 怪物 | 6 | 2500 | 1 | — | 進場：你可以從墓地免費召喚 1 隻費用 3 以下的【深淵】怪物（不觸發進場）；若你場上原本就有其他【深淵】怪物，它本回合可以攻擊。 | **Netherworld Revival Lord** — Deploy: You may summon an [Abyss] monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). If you already had another [Abyss] monster, it can attack this turn. |
-| WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方怪物攻擊你時翻開：消滅該怪物；若你的墓地有【深淵】怪物，再將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If your graveyard has an [Abyss] monster, also put a monster that costs 2 or less from your graveyard into your hand. |
+| WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] Reveal when an enemy monster attacks you: Destroy that monster. If your graveyard has an [Abyss] monster, also put a monster that costs 2 or less from your graveyard into your hand. |
 
 ## 中立（Neutral，32 張）
 
