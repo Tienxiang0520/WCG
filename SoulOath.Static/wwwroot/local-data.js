@@ -66,6 +66,7 @@
     }
     window.soulOathStorage = {
         ready,
+        isWriter: () => canWrite,
         read(name) {
             if (!allowed.has(name)) throw new Error('不支援的存檔項目。');
             return readRoot().data[name] ?? null;

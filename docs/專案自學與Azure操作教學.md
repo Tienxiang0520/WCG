@@ -559,7 +559,11 @@ http://localhost:5186/auth/callback
 
 在 `WCG Cloud Save API` 的「公開 API」查看 `Save.ReadWrite`；在前端應用程式的「API 權限」查看對應的委派權限。支援帳號類型是「任意組織目錄的帳戶及個人 Microsoft 帳戶」，所以個人與工作／學校帳號都能使用；組織仍可以有自己的同意政策。[應用程式註冊說明](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app)
 
-### 7.7 新增一個遊戲網址時，要一起核對三處
+### 7.7 登入快取與關閉重開
+
+登入是否能在關閉分頁後保留，是程式端 MSAL 的快取設定，不是 Azure Storage 的網站開關。`WcgWeb/Client/cloud/auth.ts` 現在使用 `BrowserCacheLocation.LocalStorage`，取代初版的 `SessionStorage`。若關閉整個瀏覽器，還要依 Microsoft 的「保持登入」選擇與瀏覽器 Cookie 政策；程式不自行保存密碼或跳過重新驗證。[官方快取說明](https://learn.microsoft.com/en-us/entra/msal/javascript/browser/caching)
+
+### 7.8 新增一個遊戲網址時，要一起核對三處
 
 | 設定 | 要填什麼 |
 | --- | --- |
@@ -571,7 +575,7 @@ http://localhost:5186/auth/callback
 
 這三處不同步時，可能會看到重新導向錯誤，或登入成功後同步仍失敗。先看瀏覽器 Network 的錯誤，不要直接清掉玩家進度。
 
-### 7.8 自動同步原理，幫你判斷問題
+### 7.9 自動同步原理，幫你判斷問題
 
 `cloud.js` 在玩家資料變更後安排約 1.5 秒的合併同步；每 20 秒更新裝置控制權。`cloud-sync.js` 處理狀態：
 
@@ -583,6 +587,7 @@ http://localhost:5186/auth/callback
 | 登入已過期 | 需要重新登入，單純有網路不會解除登入要求 |
 | 存檔版本衝突 | 本機與雲端版本不同，要由玩家選擇 |
 | 其他裝置正在使用 | 另一個裝置有控制權，可明確接手 |
+| 另一個魂誓分頁正在使用 | 同一瀏覽器另有寫入分頁；關閉另一頁再重新整理 |
 
 離線只是連線或請求失敗的一種情形。API 當機、CORS 錯誤也可能讓請求失敗，所以不是所有「等待連線」都能靠換 Wi-Fi 解決。租約與 ETag 防止兩台裝置、舊版本互相覆蓋。
 

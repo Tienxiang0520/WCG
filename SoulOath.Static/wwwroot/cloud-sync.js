@@ -3,7 +3,7 @@ export class CloudSync {
     constructor({remote, local, changed=()=>{}}) { this.remote=remote;this.local=local;this.changed=changed;this.mode='loading';this.attached=false;this.busy=false;this.remoteSave=null;this.lastSync=null; }
     state() { return {mode:this.mode,attached:this.attached,busy:this.busy,lastSync:this.lastSync,hasCloud:!!this.remoteSave?.exists}; }
     signal(mode) { if(mode)this.mode=mode;this.changed(this.state()); }
-    canWrite() { return !['conflict','other-device'].includes(this.mode); }
+    canWrite() { return !['conflict','other-device','other-tab'].includes(this.mode); }
     async initialize() {
         const cached=this.local.read();const meta=this.local.meta();this.attached=!!cached;this.lastSync=meta.lastSync??null;
         try {
@@ -18,7 +18,7 @@ export class CloudSync {
     markDirty() {
         if(!this.attached)return;
         this.local.setMeta({...this.local.meta(),dirty:true});
-        if(!['conflict','other-device'].includes(this.mode))this.signal('pending');
+        if(!['conflict','other-device','other-tab'].includes(this.mode))this.signal('pending');
     }
     async choose(useLocal, guest) {
         if(this.busy)return;
@@ -35,7 +35,7 @@ export class CloudSync {
         if(this.local.meta().dirty)await this.flush();
     }
     async flush() {
-        if(this.busy||!this.attached||['migration','conflict','other-device'].includes(this.mode)||!this.local.meta().dirty)return;
+        if(this.busy||!this.attached||['migration','conflict','other-device','other-tab'].includes(this.mode)||!this.local.meta().dirty)return;
         this.busy=true;this.signal('syncing');
         const save=this.local.read();const serialized=JSON.stringify(save);const meta=this.local.meta();
         try {
@@ -52,7 +52,7 @@ export class CloudSync {
         } finally{this.busy=false;this.signal();}
     }
     async renew() {
-        if(!this.attached||this.busy||['migration','conflict','other-device','reauth'].includes(this.mode))return;
+        if(!this.attached||this.busy||['migration','conflict','other-device','other-tab','reauth'].includes(this.mode))return;
         try {await this.remote.lease('renew');if(this.mode==='offline')this.signal(this.local.meta().dirty?'pending':'synced');}
         catch(error){this.signal(error.kind==='other-device'?'other-device':error.kind==='unauthorized'?'reauth':'offline');}
     }

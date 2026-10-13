@@ -1567,5 +1567,7 @@
  "{0} 副牌組 · 天梯 {1} 星": "{0} decks · {1} ranked stars",
  "有未完成對局": "Unfinished match",
  "尚無雲端存檔": "No cloud save yet",
- "匯出保留的本機進度": "Export the retained local progress"
+ "匯出保留的本機進度": "Export the retained local progress",
+ "另一個魂誓分頁正在使用": "Another Soul Oath tab is in use",
+ "請關閉另一個魂誓分頁，再重新整理此頁。": "Close the other Soul Oath tab, then refresh this page."
 }
