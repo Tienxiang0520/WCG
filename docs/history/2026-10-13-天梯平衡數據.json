@@ -1,0 +1,896 @@
+{
+  "date": "2026-10-13",
+  "method": "30 master deck lists, same AI on both sides, mirrored starting player, paired deterministic seeds. Simulation is not human win rate.",
+  "sourceSha256": "6a3384e8f6d59ecc903307e952477bdd9f5f1980db5f8ac7c0e40ba41dc5e8dc",
+  "changedCards": 35,
+  "validation": {
+    "before-ai5": {
+      "games": 27840,
+      "ai": 5,
+      "seeds": 32,
+      "seedBase": 2300000,
+      "min": 0.3319,
+      "max": 0.7091,
+      "standardDeviation": 0.10434356691025831,
+      "firstPlayerWinRate": 0.6613864942528735,
+      "decks": [
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "games": 1856,
+          "wins": 1316,
+          "winRate": 0.7091
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "games": 1856,
+          "wins": 1256,
+          "winRate": 0.6767
+        },
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "games": 1856,
+          "wins": 1242,
+          "winRate": 0.6692
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "games": 1856,
+          "wins": 1174,
+          "winRate": 0.6325
+        },
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "games": 1856,
+          "wins": 1170,
+          "winRate": 0.6304
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "games": 1856,
+          "wins": 1141,
+          "winRate": 0.6148
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "games": 1856,
+          "wins": 1113,
+          "winRate": 0.5997
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "games": 1856,
+          "wins": 1090,
+          "winRate": 0.5873
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "games": 1856,
+          "wins": 1047,
+          "winRate": 0.5641
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "games": 1856,
+          "wins": 1041,
+          "winRate": 0.5609
+        },
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "games": 1856,
+          "wins": 1007,
+          "winRate": 0.5426
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "games": 1856,
+          "wins": 1001,
+          "winRate": 0.5393
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "games": 1856,
+          "wins": 963,
+          "winRate": 0.5189
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "games": 1856,
+          "wins": 951,
+          "winRate": 0.5124
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "games": 1856,
+          "wins": 932,
+          "winRate": 0.5022
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "games": 1856,
+          "wins": 911,
+          "winRate": 0.4908
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "games": 1856,
+          "wins": 869,
+          "winRate": 0.4682
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "games": 1856,
+          "wins": 824,
+          "winRate": 0.444
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "games": 1856,
+          "wins": 794,
+          "winRate": 0.4278
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "games": 1856,
+          "wins": 780,
+          "winRate": 0.4203
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "games": 1856,
+          "wins": 776,
+          "winRate": 0.4181
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "games": 1856,
+          "wins": 774,
+          "winRate": 0.417
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "games": 1856,
+          "wins": 766,
+          "winRate": 0.4127
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "games": 1856,
+          "wins": 759,
+          "winRate": 0.4089
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "games": 1856,
+          "wins": 743,
+          "winRate": 0.4003
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "games": 1856,
+          "wins": 707,
+          "winRate": 0.3809
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "games": 1856,
+          "wins": 700,
+          "winRate": 0.3772
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "games": 1856,
+          "wins": 690,
+          "winRate": 0.3718
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "games": 1856,
+          "wins": 687,
+          "winRate": 0.3702
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "games": 1856,
+          "wins": 616,
+          "winRate": 0.3319
+        }
+      ]
+    },
+    "after-ai5": {
+      "games": 27840,
+      "ai": 5,
+      "seeds": 32,
+      "seedBase": 2300000,
+      "min": 0.3755,
+      "max": 0.6482,
+      "standardDeviation": 0.06646083056959189,
+      "firstPlayerWinRate": 0.6822198275862069,
+      "decks": [
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "games": 1856,
+          "wins": 1203,
+          "winRate": 0.6482
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "games": 1856,
+          "wins": 1140,
+          "winRate": 0.6142
+        },
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "games": 1856,
+          "wins": 1111,
+          "winRate": 0.5986
+        },
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "games": 1856,
+          "wins": 1054,
+          "winRate": 0.5679
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "games": 1856,
+          "wins": 1051,
+          "winRate": 0.5663
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "games": 1856,
+          "wins": 1041,
+          "winRate": 0.5609
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "games": 1856,
+          "wins": 1036,
+          "winRate": 0.5582
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "games": 1856,
+          "wins": 1019,
+          "winRate": 0.549
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "games": 1856,
+          "wins": 1009,
+          "winRate": 0.5436
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "games": 1856,
+          "wins": 999,
+          "winRate": 0.5383
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "games": 1856,
+          "wins": 994,
+          "winRate": 0.5356
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "games": 1856,
+          "wins": 981,
+          "winRate": 0.5286
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "games": 1856,
+          "wins": 975,
+          "winRate": 0.5253
+        },
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "games": 1856,
+          "wins": 923,
+          "winRate": 0.4973
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "games": 1856,
+          "wins": 919,
+          "winRate": 0.4952
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "games": 1856,
+          "wins": 918,
+          "winRate": 0.4946
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "games": 1856,
+          "wins": 895,
+          "winRate": 0.4822
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "games": 1856,
+          "wins": 889,
+          "winRate": 0.479
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "games": 1856,
+          "wins": 888,
+          "winRate": 0.4784
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "games": 1856,
+          "wins": 887,
+          "winRate": 0.4779
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "games": 1856,
+          "wins": 874,
+          "winRate": 0.4709
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "games": 1856,
+          "wins": 825,
+          "winRate": 0.4445
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "games": 1856,
+          "wins": 825,
+          "winRate": 0.4445
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "games": 1856,
+          "wins": 820,
+          "winRate": 0.4418
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "games": 1856,
+          "wins": 802,
+          "winRate": 0.4321
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "games": 1856,
+          "wins": 794,
+          "winRate": 0.4278
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "games": 1856,
+          "wins": 780,
+          "winRate": 0.4203
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "games": 1856,
+          "wins": 746,
+          "winRate": 0.4019
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "games": 1856,
+          "wins": 745,
+          "winRate": 0.4014
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "games": 1856,
+          "wins": 697,
+          "winRate": 0.3755
+        }
+      ]
+    },
+    "before-ai3": {
+      "games": 27840,
+      "ai": 3,
+      "seeds": 32,
+      "seedBase": 2300000,
+      "min": 0.3136,
+      "max": 0.68,
+      "standardDeviation": 0.1072573822893117,
+      "firstPlayerWinRate": 0.60625,
+      "decks": [
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "games": 1856,
+          "wins": 1262,
+          "winRate": 0.68
+        },
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "games": 1856,
+          "wins": 1260,
+          "winRate": 0.6789
+        },
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "games": 1856,
+          "wins": 1250,
+          "winRate": 0.6735
+        },
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "games": 1856,
+          "wins": 1226,
+          "winRate": 0.6606
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "games": 1856,
+          "wins": 1177,
+          "winRate": 0.6342
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "games": 1856,
+          "wins": 1175,
+          "winRate": 0.6331
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "games": 1856,
+          "wins": 1123,
+          "winRate": 0.6051
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "games": 1856,
+          "wins": 1038,
+          "winRate": 0.5593
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "games": 1856,
+          "wins": 1023,
+          "winRate": 0.5512
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "games": 1856,
+          "wins": 1018,
+          "winRate": 0.5485
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "games": 1856,
+          "wins": 1002,
+          "winRate": 0.5399
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "games": 1856,
+          "wins": 995,
+          "winRate": 0.5361
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "games": 1856,
+          "wins": 979,
+          "winRate": 0.5275
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "games": 1856,
+          "wins": 976,
+          "winRate": 0.5259
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "games": 1856,
+          "wins": 939,
+          "winRate": 0.5059
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "games": 1856,
+          "wins": 926,
+          "winRate": 0.4989
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "games": 1856,
+          "wins": 871,
+          "winRate": 0.4693
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "games": 1856,
+          "wins": 862,
+          "winRate": 0.4644
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "games": 1856,
+          "wins": 837,
+          "winRate": 0.451
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "games": 1856,
+          "wins": 823,
+          "winRate": 0.4434
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "games": 1856,
+          "wins": 793,
+          "winRate": 0.4273
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "games": 1856,
+          "wins": 789,
+          "winRate": 0.4251
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "games": 1856,
+          "wins": 785,
+          "winRate": 0.423
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "games": 1856,
+          "wins": 755,
+          "winRate": 0.4068
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "games": 1856,
+          "wins": 750,
+          "winRate": 0.4041
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "games": 1856,
+          "wins": 711,
+          "winRate": 0.3831
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "games": 1856,
+          "wins": 682,
+          "winRate": 0.3675
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "games": 1856,
+          "wins": 623,
+          "winRate": 0.3357
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "games": 1856,
+          "wins": 608,
+          "winRate": 0.3276
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "games": 1856,
+          "wins": 582,
+          "winRate": 0.3136
+        }
+      ]
+    },
+    "after-ai3": {
+      "games": 27840,
+      "ai": 3,
+      "seeds": 32,
+      "seedBase": 2300000,
+      "min": 0.3664,
+      "max": 0.6255,
+      "standardDeviation": 0.0820794168270381,
+      "firstPlayerWinRate": 0.6177801724137931,
+      "decks": [
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "games": 1856,
+          "wins": 1161,
+          "winRate": 0.6255
+        },
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "games": 1856,
+          "wins": 1149,
+          "winRate": 0.6191
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "games": 1856,
+          "wins": 1140,
+          "winRate": 0.6142
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "games": 1856,
+          "wins": 1127,
+          "winRate": 0.6072
+        },
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "games": 1856,
+          "wins": 1111,
+          "winRate": 0.5986
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "games": 1856,
+          "wins": 1099,
+          "winRate": 0.5921
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "games": 1856,
+          "wins": 1082,
+          "winRate": 0.583
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "games": 1856,
+          "wins": 1078,
+          "winRate": 0.5808
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "games": 1856,
+          "wins": 1063,
+          "winRate": 0.5727
+        },
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "games": 1856,
+          "wins": 1042,
+          "winRate": 0.5614
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "games": 1856,
+          "wins": 1030,
+          "winRate": 0.555
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "games": 1856,
+          "wins": 996,
+          "winRate": 0.5366
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "games": 1856,
+          "wins": 986,
+          "winRate": 0.5312
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "games": 1856,
+          "wins": 943,
+          "winRate": 0.5081
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "games": 1856,
+          "wins": 933,
+          "winRate": 0.5027
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "games": 1856,
+          "wins": 906,
+          "winRate": 0.4881
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "games": 1856,
+          "wins": 894,
+          "winRate": 0.4817
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "games": 1856,
+          "wins": 894,
+          "winRate": 0.4817
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "games": 1856,
+          "wins": 886,
+          "winRate": 0.4774
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "games": 1856,
+          "wins": 833,
+          "winRate": 0.4488
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "games": 1856,
+          "wins": 819,
+          "winRate": 0.4413
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "games": 1856,
+          "wins": 785,
+          "winRate": 0.423
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "games": 1856,
+          "wins": 784,
+          "winRate": 0.4224
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "games": 1856,
+          "wins": 762,
+          "winRate": 0.4106
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "games": 1856,
+          "wins": 746,
+          "winRate": 0.4019
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "games": 1856,
+          "wins": 740,
+          "winRate": 0.3987
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "games": 1856,
+          "wins": 736,
+          "winRate": 0.3966
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "games": 1856,
+          "wins": 729,
+          "winRate": 0.3928
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "games": 1856,
+          "wins": 706,
+          "winRate": 0.3804
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "games": 1856,
+          "wins": 680,
+          "winRate": 0.3664
+        }
+      ]
+    }
+  }
+}

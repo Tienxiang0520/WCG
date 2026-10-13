@@ -6,8 +6,16 @@ using WcgWeb.Services;
 namespace WcgTests;
 internal static class CounterHistory
 {
+    internal static CardDatabase BeforeOctoberBalance(CardDatabase current)
+    {
+        if(current.GetCard("WCG-160")?.TotalCost != 7)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-october-13.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeEnergyShield(CardDatabase current)
     {
+        current=BeforeOctoberBalance(current);
         if(!current.AllCards.Any(c=>c.Text.Contains("能量護盾")||c.Keywords.Contains("能量護盾")))return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-energy-shield.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

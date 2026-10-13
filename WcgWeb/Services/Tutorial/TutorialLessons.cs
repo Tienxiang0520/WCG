@@ -82,7 +82,7 @@ public static class TutorialLessons
             Topics = ["怪物攻擊怪物", "PP 比較", "平手同歸於盡", "無累積傷害", "攻擊後橫置", "墓地與紀錄", "略過怪物直接攻擊玩家"],
             Scene = new(
                 new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-154", 2), new("WCG-155", 3)] },
-                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-157", 1), new("WCG-156", 2), new("WCG-101", 3)] }),
+                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-157", 1), new("WCG-154", 2), new("WCG-101", 3)] }),
             Steps =
             [
                 new() { Title = "交戰規則", Spot = ["field"],
@@ -93,10 +93,10 @@ public static class TutorialLessons
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-114"), CardName("WCG-101")] },
                 new() { Title = "攻擊後橫置", Spot = ["own-card:WCG-114"],
                     Text = "攻擊過的怪物會橫置，這回合不能再攻擊；少數卡牌效果可以讓怪物重新直立、再攻擊一次。" },
-                new() { Title = "平手同歸於盡", Spot = ["own-card:WCG-154", "enemy-card:WCG-156"], Allow = [Attack("WCG-154", "WCG-156")],
-                    Done = e => !OnField(e.Computer, "WCG-156") && !OnField(e.Player, "WCG-154"),
-                    Text = "「{0}」目前是 {1} PP，「{2}」目前是 {3} PP。讓它們交戰，看看平手時會發生什麼。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-156"), EnemyPP("WCG-156")],
-                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-156")] },
+                new() { Title = "平手同歸於盡", Spot = ["own-card:WCG-154", "enemy-card:WCG-154"], Allow = [Attack("WCG-154", "WCG-154")],
+                    Done = e => !OnField(e.Computer, "WCG-154") && !OnField(e.Player, "WCG-154"),
+                    Text = "「{0}」目前是 {1} PP，「{2}」目前是 {3} PP。讓它們交戰，看看平手時會發生什麼。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-154"), EnemyPP("WCG-154")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-154")] },
                 new() { Title = "墓地與對戰紀錄", Spot = ["history"],
                     Text = "被消滅的卡會進入墓地。按「紀錄／墓地」可以查看雙方墓地與完整對戰紀錄；看完記得關閉視窗。" },
                 new() { Title = "略過怪物，直接打玩家", Spot = ["own-card:WCG-155", "face"], Allow = [Attack("WCG-155")],

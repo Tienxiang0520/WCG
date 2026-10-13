@@ -5,9 +5,15 @@ namespace WcgWeb.Services;
 
 internal static class CardBalanceHistory
 {
-    internal static CardDatabase BeforeEnergyShield(CardDatabase current) =>
-        current.AllCards.Any(c => c.Text.Contains("能量護盾", StringComparison.Ordinal) || c.Keywords.Contains("能量護盾"))
+    // The 7-cost molten giant identifies this numeric update; older catalogs keep their own values.
+    internal static CardDatabase BeforeOctoberBalance(CardDatabase current) => current.GetCard("WCG-160")?.TotalCost == 7
+        ? Override(current, "WcgWeb.Balance.BeforeOctoberBalance") : current;
+    internal static CardDatabase BeforeEnergyShield(CardDatabase current)
+    {
+        current = BeforeOctoberBalance(current);
+        return current.AllCards.Any(c => c.Text.Contains("能量護盾", StringComparison.Ordinal) || c.Keywords.Contains("能量護盾"))
             ? Override(current, "WcgWeb.Balance.BeforeEnergyShield") : current;
+    }
     internal static CardDatabase BeforeDamageCounters(CardDatabase current) => Override(BeforeEnergyShield(current), "WcgWeb.Balance.BeforeDamageCounters");
     internal static CardDatabase BeforePlayerTargets(CardDatabase current) => Override(BeforeDamageCounters(current), "WcgWeb.Balance.BeforePlayerTargets");
     internal static CardDatabase BeforeDiversity(CardDatabase current) => Override(BeforePlayerTargets(current), "WcgWeb.Balance.BeforeDiversity");

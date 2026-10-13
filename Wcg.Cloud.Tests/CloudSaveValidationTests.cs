@@ -2,11 +2,52 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WcgCloud;
+using WcgWeb.Models;
+using WcgWeb.Models.Battle;
+using WcgWeb.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace WcgCloudTests;
 public sealed class CloudSaveValidationTests
 {
     readonly CloudSaveValidator validator=new();
+    private sealed class MemoryStorage : IPlayerStorage
+    {
+        public object Gate { get; }=new();
+        public Dictionary<string,string> Values { get; }=new();
+        public string? Read(string key)=>Values.GetValueOrDefault(key);
+        public void Write(string key,string value,string? expected)=>Values[key]=value;
+    }
+    [Theory] [InlineData(false)] [InlineData(true)]
+    public void ActiveJournalsBeforeAndAfterOctoberBalanceCanBeSynced(bool old)
+    {
+        string Read(string name)
+        {
+            using var stream=typeof(CloudSaveValidator).Assembly.GetManifestResourceStream(name)!;
+            using var reader=new StreamReader(stream);return reader.ReadToEnd();
+        }
+        var definitions=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgCloud.Cards"))!;
+        if(old)
+        {
+            var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeOctoberBalance"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>prior.GetValueOrDefault(c.Id,c)).ToList();
+        }
+        var cards=new CardDatabase(JsonSerializer.Serialize(definitions),Read("WcgCloud.Presets"));
+        var opponents=new RankedDecks(cards,Read("WcgCloud.RankedDecks"));
+        var storage=new MemoryStorage();var store=new RankedStore(storage);
+        var session=new RankedSession(cards,new DeckService(cards,storage),store,opponents,NullLogger<BattleCoordinator>.Instance);
+        try
+        {
+            Assert.True(session.Start(cards.PresetDecks[4]).Success);
+            var profile=session.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+            session.Coordinator.Dispose();
+            session=new RankedSession(cards,new DeckService(cards,storage),store,opponents,NullLogger<BattleCoordinator>.Instance);
+            var state=session.Bridge.Snapshot();
+            Assert.True(session.Bridge.Submit(new BattleCommand(Guid.NewGuid(),state.MatchId,state.Revision,"energy",session.Engine.Player.Hand[0].InstanceId)).Success);
+            validator.Validate(new(new(){{"ranked",JsonSerializer.Serialize(session.Read())}},new()));
+        }
+        finally {session.Coordinator.Dispose();}
+    }
     [Fact] public void LegalEmptyAndRankedSavesAreAccepted()
     {
         validator.Validate(new(new(),new()));

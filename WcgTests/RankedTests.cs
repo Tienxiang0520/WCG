@@ -107,10 +107,10 @@ public sealed class RankedTests : IDisposable
         var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
         Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
         Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).Concat(restored.Engine.Player.EnergyZone).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
-        Assert.Equal(5,cards.GetCard("WCG-185")!.TotalCost);Assert.Equal(4,cards.GetCard("WCG-190")!.TotalCost);
+        Assert.Equal(4,cards.GetCard("WCG-185")!.TotalCost);Assert.Equal(4,cards.GetCard("WCG-190")!.TotalCost);
         Assert.True(Send(restored,"surrender").Success);Assert.True(restored.Start(deck).Success);
         Assert.Empty(restored.BalanceNotice);
-        Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
+        Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
         Assert.Empty(Session().Error);
     }
     [Fact] public void DamageCounterUpgradePreservesOldMatchAndNextMatchUsesHandCounters()
@@ -240,8 +240,36 @@ public sealed class RankedTests : IDisposable
         Assert.True(Send(restored,"surrender").Success);
         var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.Equal(3,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
+        Assert.Equal(2,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
     }
+    [Fact] public void OctoberBalancePreservesActiveMatchReplayAndNextMatchUsesNewValues()
+    {
+        var prior=CounterHistory.BeforeOctoberBalance(cards);
+        Assert.Equal(2,prior.GetCard("WCG-082")!.TotalCost);
+        Assert.Equal(9,prior.GetCard("WCG-160")!.TotalCost);
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[4]);
+        deck.CardIds=deck.CardIds.Select(id=>id=="WCG-095"?"WCG-082":id=="WCG-138"?"WCG-160":id).ToList();
+        Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
+        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
+        Assert.Equal(22,restored.Read().Stars);Assert.Equal(oldRules,restored.Read().Match!.Rules);
+        Assert.Equal(shape,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.True(restored.Engine.DamageCounters);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
+        Assert.True(Send(restored,"surrender").Success);
+        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
+        Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
+        var arrow=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-082");
+        Assert.Equal(3,arrow.Card.TotalCost);
+        Assert.Equal(3,cards.GetCard("WCG-082")!.TotalCost);
+        Assert.Equal(7,cards.GetCard("WCG-160")!.TotalCost);
+    }
+
     [Fact] public void EnergyShieldRenamePreservesActiveMatchAndItsReplay()
     {
         var prior=CounterHistory.BeforeEnergyShield(cards);
