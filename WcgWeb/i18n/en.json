@@ -224,7 +224,6 @@
  "勝 ·": "W ·",
  "勝利": "Victory",
  "勝利 ＋1 星": "Win +1 star",
- "勝利加 1 星、敗北扣 1 星；集滿 5 星晉升下一小段。青銅不扣星，同一賽季也不會跌出已到達的大牌位。": "A win adds 1 star and a loss removes 1; collect 5 stars to promote to the next division. Bronze never loses stars, and within a season you can't drop out of a tier you've reached.",
  "勝利條件": "How to win",
  "勝利條件總結": "Win conditions recap",
  "勝利條件：對手生命歸零，或對手需要抽牌時牌庫已空；投降則直接落敗。抽牌與棄牌效果要留意自己的牌庫張數。": "You win when your opponent's life hits zero or they must draw from an empty deck; surrendering loses immediately. Watch your own deck size when using draw and discard effects.",
@@ -694,7 +693,6 @@
  "每回合都能填 1 次能量。把「淡水狂鱷」拖到能量區，讓你有 3 點能量。": "You can add energy once every turn. Drag Freshwater Crocolisk to the energy zone to reach 3 energy.",
  "每場天梯對局都會留下紀錄。切換到「全部」看看所有賽季的紀錄。": "Every ranked match leaves a record. Switch to \"All\" to see records from every season.",
  "每小段 5 星": "5 stars per division",
- "每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。": "Each division has 5 stars, promoting III → II → I. A win adds 1 star and a loss removes 1; Bronze never loses stars, and you can't drop out of a tier you've reached within the same season.",
  "每張最多 4 張": "Up to 4 copies each",
  "每月賽季降段": "Monthly season reset",
  "每筆紀錄可以展開「對手牌組」查看完整卡表，或按「對局回顧」逐步重播當局（只顯示你當時看得到的資訊）。": "Expand \"Opponent deck\" on any record to see the full list, or press \"Replay\" to step through the match (showing only what you could see at the time).",
@@ -1531,5 +1529,7 @@
  "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，出現提示時選擇「橫置1點能量使用聖盾」。": "Attack {2} ({3} PP) with {0} ({1} PP). When prompted, choose to tap 1 energy for Shield to save it from destruction.",
  "請攻擊「{0}」，並選擇使用聖盾。": "Attack {0} and choose to use Energy Shield.",
  "沉默會移除怪物卡面上的能力，包括嘲諷與聖盾。「{0}」的效果：{1} 把它拖到「{2}」上。": "Silence removes printed abilities, including Taunt and Shield. {0} has this effect: {1} Drag it onto {2}.",
- "現在用 {0} PP 的「{1}」攻擊失去聖盾的「{2}」。": "Now attack the unshielded {2} with {1}, currently at {0} PP."
+ "現在用 {0} PP 的「{1}」攻擊失去聖盾的「{2}」。": "Now attack the unshielded {2} with {1}, currently at {0} PP.",
+ "勝利加 1 星；只有青銅敗北不扣星，白銀以上敗北扣 1 星，可降回較低牌位。集滿 5 星晉升下一小段。": "A win adds 1 star. Only Bronze losses are protected; Silver and higher lose 1 star and can drop to a lower tier. Collect 5 stars to promote to the next division.",
+ "每小段 5 星，依 III → II → I 晉升。勝利加 1 星；只有青銅敗北不扣星，白銀以上敗北扣 1 星，可降回較低牌位。": "Each division has 5 stars, promoting III → II → I. A win adds 1 star. Only Bronze losses are protected; Silver and higher lose 1 star and can drop to a lower tier."
 }

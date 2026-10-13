@@ -135,7 +135,7 @@ else
         </section>
         <section class="ranked-info">
             <p class="ranked-season"><Icon Name="clock" Size="16" />@L.F("本季至 {0}（台灣時間）。新賽季下降兩個大牌位，最低青銅。", SeasonEnd)</p>
-            <details><summary>@L["升段與存檔規則"]</summary><p>@L["每小段 5 星，依 III → II → I 晉升。勝利加 1 星、敗北扣 1 星；青銅不扣星，同賽季不跌出已到達的大牌位。"]</p><p>@L["進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。"]</p><p>@L["牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。"]</p></details>
+            <details><summary>@L["升段與存檔規則"]</summary><p>@L["每小段 5 星，依 III → II → I 晉升。勝利加 1 星；只有青銅敗北不扣星，白銀以上敗北扣 1 星，可降回較低牌位。"]</p><p>@L["進度自動保存在這台電腦。重新整理、關閉網站或重新啟動後可接續。跨月中的對局計入開局賽季，結束後套用降段。"]</p><p>@L["牌位越高，電腦越聰明：青銅常出錯、亂選目標並看漏斬殺；白銀照基本順序出牌；黃金起會評估交換與目標並用直傷斬殺；白金注意反撲；鑽石與大師會規劃多步攻擊，大師幾乎不失誤。每個流派只在特定牌位出現：低牌位是入門流派的簡化牌表，高牌位排除較弱流派；嘲諷回血最強的白銀長城、誓約審判、荊棘毒牙只在大師出現，冰封堡壘從鑽石開始。電腦只看公開資訊，遵守相同卡牌規則。"]</p></details>
             @if (Profile.History.Count > 0)
             {
                 <details><summary>@L["歷季成績"]</summary><ul class="ranked-history">@foreach (var season in Profile.History.AsEnumerable().Reverse()) { <li><b>@season.Season</b><span>@L.Text(RankedRules.Label(season.EndingStars))</span><span>@L.F("最高 {0}", RankedRules.Label(season.BestStars))</span><span class="wcg-num">@L.F("{0} 勝 {1} 敗", season.Wins, season.Losses)</span></li> }</ul></details>

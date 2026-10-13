@@ -84,7 +84,7 @@ public static class RankedRules
     public static readonly string[] Tiers = ["青銅", "白銀", "黃金", "白金", "鑽石", "大師"];
     public static int Tier(int stars) => Math.Min(5, Math.Max(0, stars) / 15);
     public static string Label(int stars) => Tier(stars) == 5 ? $"大師 · {stars - 75} 星" : $"{Tiers[Tier(stars)]} {new[] { "III", "II", "I" }[(stars % 15) / 5]}";
-    public static int Apply(int stars, bool won) => won ? stars + 1 : Tier(stars) == 0 ? stars : Math.Max(Tier(stars) * 15, stars - 1);
+    public static int Apply(int stars, bool won) => won ? stars + 1 : Tier(stars) == 0 ? stars : stars - 1;
     public static int Reset(int stars) => Math.Max(0, Tier(stars) - 2) * 15;
     public static string Season(DateTimeOffset now) => now.ToOffset(TimeSpan.FromHours(8)).ToString("yyyy-MM");
     public static void Advance(RankedProfile profile, DateTimeOffset now)

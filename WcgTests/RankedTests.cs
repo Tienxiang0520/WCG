@@ -34,10 +34,11 @@ public sealed class RankedTests : IDisposable
             grave=p.Graveyard.Select(c=>c.Card.Id)}),
         choice=e.CurrentPendingChoice?.Options.Select(o=>new{o.Title,Card=o.PreviewCard?.Id}),target=e.CurrentPendingTarget?.Title };
     [Theory]
-    [InlineData(0,false,0)] [InlineData(14,true,15)] [InlineData(15,false,15)]
+    [InlineData(0,false,0)] [InlineData(5,false,5)] [InlineData(14,false,14)] [InlineData(14,true,15)] [InlineData(15,false,14)]
     [InlineData(20,false,19)] [InlineData(29,true,30)] [InlineData(74,true,75)]
-    [InlineData(75,false,75)] [InlineData(76,false,75)] [InlineData(75,true,76)]
-    public void StarProgressAndTierFloors(int before,bool win,int after) => Assert.Equal(after,RankedRules.Apply(before,win));
+    [InlineData(30,false,29)] [InlineData(45,false,44)] [InlineData(60,false,59)]
+    [InlineData(75,false,74)] [InlineData(76,false,75)] [InlineData(75,true,76)]
+    public void StarProgressProtectsOnlyBronze(int before,bool win,int after) => Assert.Equal(after,RankedRules.Apply(before,win));
     [Theory] [InlineData(0,0)] [InlineData(15,0)] [InlineData(30,0)] [InlineData(45,15)] [InlineData(60,30)] [InlineData(90,45)]
     public void MonthlyDropIsTwoTiers(int before,int after)=>Assert.Equal(after,RankedRules.Reset(before));
     [Fact] public void TaiwanMidnightAndSeveralMissedMonths()
@@ -73,13 +74,19 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(JsonSerializer.Serialize(StateShape(s.Engine)),JsonSerializer.Serialize(StateShape(reloaded.Engine)));
         Assert.NotEmpty(reloaded.Read().Match!.Actions);
     }
-    [Fact] public void SurrenderIsSettledOnceAndSurvivesRestart()
+    [Theory]
+    [InlineData(0,0)] [InlineData(14,14)] [InlineData(15,14)] [InlineData(22,21)]
+    [InlineData(30,29)] [InlineData(45,44)] [InlineData(60,59)] [InlineData(75,74)]
+    public void SurrenderIsSettledOnceAndSurvivesRestart(int before,int after)
     {
-        store.Save(new(){Season="2026-10",Stars=22,SeasonBest=22,BestStars=22});var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        store.Save(new(){Season="2026-10",Stars=before,SeasonBest=before,BestStars=before});var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
         var state=s.Bridge.Snapshot();var cmd=new BattleCommand(Guid.NewGuid(),state.MatchId,state.Revision,"surrender");
-        Assert.True(s.Bridge.Submit(cmd).Success);Assert.Equal(21,s.Read().Stars);Assert.False(s.Bridge.Submit(cmd).Success);
-        var restored=Session();Assert.Equal(21,restored.Read().Stars);Assert.Equal(1,restored.Read().Losses);Assert.True(restored.Engine.IsOver);
+        Assert.True(s.Bridge.Submit(cmd).Success);Assert.Equal(after,s.Read().Stars);Assert.False(s.Bridge.Submit(cmd).Success);
+        var restored=Session();Assert.Equal(after,restored.Read().Stars);Assert.Equal(1,restored.Read().Losses);Assert.True(restored.Engine.IsOver);
+        Assert.Equal(before,restored.Read().BestStars);Assert.Equal(before,restored.Read().SeasonBest);
+        Assert.Equal(before,restored.Read().Result!.Before);Assert.Equal(after,restored.Read().Result!.After);
         Assert.False(Send(restored,"surrender").Success);Assert.Equal(1,restored.Read().Losses);
+        Assert.True(restored.Start(cards.PresetDecks[0]).Success);Assert.Equal(RankedRules.Tier(after),restored.Read().Match!.Tier);
     }
     [Fact] public void RankedCannotReplaceAnActiveMatchOrUsePracticeStart()
     {
