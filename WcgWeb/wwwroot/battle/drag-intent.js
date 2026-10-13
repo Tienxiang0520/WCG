@@ -10,3 +10,8 @@ export function releaseZone(mode, point, destination) {
     if (mode !== 'free' || destination === 'energy') return destination;
     return freeCastReady(point) ? 'cast' : null;
 }
+
+// Fixed-slot placement and filling energy aim from the card still in the hand.
+export function dragVisual(mode, destination) {
+    return mode === 'free' && destination !== 'energy' ? 'held' : 'arrow';
+}

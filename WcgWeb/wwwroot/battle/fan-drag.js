@@ -1,7 +1,7 @@
 import { createBattleAudio } from "./battle-audio.js";
 import { bindFeedback } from "./battle-feedback.js";
 import { applyMotionAttribute, createFx, motionReduced, readMotionSetting, saveMotionSetting } from "./battle-fx.js";
-import { freeCastReady, releaseZone } from "./drag-intent.js";
+import { dragVisual, freeCastReady, releaseZone } from "./drag-intent.js";
 
 // All gestures share the same aiming, destination feedback and cancellation lifecycle.
 export function bind(root, dotnet) {
@@ -73,6 +73,7 @@ export function bind(root, dotnet) {
         const { currentX: px, currentY: py } = gesture;
         const { x: originX, y: originY } = visibleOrigin(gesture.source);
         const destination = destinationAt(px, py);
+        showVisual(destination?.dataset.dropZone);
         // An untargeted cast has an area, not a selected creature or slot.
         const free = gesture.mode === 'free' && destination?.dataset.dropZone !== 'energy';
         const hoverDestination = free ? null : destination;
@@ -106,11 +107,11 @@ export function bind(root, dotnet) {
         reticle.setAttribute('transform', `translate(${x} ${y})`); reticle.setAttribute('stroke', color);
         frame = requestAnimationFrame(draw);
     }
-    function start(e) {
-        gesture.started = true; pendingDrop = null;
-        document.getSelection()?.removeAllRanges();
-        try { root.setPointerCapture(e.pointerId); } catch { /* Capture may be unavailable after an interrupted gesture. */ }
-        if (gesture.mode !== 'target') {
+    function showVisual(destination) {
+        const visual = dragVisual(gesture.mode, destination);
+        if (visual === 'held') {
+            aim?.remove(); aim = null;
+            if (held) return;
             held = gesture.source.cloneNode(true);
             held.removeAttribute('data-drag-kind'); held.removeAttribute('data-drag-id'); held.removeAttribute('tabindex');
             held.setAttribute('aria-hidden', 'true'); held.dataset.wcgHeld = gesture.mode;
@@ -118,9 +119,13 @@ export function bind(root, dotnet) {
             const r = gesture.source.getBoundingClientRect();
             gesture.heldWidth = Math.min(r.width, 170); gesture.heldHeight = Math.min(r.height, 240);
             Object.assign(held.style, { position: 'fixed', bottom: 'auto', width: `${gesture.heldWidth}px`, height: `${gesture.heldHeight}px`, margin: '0', transform: 'none', translate: 'none', animation: 'none', opacity: '1', transition: 'none', pointerEvents: 'none', zIndex: '2147482999', visibility: 'visible' });
-            gesture.visibility = gesture.source.style.visibility; gesture.source.style.visibility = 'hidden';
+            gesture.source.style.visibility = 'hidden';
             document.body.append(held);
         } else {
+            held?.remove(); held = null;
+            gesture.source.style.visibility = gesture.visibility;
+            root.classList.remove('free-cast-ready');
+            if (aim) return;
             aim = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             aim.setAttribute('aria-hidden', 'true'); aim.setAttribute('data-wcg-aim', gesture.kind);
             Object.assign(aim.style, { position: 'fixed', inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: '2147482999', filter: 'drop-shadow(0 2px 4px #000a)' });
@@ -132,6 +137,12 @@ export function bind(root, dotnet) {
                 + '<g data-reticle class="wcg-aim-reticle" fill="none" stroke="#ffce79" stroke-width="3"><g class="wcg-aim-spin"><circle r="22" stroke-dasharray="26 8.5" /><path d="M -32 0 H -15 M 15 0 H 32 M 0 -32 V -15 M 0 15 V 32" /></g></g>';
             document.body.append(aim);
         }
+    }
+    function start(e) {
+        gesture.started = true; pendingDrop = null;
+        gesture.visibility = gesture.source.style.visibility;
+        document.getSelection()?.removeAllRanges();
+        try { root.setPointerCapture(e.pointerId); } catch { /* Capture may be unavailable after an interrupted gesture. */ }
         root.classList.add('aiming'); untilt();
         call('BeginDrag', gesture.kind, gesture.id);
         draw();
@@ -148,6 +159,12 @@ export function bind(root, dotnet) {
         if (!gesture.started) { cleanup(); return; }
         e.preventDefault(); suppressClick = true;
         const hit = destinationAt(e.clientX, e.clientY);
+        // Pointer-up can beat the next animation frame when the destination just changed.
+        showVisual(hit?.dataset.dropZone);
+        if (held) {
+            held.style.left = `${e.clientX - gesture.heldWidth / 2}px`;
+            held.style.top = `${e.clientY - gesture.heldHeight * .6}px`;
+        }
         const zone = releaseZone(gesture.mode, castPoint(e.clientX, e.clientY), hit?.dataset.dropZone ?? null);
         const destination = zone === 'cast' ? root.querySelector('.battlefield') : zone ? hit : null;
         const { kind, id } = gesture;
