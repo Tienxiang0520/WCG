@@ -2,7 +2,7 @@
 
 現行主機改為 **Azure Blob Storage 靜態網站、日本東部、Hot LRS**。新網址：[魂誓 WCG](https://wcggametienxiang0520.z11.web.core.windows.net/)。後續建置、更新與存檔搬移請依 [Azure Blob 部署說明](AzureBlob部署說明.md)。
 
-以下保留先前 Static Web Apps／Windows App Service F1 的部署紀錄供查考，並非現行更新指令。舊 F1 資源 `wcg-game-tienxiang0520` 繼續保留；它每日 165 MiB 的流量額度不適合多人下載。原始碼儲存庫已於 2026-10-09 依使用者要求改為公開。玩家資料留在瀏覽器，不上傳到公開主機。
+以下保留先前 Static Web Apps／Windows App Service F1 的部署紀錄供查考，並非現行更新指令。2026-10-13 已刪除舊 F1 資源 `wcg-game-tienxiang0520` 與方案 `ASP-wcggamerg-a454`；下方舊主機網址及指令僅作歷史紀錄。原始碼儲存庫已於 2026-10-09 依使用者要求改為公開。訪客進度保存在瀏覽器；Microsoft 玩家進度另存私人儲存體，詳見 [登入與雲端存檔](Microsoft登入與雲端存檔.md)。從修改程式到 Azure 操作的循序教材見 [專案自學與 Azure 操作教學](專案自學與Azure操作教學.md)。
 
 公開儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。
 

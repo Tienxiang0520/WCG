@@ -1,18 +1,19 @@
 # WCG 本地 Git
 
-在 `/home/pudding/project/WCG` 使用。這份主專案沒有設定遠端，提交只保存在本機。
+在 `/home/pudding/project/WCG` 使用。主專案以本地 Git 保存版本，目前也有 GitHub 遠端 `origin`（`https://github.com/Tienxiang0520/WCG.git`）。本機提交與推送是不同動作，推送不會自動更新 Azure。循序實作見 [專案自學與 Azure 操作教學](專案自學與Azure操作教學.md)。
 
 ## 日常保存修改
 
 ```bash
 git status
 git diff
-git add .
+git add 這次要提交的檔案路徑
+git diff --cached
 git commit -m "描述這次修改"
 git log --oneline -8
 ```
 
-`git add .` 會遵守 `.gitignore`，不包含玩家資料、執行服務、套件、建置結果或 Sites 獨立 Git。首次提交使用本機識別 `pudding <pudding@localhost>`，可自行調整；沒有設定帳號或雲端同步。
+`這次要提交的檔案路徑` 是佔位文字，要換成實際檔案。只選這次修改的檔案，避免包含別的未完成工作；`.gitignore` 排除玩家資料、登入資料、套件、建置結果及 Sites 獨立 Git。首次提交使用本機識別 `pudding <pudding@localhost>`，可自行調整；目前可用 `git remote -v` 查遠端，選好分支後用 `git push` 推送。玩家進度的 Microsoft 雲端同步與 Git 分開。
 
 ## 查看與還原舊內容
 

@@ -4,11 +4,13 @@
 
 ## 主機與費用
 
+2026-10-13 現行程式與 Azure 操作教材見 [專案自學與 Azure 操作教學](專案自學與Azure操作教學.md)。網站仍使用下列 Blob 主機；Microsoft 雲端存檔另有 Function 與私人儲存體，見 [登入與雲端存檔](Microsoft登入與雲端存檔.md)。
+
 - 訂用帳戶：既有 Azure for Students，支出限制 `On`。
 - 資源群組：`wcg-game-rg`；儲存體：`wcggametienxiang0520`。
 - 日本東部、Standard StorageV2、Hot、LRS，未啟用階層命名空間。
 - HTTPS／最低 TLS 1.2。一般 Blob 匿名存取關閉；靜態網站端點依 Azure 設計提供公開唯讀的遊戲檔案。
-- 沒有另外建立付費 App Service、CDN、Front Door、資料庫或自訂網域。
+- 公開網站使用儲存體；雲端存檔另使用 Flex Consumption Function。未額外建立 CDN、Front Door、資料庫或自訂網域。
 
 此方案依儲存、操作及流量計費，學生點數仍有效且足夠時可抵用。沒有固定的靜態主機月租；用量大仍會增加費用。費用模型與來源見 [儲存體主機評估](Azure儲存體主機評估.md)。本次不變更訂用帳戶的支出限制，也未查證剩餘點數。沒有建立郵件成本提醒；提醒也不等同費用封頂。
 
@@ -20,7 +22,7 @@
 2. 到新網址的「設定」，選取剛下載的存檔，核對摘要後按「確認取代並匯入」。
 3. 檢查自訂牌組、天梯紀錄與玩家頭像。若從舊版匯入，舊天梯本季成績會歸入「舊版電腦」歷史，生涯最佳保留，依新版規則重新開始當季。
 
-原網站、本地 5180、既有備份均保留。存檔及上傳頭像只保存在瀏覽器，絕不可上傳到公開 `$web`。舊程式不能讀取含新 `profile` 欄位的存檔，不要將新版備份匯回舊程式。
+本地 5180 與既有備份保留；舊 App Service 網站及其方案已於 2026-10-13 刪除。訪客存檔及頭像保存在瀏覽器，登入 Microsoft 後使用私人 `wcgcloudtienxiang0520/player-saves` 同步；玩家資料不可上傳到公開 `$web`。舊程式不能讀取含新 `profile` 欄位的存檔，不要將新版備份匯回舊程式。
 
 ## 建置與更新
 
@@ -52,7 +54,7 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 
 ## 頁面與檔案設定
 
-`$web` 的首頁為 `index.html`，錯誤頁為 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings`、`/tutorial` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。
+`$web` 的首頁為 `index.html`；2026-10-13 核對時發現自訂錯誤頁尚未生效，已修正部署工具的 SDK 欄位名稱，下次發布會設定 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings`、`/tutorial` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。
 
 所有檔案明確設定 Content-Type，包含 `application/wasm`、JavaScript、WebP 與 Ogg。`Cache-Control: no-cache` 讓瀏覽器檢查網站更新；遊戲完整下載快取仍由既有 Service Worker 與資源雜湊控制，已下載的圖片不因重新開啟就全部重抓。
 
