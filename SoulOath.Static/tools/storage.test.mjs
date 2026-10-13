@@ -7,7 +7,8 @@ const playerKey = 'soul-oath.player.v1';
 async function browser(map = new Map(), locks = {held:false}, failure = {}) {
     const events = new Map(), tools = [];
     const sandbox = {
-        window: {addEventListener(name, fn){events.set(name,[...(events.get(name)??[]),fn]);}},
+        window: {addEventListener(name, fn){events.set(name,[...(events.get(name)??[]),fn]);},dispatchEvent(e){events.get(e.type)?.forEach(fn=>fn(e));}},
+        CustomEvent:class {constructor(type,options){this.type=type;this.detail=options?.detail;}},
         navigator: {locks:{async request(name, options, fn){
             if(locks.held) return fn(null);
             locks.held=true;try{return await fn({});}finally{locks.held=false;}
@@ -23,6 +24,19 @@ async function browser(map = new Map(), locks = {held:false}, failure = {}) {
     return {api:sandbox.window.soulOathStorage,map,tools,close:()=>events.get('pagehide')?.forEach(fn=>fn()),sandbox};
 }
 const backup = (data={},preferences={})=>JSON.stringify({format:'soul-oath-local',version:1,data,preferences});
+test('signed-in account writes and imports never replace the guest save or another account',async()=>{
+    const b=await browser();b.api.write('ranked','{"Stars":7}',null);
+    let key='wcg.player.account.A',writable=true;const marked=[];
+    b.sandbox.window.wcgCloud={storageKey:()=>key,canWrite:()=>writable,beforeWrite:()=>marked.push(key)};
+    b.api.write('ranked','{"Stars":15}',null);key='wcg.player.account.B';b.api.write('ranked','{"Stars":30}',null);
+    assert.equal(JSON.parse(b.map.get(playerKey)).data.ranked,'{"Stars":7}');assert.equal(JSON.parse(b.map.get('wcg.player.account.A')).data.ranked,'{"Stars":15}');
+    writable=false;assert.throws(()=>b.api.write('ranked','{"Stars":0}','{"Stars":30}'),/雲端存檔/);assert.equal(b.api.read('ranked'),'{"Stars":30}');
+    writable=true;b.api.importBackup(backup({ranked:'{"Stars":29}'}));assert.equal(b.api.read('ranked'),'{"Stars":29}');assert.equal(marked.at(-1),'wcg.player.account.B');b.close();
+});
+test('failure to persist the pending marker prevents a progress write before it can be lost',async()=>{
+    const b=await browser();b.api.write('ranked','{"Stars":10}',null);b.sandbox.window.wcgCloud={storageKey:()=>playerKey,canWrite:()=>true,beforeWrite:()=>{throw new Error('metadata quota');}};
+    assert.throws(()=>b.api.write('ranked','{"Stars":11}','{"Stars":10}'),/metadata quota/);assert.equal(b.api.read('ranked'),'{"Stars":10}');b.close();
+});
 test('independent save sections survive updates; stale writes are rejected',async()=>{
     const b=await browser();b.api.write('decks','[]',null);b.api.write('ranked','{"Stars":2}',null);
     assert.equal(b.api.read('decks'),'[]');assert.equal(b.api.read('ranked'),'{"Stars":2}');

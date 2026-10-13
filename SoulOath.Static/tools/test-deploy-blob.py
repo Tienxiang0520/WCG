@@ -80,6 +80,14 @@ class BlobPlanTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Missing or damaged'):
             deploy.plan(self.root)
 
+    def test_auth_callback_alias_uses_its_minimal_page(self):
+        callback = b'<script type="module" src="/cloud-redirect.js"></script>'
+        self.write('auth/callback/index.html', callback)
+        _, entries = deploy.plan(self.root)
+        alias = next(e for e in entries if e.name == 'auth/callback')
+        self.assertEqual(alias.source.read_bytes(), callback)
+        self.assertNotEqual(alias.source.read_bytes(), (self.root / 'index.html').read_bytes())
+
     def test_unlisted_game_asset_stops_plan(self):
         self.write('unlisted.js', b'new game code')
         with self.assertRaisesRegex(ValueError, 'cover every'):

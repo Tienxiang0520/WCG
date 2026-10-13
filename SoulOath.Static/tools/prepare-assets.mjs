@@ -7,9 +7,11 @@ const project = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const root = resolve(project, '..');
 const client = resolve(root, 'WcgWeb/Client');
 if (!existsSync(resolve(root, 'WcgWeb/wwwroot/battle/board.js'))
-    || !existsSync(resolve(root, 'WcgWeb/wwwroot/battle/preferences.js'))) {
+    || !existsSync(resolve(root, 'WcgWeb/wwwroot/battle/preferences.js'))
+    || !existsSync(resolve(project, 'wwwroot/cloud-auth.js'))
+    || !existsSync(resolve(project, 'wwwroot/cloud-redirect.js'))) {
     for (const args of [
-        ...(['phaser', 'typescript', 'esbuild'].some(name => !existsSync(resolve(client, 'node_modules', name, 'package.json'))) ? [['ci']] : []),
+        ...(['phaser', 'typescript', 'esbuild', '@azure/msal-browser'].some(name => !existsSync(resolve(client, 'node_modules', name, 'package.json'))) ? [['ci']] : []),
         ['run', 'build']
     ]) {
         const result = spawnSync('npm', args, { cwd: client, stdio: 'inherit' });
@@ -18,7 +20,7 @@ if (!existsSync(resolve(root, 'WcgWeb/wwwroot/battle/board.js'))
 }
 const printArt = spawnSync('python3', [resolve(root, 'WcgWeb/tools/prepare-print-art.py')], { stdio: 'inherit' });
 if (printArt.status !== 0) process.exit(printArt.status ?? 1);
-for (const name of ['app.css','wcg.css','favicon.png','sidebar.js','i18n.js','battle-drag.js','deck-print.css','card-face.css','deck-print.js','deck-picker.js','print-art','lib','battle']) {
+for (const name of ['app.css','wcg.css','favicon.png','sidebar.js','i18n.js','battle-drag.js','deck-print.css','card-face.css','deck-print.js','deck-picker.js','cloud-ui.js','print-art','lib','battle']) {
     await cp(resolve(root,'WcgWeb/wwwroot',name),resolve(project,'wwwroot',name),{recursive:true});
 }
 await mkdir(resolve(project,'wwwroot/data'),{recursive:true});

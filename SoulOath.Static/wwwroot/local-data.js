@@ -1,6 +1,7 @@
 (() => {
     'use strict';
-    const key = 'soul-oath.player.v1';
+    const guestKey = 'soul-oath.player.v1';
+    const storageKey = () => window.wcgCloud?.storageKey() ?? guestKey;
     const preferenceKeys = ['wcg.confirmEnergy', 'soul-oath.sidebar-width'];
     const legacyEnergyKey = 'lcg.confirmEnergy';
     const legacyCardPrefix = 'LCG-';
@@ -29,9 +30,10 @@
     function requireWriter() {
         if (!navigator.locks?.request) throw new Error('這個瀏覽器不支援安全存檔，請使用新版瀏覽器。');
         if (!canWrite) throw new Error('另一個魂誓分頁正在使用存檔。請關閉該分頁後重新整理。');
+        if (window.wcgCloud?.canWrite() === false) throw new Error('雲端存檔有衝突或正在其他裝置使用，請先到設定頁處理。');
     }
     function readRoot() {
-        const raw = localStorage.getItem(key);
+        const raw = localStorage.getItem(storageKey());
         if (raw === null) return { version: 1, data: {} };
         const root = JSON.parse(raw);
         if (root?.version !== 1 || !root.data || typeof root.data !== 'object' || Array.isArray(root.data) ||
@@ -74,7 +76,9 @@
             const root = readRoot();
             if ((root.data[name] ?? null) !== expected) throw new Error('另一個分頁已更新存檔，請重新整理後再操作。');
             root.data[name] = value;
-            localStorage.setItem(key, JSON.stringify(root));
+            window.wcgCloud?.beforeWrite();
+            localStorage.setItem(storageKey(), JSON.stringify(root));
+            window.dispatchEvent(new CustomEvent('wcg-local-save'));
         },
         exportBackup() {
             const root = readRoot();
@@ -98,7 +102,9 @@
         importBackup(text) {
             requireWriter();
             const backup = parseBackup(text);
+            const key=storageKey();
             const before = new Map([key, ...preferenceKeys, legacyEnergyKey].map(name => [name, localStorage.getItem(name)]));
+            window.wcgCloud?.beforeWrite(backup.preferences);
             try {
                 for (const name of preferenceKeys) {
                     if (backup.preferences[name] === undefined) localStorage.removeItem(name);
@@ -106,6 +112,7 @@
                 }
                 localStorage.removeItem(legacyEnergyKey);
                 localStorage.setItem(key, JSON.stringify({ version: 1, data: backup.data }));
+                window.dispatchEvent(new CustomEvent('wcg-local-save'));
             } catch (error) {
                 for (const [name, value] of before) {
                     try { if (value === null) localStorage.removeItem(name); else localStorage.setItem(name, value); } catch { }

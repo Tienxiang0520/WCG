@@ -1,0 +1,85 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@if (State.Available)
+{
+    <section class="cloud-account @(Compact ? "compact" : "settings-panel") @(Collapsed ? "collapsed" : "")" aria-label="@L["Microsoft 帳號與雲端存檔"]">
+        @if (!Compact) { <h2>@L["Microsoft 帳號與雲端存檔"]</h2> }
+        @if (!State.SignedIn)
+        {
+            @if (!Compact) { <p>@L["登入後同步牌組、天梯、教學與頭像，換裝置可接續。訪客進度仍保存在本機。"]</p> }
+            <button class="btn btn-outline-info microsoft-login" aria-label="@L["使用 Microsoft 登入"]" title="@L["使用 Microsoft 登入"]" disabled="@Busy" @onclick='()=>Act("login")'><span class="microsoft-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>@L["使用 Microsoft 登入"]</button>
+        }
+        else
+        {
+            <p class="cloud-name">@State.Name</p><p class="cloud-status" role="status">@L[StatusText]</p>
+            @if (Compact) { <a href="settings" class="cloud-settings" aria-label="@L["管理雲端存檔"]" title="@L["管理雲端存檔"]">@L["管理雲端存檔"]</a> }
+            else
+            {
+                @if (State.Mode is "migration" or "conflict")
+                {
+                    <p>@L[State.Mode == "migration" ? "請選擇這個帳號要使用的進度。原本的訪客存檔會保留。" : "本機與雲端都有變更。選擇前會保留兩份，請勿同時在其他裝置繼續對局。"]</p>
+                    <div class="cloud-summaries">
+                        <p><b>@L["本機進度"]</b>：@L.F("{0} 副牌組 · 天梯 {1} 星", State.LocalSummary?.Decks ?? 0, State.LocalSummary?.Stars ?? 0)@if (State.LocalSummary?.ActiveMatch == true) { <span> · @L["有未完成對局"]</span> }</p>
+                        <p><b>@L["雲端進度"]</b>：@if (State.CloudSummary is { } cloud) { @L.F("{0} 副牌組 · 天梯 {1} 星", cloud.Decks, cloud.Stars)@if (cloud.ActiveMatch) { <span> · @L["有未完成對局"]</span> } } else { @L["尚無雲端存檔"] }</p>
+                    </div>
+                    <div class="cloud-actions"><button class="btn btn-warning" disabled="@Busy" @onclick='()=>Act("useLocal")'>@L[State.Mode == "migration" ? "上傳目前本機進度" : "使用本機進度並同步"]</button><button class="btn btn-outline-info" disabled="@Busy" @onclick='()=>Act("useCloud")'>@L[State.HasCloud ? "使用雲端進度" : "建立新的雲端進度"]</button></div>
+                }
+                @if (State.Mode == "other-device") { <p>@L["另一個裝置正在控制這份存檔。接手後，另一個裝置會停止同步。"]</p><button class="btn btn-warning" disabled="@Busy" @onclick='()=>Act("takeControl")'>@L["在此裝置接續"]</button> }
+                @if (State.LastSync != null) { <p class="cloud-time">@L.F("上次同步：{0}", DateTimeOffset.TryParse(State.LastSync, out var time) ? time.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss") : State.LastSync)</p> }
+                <div class="cloud-actions">
+                    @if (State.Mode == "reauth") { <button class="btn btn-primary" disabled="@Busy" @onclick='()=>Act("login")'>@L["重新登入 Microsoft"]</button> }
+                    <button class="btn btn-outline-info" disabled="@(Busy || !State.Attached || State.Mode is "conflict" or "other-device")" @onclick='()=>Act("sync")'>@L["立即同步"]</button>
+                    <button class="btn btn-outline-secondary" disabled="@Busy" @onclick='()=>Act("logout")'>@L["登出 Microsoft"]</button>
+                </div>
+                <p class="cloud-note">@L["登出不刪除雲端進度；尚未同步的資料仍留在這個帳號的本機存檔。"]</p>
+                @if (State.HasRecovery) { <button class="btn btn-outline-secondary" @onclick='()=>Act("exportRecovery")'>@L["匯出保留的本機進度"]</button> }
+            }
+        }
+        @if (Notice != "" && !Compact) { <p role="alert">@L[Notice]</p> }
+    </section>
+}
+@code {
+    [Parameter] public bool Compact { get; set; }
+    [Parameter] public bool Collapsed { get; set; }
+    private CloudStatus State = new();
+    private IJSObjectReference? Module;
+    private DotNetObjectReference<CloudAccountPanel>? Receiver;
+    private string? Listener;
+    private string Notice = "";
+    private bool Acting, Disposed;
+    private bool Busy => Acting || State.Busy;
+    private string StatusText => State.Mode switch
+    {
+        "synced" => "雲端已同步", "syncing" => "正在同步雲端…", "pending" => "有進度等待同步", "offline" => "等待連線，進度保存在本機",
+        "migration" => "尚未選擇雲端進度", "conflict" => "存檔版本衝突，資料已保留", "other-device" => "其他裝置正在使用", "reauth" => "登入已過期，進度保存在本機", "invalid-save" => "雲端存檔驗證未通過，本機進度已保留", _ => "正在讀取雲端存檔…"
+    };
+    protected override async Task OnAfterRenderAsync(bool first)
+    {
+        if (!first) return;
+        Module = await JS.InvokeAsync<IJSObjectReference>("import", "./cloud-ui.js");
+        State = await Module.InvokeAsync<CloudStatus>("status");
+        Receiver = DotNetObjectReference.Create(this); Listener = await Module.InvokeAsync<string>("attach", Receiver); StateHasChanged();
+    }
+    [JSInvokable] public Task CloudChanged(CloudStatus status) => InvokeAsync(() => { if (!Disposed) { State = status; StateHasChanged(); } });
+    private async Task Act(string action)
+    {
+        if (Module == null || Busy) return;
+        Acting = true; Notice = "";
+        try { State = await Module.InvokeAsync<CloudStatus>("act", action); }
+        catch (JSException) { Notice = "操作未完成，原資料保留。請檢查連線後重試。"; }
+        finally { Acting = false; StateHasChanged(); }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        Disposed = true;
+        if (Module != null) { try { await Module.InvokeVoidAsync("detach", Listener); await Module.DisposeAsync(); } catch (JSDisconnectedException) { } }
+        Receiver?.Dispose();
+    }
+    public sealed class CloudStatus
+    {
+        public bool Available { get; set; } public bool SignedIn { get; set; } public bool Attached { get; set; } public bool Busy { get; set; } public bool HasCloud { get; set; } public bool HasRecovery { get; set; }
+        public string Name { get; set; } = ""; public string Mode { get; set; } = "guest"; public string? LastSync { get; set; }
+        public SaveSummary? LocalSummary { get; set; } public SaveSummary? CloudSummary { get; set; }
+    }
+    public sealed class SaveSummary { public int Decks { get; set; } public int Stars { get; set; } public bool ActiveMatch { get; set; } }
+}

@@ -8,6 +8,8 @@ export function readEnergyConfirmation():boolean {
 
 export function saveEnergyConfirmation(enabled:boolean):void {
     // Let the settings page report storage failures instead of claiming a save succeeded.
+    (window as Window & {wcgCloud?:{beforePreference:(key:string,value:string)=>void}}).wcgCloud?.beforePreference(energyConfirmationKey,String(enabled));
     localStorage.setItem(energyConfirmationKey,String(enabled));
     localStorage.removeItem(legacyEnergyConfirmationKey);
+    window.dispatchEvent(new CustomEvent('wcg-preference-saved'));
 }

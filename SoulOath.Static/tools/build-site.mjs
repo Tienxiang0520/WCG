@@ -18,11 +18,12 @@ function run(command,args,cwd=project){
 const client=resolve(root,'WcgWeb/Client');
 if(!existsSync(resolve(client,'node_modules/phaser/package.json'))
     ||!existsSync(resolve(client,'node_modules/typescript/package.json'))
+    ||!existsSync(resolve(client,'node_modules/@azure/msal-browser/package.json'))
     ||!existsSync(resolve(client,'node_modules/esbuild/package.json')))
     run('npm',['ci'],client);
 run('npm',['run','build'],client);
 run('node',['tools/prepare-assets.mjs']);
-run('node',['--test','tools/storage.test.mjs','tools/deck-print.test.mjs','tools/battle-feedback.test.mjs','tools/drag-intent.test.mjs','tools/effect-plan.test.mjs','tools/battle-audio.test.mjs','tools/battle-fx.test.mjs','tools/avatar-crop.test.mjs','tools/training.test.mjs','tools/startup.test.mjs','tools/asset-preload.test.mjs','tools/asset-worker.test.mjs']);
+run('node',['--test','tools/cloud-sync.test.mjs','tools/storage.test.mjs','tools/deck-print.test.mjs','tools/battle-feedback.test.mjs','tools/drag-intent.test.mjs','tools/effect-plan.test.mjs','tools/battle-audio.test.mjs','tools/battle-fx.test.mjs','tools/avatar-crop.test.mjs','tools/training.test.mjs','tools/startup.test.mjs','tools/asset-preload.test.mjs','tools/asset-worker.test.mjs']);
 await rm(resolve(project,'bin/site-publish'),{recursive:true,force:true});
 run('dotnet',['publish','SoulOath.Static.csproj','--nologo','-c','Release','-o',resolve(project,'bin/site-publish')]);
 await mkdir(site,{recursive:true});

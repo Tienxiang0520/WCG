@@ -37,8 +37,9 @@
     <script src="local-data.js"></script>
     <script src="lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js" autostart="false"></script>
-    <script>
-        Promise.all([soulOathStorage.ready, wcgStartup.ready]).then(() => Blazor.start()).catch(error => {
+    <script type="module">
+        import { initialize } from './cloud.js';
+        Promise.all([soulOathStorage.ready, wcgStartup.ready, initialize()]).then(() => Blazor.start()).catch(error => {
             window.wcgStartup?.fail(error);
             document.querySelector('#blazor-error-ui').style.display = 'block';
         });

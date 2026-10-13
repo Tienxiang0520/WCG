@@ -44,3 +44,9 @@ WcgWeb/wwwroot/battle/preferences.js
 .build-tmp/
 .runtime/
 **/__pycache__/
+
+# Bundled Microsoft authentication SDK; rebuilt from the locked client dependencies.
+SoulOath.Static/wwwroot/cloud-auth.js
+SoulOath.Static/wwwroot/cloud-redirect.js
+SoulOath.Static/wwwroot/cloud-ui.js
+**/local.settings.json

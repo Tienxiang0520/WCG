@@ -11,7 +11,7 @@ export function attach(sidebar, handle) {
         sidebar.style.setProperty('--sidebar-width', `${width}px`);
         handle.setAttribute('aria-valuenow', String(width));
         handle.setAttribute('aria-valuemax', String(Math.floor(limit())));
-        try { localStorage.setItem('soul-oath.sidebar-width', String(width)); } catch { }
+        try {window.wcgCloud?.beforePreference('soul-oath.sidebar-width',String(width)); localStorage.setItem('soul-oath.sidebar-width', String(width));window.dispatchEvent(new CustomEvent('wcg-preference-saved')); } catch { }
     };
     try {
         const saved = Number(localStorage.getItem('soul-oath.sidebar-width'));

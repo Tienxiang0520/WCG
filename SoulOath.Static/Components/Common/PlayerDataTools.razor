@@ -4,7 +4,7 @@
 @inject RankedDecks Opponents
 <section class="settings-panel" aria-labelledby="local-data-title">
     <h2 id="local-data-title">@L["本機存檔"]</h2>
-    <p>@L["牌組、天梯進度、玩家頭像與設定只存在這個瀏覽器。清除網站資料或更換裝置前，請先匯出備份。"]</p>
+    <p>@L["訪客資料保存在這個瀏覽器；使用 Microsoft 帳號時，請確認雲端已同步。匯出備份可另外保存目前的牌組、天梯、頭像與設定。"]</p>
     <div class="d-flex flex-wrap gap-2">
         <button class="btn btn-outline-info" @onclick="Export">@L["匯出存檔"]</button>
         <label class="btn btn-outline-light mb-0">@L["選擇備份"]<InputFile OnChange="Stage" accept="application/json,.json" class="d-none" /></label>

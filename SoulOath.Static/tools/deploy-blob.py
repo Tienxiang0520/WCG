@@ -13,7 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 
-ROUTES = ('battle', 'cards', 'deckbuilder', 'ranked', 'rules', 'settings', 'tutorial', 'legacy', 'not-found')
+ROUTES = ('battle', 'cards', 'deckbuilder', 'ranked', 'rules', 'settings', 'tutorial', 'legacy', 'not-found', 'auth/callback')
 CACHE_CONTROL = 'no-cache'
 MIME = {
     '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -109,11 +109,12 @@ def plan(source):
         phase = 2 if name.endswith('index.html') else 1 if name == 'asset-manifest.json' else 0
         entries.append(Entry(name, path, digest(path), path.stat().st_size, MIME[path.suffix], phase))
     for route in ROUTES:
-        if files[f'{route}/index.html'].read_bytes() != index.read_bytes():
+        route_index = files[f'{route}/index.html']
+        if route != 'auth/callback' and route_index.read_bytes() != index.read_bytes():
             raise ValueError(f'Route entry differs from homepage: {route}')
         # Blob names can coexist with virtual folders. Exact aliases make /cards
         # work without relying on a host-specific rewrite or a 404 fallback.
-        entries.append(Entry(route, index, digest(index), index.stat().st_size, MIME['.html'], 2))
+        entries.append(Entry(route, route_index, digest(route_index), route_index.stat().st_size, MIME['.html'], 2))
     return manifest['version'], sorted(entries, key=lambda e: (e.phase, e.name == 'index.html', e.name))
 
 

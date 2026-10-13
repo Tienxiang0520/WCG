@@ -1,0 +1,6 @@
+{
+  "clientId": "b4f81111-6331-4a64-b174-0dceb20b8338",
+  "scope": "api://aed76f8d-54ad-4054-a8f3-7cb4ecb33977/Save.ReadWrite",
+  "authority": "https://login.microsoftonline.com/common",
+  "apiUrl": "https://wcg-cloud-tienxiang0520.azurewebsites.net/api"
+}

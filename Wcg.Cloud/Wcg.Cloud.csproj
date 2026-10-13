@@ -1,0 +1,20 @@
+<Project Sdk="Azure.Functions.Sdk/1.0.1">
+  <Import Project="../build/Wcg.SharedResources.props" />
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework></PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="2.52.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Azure.Identity" Version="1.21.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.30.1" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.23.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.23.0" />
+    <Compile Include="../WcgWeb/Models/**/*.cs" Link="Shared/Models/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../WcgWeb/Services/**/*.cs" Exclude="../WcgWeb/Services/Hosting/**/*.cs" Link="Shared/Services/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="../SoulOath.Static/Services/PlayerBackupValidator.cs" Link="Shared/PlayerBackupValidator.cs" />
+    <EmbeddedResource Include="../WcgWeb/Data/cards.json" LogicalName="WcgCloud.Cards" />
+    <EmbeddedResource Include="../WcgWeb/Data/preset_decks.json" LogicalName="WcgCloud.Presets" />
+    <EmbeddedResource Include="../WcgWeb/Data/ranked_decks.json" LogicalName="WcgCloud.RankedDecks" />
+    <None Update="host.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

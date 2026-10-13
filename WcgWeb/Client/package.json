@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && esbuild battle/index.ts --bundle --format=esm --minify --sourcemap --outfile=../wwwroot/battle/board.js && esbuild battle/preferences.ts --bundle --format=esm --minify --outfile=../wwwroot/battle/preferences.js"
+    "build": "tsc --noEmit && esbuild battle/index.ts --bundle --format=esm --minify --sourcemap --outfile=../wwwroot/battle/board.js && esbuild battle/preferences.ts --bundle --format=esm --minify --outfile=../wwwroot/battle/preferences.js && esbuild cloud/auth.ts --bundle --format=esm --minify --outfile=../../SoulOath.Static/wwwroot/cloud-auth.js && esbuild cloud/redirect.ts --bundle --format=esm --minify --outfile=../../SoulOath.Static/wwwroot/cloud-redirect.js"
   },
   "dependencies": {
+    "@azure/msal-browser": "5.25.0",
     "phaser": "4.2.1"
   },
   "devDependencies": {
