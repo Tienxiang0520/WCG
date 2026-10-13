@@ -149,7 +149,7 @@ def publish(args, version, entries):
                                 connection_timeout=60, read_timeout=60, retry_total=4,
                                 max_single_put_size=4 * 1024 * 1024, max_block_size=1024 * 1024)
     service.set_service_properties(static_website={'enabled': True, 'index_document': 'index.html',
-                                                   'error_document_404_path': 'not-found/index.html'})
+                                                   'error_document404_path': 'not-found/index.html'})
     container = service.get_container_client('$web')
     existing = {b.name: b for b in container.list_blobs(include=['metadata'])}
     changed = [e for e in entries if e.name not in existing or not matches(existing[e.name], e)]
