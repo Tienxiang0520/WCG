@@ -94,6 +94,32 @@ public sealed class RankedTests : IDisposable
         Assert.False(s.Start(cards.PresetDecks[1]).Success);Assert.False(Send(s,"start").Success);Assert.False(Send(s,"reset").Success);
         Assert.Equal(id,s.Read().Match!.Id);
     }
+    [Fact] public void DeckListUpdateKeepsTheSavedOpponentAndItsReplay()
+    {
+        var current=decks.Pool(5).Single(e=>e.Deck.Id=="RANKED-5-WRATH-SCORCH").Deck;
+        var previous=DeckService.Copy(current);
+        var replaced=previous.CardIds.GroupBy(id=>id).First(g=>g.Count()>=2).Key;
+        var previousCard=cards.AllCards.First(c=>c.Will==current.MainWill&&!current.CardIds.Contains(c.Id)).Id;
+        for(var i=0;i<2;i++)
+        {
+            Assert.True(previous.CardIds.Remove(replaced));previous.CardIds.Add(previousCard);
+        }
+        Assert.True(decks.IsLegal(previous,out var error),error);
+        store.Save(new(){Season="2026-10",Stars=75,BestStars=75,SeasonBest=75});
+        var original=Session();Assert.True(original.Start(cards.PresetDecks[0]).Success);
+        var profile=original.Read();profile.Match!.ComputerDeck=previous;profile.Match.PlayerFirst=true;store.Save(profile);
+        var old=Session();Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;
+        var restored=Session();Assert.Empty(restored.Error);
+        Assert.Equal(previous.CardIds,restored.Read().Match!.ComputerDeck.CardIds);
+        Assert.Equal(rules,restored.Read().Match!.Rules);Assert.Equal(75,restored.Read().Stars);
+        Assert.Equal(shape,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.Contains(previousCard,restored.Engine.Computer.Hand.Concat(restored.Engine.Computer.Deck).Select(c=>c.Card.Id));
+        Assert.DoesNotContain(previousCard,current.CardIds);
+        Assert.True(Send(restored,"surrender").Success);
+        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        Assert.Equal(current.CardIds,decks.Pool(5).Single(e=>e.Deck.Id==current.Id).Deck.CardIds);
+    }
     [Fact] public void BalanceUpdatePreservesActiveOldMatchAndUsesNewRulesOnNextMatch()
     {
         var oldCards=Overlay(Overlay(Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
@@ -443,7 +469,8 @@ public sealed class RankedTests : IDisposable
             Assert.True(pool.Count>=8);Assert.Equal(pool.Count,keys[tier].Count);
             Assert.Equal(5,pool.Select(e=>e.Deck.MainWill).Distinct().Count());
             Assert.All(pool,e=>{Assert.True(decks.IsLegal(e.Deck,out var error),error);Assert.NotEmpty(e.Archetype);Assert.NotEmpty(e.Deck.Description);
-                Assert.True(e.Deck.GetColorCounts(cards.GetCard).OffColor<=Deck.MaxOffColorCards);Assert.True((e.Variants?.Count??0)>=3);});
+                Assert.True(e.Deck.GetColorCounts(cards.GetCard).OffColor<=Deck.MaxOffColorCards);
+                if(tier==5)Assert.Empty(e.Variants!);else Assert.True((e.Variants?.Count??0)>=3);});
             var summary=decks.Summary(tier);Assert.StartsWith($"{pool.Count} 種流派",summary);
             Assert.All(pool,e=>Assert.Contains(RankedDecks.ArchetypeName(e.Deck),summary));
         }
@@ -483,7 +510,8 @@ public sealed class RankedTests : IDisposable
                 if(last!=null)Assert.NotEqual(ArchetypeKey(last),ArchetypeKey(deck.Id));
                 last=deck.Id;lists.Add(string.Join(',',deck.CardIds.Order()));
             }
-            Assert.True(lists.Count>decks.Pool(tier).Count,"variants should add decklists beyond the base pool");
+            if(tier<5)Assert.True(lists.Count>decks.Pool(tier).Count,"variants should add decklists beyond the base pool");
+            else Assert.All(lists,list=>Assert.Contains(decks.Pool(5),e=>string.Join(',',e.Deck.CardIds.Order())==list));
         }
         Assert.Equal(decks.Pick(3,new Random(42),null).CardIds,decks.Pick(3,new Random(42),null).CardIds);
     }

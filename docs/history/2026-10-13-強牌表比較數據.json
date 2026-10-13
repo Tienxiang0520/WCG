@@ -1,0 +1,2960 @@
+{
+  "policy": "Bounded 377 build search, 116 finalists, common fixed opponent pool, paired seeds and both starting positions, AI 5/3 equally weighted. Not a global or human optimum. Lower-tier deck entries preserved.",
+  "screeningGames": 87464,
+  "finalistGames": 107648,
+  "auditGames": 109504,
+  "cardsSha256": "6a3384e8f6d59ecc903307e952477bdd9f5f1980db5f8ac7c0e40ba41dc5e8dc",
+  "decks": [
+    {
+      "id": "RANKED-5-WRATH-BLITZ",
+      "name": "狂怒・燃血突擊（快攻）",
+      "selection": "原完整牌表",
+      "beforeWinRate": 0.5862068965517241,
+      "afterWinRate": 0.5862068965517241,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 554,
+          "WinRate": 0.5969827586206896
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 534,
+          "WinRate": 0.5754310344827587
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 554,
+          "WinRate": 0.5969827586206896
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 534,
+          "WinRate": 0.5754310344827587
+        }
+      ],
+      "out": {},
+      "in": {}
+    },
+    {
+      "id": "RANKED-5-WRATH-WARBAND",
+      "name": "狂怒・戰鼓狂潮（中速）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.4396551724137931,
+      "afterWinRate": 0.5167025862068966,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 430,
+          "WinRate": 0.46336206896551724
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 386,
+          "WinRate": 0.41594827586206895
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 476,
+          "WinRate": 0.5129310344827587
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 483,
+          "WinRate": 0.5204741379310345
+        }
+      ],
+      "out": {
+        "WCG-002": 2,
+        "WCG-007": 2,
+        "WCG-124": 2,
+        "WCG-180": 2
+      },
+      "in": {
+        "WCG-018": 4,
+        "WCG-136": 4
+      }
+    },
+    {
+      "id": "RANKED-5-WRATH-SCORCH",
+      "name": "狂怒・焦土控場（控制）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.4175646551724138,
+      "afterWinRate": 0.4730603448275862,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 362,
+          "WinRate": 0.3900862068965517
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 413,
+          "WinRate": 0.44504310344827586
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 372,
+          "WinRate": 0.40086206896551724
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 506,
+          "WinRate": 0.5452586206896551
+        }
+      ],
+      "out": {
+        "WCG-004": 2,
+        "WCG-007": 4,
+        "WCG-012": 2
+      },
+      "in": {
+        "WCG-015": 2,
+        "WCG-020": 2,
+        "WCG-180": 4
+      }
+    },
+    {
+      "id": "RANKED-5-WRATH-ASHFALL",
+      "name": "狂怒・灰燼殉爆（連動）",
+      "selection": "狼騎兵先遣隊＋地獄戰狂",
+      "beforeWinRate": 0.5619612068965517,
+      "afterWinRate": 0.5813577586206896,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 502,
+          "WinRate": 0.540948275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 541,
+          "WinRate": 0.5829741379310345
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 511,
+          "WinRate": 0.5506465517241379
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 568,
+          "WinRate": 0.6120689655172413
+        }
+      ],
+      "out": {
+        "WCG-101": 2,
+        "WCG-182": 2
+      },
+      "in": {
+        "WCG-018": 2,
+        "WCG-110": 2
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-FROST",
+      "name": "理智・霜焰節奏（節奏）",
+      "selection": "秘法竊取者＋次元回溯",
+      "beforeWinRate": 0.578125,
+      "afterWinRate": 0.5985991379310345,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 529,
+          "WinRate": 0.5700431034482759
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 544,
+          "WinRate": 0.5862068965517241
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 562,
+          "WinRate": 0.6056034482758621
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 549,
+          "WinRate": 0.5915948275862069
+        }
+      ],
+      "out": {
+        "WCG-026": 2,
+        "WCG-029": 2
+      },
+      "in": {
+        "WCG-033": 2,
+        "WCG-139": 2
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-ARCANE",
+      "name": "理智・奧術控制（控制）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.4892241379310345,
+      "afterWinRate": 0.5420258620689655,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 411,
+          "WinRate": 0.44288793103448276
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 497,
+          "WinRate": 0.5355603448275862
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 475,
+          "WinRate": 0.5118534482758621
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 531,
+          "WinRate": 0.572198275862069
+        }
+      ],
+      "out": {
+        "WCG-028": 2,
+        "WCG-034": 2
+      },
+      "in": {
+        "WCG-183": 4
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-ORACLE",
+      "name": "理智・占卜連鎖（連動）",
+      "selection": "空間回折＋萬象觀測者",
+      "beforeWinRate": 0.4951508620689655,
+      "afterWinRate": 0.5328663793103449,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 424,
+          "WinRate": 0.45689655172413796
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 495,
+          "WinRate": 0.5334051724137931
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 436,
+          "WinRate": 0.4698275862068966
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 553,
+          "WinRate": 0.5959051724137931
+        }
+      ],
+      "out": {
+        "WCG-022": 2,
+        "WCG-166": 2
+      },
+      "in": {
+        "WCG-026": 2,
+        "WCG-039": 2
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-GLACIER",
+      "name": "理智・冰封堡壘（中速）",
+      "selection": "秘法學徒＋星穹領主",
+      "beforeWinRate": 0.4822198275862069,
+      "afterWinRate": 0.5048491379310345,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 372,
+          "WinRate": 0.40086206896551724
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 523,
+          "WinRate": 0.5635775862068966
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 415,
+          "WinRate": 0.44719827586206895
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 522,
+          "WinRate": 0.5625
+        }
+      ],
+      "out": {
+        "WCG-033": 2,
+        "WCG-039": 2
+      },
+      "in": {
+        "WCG-021": 2,
+        "WCG-040": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-SWARM",
+      "name": "生機・森林鋪場（鋪場）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.4331896551724138,
+      "afterWinRate": 0.4838362068965517,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 429,
+          "WinRate": 0.46228448275862066
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 375,
+          "WinRate": 0.4040948275862069
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 497,
+          "WinRate": 0.5355603448275862
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 401,
+          "WinRate": 0.43211206896551724
+        }
+      ],
+      "out": {
+        "WCG-054": 2,
+        "WCG-135": 2,
+        "WCG-188": 2
+      },
+      "in": {
+        "WCG-048": 2,
+        "WCG-060": 2,
+        "WCG-108": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-BEHEMOTH",
+      "name": "生機・巨獸奔襲（巨獸）",
+      "selection": "始祖母樹",
+      "beforeWinRate": 0.5867456896551724,
+      "afterWinRate": 0.6099137931034483,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 520,
+          "WinRate": 0.5603448275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 569,
+          "WinRate": 0.6131465517241379
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 562,
+          "WinRate": 0.6056034482758621
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 570,
+          "WinRate": 0.6142241379310345
+        }
+      ],
+      "out": {
+        "WCG-172": 2
+      },
+      "in": {
+        "WCG-060": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-THORN",
+      "name": "生機・荊棘毒牙（中速）",
+      "selection": "蓋亞暴龍＋始祖母樹",
+      "beforeWinRate": 0.5592672413793104,
+      "afterWinRate": 0.587823275862069,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 529,
+          "WinRate": 0.5700431034482759
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 509,
+          "WinRate": 0.5484913793103449
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 570,
+          "WinRate": 0.6142241379310345
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 521,
+          "WinRate": 0.5614224137931034
+        }
+      ],
+      "out": {
+        "WCG-053": 2,
+        "WCG-055": 2
+      },
+      "in": {
+        "WCG-059": 2,
+        "WCG-060": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-STAMPEDE",
+      "name": "生機・野性衝鋒（快攻）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.3642241379310345,
+      "afterWinRate": 0.4358836206896552,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 327,
+          "WinRate": 0.35237068965517243
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 349,
+          "WinRate": 0.3760775862068966
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 376,
+          "WinRate": 0.4051724137931034
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 433,
+          "WinRate": 0.4665948275862069
+        }
+      ],
+      "out": {
+        "WCG-111": 4,
+        "WCG-135": 4
+      },
+      "in": {
+        "WCG-110": 4,
+        "WCG-143": 4
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-AEGIS",
+      "name": "秩序・能量護盾防線（防守）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.47898706896551724,
+      "afterWinRate": 0.5495689655172413,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 548,
+          "WinRate": 0.5905172413793104
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 341,
+          "WinRate": 0.36745689655172414
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 563,
+          "WinRate": 0.6066810344827587
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 457,
+          "WinRate": 0.49245689655172414
+        }
+      ],
+      "out": {
+        "WCG-074": 2,
+        "WCG-133": 4
+      },
+      "in": {
+        "WCG-065": 4,
+        "WCG-075": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-RAMPART",
+      "name": "秩序・白銀長城（控制）",
+      "selection": "誓約封禁＋弗丁",
+      "beforeWinRate": 0.4865301724137931,
+      "afterWinRate": 0.5193965517241379,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 510,
+          "WinRate": 0.5495689655172413
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 393,
+          "WinRate": 0.4234913793103448
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 544,
+          "WinRate": 0.5862068965517241
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 420,
+          "WinRate": 0.4525862068965517
+        }
+      ],
+      "out": {
+        "WCG-068": 2,
+        "WCG-179": 2
+      },
+      "in": {
+        "WCG-076": 2,
+        "WCG-080": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-VERDICT",
+      "name": "秩序・誓約審判（控制）",
+      "selection": "聖堂集結號角＋日耀聖堂巨像",
+      "beforeWinRate": 0.5808189655172413,
+      "afterWinRate": 0.6147629310344828,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 527,
+          "WinRate": 0.5678879310344828
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 551,
+          "WinRate": 0.59375
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 574,
+          "WinRate": 0.6185344827586207
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 567,
+          "WinRate": 0.6109913793103449
+        }
+      ],
+      "out": {
+        "WCG-072": 2,
+        "WCG-191": 2
+      },
+      "in": {
+        "WCG-079": 2,
+        "WCG-189": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-GROVE",
+      "name": "秩序・聖林守衛（中速）",
+      "selection": "聖光審判巨神＋白銀哨衛",
+      "beforeWinRate": 0.5479525862068966,
+      "afterWinRate": 0.5673491379310345,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 439,
+          "WinRate": 0.4730603448275862
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 578,
+          "WinRate": 0.6228448275862069
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 502,
+          "WinRate": 0.540948275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 551,
+          "WinRate": 0.59375
+        }
+      ],
+      "out": {
+        "WCG-075": 2,
+        "WCG-158": 2
+      },
+      "in": {
+        "WCG-129": 2,
+        "WCG-171": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-REVENANT",
+      "name": "深淵・亡者交換（墓地）",
+      "selection": "幽冥巨龍＋苦痛契約者",
+      "beforeWinRate": 0.5274784482758621,
+      "afterWinRate": 0.5711206896551724,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 494,
+          "WinRate": 0.5323275862068966
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 485,
+          "WinRate": 0.5226293103448276
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 564,
+          "WinRate": 0.6077586206896551
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 496,
+          "WinRate": 0.5344827586206896
+        }
+      ],
+      "out": {
+        "WCG-132": 2,
+        "WCG-175": 2
+      },
+      "in": {
+        "WCG-085": 2,
+        "WCG-099": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-ASSASSIN",
+      "name": "深淵・暗影刺殺（控制）",
+      "selection": "恐懼吞噬",
+      "beforeWinRate": 0.625,
+      "afterWinRate": 0.6395474137931034,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 584,
+          "WinRate": 0.6293103448275862
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 576,
+          "WinRate": 0.6206896551724138
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 597,
+          "WinRate": 0.6433189655172413
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 590,
+          "WinRate": 0.6357758620689655
+        }
+      ],
+      "out": {
+        "WCG-084": 2
+      },
+      "in": {
+        "WCG-088": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-SOULFEAST",
+      "name": "深淵・噬魂獻祭（連動）",
+      "selection": "暗影獻祭＋苦痛契約者",
+      "beforeWinRate": 0.4401939655172414,
+      "afterWinRate": 0.4525862068965517,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 388,
+          "WinRate": 0.41810344827586204
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 429,
+          "WinRate": 0.46228448275862066
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 412,
+          "WinRate": 0.44396551724137934
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 428,
+          "WinRate": 0.46120689655172414
+        }
+      ],
+      "out": {
+        "WCG-128": 2,
+        "WCG-132": 2
+      },
+      "in": {
+        "WCG-085": 2,
+        "WCG-169": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-AMBUSH",
+      "name": "深淵・深淵伏擊（快攻）",
+      "selection": "狼騎兵先遣隊",
+      "beforeWinRate": 0.584051724137931,
+      "afterWinRate": 0.5932112068965517,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 517,
+          "WinRate": 0.5571120689655172
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 567,
+          "WinRate": 0.6109913793103449
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 532,
+          "WinRate": 0.5732758620689655
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 569,
+          "WinRate": 0.6131465517241379
+        }
+      ],
+      "out": {
+        "WCG-199": 2
+      },
+      "in": {
+        "WCG-110": 2
+      }
+    },
+    {
+      "id": "RANKED-5-WRATH-REKINDLE",
+      "name": "狂怒・復燃連擊（連擊）",
+      "selection": "阿曼尼狂戰士",
+      "beforeWinRate": 0.4229525862068966,
+      "afterWinRate": 0.46228448275862066,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 429,
+          "WinRate": 0.46228448275862066
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 356,
+          "WinRate": 0.38362068965517243
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 458,
+          "WinRate": 0.49353448275862066
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 400,
+          "WinRate": 0.43103448275862066
+        }
+      ],
+      "out": {
+        "WCG-011": 2
+      },
+      "in": {
+        "WCG-009": 2
+      }
+    },
+    {
+      "id": "RANKED-5-WRATH-FORGE",
+      "name": "狂怒・熔爐戰線（結界）",
+      "selection": "腐蝕軟泥怪＋熾紅戰斧",
+      "beforeWinRate": 0.49622844827586204,
+      "afterWinRate": 0.5193965517241379,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 473,
+          "WinRate": 0.509698275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 448,
+          "WinRate": 0.4827586206896552
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 499,
+          "WinRate": 0.5377155172413793
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 465,
+          "WinRate": 0.5010775862068966
+        }
+      ],
+      "out": {
+        "WCG-124": 2,
+        "WCG-134": 2
+      },
+      "in": {
+        "WCG-014": 2,
+        "WCG-104": 2
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-ECHO",
+      "name": "理智・回音法陣（結界）",
+      "selection": "奧術共鳴波",
+      "beforeWinRate": 0.5296336206896551,
+      "afterWinRate": 0.5517241379310345,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 447,
+          "WinRate": 0.4816810344827586
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 536,
+          "WinRate": 0.5775862068965517
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 473,
+          "WinRate": 0.509698275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 551,
+          "WinRate": 0.59375
+        }
+      ],
+      "out": {
+        "WCG-196": 2
+      },
+      "in": {
+        "WCG-184": 2
+      }
+    },
+    {
+      "id": "RANKED-5-REASON-TIME",
+      "name": "理智・時空突擊（連擊）",
+      "selection": "星穹領主＋觀星占卜師",
+      "beforeWinRate": 0.5431034482758621,
+      "afterWinRate": 0.5651939655172413,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 438,
+          "WinRate": 0.47198275862068967
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 570,
+          "WinRate": 0.6142241379310345
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 465,
+          "WinRate": 0.5010775862068966
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 584,
+          "WinRate": 0.6293103448275862
+        }
+      ],
+      "out": {
+        "WCG-021": 2,
+        "WCG-163": 2
+      },
+      "in": {
+        "WCG-040": 2,
+        "WCG-183": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-ROOTS",
+      "name": "生機・根鬚覺醒（能量）",
+      "selection": "原始印記＋始祖母樹",
+      "beforeWinRate": 0.39655172413793105,
+      "afterWinRate": 0.484375,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 413,
+          "WinRate": 0.44504310344827586
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 323,
+          "WinRate": 0.3480603448275862
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 471,
+          "WinRate": 0.5075431034482759
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 428,
+          "WinRate": 0.46120689655172414
+        }
+      ],
+      "out": {
+        "WCG-126": 2,
+        "WCG-162": 2
+      },
+      "in": {
+        "WCG-054": 2,
+        "WCG-060": 2
+      }
+    },
+    {
+      "id": "RANKED-5-VITAL-RECYCLE",
+      "name": "生機・森靈回流（墓地）",
+      "selection": "原始印記＋荊棘巨龜",
+      "beforeWinRate": 0.45851293103448276,
+      "afterWinRate": 0.5107758620689655,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 473,
+          "WinRate": 0.509698275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 378,
+          "WinRate": 0.4073275862068966
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 495,
+          "WinRate": 0.5334051724137931
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 453,
+          "WinRate": 0.48814655172413796
+        }
+      ],
+      "out": {
+        "WCG-047": 2,
+        "WCG-058": 2
+      },
+      "in": {
+        "WCG-054": 2,
+        "WCG-146": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-EXPEDITION",
+      "name": "秩序・聖光遠征（進攻）",
+      "selection": "聖光審判巨神＋白銀巡邏衛",
+      "beforeWinRate": 0.5080818965517241,
+      "afterWinRate": 0.5716594827586207,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 499,
+          "WinRate": 0.5377155172413793
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 444,
+          "WinRate": 0.47844827586206895
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 544,
+          "WinRate": 0.5862068965517241
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 517,
+          "WinRate": 0.5571120689655172
+        }
+      ],
+      "out": {
+        "WCG-080": 2,
+        "WCG-147": 2
+      },
+      "in": {
+        "WCG-065": 2,
+        "WCG-171": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ORDER-PURIFY",
+      "name": "秩序・淨化壁壘（驅散）",
+      "selection": "補強配牌",
+      "beforeWinRate": 0.4084051724137931,
+      "afterWinRate": 0.5048491379310345,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 386,
+          "WinRate": 0.41594827586206895
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 372,
+          "WinRate": 0.40086206896551724
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 480,
+          "WinRate": 0.5172413793103449
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 457,
+          "WinRate": 0.49245689655172414
+        }
+      ],
+      "out": {
+        "WCG-127": 4,
+        "WCG-152": 2
+      },
+      "in": {
+        "WCG-066": 2,
+        "WCG-075": 4
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-PLAGUE",
+      "name": "深淵・瘟疫復甦（清場）",
+      "selection": "墓園守夜人＋靈魂汲取",
+      "beforeWinRate": 0.5274784482758621,
+      "afterWinRate": 0.556573275862069,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 517,
+          "WinRate": 0.5571120689655172
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 462,
+          "WinRate": 0.4978448275862069
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 533,
+          "WinRate": 0.5743534482758621
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 500,
+          "WinRate": 0.5387931034482759
+        }
+      ],
+      "out": {
+        "WCG-098": 2,
+        "WCG-150": 2
+      },
+      "in": {
+        "WCG-094": 2,
+        "WCG-148": 2
+      }
+    },
+    {
+      "id": "RANKED-5-ABYSS-LOWLIFE",
+      "name": "深淵・殘血魔潮（殘血）",
+      "selection": "墓園守夜人＋靈魂汲取",
+      "beforeWinRate": 0.46282327586206895,
+      "afterWinRate": 0.5140086206896551,
+      "strategiesBefore": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 462,
+          "WinRate": 0.4978448275862069
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 397,
+          "WinRate": 0.42780172413793105
+        }
+      ],
+      "strategiesAfter": [
+        {
+          "Ai": 5,
+          "Games": 928,
+          "Wins": 511,
+          "WinRate": 0.5506465517241379
+        },
+        {
+          "Ai": 3,
+          "Games": 928,
+          "Wins": 443,
+          "WinRate": 0.47737068965517243
+        }
+      ],
+      "out": {
+        "WCG-193": 2,
+        "WCG-199": 2
+      },
+      "in": {
+        "WCG-094": 2,
+        "WCG-148": 2
+      }
+    }
+  ],
+  "leagues": {
+    "5": {
+      "games": 27840,
+      "seeds": 32,
+      "seedBase": 8300000,
+      "firstPlayerWinRate": 0.6889008620689655,
+      "summary": [
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "MainWill": "秩序",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 1143,
+          "winRate": 0.6158,
+          "ciLow": 0.5935,
+          "ciHigh": 0.6377,
+          "cards": {
+            "WCG-063": 4,
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-067": 4,
+            "WCG-068": 2,
+            "WCG-069": 4,
+            "WCG-076": 4,
+            "WCG-077": 4,
+            "WCG-078": 2,
+            "WCG-079": 2,
+            "WCG-080": 2,
+            "WCG-142": 4,
+            "WCG-158": 4,
+            "WCG-189": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "MainWill": "生機",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 1117,
+          "winRate": 0.6018,
+          "ciLow": 0.5794,
+          "ciHigh": 0.6239,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-045": 4,
+            "WCG-048": 2,
+            "WCG-049": 4,
+            "WCG-050": 2,
+            "WCG-051": 4,
+            "WCG-057": 4,
+            "WCG-059": 2,
+            "WCG-060": 2,
+            "WCG-082": 4,
+            "WCG-089": 4,
+            "WCG-132": 4,
+            "WCG-146": 4,
+            "WCG-188": 2,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "MainWill": "深淵",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 1075,
+          "winRate": 0.5792,
+          "ciLow": 0.5566,
+          "ciHigh": 0.6015,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-086": 4,
+            "WCG-087": 4,
+            "WCG-088": 2,
+            "WCG-089": 4,
+            "WCG-091": 4,
+            "WCG-094": 4,
+            "WCG-099": 2,
+            "WCG-100": 2,
+            "WCG-113": 4,
+            "WCG-123": 2,
+            "WCG-140": 2,
+            "WCG-159": 4,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "MainWill": "秩序",
+          "Archetype": "防守",
+          "games": 1856,
+          "wins": 1060,
+          "winRate": 0.5711,
+          "ciLow": 0.5485,
+          "ciHigh": 0.5935,
+          "cards": {
+            "WCG-061": 4,
+            "WCG-062": 4,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-074": 2,
+            "WCG-075": 4,
+            "WCG-080": 2,
+            "WCG-129": 4,
+            "WCG-147": 4,
+            "WCG-171": 2,
+            "WCG-189": 4,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "MainWill": "秩序",
+          "Archetype": "進攻",
+          "games": 1856,
+          "wins": 1055,
+          "winRate": 0.5684,
+          "ciLow": 0.5458,
+          "ciHigh": 0.5908,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-061": 4,
+            "WCG-063": 4,
+            "WCG-065": 2,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-075": 4,
+            "WCG-136": 4,
+            "WCG-147": 2,
+            "WCG-171": 2,
+            "WCG-182": 4,
+            "WCG-189": 4,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "MainWill": "深淵",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 1040,
+          "winRate": 0.5603,
+          "ciLow": 0.5377,
+          "ciHigh": 0.5828,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-014": 4,
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-083": 4,
+            "WCG-084": 2,
+            "WCG-085": 4,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-095": 2,
+            "WCG-110": 2,
+            "WCG-132": 4,
+            "WCG-138": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "MainWill": "生機",
+          "Archetype": "巨獸",
+          "games": 1856,
+          "wins": 1039,
+          "winRate": 0.5598,
+          "ciLow": 0.5371,
+          "ciHigh": 0.5822,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-044": 4,
+            "WCG-049": 4,
+            "WCG-053": 4,
+            "WCG-054": 2,
+            "WCG-055": 4,
+            "WCG-057": 4,
+            "WCG-059": 2,
+            "WCG-060": 2,
+            "WCG-126": 2,
+            "WCG-146": 4,
+            "WCG-157": 4,
+            "WCG-162": 2,
+            "WCG-188": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "MainWill": "狂怒",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 1038,
+          "winRate": 0.5593,
+          "ciLow": 0.5366,
+          "ciHigh": 0.5817,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-011": 4,
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-016": 4,
+            "WCG-018": 2,
+            "WCG-083": 4,
+            "WCG-085": 4,
+            "WCG-088": 4,
+            "WCG-101": 2,
+            "WCG-110": 2,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "MainWill": "狂怒",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 1036,
+          "winRate": 0.5582,
+          "ciLow": 0.5355,
+          "ciHigh": 0.5806,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-004": 4,
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-009": 4,
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-018": 2,
+            "WCG-101": 4,
+            "WCG-136": 4,
+            "WCG-181": 4,
+            "WCG-182": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "MainWill": "理智",
+          "Archetype": "節奏",
+          "games": 1856,
+          "wins": 1031,
+          "winRate": 0.5555,
+          "ciLow": 0.5328,
+          "ciHigh": 0.578,
+          "cards": {
+            "WCG-023": 4,
+            "WCG-024": 4,
+            "WCG-026": 2,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-033": 2,
+            "WCG-035": 4,
+            "WCG-039": 2,
+            "WCG-104": 4,
+            "WCG-137": 4,
+            "WCG-139": 2,
+            "WCG-163": 2,
+            "WCG-183": 4,
+            "WCG-184": 4,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "MainWill": "秩序",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 1000,
+          "winRate": 0.5388,
+          "ciLow": 0.5161,
+          "ciHigh": 0.5614,
+          "cards": {
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-071": 4,
+            "WCG-075": 2,
+            "WCG-076": 2,
+            "WCG-078": 2,
+            "WCG-080": 2,
+            "WCG-113": 4,
+            "WCG-129": 4,
+            "WCG-152": 4,
+            "WCG-190": 4,
+            "WCG-191": 2,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "MainWill": "深淵",
+          "Archetype": "墓地",
+          "games": 1856,
+          "wins": 962,
+          "winRate": 0.5183,
+          "ciLow": 0.4956,
+          "ciHigh": 0.541,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-083": 4,
+            "WCG-085": 2,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-090": 4,
+            "WCG-093": 4,
+            "WCG-097": 2,
+            "WCG-099": 2,
+            "WCG-100": 2,
+            "WCG-132": 2,
+            "WCG-148": 2,
+            "WCG-192": 4,
+            "WCG-194": 2,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "MainWill": "秩序",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 948,
+          "winRate": 0.5108,
+          "ciLow": 0.488,
+          "ciHigh": 0.5335,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-049": 4,
+            "WCG-061": 4,
+            "WCG-062": 4,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-129": 2,
+            "WCG-146": 4,
+            "WCG-147": 2,
+            "WCG-171": 2,
+            "WCG-190": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "MainWill": "生機",
+          "Archetype": "鋪場",
+          "games": 1856,
+          "wins": 931,
+          "winRate": 0.5016,
+          "ciLow": 0.4789,
+          "ciHigh": 0.5243,
+          "cards": {
+            "WCG-042": 2,
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 4,
+            "WCG-048": 2,
+            "WCG-049": 4,
+            "WCG-051": 4,
+            "WCG-054": 2,
+            "WCG-060": 4,
+            "WCG-101": 4,
+            "WCG-108": 2,
+            "WCG-135": 2,
+            "WCG-156": 4,
+            "WCG-187": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "MainWill": "深淵",
+          "Archetype": "殘血",
+          "games": 1856,
+          "wins": 927,
+          "winRate": 0.4995,
+          "ciLow": 0.4767,
+          "ciHigh": 0.5222,
+          "cards": {
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-081": 4,
+            "WCG-085": 4,
+            "WCG-087": 4,
+            "WCG-093": 4,
+            "WCG-094": 2,
+            "WCG-096": 4,
+            "WCG-099": 4,
+            "WCG-100": 2,
+            "WCG-148": 2,
+            "WCG-160": 4,
+            "WCG-165": 4,
+            "WCG-193": 2,
+            "WCG-199": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "MainWill": "深淵",
+          "Archetype": "清場",
+          "games": 1856,
+          "wins": 898,
+          "winRate": 0.4838,
+          "ciLow": 0.4612,
+          "ciHigh": 0.5066,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-083": 4,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-091": 4,
+            "WCG-092": 4,
+            "WCG-093": 4,
+            "WCG-094": 2,
+            "WCG-097": 4,
+            "WCG-098": 2,
+            "WCG-099": 4,
+            "WCG-100": 2,
+            "WCG-148": 2,
+            "WCG-150": 2,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "MainWill": "秩序",
+          "Archetype": "驅散",
+          "games": 1856,
+          "wins": 884,
+          "winRate": 0.4763,
+          "ciLow": 0.4536,
+          "ciHigh": 0.499,
+          "cards": {
+            "WCG-063": 4,
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 2,
+            "WCG-069": 4,
+            "WCG-072": 4,
+            "WCG-075": 4,
+            "WCG-076": 4,
+            "WCG-112": 4,
+            "WCG-134": 4,
+            "WCG-147": 4,
+            "WCG-152": 2,
+            "WCG-189": 4,
+            "WCG-191": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "MainWill": "生機",
+          "Archetype": "墓地",
+          "games": 1856,
+          "wins": 883,
+          "winRate": 0.4758,
+          "ciLow": 0.4531,
+          "ciHigh": 0.4985,
+          "cards": {
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 2,
+            "WCG-049": 4,
+            "WCG-051": 4,
+            "WCG-054": 2,
+            "WCG-060": 2,
+            "WCG-108": 4,
+            "WCG-131": 4,
+            "WCG-135": 2,
+            "WCG-143": 4,
+            "WCG-146": 2,
+            "WCG-187": 4,
+            "WCG-188": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "MainWill": "理智",
+          "Archetype": "結界",
+          "games": 1856,
+          "wins": 882,
+          "winRate": 0.4752,
+          "ciLow": 0.4526,
+          "ciHigh": 0.498,
+          "cards": {
+            "WCG-022": 2,
+            "WCG-023": 4,
+            "WCG-026": 4,
+            "WCG-031": 4,
+            "WCG-035": 4,
+            "WCG-037": 4,
+            "WCG-040": 2,
+            "WCG-109": 4,
+            "WCG-113": 2,
+            "WCG-137": 4,
+            "WCG-153": 2,
+            "WCG-166": 2,
+            "WCG-183": 4,
+            "WCG-184": 2,
+            "WCG-185": 4,
+            "WCG-196": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "MainWill": "理智",
+          "Archetype": "連擊",
+          "games": 1856,
+          "wins": 880,
+          "winRate": 0.4741,
+          "ciLow": 0.4515,
+          "ciHigh": 0.4969,
+          "cards": {
+            "WCG-021": 2,
+            "WCG-023": 4,
+            "WCG-031": 4,
+            "WCG-033": 4,
+            "WCG-035": 4,
+            "WCG-037": 4,
+            "WCG-040": 2,
+            "WCG-136": 4,
+            "WCG-137": 4,
+            "WCG-139": 4,
+            "WCG-145": 4,
+            "WCG-182": 4,
+            "WCG-183": 2,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "MainWill": "狂怒",
+          "Archetype": "結界",
+          "games": 1856,
+          "wins": 873,
+          "winRate": 0.4704,
+          "ciLow": 0.4477,
+          "ciHigh": 0.4931,
+          "cards": {
+            "WCG-001": 4,
+            "WCG-007": 4,
+            "WCG-009": 4,
+            "WCG-014": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-020": 2,
+            "WCG-104": 2,
+            "WCG-113": 4,
+            "WCG-124": 2,
+            "WCG-134": 2,
+            "WCG-151": 4,
+            "WCG-156": 4,
+            "WCG-180": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "MainWill": "狂怒",
+          "Archetype": "連擊",
+          "games": 1856,
+          "wins": 860,
+          "winRate": 0.4634,
+          "ciLow": 0.4408,
+          "ciHigh": 0.4861,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-009": 2,
+            "WCG-011": 2,
+            "WCG-016": 4,
+            "WCG-018": 2,
+            "WCG-026": 4,
+            "WCG-136": 4,
+            "WCG-139": 4,
+            "WCG-141": 4,
+            "WCG-145": 4,
+            "WCG-180": 4,
+            "WCG-181": 4,
+            "WCG-182": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "MainWill": "理智",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 844,
+          "winRate": 0.4547,
+          "ciLow": 0.4322,
+          "ciHigh": 0.4775,
+          "cards": {
+            "WCG-021": 4,
+            "WCG-024": 2,
+            "WCG-025": 4,
+            "WCG-026": 4,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-037": 4,
+            "WCG-039": 2,
+            "WCG-040": 2,
+            "WCG-109": 4,
+            "WCG-113": 4,
+            "WCG-183": 4,
+            "WCG-185": 4,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "MainWill": "生機",
+          "Archetype": "能量",
+          "games": 1856,
+          "wins": 844,
+          "winRate": 0.4547,
+          "ciLow": 0.4322,
+          "ciHigh": 0.4775,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-044": 4,
+            "WCG-049": 4,
+            "WCG-053": 4,
+            "WCG-054": 2,
+            "WCG-057": 4,
+            "WCG-059": 4,
+            "WCG-060": 2,
+            "WCG-126": 2,
+            "WCG-143": 4,
+            "WCG-167": 4,
+            "WCG-172": 4,
+            "WCG-186": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "MainWill": "理智",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 823,
+          "winRate": 0.4434,
+          "ciLow": 0.421,
+          "ciHigh": 0.4661,
+          "cards": {
+            "WCG-023": 4,
+            "WCG-024": 2,
+            "WCG-026": 2,
+            "WCG-030": 2,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-035": 2,
+            "WCG-037": 4,
+            "WCG-039": 2,
+            "WCG-104": 4,
+            "WCG-109": 4,
+            "WCG-125": 2,
+            "WCG-130": 2,
+            "WCG-137": 4,
+            "WCG-183": 4,
+            "WCG-185": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "MainWill": "狂怒",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 812,
+          "winRate": 0.4375,
+          "ciLow": 0.4151,
+          "ciHigh": 0.4602,
+          "cards": {
+            "WCG-002": 2,
+            "WCG-005": 4,
+            "WCG-007": 2,
+            "WCG-009": 4,
+            "WCG-011": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-017": 4,
+            "WCG-018": 4,
+            "WCG-020": 2,
+            "WCG-136": 4,
+            "WCG-156": 4,
+            "WCG-180": 2,
+            "WCG-181": 4,
+            "WCG-182": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "MainWill": "理智",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 779,
+          "winRate": 0.4197,
+          "ciLow": 0.3975,
+          "ciHigh": 0.4423,
+          "cards": {
+            "WCG-021": 2,
+            "WCG-024": 4,
+            "WCG-026": 4,
+            "WCG-027": 2,
+            "WCG-029": 4,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-035": 4,
+            "WCG-040": 2,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-069": 4,
+            "WCG-137": 4,
+            "WCG-184": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "MainWill": "生機",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 762,
+          "winRate": 0.4106,
+          "ciLow": 0.3884,
+          "ciHigh": 0.4331,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 4,
+            "WCG-051": 4,
+            "WCG-053": 4,
+            "WCG-101": 4,
+            "WCG-110": 4,
+            "WCG-118": 2,
+            "WCG-136": 4,
+            "WCG-143": 4,
+            "WCG-182": 4,
+            "WCG-187": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "MainWill": "深淵",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 758,
+          "winRate": 0.4084,
+          "ciLow": 0.3863,
+          "ciHigh": 0.4309,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-006": 4,
+            "WCG-011": 4,
+            "WCG-081": 4,
+            "WCG-083": 4,
+            "WCG-085": 2,
+            "WCG-087": 4,
+            "WCG-088": 4,
+            "WCG-093": 4,
+            "WCG-097": 2,
+            "WCG-132": 2,
+            "WCG-148": 4,
+            "WCG-169": 2,
+            "WCG-193": 4,
+            "WCG-194": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "MainWill": "狂怒",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 656,
+          "winRate": 0.3534,
+          "ciLow": 0.332,
+          "ciHigh": 0.3755,
+          "cards": {
+            "WCG-001": 4,
+            "WCG-002": 4,
+            "WCG-004": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-017": 4,
+            "WCG-020": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-151": 2,
+            "WCG-156": 4,
+            "WCG-170": 2,
+            "WCG-180": 4
+          }
+        }
+      ]
+    },
+    "3": {
+      "games": 27840,
+      "seeds": 32,
+      "seedBase": 8300000,
+      "firstPlayerWinRate": 0.6323275862068966,
+      "summary": [
+        {
+          "Id": "RANKED-5-VITAL-BEHEMOTH",
+          "Name": "生機・巨獸奔襲（巨獸）",
+          "MainWill": "生機",
+          "Archetype": "巨獸",
+          "games": 1856,
+          "wins": 1131,
+          "winRate": 0.6094,
+          "ciLow": 0.587,
+          "ciHigh": 0.6313,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-044": 4,
+            "WCG-049": 4,
+            "WCG-053": 4,
+            "WCG-054": 2,
+            "WCG-055": 4,
+            "WCG-057": 4,
+            "WCG-059": 2,
+            "WCG-060": 2,
+            "WCG-126": 2,
+            "WCG-146": 4,
+            "WCG-157": 4,
+            "WCG-162": 2,
+            "WCG-188": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-ASHFALL",
+          "Name": "狂怒・灰燼殉爆（連動）",
+          "MainWill": "狂怒",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 1124,
+          "winRate": 0.6056,
+          "ciLow": 0.5832,
+          "ciHigh": 0.6276,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-011": 4,
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-016": 4,
+            "WCG-018": 2,
+            "WCG-083": 4,
+            "WCG-085": 4,
+            "WCG-088": 4,
+            "WCG-101": 2,
+            "WCG-110": 2,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-TIME",
+          "Name": "理智・時空突擊（連擊）",
+          "MainWill": "理智",
+          "Archetype": "連擊",
+          "games": 1856,
+          "wins": 1087,
+          "winRate": 0.5857,
+          "ciLow": 0.5631,
+          "ciHigh": 0.6079,
+          "cards": {
+            "WCG-021": 2,
+            "WCG-023": 4,
+            "WCG-031": 4,
+            "WCG-033": 4,
+            "WCG-035": 4,
+            "WCG-037": 4,
+            "WCG-040": 2,
+            "WCG-136": 4,
+            "WCG-137": 4,
+            "WCG-139": 4,
+            "WCG-145": 4,
+            "WCG-182": 4,
+            "WCG-183": 2,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-AMBUSH",
+          "Name": "深淵・深淵伏擊（快攻）",
+          "MainWill": "深淵",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 1085,
+          "winRate": 0.5846,
+          "ciLow": 0.562,
+          "ciHigh": 0.6068,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-014": 4,
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-083": 4,
+            "WCG-084": 2,
+            "WCG-085": 4,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-095": 2,
+            "WCG-110": 2,
+            "WCG-132": 4,
+            "WCG-138": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-VERDICT",
+          "Name": "秩序・誓約審判（控制）",
+          "MainWill": "秩序",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 1062,
+          "winRate": 0.5722,
+          "ciLow": 0.5496,
+          "ciHigh": 0.5945,
+          "cards": {
+            "WCG-063": 4,
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-067": 4,
+            "WCG-068": 2,
+            "WCG-069": 4,
+            "WCG-076": 4,
+            "WCG-077": 4,
+            "WCG-078": 2,
+            "WCG-079": 2,
+            "WCG-080": 2,
+            "WCG-142": 4,
+            "WCG-158": 4,
+            "WCG-189": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-BLITZ",
+          "Name": "狂怒・燃血突擊（快攻）",
+          "MainWill": "狂怒",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 1048,
+          "winRate": 0.5647,
+          "ciLow": 0.542,
+          "ciHigh": 0.5871,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-004": 4,
+            "WCG-005": 4,
+            "WCG-006": 4,
+            "WCG-009": 4,
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-018": 2,
+            "WCG-101": 4,
+            "WCG-136": 4,
+            "WCG-181": 4,
+            "WCG-182": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-GROVE",
+          "Name": "秩序・聖林守衛（中速）",
+          "MainWill": "秩序",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 1040,
+          "winRate": 0.5603,
+          "ciLow": 0.5377,
+          "ciHigh": 0.5828,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-049": 4,
+            "WCG-061": 4,
+            "WCG-062": 4,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-129": 2,
+            "WCG-146": 4,
+            "WCG-147": 2,
+            "WCG-171": 2,
+            "WCG-190": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ORACLE",
+          "Name": "理智・占卜連鎖（連動）",
+          "MainWill": "理智",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 1018,
+          "winRate": 0.5485,
+          "ciLow": 0.5258,
+          "ciHigh": 0.571,
+          "cards": {
+            "WCG-023": 4,
+            "WCG-024": 2,
+            "WCG-026": 2,
+            "WCG-030": 2,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-035": 2,
+            "WCG-037": 4,
+            "WCG-039": 2,
+            "WCG-104": 4,
+            "WCG-109": 4,
+            "WCG-125": 2,
+            "WCG-130": 2,
+            "WCG-137": 4,
+            "WCG-183": 4,
+            "WCG-185": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-FROST",
+          "Name": "理智・霜焰節奏（節奏）",
+          "MainWill": "理智",
+          "Archetype": "節奏",
+          "games": 1856,
+          "wins": 1004,
+          "winRate": 0.5409,
+          "ciLow": 0.5182,
+          "ciHigh": 0.5635,
+          "cards": {
+            "WCG-023": 4,
+            "WCG-024": 4,
+            "WCG-026": 2,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-033": 2,
+            "WCG-035": 4,
+            "WCG-039": 2,
+            "WCG-104": 4,
+            "WCG-137": 4,
+            "WCG-139": 2,
+            "WCG-163": 2,
+            "WCG-183": 4,
+            "WCG-184": 4,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-SCORCH",
+          "Name": "狂怒・焦土控場（控制）",
+          "MainWill": "狂怒",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 999,
+          "winRate": 0.5383,
+          "ciLow": 0.5155,
+          "ciHigh": 0.5608,
+          "cards": {
+            "WCG-001": 4,
+            "WCG-002": 4,
+            "WCG-004": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-017": 4,
+            "WCG-020": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-151": 2,
+            "WCG-156": 4,
+            "WCG-170": 2,
+            "WCG-180": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ARCANE",
+          "Name": "理智・奧術控制（控制）",
+          "MainWill": "理智",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 997,
+          "winRate": 0.5372,
+          "ciLow": 0.5144,
+          "ciHigh": 0.5598,
+          "cards": {
+            "WCG-021": 4,
+            "WCG-024": 2,
+            "WCG-025": 4,
+            "WCG-026": 4,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-037": 4,
+            "WCG-039": 2,
+            "WCG-040": 2,
+            "WCG-109": 4,
+            "WCG-113": 4,
+            "WCG-183": 4,
+            "WCG-185": 4,
+            "WCG-196": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-THORN",
+          "Name": "生機・荊棘毒牙（中速）",
+          "MainWill": "生機",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 986,
+          "winRate": 0.5312,
+          "ciLow": 0.5085,
+          "ciHigh": 0.5539,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-045": 4,
+            "WCG-048": 2,
+            "WCG-049": 4,
+            "WCG-050": 2,
+            "WCG-051": 4,
+            "WCG-057": 4,
+            "WCG-059": 2,
+            "WCG-060": 2,
+            "WCG-082": 4,
+            "WCG-089": 4,
+            "WCG-132": 4,
+            "WCG-146": 4,
+            "WCG-188": 2,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-EXPEDITION",
+          "Name": "秩序・聖光遠征（進攻）",
+          "MainWill": "秩序",
+          "Archetype": "進攻",
+          "games": 1856,
+          "wins": 984,
+          "winRate": 0.5302,
+          "ciLow": 0.5074,
+          "ciHigh": 0.5528,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-061": 4,
+            "WCG-063": 4,
+            "WCG-065": 2,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-075": 4,
+            "WCG-136": 4,
+            "WCG-147": 2,
+            "WCG-171": 2,
+            "WCG-182": 4,
+            "WCG-189": 4,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-GLACIER",
+          "Name": "理智・冰封堡壘（中速）",
+          "MainWill": "理智",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 982,
+          "winRate": 0.5291,
+          "ciLow": 0.5063,
+          "ciHigh": 0.5517,
+          "cards": {
+            "WCG-021": 2,
+            "WCG-024": 4,
+            "WCG-026": 4,
+            "WCG-027": 2,
+            "WCG-029": 4,
+            "WCG-031": 4,
+            "WCG-032": 4,
+            "WCG-035": 4,
+            "WCG-040": 2,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-069": 4,
+            "WCG-137": 4,
+            "WCG-184": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-REASON-ECHO",
+          "Name": "理智・回音法陣（結界）",
+          "MainWill": "理智",
+          "Archetype": "結界",
+          "games": 1856,
+          "wins": 975,
+          "winRate": 0.5253,
+          "ciLow": 0.5026,
+          "ciHigh": 0.548,
+          "cards": {
+            "WCG-022": 2,
+            "WCG-023": 4,
+            "WCG-026": 4,
+            "WCG-031": 4,
+            "WCG-035": 4,
+            "WCG-037": 4,
+            "WCG-040": 2,
+            "WCG-109": 4,
+            "WCG-113": 2,
+            "WCG-137": 4,
+            "WCG-153": 2,
+            "WCG-166": 2,
+            "WCG-183": 4,
+            "WCG-184": 2,
+            "WCG-185": 4,
+            "WCG-196": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-ASSASSIN",
+          "Name": "深淵・暗影刺殺（控制）",
+          "MainWill": "深淵",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 926,
+          "winRate": 0.4989,
+          "ciLow": 0.4762,
+          "ciHigh": 0.5216,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-086": 4,
+            "WCG-087": 4,
+            "WCG-088": 2,
+            "WCG-089": 4,
+            "WCG-091": 4,
+            "WCG-094": 4,
+            "WCG-099": 2,
+            "WCG-100": 2,
+            "WCG-113": 4,
+            "WCG-123": 2,
+            "WCG-140": 2,
+            "WCG-159": 4,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-STAMPEDE",
+          "Name": "生機・野性衝鋒（快攻）",
+          "MainWill": "生機",
+          "Archetype": "快攻",
+          "games": 1856,
+          "wins": 868,
+          "winRate": 0.4677,
+          "ciLow": 0.4451,
+          "ciHigh": 0.4904,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 4,
+            "WCG-051": 4,
+            "WCG-053": 4,
+            "WCG-101": 4,
+            "WCG-110": 4,
+            "WCG-118": 2,
+            "WCG-136": 4,
+            "WCG-143": 4,
+            "WCG-182": 4,
+            "WCG-187": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-SOULFEAST",
+          "Name": "深淵・噬魂獻祭（連動）",
+          "MainWill": "深淵",
+          "Archetype": "連動",
+          "games": 1856,
+          "wins": 865,
+          "winRate": 0.4661,
+          "ciLow": 0.4435,
+          "ciHigh": 0.4888,
+          "cards": {
+            "WCG-003": 4,
+            "WCG-006": 4,
+            "WCG-011": 4,
+            "WCG-081": 4,
+            "WCG-083": 4,
+            "WCG-085": 2,
+            "WCG-087": 4,
+            "WCG-088": 4,
+            "WCG-093": 4,
+            "WCG-097": 2,
+            "WCG-132": 2,
+            "WCG-148": 4,
+            "WCG-169": 2,
+            "WCG-193": 4,
+            "WCG-194": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-REVENANT",
+          "Name": "深淵・亡者交換（墓地）",
+          "MainWill": "深淵",
+          "Archetype": "墓地",
+          "games": 1856,
+          "wins": 861,
+          "winRate": 0.4639,
+          "ciLow": 0.4413,
+          "ciHigh": 0.4866,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-082": 4,
+            "WCG-083": 4,
+            "WCG-085": 2,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-090": 4,
+            "WCG-093": 4,
+            "WCG-097": 2,
+            "WCG-099": 2,
+            "WCG-100": 2,
+            "WCG-132": 2,
+            "WCG-148": 2,
+            "WCG-192": 4,
+            "WCG-194": 2,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-PLAGUE",
+          "Name": "深淵・瘟疫復甦（清場）",
+          "MainWill": "深淵",
+          "Archetype": "清場",
+          "games": 1856,
+          "wins": 858,
+          "winRate": 0.4623,
+          "ciLow": 0.4397,
+          "ciHigh": 0.485,
+          "cards": {
+            "WCG-081": 4,
+            "WCG-083": 4,
+            "WCG-087": 4,
+            "WCG-089": 4,
+            "WCG-091": 4,
+            "WCG-092": 4,
+            "WCG-093": 4,
+            "WCG-094": 2,
+            "WCG-097": 4,
+            "WCG-098": 2,
+            "WCG-099": 4,
+            "WCG-100": 2,
+            "WCG-148": 2,
+            "WCG-150": 2,
+            "WCG-199": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-PURIFY",
+          "Name": "秩序・淨化壁壘（驅散）",
+          "MainWill": "秩序",
+          "Archetype": "驅散",
+          "games": 1856,
+          "wins": 855,
+          "winRate": 0.4607,
+          "ciLow": 0.4381,
+          "ciHigh": 0.4834,
+          "cards": {
+            "WCG-063": 4,
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 2,
+            "WCG-069": 4,
+            "WCG-072": 4,
+            "WCG-075": 4,
+            "WCG-076": 4,
+            "WCG-112": 4,
+            "WCG-134": 4,
+            "WCG-147": 4,
+            "WCG-152": 2,
+            "WCG-189": 4,
+            "WCG-191": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-FORGE",
+          "Name": "狂怒・熔爐戰線（結界）",
+          "MainWill": "狂怒",
+          "Archetype": "結界",
+          "games": 1856,
+          "wins": 842,
+          "winRate": 0.4537,
+          "ciLow": 0.4311,
+          "ciHigh": 0.4764,
+          "cards": {
+            "WCG-001": 4,
+            "WCG-007": 4,
+            "WCG-009": 4,
+            "WCG-014": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-020": 2,
+            "WCG-104": 2,
+            "WCG-113": 4,
+            "WCG-124": 2,
+            "WCG-134": 2,
+            "WCG-151": 4,
+            "WCG-156": 4,
+            "WCG-180": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-WARBAND",
+          "Name": "狂怒・戰鼓狂潮（中速）",
+          "MainWill": "狂怒",
+          "Archetype": "中速",
+          "games": 1856,
+          "wins": 822,
+          "winRate": 0.4429,
+          "ciLow": 0.4204,
+          "ciHigh": 0.4656,
+          "cards": {
+            "WCG-002": 2,
+            "WCG-005": 4,
+            "WCG-007": 2,
+            "WCG-009": 4,
+            "WCG-011": 2,
+            "WCG-015": 4,
+            "WCG-016": 4,
+            "WCG-017": 4,
+            "WCG-018": 4,
+            "WCG-020": 2,
+            "WCG-136": 4,
+            "WCG-156": 4,
+            "WCG-180": 2,
+            "WCG-181": 4,
+            "WCG-182": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-RAMPART",
+          "Name": "秩序・白銀長城（控制）",
+          "MainWill": "秩序",
+          "Archetype": "控制",
+          "games": 1856,
+          "wins": 810,
+          "winRate": 0.4364,
+          "ciLow": 0.414,
+          "ciHigh": 0.4591,
+          "cards": {
+            "WCG-064": 4,
+            "WCG-065": 4,
+            "WCG-066": 4,
+            "WCG-069": 4,
+            "WCG-071": 4,
+            "WCG-075": 2,
+            "WCG-076": 2,
+            "WCG-078": 2,
+            "WCG-080": 2,
+            "WCG-113": 4,
+            "WCG-129": 4,
+            "WCG-152": 4,
+            "WCG-190": 4,
+            "WCG-191": 2,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ORDER-AEGIS",
+          "Name": "秩序・能量護盾防線（防守）",
+          "MainWill": "秩序",
+          "Archetype": "防守",
+          "games": 1856,
+          "wins": 804,
+          "winRate": 0.4332,
+          "ciLow": 0.4108,
+          "ciHigh": 0.4558,
+          "cards": {
+            "WCG-061": 4,
+            "WCG-062": 4,
+            "WCG-063": 4,
+            "WCG-065": 4,
+            "WCG-069": 4,
+            "WCG-073": 4,
+            "WCG-074": 2,
+            "WCG-075": 4,
+            "WCG-080": 2,
+            "WCG-129": 4,
+            "WCG-147": 4,
+            "WCG-171": 2,
+            "WCG-189": 4,
+            "WCG-198": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-ABYSS-LOWLIFE",
+          "Name": "深淵・殘血魔潮（殘血）",
+          "MainWill": "深淵",
+          "Archetype": "殘血",
+          "games": 1856,
+          "wins": 803,
+          "winRate": 0.4327,
+          "ciLow": 0.4103,
+          "ciHigh": 0.4553,
+          "cards": {
+            "WCG-013": 4,
+            "WCG-014": 4,
+            "WCG-081": 4,
+            "WCG-085": 4,
+            "WCG-087": 4,
+            "WCG-093": 4,
+            "WCG-094": 2,
+            "WCG-096": 4,
+            "WCG-099": 4,
+            "WCG-100": 2,
+            "WCG-148": 2,
+            "WCG-160": 4,
+            "WCG-165": 4,
+            "WCG-193": 2,
+            "WCG-199": 2
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-RECYCLE",
+          "Name": "生機・森靈回流（墓地）",
+          "MainWill": "生機",
+          "Archetype": "墓地",
+          "games": 1856,
+          "wins": 791,
+          "winRate": 0.4262,
+          "ciLow": 0.4039,
+          "ciHigh": 0.4488,
+          "cards": {
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 2,
+            "WCG-049": 4,
+            "WCG-051": 4,
+            "WCG-054": 2,
+            "WCG-060": 2,
+            "WCG-108": 4,
+            "WCG-131": 4,
+            "WCG-135": 2,
+            "WCG-143": 4,
+            "WCG-146": 2,
+            "WCG-187": 4,
+            "WCG-188": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-ROOTS",
+          "Name": "生機・根鬚覺醒（能量）",
+          "MainWill": "生機",
+          "Archetype": "能量",
+          "games": 1856,
+          "wins": 761,
+          "winRate": 0.41,
+          "ciLow": 0.3879,
+          "ciHigh": 0.4326,
+          "cards": {
+            "WCG-041": 4,
+            "WCG-044": 4,
+            "WCG-049": 4,
+            "WCG-053": 4,
+            "WCG-054": 2,
+            "WCG-057": 4,
+            "WCG-059": 4,
+            "WCG-060": 2,
+            "WCG-126": 2,
+            "WCG-143": 4,
+            "WCG-167": 4,
+            "WCG-172": 4,
+            "WCG-186": 4,
+            "WCG-197": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-WRATH-REKINDLE",
+          "Name": "狂怒・復燃連擊（連擊）",
+          "MainWill": "狂怒",
+          "Archetype": "連擊",
+          "games": 1856,
+          "wins": 749,
+          "winRate": 0.4036,
+          "ciLow": 0.3815,
+          "ciHigh": 0.4261,
+          "cards": {
+            "WCG-005": 4,
+            "WCG-009": 2,
+            "WCG-011": 2,
+            "WCG-016": 4,
+            "WCG-018": 2,
+            "WCG-026": 4,
+            "WCG-136": 4,
+            "WCG-139": 4,
+            "WCG-141": 4,
+            "WCG-145": 4,
+            "WCG-180": 4,
+            "WCG-181": 4,
+            "WCG-182": 4,
+            "WCG-195": 4
+          }
+        },
+        {
+          "Id": "RANKED-5-VITAL-SWARM",
+          "Name": "生機・森林鋪場（鋪場）",
+          "MainWill": "生機",
+          "Archetype": "鋪場",
+          "games": 1856,
+          "wins": 703,
+          "winRate": 0.3788,
+          "ciLow": 0.357,
+          "ciHigh": 0.4011,
+          "cards": {
+            "WCG-042": 2,
+            "WCG-043": 4,
+            "WCG-045": 4,
+            "WCG-047": 4,
+            "WCG-048": 2,
+            "WCG-049": 4,
+            "WCG-051": 4,
+            "WCG-054": 2,
+            "WCG-060": 4,
+            "WCG-101": 4,
+            "WCG-108": 2,
+            "WCG-135": 2,
+            "WCG-156": 4,
+            "WCG-187": 4,
+            "WCG-197": 4
+          }
+        }
+      ]
+    }
+  }
+}

@@ -12,6 +12,7 @@ import collections, json, pathlib, sys
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 CARDS = {c["id"]: c for c in json.loads((ROOT / "WcgWeb/Data/cards.json").read_text(encoding="utf-8"))}
 OUT = ROOT / "WcgWeb/Data/ranked_decks.json"
+MASTER_BUILD_PATH = ROOT / "WcgWeb/Data/ranked_master_builds.json"
 TIERS = ["青銅", "白銀", "黃金", "白金", "鑽石", "大師"]
 # 每組 2 張：青銅換 8 組（16 張）、白銀 6 組、黃金 4 組、白金 2 組、鑽石 1 組、大師 0 組。
 DOWNGRADES_BY_TIER = [8, 6, 4, 2, 1, 0]
@@ -214,10 +215,14 @@ def swap(counts, out, inn, n=2):
 
 def build():
     entries, seen = [], set()
+    master_builds = json.loads(MASTER_BUILD_PATH.read_text(encoding="utf-8"))
+    if set(master_builds) != {a['key'] for a in ARCHETYPES}:
+        raise SystemExit("大師強牌表必須涵蓋全部 30 個流派")
     for tier in range(6):
         for a in ARCHETYPES:
             if tier not in TIER_GATES[a["key"]] and not ALL_TIERS: continue
-            counts = dict(a["cards"])
+            counts = (collections.Counter(int(i[-3:]) for i in master_builds[a['key']]['CardIds'])
+                      if tier == 5 else dict(a["cards"]))
             check(a["will"], counts_to_ids(counts), a["name"] + " 完整版")
             # 牌位越低，套用越多組降級替換。
             for step in range(DOWNGRADES_BY_TIER[tier]):
@@ -233,12 +238,14 @@ def build():
             label = f"{TIERS[tier]} {a['name']}"
             check(a["will"], ids, label)
             variants = []
-            for out, inn, vname in a["var"]:
+            for out, inn, vname in ([] if tier == 5 else a["var"]):
                 v = swap(counts, out, inn)
                 if v is None: continue
                 check(a["will"], counts_to_ids(v), label + " 微調 " + vname)
                 variants.append({"Name": vname, "Out": [W(out)] * 2, "In": [W(inn)] * 2})
-            if len(variants) < 3: raise SystemExit(f"{label} 可用微調少於 3 組")
+            # Master's measured full builds stay fixed; lower tiers retain their previous simplifications and variety.
+            if tier == 5: variants = []
+            elif len(variants) < 3: raise SystemExit(f"{label} 可用微調少於 3 組")
             key = tuple(ids)
             if key in seen: raise SystemExit(f"{label} 與其他牌組重複")
             seen.add(key)

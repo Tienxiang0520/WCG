@@ -251,7 +251,7 @@ node SoulOath.Static/tools/serve-static.mjs .build-tmp/learning-site/dist 5186
   "cost_spec": "",
   "cost_gen": 2,
   "total_cost": 2,
-  "pp": 1000,
+  "pp": 1300,
   "dp": 1,
   "text": "進場：抉擇：消滅 1 隻 PP 500 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。"
 }
@@ -279,7 +279,7 @@ rg -n 'WCG-001' WcgWeb/Services WcgWeb/i18n/cards.en.json
 
 ### 4.2 親手改一個數值
 
-在 `WCG-001` 那個物件中，將 `"pp": 1000` 改成 `"pp": 1100`；不要搜尋後全檔取代所有的 1000。
+在 `WCG-001` 那個物件中，將 `"pp": 1300` 改成 `"pp": 1400`；不要搜尋後全檔取代所有的 1000。
 
 ```bash
 python3 -m json.tool WcgWeb/Data/cards.json > /dev/null
@@ -289,7 +289,7 @@ git diff -- WcgWeb/Data/cards.json cards.md
 node SoulOath.Static/tools/build-site.mjs .build-tmp/learning-site --azure
 ```
 
-`cards.md` 由工具產生，應改 JSON 後再產生，不能只手改卡牌總表。重建後開 [本機圖鑑](http://127.0.0.1:5186/cards)，找 `WCG-001`，確認顯示 1100 PP；再看列印預覽的數值。
+`cards.md` 由工具產生，應改 JSON 後再產生，不能只手改卡牌總表。重建後開 [本機圖鑑](http://127.0.0.1:5186/cards)，找 `WCG-001`，確認顯示 1400 PP；再看列印預覽的數值。
 
 卡面文字與數值由 `CardFace.razor` 讀資料繪製；卡圖檔案是插畫資源，不需要為這次 PP 練習改圖片。原始插畫在 `WcgWeb/wwwroot/card-art/`，WebP 與列印 JPG 會由準備工具產生。
 
@@ -304,7 +304,11 @@ node SoulOath.Static/tools/build-site.mjs .build-tmp/learning-site --azure
 - `build/Wcg.SharedResources.props`：網站、API 共用哪些歷史資料。
 - `WcgTests/RankedTests.cs`：既有對局在改版後續玩與回顧的測試。
 
-這是進階工作。先把本次練習的 PP 改回 1000，重產 `cards.md`、重建本機站，確認圖鑑恢復。從 `git diff` 確認卡牌資料沒有留下練習變更。沒有必要靠刪玩家存檔來解決相容問題。
+這是進階工作。先把本次練習的 PP 改回 1300，重產 `cards.md`、重建本機站，確認圖鑑恢復。從 `git diff` 確認卡牌資料沒有留下練習變更。沒有必要靠刪玩家存檔來解決相容問題。
+
+### 4.4 改配牌與改單卡數值是兩件事
+
+大師及參考牌組的 50 張卡號放在 `WcgWeb/Data/ranked_master_builds.json`，低段簡化組法放在 `tools/RankedDecks/build_ranked_decks.py`。改配牌不改單卡能力；每副仍要保持 50 張、同卡最多 4 張及副色限制。修改後重跑產生器，不直接手改 `ranked_decks.json`。候選比較、獨立種子驗證與強牌表來源見 [天梯牌組與平衡測試](天梯牌組與平衡測試.md)。
 
 ## 第 5 課：讀懂 C#——只有青銅牌位保護
 
