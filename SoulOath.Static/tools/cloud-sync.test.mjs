@@ -34,9 +34,10 @@ test('a stale ETag preserves both branches and prevents continued writes until r
     await s.engine.choose(false,snapshot(0));assert.deepEqual(s.local.read(),snapshot(8));assert.equal(s.engine.canWrite(),true);
 });
 test('a newer local action while upload is in flight stays queued with the acknowledged ETag',async()=>{
-    const s=scene({dirty:true});await s.engine.initialize();let release;
-    const write=s.remote.write;s.remote.write=async(...args)=>{await new Promise(r=>release=r);return write(...args);};
-    const uploading=s.engine.flush();await new Promise(r=>setImmediate(r));s.local.write(snapshot(2));s.engine.markDirty();release();await uploading;
+    const s=scene({dirty:true});await s.engine.initialize();let release,started;
+    const ready=new Promise(resolve=>started=resolve);
+    const write=s.remote.write;s.remote.write=async(...args)=>{await new Promise(r=>{release=r;started();});return write(...args);};
+    const uploading=s.engine.flush();await ready;s.local.write(snapshot(2));s.engine.markDirty();release();await uploading;
     assert.equal(s.local.meta().etag,'v2');assert.equal(s.local.meta().dirty,true);assert.equal(s.engine.mode,'pending');assert.deepEqual(s.local.read(),snapshot(2));assert.deepEqual(s.cloud(),snapshot(1));
     s.remote.write=write;await s.engine.flush();assert.deepEqual(s.cloud(),snapshot(2));assert.equal(s.local.meta().dirty,false);
 });
@@ -46,4 +47,69 @@ test('another device cannot write, and an explicit takeover uses current cloud p
 });
 test('bad save validation and expired authentication keep local changes without claiming success',async()=>{
     for(const kind of ['invalid-save','unauthorized']){const s=scene({dirty:true});await s.engine.initialize();s.remote.write=async()=>{throw Object.assign(new Error(),{kind});};await s.engine.flush();assert.equal(s.engine.mode,kind==='unauthorized'?'reauth':'invalid-save');assert.equal(s.local.meta().dirty,true);assert.equal(s.writes.length,0);}
+});
+
+test('a committed upload whose response is lost is acknowledged without a false conflict',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();
+    const write=s.remote.write;s.remote.write=async(...args)=>{await write(...args);throw new Error('response lost');};
+    await s.engine.flush();
+    assert.equal(s.engine.mode,'synced');assert.equal(s.local.meta().etag,'v2');assert.equal(s.local.meta().dirty,false);
+    assert.equal(s.writes.length,1);assert.deepEqual(s.local.read(),snapshot(1));
+});
+test('lost acknowledgement preserves newer local actions and syncs them with the recovered ETag',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();const write=s.remote.write;
+    s.remote.write=async(...args)=>{await write(...args);s.local.write(snapshot(50));s.engine.markDirty();throw new Error('response lost');};
+    await s.engine.flush();assert.equal(s.engine.mode,'pending');assert.equal(s.local.meta().etag,'v2');
+    assert.deepEqual(s.local.read(),snapshot(50));assert.deepEqual(s.cloud(),snapshot(1));
+    s.remote.write=write;await s.engine.flush();assert.equal(s.engine.mode,'synced');assert.deepEqual(s.cloud(),snapshot(50));
+});
+test('persisted upload proof repairs an interrupted response after reopening with newer local progress',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();const write=s.remote.write,read=s.remote.read;
+    s.remote.write=async(...args)=>{await write(...args);s.local.write(snapshot(50));s.engine.markDirty();throw new Error('response lost');};
+    s.remote.read=async()=>{throw new Error('offline');};await s.engine.flush();assert.equal(s.engine.mode,'offline');
+    assert.ok(s.local.meta().pendingUpload?.hash);assert.equal(s.local.meta().etag,'v1');
+    s.remote.read=read;s.remote.write=write;
+    const reopened=new CloudSync({local:s.local,remote:s.remote});await reopened.initialize();
+    assert.equal(reopened.mode,'pending');assert.equal(s.local.meta().etag,'v2');assert.deepEqual(s.local.read(),snapshot(50));
+    await reopened.flush();assert.equal(reopened.mode,'synced');assert.deepEqual(s.cloud(),snapshot(50));
+});
+test('identical cloud and local snapshots recover even without a pending proof from older clients',async()=>{
+    const s=scene({dirty:true,serverEtag:'v2'});await s.engine.initialize();
+    assert.equal(s.engine.mode,'synced');assert.equal(s.local.meta().etag,'v2');assert.equal(s.writes.length,0);
+});
+test('another cloud branch cannot be accepted just because a prior upload lost its response',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();const write=s.remote.write,read=s.remote.read;
+    s.remote.write=async(...args)=>{await write(...args);throw new Error('lost');};
+    s.remote.read=async()=>{throw new Error('offline');};await s.engine.flush();
+    s.remote.read=read;s.server(snapshot(9),'v3');
+    const reopened=new CloudSync({local:s.local,remote:s.remote});await reopened.initialize();
+    assert.equal(reopened.mode,'conflict');assert.equal(reopened.canWrite(),false);
+    assert.equal(s.local.meta().etag,'v1');assert.deepEqual(s.local.read(),snapshot(1));assert.deepEqual(s.cloud(),snapshot(9));
+});
+test('a matching snapshot never silently takes over another device lease',async()=>{
+    const s=scene({dirty:true,serverEtag:'v2'});s.other();await s.engine.initialize();
+    assert.equal(s.engine.mode,'other-device');assert.equal(s.local.meta().etag,'v1');assert.equal(s.writes.length,0);
+});
+test('failure to persist upload proof prevents PUT and leaves progress queued',async()=>{
+    const s=scene({cached:snapshot(3),dirty:true});await s.engine.initialize();const setMeta=s.local.setMeta;
+    s.local.setMeta=m=>{if(m.pendingUpload)throw new Error('quota');setMeta(m);};
+    await s.engine.flush();assert.equal(s.engine.mode,'offline');assert.equal(s.local.meta().dirty,true);
+    assert.equal(s.writes.length,0);assert.deepEqual(s.local.read(),snapshot(3));assert.deepEqual(s.cloud(),snapshot(1));
+});
+test('retry after offline recovery checks the earlier upload before replacing its proof',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();const write=s.remote.write,read=s.remote.read;
+    s.remote.write=async(...args)=>{await write(...args);s.local.write(snapshot(50));s.engine.markDirty();throw new Error('lost');};
+    s.remote.read=async()=>{throw new Error('offline');};await s.engine.flush();
+    s.remote.read=read;s.remote.write=write;await s.engine.flush();
+    assert.equal(s.engine.mode,'pending');assert.equal(s.local.meta().etag,'v2');assert.equal(s.writes.length,1);
+    await s.engine.flush();assert.equal(s.engine.mode,'synced');assert.deepEqual(s.cloud(),snapshot(50));
+});
+test('a timed-out PUT committing during the retry still matches its retained proof',async()=>{
+    const s=scene({dirty:true});await s.engine.initialize();const write=s.remote.write;let first;
+    s.remote.write=async(...args)=>{first=args;throw new Error('timeout while still processing');};
+    await s.engine.flush();s.local.write(snapshot(50));s.engine.markDirty();
+    s.remote.write=async(...args)=>{await write(...first);return write(...args);};
+    await s.engine.flush();assert.equal(s.engine.mode,'pending');assert.equal(s.local.meta().etag,'v2');
+    assert.deepEqual(s.local.read(),snapshot(50));assert.deepEqual(s.cloud(),snapshot(1));
+    s.remote.write=write;await s.engine.flush();assert.equal(s.engine.mode,'synced');assert.deepEqual(s.cloud(),snapshot(50));
 });

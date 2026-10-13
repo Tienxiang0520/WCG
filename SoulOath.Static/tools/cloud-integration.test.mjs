@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {build} from '../../WcgWeb/Client/node_modules/esbuild/lib/main.js';
 import {browserLeaseId} from '../wwwroot/cloud-device.js';
+import {webcrypto} from 'node:crypto';
 
 const compiled=await build({entryPoints:[new URL('../wwwroot/cloud.js',import.meta.url).pathname],bundle:true,write:false,format:'iife',platform:'browser',plugins:[{name:'test-auth',setup(b){b.onResolve({filter:/cloud-auth\.js$/},()=>({path:'auth',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:'export async function createAuth(){return window.testAuth;}',loader:'js'}));}}]});
 const code=compiled.outputFiles[0].text;
@@ -14,7 +15,7 @@ const root=()=>new Map([[accountKey,JSON.stringify({version:1,data:snapshot.data
 const storage=map=>({getItem:key=>map.get(key)??null,setItem:(key,value)=>map.set(key,value),removeItem:key=>map.delete(key)});
 async function open({map=root(),session=new Map(),writer=true,server={lease:null},switchDuringToken=false}={}){
     const events=new Map(),requests=[];let selected=account;
-    const context={window:{soulOathStorage:{ready:Promise.resolve(),isWriter:()=>writer},addEventListener:(type,fn)=>events.set(type,fn),dispatchEvent(){}},localStorage:storage(map),sessionStorage:storage(session),location:{origin:'http://localhost:5186',replace(){context.replaced=true;}},crypto:{randomUUID:()=>otherDevice},CustomEvent:class{},AbortSignal,clearInterval(){},clearTimeout(){},setInterval(){return 1;},setTimeout(){return 1;},console,URL,Blob};
+    const context={window:{soulOathStorage:{ready:Promise.resolve(),isWriter:()=>writer},addEventListener:(type,fn)=>events.set(type,fn),dispatchEvent(){}},localStorage:storage(map),sessionStorage:storage(session),location:{origin:'http://localhost:5186',replace(){context.replaced=true;}},crypto:{randomUUID:()=>otherDevice,subtle:webcrypto.subtle},TextEncoder,CustomEvent:class{},AbortSignal,clearInterval(){},clearTimeout(){},setInterval(){return 1;},setTimeout(){return 1;},console,URL,Blob};
     context.window.testAuth={getActiveAccount:()=>selected,acquireTokenSilent:async()=>{if(switchDuringToken)selected={homeAccountId:'account-B'};return {accessToken:'test-only-not-a-microsoft-token'};},clearCache:async()=>{selected=null;}};
     context.fetch=async(url,options={})=>{
         if(url==='cloud-config.json')return {ok:true,json:async()=>({clientId:'test',apiUrl:'https://test.invalid/api',scope:'test'})};
