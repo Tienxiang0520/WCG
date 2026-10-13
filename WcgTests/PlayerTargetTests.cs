@@ -15,6 +15,8 @@ public class PlayerTargetTests
         var cards = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "cards.json")))!;
         if (old)
         {
+            var strongBuild = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-strong-build-adjustment.json")))!.ToDictionary(c => c.Id);
+            cards = cards.Select(c => strongBuild.GetValueOrDefault(c.Id, c)).ToList();
             var october = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-october-13.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => october.GetValueOrDefault(c.Id, c)).ToList();
             var shields = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-energy-shield.json")))!.ToDictionary(c => c.Id);

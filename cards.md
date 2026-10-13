@@ -36,7 +36,7 @@ source: WcgWeb/Data/cards.json
 | WCG-014 | 熾紅戰斧 | 法術 | 1 | — | — | — | 對敵方玩家造成 1 點傷害。 | **Crimson War Axe** — Deal 1 damage to the enemy player. |
 | WCG-015 | 炎息重騎兵 | 怪物 | 4 | 2300 | 2 | — | 進場：若敵方怪物比你的多，抽 1 張牌。 | **Flamebreath Lancer** — Deploy: If the enemy has more monsters than you, draw 1 card. |
 | WCG-016 | 灰燼復仇者 | 怪物 | 3 | 1200 | 1 | — | 陣亡：消滅 PP 最低的 1 隻敵方怪物。 | **Ashen Avenger** — On Death: Destroy the enemy monster with the lowest PP. |
-| WCG-017 | 滅絕怒火 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 1700 以下的敵方怪物，並對敵方玩家造成 1 點傷害。 | **Annihilating Wrath** — Destroy 1 enemy monster with 1700 PP or less and deal 1 damage to the enemy player. |
+| WCG-017 | 滅絕怒火 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1700 以下的敵方怪物，並對敵方玩家造成 1 點傷害。 | **Annihilating Wrath** — Destroy 1 enemy monster with 1700 PP or less and deal 1 damage to the enemy player. |
 | WCG-018 | 地獄戰狂 | 怪物 | 4 | 2200 | 2 | — | 衝鋒。 | **Infernal Warmonger** — Charge. |
 | WCG-019 | 燃血召喚 | 法術 | 3 | — | — | — | 你失去 2 點生命，抽 2 張牌。 | **Bloodcall** — You lose 2 life. Draw 2 cards. |
 | WCG-020 | 赤帝·燼滅之龍 | 怪物 | 6 | 2700 | 2 | — | 進場：消滅所有 PP 1300 以下的敵方怪物。 | **Crimson Emperor, Cinder Dragon** — Deploy: Destroy all enemy monsters with 1300 PP or less. |
@@ -121,12 +121,12 @@ source: WcgWeb/Data/cards.json
 | WCG-131 | 棘刺巨蛋 | 怪物 | 2 | 1200 | 1 | — | 陣亡：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。 | **Thorned Giant Egg** — On Death: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-135 | 野性萌發 | 法術 | 2 | — | — | — | 使 1 隻己方怪物 PP +500（將此卡附著其上）。 | **Wild Sprouting** — Give 1 of your monsters +500 PP (attach this card to it). |
 | WCG-143 | 甦生甘霖 | 法術 | 1 | — | — | — | 將 1 隻橫置的怪物轉為直立（本回合可以攻擊），並使它 PP +500，直到它下一次攻擊或交戰結束。 | **Reviving Downpour** — Untap 1 tapped monster (it can attack this turn). It gets +500 PP until its next attack or combat ends. |
-| WCG-146 | 荊棘巨龜 | 怪物 | 3 | 1800 | 0 | — | 嘲諷。 | **Thornback Tortoise** — Taunt. |
+| WCG-146 | 荊棘巨龜 | 怪物 | 3 | 1700 | 0 | — | 嘲諷。 | **Thornback Tortoise** — Taunt. |
 | WCG-157 | 蒼翠古樹衛士 | 怪物 | 4 | 2300 | 1 | — | 無。 | **Verdant Elder Warden** — None. |
 | WCG-162 | 遠古泰坦·世界樹之靈 | 怪物 | 9 | 3500 | 2 | — | 嘲諷；進場：回復己方 3 點生命，並抽 2 張牌。 | **Ancient Titan, Spirit of the World Tree** — Taunt. Deploy: Restore 3 life to yourself and draw 2 cards. |
 | WCG-167 | 萌芽喚醒 | 法術 | 0 | — | — | — | 將 1 隻橫置的己方怪物轉為直立（本回合可以攻擊）。 | **Sprouting Awakening** — Untap 1 of your tapped monsters (it can attack this turn). |
 | WCG-172 | 遠古蠻荒巨獸 | 怪物 | 7 | 3500 | 2 | — | 貫穿；陣亡：將牌庫頂 1 張牌放入你的能量區，作為額外 1 點能量（立即可用）。 | **Ancient Primal Behemoth** — Trample. On Death: Put the top card of your deck into your energy zone as 1 extra energy (usable right away). |
-| WCG-186 | 母樹共鳴 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【生機】怪物牌加入手牌，其餘依任意順序放到牌庫底；若你場上有【生機】結界，再抽 1 張牌。 | **Mother Tree Resonance** — Look at the top 3 cards of your deck. Put 1 [Life] monster card among them into your hand and the rest on the bottom in any order. If you have a [Life] Ward, draw 1 more card. |
+| WCG-186 | 母樹共鳴 | 法術 | 1 | — | — | — | 檢視牌庫頂 3 張，選 1 張【生機】怪物牌加入手牌，其餘依任意順序放到牌庫底；若你場上有【生機】結界，再抽 1 張牌。 | **Mother Tree Resonance** — Look at the top 3 cards of your deck. Put 1 [Life] monster card among them into your hand and the rest on the bottom in any order. If you have a [Life] Ward, draw 1 more card. |
 | WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 1900 | 1 | — | 進場：若己方場上有其他【生機】怪物，你可以從手牌免費召喚 1 隻費用 2 以下的【生機】怪物（不觸發進場）。 | **Verdant Beastcaller** — Deploy: If you have another [Life] monster, you may summon a [Life] monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 2500 | 1 | — | 嘲諷；進場：你場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have. |
 | WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger). |
@@ -153,7 +153,7 @@ source: WcgWeb/Data/cards.json
 | WCG-076 | 誓約封禁 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 1700 以上的敵方怪物。 | **Oathbound Seal** — Destroy 1 enemy monster with 1700 PP or more. |
 | WCG-077 | 秩序聖裁者 | 怪物 | 5 | 2000 | 1 | — | 進場：消滅 1 隻 PP 2300 以上的敵方怪物。 | **Order Adjudicator** — Deploy: Destroy 1 enemy monster with 2300 PP or more. |
 | WCG-078 | 聖光普照 | 法術 | 4 | — | — | — | 消滅所有 PP 700 以下的敵方怪物，然後回復己方 1 點生命。 | **Radiant Dawn** — Destroy all enemy monsters with 700 PP or less, then restore 1 life to yourself. |
-| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 4000 | 1 | — | 嘲諷；能量護盾。 | **Sunblaze Temple Colossus** — Taunt. Energy Shield. |
+| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 3600 | 1 | — | 嘲諷；能量護盾。 | **Sunblaze Temple Colossus** — Taunt. Energy Shield. |
 | WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 3000 | 2 | — | 能量護盾；陣亡：消滅所有 PP 1000 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Energy Shield. On Death: Destroy all enemy monsters with 1000 PP or less. |
 | WCG-127 | 守誓者壁壘 | 結界 | 3 | — | — | — | 只要你場上有直立的怪物，敵方法術對你造成的傷害 -1。 | **Oathkeeper's Rampart** — While you have an untapped monster, damage enemy spells deal to you is reduced by 1. |
 | WCG-129 | 白銀哨衛 | 怪物 | 1 | 1200 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
@@ -198,14 +198,14 @@ source: WcgWeb/Data/cards.json
 | WCG-132 | 腐肉食腐蛛 | 怪物 | 1 | 500 | 0 | — | 劇毒。 | **Carrion Spider** — Poison. |
 | WCG-138 | 暗影伏擊者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：橫置對手 1 點未用的能量（本回合對手不能用它支付能量護盾或反擊）。 | **Shadow Ambusher** — Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Energy Shield or Counters this turn). |
 | WCG-140 | 湮滅契約 | 法術 | 3 | — | — | — | 消滅 1 隻怪物；它的控制者抽 1 張牌。 | **Pact of Oblivion** — Destroy 1 monster; its controller draws 1 card. |
-| WCG-148 | 墓園守夜人 | 怪物 | 2 | 1100 | 1 | — | 每當己方另 1 隻怪物被消滅，橫置對手 1 點未用的能量。 | **Graveyard Nightwatch** — Whenever another of your monsters is destroyed, tap 1 of your opponent's unused energy. |
+| WCG-148 | 墓園守夜人 | 怪物 | 2 | 1400 | 1 | — | 每當己方另 1 隻怪物被消滅，橫置對手 1 點未用的能量。 | **Graveyard Nightwatch** — Whenever another of your monsters is destroyed, tap 1 of your opponent's unused energy. |
 | WCG-159 | 冥界骸骨巨獸 | 怪物 | 5 | 2500 | 1 | — | 無。 | **Underworld Bone Behemoth** — None. |
 | WCG-160 | 血肉熔爐巨怪 | 怪物 | 7 | 3000 | 3 | — | 你每比生命上限（7）少 1 點生命，此卡費用 -1。 | **Flesh Furnace Brute** — This card costs 1 less for each life you are below your maximum life (7). |
 | WCG-169 | 暗影獻祭 | 法術 | 0 | — | — | — | 額外代價：犧牲 1 隻己方怪物。抽 1 張牌。 | **Shadow Offering** — Additional cost: sacrifice 1 of your monsters. Draw 1 card. |
 | WCG-175 | 冥界引渡者·冥王 | 怪物 | 8 | 3200 | 2 | — | 進場：你可以從墓地免費召喚 1 隻費用 5 以下的怪物（不觸發進場）。 | **Underworld Ferryman, Hades** — Deploy: You may summon a monster that costs 5 or less from your graveyard for free (its Deploy does not trigger). |
 | WCG-192 | 冥河引魂術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【深淵】怪物牌加入手牌，其餘送入墓地。 | **Styx Soulguide Rite** — Look at the top 3 cards of your deck. Put 1 [Abyss] monster card among them into your hand and the rest into your graveyard. |
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 1400 | 2 | — | 進場：你可以犧牲 1 隻其他的己方【深淵】怪物；若如此做，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another of your [Abyss] monsters; if you do, draw 2 cards. |
-| WCG-194 | 冥府復甦領主 | 怪物 | 6 | 2500 | 1 | — | 進場：你可以從墓地免費召喚 1 隻費用 3 以下的【深淵】怪物（不觸發進場）；若你場上原本就有其他【深淵】怪物，它本回合可以攻擊。 | **Netherworld Revival Lord** — Deploy: You may summon an [Abyss] monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). If you already had another [Abyss] monster, it can attack this turn. |
+| WCG-194 | 冥府復甦領主 | 怪物 | 5 | 2500 | 1 | — | 進場：你可以從墓地免費召喚 1 隻費用 3 以下的【深淵】怪物（不觸發進場）；若你場上原本就有其他【深淵】怪物，它本回合可以攻擊。 | **Netherworld Revival Lord** — Deploy: You may summon an [Abyss] monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). If you already had another [Abyss] monster, it can attack this turn. |
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand. |
 
 ## 中立（Neutral，32 張）

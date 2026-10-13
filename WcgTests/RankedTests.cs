@@ -268,6 +268,38 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
         Assert.Equal(2,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
     }
+    [Fact] public void StrongBuildAdjustmentPreservesActiveMatchReplayAndNextMatchUsesNewValues()
+    {
+        var prior=CounterHistory.BeforeStrongBuildAdjustment(cards);
+        Assert.Equal(1800,prior.GetCard("WCG-146")!.PP);
+        Assert.Equal(4000,prior.GetCard("WCG-079")!.PP);
+        Assert.Equal(1100,prior.GetCard("WCG-148")!.PP);
+        Assert.Equal(6,prior.GetCard("WCG-194")!.TotalCost);
+        Assert.Equal(2,prior.GetCard("WCG-186")!.TotalCost);
+        Assert.Equal(4,prior.GetCard("WCG-017")!.TotalCost);
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[4]);
+        Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
+        old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
+        old.Coordinator.Dispose();
+        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
+        Assert.Equal(22,restored.Read().Stars);Assert.Equal(oldRules,restored.Read().Match!.Rules);
+        Assert.Equal(shape,JsonSerializer.Serialize(StateShape(restored.Engine)));
+        Assert.Equal(6,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-194").Card.TotalCost);
+        Assert.True(Send(restored,"surrender").Success);
+        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
+        Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
+        Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-194").Card.TotalCost);
+        Assert.Equal(1400,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-148").Card.PP);
+        restored.Coordinator.Dispose();
+    }
+
     [Fact] public void OctoberBalancePreservesActiveMatchReplayAndNextMatchUsesNewValues()
     {
         var prior=CounterHistory.BeforeOctoberBalance(cards);
