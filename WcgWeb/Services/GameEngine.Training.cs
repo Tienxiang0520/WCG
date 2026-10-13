@@ -83,10 +83,10 @@ public partial class GameEngine
         }
         var card=_cardDb.GetCard(edit.CardId??"");if(card==null)return Fail("請選擇卡片。");
         if(type=="training-hand") { if(side.Hand.Count>=30)return Fail("測試手牌最多30張。");side.Hand.Add(new(card));return true; }
-        if(type=="training-set"&&DamageCounters)return Fail("現行規則不使用蓋牌；請將反擊牌加入手牌。");
+        if(type=="training-set"&&DamageCounters)return Fail("反擊牌請加入手牌。");
         if(type is not ("training-place" or "training-enter" or "training-set")) return Fail("不支援此訓練操作。");
         if(edit.Slot<0 || edit.Slot>4 || side.Board.Any(m=>m.Slot==edit.Slot))return Fail("請選擇空的格位。");
-        if(type!="training-set" && !card.IsMonster && !card.IsEnchantment)return Fail("正面格位僅能放怪物或結界；法術可加入手牌或背面蓋牌。");
+        if(type!="training-set" && !card.IsMonster && !card.IsEnchantment)return Fail(DamageCounters?"場上格位只能放怪物或結界；法術請加入手牌。":"正面格位僅能放怪物或結界；法術可加入手牌或背面蓋牌。");
         var instance=new CardInstance(card);
         if(type=="training-enter") { plannedSlots[instance.InstanceId]=edit.Slot; if(card.IsMonster)Summon(side,instance,true);else SummonStructure(side,instance); }
         else

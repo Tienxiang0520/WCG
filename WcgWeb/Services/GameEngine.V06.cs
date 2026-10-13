@@ -60,7 +60,7 @@ public partial class GameEngine
     private void SummonStructure(PlayerState p, CardInstance c)
     { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場"); }
     public bool SetCard(PlayerState p, CardInstance c) => Change(()=>
-    { if(DamageCounters)return Fail("現行規則不使用蓋牌；反擊牌留在手牌。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
+    { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
     { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>x.CurrentPP<=800),_=>false });
     public bool Activate(PlayerState p, MonsterInstance m)=>Change(()=>
@@ -79,7 +79,7 @@ public partial class GameEngine
         return true;
     });
     private void DestroyStructure(MonsterInstance m)
-    { if(!Alive(m))return;var p=Owner(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:"摧毀結界／蓋牌"); }
+    { if(!Alive(m))return;var p=Owner(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:DamageCounters?"摧毀結界":"摧毀結界／蓋牌"); }
     // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
     private void OptionalDispel(PlayerState p,MonsterInstance source)
     {

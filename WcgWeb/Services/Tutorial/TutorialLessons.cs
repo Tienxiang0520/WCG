@@ -299,7 +299,7 @@ public static class TutorialLessons
                     Text = "點一下場上的「{0}」打開詳情，按「發動結界」，再點選敵方「{1}」消滅它。", TextValues = [CardName("WCG-151"), CardName("WCG-101")],
                     Hint = "請發動「{0}」，選擇「{1}」。", HintValues = [CardName("WCG-151"), CardName("WCG-101")] },
                 new() { Title = "反擊留在手牌", Spot = ["hand:WCG-195"],
-                    Text = "反擊牌不用蓋牌，也不能在行動階段正常施放。受到生命傷害後，手牌中符合傷害來源、目標與費用條件的反擊牌才會出現發動選擇；你也可以略過。保留「{0}」與至少 {1} 點直立能量。", TextValues = [CardName("WCG-195"), CardCost("WCG-195")] },
+                    Text = "反擊牌留在手牌。受到生命傷害後，手牌中符合傷害來源、目標與費用條件的反擊牌才會出現發動選擇；你也可以略過。保留「{0}」與至少 {1} 點直立能量。", TextValues = [CardName("WCG-195"), CardCost("WCG-195")] },
                 new() { Title = "結束回合", Spot = ["end"], Allow = [End()],
                     Done = e => e.CurrentTurnPlayerId == "computer",
                     Text = "能量還留著 {0} 點，足夠支付反擊法術。按「結束回合」。", TextValues = [AvailableEnergy()],
