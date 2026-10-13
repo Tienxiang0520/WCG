@@ -8,6 +8,7 @@ namespace WcgWeb.Services.Tutorial;
 // Player commands pass the step check first and then run through the normal battle rules.
 public sealed class TutorialSession : IDisposable
 {
+    private readonly CardDatabase cards;
     public GameEngine Engine { get; }
     public BattleBridge Bridge { get; }
     public BattleCoordinator Coordinator { get; }
@@ -22,6 +23,7 @@ public sealed class TutorialSession : IDisposable
 
     public TutorialSession(CardDatabase cards, DeckService decks, ILogger<BattleCoordinator> logger, TimeProvider? clock = null)
     {
+        this.cards = cards;
         Engine = GameEngine.CreateTraining(cards);
         Bridge = new BattleBridge(Engine, decks) { RankedSubmit = Submit, RankedAi = ComputerStep };
         Coordinator = new BattleCoordinator(Bridge, Engine, logger, clock);
@@ -91,6 +93,9 @@ public sealed class TutorialSession : IDisposable
         return response;
     }
 
+    public string RenderText(TutorialStep? step, Localizer language)
+        => step == null ? "" : TutorialText.Render(step.Text, step.TextValues, cards, Engine, language);
+
     // Null means the command belongs to the current step.
     internal string? Check(BattleCommand command)
     {
@@ -99,7 +104,7 @@ public sealed class TutorialSession : IDisposable
         if (step.IsInfo) return "先閱讀說明，然後按「下一步」。";
         if (step.IsWaiting) return "請等待電腦行動。";
         if (command.Type == "cancel") return null;
-        return Engine.ReadConsistent(() => step.Allow.Any(a => Matches(a, command))) ? null : string.IsNullOrEmpty(step.Hint) ? $"這一步請依照提示操作：{step.Title}。" : step.Hint;
+        return Engine.ReadConsistent(() => step.Allow.Any(a => Matches(a, command))) ? null : string.IsNullOrEmpty(step.Hint) ? $"這一步請依照提示操作：{step.Title}。" : TutorialText.Render(step.Hint, step.HintValues, cards, Engine);
     }
 
     private string? CardOf(Guid? id)

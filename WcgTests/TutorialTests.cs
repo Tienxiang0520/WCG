@@ -152,6 +152,85 @@ public class TutorialTests
     }
 
     [Fact]
+    public void TutorialCardDescriptionsReadCurrentCatalogueDataInBothLanguages()
+    {
+        using var s = New(); var lesson = TutorialLessons.Find("traps")!; s.Load(lesson);
+        using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
+        var step = lesson.Steps.Single(x => x.Title == "放置結界");
+        Assert.Contains("費用 2", s.RenderText(step, language));
+        var card = cards.GetCard("WCG-151")!;
+        card.TotalCost = 5; card.Name = "測試鍛爐";
+        Assert.Contains("「測試鍛爐」（費用 5）", s.RenderText(step, language));
+        language.Set(Localizer.English);
+        Assert.Contains(language.CardName(card), s.RenderText(step, language));
+        Assert.Contains("cost 5", s.RenderText(step, language));
+
+        var spellLesson = TutorialLessons.Find("spells")!; s.Load(spellLesson);
+        cards.GetCard("WCG-004")!.Text = "測試效果：抽 3 張牌。";
+        language.Set(Localizer.Chinese);
+        Assert.Contains("測試效果：抽 3 張牌。", s.RenderText(spellLesson.Steps.Single(x => x.Title == "消滅並抽牌"), language));
+    }
+
+    [Fact]
+    public void TutorialCombatTextReadsLivePowerAndDamageInsteadOfOldNumbers()
+    {
+        using var s = New(); var lesson = TutorialLessons.Find("status")!; s.Load(lesson);
+        using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
+        var unit = s.Engine.Player.Field.Single(x => x.Card.Id == "WCG-154");
+        unit.TurnBonus += 300;
+        Assert.Equal(1800, unit.CurrentPP);
+        Assert.Contains($"{unit.CurrentPP} PP", s.RenderText(lesson.Steps.Single(x => x.Title == "擊破"), language));
+        var taunt = TutorialLessons.Find("taunt")!; s.Load(taunt);
+        cards.GetCard("WCG-156")!.DP = 4;
+        Assert.Contains("DP 是 4", s.RenderText(taunt.Steps.Single(x => x.Title == "打穿防線"), language));
+        Assert.Contains("1600 PP", s.RenderText(taunt.Steps.Single(x => x.Title == "擊破嘲諷"), language));
+    }
+
+    [Fact]
+    public void CounterLessonReportsEnergyActuallyRemainingAfterPlayingTheWard()
+    {
+        using var s = New(); var lesson = TutorialLessons.Find("traps")!; s.Load(lesson);
+        using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
+        var token = s.Coordinator.Attach(); s.Next();
+        var step = s.Step!;
+        var command = Solve(s.Engine, step)!;
+        s.Coordinator.Resync(token); Assert.True(s.Coordinator.Submit(token, command).Success);
+        if (s.Engine.IsWaiting)
+        {
+            command = Cmd(s.Engine, "choice", option: "SLOT:2");
+            s.Coordinator.Resync(token); Assert.True(s.Coordinator.Submit(token, command).Success);
+        }
+        Assert.Equal(4, s.Engine.Player.AvailableEnergy);
+        Assert.Contains("還留著 4 點", s.RenderText(lesson.Steps.Single(x => x.Title == "結束回合"), language));
+    }
+
+    [Fact]
+    public void EveryBoundDescriptionAndHintResolvesToLocalizedTextWithRealCardIds()
+    {
+        using var s = New();
+        using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
+        foreach (var lesson in TutorialLessons.All.Where(x => x.IsBattle))
+        {
+            s.Load(lesson);
+            foreach (var step in lesson.Steps)
+            {
+                foreach (var value in step.TextValues.Concat(step.HintValues).Where(x => x.CardId != ""))
+                    Assert.NotNull(cards.GetCard(value.CardId));
+                foreach (var lang in new[] { Localizer.Chinese, Localizer.English })
+                {
+                    language.Set(lang);
+                    var texts = new[] { s.RenderText(step, language), TutorialText.Render(step.Hint, step.HintValues, cards, s.Engine, language) };
+                    foreach (var text in texts)
+                    {
+                        Assert.DoesNotMatch(@"\{\d+\}", text);
+                        if (lang == Localizer.English) Assert.False(LocalizationCatalog.HasHan(text), $"{lesson.Id}: {text}");
+                    }
+                }
+            }
+        }
+    }
+
+    [Fact]
     public void ActionsOutsideTheCurrentStepAreRejectedWithoutChangingTheBoard()
     {
         using var s = New(); s.Load(TutorialLessons.Find("basics")!); var token = s.Coordinator.Attach(); var e = s.Engine;

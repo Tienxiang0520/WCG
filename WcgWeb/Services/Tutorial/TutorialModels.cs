@@ -42,10 +42,12 @@ public sealed class TutorialStep
 {
     public required string Title { get; init; }
     public required string Text { get; init; }
+    public TutorialTextValue[] TextValues { get; init; } = [];
     public TutorialAllow[] Allow { get; init; } = [];
     public Func<GameEngine, bool>? Done { get; init; }
     public string[] Spot { get; init; } = [];
     public string Hint { get; init; } = "";
+    public TutorialTextValue[] HintValues { get; init; } = [];
     public bool IsInfo => Done == null;
     public bool IsWaiting => Done != null && Allow.Length == 0;
 }
