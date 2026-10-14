@@ -54,6 +54,7 @@ public class MonsterInstance
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
     public bool HasShield => ShieldQualified;
+    public bool HasHeroGuard => IsUnit && !IsSilenced && Card.HasHeroGuard;
     public CardInstance? SilenceSpell { get; set; }
     public string? SilenceOwnerId { get; set; }
 

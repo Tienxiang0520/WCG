@@ -1001,5 +1001,10 @@
   "name": "Vengeful Spirit Trap",
   "text": "[Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand.",
   "zh_text": "【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。"
+ },
+ "WCG-200": {
+  "name": "Oathguard",
+  "text": "Guardian (When you would take damage, you may tap any number of ready energy. Each energy tapped prevents 1 damage from that event).",
+  "zhText": "護主（你將受到傷害前，可以橫置任意數量的直立能量，每橫置 1 點抵銷 1 點該次傷害）。"
  }
 }

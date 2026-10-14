@@ -1569,5 +1569,17 @@
  "尚無雲端存檔": "No cloud save yet",
  "匯出保留的本機進度": "Export the retained local progress",
  "另一個魂誓分頁正在使用": "Another Soul Oath tab is in use",
- "請關閉另一個魂誓分頁，再重新整理此頁。": "Close the other Soul Oath tab, then refresh this page."
+ "請關閉另一個魂誓分頁，再重新整理此頁。": "Close the other Soul Oath tab, then refresh this page.",
+ "護主": "Guardian",
+ "護主（每能量抵銷1傷害）": "Guardian (1 energy prevents 1 damage)",
+ "護主：選擇抵銷傷害": "Guardian: choose damage to prevent",
+ "不抵銷，接受傷害": "Take the damage",
+ "橫置 {0} 點能量，抵銷 {0} 點傷害": "Tap {0} energy to prevent {0} damage",
+ "將受到 {0} 點傷害；最多可橫置 {1} 點能量。抵銷後剩餘傷害才會扣血並檢查反擊。": "You would take {0} damage; you can tap up to {1} energy. Only remaining damage reduces life and allows counters.",
+ "護主抵銷傷害": "Guardian prevented damage",
+ "【{0}】橫置 {1} 點能量，護主抵銷 {1} 點傷害。": "[{0}] tapped {1} energy; Guardian prevented {1} damage.",
+ "護主如何抵銷玩家傷害？": "How does Guardian prevent damage to a player?",
+ "己方有未被沉默的護主怪物在場時，玩家將受到傷害前，可選擇橫置直立能量，每點抵銷1點該次傷害。先抵銷，再扣剩餘傷害並檢查反擊；完全抵銷不觸發受傷反擊。橫置怪物仍有效，多隻不重複，沉默或離場失效。生命代價不是傷害，不能用護主抵銷。": "While you control an unsilenced Guardian monster, before taking damage you may tap ready energy to prevent 1 damage each. Only remaining damage reduces life and allows counters. Preventing all damage does not trigger damage counters. Tapped Guardians still work; multiple Guardians do not stack. Silence or leaving play removes the ability. Life costs cannot be prevented.",
+ "攻擊預覽：{0} 點傷害，護主最多可抵銷 {1} 點；對手選擇後才扣血。": "Attack preview: {0} damage; Guardian can prevent up to {1}. Life is reduced after the opponent chooses.",
+ "（護主最多抵銷 {0}）": " (Guardian can prevent up to {0})"
 }

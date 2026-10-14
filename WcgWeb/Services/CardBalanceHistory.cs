@@ -5,9 +5,11 @@ namespace WcgWeb.Services;
 
 internal static class CardBalanceHistory
 {
+    internal static CardDatabase BeforeHeroGuard(CardDatabase current) => current.GetCard("WCG-200") == null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id != "WCG-200")), JsonSerializer.Serialize(current.PresetDecks));
     internal static CardDatabase BeforeStrongBuildAdjustment(CardDatabase current) =>
         current.GetCard("WCG-194")?.TotalCost == 5 && current.GetCard("WCG-079")?.PP == 3600
-            ? Override(current, "WcgWeb.Balance.BeforeStrongBuildAdjustment") : current;
+            ? Override(BeforeHeroGuard(current), "WcgWeb.Balance.BeforeStrongBuildAdjustment") : BeforeHeroGuard(current);
     // The 7-cost molten giant identifies this numeric update; older catalogs keep their own values.
     internal static CardDatabase BeforeOctoberBalance(CardDatabase current)
     {

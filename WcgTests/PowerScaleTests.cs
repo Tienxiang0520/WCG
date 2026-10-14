@@ -31,7 +31,7 @@ public class PowerScaleTests
     [Fact] public void CatalogUses100PointStepsAndExpectedRange()
     {
         var monsters = cards.AllCards.Where(c => c.IsMonster).ToArray();
-        Assert.Equal(117, monsters.Length);
+        Assert.Equal(118, monsters.Length);
         Assert.Equal(500, monsters.Min(c => c.PP)); Assert.Equal(4000, monsters.Max(c => c.PP));
         Assert.All(monsters, c => Assert.Equal(0, c.PP % 100));
         Assert.Equal(500, cards.GetCard("WCG-003")!.PP);

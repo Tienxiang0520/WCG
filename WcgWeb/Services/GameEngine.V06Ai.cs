@@ -8,6 +8,7 @@ public partial class GameEngine
         var p=PlayerById(DecisionPlayerId);var e=GetOpponent(p);
         if(CurrentPendingChoice is {} choice)
         {
+            if(choice.Title=="護主：選擇抵銷傷害")return ChooseHeroGuard(choice);
             var preferred=choice.Options.FirstOrDefault(o=>o.Id=="SHIELD");
             if(preferred!=null)return SelectChoice(preferred);
             if(choice.Title.Contains("固定進場格位"))

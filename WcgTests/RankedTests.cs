@@ -268,6 +268,25 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
         Assert.Equal(2,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
     }
+    [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
+    {
+        var prior=CounterHistory.BeforeHeroGuard(cards);Assert.Equal(199,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-200"));
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
+        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+        deck.CardIds=Enumerable.Repeat("WCG-200",4).Concat(deck.CardIds.Skip(4)).ToList();
+        Assert.True(deck.IsValid(cards.GetCard,out _));Assert.True(current.Start(deck).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
+        Assert.Equal(4,current.Engine.Player.Hand.Concat(current.Engine.Player.Deck).Count(c=>c.Card.Id=="WCG-200"));
+        current.Coordinator.Dispose();
+    }
+
     [Fact] public void StrongBuildAdjustmentPreservesActiveMatchReplayAndNextMatchUsesNewValues()
     {
         var prior=CounterHistory.BeforeStrongBuildAdjustment(cards);

@@ -18,7 +18,7 @@ public sealed class CloudSaveValidationTests
         public string? Read(string key)=>Values.GetValueOrDefault(key);
         public void Write(string key,string value,string? expected)=>Values[key]=value;
     }
-    [Theory] [InlineData(0)] [InlineData(1)] [InlineData(2)]
+    [Theory] [InlineData(0)] [InlineData(1)] [InlineData(2)] [InlineData(3)]
     public void ActiveJournalsAcrossCardBalanceVersionsCanBeSynced(int era)
     {
         string Read(string name)
@@ -27,12 +27,13 @@ public sealed class CloudSaveValidationTests
             using var reader=new StreamReader(stream);return reader.ReadToEnd();
         }
         var definitions=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgCloud.Cards"))!;
-        if(era>=1)
+        if(era>=1) definitions=definitions.Where(c=>c.Id!="WCG-200").ToList();
+        if(era>=2)
         {
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeStrongBuildAdjustment"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>prior.GetValueOrDefault(c.Id,c)).ToList();
         }
-        if(era>=2)
+        if(era>=3)
         {
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeOctoberBalance"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>prior.GetValueOrDefault(c.Id,c)).ToList();

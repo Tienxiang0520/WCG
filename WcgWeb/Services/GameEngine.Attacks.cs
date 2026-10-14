@@ -10,11 +10,14 @@ public partial class GameEngine
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
     private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>1300)&&(a.Card.Id!="WCG-178"||LegacyCardRules));
-    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage);
+    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0);
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
-    {if(d==null)return new(false,false,false,false,a.CurrentDP);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
+    {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP));var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
         var ash=ah&&a.HasShield&&Owner(a).AvailableEnergy>0;var dsh=dh&&d.HasShield&&Owner(d).AvailableEnergy>0;
-        return new(ah&&!ash,dh&&!dsh,ash,dsh,!ah||ash ? dh&&!dsh&&a.HasTrample&&a.CurrentPP-d.CurrentPP>=700?1:0:0);}
+        var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&a.CurrentPP-d.CurrentPP>=700?1:0:0;
+        var guardSurvives=GetOpponent(Owner(a)).Field.Any(m=>m.HasHeroGuard&&(m!=d||!dh||dsh));
+        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0);}
+    private static int GuardReduction(PlayerState p,int damage)=>p.Field.Any(m=>m.HasHeroGuard)?Math.Min(damage,p.AvailableEnergy):0;
     public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
     private class AttackContext{public bool Cancelled;}
     public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>Change(()=>

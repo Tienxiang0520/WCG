@@ -39,9 +39,9 @@ public partial class GameEngine
     }
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
-    private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
+    private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0);
-    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0)
+    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0) + (c.HasHeroGuard ? 3 : 0)
         : 3 + c.TotalCost * .6;
 
     private bool ExecuteTieredAi()
@@ -132,7 +132,7 @@ public partial class GameEngine
         foreach (var a in p.Field.Where(CanAttack))
         {
             if (CanAttackPlayer(a) && a.CurrentDP > 0)
-                moves.Add(new("attack", a.CurrentDP * (prof.ThreatAware ? 4 : 3) + (a.CurrentDP >= e.Hp ? 1000 : 0)
+                moves.Add(new("attack", a.CurrentDP * (prof.ThreatAware ? 4 : 3) + (a.CurrentDP - GuardReduction(e,a.CurrentDP) >= e.Hp ? 1000 : 0)
                     - (prof.ThreatAware && dangerous ? 6 : 0) - (prof.ThreatAware && e.Structures.Any(x => x.IsSet) ? 1 : 0), Attacker: a));
             foreach (var d in GetAttackTargets(a))
             {
@@ -152,7 +152,7 @@ public partial class GameEngine
     {
         var face = p.Field.Where(m => CanAttackPlayer(m) && m.CurrentDP > 0).ToArray();
         var damage = face.Sum(m => m.CurrentDP);
-        if (damage >= e.Hp && face.Length > 0) return Attack(p, face.OrderByDescending(m => m.CurrentDP).First());
+        if (damage - GuardReduction(e,damage) >= e.Hp && face.Length > 0) return Attack(p, face.OrderByDescending(m => m.CurrentDP).First());
         if (!prof.BurnLethal) return false;
         int Burn(CardInstance c) => !CanPlayCard(p, c) ? 0 : c.Card.Id switch
         { "WCG-014" => 1, "WCG-006" => 2, "WCG-017" or "WCG-123" => 1, "WCG-013" => p.Hp > 1 ? 1 : 0, "WCG-170" => e.Field.All(m => m.CurrentPP <= 1500) ? 2 : 0, _ => 0 };
@@ -204,6 +204,7 @@ public partial class GameEngine
 
     private bool TieredChoice(PlayerState p, PlayerState e, PendingChoice choice, AiProfile prof)
     {
+        if(choice.Title=="護主：選擇抵銷傷害")return ChooseHeroGuard(choice);
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
         if (choice.Title == "受到傷害，可從手牌發動反擊")

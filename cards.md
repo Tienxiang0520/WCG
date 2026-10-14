@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 199
+total_cards: 200
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 199 張）
+# WCG 卡牌總表（共 200 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 117 張、法術 69 張、法術（反擊） 5 張、結界 8 張。
+類型：怪物 118 張、法術 69 張、法術（反擊） 5 張、結界 8 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，34 張）
@@ -131,7 +131,7 @@ source: WcgWeb/Data/cards.json
 | WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 2500 | 1 | — | 嘲諷；進場：你場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have. |
 | WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger). |
 
-## 秩序（Order，34 張）
+## 秩序（Order，35 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -169,6 +169,7 @@ source: WcgWeb/Data/cards.json
 | WCG-190 | 白銀軍團旗手 | 怪物 | 4 | 1400 | 1 | — | 嘲諷；每當 1 隻【秩序】怪物進入你的場上（含此怪物與免費召喚），回復己方 1 點生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life to yourself. |
 | WCG-191 | 聖光大審判官 | 怪物 | 6 | 2600 | 1 | — | 嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 2000 以上的敵方怪物，並回復己方 1 點生命。 | **Grand Inquisitor of Holy Light** — Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life to yourself. |
 | WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Energy Shield by attaching this card to it. |
+| WCG-200 | 護誓守衛 | 怪物 | 4 | 1200 | 1 | — | 護主（你將受到傷害前，可以橫置任意數量的直立能量，每橫置 1 點抵銷 1 點該次傷害）。 | **Oathguard** — Guardian (When you would take damage, you may tap any number of ready energy. Each energy tapped prevents 1 damage from that event). |
 
 ## 深淵（Abyss，33 張）
 
