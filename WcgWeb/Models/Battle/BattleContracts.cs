@@ -11,7 +11,7 @@ public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string P
     string Preparation, string EnergyProblem, string[] PlayTargets, string Warning = "", bool CanSet = false);
 public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);
 public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks,
-    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0);
+    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0);
 public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
     bool CanAttack, string Problem, BattleTarget[] Targets, BattleCard? Attachment, int Slot = -1, bool Tapped = false, bool IsSet = false, bool CanActivate = false, BattleCard[]? Attachments = null);
 public record BattleEnergy(Guid InstanceId, bool Tapped);

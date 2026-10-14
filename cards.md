@@ -2,21 +2,21 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 200
+total_cards: 204
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 200 張）
+# WCG 卡牌總表（共 204 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 118 張、法術 69 張、法術（反擊） 5 張、結界 8 張。
+類型：怪物 122 張、法術 69 張、法術（反擊） 5 張、結界 8 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，34 張）
+## 狂怒（Fury，35 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -54,8 +54,9 @@ source: WcgWeb/Data/cards.json
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 1200 | 1 | — | 進場：若己方場上有其他【狂怒】怪物，你目前在場的所有【狂怒】怪物（含此怪物）本回合 PP +300。 | **Crimson Oath Drummer** — Deploy: If you have another [Fury] monster, all your [Fury] monsters currently in play (including this one) get +300 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 4 | 1800 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] After taking damage from an enemy monster, if it is still on the board: Destroy it and reverse this damage. If it had 1500 PP or more, also deal 1 damage to the enemy player. |
+| WCG-201 | 赤焰破陣者 | 怪物 | 3 | 1200 | 1 | — | 怒擊（此怪物攻擊玩家時，你可以橫置任意數量的直立能量。每橫置 1 點，這次攻擊的 DP＋1；攻擊結束後加成消失）。 | **Flamebreaker Vanguard** — Rage (When this monster attacks a player, you may tap any number of ready energy. It gets +1 DP for each energy tapped for this attack only). |
 
-## 理智（Reason，33 張）
+## 理智（Reason，34 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -92,8 +93,9 @@ source: WcgWeb/Data/cards.json
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 將 1 隻直立的敵方怪物橫置；若選的是已橫置的敵方怪物，改為將它移回手牌。若你場上有【理智】卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap 1 untapped enemy monster. If you choose an already tapped enemy monster instead, return it to its hand. If you have a [Reason] card in play, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 2200 | 1 | — | 每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 1000 以下的敵方怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, destroy 1 enemy monster with 1000 PP or less. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] After taking damage from an enemy card: Reverse this damage, then draw 1 card. |
+| WCG-202 | 星軌觀測師 | 怪物 | 4 | 1200 | 1 | — | 觀測（對手結束回合時，你可以橫置任意偶數點直立能量。每橫置 2 點，依序檢視牌庫頂最多 2 張，選 1 張加入手牌，其餘放到牌庫底）。 | **Starpath Observer** — Observation (At the end of your opponent's turn, you may tap any even number of ready energy. For each 2 energy, in sequence look at the top 2 cards of your deck, take 1 into hand and put the rest on the bottom). |
 
-## 生機（Life，33 張）
+## 生機（Life，34 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -130,6 +132,7 @@ source: WcgWeb/Data/cards.json
 | WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 1900 | 1 | — | 進場：若己方場上有其他【生機】怪物，你可以從手牌免費召喚 1 隻費用 2 以下的【生機】怪物（不觸發進場）。 | **Verdant Beastcaller** — Deploy: If you have another [Life] monster, you may summon a [Life] monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 2500 | 1 | — | 嘲諷；進場：你場上每有 1 隻其他【生機】怪物，回復己方 1 點生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life to yourself for each other [Life] monster you have. |
 | WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。 | **Jungle Guardian Ambush** — [Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger). |
+| WCG-203 | 荒野鬥角獸 | 怪物 | 4 | 1800 | 1 | — | 野性（此怪物與另一隻怪物交戰時，你可以橫置任意數量的直立能量。每橫置 1 點，它在這次交戰中的 PP＋500；交戰結束後加成消失）。 | **Wild Antlerbeast** — Wild (When this monster battles another monster, you may tap any number of ready energy. It gets +500 PP for each energy tapped for this battle only). |
 
 ## 秩序（Order，35 張）
 
@@ -171,7 +174,7 @@ source: WcgWeb/Data/cards.json
 | WCG-198 | 神聖救贖誓約 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。 | **Oath of Holy Redemption** — [Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Energy Shield by attaching this card to it. |
 | WCG-200 | 護誓守衛 | 怪物 | 4 | 1200 | 1 | — | 護主（你將受到傷害前，可以橫置任意數量的直立能量，每橫置 1 點抵銷 1 點該次傷害）。 | **Oathguard** — Guardian (When you would take damage, you may tap any number of ready energy. Each energy tapped prevents 1 damage from that event). |
 
-## 深淵（Abyss，33 張）
+## 深淵（Abyss，34 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -208,6 +211,7 @@ source: WcgWeb/Data/cards.json
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 1400 | 2 | — | 進場：你可以犧牲 1 隻其他的己方【深淵】怪物；若如此做，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another of your [Abyss] monsters; if you do, draw 2 cards. |
 | WCG-194 | 冥府復甦領主 | 怪物 | 5 | 2500 | 1 | — | 進場：你可以從墓地免費召喚 1 隻費用 3 以下的【深淵】怪物（不觸發進場）；若你場上原本就有其他【深淵】怪物，它本回合可以攻擊。 | **Netherworld Revival Lord** — Deploy: You may summon an [Abyss] monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). If you already had another [Abyss] monster, it can attack this turn. |
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand. |
+| WCG-204 | 冥河徘徊者 | 怪物 | 3 | 1400 | 1 | — | 回魂（此怪物陣亡時，你可以立即橫置 2 點直立能量，將這張牌從墓地加入手牌）。 | **Styx Wanderer** — Soul Return (When this monster dies, you may immediately tap 2 ready energy to put this card from your graveyard into your hand). |
 
 ## 中立（Neutral，32 張）
 

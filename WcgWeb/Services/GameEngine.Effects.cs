@@ -171,6 +171,7 @@ public partial class GameEngine
         foreach (var m in victims)
         {
             var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var grave = new CardInstance(m.Card) { InstanceId = m.InstanceId }; owner.Graveyard.Add(grave);
+            m.CombatPowerBonus=0;m.AttackDamageBonus=0;
             deaths.Add((owner, m, grave)); Present("death", owner, m.InstanceId, card: m.Card, label: reason); Log($"【{m.Card.Name}】因 {reason} 送入墓地。", "combat");
         }
         var triggers = new List<Action>();
@@ -190,6 +191,7 @@ public partial class GameEngine
     private void Death(PlayerState p, MonsterInstance m, CardInstance grave)
     {
         if (m.IsSilenced) return;
+        if (m.HasSoulReturn) SoulReturn(p,m,grave);
         if (m.Card.Id is "WCG-003" or "WCG-016" or "WCG-025" or "WCG-103" or "WCG-043" or "WCG-108" or "WCG-080" or "WCG-083" or "WCG-093" or "WCG-097")
             Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
         var enemy = GetOpponent(p);

@@ -64,6 +64,10 @@ public class CardDefinition
     [JsonIgnore] public bool HasCharge => Keywords.Contains("衝鋒");
     public static string NormalizeShieldName(string text) => text.Replace("聖盾", "能量護盾", StringComparison.Ordinal).Replace("能量能量護盾", "能量護盾", StringComparison.Ordinal);
     [JsonIgnore] public bool HasEnergyShield => Keywords.Contains("能量護盾") || Keywords.Contains("聖盾"); // Historical catalogue compatibility.
+    [JsonIgnore] public bool HasRage => Keywords.Contains("怒擊");
+    [JsonIgnore] public bool HasObservation => Keywords.Contains("觀測");
+    [JsonIgnore] public bool HasWild => Keywords.Contains("野性");
+    [JsonIgnore] public bool HasSoulReturn => Keywords.Contains("回魂");
     [JsonIgnore] public bool HasHeroGuard => Keywords.Contains("護主");
     [JsonIgnore] public bool HasTrample => Keywords.Contains("貫穿");
     [JsonIgnore] public bool HasPoison => Keywords.Contains("劇毒");

@@ -8,6 +8,7 @@ public partial class GameEngine
         var p=PlayerById(DecisionPlayerId);var e=GetOpponent(p);
         if(CurrentPendingChoice is {} choice)
         {
+            if(ChooseEnergyKeyword(choice))return true;
             if(choice.Title=="護主：選擇抵銷傷害")return ChooseHeroGuard(choice);
             var preferred=choice.Options.FirstOrDefault(o=>o.Id=="SHIELD");
             if(preferred!=null)return SelectChoice(preferred);
@@ -35,6 +36,7 @@ public partial class GameEngine
             return selected!=null&&SelectTarget(selected);
         }
         if(!Main(p))return false;
+        var rage=p.Field.FirstOrDefault(m=>m.HasRage&&CanAttackPlayer(m)&&m.CurrentDP+p.AvailableEnergy-GuardReduction(e,m.CurrentDP+p.AvailableEnergy)>=e.Hp);if(rage!=null)return Attack(p,rage);
         var lethal=p.Field.Where(m=>CanAttackPlayer(m)&&m.CurrentDP>0).ToArray();if(lethal.Sum(m=>m.CurrentDP)>=e.Hp&&lethal.Length>0)return Attack(p,lethal[0]);
         var face=p.Field.FirstOrDefault(m=>CanAttackPlayer(m)&&m.CurrentDP>=e.Hp&&m.CurrentDP>0);if(face!=null)return Attack(p,face);
         if(!p.HasFilledEnergyThisTurn&&p.Hand.Count>0&&(p.Hand.Count>1||!p.Hand.Any(c=>CanPlayCard(p,c)))&&p.TotalEnergy<Math.Max(5,p.Hand.Max(c=>ActualCost(p,c.Card))))
@@ -48,7 +50,7 @@ public partial class GameEngine
         if(playable!=null)return playable.Card.IsMonster?SummonMonster(p,playable):playable.Card.IsEnchantment?PlayEnchantment(p,playable):CastSpell(p,playable);
         foreach(var m in p.Field.Where(CanAttack).OrderByDescending(x=>x.CurrentDP).ToArray())
         {
-            var victim=GetAttackTargets(m).FirstOrDefault(x=>{var preview=CompareAttack(m,x);return preview.DefenderDies&&!preview.AttackerDies;});
+            var victim=GetAttackTargets(m).FirstOrDefault(x=>{var preview=CompareAiAttack(m,x);return preview.DefenderDies&&!preview.AttackerDies;});
             if(victim!=null)return Attack(p,m,victim);
             if(CanAttackPlayer(m)&&m.CurrentDP>0)return Attack(p,m);
             victim=GetAttackTargets(m).FirstOrDefault(x=>m.HasPoison||m.CurrentPP==x.CurrentPP);if(victim!=null)return Attack(p,m,victim);

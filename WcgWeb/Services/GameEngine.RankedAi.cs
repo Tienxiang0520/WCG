@@ -39,9 +39,9 @@ public partial class GameEngine
     }
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
-    private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0)
+    private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0) + (m.HasRage ? 2 : 0) + (m.HasObservation ? 3 : 0) + (m.HasWild ? 2 : 0) + (m.HasSoulReturn ? 1.5 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0);
-    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0) + (c.HasHeroGuard ? 3 : 0)
+    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0) + (c.HasHeroGuard ? 3 : 0) + (c.HasRage ? 2 : 0) + (c.HasObservation ? 3 : 0) + (c.HasWild ? 2 : 0) + (c.HasSoulReturn ? 1.5 : 0)
         : 3 + c.TotalCost * .6;
 
     private bool ExecuteTieredAi()
@@ -107,7 +107,7 @@ public partial class GameEngine
         for (int i = 0; i < ordered.Count; i++) moves.Add(new("play", 100 - i, ordered[i]));
         foreach (var m in p.Field.Where(CanAttack).OrderByDescending(x => x.CurrentDP))
         {
-            var victim = GetAttackTargets(m).FirstOrDefault(x => { var pr = CompareAttack(m, x); return pr.DefenderDies && !pr.AttackerDies; });
+            var victim = GetAttackTargets(m).FirstOrDefault(x => { var pr = CompareAiAttack(m, x); return pr.DefenderDies && !pr.AttackerDies; });
             if (victim != null) moves.Add(new("attack", 50 + BodyValue(victim), Attacker: m, Target: victim));
             else if (CanAttackPlayer(m) && m.CurrentDP > 0) moves.Add(new("attack", 40 + m.CurrentDP, Attacker: m));
             else if (GetAttackTargets(m).FirstOrDefault(x => m.HasPoison || m.CurrentPP == x.CurrentPP) is { } trade) moves.Add(new("attack", 30, Attacker: m, Target: trade));
@@ -132,11 +132,11 @@ public partial class GameEngine
         foreach (var a in p.Field.Where(CanAttack))
         {
             if (CanAttackPlayer(a) && a.CurrentDP > 0)
-                moves.Add(new("attack", a.CurrentDP * (prof.ThreatAware ? 4 : 3) + (a.CurrentDP - GuardReduction(e,a.CurrentDP) >= e.Hp ? 1000 : 0)
+                moves.Add(new("attack", (a.CurrentDP+(a.HasRage?p.AvailableEnergy:0)) * (prof.ThreatAware ? 4 : 3) + (a.CurrentDP+(a.HasRage?p.AvailableEnergy:0) - GuardReduction(e,a.CurrentDP+(a.HasRage?p.AvailableEnergy:0)) >= e.Hp ? 1000 : 0)
                     - (prof.ThreatAware && dangerous ? 6 : 0) - (prof.ThreatAware && e.Structures.Any(x => x.IsSet) ? 1 : 0), Attacker: a));
             foreach (var d in GetAttackTargets(a))
             {
-                var pr = CompareAttack(a, d);
+                var pr = CompareAiAttack(a, d);
                 var score = (pr.DefenderDies ? BodyValue(d) : pr.DefenderShieldBreaks ? 1.5 : 0)
                     - (pr.AttackerDies ? BodyValue(a) : pr.AttackerShieldBreaks ? 1 : 0) + pr.PlayerDamage * 4;
                 if (d.IsTaunt && pr.DefenderDies) score += 3;
@@ -151,6 +151,8 @@ public partial class GameEngine
     private bool TryLethal(PlayerState p, PlayerState e, AiProfile prof)
     {
         var face = p.Field.Where(m => CanAttackPlayer(m) && m.CurrentDP > 0).ToArray();
+        var rage=face.FirstOrDefault(m=>m.HasRage && m.CurrentDP+p.AvailableEnergy-GuardReduction(e,m.CurrentDP+p.AvailableEnergy)>=e.Hp);
+        if(rage!=null)return Attack(p,rage);
         var damage = face.Sum(m => m.CurrentDP);
         if (damage - GuardReduction(e,damage) >= e.Hp && face.Length > 0) return Attack(p, face.OrderByDescending(m => m.CurrentDP).First());
         if (!prof.BurnLethal) return false;
@@ -204,6 +206,7 @@ public partial class GameEngine
 
     private bool TieredChoice(PlayerState p, PlayerState e, PendingChoice choice, AiProfile prof)
     {
+        if(ChooseEnergyKeyword(choice))return true;
         if(choice.Title=="護主：選擇抵銷傷害")return ChooseHeroGuard(choice);
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);

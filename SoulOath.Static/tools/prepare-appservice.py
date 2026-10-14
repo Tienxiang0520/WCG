@@ -17,6 +17,6 @@ with ZipFile(output, 'w', compression=ZIP_DEFLATED, compresslevel=6) as archive:
     archive.write(config, 'web.config')
 with ZipFile(output) as archive:
     assert 'index.html' in archive.namelist() and 'web.config' in archive.namelist()
-    assert len([n for n in archive.namelist() if n.startswith('card-art/') and n.endswith('.webp')]) == 200
+    assert len([n for n in archive.namelist() if n.startswith('card-art/') and n.endswith('.webp')]) == 204
     assert archive.testzip() is None
 print(f'Windows App Service package ready: {output}, {output.stat().st_size / 1_000_000:.1f} MB')

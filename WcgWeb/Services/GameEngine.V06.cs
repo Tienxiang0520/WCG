@@ -24,7 +24,7 @@ public partial class GameEngine
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
             var unit=m;
-            unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => a.Card.Card.Id == "WCG-135" ? 500 : a.Card.Card.Id == "WCG-141" ? 700 : 0)+unit.NextCombatBonus+unit.TurnBonus+
+            unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => a.Card.Card.Id == "WCG-135" ? 500 : a.Card.Card.Id == "WCG-141" ? 700 : 0)+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.Will=="狂怒")*300 : 0)+ArrowPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id=="WCG-133" && p.Hp<=3)

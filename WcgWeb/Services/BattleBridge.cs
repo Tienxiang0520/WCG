@@ -76,11 +76,15 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         }
     }
     private static GameEnginePreview? Preview(GameEngine.AttackPreview? p) => p == null ? null
-        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable);
+        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable,p.RageEnergy,p.WildEnergy);
     private BattleMonster Monster(PlayerState owner, MonsterInstance m)
     {
         if(m.IsSet)return new(new(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被宣告攻擊時可翻開。",""),0,0,["蓋牌"],false,"蓋牌不能攻擊",[],null,m.Slot,false,true,false,[]);
         var status = new List<string>();
+        if(m.HasRage)status.Add("怒擊（每能量本次DP＋1）");
+        if(m.HasWild)status.Add("野性（每能量本次PP＋500）");
+        if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
+        if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
         if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
         if(m.IsTaunt)status.Add("嘲諷");if(m.HasShield)status.Add("能量護盾資格（每次1能量）");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));

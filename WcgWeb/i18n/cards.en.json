@@ -1006,5 +1006,29 @@
   "name": "Oathguard",
   "text": "Guardian (When you would take damage, you may tap any number of ready energy. Each energy tapped prevents 1 damage from that event).",
   "zhText": "護主（你將受到傷害前，可以橫置任意數量的直立能量，每橫置 1 點抵銷 1 點該次傷害）。"
+ },
+ "WCG-201": {
+  "zh": "赤焰破陣者",
+  "name": "Flamebreaker Vanguard",
+  "text": "Rage (When this monster attacks a player, you may tap any number of ready energy. It gets +1 DP for each energy tapped for this attack only).",
+  "zh_text": "怒擊（此怪物攻擊玩家時，你可以橫置任意數量的直立能量。每橫置 1 點，這次攻擊的 DP＋1；攻擊結束後加成消失）。"
+ },
+ "WCG-202": {
+  "zh": "星軌觀測師",
+  "name": "Starpath Observer",
+  "text": "Observation (At the end of your opponent's turn, you may tap any even number of ready energy. For each 2 energy, in sequence look at the top 2 cards of your deck, take 1 into hand and put the rest on the bottom).",
+  "zh_text": "觀測（對手結束回合時，你可以橫置任意偶數點直立能量。每橫置 2 點，依序檢視牌庫頂最多 2 張，選 1 張加入手牌，其餘放到牌庫底）。"
+ },
+ "WCG-203": {
+  "zh": "荒野鬥角獸",
+  "name": "Wild Antlerbeast",
+  "text": "Wild (When this monster battles another monster, you may tap any number of ready energy. It gets +500 PP for each energy tapped for this battle only).",
+  "zh_text": "野性（此怪物與另一隻怪物交戰時，你可以橫置任意數量的直立能量。每橫置 1 點，它在這次交戰中的 PP＋500；交戰結束後加成消失）。"
+ },
+ "WCG-204": {
+  "zh": "冥河徘徊者",
+  "name": "Styx Wanderer",
+  "text": "Soul Return (When this monster dies, you may immediately tap 2 ready energy to put this card from your graveyard into your hand).",
+  "zh_text": "回魂（此怪物陣亡時，你可以立即橫置 2 點直立能量，將這張牌從墓地加入手牌）。"
  }
 }

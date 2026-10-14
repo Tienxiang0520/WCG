@@ -154,7 +154,7 @@ public partial class GameEngine
         CheckLethal(p);
     }
     private void Lose(PlayerState p, string reason)
-    { p.HasLost = true; p.LossReason = reason; CurrentPhase = TurnPhase.GameOver; Present("gameover", p, label: reason); Log($"【{p.Name}】敗北：{reason}", "victory"); }
+    { foreach(var m in Player.Field.Concat(Computer.Field)){m.AttackDamageBonus=0;m.CombatPowerBonus=0;} p.HasLost = true; p.LossReason = reason; CurrentPhase = TurnPhase.GameOver; Present("gameover", p, label: reason); Log($"【{p.Name}】敗北：{reason}", "victory"); }
     private void CheckLethal(PlayerState p) { if (p.Hp <= 0) Lose(p, "生命降至 0"); }
     private bool Draw(PlayerState p)
     {

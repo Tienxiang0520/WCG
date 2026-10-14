@@ -41,7 +41,10 @@ public class MonsterInstance
     public int TriggersThisTurn { get; set; }
     public List<AttachedSpell> Attachments { get; set; } = [];
     public bool AttackLocked => Attachments.Any(a => a.Card.Card.Id == "WCG-142");
-    public int CurrentDP { get; set; }
+    public int CombatPowerBonus { get; set; }
+    public int AttackDamageBonus { get; set; }
+    private int baseDP;
+    public int CurrentDP { get => baseDP + AttackDamageBonus; set => baseDP = value; }
     public bool HasAttacked { get; set; }
     public bool HasSummoningSickness { get; set; }
     public bool IsSilenced { get; set; }
@@ -54,6 +57,10 @@ public class MonsterInstance
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
     public bool HasShield => ShieldQualified;
+    public bool HasRage => IsUnit && !IsSilenced && Card.HasRage;
+    public bool HasObservation => IsUnit && !IsSilenced && Card.HasObservation;
+    public bool HasWild => IsUnit && !IsSilenced && Card.HasWild;
+    public bool HasSoulReturn => IsUnit && !IsSilenced && Card.HasSoulReturn;
     public bool HasHeroGuard => IsUnit && !IsSilenced && Card.HasHeroGuard;
     public CardInstance? SilenceSpell { get; set; }
     public string? SilenceOwnerId { get; set; }

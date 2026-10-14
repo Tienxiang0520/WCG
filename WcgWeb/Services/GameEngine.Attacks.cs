@@ -10,13 +10,13 @@ public partial class GameEngine
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
     private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>1300)&&(a.Card.Id!="WCG-178"||LegacyCardRules));
-    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0);
+    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int RageEnergy=0,int WildEnergy=0);
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
-    {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP));var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
+    {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP),a.HasRage?Owner(a).AvailableEnergy:0);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
         var ash=ah&&a.HasShield&&Owner(a).AvailableEnergy>0;var dsh=dh&&d.HasShield&&Owner(d).AvailableEnergy>0;
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&a.CurrentPP-d.CurrentPP>=700?1:0:0;
         var guardSurvives=GetOpponent(Owner(a)).Field.Any(m=>m.HasHeroGuard&&(m!=d||!dh||dsh));
-        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0);}
+        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0,0,(a.HasWild?Owner(a).AvailableEnergy:0)+(d.HasWild?Owner(d).AvailableEnergy:0));}
     private static int GuardReduction(PlayerState p,int damage)=>p.Field.Any(m=>m.HasHeroGuard)?Math.Min(damage,p.AvailableEnergy):0;
     public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
     private class AttackContext{public bool Cancelled;}
@@ -27,7 +27,10 @@ public partial class GameEngine
         var ctx=new AttackContext();var e=GetOpponent(p);
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
-            ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled)ResolveAttack(p,a,d);},()=>FinishAttack(p,a));return true;
+            ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
+                ()=>{if(d==null) RageDecision(p,a); else if(Alive(d)) WildDecision(p,a,d);},
+                ()=>{if(d!=null && Alive(a)&&Alive(d)) WildDecision(e,d,a);},
+                ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a);});return true;
     });
     private void FinishAttack(PlayerState p,MonsterInstance a)
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;
@@ -49,7 +52,7 @@ public partial class GameEngine
                     foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a))triggers.Add(()=>Damage(p,1,new(e,x.Card,x,"passive")));
                     if(DamageCounters) Resolve(triggers.ToArray()); else foreach(var trigger in triggers)trigger();
                 },
-                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;});
+                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
             KillBatch(dead,"交戰");
         });
     }
@@ -104,6 +107,7 @@ public partial class GameEngine
         }
         foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
             effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
+        effects.Add(() => Observe(GetOpponent(p)));
         effects.Add(() =>
         {
             foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;}

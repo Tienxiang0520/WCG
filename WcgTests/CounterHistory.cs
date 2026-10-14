@@ -6,8 +6,14 @@ using WcgWeb.Services;
 namespace WcgTests;
 internal static class CounterHistory
 {
-    internal static CardDatabase BeforeHeroGuard(CardDatabase current) => current.GetCard("WCG-200") == null ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>c.Id!="WCG-200")),JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeEnergyKeywords(CardDatabase current) => current.GetCard("WCG-201") == null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id is not ("WCG-201" or "WCG-202" or "WCG-203" or "WCG-204"))), JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeHeroGuard(CardDatabase current)
+    {
+        current=BeforeEnergyKeywords(current);
+        return current.GetCard("WCG-200") == null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id != "WCG-200")), JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeStrongBuildAdjustment(CardDatabase current)
     {
         current=BeforeHeroGuard(current);
