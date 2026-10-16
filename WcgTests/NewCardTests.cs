@@ -280,7 +280,7 @@ public class NewCardTests
         var g=Game();var mill=Hand(g,211,g.Computer);while(g.Player.Deck.Count>3)g.Player.Deck.RemoveAt(0);
         var rev=typeof(GameEngine).GetProperty("AiRevision",BindingFlags.NonPublic|BindingFlags.Instance)!;
         var value=typeof(GameEngine).GetMethod("NewPlayValue",BindingFlags.NonPublic|BindingFlags.Instance)!;
-        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(7,GameEngine.RankedAiVersion);
+        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(8,GameEngine.RankedAiVersion);
         Assert.True((double)value.Invoke(g,[g.Computer,mill])! >= 50);   // milling the last cards wins
         rev.SetValue(g,5);Assert.Null(value.Invoke(g,[g.Computer,mill]));
     }

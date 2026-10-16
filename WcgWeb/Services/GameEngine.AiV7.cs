@@ -21,6 +21,32 @@ public partial class GameEngine
         _ => new(1, 1200, 8, 8, 6, 1000, 0, 0, 20, 2),
     };
 
+    // v8 (RankedAiVersion 8, tools/RankedCheck --v8-vs-v7): Diamond and Master never play random "blunder"
+    // moves, and lower tiers' blunders never throw a monster away; the turn and lethal searches skip pointless
+    // attacks that throw the attacker away for nothing (the lethal search also skips free shield bumps); a move that draws a card
+    // is a search leaf priced over several sampled draws, so no plan relies on one lucky simulated draw; the
+    // lethal search tries the shortest sequences first. Steps recorded as v7 replay with the v7 rules above.
+    private bool V8 => AiRevision >= 8;
+    private const int DrawSamples = 3;
+    internal V7Profile ProfileForDecision() { var prof = V7ProfileFor(AiLevel); return V8 && AiLevel >= 4 ? prof with { Blunder = 0 } : prof; }
+
+    // Public facts a move can change, minus the moving monster itself. Equal keys before and after an attack mean
+    // the attack achieved nothing: no enemy monster, shield, tap or life changed and nothing was drawn or triggered.
+    private static string EffectKey(GameEngine g, string pid, Guid exclude)
+    {
+        var p = g.PlayerById(pid); var e = g.GetOpponent(p);
+        string Side(PlayerState s) => $"{s.Hp}/{s.AvailableEnergy}/{s.Hand.Count}/{s.Deck.Count}/{s.Structures.Count}:" +
+            string.Join(",", s.Field.Where(m => m.InstanceId != exclude).Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{(m.HasShield ? 1 : 0)}:{m.Attachments.Count}:{(m.IsSilenced ? 1 : 0)}"));
+        return Side(p) + "|" + Side(e);
+    }
+    internal static bool PointlessAttack(GameEngine before, GameEngine after, string pid, SimMove m) =>
+        m.Kind == "attack" && !after.IsOver && EffectKey(before, pid, m.Source) == EffectKey(after, pid, m.Source);
+    // A pointless attack that also loses the attacker. Shield bumps that cost nothing stay in the turn search:
+    // pruning them as well measured weaker (41% vs v7 at Diamond, tools/RankedCheck --v8-vs-v7).
+    internal static bool SuicideAttack(GameEngine before, GameEngine after, string pid, SimMove m) =>
+        PointlessAttack(before, after, pid, m) && !after.PlayerById(pid).Field.Any(u => u.InstanceId == m.Source);
+    private static bool Drew(GameEngine before, GameEngine after, string pid) => after.PlayerById(pid).Deck.Count < before.PlayerById(pid).Deck.Count;
+
     internal sealed record SimMove(string Kind, Guid Source, Guid? Target = null)
     {
         public override string ToString() => $"{Kind}:{Source}{(Target is { } t ? ">" + t : "")}";
@@ -46,7 +72,7 @@ public partial class GameEngine
         // Choices and targets raised by our own actions keep the v6 logic, the same logic simulations use.
         if (IsWaiting || !Main(p) || !IsQuiescent) return ExecuteTieredAi();
         if (p.Id != _planOwner) { _plan = null; _planOwner = p.Id; }
-        var prof = V7ProfileFor(AiLevel); _simCounter = 0;
+        var prof = ProfileForDecision(); _simCounter = 0;
         // Following a plan whose simulated position still matches skips both searches.
         var next = NextPlannedMove(p);
         if (next != null) Trace($"plan: {Describe(next)}");
@@ -57,6 +83,7 @@ public partial class GameEngine
             if (prof.Blunder > 0 && Noise(102) < prof.Blunder)
             {
                 var legal = GenerateMoves(p, energy: false);
+                if (V8) legal = legal.Where(m => m.Kind != "attack" || (CloneQuiescent(SimSeed(), p.Id) is var c && c.SimApply(x => ApplyMove(x, p.Id, m)) && !PointlessAttack(this, c, p.Id, m))).ToList();
                 if (legal.Count > 0) { var pick = Pick(legal, 103); Trace($"blunder: {Describe(pick)}"); if (ApplyMove(this, p.Id, pick)) return true; }
             }
             next = SearchTurn(p, prof);
@@ -160,11 +187,27 @@ public partial class GameEngine
                     if (--budget < 0) break;
                     var child = node.G.CloneQuiescent(SimSeed(), p.Id);
                     if (!child.SimApply(x => ApplyMove(x, p.Id, m), Math.Max(AiLevel, 0))) continue;
-                    var score = child.Evaluate(p.Id) + (prof.Sigma > 0 ? (Noise(salt++) - .5) * 2 * prof.Sigma : 0);
+                    bool leaf = false; var value = child.Evaluate(p.Id);
+                    if (V8)
+                    {
+                        if (SuicideAttack(node.G, child, p.Id, m)) continue;
+                        if (!child.IsOver && Drew(node.G, child, p.Id))
+                        {
+                            // Chance node: average over sampled draws and stop here; the real draw triggers a new search.
+                            leaf = true;
+                            for (int k = 1; k < DrawSamples; k++)
+                            {
+                                var sample = node.G.CloneQuiescent(SimSeed(), p.Id);
+                                value += sample.SimApply(x => ApplyMove(x, p.Id, m), Math.Max(AiLevel, 0)) ? sample.Evaluate(p.Id) : child.Evaluate(p.Id);
+                            }
+                            value /= DrawSamples;
+                        }
+                    }
+                    var score = value + (prof.Sigma > 0 ? (Noise(salt++) - .5) * 2 * prof.Sigma : 0);
                     var c = new SearchNode(child, node, m, score);
                     if (score > best.Score + 1e-9) best = c;
                     all.Add(c);
-                    if (!child.IsOver && child.CurrentTurnPlayerId == p.Id && child.IsQuiescent) children.Add(c);
+                    if (!leaf && !child.IsOver && child.CurrentTurnPlayerId == p.Id && child.IsQuiescent) children.Add(c);
                 }
                 if (budget < 0) break;
             }
@@ -279,10 +322,18 @@ public partial class GameEngine
                 var child = g.CloneQuiescent(SimSeed(), p.Id);
                 if (!child.SimApply(x => ApplyMove(x, p.Id, m))) continue;
                 if (child.GetOpponent(child.PlayerById(p.Id)).HasLost && !child.PlayerById(p.Id).HasLost) return m;
+                if (V8 && (PointlessAttack(g, child, p.Id, m) || Drew(g, child, p.Id))) continue;
                 if (depth > 1 && !child.IsOver && child.CurrentTurnPlayerId == p.Id && Search(child, depth - 1) != null) return m;
             }
             return null;
         }
-        return Search(CloneQuiescent(SimSeed(), p.Id), prof.LethalDepth);
+        if (!V8) return Search(CloneQuiescent(SimSeed(), p.Id), prof.LethalDepth);
+        // Shortest first: a lethal that needs fewer moves never throws monsters at a taunt it does not have to.
+        for (int depth = 1; depth <= prof.LethalDepth; depth++)
+        {
+            budget = prof.LethalBudget;
+            if (Search(CloneQuiescent(SimSeed(), p.Id), depth) is { } found) return found;
+        }
+        return null;
     }
 }
