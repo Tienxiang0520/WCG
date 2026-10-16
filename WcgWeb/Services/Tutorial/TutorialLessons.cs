@@ -138,7 +138,7 @@ public static class TutorialLessons
         new()
         {
             Id = "shield", Icon = "shield", Title = "聖盾與箭頭",
-            Summary = "聖盾放 1 個指示物，擋下 1 次交戰消滅後就用掉；學會用箭頭把聖盾交給相鄰的隊友。",
+            Summary = "聖盾放 1 個指示物，受到 1 次攻擊就用掉；學會用箭頭把聖盾交給相鄰的隊友。",
             Topics = ["聖盾", "聖盾指示物", "箭頭 ← → ↑", "固定格位"],
             Scene = new(
                 new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2)] },
@@ -146,7 +146,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "聖盾", Spot = ["own-card:WCG-154"],
-                    Text = "怪物獲得聖盾時，在牌上放 1 個聖盾指示物。它第一次將在交戰中被消滅時，改為移除指示物並存活。指示物用掉就沒了，不會每回合補回。" },
+                    Text = "怪物獲得聖盾時，在牌上放 1 個聖盾指示物。它受到攻擊時，不論會不會被消滅，都要移除 1 個指示物，並在這次交戰中存活。指示物用掉就沒了，不會每回合補回。" },
                 new() { Title = "放對格位", Spot = ["hand:WCG-061", "own:1"], Allow = [Play("WCG-061"), Slot(1)],
                     Done = e => Unit(e.Player, "WCG-061")?.Slot == 1,
                     Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-061"), CardEffect("WCG-061"), CardName("WCG-154")],

@@ -29,13 +29,13 @@ public partial class GameEngine
         RefreshBoard();
         Present("status", Owner(m), m.InstanceId, card: m.Card, label: "交戰後附著卡送入墓地");
     }
-    private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish)
+    private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish, bool lethal = true)
     {
         if (!hit || !Alive(m) || !m.HasShield || m.ShieldSpent) { finish(false); return; }
         if (ShieldCounterRules) { m.ShieldCounters = Math.Max(0, m.ShieldCounters - 1); m.ShieldQualified = m.ShieldCounters > 0; m.ShieldSpent = m.ShieldCounters == 0; }
         else m.ShieldSpent = true;
-        Present("status", Owner(m), m.InstanceId, card: m.Card, label: "聖盾抵擋消滅");
-        if (ShieldCounterRules) Log($"【{m.Card.Name}】移除 1 個聖盾指示物，抵擋了這次消滅。", "combat");
+        Present("status", Owner(m), m.InstanceId, card: m.Card, label: lethal ? "聖盾抵擋消滅" : "受到攻擊，消耗聖盾");
+        if (ShieldCounterRules) Log(lethal ? $"【{m.Card.Name}】移除 1 個聖盾指示物，抵擋了這次消滅。" : $"【{m.Card.Name}】受到攻擊，移除 1 個聖盾指示物。", "combat");
         else Log($"【{m.Card.Name}】的聖盾抵擋了這次消滅（本回合已用）。", "combat");
         finish(true);
     }

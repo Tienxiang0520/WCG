@@ -358,7 +358,7 @@ public partial class GameEngine
     private AiMove? PlanAttacks(PlayerState p, PlayerState e, AiProfile prof)
     {
         int budget = prof.PlanBudget;
-        var fresh = NewAi && SimplifiedRules;
+        var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldCounterRules;
         PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (!fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m),
             !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && m.Card.Id is "WCG-210" or "WCG-178", !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
@@ -394,14 +394,14 @@ public partial class GameEngine
                     else
                     {
                         bool ah = a.PP <= d.PP || d.Poison, dh = d.PP <= a.PP || a.Poison;
-                        bool asaved = ah && a.Shield && (fresh || me > 0), dsaved = dh && d.Shield && (fresh || them > 0);
+                        bool asaved = ah && a.Shield && (fresh || me > 0), dsaved = (dh || attackedSpends) && d.Shield && (fresh || them > 0);
                         if (asaved && !fresh) me--; if (dsaved && !fresh) them--;
                         // Simplified rules: a Holy Shield saves once per turn and needs no energy.
                         var after = asaved && fresh ? a with { Shield = false, Ready = false } : a with { Ready = false };
                         if (ah && !asaved) aa.RemoveAt(ai); else aa[ai] = after;
                         var di = dd.FindIndex(u => u.Id == d.Id);
                         if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && (fresh || a.PP - d.PP >= 700)) nhp--; }
-                        else if (fresh && dsaved) dd[di] = d with { Shield = false };
+                        else if (fresh && dsaved) dd[di] = d with { Shield = false, Value = attackedSpends ? d.Value - 2 : d.Value };
                     }
                     Search(aa, dd, nhp, me, them, left - 1, first ?? (a.Id, d?.Id));
                 }

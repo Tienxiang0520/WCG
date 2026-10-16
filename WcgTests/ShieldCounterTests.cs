@@ -17,6 +17,22 @@ public class ShieldCounterTests
     private static void ComputerTurn(GameEngine g){Assert.True(g.EndTurn());while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));Assert.Equal("computer",g.CurrentTurnPlayerId);}
     private static void PlayerTurn(GameEngine g){Assert.True(g.EndTurn());while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));Assert.Equal("player",g.CurrentTurnPlayerId);}
 
+    [Fact] public void BeingAttackedSpendsACounterEvenWhenItWouldSurvive()
+    {
+        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,3,3);Refresh(g);ComputerTurn(g);
+        Assert.True(knight.ShieldCounters>0&&small.CurrentPP<knight.CurrentPP);var before=knight.ShieldCounters;
+        var preview=g.PreviewAttack(small,knight)!;Assert.True(preview.DefenderShieldBreaks);Assert.False(preview.DefenderDies);Assert.True(preview.AttackerDies);
+        Assert.True(g.Attack(g.Computer,small,knight));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
+        Assert.Contains(knight,g.Player.Field);Assert.Equal(before-1,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
+    }
+
+    [Fact] public void AttackingDoesNotSpendACounterWhenItWins()
+    {
+        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,3,3);Refresh(g);var before=knight.ShieldCounters;
+        Assert.True(g.Attack(g.Player,knight,small));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
+        Assert.Equal(before,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
+    }
+
     [Fact] public void CurrentCatalogUsesCountersAndOlderCatalogsDoNot()
     {
         Assert.True(Game().ShieldCounterRules);
