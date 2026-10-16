@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """產生天梯電腦牌組：WcgWeb/Data/ranked_decks.json。
 
-只使用 cards.json 既有卡牌；每副 50 張、同卡號最多 4 張、最多兩個派系、混色最多 12 張。
+只使用 cards.json 既有卡牌；每副 50 張、同卡號最多 4 張、最多兩個派系（中立不計，副色張數不限）；雙色卡只能放進主色＋副色剛好是它兩個意志的牌組。
 每個流派只在 tiers 列出的牌位出現；低牌位版本會依 downgrades 依序把主題卡換成較笨重的通用卡；大師使用完整牌表。
 Variants 是開局時隨機套用的 2 張小幅替換，讓同一副對手每場略有不同。
 用法：python3 tools/RankedDecks/build_ranked_decks.py [--check]
@@ -20,6 +20,7 @@ DOWNGRADES_BY_TIER = [8, 6, 4, 2, 1, 0]
 WEAK_FILLERS = [102, 106, 103, 109, 116, 120]
 
 def W(n): return f"WCG-{n:03d}"
+def WILLS_OF(i): w = CARDS[i]["will"]; return w if isinstance(w, list) else [w]
 
 # key, 主色, 名稱, 流派, 首次出現牌位, 說明, 完整牌表, 降級時依序拿掉的卡（電腦最能打出價值的高效怪物與解場）, 隨機微調(out, in, 名稱)
 # 首次出現牌位依 RankedCheck 對五副預組的 AI 對照勝率排序：較弱的流派先出現，最強的留到高段。
@@ -45,7 +46,7 @@ ARCHETYPES = [
        down=[88,16,195,11,6,13],
        var=[(101,110,"狼騎兵先遣隊"),(182,18,"地獄戰狂"),(14,2,"致死衝擊"),(11,136,"狂戰士斥候")]),
   dict(key="REASON-FROST", will="理智", name="霜焰節奏", style="節奏", tiers=(1,2,3,4,5),
-       text="橫置、回手與嘲諷能量護盾控制節奏，再用時間靜止者打出空檔。",
+       text="橫置、回手與嘲諷聖盾控制節奏，再用時間靜止者打出空檔。",
        cards={23:4,24:4,26:4,137:4,184:4,31:4,35:4,29:2,183:4,196:4,32:4,39:2,104:4,163:2},
        down=[32,104,35,184,137,196],
        var=[(104,102,"精靈遊俠"),(29,33,"秘法竊取者"),(163,40,"星穹領主"),(26,139,"次元回溯")]),
@@ -60,7 +61,7 @@ ARCHETYPES = [
        down=[32,137,35,185,37,31,24,30],
        var=[(125,153,"奧術回音塔"),(30,28,"奧術靈感"),(35,29,"冰霜魔導師"),(166,26,"空間回折"),(130,21,"秘法學徒"),(22,39,"萬象觀測者")]),
   dict(key="REASON-GLACIER", will="理智", name="冰封堡壘", style="中速", tiers=(4,5),
-       text="理智橫置配秩序嘲諷能量護盾，穩住場面再逐步推進。",
+       text="理智橫置配秩序嘲諷聖盾，穩住場面再逐步推進。",
        cards={31:4,29:4,35:4,26:4,137:4,32:4,33:2,27:2,39:2,24:4,184:4,65:4,69:4,63:4},
        down=[32,35,184,69,137,31],
        var=[(33,21,"秘法學徒"),(27,163,"時空之主"),(39,40,"星穹領主"),(26,196,"維度時空屏障")]),
@@ -84,8 +85,8 @@ ARCHETYPES = [
        cards={45:4,51:4,53:4,47:4,101:4,111:4,135:4,187:4,43:4,118:2,5:4,136:4,182:4},
        down=[182,187,135,136,53,45],
        var=[(118,110,"狼騎兵先遣隊"),(101,102,"精靈遊俠"),(47,42,"野性之力"),(111,57,"遠古守護者")]),
-  dict(key="ORDER-AEGIS", will="秩序", name="能量護盾防線", style="防守", tiers=(0,1,2,3,4,5),
-       text="箭頭與附著法術層層給能量護盾，靠反擊與嘲諷拖垮攻勢。",
+  dict(key="ORDER-AEGIS", will="秩序", name="聖盾防線", style="防守", tiers=(0,1,2,3,4,5),
+       text="箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
        cards={61:4,63:4,69:4,73:4,147:4,62:4,74:4,189:4,75:2,80:2,129:4,133:4,198:4,171:2},
        down=[129,133,198,80,75,171,61,147],
        var=[(171,179,"阿曼蘇爾"),(62,66,"王者賜福"),(74,70,"崇高奉獻"),(189,72,"淨化聖光"),(80,191,"聖光大審判官")]),
@@ -100,7 +101,7 @@ ARCHETYPES = [
        down=[76,142,77,67,64,65],
        var=[(72,189,"聖堂集結號角"),(68,198,"神聖救贖誓約"),(191,79,"日耀聖堂巨像"),(158,152,"禁魔石像")]),
   dict(key="ORDER-GROVE", will="秩序", name="聖林守衛", style="中速", tiers=(4,5),
-       text="秩序能量護盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
+       text="秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
        cards={63:4,61:4,65:4,69:4,73:4,147:2,190:4,75:2,62:4,66:4,49:4,146:4,41:4,158:2},
        down=[73,190,62,146,69,63],
        var=[(147,189,"聖堂集結號角"),(75,171,"聖光審判巨神"),(158,129,"白銀哨衛"),(66,198,"神聖救贖誓約")]),
@@ -159,7 +160,7 @@ ARCHETYPES += [
        down=[143,187,131,135,197,51,45,188],
        var=[(58,54,"原始印記"),(135,55,"沼澤巨鱷"),(60,162,"世界樹之靈"),(108,103,"淘金鼠人"),(43,56,"生態同調"),(47,146,"荊棘巨龜")]),
   dict(key="ORDER-EXPEDITION", will="秩序", name="聖光遠征", style="進攻", tiers=(1,2,3,4,5),
-       text="能量護盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
+       text="聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
        cards={61:4,63:4,69:4,73:4,75:4,147:4,189:4,66:4,198:4,5:4,136:4,182:4,80:2},
        down=[182,136,73,69,198,63,61,75],
        var=[(80,171,"聖光審判巨神"),(189,74,"堅壁祈願"),(147,65,"白銀巡邏衛"),(66,70,"崇高奉獻")]),
@@ -180,6 +181,60 @@ ARCHETYPES += [
        var=[(96,88,"恐懼吞噬"),(100,97,"希爾瓦"),(193,148,"墓園守夜人"),(199,94,"靈魂汲取")]),
 ]
 
+# 2026-10-16 新流派 A–G（設計 v2 第 6 節，PR E）。機制越複雜的流派越晚出現；戰紋巨獸偏強，只在鑽石與大師。
+ARCHETYPES += [
+  dict(key="REASON-TIDE", will="理智", name="記憶潮汐", style="磨牌", tiers=(3,4,5),
+       text="思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
+       cards={211:4,212:4,213:4,214:4,226:4,250:2,208:2,31:4,32:4,35:4,24:2,26:2,82:4,81:4,37:2},
+       down=[214,213,32,35,226,212],
+       var=[(250,30,""),(208,33,""),(37,183,""),(24,89,"")]),
+  dict(key="VITAL-PHALANX", will="生機", name="方陣列隊", style="站位", tiers=(2,3,4,5),
+       text="根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
+       cards={215:4,216:4,217:2,218:4,219:2,206:2,49:4,146:4,41:4,45:4,61:4,73:4,63:4,135:4},
+       down=[218,216,49,73,61,146],
+       var=[(217,54,""),(219,57,""),(206,46,""),(135,62,"")]),
+  dict(key="WRATH-WARRUNE", will="狂怒", name="戰紋巨獸", style="附著", tiers=(4,5),
+       text="荊棘甲殼與烈焰戰紋疊在共生巨蜥身上，一隻巨獸撞穿防線。",
+       cards={220:4,221:4,222:4,223:4,205:2,5:4,9:4,136:4,181:4,182:4,135:4,53:4,51:2,17:2},
+       down=[222,221,182,136,53,9],
+       var=[(205,110,""),(51,45,""),(17,2,""),(223,156,"")]),
+  dict(key="REASON-PROPHECY", will="理智", name="預言之盾", style="反擊", tiers=(2,3,4,5),
+       text="手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
+       cards={224:4,225:2,226:2,227:4,251:2,31:4,33:4,183:4,37:4,65:4,69:4,256:4,101:4,154:2,66:2},
+       down=[224,227,69,31,183,37],
+       var=[(251,39,""),(225,70,""),(66,72,""),(154,23,"")]),
+  dict(key="WRATH-LONEWOLF", will="狂怒", name="孤狼劍道", style="少怪", tiers=(1,2,3,4,5),
+       text="場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
+       cards={228:4,229:4,230:4,231:2,242:2,18:4,136:4,182:2,17:4,2:4,4:4,24:4,26:4,14:4},
+       down=[228,230,18,17,2,24],
+       var=[(231,110,""),(242,137,""),(182,156,""),(14,184,"")]),
+  dict(key="VITAL-ROTCYCLE", will="生機", name="腐生循環", style="犧牲", tiers=(2,3,4,5),
+       text="犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
+       cards={232:4,233:4,234:4,235:4,249:2,207:2,43:4,45:4,47:4,51:4,101:4,154:4,93:2,187:2,58:2},
+       down=[234,235,233,45,51,93],
+       var=[(249,97,""),(207,82,""),(58,90,""),(187,88,"")]),
+  dict(key="ORDER-MERCENARY", will="秩序", name="無旗傭兵", style="中立", tiers=(0,1,2,3,4,5),
+       text="大量中立傭兵互相加成，傭兵契約找人、流浪將軍壓陣。",
+       cards={236:4,237:4,238:4,209:4,210:2,219:2,257:2,110:4,111:4,113:4,114:2,154:4,65:4,69:4,133:2},
+       down=[238,236,113,69,111,209],
+       var=[(210,118,""),(219,66,""),(257,119,""),(114,155,"")]),
+]
+# 單色強化卡（241–252）放進單色流派。
+def _boost(key, out, adds, down_from=None, down_to=None):
+    a = next(x for x in ARCHETYPES if x["key"] == key)
+    assert a["cards"].get(out, 0) == sum(adds.values()), key
+    del a["cards"][out]
+    for k, v in adds.items(): a["cards"][k] = a["cards"].get(k, 0) + v
+    a["down"] = [down_to if d == out else d for d in a["down"]]
+    a["var"] = [v for v in a["var"] if v[0] != out]
+    BOOSTS[key] = (out, adds)
+BOOSTS = {}
+_boost("WRATH-FORGE", 113, {244: 2, 242: 2}, down_to=244)
+_boost("VITAL-SWARM", 101, {246: 4}, down_to=246)
+_boost("VITAL-BEHEMOTH", 55, {247: 2, 248: 2}, down_to=248)
+_boost("ABYSS-REVENANT", 132, {249: 2, 250: 2}, down_to=249)
+_boost("REASON-ARCANE", 113, {251: 2, 252: 2}, down_to=252)
+
 # 每個流派只在 tiers 列出的牌位出現（不再自動繼承低牌位流派）。
 # 依 2026-10-09 分級電腦模擬（tools/RankedCheck 搭配 --all-tiers）決定：
 # 2026-10-10 多樣性調整：抽牌、獻祭與鋪場重新構築後也可進入高牌位；強控制仍維持高段限定。
@@ -199,10 +254,11 @@ def check(deck_will, ids, label):
     for i, n in c.items():
         if i not in CARDS: errors.append(f"未知卡 {i}")
         elif n > 4: errors.append(f"{i} 超過 4 張")
-    wills = {CARDS[i]["will"] for i in ids if i in CARDS and CARDS[i]["will"] != "中立"}
+    wills = {w for i in ids if i in CARDS for w in WILLS_OF(i) if w != "中立"}
     if len(wills) > 2: errors.append("超過兩派系")
-    off = sum(1 for i in ids if i in CARDS and CARDS[i]["will"] not in ("中立", deck_will))
-    if off > 12: errors.append(f"混色 {off} 張")
+    for i in set(ids):
+        if i in CARDS and len(WILLS_OF(i)) == 2 and (deck_will not in WILLS_OF(i) or not wills <= set(WILLS_OF(i))):
+            errors.append(f"雙色卡 {i} 不符主副色")
     if errors: raise SystemExit(f"{label} 不合法：" + "、".join(errors))
 
 def swap(counts, out, inn, n=2):
@@ -217,7 +273,7 @@ def build():
     entries, seen = [], set()
     master_builds = json.loads(MASTER_BUILD_PATH.read_text(encoding="utf-8"))
     if set(master_builds) != {a['key'] for a in ARCHETYPES}:
-        raise SystemExit("大師強牌表必須涵蓋全部 30 個流派")
+        raise SystemExit("大師強牌表必須涵蓋全部流派")
     for tier in range(6):
         for a in ARCHETYPES:
             if tier not in TIER_GATES[a["key"]] and not ALL_TIERS: continue
@@ -239,6 +295,7 @@ def build():
             check(a["will"], ids, label)
             variants = []
             for out, inn, vname in ([] if tier == 5 else a["var"]):
+                vname = vname or CARDS[W(inn)]["name"]
                 v = swap(counts, out, inn)
                 if v is None: continue
                 check(a["will"], counts_to_ids(v), label + " 微調 " + vname)

@@ -10,7 +10,7 @@ internal static class CounterHistory
     // Catalog before the PP/cost deflation (PR B).
     // Catalog before the new cards 205–257 (PR D).
     internal static CardDatabase BeforeNewCards(CardDatabase current) => !current.AllCards.Any(c => int.Parse(c.Id[4..]) >= 205) ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c => int.Parse(c.Id[4..]) < 205)), JsonSerializer.Serialize(current.PresetDecks));
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c => int.Parse(c.Id[4..]) < 205)), JsonSerializer.Serialize(current.PresetDecks).Replace("\"WCG-249\"","\"WCG-128\"").Replace("\"WCG-250\"","\"WCG-169\"").Replace("\"WCG-212\"","\"WCG-169\""));
     internal static CardDatabase BeforeDeflation(CardDatabase current)
     {
         current=BeforeNewCards(current);
