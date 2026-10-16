@@ -32,7 +32,7 @@ public class CardTextClarityTests
     {
         Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("離場",c.Text);Assert.DoesNotContain("犧牲不算",c.Text);Assert.DoesNotContain("敵方全場",c.Text);Assert.DoesNotContain("不支付費用",c.Text);foreach(var t in new[]{"生命傷害","己方玩家","全場所有","或者"})Assert.DoesNotContain(t,c.Text);});
         Assert.All(cards.AllCards.Where(c=>Regex.IsMatch(c.Text,"免費召喚(至多 )?\\d")),c=>Assert.Contains("不觸發進場",c.Text));
-        Assert.All(cards.AllCards.Where(c=>c.IsCounter),c=>Assert.StartsWith("【反擊】受到",c.Text));
+        Assert.All(cards.AllCards.Where(c=>c.IsCounter),c=>Assert.Matches("^【反擊】(受到|敵方施放法術時|敵方付費召喚怪物時)",c.Text));
         foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("它交戰後，此卡送入墓地",cards.GetCard(id)!.Text);
         Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
         Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);

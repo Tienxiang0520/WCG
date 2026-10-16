@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 257
+total_cards: 262
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 257 張）
+# WCG 卡牌總表（共 262 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 155 張、法術 84 張、法術（反擊） 7 張、結界 11 張。
+類型：怪物 158 張、法術 84 張、法術（反擊） 9 張、結界 11 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -64,25 +64,25 @@ source: WcgWeb/Data/cards.json
 | WCG-243 | 赤鱗護衛 | 怪物 | 3 | 1400 | 1 | — | 嘲諷；陣亡：對敵方玩家造成 1 點傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-244 | 烽火戰旗 | 結界 | 3 | — | — | — | 你的回合結束時，若你場上有怪物且都是狂怒，對敵方玩家造成 1 點傷害。 | **Beacon War Banner** — At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player. |
 
-## 理智（Reason，39 張）
+## 理智（Reason，44 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-021 | 秘法學徒 | 怪物 | 2 | 1000 | 1 | ←→ | 【箭頭：← →】進場：抽 1 張牌；若左右兩邊都有相鄰的己方怪物，再抽 1 張。 | **Arcane Apprentice** — [Arrow: ← →] Deploy: Draw 1 card. If you have adjacent monsters on both the left and the right, draw 1 more. |
 | WCG-022 | 伺機待發 | 法術 | 1 | — | — | — | 檢視牌庫頂 3 張，選至多 1 張法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Lie in Wait** — Look at the top 3 cards of your deck. Put up to 1 spell card among them into your hand and the rest on the bottom in any order. |
-| WCG-023 | 靈光學徒 | 怪物 | 1 | 400 | 1 | — | 每當你施放 1 張法術牌，抽 1 張牌，然後棄 1 張手牌。 | **Lumen Apprentice** — Whenever you cast a spell, draw 1 card, then discard 1 card. |
+| WCG-023 | 靈光學徒 | 怪物 | 1 | 500 | 1 | — | 每當你施放 1 張法術牌，檢視你的牌庫頂 1 張，你可以將它放到牌庫底。 | **Lumen Apprentice** — Whenever you cast a spell, look at the top card of your deck. You may put it on the bottom. |
 | WCG-024 | 寒霜禁錮 | 法術 | 1 | — | — | — | 將 1 隻直立的敵方怪物橫置；若選的是已橫置的敵方怪物，改為抽 1 張牌，然後棄 1 張手牌。 | **Frost Shackles** — Tap 1 untapped enemy monster. If you choose an already tapped enemy monster instead, draw 1 card, then discard 1 card. |
 | WCG-025 | 智謀策士 | 怪物 | 2 | 1100 | 1 | — | 陣亡：抽 1 張牌。 | **Cunning Strategist** — On Death: Draw 1 card. |
 | WCG-026 | 空間回折 | 法術 | 2 | — | — | — | 將 1 隻敵方怪物移回手牌。 | **Spatial Fold** — Return 1 enemy monster to its hand. |
 | WCG-028 | 奧術靈感 | 法術 | 3 | — | — | — | 抽 2 張牌。 | **Arcane Insight** — Draw 2 cards. |
 | WCG-029 | 冰霜魔導師 | 怪物 | 4 | 1500 | 1 | — | 每當此怪物交戰後，若雙方都還在場：將對手怪物橫置；若它已橫置，改為抽 1 張牌。 | **Frost Magus** — Whenever this monster survives combat and so does the other monster: tap that monster; if it is already tapped, draw 1 card instead. |
 | WCG-030 | 預言秘術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張加入手牌，其餘依任意順序放到牌庫底。 | **Prophetic Arts** — Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom in any order. |
-| WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1100 以下的敵方怪物。 | **Mass Disruption** — Destroy 1 enemy monster with 1100 PP or less. |
-| WCG-033 | 秘法竊取者 | 怪物 | 4 | 1100 | 1 | ↑ | 【箭頭：↑】進場：將正對面直立的敵方怪物橫置；若正對面沒有直立的敵方怪物，改為抽 1 張牌。 | **Arcane Thief** — [Arrow: ↑] Deploy: Tap the untapped enemy monster directly opposite. If there is no untapped enemy monster directly opposite, draw 1 card instead. |
+| WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。 | **Mass Disruption** — Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead. |
+| WCG-033 | 秘法竊取者 | 怪物 | 4 | 1600 | 1 | ↑ | 【箭頭：↑】進場：將正對面直立的敵方怪物橫置；若正對面沒有直立的敵方怪物，改為抽 1 張牌。 | **Arcane Thief** — [Arrow: ↑] Deploy: Tap the untapped enemy monster directly opposite. If there is no untapped enemy monster directly opposite, draw 1 card instead. |
 | WCG-034 | 思維超載 | 法術 | 4 | — | — | — | 抽 3 張牌。 | **Mind Overload** — Draw 3 cards. |
 | WCG-035 | 時間靜止者 | 怪物 | 4 | 1300 | 1 | — | 進場：你可以將 1 隻已橫置的敵方怪物移回手牌，然後將所有敵方怪物橫置。 | **Timestopper** — Deploy: You may return 1 tapped enemy monster to its hand, then tap all enemy monsters. |
-| WCG-036 | 虛空調度 | 法術 | 2 | — | — | — | 將 1 隻己方怪物移回手牌，然後抽 1 張牌。 | **Void Recall** — Return 1 of your monsters to your hand, then draw 1 card. |
-| WCG-037 | 符文構裝巨像 | 怪物 | 4 | 1800 | 2 | — | 每當你施放 1 張法術牌，若對手的手牌比你多，抽 1 張牌。 | **Runebound Colossus** — Whenever you cast a spell, if your opponent has more cards in hand than you, draw 1 card. |
+| WCG-036 | 虛空調度 | 法術 | 1 | — | — | — | 將 1 隻己方怪物移回手牌，然後抽 1 張牌。 | **Void Recall** — Return 1 of your monsters to your hand, then draw 1 card. |
+| WCG-037 | 符文構裝巨像 | 怪物 | 4 | 1800 | 2 | — | 每當你施放 1 張法術牌，若你的手牌 3 張以下，抽 1 張牌。 | **Runebound Colossus** — Whenever you cast a spell, if you have 3 or fewer cards in hand, draw 1 card. |
 | WCG-038 | 逆流風暴 | 法術 | 4 | — | — | — | 將雙方所有費用 2 以下的怪物移回其擁有者的手牌。 | **Reverse Tide** — Return all monsters on both sides that cost 2 or less to their owners' hands. |
 | WCG-039 | 萬象觀測者 | 怪物 | 5 | 1800 | 1 | — | 進場：抽 2 張牌。 | **All-Seeing Observer** — Deploy: Draw 2 cards. |
 | WCG-040 | 星穹領主·奧瑞斯 | 怪物 | 6 | 2400 | 2 | — | 進場：檢視對手的手牌，選 1 張法術牌送入墓地。 | **Starvault Lord, Oris** — Deploy: Look at your opponent's hand and put 1 spell card from it into their graveyard. |
@@ -92,21 +92,26 @@ source: WcgWeb/Data/cards.json
 | WCG-139 | 次元回溯 | 法術 | 2 | — | — | — | 將 1 隻怪物移回其擁有者的手牌；若它是己方怪物，抽 1 張牌。 | **Dimensional Rewind** — Return 1 monster to its owner's hand. If it was your monster, draw 1 card. |
 | WCG-145 | 逆流法師 | 怪物 | 3 | 1400 | 1 | — | 進場：抉擇：移除 1 隻怪物的所有附著卡並解除沉默；或將 1 隻橫置的己方怪物轉為直立（本回合可以攻擊）。 | **Countertide Mage** — Deploy: Choose One: Remove all cards attached to 1 monster and its Silence; or untap 1 of your tapped monsters (it can attack this turn). |
 | WCG-153 | 奧術回音塔 | 結界 | 4 | — | — | — | 每當你施放費用 2 以上的法術，從你的墓地隨機將 1 張費用 1 的法術牌加入手牌。 | **Arcane Echo Tower** — Whenever you cast a spell that costs 2 or more, put a random spell that costs 1 from your graveyard into your hand. |
-| WCG-163 | 時空之主·克羅諾斯 | 怪物 | 9 | 2200 | 1 | — | 進場：你的所有能量轉為直立（可再使用）；將 1 隻敵方怪物移回手牌。 | **Lord of Time, Kronos** — Deploy: Untap all of your energy (you can use it again). Return 1 enemy monster to its hand. |
+| WCG-163 | 時空之主·克羅諾斯 | 怪物 | 9 | 2900 | 1 | — | 進場：你的所有能量轉為直立（可再使用）；將 1 隻敵方怪物移回手牌。 | **Lord of Time, Kronos** — Deploy: Untap all of your energy (you can use it again). Return 1 enemy monster to its hand. |
 | WCG-166 | 思維置換 | 法術 | 0 | — | — | — | 將 1 張手牌放到牌庫底，然後抽 1 張牌。 | **Mind Swap** — Put 1 card from your hand on the bottom of your deck, then draw 1 card. |
 | WCG-173 | 維度扭曲 | 法術 | 7 | — | — | — | 將雙方所有怪物移回其擁有者的手牌；抽 2 張牌。 | **Dimensional Warp** — Return all monsters on both sides to their owners' hands. Draw 2 cards. |
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 500 | 1 | — | 進場：檢視牌庫頂 3 張，選 1 張法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Stargazing Diviner** — Deploy: Look at the top 3 cards of your deck. Put 1 spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 將 1 隻直立的敵方怪物橫置；若選的是已橫置的敵方怪物，改為將它移回手牌。若你場上有【理智】卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap 1 untapped enemy monster. If you choose an already tapped enemy monster instead, return it to its hand. If you have a [Reason] card in play, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 1800 | 1 | — | 每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方傷害時：抵銷傷害，抽 1 張。 | **Dimensional Time Barrier** — [Counter] When you take damage from the enemy: Cancel the damage and draw 1 card. |
-| WCG-202 | 星軌觀測師 | 怪物 | 4 | 1500 | 1 | — | 進場：看牌庫頂 2 張，1 張入手，其餘置底。 | **Starpath Observer** — Deploy: Look at the top 2 cards of your deck. Put 1 into your hand and the rest on the bottom. |
+| WCG-202 | 星軌觀測師 | 怪物 | 3 | 1300 | 1 | — | 進場：看牌庫頂 2 張，1 張入手，其餘置底。 | **Starpath Observer** — Deploy: Look at the top 2 cards of your deck. Put 1 into your hand and the rest on the bottom. |
 | WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 沉默 1 隻尚未被沉默的敵方怪物（將此卡附著其上）。 | **Hush Hex** — Silence 1 enemy monster that is not already silenced (attach this card to it). |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] When you take damage from a spell: Cancel the damage and draw 1 card. |
-| WCG-229 | 虛空隱士 | 怪物 | 3 | 1500 | 1 | — | 你場上只有此怪物時，它不能成為法術的目標。 | **Void Hermit** — While this is your only monster, it can't be targeted by spells. |
-| WCG-231 | 空無祭壇 | 結界 | 2 | — | — | — | 你的回合開始時，若你場上只有 1 隻怪物，抽 1 張牌。 | **Altar of Emptiness** — At the start of your turn, if you have exactly 1 monster, draw 1 card. |
-| WCG-251 | 秘法護衛 | 怪物 | 3 | 1400 | 1 | — | 進場：若你場上其他怪物都是理智，抽 1 張牌。 | **Arcane Guard** — Deploy: If all your other monsters are [Reason], draw 1 card. |
+| WCG-229 | 虛空隱士 | 怪物 | 3 | 1400 | 1 | — | 此怪物不能成為敵方法術的目標。 | **Void Hermit** — This monster can't be the target of enemy spells. |
+| WCG-231 | 空無祭壇 | 結界 | 2 | — | — | — | 你的回合開始時，若你場上的怪物數量不多於對手，抽 1 張牌。 | **Altar of Emptiness** — At the start of your turn, if you control no more monsters than your opponent, draw 1 card. |
+| WCG-251 | 秘法護衛 | 怪物 | 3 | 1100 | 1 | — | 嘲諷；進場：抽 1 張牌。 | **Arcane Guard** — Taunt. Deploy: Draw 1 card. |
 | WCG-252 | 星界巨像 | 怪物 | 5 | 2100 | 2 | — | 每當你施放法術，此怪物本回合 PP +300。 | **Astral Colossus** — Whenever you cast a spell, this monster gets +300 PP this turn. |
 | WCG-256 | 符文哨兵 | 怪物 | 2 | 1300 | 1 | — | 無。 | **Rune Sentry** — None. |
+| WCG-258 | 鏡湖守衛 | 怪物 | 3 | 1100 | 1 | — | 嘲諷；被攻擊後，若攻擊者仍在場，將它移回持有者手上。 | **Mirror Lake Warden** — Taunt. After this monster is attacked, if the attacker is still in play, return it to its owner's hand. |
+| WCG-259 | 否決之言 | 法術（反擊） | 2 | — | — | — | 【反擊】敵方施放法術時：使該法術無效（送入墓地），然後你抽 1 張牌。 | **Word of Denial** — [Counter] When an enemy casts a spell: Negate that spell (it goes to the graveyard), then draw 1 card. |
+| WCG-260 | 退潮令 | 法術（反擊） | 3 | — | — | — | 【反擊】敵方付費召喚怪物時：將該怪物移回持有者手上（不觸發進場）。 | **Ebb Tide Edict** — [Counter] When an enemy summons a monster with payment: Return that monster to its owner's hand (its Deploy doesn't trigger). |
+| WCG-261 | 霧翼斥候 | 怪物 | 2 | 1000 | 1 | — | 此怪物攻擊時可以無視嘲諷。 | **Mistwing Scout** — This monster can ignore Taunt when it attacks. |
+| WCG-262 | 智識巨靈 | 怪物 | 6 | 1800 | 2 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +700）。 | **Lore Colossus** — This monster gets +100 PP for each card in your hand (up to +700). |
 
 ## 生機（Life，41 張）
 

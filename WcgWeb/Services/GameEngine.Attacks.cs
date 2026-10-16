@@ -9,7 +9,7 @@ public partial class GameEngine
     {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-210")&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>Low(1300))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261"))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>Low(1300))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int RageEnergy=0,int WildEnergy=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
@@ -50,7 +50,7 @@ public partial class GameEngine
     private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d)
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
-        var ap=a.CurrentPP;var dp=d.CurrentPP;var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
+        var ap=a.CurrentPP;var dp=d.CurrentPP;var mirror=d.IsUnit&&!d.IsSilenced&&d.Card.Id=="WCG-258";var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
         Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh,b=>dsaved=b),()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
@@ -62,7 +62,7 @@ public partial class GameEngine
                     foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a))triggers.Add(()=>Damage(p,1,new(e,x.Card,x,"passive")));
                     if(DamageCounters) Resolve(triggers.ToArray()); else foreach(var trigger in triggers)trigger();
                 },
-                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
+                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{if(mirror&&Alive(a))Bounce(a);},()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
             KillBatch(dead,"交戰");
         });
     }

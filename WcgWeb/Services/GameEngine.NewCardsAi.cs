@@ -58,7 +58,7 @@ public partial class GameEngine
             "WCG-238" => others.Count(m => m.Card.IsNeutral) * 200 / 450d,
             "WCG-241" => others.All(m => m.Card.HasWill("狂怒")) ? 400 / 450d : 0,
             "WCG-245" => others.All(m => m.Card.HasWill("生機")) ? 2 : 0,
-            "WCG-251" => others.All(m => m.Card.HasWill("理智")) ? 2 : 0,
+            "WCG-251" => ReasonBuff || others.All(m => m.Card.HasWill("理智")) ? 2 : 0,
             "WCG-252" => p.Hand.Count(x => x.Card.IsSpell && !x.Card.IsCounter) * .5,
             _ => 0d,
         };

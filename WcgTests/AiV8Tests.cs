@@ -33,7 +33,7 @@ public sealed class AiV8Tests : IDisposable
     static double Chosen(string searchLine)=>double.Parse(searchLine.Split("chosen ")[1].Split(':')[0],System.Globalization.CultureInfo.InvariantCulture);
 
     [Fact]
-    public void RankedAiVersionIsEight()=>Assert.Equal(8,GameEngine.RankedAiVersion);
+    public void RankedAiVersionIsNine()=>Assert.Equal(9,GameEngine.RankedAiVersion);
 
     [Fact]
     public void TheMatchCodeStillReplaysWithItsRecordedV7Steps()

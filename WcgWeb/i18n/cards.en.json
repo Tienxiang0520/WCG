@@ -119,7 +119,7 @@
  "WCG-023": {
   "zh": "靈光學徒",
   "name": "Lumen Apprentice",
-  "text": "Whenever you cast a spell, draw 1 card, then discard 1 card."
+  "text": "Whenever you cast a spell, look at the top card of your deck. You may put it on the bottom."
  },
  "WCG-024": {
   "zh": "寒霜禁錮",
@@ -165,8 +165,8 @@
  "WCG-032": {
   "zh": "質能瓦解",
   "name": "Mass Disruption",
-  "text": "Destroy 1 enemy monster with 1100 PP or less.",
-  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物。"
+  "text": "Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead.",
+  "zh_text": "消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。"
  },
  "WCG-033": {
   "zh": "秘法竊取者",
@@ -191,7 +191,7 @@
  "WCG-037": {
   "zh": "符文構裝巨像",
   "name": "Runebound Colossus",
-  "text": "Whenever you cast a spell, if your opponent has more cards in hand than you, draw 1 card."
+  "text": "Whenever you cast a spell, if you have 3 or fewer cards in hand, draw 1 card."
  },
  "WCG-038": {
   "zh": "逆流風暴",
@@ -1204,7 +1204,7 @@
  "WCG-229": {
   "zh": "虛空隱士",
   "name": "Void Hermit",
-  "text": "While this is your only monster, it can't be targeted by spells."
+  "text": "This monster can't be the target of enemy spells."
  },
  "WCG-230": {
   "zh": "決鬥宣言",
@@ -1214,7 +1214,7 @@
  "WCG-231": {
   "zh": "空無祭壇",
   "name": "Altar of Emptiness",
-  "text": "At the start of your turn, if you have exactly 1 monster, draw 1 card."
+  "text": "At the start of your turn, if you control no more monsters than your opponent, draw 1 card."
  },
  "WCG-232": {
   "zh": "腐土苗床",
@@ -1314,7 +1314,7 @@
  "WCG-251": {
   "zh": "秘法護衛",
   "name": "Arcane Guard",
-  "text": "Deploy: If all your other monsters are [Reason], draw 1 card."
+  "text": "Taunt. Deploy: Draw 1 card."
  },
  "WCG-252": {
   "zh": "星界巨像",
@@ -1345,5 +1345,30 @@
   "zh": "傭兵重鎚手",
   "name": "Mercenary Hammerer",
   "text": "None."
+ },
+ "WCG-258": {
+  "zh": "鏡湖守衛",
+  "name": "Mirror Lake Warden",
+  "text": "Taunt. After this monster is attacked, if the attacker is still in play, return it to its owner's hand."
+ },
+ "WCG-259": {
+  "zh": "否決之言",
+  "name": "Word of Denial",
+  "text": "[Counter] When an enemy casts a spell: Negate that spell (it goes to the graveyard), then draw 1 card."
+ },
+ "WCG-260": {
+  "zh": "退潮令",
+  "name": "Ebb Tide Edict",
+  "text": "[Counter] When an enemy summons a monster with payment: Return that monster to its owner's hand (its Deploy doesn't trigger)."
+ },
+ "WCG-261": {
+  "zh": "霧翼斥候",
+  "name": "Mistwing Scout",
+  "text": "This monster can ignore Taunt when it attacks."
+ },
+ "WCG-262": {
+  "zh": "智識巨靈",
+  "name": "Lore Colossus",
+  "text": "This monster gets +100 PP for each card in your hand (up to +700)."
  }
 }

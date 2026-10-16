@@ -280,6 +280,7 @@ public partial class GameEngine
             "WCG-048" => enemy.Where(m => m.CurrentPP <= p.Field.Count * 500),
             "WCG-024" or "WCG-137" or "WCG-184" => enemy,
             "WCG-062" or "WCG-074" => p.Field.Where(CanShield),
+            "WCG-032" when ReasonBuff => enemy.Where(m => m.CurrentPP <= (m.IsTapped ? 2300 : 1600)),
             "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= Low(1700)),
             "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= Low(1300)),
             "WCG-076" => enemy.Where(m => m.CurrentPP >= High(1700)),
@@ -294,7 +295,7 @@ public partial class GameEngine
             "WCG-072" => p.Field.Concat(enemy).Where(m => !m.IsSilenced),
             _ => NewSpellTargets(p, c) ?? []
         };
-        return Targetable(p, candidates).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(m)).ToList();
+        return Targetable(p, candidates).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(p, m)).ToList();
     }
     // 寂靜禁咒 (WCG-208) needs a target only as a spell; in old-era catalogs it is the monster 寂靜學者.
     private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) || card.Id == "WCG-208" && card.IsSpell;
@@ -398,7 +399,12 @@ public partial class GameEngine
         {
             if (c.Card.IsMonster) Summon(p, c, true);
             else if (c.Card.IsEnchantment) SummonStructure(p, c);
-            else { Log($"【{p.Name}】施放【{c.Card.Name}】。", "action"); Spell(p, c, target, mode, playerTarget); UsedSpell(p, c.Card); }
+            else
+            {
+                Log($"【{p.Name}】施放【{c.Card.Name}】。", "action");
+                void Cast() { Spell(p, c, target, mode, playerTarget); UsedSpell(p, c.Card); }
+                if (!OfferNegate(p, c, Cast)) Cast();
+            }
         });
     }
     private void Summon(PlayerState p, CardInstance c, bool paid)
@@ -408,6 +414,7 @@ public partial class GameEngine
         var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshBoard(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
         Summoned(p, m);
         if (!paid) return;
+        OfferEbbTide(p, m);
         _effects.AddLast(() => Deploy(p, m));
         _effects.AddLast(() =>
         {
@@ -420,8 +427,8 @@ public partial class GameEngine
         NewSpellTriggers(p, spell);
         foreach (var m in p.Field.Where(m => !m.IsSilenced).ToArray())
         {
-            if (m.Card.Id == "WCG-023") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); Loot(p); } });
-            if (m.Card.Id == "WCG-037") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced && GetOpponent(p).Hand.Count > p.Hand.Count) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); DrawMany(p, 1); } });
+            if (m.Card.Id == "WCG-023") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); if (ReasonBuff) ScryOne(p); else Loot(p); } });
+            if (m.Card.Id == "WCG-037") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced && (ReasonBuff ? p.Hand.Count <= 3 : GetOpponent(p).Hand.Count > p.Hand.Count)) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); DrawMany(p, 1); } });
         }
     }
     private void Bounce(MonsterInstance m)

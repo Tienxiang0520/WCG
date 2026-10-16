@@ -36,6 +36,7 @@ public partial class GameEngine
             case "WCG-222": bonus += 500 * m.Attachments.Count; break;
             case "WCG-228": bonus += 300 * Math.Max(0, 5 - p.Occupied); break;
             case "WCG-238": bonus += 200 * p.Field.Count(x => x != m && x.Card.IsNeutral); break;
+            case "WCG-262": bonus += 100 * Math.Min(7, p.Hand.Count); break;
             case "WCG-241": if (p.Field.All(x => x.Card.HasWill("狂怒"))) bonus += 400; break;
         }
         return bonus;
@@ -60,7 +61,8 @@ public partial class GameEngine
         return GetOpponent(owner).Field.Any(x => Active(x, "WCG-216") && HasArrows(x) && PointsAt(GetOpponent(owner), x, owner, m));
     }
     // 虛空隱士: while it is your only monster, spells can't target it.
-    private bool Hermit(MonsterInstance m) => Alive(m) && Active(m, "WCG-229") && Owner(m).Field.Count == 1;
+    // After the 理智 buff: enemy spells can never target it.
+    private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1);
     private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221");
     private static int NewAttachmentPower(string id) => id == "WCG-221" ? 300 : 0;
     private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : 0;
@@ -101,6 +103,7 @@ public partial class GameEngine
             case "WCG-227": if (p.Hand.Count > e.Hand.Count) DrawMany(p, 1); break;
             case "WCG-236": if (OthersAre(p, m, c => c.IsNeutral)) DrawMany(p, 1); break;
             case "WCG-245": if (OthersAre(p, m, c => c.HasWill("生機"))) DrawMany(p, 1); break;
+            case "WCG-251" when ReasonBuff: DrawMany(p, 1); break;
             case "WCG-251": if (OthersAre(p, m, c => c.HasWill("理智"))) DrawMany(p, 1); break;
             default: return false;
         }
@@ -164,7 +167,7 @@ public partial class GameEngine
     {
         foreach (var s in p.Structures.Where(x => !x.IsSet).ToArray())
         {
-            if (s.Card.Id == "WCG-231" && p.Field.Count == 1) _effects.AddLast(() => { if (p.Structures.Contains(s) && p.Field.Count == 1) DrawMany(p, 1); });
+            if (s.Card.Id == "WCG-231" && AltarReady(p)) _effects.AddLast(() => { if (p.Structures.Contains(s) && AltarReady(p)) DrawMany(p, 1); });
             if (s.Card.Id == "WCG-247" && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) _effects.AddLast(() => { if (p.Structures.Contains(s) && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) DrawMany(p, 1); });
         }
     }

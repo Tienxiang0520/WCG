@@ -23,8 +23,8 @@ public class NewCardTests
 
     [Fact] public void CatalogHasAllDesignedCardsWithPlainText()
     {
-        var added=cards.AllCards.Where(c=>int.Parse(c.Id[4..])>=205).ToArray();
-        Assert.Equal(53,added.Length);Assert.Equal("WCG-257",added[^1].Id);Assert.Null(cards.GetCard("WCG-258"));
+        var added=cards.AllCards.Where(c=>int.Parse(c.Id[4..])>=205&&int.Parse(c.Id[4..])<258).ToArray();
+        Assert.Equal(53,added.Length);Assert.Equal("WCG-257",added[^1].Id);Assert.Null(cards.GetCard("WCG-263"));
         Assert.Equal(["WCG-253","WCG-254","WCG-255","WCG-256","WCG-257"],added.Where(c=>c.IsVanilla).Select(c=>c.Id));
         Assert.All(added.Where(c=>c.IsVanilla),c=>{Assert.Equal("無。",c.Text);Assert.Empty(c.Keywords);});
         Assert.All(added,c=>{Assert.DoesNotContain("能量護盾",c.Text);Assert.All(c.Keywords,k=>Assert.Contains(k,new[]{"嘲諷","衝鋒","聖盾","貫穿","劇毒","沉默"}));
@@ -169,11 +169,13 @@ public class NewCardTests
         var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1900+4*300,m.CurrentPP);
         Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1900+2*300,m.CurrentPP);
     }
-    [Fact] public void VoidHermitCannotBeTargetedBySpellsWhileAlone()
+    // 2026-10-17 理智加強: enemy spells can never target it, alone or not; its owner's spells still can.
+    [Fact] public void VoidHermitCannotBeTargetedByEnemySpells()
     {
         var g=Game();var hermit=Unit(g.Computer,229,0);var kill=Hand(g,168);
         Assert.Empty(g.GetDirectPlayTargets(g.Player,kill));Assert.False(g.CanPlayCard(g.Player,kill));
-        Unit(g.Computer,154,1);Assert.Contains(hermit,g.GetDirectPlayTargets(g.Player,kill));
+        Unit(g.Computer,154,1);Assert.DoesNotContain(hermit,g.GetDirectPlayTargets(g.Player,kill));
+        var own=Game();var mine=Unit(own.Player,229,0);Assert.Contains(mine,own.GetDirectPlayTargets(own.Player,Hand(own,168)));
     }
     [Fact] public void DuelBypassesTauntAndTapsTheChallenger()
     {
@@ -181,9 +183,10 @@ public class NewCardTests
         Assert.True(g.CastSpellAt(g.Player,Hand(g,230),champ));Assert.True(g.SelectTarget(back));
         Assert.DoesNotContain(back,g.Computer.Field);Assert.True(champ.IsTapped);Assert.Contains(champ,g.Player.Field);
     }
-    [Fact] public void AltarOfEmptinessDrawsAtStartOfTurnWithExactlyOneMonster()
+    // 2026-10-17 理智加強: draws while you control no more monsters than your opponent.
+    [Fact] public void AltarOfEmptinessDrawsWhileYouHaveNoMoreMonstersThanTheOpponent()
     {
-        var g=Game();Structure(g.Player,231,4);Unit(g.Player,101,0);EndTurnQuietly(g);var hand=g.Player.Hand.Count;EndTurnQuietly(g);Assert.Equal(hand+2,g.Player.Hand.Count);
+        var g=Game();Structure(g.Player,231,4);Unit(g.Player,101,0);Unit(g.Computer,101,0);EndTurnQuietly(g);var hand=g.Player.Hand.Count;EndTurnQuietly(g);Assert.Equal(hand+2,g.Player.Hand.Count);
         Unit(g.Player,101,1);EndTurnQuietly(g);hand=g.Player.Hand.Count;EndTurnQuietly(g);Assert.Equal(hand+1,g.Player.Hand.Count);
     }
 
@@ -280,7 +283,7 @@ public class NewCardTests
         var g=Game();var mill=Hand(g,211,g.Computer);while(g.Player.Deck.Count>3)g.Player.Deck.RemoveAt(0);
         var rev=typeof(GameEngine).GetProperty("AiRevision",BindingFlags.NonPublic|BindingFlags.Instance)!;
         var value=typeof(GameEngine).GetMethod("NewPlayValue",BindingFlags.NonPublic|BindingFlags.Instance)!;
-        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(8,GameEngine.RankedAiVersion);
+        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(9,GameEngine.RankedAiVersion);
         Assert.True((double)value.Invoke(g,[g.Computer,mill])! >= 50);   // milling the last cards wins
         rev.SetValue(g,5);Assert.Null(value.Invoke(g,[g.Computer,mill]));
     }

@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Bump when ranked AI decisions change; RankedSession stores it with every journal action.
-    public const int RankedAiVersion = 8;
+    public const int RankedAiVersion = 9;
     private int _aiSeed;
     // Ranked replays seed this through SetReplaySeed; simulations may seed it directly.
     public void SeedRankedAi(int seed) => _aiSeed = seed;
@@ -219,6 +219,7 @@ public partial class GameEngine
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
         if (choice.Title == "受到傷害，可從手牌發動反擊")
             return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
+        if (ReasonChoice(p, e, choice, prof) is { } reason) return SelectChoice(reason);
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
         if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return NewSlot(p, choice) is { } slot ? SelectChoice(slot) : ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));

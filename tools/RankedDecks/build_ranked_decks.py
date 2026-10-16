@@ -235,6 +235,23 @@ _boost("VITAL-BEHEMOTH", 55, {247: 2, 248: 2}, down_to=248)
 _boost("ABYSS-REVENANT", 132, {249: 2, 250: 2}, down_to=249)
 _boost("REASON-ARCANE", 113, {251: 2, 252: 2}, down_to=252)
 
+# 2026-10-17 理智加強：新卡 258–262 與改成嘲諷的秘法護衛（251）放進理智流派；占卜連鎖維持 205 前的卡，讓舊卡表的天梯每個牌位仍有理智牌組。大師強牌表做同樣替換（ranked_master_builds.json）。
+REASON_SWAPS = {
+  "REASON-FROST": [(104, 251, 4), (39, 259, 2)],
+  "REASON-ARCANE": [(109, 258, 4), (28, 259, 2), (39, 262, 2)],
+  "REASON-ECHO": [(109, 258, 4)],
+  "REASON-TIME": [(139, 261, 4)],
+  "REASON-TIDE": [(37, 260, 2)],
+  "REASON-PROPHECY": [(66, 259, 2), (101, 258, 4)],
+}
+for _key, _swaps in REASON_SWAPS.items():
+    _a = next(x for x in ARCHETYPES if x["key"] == _key)
+    for _out, _inn, _n in _swaps:
+        assert _a["cards"].get(_out, 0) == _n, (_key, _out)
+        del _a["cards"][_out]; _a["cards"][_inn] = _a["cards"].get(_inn, 0) + _n
+        _a["down"] = [_inn if d == _out else d for d in _a["down"]]
+        _a["var"] = [v for v in _a["var"] if v[0] != _out]
+
 # 每個流派只在 tiers 列出的牌位出現（不再自動繼承低牌位流派）。
 # 依 2026-10-09 分級電腦模擬（tools/RankedCheck 搭配 --all-tiers）決定：
 # 2026-10-10 多樣性調整：抽牌、獻祭與鋪場重新構築後也可進入高牌位；強控制仍維持高段限定。
