@@ -136,8 +136,8 @@ public class NewCardTests
     // ---- E 孤狼劍道：空格獎勵 ----
     [Fact] public void LoneSwordmasterGainsPowerPerEmptySlot()
     {
-        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1600+4*300,m.CurrentPP);
-        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1600+2*300,m.CurrentPP);
+        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1900+4*300,m.CurrentPP);
+        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1900+2*300,m.CurrentPP);
     }
     [Fact] public void VoidHermitCannotBeTargetedBySpellsWhileAlone()
     {
