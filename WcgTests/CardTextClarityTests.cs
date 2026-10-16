@@ -39,7 +39,7 @@ public class CardTextClarityTests
         Assert.Equal(800,cards.GetCard("WCG-147")!.PP);
         var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(root,"i18n/cards.en.json")))!;
         Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
-        Assert.Equal(10,cards.AllCards.Count(c=>c.IsVanilla));
+        Assert.Equal(15,cards.AllCards.Count(c=>c.IsVanilla));
     }
     [Fact] public void EnergyShieldKeywordRecognizesCurrentAndHistoricalCards()
     {

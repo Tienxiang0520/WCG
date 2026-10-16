@@ -18,7 +18,7 @@ public partial class GameEngine
 
     private bool CanDestroyDamageSource(DamageContext damage) => damage.Source?.Unit is { } unit
         && unit.IsUnit && Alive(unit) && (unit.IsSilenced || unit.Card.Id != "WCG-152");
-    private bool CanRecoverCounter(PlayerState p) => p.Graveyard.Any(c => c.Card.IsMonster && c.Card.Will == "深淵")
+    private bool CanRecoverCounter(PlayerState p) => p.Graveyard.Any(c => c.Card.IsMonster && c.Card.HasWill("深淵"))
         && p.Graveyard.Any(c => c.Card.IsMonster && c.Card.TotalCost <= 2);
     private bool CanReact(PlayerState p, CardInstance card, DamageContext damage)
     {
@@ -34,6 +34,8 @@ public partial class GameEngine
                 "WCG-195" or "WCG-199" => monster,
                 "WCG-196" => damage.Source is { } s && s.Owner != p,
                 "WCG-197" or "WCG-198" => true,
+                "WCG-225" => monster,
+                "WCG-226" => damage.Source?.Card.IsSpell == true,
                 _ => false
             };
         }
@@ -88,6 +90,12 @@ public partial class GameEngine
     private void ResolveDamageCounter(PlayerState p, CardInstance card, DamageContext damage)
     {
         var enemy = GetOpponent(p); var source = damage.Source?.Unit;
+        if (card.Card.Id == "WCG-225")
+        {
+            Resolve(() => ReverseDamage(damage), () => { if (source != null && Alive(source) && source.IsUnit && !source.IsTapped) { source.IsTapped = true; Present("status", Owner(source), source.InstanceId, card: source.Card, label: "橫置"); } });
+            return;
+        }
+        if (card.Card.Id == "WCG-226") { Resolve(() => ReverseDamage(damage), () => DrawMany(p, 1)); return; }
         if (SimplifiedRules && card.Card.Id is "WCG-195" or "WCG-199")
         {
             // If the monster already left the board, the counter only cancels the damage.

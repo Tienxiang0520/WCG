@@ -30,6 +30,7 @@ public sealed class CloudSaveValidationTests
         if(era>=1)
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
+            definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
             var deflation=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeDeflation"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>deflation.GetValueOrDefault(c.Id,c)).ToList();
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeRulesSimplification"))!.ToDictionary(c=>c.Id);

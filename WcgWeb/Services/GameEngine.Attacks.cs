@@ -4,19 +4,19 @@ public partial class GameEngine
 {
     public record AttackPresentation(Guid AttackerId, Guid? TargetId, long ActionNumber);
     public AttackPresentation? LastAttack {get;private set;}
-    public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&(m.IsSilenced||!m.Card.CannotAttack);
+    public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&!Pinned(m)&&(m.IsSilenced||!m.Card.CannotAttack);
     public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
     {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>Low(1300))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||a.Card.Id!="WCG-210")&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>Low(1300))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int RageEnergy=0,int WildEnergy=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
     {
-        if(!FixedAttackBonus(a)&&!FixedCombatBonus(a)&&(d==null||!FixedCombatBonus(d)))return CompareAttackCore(a,d);
+        if(AttackDpBonus(a)==0&&!FixedCombatBonus(a)&&(d==null||!FixedCombatBonus(d)))return CompareAttackCore(a,d);
         var ad=a.AttackDamageBonus;var ac=a.CombatPowerBonus;var dc=d?.CombatPowerBonus??0;
-        try{if(d==null){if(FixedAttackBonus(a))a.AttackDamageBonus=1;}else{if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}return CompareAttackCore(a,d);}
+        try{if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else{if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}return CompareAttackCore(a,d);}
         finally{a.AttackDamageBonus=ad;a.CombatPowerBonus=ac;if(d!=null)d.CombatPowerBonus=dc;}
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
@@ -37,7 +37,7 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){if(FixedAttackBonus(a))a.AttackDamageBonus=1;}else if(Alive(d)){if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}}
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else if(Alive(d)){if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}}
                     else if(d==null) RageDecision(p,a); else if(Alive(d)) WildDecision(p,a,d);},
                 ()=>{if(!SimplifiedRules && d!=null && Alive(a)&&Alive(d)) WildDecision(e,d,a);},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a);});return true;
@@ -97,7 +97,7 @@ public partial class GameEngine
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
                 case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
-                case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.Will=="深淵"))Recover(p,2,1);});break;
+                case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.HasWill("深淵")))Recover(p,2,1);});break;
             }
             UsedSpell(p,c.Card);
         });
@@ -116,6 +116,7 @@ public partial class GameEngine
             });
             if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
         }
+        NewEndTurn(p, effects);
         foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
             effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
         effects.Add(() => Observe(GetOpponent(p)));
@@ -126,7 +127,7 @@ public partial class GameEngine
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;
             Present("turn", ActivePlayer, label: $"第 {TurnNumber} 回合");
             ActivePlayer.ResetEnergyForOwnTurn(); foreach (var m in ActivePlayer.Board) m.ResetTurnState(); RefreshBoard();
-            Draw(ActivePlayer); Log($"第 {TurnNumber} 回合：輪到【{ActivePlayer.Name}】行動。", "action");
+            Draw(ActivePlayer); NewStartTurn(ActivePlayer); Log($"第 {TurnNumber} 回合：輪到【{ActivePlayer.Name}】行動。", "action");
         });
         Resolve(effects.ToArray()); return true;
     });

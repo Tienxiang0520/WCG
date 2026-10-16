@@ -51,10 +51,15 @@ public class MonsterInstance
     public bool HasSummoningSickness { get; set; }
     public bool IsSilenced { get; set; }
     public bool IsStealthed { get; set; }
-    public bool IsTaunt => !IsSilenced && Card.HasTaunt;
+    // Taunt/trample granted by board conditions or attachments (new cards 215/218/220/224); set by RefreshBoard.
+    public bool ExtraTaunt { get; set; }
+    public bool ExtraTrample { get; set; }
+    // Cards that were attached when the monster died (戰紋傳承者).
+    public List<CardInstance> LostAttachments { get; set; } = [];
+    public bool IsTaunt => !IsSilenced && Card.HasTaunt || ExtraTaunt;
     public bool HasCharge => !IsSilenced && Card.HasCharge || Attachments.Any(a => a.Card.Card.Id == "WCG-141");
     public bool HasPoison => !IsSilenced && Card.HasPoison;
-    public bool HasTrample => !IsSilenced && Card.HasTrample;
+    public bool HasTrample => !IsSilenced && Card.HasTrample || ExtraTrample;
     public List<CardInstance> ShieldEnergies { get; set; } = [];
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
