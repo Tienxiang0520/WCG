@@ -150,3 +150,8 @@
     .deck-chip { gap: 6px; padding-right: 6px; }
     .record-deck { padding: 10px; }
 }
+
+.match-code-open { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin: .5rem 0 .75rem; }
+.match-code-open label { font-weight: 600; }
+.match-code-open textarea { flex: 1 1 18rem; min-width: 0; font-family: ui-monospace, monospace; font-size: .8rem; resize: vertical; }
+.match-code-message { flex-basis: 100%; margin: 0; font-size: .85rem; }

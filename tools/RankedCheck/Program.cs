@@ -3,13 +3,43 @@ using WcgWeb.Models;
 using WcgWeb.Services;
 using WcgWeb.Models.Ranked;
 using Microsoft.AspNetCore.Builder;
-// 用法：dotnet run --project tools/RankedCheck -- [WcgWeb 路徑] [每副種子數] [--matrix|--ai-vs|--v7-ladder]
+// 用法：dotnet run --project tools/RankedCheck -- [WcgWeb 路徑] [每副種子數] [--matrix|--ai-vs|--v7-ladder|--explain <代碼或存檔> [索引]]
 // --matrix：只跑強度矩陣。每個牌位的對手池（該牌位電腦＋該牌位牌組）分別對上「玩家方」五副預組，
 // 玩家方依序使用試玩電腦（-1）與青銅～大師分級電腦（0～5）；每格每流派 種子數 × 2（先後手）場。
 // 檢查每副天梯牌組與所有微調都合法、能完整打完，並輸出對五副預組的 AI 對照勝率與各牌位平均。
 // 天梯方使用該牌位的分級電腦（AiLevel = 牌位），預組方使用練習模式的 v0.6 電腦（AiLevel = -1）代表一般玩家。
 var builder=WebApplication.CreateBuilder(new WebApplicationOptions{ContentRootPath=Path.GetFullPath(args.Length>0?args[0]:"WcgWeb")});
 var db=new CardDatabase(builder.Environment);var pool=new RankedDecks(db,builder.Environment);int seeds=args.Length>1?int.Parse(args[1]):6;
+// --explain <對局代碼 | 代碼檔 | 匯出存檔.json> [紀錄索引|match]：重新模擬一場天梯對局，逐步輸出電腦每個決策
+// （必殺、計畫、能量、失誤、搜尋候選分數與對手回應評估）。紀錄索引預設為最後一場；match 表示進行中的對局。
+if(args.Contains("--explain"))
+{
+ var at=Array.IndexOf(args,"--explain");var input=args[at+1];var which=args.Length>at+2?args[at+2]:"";
+ RankedRecord? record;var text=File.Exists(input)?File.ReadAllText(input):input;
+ if(text.TrimStart().StartsWith("{"))
+ {
+  var root=JsonDocument.Parse(text).RootElement;var ranked=root.TryGetProperty("data",out var data)?data.GetProperty("ranked").GetString()!:text;
+  var profile=JsonSerializer.Deserialize<RankedProfile>(ranked)!;var records=profile.Records??[];
+  if(which=="match"){var m=profile.Match??throw new Exception("No match in progress.");record=new RankedRecord{Id=m.Id,Tier=m.Tier,Seed=m.Seed,PlayerFirst=m.PlayerFirst,Rules=m.Rules,PlayerDeck=m.PlayerDeck,ComputerDeck=m.ComputerDeck,Actions=RankedRecord.Encode(m.Actions)};}
+  else{var i=which==""?records.Count-1:int.Parse(which);if(i<0)i+=records.Count;record=records[i];}
+ }
+ else{record=MatchCode.Decode(text,out var err,out _);if(record==null)throw new Exception(err);}
+ var matchCode=MatchCode.Encode(record);Console.WriteLine($"match code ({matchCode.Length} chars): {(args.Contains("--print-code")?matchCode:matchCode[..Math.Min(60,matchCode.Length)]+"…")}");
+ var storage=new MemoryStorage();
+ var session=new RankedSession(db,new DeckService(db,storage,pool),new RankedStore(storage),pool,Microsoft.Extensions.Logging.Abstractions.NullLogger<BattleCoordinator>.Instance,TimeProvider.System);
+ var traces=new SortedDictionary<int,List<string>>();
+ var replay=session.BuildReplay(record,(i,t)=>{if(!traces.TryGetValue(i,out var l))traces[i]=l=[];l.Add(t);});
+ var actions=RankedRecord.Decode(record.Actions);
+ Console.WriteLine($"{record.PlayerDeck.Name} vs {record.ComputerDeck.Name}  tier {record.Tier}  seed {record.Seed}  {(record.PlayerFirst?"player first":"computer first")}  {actions.Count} actions  rules {record.Rules[..Math.Min(24,record.Rules.Length)]}…");
+ for(int i=0;i<actions.Count&&i+1<replay.Steps.Count;i++)
+ {
+  var a=actions[i];var st=replay.Steps[i+1].State;
+  Console.WriteLine($"#{i} turn {st.Turn} {(a.Type=="ai"?"AI":"player")} {a.Type} src {a.Source} tgt {a.TargetSide}/{a.Target} choice {a.Choice} v{a.RulesVersion}  hp {st.Player.Hp}-{st.Computer.Hp}");
+  if(traces.TryGetValue(i,out var lines))foreach(var l in lines)Console.WriteLine("    "+l);
+ }
+ if(replay.Error!="")Console.WriteLine("ERROR: "+replay.Error);
+ return;
+}
 (bool won,int turns,double slowest) Play(Deck deck,int tier,int seed,bool first,Deck? opponent=null,int presetLevel=-1)
 {
  var e=new GameEngine(db,new Random(700+seed));e.SeedRankedAi(700+seed);e.StartGame(deck,opponent??db.PresetDecks[seed%5],first);e.Player.IsAi=true;double slowest=0;
@@ -129,3 +159,11 @@ for(int tier=0;tier<6;tier++)
 var tiers=output.Cast<dynamic>().GroupBy(r=>(int)r.tier).Select(g=>{var sorted=g.OrderBy(r=>(double)r.winRate).ToList();return new{tier=g.Key,decks=g.Count(),games=g.Sum(r=>(int)r.games),winRate=Math.Round((double)g.Sum(r=>(int)r.wins)/g.Sum(r=>(int)r.games),3),
  wills=g.Select(r=>(string)r.will).Distinct().Count(),weakest=new{deck=(string)sorted[0].deck,winRate=(double)sorted[0].winRate},strongest=new{deck=(string)sorted[^1].deck,winRate=(double)sorted[^1].winRate},archetypes=sorted.Select(r=>(string)r.deck).ToList()};});
 Console.WriteLine(JsonSerializer.Serialize(new{policy="seeds 700 onward, both starting positions; ranked side uses the tiered AI for its tier, presets use the v0.6 trial AI; not human win rates",seeds,aiLadder=ladder,aiLadderSlowestActionMs=Math.Round(worst,2),tiers,picks,results=output},new JsonSerializerOptions{WriteIndented=true,Encoder=System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+// In-memory player storage for --explain (never touches real saves).
+sealed class MemoryStorage:IPlayerStorage
+{
+ public object Gate{get;}=new();
+ readonly Dictionary<string,string> values=new();
+ public string? Read(string key)=>values.GetValueOrDefault(key);
+ public void Write(string key,string value,string? expected){values[key]=value;}
+}

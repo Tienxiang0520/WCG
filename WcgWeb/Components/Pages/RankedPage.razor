@@ -6,6 +6,7 @@
 @using WcgWeb.Components.Ranked
 @implements IAsyncDisposable
 @inject RankedSession Ranked
+@inject IJSRuntime JS
 @inject CardDatabase Cards
 @inject DeckService Decks
 @inject RankedDecks Opponents
@@ -26,7 +27,7 @@
                 @if (Profile.Match is { } finished && finished.Id == result.MatchId) { <p class="ranked-result-opponent">@L.F("對手：{0}", L.DeckName(finished.ComputerDeck))</p> }
                 @if (result.Season != Profile.Season) { <p>@L.F("新賽季已開始，目前為 {0}。", RankedRules.Label(Profile.Stars))</p> }
                 <div class="ranked-result-actions"><button class="btn btn-primary" @onclick="Lobby">@L["返回天梯"]</button>
-                @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button class="btn btn-outline-primary" data-sfx="nav" @onclick="() => ReviewFinished(result.MatchId)"><Icon Name="history" Size="17" />@L["對局回顧"]</button> }</div>
+                @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button class="btn btn-outline-primary" data-sfx="nav" @onclick="() => ReviewFinished(result.MatchId)"><Icon Name="history" Size="17" />@L["對局回顧"]</button> } @if (Profile.Records?.Any(r => r.Id == result.MatchId) == true) { <button type="button" class="btn btn-outline-primary match-code-copy" data-sfx="nav" @onclick="() => CopyCode(Ranked.MatchCodeFor(result.MatchId))"><Icon Name="cards" Size="17" />@L["複製對局代碼"]</button> }</div>
             </section>
         }
     </div>
@@ -94,6 +95,13 @@ else
                     <button type="button" role="radio" aria-checked="@(AllSeasons ? "true" : "false")" class="@(AllSeasons ? "on" : "")" @onclick="() => AllSeasons = true">@L["全部"]</button>
                 </div>
             </header>
+            <form class="match-code-open" @onsubmit="OpenCode" @onsubmit:preventDefault>
+                <label for="match-code-input">@L["對局代碼"]</label>
+                <textarea id="match-code-input" rows="2" spellcheck="false" placeholder="WCG1-…" @bind="CodeInput" disabled="@(!Interactive)"></textarea>
+                <button type="submit" class="btn btn-outline-primary" data-sfx="nav" disabled="@(!Interactive)"><Icon Name="play" Size="15" />@L["開啟對局代碼"]</button>
+                @if (Ranked.CurrentMatchCode() is { } live) { <button type="button" class="btn btn-outline-primary" data-sfx="nav" disabled="@(!Interactive)" @onclick="() => CopyCode(live)"><Icon Name="cards" Size="15" />@L["複製進行中對局代碼"]</button> }
+                @if (CodeMessage != "") { <p class="match-code-message" role="status">@L[CodeMessage]</p> }
+            </form>
             @if (Records.Count == 0)
             {
                 <p class="ranked-records-empty">@L[AllSeasons || (Profile.Records?.Count ?? 0) == 0 ? "完成一場天梯對局後，紀錄會出現在這裡，並可逐步回顧。" : "本季尚無對局紀錄，切換「全部」可查看先前賽季。"]</p>
@@ -112,6 +120,7 @@ else
                             <div class="record-actions">
                                 <button type="button" class="btn btn-outline-primary record-deck-toggle" data-sfx="@(OpenDeck == r.Id ? "toggleOff" : "toggleOn")" aria-expanded="@(OpenDeck == r.Id ? "true" : "false")" aria-controls="deck-@r.Id" disabled="@(!Interactive)" @onclick="() => OpenDeck = OpenDeck == r.Id ? null : r.Id"><Icon Name="cards" Size="15" />@L["對手牌組"]</button>
                                 <button type="button" class="btn btn-outline-primary record-replay" data-sfx="nav" disabled="@(!Interactive)" aria-label="@L.F("回顧 {0} 對戰 {1}", When(r), L.DeckName(r.ComputerDeck))" @onclick="() => OpenReplay(r)"><Icon Name="play" Size="15" />@L["對局回顧"]</button>
+                                <button type="button" class="btn btn-outline-primary record-code" data-sfx="nav" disabled="@(!Interactive)" @onclick="() => CopyCode(Ranked.MatchCodeFor(r.Id))"><Icon Name="cards" Size="15" />@L["複製對局代碼"]</button>
                             </div>
                             @if (OpenDeck == r.Id)
                             {
@@ -202,6 +211,24 @@ else
         Replay = Ranked.BuildReplay(r.Id); StateHasChanged();
     }
     private void CloseReplay() { ReplayRecord = null; Replay = null; }
+    // 對局代碼: copy a shareable code, or decode a pasted one and replay it (works offline; nothing is saved).
+    private string CodeInput = "", CodeMessage = "";
+    private async Task CopyCode(string? code)
+    {
+        if (code == null) { CodeMessage = "找不到這場對局。"; return; }
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", code); CodeMessage = "已複製對局代碼。"; }
+        catch (Exception e) when (e is JSException or InvalidOperationException or TaskCanceledException) { CodeInput = code; CodeMessage = "無法存取剪貼簿，請手動複製上方代碼。"; }
+    }
+    private async Task OpenCode()
+    {
+        var record = MatchCode.Decode(CodeInput, out var error, out var live);
+        if (record == null) { CodeMessage = error; return; }
+        CodeMessage = live ? "這是進行中的對局，只回顧到目前為止。" : "";
+        ReplayRecord = record; Replay = null; StateHasChanged();
+        await Task.Delay(30);
+        if (ReplayRecord != record) return;
+        Replay = Ranked.BuildReplay(record); StateHasChanged();
+    }
     private async Task ReviewFinished(Guid id)
     {
         await Lobby();
