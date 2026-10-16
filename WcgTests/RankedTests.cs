@@ -563,11 +563,12 @@ public sealed class RankedTests : IDisposable
             Assert.Equal(Play(level,1000+k,mine,theirs),Play(level,1000+k,mine,theirs));
         }
     }
+    // Pinned to v6 (kept for replays of version-6 journals); v7 lethal is covered by AiLethalTests.
     [Fact] public void MasterAiFindsCombinedLethalThatBronzeMisses()
     {
         GameEngine Setup(int level)
         {
-            var e=new GameEngine(cards,new Random(1)){AiLevel=level};e.SeedRankedAi(1);e.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],false);
+            var e=new GameEngine(cards,new Random(1)){AiLevel=level,AiRevision=6};e.SeedRankedAi(1);e.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],false);
             e.Computer.Hand.Clear();e.Player.Hp=2;
             for(int i=0;i<2;i++)e.Computer.Field.Add(new(cards.GetCard("WCG-101")!){IsTapped=false,HasSummoningSickness=false});
             e.Player.Field.Add(new(cards.GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false});
