@@ -32,11 +32,18 @@ public class NewCardTests
         Assert.Equal(["理智","深淵"],cards.GetCard("WCG-214")!.Wills);
         Assert.All(cards.PresetDecks,d=>Assert.True(d.IsValid(cards.GetCard,out _)));
     }
+    // Design rule: any monster with an ability or keyword has PP below the same-cost vanilla curve.
+    [Fact] public void AbilityMonstersStayBelowTheVanillaCurve()
+    {
+        var vanilla=new Dictionary<int,int>{[1]=700,[2]=1300,[3]=1600,[4]=2000,[5]=2300,[6]=2600,[7]=2900,[8]=3200,[9]=3500};
+        var over=cards.AllCards.Where(c=>c.IsMonster&&c.Text.Trim() is not (""or"無"or"無。")&&vanilla.ContainsKey(c.TotalCost)&&(c.PP??0)>=vanilla[c.TotalCost]).Select(c=>c.Id).ToList();
+        Assert.Empty(over);
+    }
     [Fact] public void OldCatalogWithoutNewCardsIsPreserved()
     {
         var old=CounterHistory.BeforeNewCards(cards);
         Assert.Equal(204,old.AllCards.Count);Assert.Null(old.GetCard("WCG-205"));
-        Assert.Equal(cards.AllCards.Take(204).Select(c=>System.Text.Json.JsonSerializer.Serialize(c)),old.AllCards.Select(c=>System.Text.Json.JsonSerializer.Serialize(c)));
+        Assert.Equal(CounterHistory.BeforeAbilityPp(cards).AllCards.Take(204).Select(c=>System.Text.Json.JsonSerializer.Serialize(c)),old.AllCards.Select(c=>System.Text.Json.JsonSerializer.Serialize(c)));
         Assert.Equal(204,CounterHistory.BeforeNewCards(old).AllCards.Count);
     }
 
@@ -129,8 +136,8 @@ public class NewCardTests
     // ---- E 孤狼劍道：空格獎勵 ----
     [Fact] public void LoneSwordmasterGainsPowerPerEmptySlot()
     {
-        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1900+4*300,m.CurrentPP);
-        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1900+2*300,m.CurrentPP);
+        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1600+4*300,m.CurrentPP);
+        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1600+2*300,m.CurrentPP);
     }
     [Fact] public void VoidHermitCannotBeTargetedBySpellsWhileAlone()
     {

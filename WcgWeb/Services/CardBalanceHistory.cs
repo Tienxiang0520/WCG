@@ -8,7 +8,11 @@ internal static class CardBalanceHistory
     // Catalog before the rules simplification (Holy Shield refresh, fixed 200–204 effects, 3 PP thresholds, attached 143/165/168).
     // Catalog before the PP/cost deflation (PR B); only PP and cost changed, effects and DP did not.
     // Catalog before the new cards 205–257 (PR D); existing cards are unchanged, so the old catalog is the current one without them.
-    internal static CardDatabase BeforeNewCards(CardDatabase current) => !current.AllCards.Any(c => IsNewCard(c.Id)) ? current
+    // Catalog before ability monsters were lowered below the vanilla PP curve (2026-10-16); only PP and design notes changed.
+    internal static CardDatabase BeforeAbilityPp(CardDatabase current) => current.GetCard("WCG-113")?.PP < 2000
+        ? Override(current, "WcgWeb.Balance.BeforeAbilityPp") : current;
+    internal static CardDatabase BeforeNewCards(CardDatabase current) { current = BeforeAbilityPp(current); return NewCardsRemoved(current); }
+    private static CardDatabase NewCardsRemoved(CardDatabase current) => !current.AllCards.Any(c => IsNewCard(c.Id)) ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c => !IsNewCard(c.Id))), PresetsBeforeNewCards(current.PresetDecks));
     // PR E put new cards into the v0.6 深淵 preset; the older catalogs keep its original list (249 was 128, 250 and 212 were 169).
     private static readonly Dictionary<string, string> PresetCardBeforeNewCards = new() { ["WCG-249"] = "WCG-128", ["WCG-250"] = "WCG-169", ["WCG-212"] = "WCG-169" };
