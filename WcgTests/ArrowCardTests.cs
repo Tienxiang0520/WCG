@@ -27,7 +27,7 @@ public class ArrowCardTests
         Assert.Equal(["WCG-061","WCG-073","WCG-147"],arrows.Where(GameEngine.ShieldArrows));
         Assert.All(arrows,id=>Assert.Contains("【箭頭：",cards.GetCard(id)!.Text));
         // Every will except Neutral has positional arrows.
-        Assert.Equal(["深淵","狂怒","理智","生機","秩序"],arrows.Select(id=>cards.GetCard(id)!.Will).Distinct().Order());
+        Assert.Equal(["深淵","狂怒","理智","生機","秩序"],arrows.Select(id=>cards.GetCard(id)!.Will).Distinct().Order(StringComparer.Ordinal));
     }
     [Fact] public void CardsWithoutEffectsStayVanilla()
     {
@@ -80,7 +80,7 @@ public class ArrowCardTests
     [Fact] public void PreArrowCatalogKeepsTheOldCards()
     {
         var prior=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(root,"Data/balance-before-arrow-cards.json")))!.ToDictionary(c=>c.Id);
-        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-085"],prior.Keys.Order());
+        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-085"],prior.Keys.Order(StringComparer.Ordinal));
         var old=new CardDatabase(JsonSerializer.Serialize(cards.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(cards.PresetDecks));
         var g=Game(old);var foe=Unit(g.Computer,101,2,old);var left=Unit(g.Player,101,3,old);Unit(g.Player,5,4,old);Unit(g.Player,49,0,old);var mid=Unit(g.Player,101,1,old);Refresh(g);
         Assert.Equal(700,left.CurrentPP);Assert.Equal(700,mid.CurrentPP);
