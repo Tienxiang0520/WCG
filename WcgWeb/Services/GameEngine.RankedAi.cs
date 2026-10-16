@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Bump when ranked AI decisions change; RankedSession stores it with every journal action.
-    public const int RankedAiVersion = 5;
+    public const int RankedAiVersion = 6;
     private int _aiSeed;
     // Ranked replays seed this through SetReplaySeed; simulations may seed it directly.
     public void SeedRankedAi(int seed) => _aiSeed = seed;
@@ -191,6 +191,13 @@ public partial class GameEngine
     {
         var own = targets.Where(p.Field.Contains).ToArray(); var enemy = targets.Where(e.Field.Contains).ToArray();
         if (id is "WCG-036" or "WCG-164" or "WCG-169") return own.OrderBy(BodyValue).FirstOrDefault();
+        if (NewAi && id is "WCG-220" or "WCG-221" or "WCG-230" or "WCG-248")
+            return own.OrderByDescending(m => id switch
+            {
+                "WCG-220" => m.HasTrample ? -5 : m.CurrentPP / 500d + (CanAttack(m) ? 2 : 0),
+                "WCG-221" => (m.Card.Id == "WCG-222" ? 5 : 0) + (CanAttack(m) ? 3 : 0) + BodyValue(m),
+                _ => m.CurrentPP / 500d,
+            }).FirstOrDefault();
         if (FriendlySpells.Contains(id))
             return own.OrderByDescending(m => (CanAttack(m) || m.IsTapped && id is "WCG-143" or "WCG-167" ? 5 : 0) + BodyValue(m)).FirstOrDefault();
         if (id is "WCG-024" or "WCG-137" or "WCG-184") return enemy.OrderByDescending(m => (m.IsTapped ? 0 : m.CurrentDP * 3) + BodyValue(m)).FirstOrDefault();
@@ -213,7 +220,7 @@ public partial class GameEngine
         if (choice.Title == "受到傷害，可從手牌發動反擊")
             return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
-        if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return ExecuteV06Ai();
+        if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return NewSlot(p, choice) is { } slot ? SelectChoice(slot) : ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));
         if (!prof.SmartTargets) return ExecuteV06Ai();
         var discard = choice.Title.Contains("棄") || choice.Title.Contains("牌庫底") || choice.Title.Contains("置底");
@@ -249,6 +256,7 @@ public partial class GameEngine
         var cost = pending.Title.Contains("犧牲") || pending.Title.Contains("祭品") || pending.Title.Contains("代價");
         var friendly = cost || pending.Title.Contains("附著能量護盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
         MonsterInstance target;
+        if (NewTarget(p, pending, legal) is { } chosen) return SelectTarget(chosen);
         if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
         else if (friendly) target = legal.OrderByDescending(m => (p.Board.Contains(m) ? 20 : 0) + BodyValue(m)).First();
         else target = legal.OrderByDescending(m => (e.Board.Contains(m) ? 20 : 0) + BodyValue(m) + (m.IsTaunt ? 3 : 0)).First();
@@ -288,10 +296,11 @@ public partial class GameEngine
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= 2300) ? 6 : 0,
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= 2000) ? 6 : 0,
                 "WCG-117" => e.Field.Any(m => m.CurrentPP <= 1000) ? 3 : 0,
-                _ => 0,
+                _ => NewPlayValue(p, c) ?? 0,
             };
             return score;
         }
+        if (NewPlayValue(p, c) is { } fresh) return fresh;
         var targets = SpellTargets(p, c.Card);
         if (FriendlySpells.Contains(id))
         {
@@ -348,8 +357,9 @@ public partial class GameEngine
     private AiMove? PlanAttacks(PlayerState p, PlayerState e, AiProfile prof)
     {
         int budget = prof.PlanBudget;
-        PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield, m.HasTrample, CanAttack(m),
-            !m.IsSilenced && m.Card.Id == "WCG-059", !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
+        var fresh = NewAi && SimplifiedRules;
+        PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (!fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m),
+            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && m.Card.Id is "WCG-210" or "WCG-178", !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
         {
             if (hp <= 0) return 10000;
@@ -373,7 +383,7 @@ public partial class GameEngine
             if (left == 0 || hp <= 0) return;
             foreach (var a in own.Where(u => u.Ready).ToArray())
             {
-                var taunts = opp.Where(u => u.Taunt && (!a.IgnoresLowTaunt || u.PP > 1300)).ToList();
+                var taunts = opp.Where(u => u.Taunt && (!a.IgnoresLowTaunt || !fresh && u.PP > 1300 || fresh && p.Field.First(m => m.InstanceId == a.Id).Card.Id == "WCG-059" && u.PP > 1100)).ToList();
                 var targets = taunts.Count > 0 ? taunts.Cast<PlanUnit?>().ToList() : opp.Cast<PlanUnit?>().Append(null).ToList();
                 foreach (var d in targets)
                 {
@@ -383,11 +393,14 @@ public partial class GameEngine
                     else
                     {
                         bool ah = a.PP <= d.PP || d.Poison, dh = d.PP <= a.PP || a.Poison;
-                        bool asaved = ah && a.Shield && me > 0, dsaved = dh && d.Shield && them > 0;
-                        if (asaved) me--; if (dsaved) them--;
-                        if (ah && !asaved) aa.RemoveAt(ai); else aa[ai] = a with { Ready = false };
+                        bool asaved = ah && a.Shield && (fresh || me > 0), dsaved = dh && d.Shield && (fresh || them > 0);
+                        if (asaved && !fresh) me--; if (dsaved && !fresh) them--;
+                        // Simplified rules: a Holy Shield saves once per turn and needs no energy.
+                        var after = asaved && fresh ? a with { Shield = false, Ready = false } : a with { Ready = false };
+                        if (ah && !asaved) aa.RemoveAt(ai); else aa[ai] = after;
                         var di = dd.FindIndex(u => u.Id == d.Id);
-                        if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && a.PP - d.PP >= 700) nhp--; }
+                        if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && (fresh || a.PP - d.PP >= 700)) nhp--; }
+                        else if (fresh && dsaved) dd[di] = d with { Shield = false };
                     }
                     Search(aa, dd, nhp, me, them, left - 1, first ?? (a.Id, d?.Id));
                 }

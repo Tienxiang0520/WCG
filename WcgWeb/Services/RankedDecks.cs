@@ -16,6 +16,9 @@ public sealed partial class RankedDecks
     {
         getCard = cards.GetCard;
         var entries = JsonSerializer.Deserialize<List<Entry>>(json) ?? throw new InvalidDataException("天梯牌組資料為空。");
+        // An older catalog (used to restore pre-update matches) lacks the newest cards; decks built with them did not exist then.
+        var newest = cards.AllCards.Max(c => CardNumber(c.Id));
+        entries = entries.Where(e => !e.Deck.CardIds.Concat((e.Variants ?? []).SelectMany(v => v.In)).Any(id => cards.GetCard(id) == null && CardNumber(id) > newest)).ToList();
         All = entries.AsReadOnly();
         if (All.Select(e => e.Deck.Id).Distinct().Count() != All.Count) throw new InvalidDataException("天梯牌組 ID 重複。");
         foreach (var entry in All)
@@ -37,6 +40,7 @@ public sealed partial class RankedDecks
     }
     // Deck.Validate covers size, copies, factions and dual-will cards. The old 12-card off-color cap no longer exists.
     public bool IsLegal(Deck deck, out string? error) => deck.IsValid(getCard, out error);
+    private static int CardNumber(string id) => int.TryParse(id.AsSpan(id.LastIndexOf('-') + 1), out var n) ? n : 0;
     public IReadOnlyList<Entry> Pool(int tier) => tier >= 0 && tier < pools.Length ? pools[tier] : [];
     public Deck Pick(int tier, Random random, string? avoidDeckId = null)
     {

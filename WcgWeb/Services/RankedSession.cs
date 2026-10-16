@@ -133,11 +133,11 @@ public sealed partial class RankedSession
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         foreach (var action in match.Actions)
         {
-            Engine.StackableShields = action.RulesVersion >= 2;
+            Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
             var response = action.Type == "ai" ? Bridge.AiStepCore() : Bridge.SubmitCore(Decode(action));
             if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
         }
-        Engine.StackableShields = true;
+        Engine.StackableShields = true; Engine.AiRevision = GameEngine.RankedAiVersion;
         if (match.Settled != Engine.IsOver) throw new InvalidOperationException("對局結算紀錄不一致。");
     }
     private BattleResponse Reject(string reason) => new(false, "ranked", reason, Guid.NewGuid(), Bridge.Snapshot(), []);

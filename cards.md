@@ -59,7 +59,7 @@ source: WcgWeb/Data/cards.json
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 使 1 隻己方怪物 PP +300，攻擊玩家時 DP +1（將此卡附著其上）。 | **Flame War-Rune** — Give 1 of your monsters +300 PP and +1 DP when attacking the player (attach this card to it). |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 1100 | 1 | — | 陣亡：將附著在此怪物上的 1 張你的卡加入手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards that was attached to this monster to your hand. |
 | WCG-230 | 決鬥宣言 | 法術 | 2 | — | — | — | 橫置 1 隻己方直立怪物，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Declaration of Duel** — Tap 1 of your untapped monsters and have it battle 1 enemy monster (Taunt can't stop it). |
-| WCG-241 | 熔岩衝陣者 | 怪物 | 5 | 2100 | 2 | — | 衝鋒；你場上的怪物都是狂怒時，此怪物 PP +400。 | **Lava Line-Breaker** — Charge. While all your monsters are [Fury], this monster gets +400 PP. |
+| WCG-241 | 熔岩衝陣者 | 怪物 | 5 | 1900 | 2 | — | 衝鋒；你場上的怪物都是狂怒時，此怪物 PP +400。 | **Lava Line-Breaker** — Charge. While all your monsters are [Fury], this monster gets +400 PP. |
 | WCG-242 | 戰火補給 | 法術 | 2 | — | — | — | 抽 2 張牌，然後失去 1 點生命。 | **War Supplies** — Draw 2 cards, then lose 1 life. |
 | WCG-243 | 赤鱗護衛 | 怪物 | 3 | 1400 | 1 | — | 嘲諷；陣亡：對敵方玩家造成 1 點傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-244 | 烽火戰旗 | 結界 | 3 | — | — | — | 你的回合結束時，若你場上有怪物且都是狂怒，對敵方玩家造成 1 點傷害。 | **Beacon War Banner** — At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player. |
@@ -104,9 +104,9 @@ source: WcgWeb/Data/cards.json
 | WCG-202 | 星軌觀測師 | 怪物 | 4 | 1500 | 1 | — | 進場：看牌庫頂 2 張，1 張入手，其餘置底。 | **Starpath Observer** — Deploy: Look at the top 2 cards of your deck. Put 1 into your hand and the rest on the bottom. |
 | WCG-208 | 寂靜學者 | 怪物 | 3 | 1400 | 1 | — | 進場：沉默 1 隻敵方怪物。 | **Silent Scholar** — Deploy: Silence 1 enemy monster. |
 | WCG-211 | 思緒潰散 | 法術 | 2 | — | — | — | 將對手牌庫頂 3 張牌送入墓地。 | **Shattered Thoughts** — Put the top 3 cards of your opponent's deck into their graveyard. |
-| WCG-213 | 記憶吞噬者 | 怪物 | 4 | 1600 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，將對手牌庫頂 1 張牌送入墓地。 | **Memory Devourer** — Taunt. At the end of your turn, if this monster is untapped, put the top card of your opponent's deck into their graveyard. |
+| WCG-213 | 記憶吞噬者 | 怪物 | 4 | 1800 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，將對手牌庫頂 1 張牌送入墓地。 | **Memory Devourer** — Taunt. At the end of your turn, if this monster is untapped, put the top card of your opponent's deck into their graveyard. |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] When you take damage from a spell: Cancel the damage and draw 1 card. |
-| WCG-229 | 虛空隱士 | 怪物 | 3 | 1300 | 1 | — | 你場上只有此怪物時，它不能成為法術的目標。 | **Void Hermit** — While this is your only monster, it can't be targeted by spells. |
+| WCG-229 | 虛空隱士 | 怪物 | 3 | 1500 | 1 | — | 你場上只有此怪物時，它不能成為法術的目標。 | **Void Hermit** — While this is your only monster, it can't be targeted by spells. |
 | WCG-231 | 空無祭壇 | 結界 | 2 | — | — | — | 你的回合開始時，若你場上只有 1 隻怪物，抽 1 張牌。 | **Altar of Emptiness** — At the start of your turn, if you have exactly 1 monster, draw 1 card. |
 | WCG-251 | 秘法護衛 | 怪物 | 3 | 1400 | 1 | — | 進場：若你場上其他怪物都是理智，抽 1 張牌。 | **Arcane Guard** — Deploy: If all your other monsters are [Reason], draw 1 card. |
 | WCG-252 | 星界巨像 | 怪物 | 5 | 2100 | 2 | — | 每當你施放法術，此怪物本回合 PP +300。 | **Astral Colossus** — Whenever you cast a spell, this monster gets +300 PP this turn. |
@@ -154,7 +154,7 @@ source: WcgWeb/Data/cards.json
 | WCG-215 | 根鬚哨兵 | 怪物 | 2 | 1100 | 1 | ←→ | 【箭頭：← →】左右都有己方怪物時，此怪物具有嘲諷。 | **Rootwatch Sentry** — [Arrow: ← →] While you have monsters on both its left and right, this monster has Taunt. |
 | WCG-220 | 荊棘甲殼 | 法術 | 1 | — | — | — | 使 1 隻己方怪物具有貫穿（將此卡附著其上）。 | **Thorn Carapace** — Give 1 of your monsters Trample (attach this card to it). |
 | WCG-232 | 腐土苗床 | 怪物 | 2 | 1100 | 1 | — | 陣亡：將你的牌庫頂 1 張牌放入你的能量區。 | **Rotsoil Seedbed** — On Death: Put the top card of your deck into your energy zone. |
-| WCG-234 | 腐木巨像 | 怪物 | 6 | 2400 | 2 | — | 嘲諷；你的墓地每有 3 隻怪物，此卡費用 -1（最低 2 費）。 | **Rotwood Colossus** — Taunt. This card costs 1 less for every 3 monsters in your graveyard (minimum 2). |
+| WCG-234 | 腐木巨像 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；你的墓地每有 3 隻怪物，此卡費用 -1（最低 2 費）。 | **Rotwood Colossus** — Taunt. This card costs 1 less for every 3 monsters in your graveyard (minimum 2). |
 | WCG-245 | 叢林統領 | 怪物 | 5 | 2100 | 1 | — | 進場：若你場上其他怪物都是生機，抽 1 張牌。 | **Jungle Warlord** — Deploy: If all your other monsters are [Life], draw 1 card. |
 | WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 消滅 1 隻 PP 1100 以下的敵方怪物。 | **Vine Strangle** — Destroy 1 enemy monster with 1100 PP or less. |
 | WCG-247 | 大地之心 | 結界 | 3 | — | — | — | 你的回合開始時，若你場上有 3 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — At the start of your turn, if you have 3 or more [Life] monsters, draw 1 card. |
@@ -241,7 +241,7 @@ source: WcgWeb/Data/cards.json
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若你墓地有深淵怪物，可將墓地 1 隻 2 費以下怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand. |
 | WCG-204 | 冥河徘徊者 | 怪物 | 3 | 1200 | 1 | — | 陣亡：從墓地將另 1 隻 2 費以下怪物加入手牌。 | **Styx Wanderer** — On Death: Put another monster costing 2 or less from your graveyard into your hand. |
 | WCG-207 | 蝕骨詛咒 | 法術 | 3 | — | — | — | 額外代價：失去 1 點生命。消滅 1 隻 PP 1800 以上的敵方嘲諷怪物。 | **Bone-Rot Curse** — Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more. |
-| WCG-212 | 墓語竊賊 | 怪物 | 3 | 1400 | 1 | — | 進場：將對手牌庫頂 2 張牌送入墓地。 | **Gravewhisper Thief** — Deploy: Put the top 2 cards of your opponent's deck into their graveyard. |
+| WCG-212 | 墓語竊賊 | 怪物 | 3 | 1500 | 1 | — | 進場：將對手牌庫頂 2 張牌送入墓地。 | **Gravewhisper Thief** — Deploy: Put the top 2 cards of your opponent's deck into their graveyard. |
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 1800 | 1 | — | 嘲諷；陣亡：從你的墓地將另 1 隻深淵怪物加入手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你的墓地有 5 隻以上怪物，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead. |
 
@@ -300,9 +300,9 @@ source: WcgWeb/Data/cards.json
 | WCG-214 | 終焉之潮 | 法術（理智／深淵） | 5 | — | — | — | 將對手牌庫頂 X 張牌送入墓地。X＝你墓地的怪物數（最多 8）。 | **Tide of the End** — Put the top X cards of your opponent's deck into their graveyard. X = the number of monsters in your graveyard (up to 8). |
 | WCG-217 | 列陣號令 | 法術（生機／秩序） | 2 | — | — | — | 你場上每有 1 隻有箭頭的怪物，抽 1 張牌（最多 3 張）。 | **Call to Formation** — Draw 1 card for each monster with arrows you control (up to 3). |
 | WCG-218 | 連根古木 | 怪物（生機／秩序） | 5 | 2200 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有貫穿。 | **Rootbound Elder** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Trample. |
-| WCG-222 | 共生巨蜥 | 怪物（狂怒／生機） | 3 | 1500 | 1 | — | 此怪物每附著 1 張卡，PP +500。 | **Symbiotic Monitor** — This monster gets +500 PP for each card attached to it. |
-| WCG-224 | 伺守觀星者 | 怪物（理智／秩序） | 3 | 1500 | 1 | — | 你的手牌在 5 張以上時，此怪物具有嘲諷。 | **Vigilant Stargazer** — While you have 5 or more cards in hand, this monster has Taunt. |
-| WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 1700 | 2 | — | 你場上每有 1 個空格，此怪物 PP +300。 | **Lone Wolf Swordmaster** — This monster gets +300 PP for each empty slot you have. |
+| WCG-222 | 共生巨蜥 | 怪物（狂怒／生機） | 3 | 1300 | 1 | — | 此怪物每附著 1 張卡，PP +500。 | **Symbiotic Monitor** — This monster gets +500 PP for each card attached to it. |
+| WCG-224 | 伺守觀星者 | 怪物（理智／秩序） | 3 | 1700 | 1 | — | 你的手牌在 5 張以上時，此怪物具有嘲諷。 | **Vigilant Stargazer** — While you have 5 or more cards in hand, this monster has Taunt. |
+| WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 1900 | 2 | — | 你場上每有 1 個空格，此怪物 PP +300。 | **Lone Wolf Swordmaster** — This monster gets +300 PP for each empty slot you have. |
 | WCG-233 | 獻祭苗床 | 法術（生機／深淵） | 1 | — | — | — | 額外代價：犧牲 1 隻己方怪物。抽 1 張牌；若犧牲的是生機怪物，回復 1 點生命。 | **Sacrificial Seedbed** — Additional cost: sacrifice 1 of your monsters. Draw 1 card. If the sacrificed monster was [Life], restore 1 life. |
 | WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 1500 | 1 | — | 陣亡：你可以從墓地免費召喚 1 隻 1 費的生機怪物（不觸發進場）。 | **Corpse Bloom** — On Death: You may summon a 1-cost [Life] monster from your graveyard for free (its Deploy does not trigger). |
 | WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 2 | 1300 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |

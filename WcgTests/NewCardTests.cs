@@ -94,8 +94,8 @@ public class NewCardTests
     [Fact] public void AttachmentsGrantTrampleAndAttackBonusesAndStack()
     {
         var g=Game();var lizard=Unit(g.Player,222,0);
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,220),lizard));Assert.True(lizard.HasTrample);Assert.Equal(2000,lizard.CurrentPP);
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,221),lizard));Assert.Equal(2800,lizard.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,220),lizard));Assert.True(lizard.HasTrample);Assert.Equal(1800,lizard.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,221),lizard));Assert.Equal(2600,lizard.CurrentPP);
         Assert.Equal(2,g.PreviewAttack(lizard)!.PlayerDamage);
         var hp=g.Computer.Hp;Assert.True(g.Attack(g.Player,lizard));Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(1,lizard.CurrentDP);
     }
@@ -129,8 +129,8 @@ public class NewCardTests
     // ---- E 孤狼劍道：空格獎勵 ----
     [Fact] public void LoneSwordmasterGainsPowerPerEmptySlot()
     {
-        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1700+4*300,m.CurrentPP);
-        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1700+2*300,m.CurrentPP);
+        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1900+4*300,m.CurrentPP);
+        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1900+2*300,m.CurrentPP);
     }
     [Fact] public void VoidHermitCannotBeTargetedBySpellsWhileAlone()
     {
@@ -211,7 +211,7 @@ public class NewCardTests
     // ---- 5.4 單色強化 ----
     [Fact] public void MonoWillBoosts()
     {
-        var g=Game();var lava=Unit(g.Player,241,0);Refresh(g);Assert.Equal(2500,lava.CurrentPP);Unit(g.Player,101,1);Refresh(g);Assert.Equal(2100,lava.CurrentPP);
+        var g=Game();var lava=Unit(g.Player,241,0);Refresh(g);Assert.Equal(2300,lava.CurrentPP);Unit(g.Player,101,1);Refresh(g);Assert.Equal(1900,lava.CurrentPP);
         var hp=g.Player.Hp;var hand=g.Player.Hand.Count;Assert.True(g.CastSpell(g.Player,Hand(g,242)));Assert.Equal(hand+2,g.Player.Hand.Count);Assert.Equal(hp-1,g.Player.Hp);
         var colossus=Unit(g.Player,252,2);Assert.True(g.CastSpell(g.Player,Hand(g,250)));Assert.Equal(2400,colossus.CurrentPP);
         EndTurnQuietly(g);Assert.Equal(2100,colossus.CurrentPP);
@@ -237,5 +237,14 @@ public class NewCardTests
         Assert.True(g.Attack(g.Player,keeper,killer));Choose(g,o=>o.Id==shade.InstanceId.ToString());Assert.Contains(shade,g.Player.Hand);
         for(int i=0;i<5;i++)g.Player.Graveyard.Add(Card(101));var hand=g.Player.Hand.Count;Assert.True(g.CastSpell(g.Player,Hand(g,250)));Assert.Equal(hand+2,g.Player.Hand.Count);
         g=Game();Unit(g.Player,21,0);hand=g.Player.Hand.Count;Summon(g,251,1);Assert.Equal(hand+1,g.Player.Hand.Count);
+    }
+    [Fact] public void RankedAiValuesMillOnlyFromVersionSixSoOldJournalsReplayTheSame()
+    {
+        var g=Game();var mill=Hand(g,211,g.Computer);while(g.Player.Deck.Count>3)g.Player.Deck.RemoveAt(0);
+        var rev=typeof(GameEngine).GetProperty("AiRevision",BindingFlags.NonPublic|BindingFlags.Instance)!;
+        var value=typeof(GameEngine).GetMethod("NewPlayValue",BindingFlags.NonPublic|BindingFlags.Instance)!;
+        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(6,GameEngine.RankedAiVersion);
+        Assert.True((double)value.Invoke(g,[g.Computer,mill])! >= 50);   // milling the last cards wins
+        rev.SetValue(g,5);Assert.Null(value.Invoke(g,[g.Computer,mill]));
     }
 }
