@@ -13,7 +13,7 @@ public class PowerScaleTests
     {
         var env = new Mock<IWebHostEnvironment>();
         env.Setup(x => x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb")));
-        cards = new(env.Object); engine = new(cards, new Random(4));
+        cards=CounterHistory.BeforeRulesSimplification(new(env.Object)); /* Pre-simplification rules, still used to replay saved ranked matches. */ engine = new(cards, new Random(4));
         engine.StartGame(cards.PresetDecks[0], cards.PresetDecks[1]);
         engine.Player.Hand.Clear(); engine.Computer.Hand.Clear(); engine.Computer.IsAi = false;
         for (int i = 0; i < 15; i++) engine.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));

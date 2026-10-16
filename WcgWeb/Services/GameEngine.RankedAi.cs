@@ -207,7 +207,7 @@ public partial class GameEngine
     private bool TieredChoice(PlayerState p, PlayerState e, PendingChoice choice, AiProfile prof)
     {
         if(ChooseEnergyKeyword(choice))return true;
-        if(choice.Title=="護主：選擇抵銷傷害")return ChooseHeroGuard(choice);
+        if(choice.Title is "護主：選擇抵銷傷害" or OathGuardTitle)return ChooseHeroGuard(choice);
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
         if (choice.Title == "受到傷害，可從手牌發動反擊")

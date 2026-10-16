@@ -2,12 +2,14 @@
  "WCG-001": {
   "zh": "赤誓殘酷監工",
   "name": "Crimson Oath Taskmaster",
-  "text": "Deploy: Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+  "zh_text": "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。"
  },
  "WCG-002": {
   "zh": "致死衝擊",
   "name": "Lethal Strike",
-  "text": "Destroy 1 enemy monster with 1000 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player."
+  "text": "Destroy 1 enemy monster with 1100 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player.",
+  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。"
  },
  "WCG-003": {
   "zh": "熔岩地精",
@@ -17,7 +19,8 @@
  "WCG-004": {
   "zh": "熾炎猛擊",
   "name": "Blazing Smash",
-  "text": "Destroy 1 enemy monster with 500 PP or less, then draw 1 card."
+  "text": "Destroy 1 enemy monster with 600 PP or less, then draw 1 card.",
+  "zh_text": "消滅 1 隻 PP 600 以下的敵方怪物，然後抽 1 張牌。"
  },
  "WCG-005": {
   "zh": "突擊狼騎兵",
@@ -32,12 +35,14 @@
  "WCG-007": {
   "zh": "狂血投擲者",
   "name": "Bloodfrenzy Hurler",
-  "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 500 PP or less)."
+  "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 600 PP or less).",
+  "zh_text": "進場：消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。"
  },
  "WCG-008": {
   "zh": "烈焰旋風",
   "name": "Flame Whirlwind",
-  "text": "Destroy all monsters on both sides with 500 PP or less."
+  "text": "Destroy all monsters on both sides with 600 PP or less.",
+  "zh_text": "消滅雙方所有 PP 600 以下的怪物。"
  },
  "WCG-009": {
   "zh": "阿曼尼狂戰士",
@@ -82,7 +87,8 @@
  "WCG-017": {
   "zh": "滅絕怒火",
   "name": "Annihilating Wrath",
-  "text": "Destroy 1 enemy monster with 1700 PP or less and deal 1 damage to the enemy player."
+  "text": "Destroy 1 enemy monster with 1100 PP or less and deal 1 damage to the enemy player.",
+  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物，並對敵方玩家造成 1 點傷害。"
  },
  "WCG-018": {
   "zh": "地獄戰狂",
@@ -97,7 +103,8 @@
  "WCG-020": {
   "zh": "赤帝·燼滅之龍",
   "name": "Crimson Emperor, Cinder Dragon",
-  "text": "Deploy: Destroy all enemy monsters with 1300 PP or less."
+  "text": "Deploy: Destroy all enemy monsters with 1100 PP or less.",
+  "zh_text": "進場：消滅所有 PP 1100 以下的敵方怪物。"
  },
  "WCG-021": {
   "zh": "秘法學徒",
@@ -152,12 +159,14 @@
  "WCG-031": {
   "zh": "鏡像護衛",
   "name": "Mirror Guard",
-  "text": "Taunt. Energy Shield."
+  "text": "Taunt. Holy Shield.",
+  "zh_text": "嘲諷；聖盾。"
  },
  "WCG-032": {
   "zh": "質能瓦解",
   "name": "Mass Disruption",
-  "text": "Destroy 1 enemy monster with 1700 PP or less."
+  "text": "Destroy 1 enemy monster with 1100 PP or less.",
+  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物。"
  },
  "WCG-033": {
   "zh": "秘法竊取者",
@@ -227,7 +236,8 @@
  "WCG-046": {
   "zh": "自然之怒",
   "name": "Nature's Wrath",
-  "text": "Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+  "zh_text": "抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。"
  },
  "WCG-047": {
   "zh": "繁衍蜂群",
@@ -293,7 +303,8 @@
  "WCG-059": {
   "zh": "蓋亞暴龍",
   "name": "Gaia Tyrant",
-  "text": "Enemy Taunt monsters with 1300 PP or less can't block this monster (it may attack past them, including the player)."
+  "text": "Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player).",
+  "zh_text": "PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。"
  },
  "WCG-060": {
   "zh": "始祖母樹·伊瓦",
@@ -303,17 +314,20 @@
  "WCG-061": {
   "zh": "銀色誓言衛",
   "name": "Silver Oath Guard",
-  "text": "[Arrow: →] Your adjacent monster on the right has Energy Shield."
+  "text": "[Arrow: →] Your adjacent monster on the right has Holy Shield.",
+  "zh_text": "【箭頭：→】右側相鄰的己方怪物具有聖盾。"
  },
  "WCG-062": {
   "zh": "保護之手",
   "name": "Hand of Protection",
-  "text": "Give 1 of your monsters Energy Shield (attach this card to it), then restore 1 life to yourself."
+  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself.",
+  "zh_text": "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。"
  },
  "WCG-063": {
   "zh": "聖印侍從",
   "name": "Sigil Squire",
-  "text": "Energy Shield."
+  "text": "Holy Shield.",
+  "zh_text": "聖盾。"
  },
  "WCG-064": {
   "zh": "謙遜戒律",
@@ -339,12 +353,14 @@
  "WCG-068": {
   "zh": "神聖審判",
   "name": "Divine Judgment",
-  "text": "Destroy all enemy monsters with 700 PP or less."
+  "text": "Destroy all enemy monsters with 600 PP or less.",
+  "zh_text": "消滅所有 PP 600 以下的敵方怪物。"
  },
  "WCG-069": {
   "zh": "鐵壁騎士",
   "name": "Bulwark Knight",
-  "text": "Taunt. Energy Shield."
+  "text": "Taunt. Holy Shield.",
+  "zh_text": "嘲諷；聖盾。"
  },
  "WCG-070": {
   "zh": "崇高奉獻",
@@ -365,42 +381,50 @@
  "WCG-073": {
   "zh": "榮耀護衛官",
   "name": "Glory Warden",
-  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Energy Shield."
+  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield.",
+  "zh_text": "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。"
  },
  "WCG-074": {
   "zh": "堅壁祈願",
   "name": "Prayer of the Bulwark",
-  "text": "Give 1 of your monsters Energy Shield (attach this card to it), then draw 1 card."
+  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card.",
+  "zh_text": "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。"
  },
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Energy Shield. Deploy: Restore 1 life to yourself."
+  "text": "Holy Shield. Deploy: Restore 1 life to yourself.",
+  "zh_text": "聖盾；進場：回復己方 1 點生命。"
  },
  "WCG-076": {
   "zh": "誓約封禁",
   "name": "Oathbound Seal",
-  "text": "Destroy 1 enemy monster with 1700 PP or more."
+  "text": "Destroy 1 enemy monster with 1800 PP or more.",
+  "zh_text": "消滅 1 隻 PP 1800 以上的敵方怪物。"
  },
  "WCG-077": {
   "zh": "秩序聖裁者",
   "name": "Order Adjudicator",
-  "text": "Deploy: Destroy 1 enemy monster with 2300 PP or more."
+  "text": "Deploy: Destroy 1 enemy monster with 1800 PP or more.",
+  "zh_text": "進場：消滅 1 隻 PP 1800 以上的敵方怪物。"
  },
  "WCG-078": {
   "zh": "聖光普照",
   "name": "Radiant Dawn",
-  "text": "Destroy all enemy monsters with 700 PP or less, then restore 1 life to yourself."
+  "text": "Destroy all enemy monsters with 600 PP or less, then restore 1 life to yourself.",
+  "zh_text": "消滅所有 PP 600 以下的敵方怪物，然後回復己方 1 點生命。"
  },
  "WCG-079": {
   "zh": "日耀聖堂巨像",
   "name": "Sunblaze Temple Colossus",
-  "text": "Taunt. Energy Shield."
+  "text": "Taunt. Holy Shield.",
+  "zh_text": "嘲諷；聖盾。"
  },
  "WCG-080": {
   "zh": "光輝聖皇·弗丁",
   "name": "Radiant Holy Emperor, Fordin",
-  "text": "Energy Shield. On Death: Destroy all enemy monsters with 1000 PP or less."
+  "text": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
+  "zh_text": "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。"
  },
  "WCG-081": {
   "zh": "虛空夜行魔",
@@ -410,17 +434,20 @@
  "WCG-082": {
   "zh": "暗影裂箭",
   "name": "Shadow Rift Arrow",
-  "text": "Destroy 1 enemy monster with 1300 PP or less."
+  "text": "Destroy 1 enemy monster with 1100 PP or less.",
+  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物。"
  },
  "WCG-083": {
   "zh": "腐爛食屍鬼",
   "name": "Rotting Ghoul",
-  "text": "On Death: Destroy 1 enemy monster with 500 PP or less."
+  "text": "On Death: Destroy 1 enemy monster with 600 PP or less.",
+  "zh_text": "陣亡：消滅 1 隻 PP 600 以下的敵方怪物。"
  },
  "WCG-084": {
   "zh": "靈魂撕裂",
   "name": "Soul Rend",
-  "text": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1300 PP or less."
+  "text": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less.",
+  "zh_text": "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。"
  },
  "WCG-085": {
   "zh": "苦痛契約者",
@@ -430,7 +457,8 @@
  "WCG-086": {
   "zh": "衰竭詛咒",
   "name": "Curse of Exhaustion",
-  "text": "Destroy 1 enemy monster with 1000 PP or less, then draw 1 card."
+  "text": "Destroy 1 enemy monster with 1100 PP or less, then draw 1 card.",
+  "zh_text": "消滅 1 隻 PP 1100 以下的敵方怪物，然後抽 1 張牌。"
  },
  "WCG-087": {
   "zh": "墓穴行屍",
@@ -455,12 +483,14 @@
  "WCG-091": {
   "zh": "哀慟女妖",
   "name": "Wailing Banshee",
-  "text": "Deploy: Destroy all enemy monsters with 500 PP or less."
+  "text": "Deploy: Destroy all enemy monsters with 600 PP or less.",
+  "zh_text": "進場：消滅所有 PP 600 以下的敵方怪物。"
  },
  "WCG-092": {
   "zh": "絕望疫病",
   "name": "Plague of Despair",
-  "text": "Destroy all monsters on both sides with 800 PP or less."
+  "text": "Destroy all monsters on both sides with 600 PP or less.",
+  "zh_text": "消滅雙方所有 PP 600 以下的怪物。"
  },
  "WCG-093": {
   "zh": "深淵伏擊魔",
@@ -510,7 +540,8 @@
  "WCG-102": {
   "zh": "精靈遊俠",
   "name": "Elven Ranger",
-  "text": "Deploy: Choose One: Destroy 1 enemy monster with 500 PP or less; or draw 1 card, then discard 1 card."
+  "text": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+  "zh_text": "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。"
  },
  "WCG-103": {
   "zh": "淘金鼠人",
@@ -525,7 +556,8 @@
  "WCG-105": {
   "zh": "狂暴投彈手",
   "name": "Mad Bomber",
-  "text": "Deploy: Destroy all other monsters on both sides with 500 PP or less."
+  "text": "Deploy: Destroy all other monsters on both sides with 600 PP or less.",
+  "zh_text": "進場：消滅雙方所有其他 PP 600 以下的怪物。"
  },
  "WCG-106": {
   "zh": "日怒壁壘",
@@ -535,7 +567,8 @@
  "WCG-107": {
   "zh": "飛刀投擲手",
   "name": "Knife Juggler",
-  "text": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 500 PP or less)."
+  "text": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 600 PP or less).",
+  "zh_text": "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。"
  },
  "WCG-108": {
   "zh": "殘破魔像",
@@ -585,7 +618,8 @@
  "WCG-117": {
   "zh": "狂奔科多獸",
   "name": "Stampeding Kodo",
-  "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1000 PP or less)."
+  "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1100 PP or less).",
+  "zh_text": "進場：消滅 PP 最低的 1 隻敵方怪物（須在 1100 以下）。"
  },
  "WCG-118": {
   "zh": "荊棘谷猛虎",
@@ -665,7 +699,8 @@
  "WCG-133": {
   "zh": "厚甲石像鬼",
   "name": "Armored Gargoyle",
-  "text": "Taunt. While you have 3 or less life, this monster has Energy Shield."
+  "text": "Taunt. While you have 3 or less life, this monster has Holy Shield.",
+  "zh_text": "嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。"
  },
  "WCG-134": {
   "zh": "巡林驅邪工兵",
@@ -680,7 +715,8 @@
  "WCG-136": {
   "zh": "狂戰士斥候",
   "name": "Berserker Scout",
-  "text": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 500 PP or less."
+  "text": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 600 PP or less.",
+  "zh_text": "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 600 以下的敵方怪物。"
  },
  "WCG-137": {
   "zh": "思維凍結",
@@ -690,7 +726,8 @@
  "WCG-138": {
   "zh": "暗影伏擊者",
   "name": "Shadow Ambusher",
-  "text": "Charge. Deploy: Tap 1 unused enemy energy (it can't pay for Energy Shield or Counters this turn)."
+  "text": "Charge. Deploy: Tap 1 ready enemy energy.",
+  "zh_text": "衝鋒；進場：橫置對手 1 點直立能量。"
  },
  "WCG-139": {
   "zh": "次元回溯",
@@ -715,7 +752,8 @@
  "WCG-143": {
   "zh": "甦生甘霖",
   "name": "Reviving Downpour",
-  "text": "Untap 1 tapped monster (it can attack this turn). It gets +500 PP until its next attack or combat ends."
+  "text": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard.",
+  "zh_text": "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。"
  },
  "WCG-144": {
   "zh": "狂熱嘲弄者",
@@ -735,7 +773,8 @@
  "WCG-147": {
   "zh": "聖堂仲裁護衛",
   "name": "Temple Arbiter Guard",
-  "text": "[Arrow: ← ↑] Your adjacent monster on the left has Energy Shield. The enemy monster directly opposite loses Energy Shield."
+  "text": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield.",
+  "zh_text": "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。"
  },
  "WCG-148": {
   "zh": "墓園守夜人",
@@ -750,12 +789,14 @@
  "WCG-150": {
   "zh": "自爆發條偶",
   "name": "Self-Destructing Clockwork",
-  "text": "On Death: Destroy all monsters on both sides with 700 PP or less."
+  "text": "On Death: Destroy all monsters on both sides with 600 PP or less.",
+  "zh_text": "陣亡：消滅雙方所有 PP 600 以下的怪物。"
  },
  "WCG-151": {
   "zh": "熔火鍛爐",
   "name": "Molten Forge",
-  "text": "Tap this card: destroy 1 monster with 800 PP or less."
+  "text": "Tap this card: destroy 1 monster with 600 PP or less.",
+  "zh_text": "橫置此卡：消滅 1 隻 PP 600 以下的怪物。"
  },
  "WCG-152": {
   "zh": "禁魔石像",
@@ -825,7 +866,8 @@
  "WCG-165": {
   "zh": "血祭狂暴",
   "name": "Blood Sacrifice Frenzy",
-  "text": "Additional cost: lose 1 life. 1 monster gets +500 PP until its next attack or combat ends."
+  "text": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard.",
+  "zh_text": "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。"
  },
  "WCG-166": {
   "zh": "思維置換",
@@ -840,7 +882,8 @@
  "WCG-168": {
   "zh": "正義壓制",
   "name": "Righteous Suppression",
-  "text": "1 monster gets -500 PP until its next attack or combat ends."
+  "text": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard.",
+  "zh_text": "附著：怪物 PP -500。它交戰後，此卡送入墓地。"
  },
  "WCG-169": {
   "zh": "暗影獻祭",
@@ -855,7 +898,8 @@
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt. Energy Shield. Deploy: Restore 2 life to yourself."
+  "text": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself.",
+  "zh_text": "嘲諷；聖盾；進場：回復己方 2 點生命。"
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -880,7 +924,8 @@
  "WCG-176": {
   "zh": "神聖至高審判",
   "name": "Supreme Holy Judgment",
-  "text": "Destroy all monsters on both sides with 1500 PP or more. Restore 2 life to yourself."
+  "text": "Destroy all monsters on both sides with 1800 PP or more. Restore 2 life to yourself.",
+  "zh_text": "消滅雙方所有 PP 1800 以上的怪物；回復己方 2 點生命。"
  },
  "WCG-177": {
   "zh": "機械工廠巨像",
@@ -895,7 +940,8 @@
  "WCG-179": {
   "zh": "光輝至高大天使·阿曼蘇爾",
   "name": "Radiant Supreme Archangel, Amansul",
-  "text": "Taunt. Energy Shield. Deploy: Restore your life to its maximum (7)."
+  "text": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7).",
+  "zh_text": "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。"
  },
  "WCG-180": {
   "zh": "戰歌號令",
@@ -925,7 +971,8 @@
  "WCG-185": {
   "zh": "魔導樞紐守衛",
   "name": "Arcane Nexus Warden",
-  "text": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 1000 PP or less."
+  "text": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less.",
+  "zh_text": "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。"
  },
  "WCG-186": {
   "zh": "母樹共鳴",
@@ -945,7 +992,8 @@
  "WCG-189": {
   "zh": "聖堂集結號角",
   "name": "Temple Rally Horn",
-  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Energy Shield (attach this card to it)."
+  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
+  "zh_text": "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
  },
  "WCG-190": {
   "zh": "白銀軍團旗手",
@@ -955,7 +1003,8 @@
  "WCG-191": {
   "zh": "聖光大審判官",
   "name": "Grand Inquisitor of Holy Light",
-  "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 2000 PP or more and restore 1 life to yourself."
+  "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 1800 PP or more and restore 1 life to yourself.",
+  "zh_text": "嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 1800 以上的敵方怪物，並回復己方 1 點生命。"
  },
  "WCG-192": {
   "zh": "冥河引魂術",
@@ -975,60 +1024,60 @@
  "WCG-195": {
   "zh": "熔火爆炸陷阱",
   "name": "Molten Blast Trap",
-  "text": "[Counter] After taking damage from an enemy monster, if it is still on the board: Destroy it and reverse this damage. If it had 1500 PP or more, also deal 1 damage to the enemy player.",
-  "zh_text": "【反擊】受到敵方怪物造成的傷害後，若該怪物仍在場：消滅該怪物，並抵銷這次傷害；若它 PP 1500 以上，再對敵方玩家造成 1 點傷害。"
+  "text": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
+  "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。"
  },
  "WCG-196": {
   "zh": "維度時空屏障",
   "name": "Dimensional Time Barrier",
-  "text": "[Counter] After taking damage from an enemy card: Reverse this damage, then draw 1 card.",
-  "zh_text": "【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害，然後抽 1 張牌。"
+  "text": "[Counter] When you take damage from the enemy: Cancel the damage and draw 1 card.",
+  "zh_text": "【反擊】受到敵方傷害時：抵銷傷害，抽 1 張。"
  },
  "WCG-197": {
   "zh": "叢林守護伏擊",
   "name": "Jungle Guardian Ambush",
-  "text": "[Counter] After taking damage from an enemy card: Reverse this damage. You may summon a [Life] monster costing 3 or less from hand for free (its Deploy does not trigger).",
-  "zh_text": "【反擊】受到敵方卡牌造成的傷害後：抵銷這次傷害；你可以從手牌免費召喚 1 隻費用 3 以下的【生機】怪物（不觸發進場）。"
+  "text": "[Counter] When you take damage: Cancel the damage. You may summon a [Life] monster costing 3 or less from your hand for free.",
+  "zh_text": "【反擊】受到傷害時：抵銷傷害，可從手牌免費召喚 1 隻 3 費以下生機怪物。"
  },
  "WCG-198": {
   "zh": "神聖救贖誓約",
   "name": "Oath of Holy Redemption",
-  "text": "[Counter] After taking damage: Reverse this damage and restore 2 life to yourself. You may give one of your monsters Energy Shield by attaching this card to it.",
-  "zh_text": "【反擊】受到傷害後：抵銷這次傷害，回復己方 2 點生命；你可以使 1 隻己方怪物獲得能量護盾（將此卡附著其上）。"
+  "text": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters Holy Shield (attach this card to it).",
+  "zh_text": "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
  },
  "WCG-199": {
   "zh": "亡魂索命陷阱",
   "name": "Vengeful Spirit Trap",
-  "text": "[Counter] After taking damage from an enemy monster: If it is still on the board, destroy it and reverse this damage. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand.",
-  "zh_text": "【反擊】受到敵方怪物造成的傷害後：若該怪物仍在場，消滅它並抵銷這次傷害；若你的墓地有【深淵】怪物，你可以將墓地 1 張費用 2 以下的怪物加入手牌。"
+  "text": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand.",
+  "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若你墓地有深淵怪物，可將墓地 1 隻 2 費以下怪物加入手牌。"
  },
  "WCG-200": {
   "name": "Oathguard",
-  "text": "Guardian (When you would take damage, you may tap any number of ready energy. Each energy tapped prevents 1 damage from that event).",
-  "zhText": "護主（你將受到傷害前，可以橫置任意數量的直立能量，每橫置 1 點抵銷 1 點該次傷害）。"
+  "text": "When you take damage, you may tap this monster to reduce that damage by 1.",
+  "zh_text": "你受到傷害時，可橫置此怪物，使傷害 -1。"
  },
  "WCG-201": {
   "zh": "赤焰破陣者",
   "name": "Flamebreaker Vanguard",
-  "text": "Rage (When this monster attacks a player, you may tap any number of ready energy. It gets +1 DP for each energy tapped for this attack only).",
-  "zh_text": "怒擊（此怪物攻擊玩家時，你可以橫置任意數量的直立能量。每橫置 1 點，這次攻擊的 DP＋1；攻擊結束後加成消失）。"
+  "text": "When this monster attacks a player, it gets +1 DP.",
+  "zh_text": "此怪物攻擊玩家時 DP +1。"
  },
  "WCG-202": {
   "zh": "星軌觀測師",
   "name": "Starpath Observer",
-  "text": "Observation (At the end of your opponent's turn, you may tap any even number of ready energy. For each 2 energy, in sequence look at the top 2 cards of your deck, take 1 into hand and put the rest on the bottom).",
-  "zh_text": "觀測（對手結束回合時，你可以橫置任意偶數點直立能量。每橫置 2 點，依序檢視牌庫頂最多 2 張，選 1 張加入手牌，其餘放到牌庫底）。"
+  "text": "Deploy: Look at the top 2 cards of your deck. Put 1 into your hand and the rest on the bottom.",
+  "zh_text": "進場：看牌庫頂 2 張，1 張入手，其餘置底。"
  },
  "WCG-203": {
   "zh": "荒野鬥角獸",
   "name": "Wild Antlerbeast",
-  "text": "Wild (When this monster battles another monster, you may tap any number of ready energy. It gets +500 PP for each energy tapped for this battle only).",
-  "zh_text": "野性（此怪物與另一隻怪物交戰時，你可以橫置任意數量的直立能量。每橫置 1 點，它在這次交戰中的 PP＋500；交戰結束後加成消失）。"
+  "text": "In combat, this monster gets +500 PP.",
+  "zh_text": "交戰時 PP +500。"
  },
  "WCG-204": {
   "zh": "冥河徘徊者",
   "name": "Styx Wanderer",
-  "text": "Soul Return (When this monster dies, you may immediately tap 2 ready energy to put this card from your graveyard into your hand).",
-  "zh_text": "回魂（此怪物陣亡時，你可以立即橫置 2 點直立能量，將這張牌從墓地加入手牌）。"
+  "text": "On Death: Put another monster costing 2 or less from your graveyard into your hand.",
+  "zh_text": "陣亡：從墓地將另 1 隻 2 費以下怪物加入手牌。"
  }
 }

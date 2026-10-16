@@ -108,6 +108,7 @@ public partial class GameEngine
     private void Damage(PlayerState p, int amount, DamageSource? source = null)
     {
         if (IsOver || amount <= 0) return;
+        if (SimplifiedRules) { OathGuardDamage(p, amount, source); return; }
         var guard = p.Field.FirstOrDefault(m => m.HasHeroGuard);
         var maximum = Math.Min(amount, p.AvailableEnergy);
         if (guard == null || maximum == 0) { ApplyPlayerDamage(p, amount, source); return; }
@@ -273,15 +274,15 @@ public partial class GameEngine
     {
         var enemy = GetOpponent(p).Field; IEnumerable<MonsterInstance> candidates = c.Id switch
         {
-            "WCG-002" or "WCG-086" => enemy.Where(m => m.CurrentPP <= 1000),
+            "WCG-002" or "WCG-086" => enemy.Where(m => m.CurrentPP <= Low(1000)),
             "WCG-012" or "WCG-064" => enemy.Where(m => m.Card.TotalCost <= 2),
-            "WCG-004" or "WCG-046" => enemy.Where(m => m.CurrentPP <= 500),
+            "WCG-004" or "WCG-046" => enemy.Where(m => m.CurrentPP <= Low(500)),
             "WCG-048" => enemy.Where(m => m.CurrentPP <= p.Field.Count * 500),
             "WCG-024" or "WCG-137" or "WCG-184" => enemy,
             "WCG-062" or "WCG-074" => p.Field.Where(CanShield),
-            "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= 1700),
-            "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= 1300),
-            "WCG-076" => enemy.Where(m => m.CurrentPP >= 1700),
+            "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= Low(1700)),
+            "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= Low(1300)),
+            "WCG-076" => enemy.Where(m => m.CurrentPP >= High(1700)),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => enemy,
             "WCG-036" or "WCG-135" => p.Field,
             "WCG-141" when !LegacyCardRules => p.Field,
@@ -351,7 +352,7 @@ public partial class GameEngine
         if (c.Card.Id == "WCG-046" && mode == "")
         {
             var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張牌，然後棄 1 張手牌" } };
-            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = "消滅 PP 500 以下敵怪" });
+            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = $"消滅 PP {Low(500)} 以下敵怪" });
             Ask(p, "自然之怒抉擇（尚未扣費）", modes, o => BeginPlay(p, c, o.Id), true, c.InstanceId); return true;
         }
         void WithTarget(MonsterInstance? target)
@@ -406,7 +407,7 @@ public partial class GameEngine
         _effects.AddLast(() =>
         {
             foreach (var juggler in p.Field.Where(x => x != m && !x.IsSilenced && x.Card.Id == "WCG-107").ToArray())
-                _effects.AddLast(() => PickLowest(p, GetOpponent(p).Field.Where(x => x.CurrentPP <= 500), x => KillBatch(new[] { x }, "飛刀投擲手")));
+                _effects.AddLast(() => PickLowest(p, GetOpponent(p).Field.Where(x => x.CurrentPP <= Low(500)), x => KillBatch(new[] { x }, "飛刀投擲手")));
         });
     }
     private void UsedSpell(PlayerState p, CardDefinition? spell = null)

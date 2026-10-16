@@ -9,7 +9,7 @@
 //   stat      a unit's PP changed (buff / debuff)
 //   tap       a unit was tapped or readied by an effect (not by attacking)
 
-export const BADGE_KEYWORDS = ['能量護盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
+export const BADGE_KEYWORDS = ['能量護盾', '聖盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
 const SOURCE_TYPES = new Set(['effect', 'trigger']);
 const TARGETED = new Set(['death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
@@ -62,7 +62,7 @@ export function planSteps(previous, next, events) {
             const unit = after.get(ev.instanceId);
             for (const k of keywords(unit)) {
                 badged.add(`${ev.instanceId}:${k}`);
-                steps.push({ kind: 'badge', target: ev.instanceId, keyword: k, from: k === '能量護盾' && unit ? auraSource(unit, after) : null });
+                steps.push({ kind: 'badge', target: ev.instanceId, keyword: k, from: (k === '能量護盾' || k === '聖盾') && unit ? auraSource(unit, after, k) : null });
             }
         }
     }
@@ -73,7 +73,7 @@ export function planSteps(previous, next, events) {
         const was = keywords(old);
         for (const k of keywords(unit)) {
             if (was.has(k) || badged.has(`${id}:${k}`)) continue;
-            steps.push({ kind: 'badge', target: id, keyword: k, from: k === '能量護盾' ? auraSource(unit, after) : null });
+            steps.push({ kind: 'badge', target: id, keyword: k, from: (k === '能量護盾' || k === '聖盾') ? auraSource(unit, after, k) : null });
         }
         const delta = (Number(unit.pp) || 0) - (Number(old.pp) || 0);
         if (delta && Number.isFinite(delta)) steps.push({ kind: 'stat', target: id, delta });

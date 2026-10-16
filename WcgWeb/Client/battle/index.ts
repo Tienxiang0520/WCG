@@ -211,8 +211,8 @@ class BattleScene extends Phaser.Scene {
         if(spellLabel)container.add(this.text(0,ch/2-8,spellLabel,focus?14:12,'#ffe7b6').setName('spell-badge'));
         if(monster){const status=monster.status.join(' · ')||(monster.canAttack?'可攻擊':monster.problem==='目前不能攻擊'?'':monster.problem),limit=Math.max(3,Math.floor((cw-8)/13));
             container.add(this.text(0,ch/2-8,focus&&status.length>limit?status.slice(0,limit-1)+'…':status,focus?14:(this.compact?10:11),'#b7d9da'));}
-        if(monster?.status.some(s=>s.startsWith('能量護盾'))){container.add(this.add.rectangle(cw/4,0,cw/2,ch-6,0x69c8cc,.25).setStrokeStyle(2,0x69c8cc).setName('shield'));
-            container.add(this.text(cw/4,-ch/2+30,monster.status.find(s=>s.startsWith('能量護盾'))!,12,'#d5ffff').setBackgroundColor('#164452').setPadding(3).setName('shield-count'));}
+        if(monster?.status.some(s=>s.startsWith('能量護盾')||s.startsWith('聖盾'))){container.add(this.add.rectangle(cw/4,0,cw/2,ch-6,0x69c8cc,.25).setStrokeStyle(2,0x69c8cc).setName('shield'));
+            container.add(this.text(cw/4,-ch/2+30,monster.status.find(s=>s.startsWith('能量護盾')||s.startsWith('聖盾'))!,12,'#d5ffff').setBackgroundColor('#164452').setPadding(3).setName('shield-count'));}
         if(monster?.status.includes('沉默'))container.add(this.add.rectangle(-cw/4,0,cw/2,ch-6,0xa5a5c4,.2).setStrokeStyle(2,0xa5a5c4));
         }
         this.borders.set(card.instanceId,container.getData('border'));
@@ -448,7 +448,7 @@ class BattleScene extends Phaser.Scene {
                 if(card&&id!==this.attack?.id&&(card.x!==slot.x||card.y!==slot.y))await this.tween(card,{x:slot.x,y:slot.y,duration:this.owner.fast?80:180,ease:'Cubic.Out'});
             }));
         }else{
-            if(event.type==='status'&&event.label.includes('能量護盾'))piece?.list.find(child=>child.name==='shield')?.destroy();
+            if(event.type==='status'&&(event.label.includes('能量護盾')||event.label.includes('聖盾')))piece?.list.find(child=>child.name==='shield')?.destroy();
             if(this.attack||event.type==='damage'||event.type==='heal'){
                 const place=(event.type==='damage'||event.type==='heal')?this.heroZone(event.side):piece;
                 this.owner.status.textContent=`${event.card?.name??''} ${event.label}${event.amount?' '+event.amount:''}`;
@@ -642,8 +642,8 @@ class Board {
         if(!entry?.preview)return;const p=entry.preview;
         if(target==='face'&&p.rageEnergy){this.status.textContent=`攻擊預覽：基本 ${p.playerDamage} 點傷害，可投入最多 ${p.rageEnergy} 點能量增加 DP；護主與反擊另行結算。`;return;}
         if(target!=='face'&&p.wildEnergy){this.status.textContent='交戰預覽：野性可改變 PP；先由攻擊方投入，再由防守方投入，之後才判定存活與消滅。';return;}
-        if(target==='face'){const prevent=p.playerDamagePreventable||0;this.status.textContent=prevent?`攻擊預覽：${p.playerDamage} 點傷害，護主最多可抵銷 ${prevent} 點；對手選擇後才扣血。`:`攻擊預覽：電腦生命 ${this.state!.computer.hp} → ${Math.max(0,this.state!.computer.hp-p.playerDamage)}。宣告觸發與陣亡能力另行結算。`;return;}
-        this.status.textContent=`交戰預覽 → ${entry.label}：己方${p.attackerDies?'消滅':p.attackerShieldBreaks?'消耗一層能量護盾':'存活'}、敵方${p.defenderDies?'消滅':p.defenderShieldBreaks?'消耗一層能量護盾':'存活'}${p.playerDamage?'，玩家傷害 '+p.playerDamage+(p.playerDamagePreventable?'（護主最多抵銷 '+p.playerDamagePreventable+'）':''):''}。陣亡能力另行結算。`;
+        if(target==='face'){const prevent=p.playerDamagePreventable||0;this.status.textContent=prevent?`攻擊預覽：${p.playerDamage} 點傷害，護誓守衛最多可減少 ${prevent} 點；對手選擇後才扣血。`:`攻擊預覽：電腦生命 ${this.state!.computer.hp} → ${Math.max(0,this.state!.computer.hp-p.playerDamage)}。宣告觸發與陣亡能力另行結算。`;return;}
+        this.status.textContent=`交戰預覽 → ${entry.label}：己方${p.attackerDies?'消滅':p.attackerShieldBreaks?'護盾擋下':'存活'}、敵方${p.defenderDies?'消滅':p.defenderShieldBreaks?'護盾擋下':'存活'}${p.playerDamage?'，玩家傷害 '+p.playerDamage+(p.playerDamagePreventable?'（護誓守衛最多減少 '+p.playerDamagePreventable+'）':''):''}。陣亡能力另行結算。`;
     }
     finishPresentation(){if(this.presentation)this.metrics.turns.push({phase:'ready',side:this.presentation.side,turn:this.presentation.turn});this.presentation=null;}
     turnText(){

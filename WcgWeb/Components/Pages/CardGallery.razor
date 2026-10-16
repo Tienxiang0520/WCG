@@ -40,7 +40,7 @@
 
                 <div class="vr mx-2"></div>
                 <span class="filter-label">@L["關鍵字"]</span>
-                @foreach (var kw in new[] { "嘲諷", "衝鋒", "貫穿", "劇毒", "能量護盾", "護主", "怒擊", "觀測", "野性", "回魂", "箭頭", "反擊", "沉默" })
+                @foreach (var kw in new[] { "嘲諷", "衝鋒", "聖盾", "貫穿", "劇毒", "沉默", "箭頭", "反擊" })
                 {
                     string k = kw;
                     <button class="filter-chip @(SelectedKeyword == k ? "on" : "")" aria-pressed="@(SelectedKeyword == k ? "true" : "false")"
@@ -114,7 +114,7 @@
                                        (SelectedKeyword == "衝鋒" && c.HasCharge) ||
                                        (SelectedKeyword == "貫穿" && c.HasTrample) ||
                                        (SelectedKeyword == "劇毒" && c.HasPoison) ||
-                                       (SelectedKeyword == "能量護盾" && c.Text.Contains("能量護盾")) ||
+                                       (SelectedKeyword == "聖盾" && c.HasEnergyShield) ||
                                        (SelectedKeyword == "箭頭" && c.Arrows.Length>0) ||
                                        (SelectedKeyword == "反擊" && c.IsCounter) ||
                                        (SelectedKeyword == "沉默" && c.HasSilence));
