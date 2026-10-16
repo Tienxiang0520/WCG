@@ -7,8 +7,17 @@ namespace WcgTests;
 internal static class CounterHistory
 {
     // Catalog before the rules simplification (energy only pays costs, per-turn Holy Shield, 3 PP thresholds).
+    // Catalog before the PP/cost deflation (PR B).
+    internal static CardDatabase BeforeDeflation(CardDatabase current)
+    {
+        if(!(current.GetCard("WCG-161")?.PP<4000))return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-deflation.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeRulesSimplification(CardDatabase current)
     {
+        current=BeforeDeflation(current);
         if(current.GetCard("WCG-200")?.Text.StartsWith("你受到傷害時") != true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-rules-simplification.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
