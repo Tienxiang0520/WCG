@@ -28,6 +28,7 @@
                 <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" @onclick='() => SelectedWill = "秩序"'><i class="will-dot"></i>@L["秩序"] <small>@CardDb.AllCards.Count(c => c.Will == "秩序")</small></button>
                 <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" @onclick='() => SelectedWill = "深淵"'><i class="will-dot"></i>@L["深淵"] <small>@CardDb.AllCards.Count(c => c.Will == "深淵")</small></button>
                 <button class="filter-chip will-chip will-neutral @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SelectedWill = "中立"'><i class="will-dot"></i>@L["中立"] <small>@CardDb.AllCards.Count(c => c.Will == "中立")</small></button>
+                <button class="filter-chip will-chip will-dual @(SelectedWill == "雙色" ? "on" : "")" aria-pressed="@(SelectedWill == "雙色" ? "true" : "false")" title="@L["只看雙色卡"]" @onclick='() => SelectedWill = "雙色"'><i class="will-dot"></i>@L["雙色卡"]</button>
             </div>
 
             <!-- Type Filters & Keyword Filters -->
@@ -102,7 +103,7 @@
             var list = CardDb.AllCards.AsEnumerable();
 
             if (!string.IsNullOrEmpty(SelectedWill))
-                list = list.Where(c => c.Will == SelectedWill);
+                list = SelectedWill == "雙色" ? list.Where(c => c.IsDual) : list.Where(c => c.HasWill(SelectedWill));
 
             if (!string.IsNullOrEmpty(SelectedType))
                 list = list.Where(c => (SelectedType=="法術"?c.IsSpell:c.Type == SelectedType));

@@ -286,7 +286,7 @@ public partial class GameEngine
                 "WCG-047" or "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
                 "WCG-001" or "WCG-007" or "WCG-102" => e.Field.Any(m => m.CurrentPP <= 500) ? 3 : 0,
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= 2300) ? 6 : 0,
-                "WCG-191" => p.Field.Any(m => m.Card.Will == "秩序") && e.Field.Any(m => m.CurrentPP >= 2000) ? 6 : 0,
+                "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= 2000) ? 6 : 0,
                 "WCG-117" => e.Field.Any(m => m.CurrentPP <= 1000) ? 3 : 0,
                 _ => 0,
             };

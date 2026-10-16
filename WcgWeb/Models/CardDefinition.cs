@@ -14,8 +14,23 @@ public class CardDefinition
     [JsonPropertyName("type")]
     public string Type { get; set; } = ""; // 怪物, 法術
 
+    // "will" is a string for single-will cards (all existing data) or a two-element array for dual-will cards
+    // (MTG-style: the deck must have chosen both wills). Arrays are normalised to the fixed will order
+    // 狂怒、理智、生機、秩序、深淵 and written back as a plain string when there is only one will.
     [JsonPropertyName("will")]
-    public string Will { get; set; } = ""; // 狂怒, 理智, 生機, 秩序, 深淵, 中立
+    [JsonConverter(typeof(WillListConverter))]
+    public string[] Wills { get; set; } = [""];
+
+    // Primary will (first in the fixed order). Single-will cards behave exactly as before.
+    [JsonIgnore]
+    public string Will { get => Wills.Length > 0 ? Wills[0] : ""; set => Wills = [value ?? ""]; } // 狂怒, 理智, 生機, 秩序, 深淵, 中立
+
+    [JsonIgnore] public bool IsDual => Wills.Length == 2;
+    [JsonIgnore] public bool IsNeutral => Wills.All(w => w is "中立" or "");
+    // Effects that check a will count both wills of a dual card.
+    public bool HasWill(string will) => Wills.Contains(will);
+    // Non-neutral wills this card requires the deck to have chosen.
+    [JsonIgnore] public IEnumerable<string> FactionWills => Wills.Where(w => w is not ("中立" or ""));
 
     [JsonPropertyName("cost_spec")]
     public string CostSpec { get; set; } = ""; // 保留舊欄位相容性；新版資料一律空白
@@ -118,5 +133,34 @@ public class FlexibleIntConverter : JsonConverter<int?>
             writer.WriteNumberValue(value.Value);
         else
             writer.WriteNullValue();
+    }
+}
+
+public class WillListConverter : JsonConverter<string[]>
+{
+    public static readonly string[] Order = ["狂怒", "理智", "生機", "秩序", "深淵"];
+    public static string[] Normalize(IEnumerable<string> wills)
+    {
+        var list = wills.Select(w => (w ?? "").Trim()).Where(w => w != "").Distinct().ToList();
+        if (list.Count > 1) list.RemoveAll(w => w == "中立");
+        if (list.Count == 0) return [""];
+        return list.OrderBy(w => Array.IndexOf(Order, w) is var i && i < 0 ? 99 : i).ToArray();
+    }
+    public override string[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        if (reader.TokenType == JsonTokenType.String) return [reader.GetString() ?? ""];
+        if (reader.TokenType == JsonTokenType.Null) return [""];
+        if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException("will 必須是字串或字串陣列");
+        var list = new List<string>();
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+            list.Add(reader.TokenType == JsonTokenType.String ? reader.GetString() ?? "" : throw new JsonException("will 陣列只能包含字串"));
+        var result = Normalize(list);
+        if (result.Length > 2) throw new JsonException("一張卡最多屬於兩個意志");
+        return result;
+    }
+    public override void Write(Utf8JsonWriter writer, string[] value, JsonSerializerOptions options)
+    {
+        if (value.Length <= 1) { writer.WriteStringValue(value.Length == 0 ? "" : value[0]); return; }
+        writer.WriteStartArray(); foreach (var w in value) writer.WriteStringValue(w); writer.WriteEndArray();
     }
 }

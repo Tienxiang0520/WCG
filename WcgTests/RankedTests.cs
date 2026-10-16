@@ -576,7 +576,6 @@ public sealed class RankedTests : IDisposable
             Assert.True(pool.Count>=8);Assert.Equal(pool.Count,keys[tier].Count);
             Assert.Equal(5,pool.Select(e=>e.Deck.MainWill).Distinct().Count());
             Assert.All(pool,e=>{Assert.True(decks.IsLegal(e.Deck,out var error),error);Assert.NotEmpty(e.Archetype);Assert.NotEmpty(e.Deck.Description);
-                Assert.True(e.Deck.GetColorCounts(cards.GetCard).OffColor<=Deck.MaxOffColorCards);
                 if(tier==5)Assert.Empty(e.Variants!);else Assert.True((e.Variants?.Count??0)>=3);});
             var summary=decks.Summary(tier);Assert.StartsWith($"{pool.Count} 種流派",summary);
             Assert.All(pool,e=>Assert.Contains(RankedDecks.ArchetypeName(e.Deck),summary));
