@@ -232,7 +232,7 @@ public class NewCardTests
     }
 
     // ---- 5.1 反制 ----
-    // 聖盾指示物: 205/209 remove the counter for good; it does not come back next turn.
+    // 聖盾指示物: 209 removes 1 counter for good; it does not come back next turn.
     [Fact] public void ShieldBreakersRemoveTheHolyShieldCounter()
     {
         var g=Game();var wall=Unit(g.Computer,31,2);Refresh(g);Assert.True(wall.HasShield);Assert.False(wall.ShieldSpent);

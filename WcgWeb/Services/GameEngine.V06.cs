@@ -24,7 +24,7 @@ public partial class GameEngine
         var counters=ShieldCounterRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
-            var unit=m;var hadShield=unit.ShieldQualified;unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
+            var unit=m;unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+NewPower(p,unit));
@@ -34,9 +34,25 @@ public partial class GameEngine
                     && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Owner(source)!=p));
             // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
             if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
-            // 聖盾指示物: gaining 聖盾 places one counter; losing 聖盾 removes it. ShieldSpent means "no counter".
-            if (counters) { if (!unit.ShieldQualified) unit.ShieldSpent = true; else if (!hadShield) unit.ShieldSpent = false; }
+            if (counters) ShieldCounterSources(p, unit);
         }
+    }
+    // 聖盾指示物: every 聖盾 source that starts applying (printed 聖盾 on entry or after Dispel, 133's condition, each arrow,
+    // each attached 聖盾 spell) adds 1 counter; counters stack. Being silenced, or 147's up arrow pointing at it, removes all counters.
+    // A monster "has 聖盾" while it has counters; ShieldSpent mirrors "no counters" for code shared with the per-turn era.
+    private void ShieldCounterSources(PlayerState p, MonsterInstance unit)
+    {
+        var now = new HashSet<string>();
+        if (!unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id == "WCG-133" && p.Hp <= 3)) now.Add("native");
+        foreach (var a in unit.Attachments.Where(a => a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")) now.Add("T:" + a.Card.InstanceId);
+        foreach (var source in Player.Field.Concat(Computer.Field).Where(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length > 0 && PointsAt(Owner(source), source, p, unit)
+            && !(source.Card.Id == "WCG-147" && !LegacyCardRules && Owner(source) != p))) now.Add("A:" + source.InstanceId);
+        if (unit.IsSilenced && !unit.WasSilenced) unit.ShieldCounters = 0;
+        unit.WasSilenced = unit.IsSilenced;
+        unit.ShieldCounters += now.Count(s => !unit.ShieldSources.Contains(s));
+        unit.ShieldSources = now;
+        if (!LegacyCardRules && Arbitrated(p, unit)) unit.ShieldCounters = 0;
+        unit.ShieldQualified = unit.ShieldCounters > 0; unit.ShieldSpent = unit.ShieldCounters == 0;
     }
     private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Id == "WCG-147" && source.Card.Arrows.Contains("up")
@@ -59,8 +75,6 @@ public partial class GameEngine
         card.TotalCost-(card.Id=="WCG-160" ? 7-p.Hp : 0)-NewCostReduction(p,card)-(card.IsMonster ? p.NextCreatureDiscount : 0));
     private void Attach(PlayerState p, CardInstance card, MonsterInstance target, int? expire = null)
     { if(!Alive(target)) return; p.Graveyard.Remove(card); target.Attachments.Add(new(card,p.Id,expire)); RefreshBoard();
-      // 聖盾指示物: an attached spell that grants 聖盾 adds the counter even when the monster already had 聖盾 (max 1).
-      if(ShieldCounterRules && card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198" && target.ShieldQualified) target.ShieldSpent=false;
       Present("attach",p,card.InstanceId,target.InstanceId,card:card.Card,label:"附著"); }
     private void ReadyMonster(MonsterInstance m) { if(!Alive(m))return; m.IsTapped=false;m.HasAttacked=false;m.HasSummoningSickness=false; }
     private void SummonStructure(PlayerState p, CardInstance c)

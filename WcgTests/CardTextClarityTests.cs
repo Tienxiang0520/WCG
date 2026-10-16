@@ -147,7 +147,8 @@ public class CardTextClarityTests
     {
         var g=Game();var src=Unit(g.Player,147,1);var foe=Unit(g.Computer,101,3);
         g.Computer.Field.Single().Attachments.Add(new(new CardInstance(cards.GetCard("WCG-062")!),g.Computer.Id));Refresh(g);Assert.False(foe.HasShield);
-        src.IsSilenced=true;Refresh(g);Assert.True(foe.HasShield);
+        // 聖盾指示物: the counters are gone; silencing the arbiter does not hand them back.
+        src.IsSilenced=true;Refresh(g);Assert.False(foe.HasShield);
     }
     [Theory] [InlineData(false,true)] [InlineData(true,false)]
     public void ScoutTriggersWheneverItSurvivesItsAttack(bool legacy,bool triggers)
@@ -222,7 +223,7 @@ public class CardTextClarityTests
             Assert.Matches("<p></p>", FaceText(await Render<CardFace>(language, new() { ["Battle"] = battle })));
         }
         var effect = FaceText(await Render<CardFace>(language, new() { ["Card"] = cards.GetCard("WCG-147") }));
-        Assert.Contains(language == "zh" ? "失去聖盾" : "loses Holy Shield", effect);
+        Assert.Contains(language == "zh" ? "移除所有聖盾指示物" : "loses all Holy Shield counters", effect);
     }
     [Fact] public void FaceTextBlanksVanillaButSearchTextKeepsIt()
     {

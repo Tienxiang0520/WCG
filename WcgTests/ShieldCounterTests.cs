@@ -36,28 +36,39 @@ public class ShieldCounterTests
         Assert.True(g.Attack(g.Computer,wall,knight));Assert.DoesNotContain(knight,g.Player.Field);
     }
 
-    [Fact] public void SilenceRemovesTheCounterAndDispelGivesANewOne()
+    [Fact] public void SilenceRemovesAllCountersAndDispelGivesANewOne()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);Refresh(g);Assert.False(knight.ShieldSpent);
-        knight.IsSilenced=true;Refresh(g);Assert.False(knight.HasShield);Assert.True(knight.ShieldSpent);
-        knight.IsSilenced=false;Refresh(g);Assert.True(knight.HasShield);Assert.False(knight.ShieldSpent);
+        var g=Game();var knight=Unit(g.Player,69,1);Refresh(g);Assert.Equal(1,knight.ShieldCounters);
+        knight.ShieldCounters=3;knight.IsSilenced=true;Refresh(g);Assert.False(knight.HasShield);Assert.Equal(0,knight.ShieldCounters);
+        knight.IsSilenced=false;Refresh(g);Assert.True(knight.HasShield);Assert.Equal(1,knight.ShieldCounters);
     }
 
-    [Fact] public void ArrowGivesOneCounterWhenItStartsPointingAndKeepsItSpent()
+    [Fact] public void ArrowAddsOneCounterWhenItStartsPointingAndLeavingDoesNotTakeItBack()
     {
         var g=Game();var target=Unit(g.Player,154,2);Refresh(g);Assert.False(target.HasShield);
-        var guard=Unit(g.Player,61,1);Refresh(g);Assert.True(target.HasShield);Assert.False(target.ShieldSpent);
-        target.ShieldSpent=true;Refresh(g);Assert.True(target.ShieldSpent);
-        ComputerTurn(g);PlayerTurn(g);Assert.True(target.ShieldSpent);
-        g.Player.Field.Remove(guard);Refresh(g);Assert.False(target.HasShield);
+        var guard=Unit(g.Player,61,1);Refresh(g);Assert.Equal(1,target.ShieldCounters);
+        Refresh(g);ComputerTurn(g);PlayerTurn(g);Assert.Equal(1,target.ShieldCounters);
+        g.Player.Field.Remove(guard);Refresh(g);Assert.Equal(1,target.ShieldCounters);
     }
 
-    [Fact] public void AttachedShieldSpellRefillsASpentCounter()
+    [Fact] public void GrantsStackAndEachCombatRemovesOne()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);Refresh(g);knight.ShieldSpent=true;
+        var g=Game();var knight=Unit(g.Player,69,1);Refresh(g);
         var spell=new CardInstance(cards.GetCard("WCG-074")!);g.Player.Hand.Add(spell);
         Assert.True(g.CastSpellAt(g.Player,spell,knight));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.First()));
-        Assert.False(knight.ShieldSpent);
+        Assert.Equal(2,knight.ShieldCounters);
+        var wall=Unit(g.Computer,155,3);Refresh(g);
+        Assert.True(g.Attack(g.Player,knight,wall));Assert.Contains(knight,g.Player.Field);Assert.Equal(1,knight.ShieldCounters);
+    }
+
+    [Fact] public void ShieldBreakersRemoveAllOrOne()
+    {
+        var g=Game();var a=Unit(g.Computer,31,2);var b=Unit(g.Computer,69,3);Refresh(g);a.ShieldCounters=3;b.ShieldCounters=3;
+        var p205=new CardInstance(cards.GetCard("WCG-205")!);var p209=new CardInstance(cards.GetCard("WCG-209")!);
+        Assert.Contains("所有聖盾指示物",p205.Card.Text);Assert.Contains("1 個聖盾指示物",p209.Card.Text);
+        var m=typeof(GameEngine).GetMethod("BreakShield",BindingFlags.NonPublic|BindingFlags.Instance)!;
+        m.Invoke(g,[g.Player,true]);Assert.True(g.SelectTarget(a));Assert.Equal(0,a.ShieldCounters);Assert.False(a.HasShield);
+        m.Invoke(g,[g.Player,false]);Assert.True(g.SelectTarget(b));Assert.Equal(2,b.ShieldCounters);
     }
 
     [Fact] public void OldEraStillRefreshesEachTurn()

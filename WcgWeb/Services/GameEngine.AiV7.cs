@@ -42,7 +42,7 @@ public partial class GameEngine
     // v10 (RankedAiVersion 10): with 聖盾指示物 a used counter never comes back, so a spent counter is a real change
     // in the keys and the body value; earlier steps replay with the older keys.
     private bool V10 => AiRevision >= 10;
-    private static int ShieldMark(GameEngine g, MonsterInstance m) => !m.HasShield ? 0 : g.V10 && m.ShieldSpent && g.ShieldCounterRules ? 2 : 1;
+    private static int ShieldMark(GameEngine g, MonsterInstance m) => g.V10 && g.ShieldCounterRules ? 10 + m.ShieldCounters : m.HasShield ? 1 : 0;
     internal static bool PointlessAttack(GameEngine before, GameEngine after, string pid, SimMove m) =>
         m.Kind == "attack" && !after.IsOver && EffectKey(before, pid, m.Source) == EffectKey(after, pid, m.Source);
     // A pointless attack that also loses the attacker. Shield bumps that cost nothing stay in the turn search:
