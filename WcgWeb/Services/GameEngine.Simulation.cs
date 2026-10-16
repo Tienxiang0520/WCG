@@ -10,7 +10,7 @@ public partial class GameEngine
     private bool _simulation;
     internal bool IsSimulation => _simulation;
     internal static readonly CardDefinition HiddenCard = new() { Id = "SIM-HIDDEN", Name = "未知", Type = "法術", TotalCost = 99, Text = "" };
-    internal bool IsQuiescent => !IsWaiting && _effects.Count == 0 && _reactionDepth == 0 && _mutationDepth == 0;
+    internal bool IsQuiescent => !IsWaiting && _effects.Count == 0 && _reactionDepth == 0;
 
     internal GameEngine CloneQuiescent(int simSeed, string viewerId)
     {

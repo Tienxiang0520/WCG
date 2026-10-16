@@ -3,7 +3,7 @@ using WcgWeb.Models;
 using WcgWeb.Services;
 using WcgWeb.Models.Ranked;
 using Microsoft.AspNetCore.Builder;
-// 用法：dotnet run --project tools/RankedCheck -- [WcgWeb 路徑] [每副種子數] [--matrix]
+// 用法：dotnet run --project tools/RankedCheck -- [WcgWeb 路徑] [每副種子數] [--matrix|--ai-vs|--v7-ladder]
 // --matrix：只跑強度矩陣。每個牌位的對手池（該牌位電腦＋該牌位牌組）分別對上「玩家方」五副預組，
 // 玩家方依序使用試玩電腦（-1）與青銅～大師分級電腦（0～5）；每格每流派 種子數 × 2（先後手）場。
 // 檢查每副天梯牌組與所有微調都合法、能完整打完，並輸出對五副預組的 AI 對照勝率與各牌位平均。
@@ -23,6 +23,43 @@ var db=new CardDatabase(builder.Environment);var pool=new RankedDecks(db,builder
  if(new[]{e.Player,e.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null))!=100)
   throw new Exception("Card count changed: "+deck.Name);
  return(e.Computer.HasLost,e.TurnNumber,slowest);
+}
+// --ai-vs：AI v7 對 AI v6。每個牌位用五副預組全部配對（含鏡像、雙方先後手、雙方交換牌組），
+// 流派以 v7 方的預組計。--v7-ladder：v7 牌位 n 對 v7 牌位 n−1，檢查分級單調變強。
+// 決策耗時只計 v7 方的每一步（box 上的 .NET JIT；瀏覽器 WASM 會更慢）。
+(bool v7won,List<double> ms) PlayVs(Deck v7Deck,Deck otherDeck,int seed,bool v7First,int v7Level,int v7Rev,int otherLevel,int otherRev)
+{
+ var e=new GameEngine(db,new Random(1700+seed));e.SeedRankedAi(1700+seed);e.StartGame(v7Deck,otherDeck,v7First);e.Player.IsAi=true;var ms=new List<double>();
+ for(int step=0;step<3000&&!e.IsOver;step++)
+ {
+  bool mine=e.DecisionPlayerId=="player";e.AiLevel=mine?v7Level:otherLevel;e.AiRevision=mine?v7Rev:otherRev;
+  var clock=System.Diagnostics.Stopwatch.StartNew();
+  if(!e.ExecuteAiStep())throw new Exception($"stalled: {v7Deck.Name} vs {otherDeck.Name} seed {seed}: {e.LastError}");
+  if(mine)ms.Add(clock.Elapsed.TotalMilliseconds);
+ }
+ if(!e.IsOver)throw new Exception("Timeout");
+ return(e.Computer.HasLost,ms);
+}
+if(args.Contains("--ai-vs")||args.Contains("--v7-ladder"))
+{
+ bool ladderMode=args.Contains("--v7-ladder");int newRev=GameEngine.RankedAiVersion<7?7:GameEngine.RankedAiVersion;
+ var tierList=ladderMode?new[]{1,2,3,4,5}:new[]{0,1,2,3,4,5};
+ var jobs=tierList.SelectMany(t=>Enumerable.Range(0,5).SelectMany(i=>Enumerable.Range(0,5).SelectMany(j=>Enumerable.Range(0,seeds).SelectMany(s=>new[]{true,false}.Select(f=>(t,i,j,s,f)))))).ToList();
+ var res=new (bool won,List<double> ms)[jobs.Count];var clock=System.Diagnostics.Stopwatch.StartNew();
+ var threads=int.TryParse(Environment.GetEnvironmentVariable("RANKEDCHECK_THREADS"),out var n2)&&n2>0?n2:Environment.ProcessorCount;
+ Parallel.For(0,jobs.Count,new ParallelOptions{MaxDegreeOfParallelism=threads},k=>
+ {var (t,i,j,s,f)=jobs[k];res[k]=ladderMode?PlayVs(db.PresetDecks[i],db.PresetDecks[j],s*25+i*5+j,f,t,newRev,t-1,newRev):PlayVs(db.PresetDecks[i],db.PresetDecks[j],s*25+i*5+j,f,t,newRev,t,6);});
+ double Pct(List<double> xs,double q){if(xs.Count==0)return 0;var o=xs.OrderBy(x=>x).ToList();return Math.Round(o[Math.Min(o.Count-1,(int)(q*o.Count))],2);}
+ var table=tierList.Select(t=>
+ {
+  var idx=Enumerable.Range(0,jobs.Count).Where(k=>jobs[k].t==t).ToList();var ms=idx.SelectMany(k=>res[k].ms).ToList();
+  double wr=(double)idx.Count(k=>res[k].won)/idx.Count;double ci=1.96*Math.Sqrt(wr*(1-wr)/idx.Count);
+  return new{tier=t,tierName=RankedRules.Tiers[t],opponent=ladderMode?"v7 "+RankedRules.Tiers[t-1]:"v6 "+RankedRules.Tiers[t],games=idx.Count,winRate=Math.Round(wr,3),ci95=Math.Round(ci,3),
+   archetypes=Enumerable.Range(0,5).Select(i=>{var a=idx.Where(k=>jobs[k].i==i).ToList();return new{deck=db.PresetDecks[i].Name,games=a.Count,winRate=Math.Round((double)a.Count(k=>res[k].won)/a.Count,3)};}).ToList(),
+   decisionMs=new{decisions=ms.Count,median=Pct(ms,.5),p95=Pct(ms,.95),p99=Pct(ms,.99),max=Math.Round(ms.DefaultIfEmpty(0).Max(),2)}};
+ }).ToList();
+ Console.WriteLine(JsonSerializer.Serialize(new{mode=ladderMode?"v7 tier n vs v7 tier n-1":"v7 vs v6 (same tier)",v7Revision=newRev,seedsPerPairing=seeds,elapsedSeconds=Math.Round(clock.Elapsed.TotalSeconds,1),table},new JsonSerializerOptions{WriteIndented=true,Encoder=System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+ return;
 }
 if(args.Contains("--matrix"))
 {

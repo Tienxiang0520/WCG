@@ -132,6 +132,6 @@ public partial class GameEngine
         Resolve(effects.ToArray()); return true;
     });
     // Ranked matches set AiLevel 0..5 for the tiered AI; practice and training keep the v0.6 trial AI.
-    public bool ExecuteAiStep() => Change(()=>AiLevel>=0?ExecuteTieredAi():ExecuteV06Ai());
+    public bool ExecuteAiStep() => Change(()=>AiLevel<0?ExecuteV06Ai():AiRevision>=7?ExecuteV7Ai():ExecuteTieredAi());
     public void ExecuteAiTurn(){for(int i=0;i<400&&DecisionPlayerId==Computer.Id&&!IsOver;i++)if(!ExecuteAiStep())break;}
 }
