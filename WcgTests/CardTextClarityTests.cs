@@ -36,7 +36,7 @@ public class CardTextClarityTests
         foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("它交戰後，此卡送入墓地",cards.GetCard(id)!.Text);
         Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
         Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);
-        Assert.Equal(1000,cards.GetCard("WCG-147")!.PP);
+        Assert.Equal(800,cards.GetCard("WCG-147")!.PP);
         var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(root,"i18n/cards.en.json")))!;
         Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
         Assert.Equal(10,cards.AllCards.Count(c=>c.IsVanilla));
@@ -92,19 +92,19 @@ public class CardTextClarityTests
         Assert.True(g.CastSpell(g.Player,Hand(g,96)));Assert.True(g.SelectTarget(victim));
         Assert.Equal(hp,g.Player.Hp);Assert.Equal(deck-drawn,g.Player.Deck.Count);
     }
-    [Theory] [InlineData(false,2000)] [InlineData(true,2000)]
+    [Theory] [InlineData(false,1800)] [InlineData(true,1800)]
     // Simplified rules: 143 is an attachment that stays until the monster battles; attacking the player keeps it.
     public void NextCombatBonusEndsAfterAttackingThePlayer(bool legacy,int after)
     {
         var g=Game(legacy);var m=Unit(g.Player,154,2);m.IsTapped=true;
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,143),m));Assert.Equal(2000,m.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,143),m));Assert.Equal(1800,m.CurrentPP);
         var hp=g.Computer.Hp;Assert.True(g.Attack(g.Player,m));Assert.Equal(hp-1,g.Computer.Hp);
         Assert.Equal(after,m.CurrentPP);
     }
     [Fact] public void DebuffEndsAfterTheTargetsNextAttack()
     {
-        var g=Game();var m=Unit(g.Player,154,2);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),m));Assert.Equal(1000,m.CurrentPP);
-        Assert.True(g.Attack(g.Player,m));Assert.Equal(1000,m.CurrentPP); // Attached: attacking the player is not a battle.
+        var g=Game();var m=Unit(g.Player,154,2);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),m));Assert.Equal(800,m.CurrentPP);
+        Assert.True(g.Attack(g.Player,m));Assert.Equal(800,m.CurrentPP); // Attached: attacking the player is not a battle.
         Assert.Contains(m.Attachments,a=>a.Card.Card.Id=="WCG-168");
     }
     [Theory] [InlineData(false)] [InlineData(true)]
@@ -183,7 +183,7 @@ public class CardTextClarityTests
         var g=Game();var own=Unit(g.Player,154,1);own.IsTapped=true;own.HasAttacked=true;var foe=Unit(g.Computer,154,2);var spell=Hand(g,141);
         var targets=g.GetDirectPlayTargets(g.Player,spell);Assert.Contains(own,targets);Assert.DoesNotContain(foe,targets);
         Assert.False(g.CastSpellAt(g.Player,spell,foe));
-        Assert.True(g.CastSpellAt(g.Player,spell,own));Assert.True(g.CanAttack(own));Assert.Equal(2200,own.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,spell,own));Assert.True(g.CanAttack(own));Assert.Equal(2000,own.CurrentPP);
         Assert.Equal(g.TurnNumber+2,own.Attachments.Single().ExpireTurn);
         g=Game(true);foe=Unit(g.Computer,154,2);Assert.Contains(foe,g.GetDirectPlayTargets(g.Player,Hand(g,141)));
     }

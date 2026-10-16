@@ -6,8 +6,12 @@ namespace WcgWeb.Services;
 internal static class CardBalanceHistory
 {
     // Catalog before the rules simplification (Holy Shield refresh, fixed 200–204 effects, 3 PP thresholds, attached 143/165/168).
-    internal static CardDatabase BeforeRulesSimplification(CardDatabase current) => SimplifiedCatalog(current)
-        ? Override(current, "WcgWeb.Balance.BeforeRulesSimplification") : current;
+    // Catalog before the PP/cost deflation (PR B); only PP and cost changed, effects and DP did not.
+    internal static CardDatabase BeforeDeflation(CardDatabase current) => DeflatedCatalog(current)
+        ? Override(current, "WcgWeb.Balance.BeforeDeflation") : current;
+    internal static bool DeflatedCatalog(CardDatabase cards) => cards.GetCard("WCG-161")?.PP < 4000;
+    internal static CardDatabase BeforeRulesSimplification(CardDatabase current) { current = BeforeDeflation(current); return SimplifiedCatalog(current)
+        ? Override(current, "WcgWeb.Balance.BeforeRulesSimplification") : current; }
     internal static bool SimplifiedCatalog(CardDatabase cards) => cards.GetCard("WCG-200")?.Text.StartsWith("你受到傷害時", StringComparison.Ordinal) == true;
     internal static CardDatabase BeforeEnergyKeywords(CardDatabase current) { current = BeforeRulesSimplification(current); return current.GetCard("WCG-201") == null ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id is not ("WCG-201" or "WCG-202" or "WCG-203" or "WCG-204"))), JsonSerializer.Serialize(current.PresetDecks)); }
@@ -17,9 +21,12 @@ internal static class CardBalanceHistory
         return current.GetCard("WCG-200") == null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id != "WCG-200")), JsonSerializer.Serialize(current.PresetDecks));
     }
-    internal static CardDatabase BeforeStrongBuildAdjustment(CardDatabase current) =>
-        current.GetCard("WCG-194")?.TotalCost == 5 && current.GetCard("WCG-079")?.PP == 3600
-            ? Override(BeforeHeroGuard(current), "WcgWeb.Balance.BeforeStrongBuildAdjustment") : BeforeHeroGuard(current);
+    internal static CardDatabase BeforeStrongBuildAdjustment(CardDatabase current)
+    {
+        current = BeforeHeroGuard(current);
+        return current.GetCard("WCG-194")?.TotalCost == 5 && current.GetCard("WCG-079")?.PP == 3600
+            ? Override(current, "WcgWeb.Balance.BeforeStrongBuildAdjustment") : current;
+    }
     // The 7-cost molten giant identifies this numeric update; older catalogs keep their own values.
     internal static CardDatabase BeforeOctoberBalance(CardDatabase current)
     {

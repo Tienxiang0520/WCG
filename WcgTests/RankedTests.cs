@@ -266,7 +266,7 @@ public sealed class RankedTests : IDisposable
         Assert.True(Send(restored,"surrender").Success);
         var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.Equal(2,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
+        Assert.Equal(3,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
     }
     [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
     {
@@ -325,6 +325,24 @@ public sealed class RankedTests : IDisposable
         current.Coordinator.Dispose();
     }
 
+    [Fact] public void DeflationPreservesPreDeflationMatchAndReplay()
+    {
+        var prior=CounterHistory.BeforeDeflation(cards);Assert.Equal(4000,prior.GetCard("WCG-161")!.PP);Assert.Equal(7,prior.GetCard("WCG-160")!.TotalCost);
+        Assert.Equal(3300,cards.GetCard("WCG-161")!.PP);Assert.Equal(8,cards.GetCard("WCG-160")!.TotalCost);
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[0]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.Equal(22,current.Read().Stars);
+        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+        Assert.True(current.Start(DeckService.Copy(cards.PresetDecks[0])).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
+        current.Coordinator.Dispose();
+    }
+
     [Fact] public void StrongBuildAdjustmentPreservesActiveMatchReplayAndNextMatchUsesNewValues()
     {
         var prior=CounterHistory.BeforeStrongBuildAdjustment(cards);
@@ -353,7 +371,7 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
         Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
         Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-194").Card.TotalCost);
-        Assert.Equal(1400,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-148").Card.PP);
+        Assert.Equal(1100,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-148").Card.PP);
         restored.Coordinator.Dispose();
     }
 
@@ -382,7 +400,7 @@ public sealed class RankedTests : IDisposable
         var arrow=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-082");
         Assert.Equal(3,arrow.Card.TotalCost);
         Assert.Equal(3,cards.GetCard("WCG-082")!.TotalCost);
-        Assert.Equal(7,cards.GetCard("WCG-160")!.TotalCost);
+        Assert.Equal(8,cards.GetCard("WCG-160")!.TotalCost);
     }
 
     [Fact] public void EnergyShieldRenamePreservesActiveMatchAndItsReplay()

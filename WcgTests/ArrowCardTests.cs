@@ -42,13 +42,13 @@ public class ArrowCardTests
     public void SideArrowsBoostBothAdjacentAllies(int id,int bonus)
     {
         var g=Game();var left=Unit(g.Player,101,1);var src=Unit(g.Player,id,2);var right=Unit(g.Player,154,3);var far=Unit(g.Player,101,4);var foe=Unit(g.Computer,101,2);Refresh(g);
-        Assert.Equal(700+bonus,left.CurrentPP);Assert.Equal(1500+bonus,right.CurrentPP);Assert.Equal(700,far.CurrentPP);Assert.Equal(700,foe.CurrentPP);
+        Assert.Equal(700+bonus,left.CurrentPP);Assert.Equal(1300+bonus,right.CurrentPP);Assert.Equal(700,far.CurrentPP);Assert.Equal(700,foe.CurrentPP);
         Assert.Equal(src.Card.PP,src.CurrentPP);
     }
     [Fact] public void UpArrowWeakensOnlyTheEnemyStraightAhead()
     {
         var g=Game();Unit(g.Player,85,1);var ahead=Unit(g.Computer,154,3);var other=Unit(g.Computer,154,1);var ally=Unit(g.Player,154,2);Refresh(g);
-        Assert.Equal(1200,ahead.CurrentPP);Assert.Equal(1500,other.CurrentPP);Assert.Equal(1500,ally.CurrentPP);
+        Assert.Equal(1000,ahead.CurrentPP);Assert.Equal(1300,other.CurrentPP);Assert.Equal(1300,ally.CurrentPP);
     }
     [Fact] public void SilenceTurnsAurasOffAndArrowCardsDoNotGrantShields()
     {

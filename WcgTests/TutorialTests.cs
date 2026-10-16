@@ -157,7 +157,7 @@ public class TutorialTests
         using var s = New(); var lesson = TutorialLessons.Find("traps")!; s.Load(lesson);
         using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
         var step = lesson.Steps.Single(x => x.Title == "放置結界");
-        Assert.Contains("費用 1", s.RenderText(step, language));
+        Assert.Contains("費用 2", s.RenderText(step, language));
         var card = cards.GetCard("WCG-151")!;
         card.TotalCost = 5; card.Name = "測試鍛爐";
         Assert.Contains("「測試鍛爐」（費用 5）", s.RenderText(step, language));
@@ -178,12 +178,12 @@ public class TutorialTests
         using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
         var unit = s.Engine.Player.Field.Single(x => x.Card.Id == "WCG-154");
         unit.TurnBonus += 300;
-        Assert.Equal(1800, unit.CurrentPP);
+        Assert.Equal(1600, unit.CurrentPP);
         Assert.Contains($"{unit.CurrentPP} PP", s.RenderText(lesson.Steps.Single(x => x.Title == "擊破"), language));
         var taunt = TutorialLessons.Find("taunt")!; s.Load(taunt);
         cards.GetCard("WCG-156")!.DP = 4;
         Assert.Contains("DP 是 4", s.RenderText(taunt.Steps.Single(x => x.Title == "打穿防線"), language));
-        Assert.Contains("1600 PP", s.RenderText(taunt.Steps.Single(x => x.Title == "擊破嘲諷"), language));
+        Assert.Contains($"{cards.GetCard("WCG-049")!.PP} PP", s.RenderText(taunt.Steps.Single(x => x.Title == "擊破嘲諷"), language));
     }
 
     [Fact]
@@ -200,8 +200,8 @@ public class TutorialTests
             command = Cmd(s.Engine, "choice", option: "SLOT:2");
             s.Coordinator.Resync(token); Assert.True(s.Coordinator.Submit(token, command).Success);
         }
-        Assert.Equal(5, s.Engine.Player.AvailableEnergy);
-        Assert.Contains("還留著 5 點", s.RenderText(lesson.Steps.Single(x => x.Title == "結束回合"), language));
+        Assert.Equal(4, s.Engine.Player.AvailableEnergy);
+        Assert.Contains("還留著 4 點", s.RenderText(lesson.Steps.Single(x => x.Title == "結束回合"), language));
     }
 
     [Fact]

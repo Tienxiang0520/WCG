@@ -50,7 +50,7 @@ public class CardFaceTests
         Assert.Matches(new Regex("face-band\"><span>秩序</span><i>・</i><span>怪物</span>"), html);
         Assert.Single(Regex.Matches(html, "face-arrow right"));
         Assert.Contains("<p>右側相鄰的己方怪物具有聖盾。</p>", html); // arrow prefix becomes a gold triangle instead of text
-        Assert.Matches(new Regex("<small>力量</small><b>1000</b><small>PP</small>"), html);
+        Assert.Matches(new Regex("<small>力量</small><b>700</b><small>PP</small>"), html);
         Assert.Matches(new Regex("<small>傷害</small><b>1</b><small>DP</small>"), html);
         Assert.Matches(new Regex("face-foot\"><span>魂誓</span><span>WCG-061</span>"), html);
         Assert.Contains("face-compass", html);
