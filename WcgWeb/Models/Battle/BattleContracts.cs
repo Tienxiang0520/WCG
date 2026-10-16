@@ -6,7 +6,12 @@ public record BattleCommand(Guid CommandId, Guid MatchId, long ExpectedRevision,
 public record TrainingEdit(string Side = "player", string? CardId = null, int Slot = 0,
     int Hp = 7, int TotalEnergy = 0, int AvailableEnergy = 0, string? Scene = null);
 public record BattleCard(Guid InstanceId, string CardId, string Name, string Type, string Will,
-    int Cost, int? PP, int? DP, string Text, string Art, string[]? Arrows = null);
+    int Cost, int? PP, int? DP, string Text, string Art, string[]? Arrows = null)
+{
+    // Both wills of a dual-will card (fixed will order); null for single-will cards so snapshots/replays stay unchanged.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public string[]? Wills { get; init; }
+}
 public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string Problem,
     string Preparation, string EnergyProblem, string[] PlayTargets, string Warning = "", bool CanSet = false);
 public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);

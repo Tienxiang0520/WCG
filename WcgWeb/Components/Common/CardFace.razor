@@ -4,7 +4,13 @@
    effect box with emblem watermark, PP/DP footer, set name + card number. Order is the physical reference
    (ivory parchment, gold frame); every other will has its own frame theme (card-face.css [data-will]) and
    ornaments (CardFaceThemes). Pure CSS/SVG; sizes are container-relative so one markup serves every size. *@
-<article class="wcg-face @LengthClass @NameClass @ArrowClass @Class" data-will="@WillKey" data-card-id="@Id" aria-label="@NameText"><div class="face-card">
+<article class="wcg-face @LengthClass @NameClass @ArrowClass @(IsDual ? "is-dual" : "") @Class" data-will="@WillKey" data-will2="@(IsDual ? Will2Key : null)" data-card-id="@Id" aria-label="@NameText"><div class="face-card">
+    @* Dual-will frame: the primary will's frame on the left, the second will's frame on the right, blended across the
+       middle ~15%. Left/right follow the fixed will order 狂怒、理智、生機、秩序、深淵 (card-face.css .face-dual). *@
+    @if (IsDual)
+    {
+        <div class="face-dual" data-will="@Will2Key" aria-hidden="true"></div>
+    }
     <svg class="face-frame" viewBox="0 0 63 88" preserveAspectRatio="none" aria-hidden="true">
         <rect x="2.2" y="2.2" width="58.6" height="83.6" rx="1.8" class="frame-inner" />
     </svg>
@@ -21,7 +27,14 @@
         <h3 class="face-name"><svg class="face-spark" viewBox="0 0 20 20" aria-hidden="true"><path d="@Theme.Spark" /></svg><span>@NameText</span></h3>
         <span class="face-cost" title="@L["費"]"><b>@Cost</b><small>@L["費"]</small></span>
     </header>
-    <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
+    @if (IsDual)
+    {
+        <div class="face-band dual-band"><span class="dual-wills" title="@L["雙色卡：牌組必須選了這兩個意志"]"><i class="will-mark a"></i>@L.Will(Wills[0])<b>／</b><i class="will-mark b"></i>@L.Will(Wills[1])</span><i>・</i><span>@L.CardType(Type)</span></div>
+    }
+    else
+    {
+        <div class="face-band"><span>@L.Will(Will)</span><i>・</i><span>@L.CardType(Type)</span></div>
+    }
     <div class="face-art">
         @if (ArtSrc != null)
         {
@@ -74,7 +87,10 @@
     private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
     private string ArrowClass => string.Join(" ", (Arrows ?? []).Where(a => a is "up" or "down").Select(a => "has-" + a));
     private string ArrowLabel(string arrow) => L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"];
+    private string[] Wills => Card?.Wills ?? Battle?.Wills ?? [Will];
+    private bool IsDual => Wills.Length == 2;
     private string WillKey => CardFaceThemes.Key(Will);
+    private string Will2Key => IsDual ? CardFaceThemes.Key(Wills[1]) : WillKey;
     private CardFaceThemes.Theme Theme => CardFaceThemes.For(WillKey);
     private string NameClass { get { var n = NameText.Sum(c => c > 0x2E80 ? 2 : 1); return n > 24 ? "name-xl" : n > 15 ? "name-l" : ""; } }
     // Longer (usually English) effect text steps the font down so it stays inside the box.

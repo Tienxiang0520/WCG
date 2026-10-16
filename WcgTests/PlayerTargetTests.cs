@@ -15,6 +15,8 @@ public class PlayerTargetTests
         var cards = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "cards.json")))!;
         if (old)
         {
+            var deflation = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-deflation.json")))!.ToDictionary(c => c.Id);
+            cards = cards.Select(c => deflation.GetValueOrDefault(c.Id, c)).ToList();
             var simplified = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-rules-simplification.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => simplified.GetValueOrDefault(c.Id, c)).ToList();
             cards = cards.Where(c => c.Id is not ("WCG-200" or "WCG-201" or "WCG-202" or "WCG-203" or "WCG-204")).ToList();

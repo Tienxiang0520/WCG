@@ -79,7 +79,7 @@ public class SimplifiedRulesTests
         var beast=Unit(g.Player,203,1);var yeti=Unit(g.Computer,114,2);Refresh(g);
         Assert.True(g.PreviewAttack(beast,yeti)!.DefenderDies);
         Assert.True(g.Attack(g.Player,beast,yeti));Assert.False(g.IsWaiting);Assert.Contains(beast,g.Player.Field);Assert.DoesNotContain(yeti,g.Computer.Field);
-        Assert.Equal(1800,beast.CurrentPP);Assert.Equal(energy,g.Player.AvailableEnergy);
+        Assert.Equal(1600,beast.CurrentPP);Assert.Equal(energy,g.Player.AvailableEnergy);
     }
 
     [Fact] public void ObserverLooksAtTopTwoOnDeploy()
@@ -100,12 +100,12 @@ public class SimplifiedRulesTests
     [Fact] public void CombatBuffsAreAttachmentsThatLeaveAfterTheMonsterBattles()
     {
         var g=Game();var croc=Unit(g.Player,154,0);croc.IsTapped=true;var buff=Hand(g,143);
-        Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.Equal(2000,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
-        Assert.True(g.Attack(g.Player,croc));Assert.Equal(2000,croc.CurrentPP); // Attacking the player is not a battle.
+        Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.Equal(1800,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
+        Assert.True(g.Attack(g.Player,croc));Assert.Equal(1800,croc.CurrentPP); // Attacking the player is not a battle.
         croc.IsTapped=false;var foe=Unit(g.Computer,155,2);
-        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(1500,croc.CurrentPP);
+        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(1300,croc.CurrentPP);
         Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
-        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(1700,weak.CurrentPP);
+        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(1500,weak.CurrentPP);
     }
 
     [Fact] public void OnlyOneCounterPerDamageAndDeadSourceStillCancels()

@@ -77,9 +77,9 @@ public partial class DeckBuilder
 
             // Locked to the deck's colours (主色＋副色＋中立) while browsing the library; 目前牌組 still lists every card in the deck.
             if (!ShowDeckCards && AllowedWills is { } allowed)
-                list = list.Where(c => allowed.Contains(c.Will));
+                list = list.Where(c => c.Wills.All(allowed.Contains) && Deck.DualFits(c, CurrentDeck.MainWill, DualColor ? SecondWill : "-"));
             if (!string.IsNullOrEmpty(SelectedWill))
-                list = list.Where(c => c.Will == SelectedWill);
+                list = SelectedWill == DualFilter ? list.Where(c => c.IsDual) : list.Where(c => c.HasWill(SelectedWill));
 
             if (!string.IsNullOrEmpty(SelectedType))
                 list = list.Where(c => SelectedType=="法術"?c.IsSpell:c.Type == SelectedType);
@@ -160,8 +160,8 @@ public partial class DeckBuilder
     private string WillChipState(string will) => AllowedWills == null ? "" : LockedOut(will) ? "locked" : will == CurrentDeck.MainWill ? "main-will" : will == "中立" ? "" : "second-will";
     private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
     private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
-    private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !a.Contains(c.Will)) : 0;
-    private void DropLockedFilter() { if (SelectedWill != "" && LockedOut(SelectedWill)) SelectedWill = ""; }
+    private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !c.Wills.All(a.Contains)) : 0;
+    private void DropLockedFilter() { if (SelectedWill != "" && SelectedWill != DualFilter && LockedOut(SelectedWill)) SelectedWill = ""; }
     private void SetDual(bool dual)
     {
         DualColor = dual;
@@ -192,12 +192,16 @@ public partial class DeckBuilder
         ValidateDeck();
     }
 
-    private string[] UsedFactions=>CurrentDeck.CardIds.Select(CardDb.GetCard).Where(c=>c!=null&&c.Will!="中立").Select(c=>c!.Will).Distinct().ToArray();
-    private bool CanAddFaction(CardDefinition card)=>card.Will=="中立"||UsedFactions.Contains(card.Will)||UsedFactions.Length<2;
+    private string[] UsedFactions=>CurrentDeck.CardIds.Select(CardDb.GetCard).Where(c=>c!=null).SelectMany(c=>c!.FactionWills).Distinct().ToArray();
+    private bool CanAddFaction(CardDefinition card)=>UsedFactions.Union(card.FactionWills).Count()<=2;
+    // 雙色卡 (MTG style): only when the deck's main + secondary wills are exactly the card's two wills.
+    private bool DualAllowed(CardDefinition card)=>Deck.DualFits(card, CurrentDeck.MainWill, DualColor ? SecondWill : "-")
+        && (!card.IsDual || UsedFactions.All(card.HasWill));
+    public const string DualFilter = "雙色";
     private bool CanAddCard(CardDefinition card)
     {
         if (CurrentDeck.CardIds.Count >= 50 || !Deck.Wills.Contains(CurrentDeck.MainWill)) return false;
-        if (!CanAddFaction(card) || LockedOut(card.Will)) return false;
+        if (!CanAddFaction(card) || !DualAllowed(card) || card.Wills.Any(LockedOut)) return false;
         int count = CurrentDeck.CardIds.Count(id => id == card.Id);
         return count < 4;
     }
@@ -208,7 +212,7 @@ public partial class DeckBuilder
         if (!CanAddCard(card)) return;
 
         CurrentDeck.CardIds.Add(card.Id);
-        if (DualColor && SecondWill == "" && card.Will != "中立" && card.Will != CurrentDeck.MainWill) SecondWill = card.Will;
+        if (DualColor && SecondWill == "" && card.FactionWills.FirstOrDefault(w => w != CurrentDeck.MainWill) is { } second) SecondWill = second;
         ValidateDeck();
     }
 

@@ -1711,5 +1711,10 @@
  "你將受到傷害時，可以橫置場上直立、未被沉默的護誓守衛，每橫置 1 隻使這次傷害 -1；先減少，再扣剩餘傷害並檢查反擊。生命代價不是傷害，不能減少。": "When you would take damage, you may tap ready, unsilenced Oathguards on your board; each one tapped reduces that damage by 1. Reduce first, then lose the rest and check counters. Paying life is not damage and can't be reduced.",
  "先依交戰時的 PP 與劇毒判定雙方應被消滅的結果。同一怪物同時輸 PP 又中了劇毒，聖盾也只擋一次。劇毒來源在同一交戰中死亡，也不會撤回已判定的劇毒消滅。貫穿只看攻擊者是否存活、對象是否被交戰消滅，不看 PP 差。": "First decide which monsters combat destroys from combat PP and Poison. If a monster both loses on PP and is hit by Poison, Holy Shield still stops it only once. A Poison source dying in the same combat doesn't undo that destruction. Trample only checks that the attacker survives and the target is destroyed in combat; the PP difference doesn't matter.",
  "生命傷害先扣血，再結算合法的手牌反擊；反擊結束後，生命仍為0才敗北。沒有合法反擊或選擇略過，不會等原卡後面的回血救回。抵銷只撤回本次實際扣血，不取消來源其他效果；例如先傷害、再抽牌的法術，反擊結束且對局未結束後仍會抽牌。": "Damage reduces life first, then legal counters from hand resolve; you lose only if your life is still 0 after that. With no legal counter, or if you skip, healing later on the same card doesn't save you. Cancelling only restores the life actually lost this time and doesn't cancel the source's other effects; for example, a spell that deals damage then draws still draws if the game continues.",
- "非付費召喚使用真實手牌或墓地卡，不觸發「進場」效果，仍須空格。「陣亡」在怪物被消滅或犧牲、送入墓地時觸發，移回手牌不算；犧牲也算被消滅。": "Free summons use real cards from hand or graveyard, don't trigger Deploy, and still need an empty slot. On Death triggers when a monster is destroyed or sacrificed and goes to the graveyard; returning to hand doesn't count. Sacrifice counts as destroyed."
+ "非付費召喚使用真實手牌或墓地卡，不觸發「進場」效果，仍須空格。「陣亡」在怪物被消滅或犧牲、送入墓地時觸發，移回手牌不算；犧牲也算被消滅。": "Free summons use real cards from hand or graveyard, don't trigger Deploy, and still need an empty slot. On Death triggers when a monster is destroyed or sacrificed and goes to the graveyard; returning to hand doesn't count. Sacrifice counts as destroyed.",
+ "雙色卡": "Dual-will",
+ "只看雙色卡": "Show only dual-will cards",
+ "雙色卡需選齊這兩個意志": "Dual-will cards need both of their wills in the deck",
+ "雙色卡：牌組必須選了這兩個意志": "Dual-will card: the deck must use both of these wills",
+ "雙色卡【{0}】只能放進主色與副色剛好是{1}的牌組。": "Dual-will card \"{0}\" can only go in a deck whose main and second wills are exactly {1}."
 }

@@ -15,7 +15,7 @@ int seeds=int.Parse(Arg("--seeds","2")),seedBase=int.Parse(Arg("--seed-base","53
 if(seeds<1||groups.Count==0||opponents.Length<2)throw new ArgumentException("Positive seeds and nonempty candidate/opponent pools required.");
 foreach(var deck in groups.SelectMany(g=>g.Candidates.Select(c=>c.Deck)).Concat(opponents))
 {
-    if(!deck.IsValid(cards.GetCard,out var error)||deck.GetColorCounts(cards.GetCard).OffColor>Deck.MaxOffColorCards)throw new InvalidDataException(deck.Name+": "+error);
+    if(!deck.IsValid(cards.GetCard,out var error))throw new InvalidDataException(deck.Name+": "+error);
 }
 var jobs=groups.SelectMany(g=>g.Candidates.Select((c,i)=>(g,c,i))).ToArray();
 var results=new Result[jobs.Length];int done=0;
