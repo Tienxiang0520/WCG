@@ -19,6 +19,10 @@ public partial class GameEngine
         var others = p.Field.ToArray();
         switch (id)
         {
+            case "WCG-208" when c.Card.IsSpell:
+                // 寂靜禁咒: worth casting only on an enemy whose ability matters (taunt, shield, poison or any text).
+                var hush = e.Field.Where(m => !m.IsSilenced && !m.Card.IsVanilla).Select(m => (m.IsTaunt ? 3 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + 1 + BodyValue(m) * .3).DefaultIfEmpty(-5).Max();
+                return hush - 1;
             case "WCG-211": return Mill(3) - 1;
             case "WCG-214": return Mill(Math.Min(8, p.Graveyard.Count(x => x.Card.IsMonster))) - 2;
             case "WCG-217": return Draw(Math.Min(3, p.Field.Count(HasArrows))) - 1.5;

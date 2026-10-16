@@ -13,7 +13,7 @@ source: WcgWeb/Data/cards.json
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 156 張、法術 83 張、法術（反擊） 7 張、結界 11 張。
+類型：怪物 155 張、法術 84 張、法術（反擊） 7 張、結界 11 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -102,7 +102,7 @@ source: WcgWeb/Data/cards.json
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 1800 | 1 | — | 每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方傷害時：抵銷傷害，抽 1 張。 | **Dimensional Time Barrier** — [Counter] When you take damage from the enemy: Cancel the damage and draw 1 card. |
 | WCG-202 | 星軌觀測師 | 怪物 | 4 | 1500 | 1 | — | 進場：看牌庫頂 2 張，1 張入手，其餘置底。 | **Starpath Observer** — Deploy: Look at the top 2 cards of your deck. Put 1 into your hand and the rest on the bottom. |
-| WCG-208 | 寂靜學者 | 怪物 | 3 | 1400 | 1 | — | 進場：沉默 1 隻敵方怪物。 | **Silent Scholar** — Deploy: Silence 1 enemy monster. |
+| WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 沉默 1 隻尚未被沉默的敵方怪物（將此卡附著其上）。 | **Hush Hex** — Silence 1 enemy monster that is not already silenced (attach this card to it). |
 | WCG-211 | 思緒潰散 | 法術 | 2 | — | — | — | 將對手牌庫頂 3 張牌送入墓地。 | **Shattered Thoughts** — Put the top 3 cards of your opponent's deck into their graveyard. |
 | WCG-213 | 記憶吞噬者 | 怪物 | 4 | 1800 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，將對手牌庫頂 1 張牌送入墓地。 | **Memory Devourer** — Taunt. At the end of your turn, if this monster is untapped, put the top card of your opponent's deck into their graveyard. |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] When you take damage from a spell: Cancel the damage and draw 1 card. |

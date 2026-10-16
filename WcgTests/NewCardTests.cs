@@ -39,6 +39,36 @@ public class NewCardTests
         var over=cards.AllCards.Where(c=>c.IsMonster&&c.Text.Trim() is not (""or"無"or"無。")&&vanilla.ContainsKey(c.TotalCost)&&(c.PP??0)>=vanilla[c.TotalCost]).Select(c=>c.Id).ToList();
         Assert.Empty(over);
     }
+    // 寂靜禁咒 (WCG-208) is a spell attached under the silenced monster, so physical play needs no silence marker.
+    [Fact] public void HushHexAttachesUnderTargetAndLeavesWithIt()
+    {
+        var hex=cards.GetCard("WCG-208")!;Assert.True(hex.IsSpell);Assert.Equal(2,hex.TotalCost);Assert.Equal("寂靜禁咒",hex.Name);Assert.True(hex.HasSilence);
+        var g=Game();var mine=Unit(g.Player,101,0);var tree=Unit(g.Computer,49,0);Refresh(g);Assert.True(tree.IsTaunt);
+        var spell=Hand(g,208);Assert.DoesNotContain(mine,g.GetDirectPlayTargets(g.Player,spell));
+        Assert.True(g.CastSpellAt(g.Player,spell,tree));Assert.True(tree.IsSilenced);Assert.False(tree.IsTaunt);
+        Assert.Same(spell,tree.SilenceSpell);Assert.DoesNotContain(spell,g.Player.Graveyard);
+        Assert.False(g.CanPlayCard(g.Player,Hand(g,208)));
+        var kill=typeof(GameEngine).GetMethod("KillBatch",BindingFlags.NonPublic|BindingFlags.Instance)!;kill.Invoke(g,[new[]{tree},"test",true]);
+        Assert.Contains(spell,g.Player.Graveyard);
+    }
+    [Fact] public void DispelRemovesHushHexAndItsSilence()
+    {
+        var g=Game();var tree=Unit(g.Computer,49,0);var spell=Hand(g,208);Assert.True(g.CastSpellAt(g.Player,spell,tree));
+        Assert.True(g.SummonMonster(g.Player,Hand(g,134)));
+        for(int i=0;i<20&&g.IsWaiting;i++){if(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.FirstOrDefault(o=>o.Id=="SLOT:1")??c.Options.First(o=>o.Id!="SKIP")));else Assert.True(g.SelectTarget(tree));}
+        Assert.False(tree.IsSilenced);Assert.True(tree.IsTaunt);Assert.Null(tree.SilenceSpell);Assert.Contains(spell,g.Player.Graveyard);
+    }
+    [Fact] public void OldCatalogKeepsSilentScholarMonster()
+    {
+        var old=CounterHistory.BeforeSilenceSpell(cards);var scholar=old.GetCard("WCG-208")!;
+        Assert.True(scholar.IsMonster);Assert.Equal("寂靜學者",scholar.Name);Assert.Equal(1400,scholar.PP);
+        var g=new GameEngine(old,new Random(17));g.StartGame(old.PresetDecks[0],old.PresetDecks[1]);
+        foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();for(int i=0;i<12;i++)p.EnergyZone.Add(new(old.GetCard("WCG-101")!));}
+        var tree=new MonsterInstance(old.GetCard("WCG-049")!){Slot=0,IsTapped=false,HasSummoningSickness=false};g.Computer.Field.Add(tree);
+        var c=new CardInstance(scholar);g.Player.Hand.Add(c);Assert.True(g.CanPlayCard(g.Player,c));Assert.True(g.SummonMonster(g.Player,c));
+        for(int i=0;i<20&&g.IsWaiting;i++){if(g.CurrentPendingChoice is {} ch)Assert.True(g.SelectChoice(ch.Options.FirstOrDefault(o=>o.Id=="SLOT:0")??ch.Options.First(o=>o.Id!="SKIP")));else Assert.True(g.SelectTarget(tree));}
+        Assert.True(tree.IsSilenced);Assert.Contains(g.Player.Field,m=>m.Card.Id=="WCG-208");
+    }
     [Fact] public void OldCatalogWithoutNewCardsIsPreserved()
     {
         var old=CounterHistory.BeforeNewCards(cards);
@@ -212,7 +242,7 @@ public class NewCardTests
         Assert.True(g.CastSpellAt(g.Player,Hand(g,206),taunt));Assert.True(taunt.IsSilenced);Assert.False(taunt.IsTaunt);
         var hp=g.Player.Hp;Assert.True(g.CastSpellAt(g.Player,Hand(g,207),big));Assert.Equal(hp-1,g.Player.Hp);Assert.DoesNotContain(big,g.Computer.Field);
         var wall=Unit(g.Computer,65,3);var climber=Unit(g.Player,210,0);Assert.True(g.CanAttackPlayer(climber));Assert.Contains(taunt,g.GetAttackTargets(climber));
-        Summon(g,208,1);Assert.True(g.SelectTarget(wall));Assert.True(wall.IsSilenced);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,208),wall));Assert.True(wall.IsSilenced);Assert.NotNull(wall.SilenceSpell);
     }
 
     // ---- 5.4 單色強化 ----

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "WCG-208",
+    "name": "寂靜學者",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1400,
+    "dp": 1,
+    "text": "進場：沉默 1 隻敵方怪物。",
+    "design_note": "2026-10-16 新卡（設計 v2 第 5 節）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  }
+]

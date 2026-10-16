@@ -10,8 +10,17 @@ internal static class CounterHistory
     // Catalog before the PP/cost deflation (PR B).
     // Catalog before the new cards 205–257 (PR D).
     // Catalog before ability monsters were lowered below the vanilla PP curve.
+    // Catalog before 寂靜學者 (WCG-208) became the silence spell 寂靜禁咒.
+    internal static CardDatabase BeforeSilenceSpell(CardDatabase current)
+    {
+        if(current.GetCard("WCG-208")?.IsSpell!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-silence-spell.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeAbilityPp(CardDatabase current)
     {
+        current=BeforeSilenceSpell(current);
         if(!(current.GetCard("WCG-113")?.PP<2000))return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-ability-pp.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
