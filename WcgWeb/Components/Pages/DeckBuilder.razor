@@ -47,6 +47,7 @@
                         <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@L[WillChipTitle("秩序")]" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>@L["秩序"]</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@L[WillChipTitle("深淵")]" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>@L["深淵"]</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>@L["中立"]</button>
+                        <button class="filter-chip will-chip will-dual @(SelectedWill == DualFilter ? "on" : "")" aria-pressed="@(SelectedWill == DualFilter ? "true" : "false")" title="@L["只看雙色卡"]" @onclick='() => SetWillFilter(DualFilter)'><i class="will-dot"></i>@L["雙色卡"]</button>
                     </div>
 
                     <p class="deck-lock-note @(AllowedWills == null ? "" : "locked")" aria-live="polite">
@@ -98,7 +99,7 @@
                                         <button class="btn btn-sm btn-outline-light" aria-label="@L.F("查看卡片：{0}", L.CardName(card))" @onclick="() => Inspect = card"><WcgWeb.Components.Common.Icon Name="eye" Size="14" /><span class="visually-hidden">@L["查看"]</span></button>
                                         <button class="btn btn-sm btn-outline-danger" data-sfx="deckRemove" aria-label="@L.F("移除一張：{0}", L.CardName(card))" disabled="@(inDeck == 0)" @onclick="() => RemoveCardFromDeck(card)">－</button>
                                         <button class="btn btn-sm btn-outline-info add-card-btn" data-sfx="deckAdd"
-                                                title="@L[!CanAddFaction(card) ? "最多兩個派系" : LockedOut(card.Will) ? "不在這副牌組的組色內" : "加入牌組"]"
+                                                title="@L[!CanAddFaction(card) ? "最多兩個派系" : card.Wills.Any(LockedOut) ? "不在這副牌組的組色內" : !DualAllowed(card) ? "雙色卡需選齊這兩個意志" : "加入牌組"]"
                                                 aria-label="@L.F("加入一張：{0}", L.CardName(card))"
                                                 disabled="@(!CanAddCard(card))"
                                                 @onclick="@(() => AddCardToDeck(card))">
@@ -144,7 +145,7 @@
                     <div class="color-mode mb-2" role="group" aria-label="@L["組色"]">
                         <div class="segmented small-seg" role="radiogroup" aria-label="@L["單色或雙色"]">
                             <button type="button" role="radio" aria-checked="@(!DualColor ? "true" : "false")" class="@(!DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(false)">@L["單色"]</button>
-                            <button type="button" role="radio" aria-checked="@(DualColor ? "true" : "false")" class="@(DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(true)">@L["雙色"]</button>
+                            <button type="button" role="radio" aria-checked="@(DualColor ? "true" : "false")" class="@(DualColor ? "on" : "")" disabled="@(!Deck.Wills.Contains(CurrentDeck.MainWill))" @onclick="() => SetDual(true)">@L["雙色卡"]</button>
                         </div>
                         @if (DualColor)
                         {

@@ -35,13 +35,8 @@ public sealed partial class RankedDecks
         if (pools.Any(pool => pool.Select(e => e.Deck.MainWill).Distinct().Count() < 5))
             throw new InvalidDataException("各牌位對手須涵蓋五種意志。");
     }
-    // Deck.Validate covers size, copies and factions; ranked data also keeps the off-color limit from 規則.md.
-    public bool IsLegal(Deck deck, out string? error)
-    {
-        if (!deck.IsValid(getCard, out error)) return false;
-        if (deck.GetColorCounts(getCard).OffColor > Deck.MaxOffColorCards) { error = $"混色超過 {Deck.MaxOffColorCards} 張"; return false; }
-        return true;
-    }
+    // Deck.Validate covers size, copies, factions and dual-will cards. The old 12-card off-color cap no longer exists.
+    public bool IsLegal(Deck deck, out string? error) => deck.IsValid(getCard, out error);
     public IReadOnlyList<Entry> Pool(int tier) => tier >= 0 && tier < pools.Length ? pools[tier] : [];
     public Deck Pick(int tier, Random random, string? avoidDeckId = null)
     {

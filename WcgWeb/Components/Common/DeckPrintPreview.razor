@@ -42,7 +42,7 @@
                         }
                         else
                         {
-                            <article class="@PlainClass(card)" style="--will-color:@card.WillColor" data-card-id="@card.Id">
+                            <article class="@PlainClass(card)" style="--will-color:@card.WillColor;--will-color-2:@card.WillColor2" data-card-id="@card.Id">
                                 @if (WhiteColor)
                                 {
                                     @foreach (var arrow in card.ArrowList.Where(a => a is "up" or "down"))
@@ -51,7 +51,7 @@
                                     }
                                 }
                                 <header class="print-card-header"><h2 class="print-card-title">@L.CardName(card.Id, card.Name)</h2><span class="print-cost">@card.Cost<span>@L["費"]</span></span></header>
-                                <p class="print-card-meta">@L.Text(card.Will) · @L.Text(card.Type)</p>
+                                <p class="print-card-meta">@(card.IsDual ? $"{L.Text(card.Wills![0])}／{L.Text(card.Wills[1])}" : L.Text(card.Will)) · @L.Text(card.Type)</p>
                                 @if (WhiteColor)
                                 {
                                     <div class="white-print-art-wrap">
@@ -127,7 +127,7 @@
         var text = L.FaceText(card.Id, card.Text);
         return WhiteColor ? ArrowPrefix.Replace(text, "").Trim() : text;
     }
-    private string PlainClass(PrintedCard card) => "print-card" + (WhiteColor ? " white-print-card" +
+    private string PlainClass(PrintedCard card) => "print-card" + (card.IsDual ? " dual-print-card" : "") + (WhiteColor ? " white-print-card" +
         (PrintedText(card).Length > (L.IsEnglish ? 160 : 70) ? " long-text" : "") +
         (card.ArrowList.Contains("up") ? " has-up" : "") : "");
     private string ArrowLabel(string arrow) => L[arrow == "left" ? "指向左鄰格" : arrow == "right" ? "指向右鄰格" : "指向正對面敵格"];

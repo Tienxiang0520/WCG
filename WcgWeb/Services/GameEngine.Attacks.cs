@@ -97,7 +97,7 @@ public partial class GameEngine
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
                 case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
-                case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.Will=="深淵"))Recover(p,2,1);});break;
+                case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.HasWill("深淵")))Recover(p,2,1);});break;
             }
             UsedSpell(p,c.Card);
         });
