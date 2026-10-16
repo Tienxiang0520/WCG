@@ -68,9 +68,9 @@ public class AiLethalTests
     private record SimMoveKey(string Kind,int Index);
 
     [Fact]
-    public void RankedAiVersionIsSevenAndOldStepsKeepV6()
+    public void RankedAiVersionIsEightAndOldStepsKeepV6()
     {
-        Assert.Equal(7,GameEngine.RankedAiVersion);
+        Assert.Equal(8,GameEngine.RankedAiVersion);
         var g=Game(6);g.Computer.Hp=3;Hand(g,"WCG-014");Hand(g,"WCG-014");Unit(g.Player,"WCG-101",0);
         var v6=Game(6);v6.Computer.Hp=3;Hand(v6,"WCG-014");Hand(v6,"WCG-014");Unit(v6.Player,"WCG-101",0);
         PlayTurn(g);PlayTurn(v6);Assert.Equal(AiSimulationTests.Board(v6),AiSimulationTests.Board(g));

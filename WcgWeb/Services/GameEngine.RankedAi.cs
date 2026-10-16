@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Bump when ranked AI decisions change; RankedSession stores it with every journal action.
-    public const int RankedAiVersion = 7;
+    public const int RankedAiVersion = 8;
     private int _aiSeed;
     // Ranked replays seed this through SetReplaySeed; simulations may seed it directly.
     public void SeedRankedAi(int seed) => _aiSeed = seed;

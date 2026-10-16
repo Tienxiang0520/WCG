@@ -36,6 +36,13 @@ if(args.Contains("--explain"))
   var a=actions[i];var st=replay.Steps[i+1].State;
   Console.WriteLine($"#{i} turn {st.Turn} {(a.Type=="ai"?"AI":"player")} {a.Type} src {a.Source} tgt {a.TargetSide}/{a.Target} choice {a.Choice} v{a.RulesVersion}  hp {st.Player.Hp}-{st.Computer.Hp}");
   if(traces.TryGetValue(i,out var lines))foreach(var l in lines)Console.WriteLine("    "+l);
+  if(args.Contains("--boards"))
+  {
+   string Side(WcgWeb.Models.Battle.BattleSide s)=>string.Join(" ",s.Field.Select(m=>$"{m.Card.Name}({m.PP}/{m.DP}{(m.Tapped?",橫":"")}{(m.Status.Length>0?","+string.Join("/",m.Status):"")})"));
+   Console.WriteLine($"    [玩家 HP{st.Player.Hp} 能量{st.Player.AvailableEnergy}/{st.Player.TotalEnergy} 手{st.Player.HandCount}] {Side(st.Player)}");
+   Console.WriteLine($"    [電腦 HP{st.Computer.Hp} 能量{st.Computer.AvailableEnergy}/{st.Computer.TotalEnergy} 手{st.Computer.HandCount}] {Side(st.Computer)}");
+   var prev=replay.Steps[i].State.Logs;foreach(var l in st.Logs.Skip(prev.Length>st.Logs.Length?0:prev.Length))Console.WriteLine("      log: "+l);
+  }
  }
  if(replay.Error!="")Console.WriteLine("ERROR: "+replay.Error);
  return;
@@ -69,6 +76,20 @@ if(args.Contains("--explain"))
  }
  if(!e.IsOver)throw new Exception("Timeout");
  return(e.Computer.HasLost,ms);
+}
+// --v8-vs-v7：同牌位 v8（目前版本）對 v7，五副預組全部配對、雙方先後手。
+if(args.Contains("--v8-vs-v7"))
+{
+ int[] tierList=args.Contains("--tiers")?args[Array.IndexOf(args,"--tiers")+1].Split(',').Select(int.Parse).ToArray():[3,4,5];
+ var jobs=tierList.SelectMany(t=>Enumerable.Range(0,5).SelectMany(i=>Enumerable.Range(0,5).SelectMany(j=>Enumerable.Range(0,seeds).SelectMany(s=>new[]{true,false}.Select(f=>(t,i,j,s,f)))))).ToList();
+ var res=new (bool won,List<double> ms)[jobs.Count];var clock=System.Diagnostics.Stopwatch.StartNew();
+ var threads=int.TryParse(Environment.GetEnvironmentVariable("RANKEDCHECK_THREADS"),out var n3)&&n3>0?n3:Environment.ProcessorCount;
+ Parallel.For(0,jobs.Count,new ParallelOptions{MaxDegreeOfParallelism=threads},k=>{var (t,i,j,s,f)=jobs[k];res[k]=PlayVs(db.PresetDecks[i],db.PresetDecks[j],s*25+i*5+j,f,t,GameEngine.RankedAiVersion,t,7);});
+ double Pct(List<double> xs,double q){if(xs.Count==0)return 0;var o=xs.OrderBy(x=>x).ToList();return Math.Round(o[Math.Min(o.Count-1,(int)(q*o.Count))],2);}
+ var table=tierList.Select(t=>{var idx=Enumerable.Range(0,jobs.Count).Where(k=>jobs[k].t==t).ToList();var ms=idx.SelectMany(k=>res[k].ms).ToList();double wr=(double)idx.Count(k=>res[k].won)/idx.Count;
+  return new{tier=t,tierName=RankedRules.Tiers[t],games=idx.Count,winRate=Math.Round(wr,3),ci95=Math.Round(1.96*Math.Sqrt(wr*(1-wr)/idx.Count),3),decisionMs=new{median=Pct(ms,.5),p95=Pct(ms,.95),p99=Pct(ms,.99),max=Math.Round(ms.DefaultIfEmpty(0).Max(),2)}};}).ToList();
+ Console.WriteLine(JsonSerializer.Serialize(new{mode=$"v{GameEngine.RankedAiVersion} vs v7 (same tier)",seedsPerPairing=seeds,elapsedSeconds=Math.Round(clock.Elapsed.TotalSeconds,1),table},new JsonSerializerOptions{WriteIndented=true,Encoder=System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+ return;
 }
 if(args.Contains("--ai-vs")||args.Contains("--v7-ladder"))
 {
