@@ -12,9 +12,12 @@ public static class PlayerBackupValidator
         var values = data.EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString()!);
         var storage = new SnapshotStorage(values);
         var decks = new DeckService(cards, storage);
+        // Decks built before seven cards became dual-will (2026-10-16) may no longer fit; keep accepting them so old saves still sync.
+        var beforeDual = CardBalanceHistory.BeforeDualWill(cards);
+        bool Legal(Deck deck, out string? error) => deck.IsValid(cards.GetCard, out error) || deck.IsValid(beforeDual.GetCard, out _);
         foreach (var deck in decks.GetCustomDecks())
         {
-            if (!deck.IsValid(cards.GetCard, out var error)) throw new InvalidDataException(error);
+            if (!Legal(deck, out var error)) throw new InvalidDataException(error);
             if (cards.PresetDecks.Any(d => d.Id == deck.Id)) throw new InvalidDataException("自訂牌組不可覆蓋官方預組。");
         }
         if (decks.LastStorageError != null) throw new InvalidDataException(decks.LastStorageError);
@@ -22,7 +25,7 @@ public static class PlayerBackupValidator
         if (!values.ContainsKey("ranked")) return;
         var store = new RankedStore(storage);
         var profile = store.Load();
-        if (profile.Match is { } match && (!match.PlayerDeck.IsValid(cards.GetCard, out _) || !match.ComputerDeck.IsValid(cards.GetCard, out _)))
+        if (profile.Match is { } match && (!Legal(match.PlayerDeck, out _) || !Legal(match.ComputerDeck, out _)))
             throw new InvalidDataException("備份對局包含不合法牌組。");
         var session = new RankedSession(cards, decks, store, opponents, NullLogger<BattleCoordinator>.Instance);
         try { if (session.Error != "") throw new InvalidDataException("天梯對局無法還原，原存檔保留。"); }

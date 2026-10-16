@@ -10,8 +10,11 @@ internal static class CardBalanceHistory
     // Catalog before the new cards 205–257 (PR D); existing cards are unchanged, so the old catalog is the current one without them.
     // Catalog before ability monsters were lowered below the vanilla PP curve (2026-10-16); only PP and design notes changed.
     // Catalog before 寂靜學者 (WCG-208, monster with an entry silence) became the attached spell 寂靜禁咒 (2026-10-16).
-    internal static CardDatabase BeforeSilenceSpell(CardDatabase current) => current.GetCard("WCG-208")?.IsSpell == true
-        ? Override(current, "WcgWeb.Balance.BeforeSilenceSpell") : current;
+    // Catalog before seven single-will cards (027, 031, 058, 067, 211, 213, 234) became dual-will (2026-10-16); only wills and design notes changed.
+    internal static CardDatabase BeforeDualWill(CardDatabase current) => current.GetCard("WCG-031")?.IsDual == true
+        ? Override(current, "WcgWeb.Balance.BeforeDualWill") : current;
+    internal static CardDatabase BeforeSilenceSpell(CardDatabase current) { current = BeforeDualWill(current); return current.GetCard("WCG-208")?.IsSpell == true
+        ? Override(current, "WcgWeb.Balance.BeforeSilenceSpell") : current; }
     internal static CardDatabase BeforeAbilityPp(CardDatabase current) { current = BeforeSilenceSpell(current); return current.GetCard("WCG-113")?.PP < 2000
         ? Override(current, "WcgWeb.Balance.BeforeAbilityPp") : current; }
     internal static CardDatabase BeforeNewCards(CardDatabase current) { current = BeforeAbilityPp(current); return NewCardsRemoved(current); }

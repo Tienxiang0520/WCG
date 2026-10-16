@@ -31,6 +31,9 @@ public sealed class CloudSaveValidationTests
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
             definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
+            /* 這些時代的卡在 2026-10-16 改成雙色之前都是單色。 */
+            var single=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeDualWill"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>single.GetValueOrDefault(c.Id,c)).ToList();
             var deflation=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeDeflation"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>deflation.GetValueOrDefault(c.Id,c)).ToList();
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeRulesSimplification"))!.ToDictionary(c=>c.Id);
