@@ -6,8 +6,20 @@ using WcgWeb.Services;
 namespace WcgTests;
 internal static class CounterHistory
 {
-    internal static CardDatabase BeforeEnergyKeywords(CardDatabase current) => current.GetCard("WCG-201") == null ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id is not ("WCG-201" or "WCG-202" or "WCG-203" or "WCG-204"))), JsonSerializer.Serialize(current.PresetDecks));
+    // Catalog before the rules simplification (energy only pays costs, per-turn Holy Shield, 3 PP thresholds).
+    internal static CardDatabase BeforeRulesSimplification(CardDatabase current)
+    {
+        if(current.GetCard("WCG-200")?.Text.StartsWith("你受到傷害時") != true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-rules-simplification.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
+    internal static CardDatabase BeforeEnergyKeywords(CardDatabase current)
+    {
+        current=BeforeRulesSimplification(current);
+        return current.GetCard("WCG-201") == null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c => c.Id is not ("WCG-201" or "WCG-202" or "WCG-203" or "WCG-204"))), JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeHeroGuard(CardDatabase current)
     {
         current=BeforeEnergyKeywords(current);

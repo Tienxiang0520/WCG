@@ -24,6 +24,19 @@ public partial class GameEngine
     {
         if (!p.Hand.Contains(card) || !card.Card.IsCounter || damage.LostHp <= 0 || damage.Reversed
             || !CanPayCost(p, card.Card, out _)) return false;
+        if (SimplifiedRules)
+        {
+            // Damage dealt by a counter card cannot be countered: no chains.
+            if (damage.Source?.Card.IsCounter == true) return false;
+            var monster = damage.Source?.Card.IsMonster == true;
+            return card.Card.Id switch
+            {
+                "WCG-195" or "WCG-199" => monster,
+                "WCG-196" => damage.Source is { } s && s.Owner != p,
+                "WCG-197" or "WCG-198" => true,
+                _ => false
+            };
+        }
         var enemySource = damage.Source is { } source && source.Owner != p;
         var enemyMonster = enemySource && damage.Source!.Card.IsMonster;
         return card.Card.Id switch
@@ -57,7 +70,8 @@ public partial class GameEngine
             Present("play", p, card.InstanceId, card: card.Card, label: "從手牌發動反擊");
             Log($"【{p.Name}】從手牌發動【{card.Card.Name}】。", "action");
             // Re-check remaining hand cards only after this counter's full effect and nested reactions.
-            Resolve(() => ResolveDamageCounter(p, card, damage), () => DamageReaction(damage));
+            // Simplified rules: at most 1 counter per damage event.
+            Resolve(() => ResolveDamageCounter(p, card, damage), () => { if (!SimplifiedRules) DamageReaction(damage); });
             UsedSpell(p, card.Card);
         }, sourceInstanceId: damage.Source?.Unit?.InstanceId);
         CurrentPendingChoice!.Description = damage.Source == null ? "生命傷害已扣除；反擊結算後才判定敗北。"
@@ -74,6 +88,14 @@ public partial class GameEngine
     private void ResolveDamageCounter(PlayerState p, CardInstance card, DamageContext damage)
     {
         var enemy = GetOpponent(p); var source = damage.Source?.Unit;
+        if (SimplifiedRules && card.Card.Id is "WCG-195" or "WCG-199")
+        {
+            // If the monster already left the board, the counter only cancels the damage.
+            var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? source!.CurrentPP : 0;
+            Resolve(() => ReverseDamage(damage), () => { if (killable) KillBatch([source!], card.Card.Name); },
+                () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= 1800) SpellDamage(p, enemy, 1, card.Card); } else if (CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
+            return;
+        }
         switch (card.Card.Id)
         {
             case "WCG-195":
@@ -90,7 +112,7 @@ public partial class GameEngine
                 break;
             case "WCG-198":
                 Resolve(() => ReverseDamage(damage), () => Heal(p, 2),
-                    () => OptionalTarget(p, "可附著能量護盾", p.Field.Where(x => x.IsSilenced || x.Card.Id != "WCG-152"), x => Attach(p, card, x)));
+                    () => OptionalTarget(p, SimplifiedRules ? "可附著聖盾" : "可附著能量護盾", p.Field.Where(x => x.IsSilenced || x.Card.Id != "WCG-152"), x => Attach(p, card, x)));
                 break;
             case "WCG-199":
                 Resolve(() =>

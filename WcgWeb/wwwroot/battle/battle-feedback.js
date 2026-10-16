@@ -3,7 +3,7 @@ import { planSteps, batchSpeed, isSpellCard, keywordOf } from './effect-plan.js'
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
 const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
-    '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
+    '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
     '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
     '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
     '中立': 'Neutral', '深淵': 'Abyss', '狂怒': 'Fury', '理智': 'Reason', '生機': 'Life', '秩序': 'Order' };
@@ -22,7 +22,7 @@ export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, priorInert = false, locked = false, speed = 1, pauser = null, banner = null, showcase = null;
     const animations = new Set(), hidden = new Map(), ghosts = new Map();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
-    const shielded = (units, id) => !!units.get(id)?.status?.some(x => String(x).startsWith('能量護盾'));
+    const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
     // A energy shield that was up before this batch and is gone afterwards (unit still alive) shattered in combat.
     const shieldBroke = id => !!id && shielded(priorUnits, id) && nextUnits.has(id) && !shielded(nextUnits, id);
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
@@ -383,8 +383,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         }
         if (step.kind === 'badge') {
             const el = visual(step.target); if (!el) return;
-            if (step.from) await beam(visual(step.from), el, step.keyword === '能量護盾' ? '#ffe08a' : '#ffd77a');
-            if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾') void sound?.play('glass'); else void sound?.play('trigger');
+            if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
+            if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
             void fx?.ring(el, step.keyword === '沉默' ? '#c49bff' : '#ffe08a', .6);
             await badge(el, t(step.keyword), step.keyword);
             return;

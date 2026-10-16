@@ -86,7 +86,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
         if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
         if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
-        if(m.IsTaunt)status.Add("嘲諷");if(m.HasShield)status.Add("能量護盾資格（每次1能量）");status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");
@@ -127,7 +127,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                 engine.GetPlayProblem(engine.Player, c), GameEngine.GetPlayPreparation(c.Card),
                 engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString())
                     .Concat(engine.GetDirectPlayerTargets(engine.Player, c).Select(p => engine.TargetId(p).ToString())).ToArray(),
-                c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有能量護盾資格仍需留能量保命。" : "",
+                !engine.SimplifiedRules&&c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有能量護盾資格仍需留能量保命。" : "",
                 !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
             // Old logs can contain an AI-only hand inspection. The new board uses public structured events.
             [], engine.RevealedCards.ToArray(), engine.RevealTitle, engine.CurrentTurnPlayerId, engine.DamageCounters);

@@ -36,6 +36,8 @@ public class MonsterInstance
     public bool IsSet { get; set; }
     public bool IsUnit => Card.IsMonster && !IsSet;
     public bool ShieldQualified { get; set; }
+    // 聖盾 used this turn (simplified rules); every monster refreshes at each turn change.
+    public bool ShieldSpent { get; set; }
     public int NextCombatBonus { get; set; }
     public int TurnBonus { get; set; }
     public int TriggersThisTurn { get; set; }

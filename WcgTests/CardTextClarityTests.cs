@@ -33,7 +33,7 @@ public class CardTextClarityTests
         Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("離場",c.Text);Assert.DoesNotContain("犧牲不算",c.Text);Assert.DoesNotContain("敵方全場",c.Text);Assert.DoesNotContain("不支付費用",c.Text);foreach(var t in new[]{"生命傷害","己方玩家","全場所有","或者"})Assert.DoesNotContain(t,c.Text);});
         Assert.All(cards.AllCards.Where(c=>Regex.IsMatch(c.Text,"免費召喚(至多 )?\\d")),c=>Assert.Contains("不觸發進場",c.Text));
         Assert.All(cards.AllCards.Where(c=>c.IsCounter),c=>Assert.StartsWith("【反擊】受到",c.Text));
-        foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("直到它下一次攻擊或交戰結束",cards.GetCard(id)!.Text);
+        foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("它交戰後，此卡送入墓地",cards.GetCard(id)!.Text);
         Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
         Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);
         Assert.Equal(1000,cards.GetCard("WCG-147")!.PP);
@@ -45,11 +45,13 @@ public class CardTextClarityTests
     {
         Assert.All(cards.AllCards,c=>
         {
-            Assert.DoesNotContain("聖盾",c.Text);
-            Assert.DoesNotContain("聖盾",c.Keywords);
+            // Rules simplification: the per-turn 聖盾 replaces the energy-paid 能量護盾 on current cards.
+            Assert.DoesNotContain("能量護盾",c.Text);
+            Assert.DoesNotContain("能量護盾",c.Keywords);
             Assert.DoesNotContain("冰凍",c.Keywords);
         });
-        Assert.True(cards.GetCard("WCG-063")!.HasEnergyShield);
+        Assert.True(cards.GetCard("WCG-063")!.HasEnergyShield);Assert.Contains("聖盾",cards.GetCard("WCG-063")!.Keywords);
+        Assert.Contains("能量護盾",CounterHistory.BeforeRulesSimplification(cards).GetCard("WCG-063")!.Keywords);
         var old=CounterHistory.BeforeEnergyShield(cards).GetCard("WCG-063")!;
         Assert.Contains("聖盾",old.Keywords);
         Assert.True(old.HasEnergyShield);
@@ -90,7 +92,8 @@ public class CardTextClarityTests
         Assert.True(g.CastSpell(g.Player,Hand(g,96)));Assert.True(g.SelectTarget(victim));
         Assert.Equal(hp,g.Player.Hp);Assert.Equal(deck-drawn,g.Player.Deck.Count);
     }
-    [Theory] [InlineData(false,1500)] [InlineData(true,2000)]
+    [Theory] [InlineData(false,2000)] [InlineData(true,2000)]
+    // Simplified rules: 143 is an attachment that stays until the monster battles; attacking the player keeps it.
     public void NextCombatBonusEndsAfterAttackingThePlayer(bool legacy,int after)
     {
         var g=Game(legacy);var m=Unit(g.Player,154,2);m.IsTapped=true;
@@ -101,7 +104,8 @@ public class CardTextClarityTests
     [Fact] public void DebuffEndsAfterTheTargetsNextAttack()
     {
         var g=Game();var m=Unit(g.Player,154,2);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),m));Assert.Equal(1000,m.CurrentPP);
-        Assert.True(g.Attack(g.Player,m));Assert.Equal(1500,m.CurrentPP);
+        Assert.True(g.Attack(g.Player,m));Assert.Equal(1000,m.CurrentPP); // Attached: attacking the player is not a battle.
+        Assert.Contains(m.Attachments,a=>a.Card.Card.Id=="WCG-168");
     }
     [Theory] [InlineData(false)] [InlineData(true)]
     public void QueenReviveIsOptional(bool legacy)
@@ -218,7 +222,7 @@ public class CardTextClarityTests
             Assert.Matches("<p></p>", FaceText(await Render<CardFace>(language, new() { ["Battle"] = battle })));
         }
         var effect = FaceText(await Render<CardFace>(language, new() { ["Card"] = cards.GetCard("WCG-147") }));
-        Assert.Contains(language == "zh" ? "失去能量護盾" : "loses Energy Shield", effect);
+        Assert.Contains(language == "zh" ? "失去聖盾" : "loses Holy Shield", effect);
     }
     [Fact] public void FaceTextBlanksVanillaButSearchTextKeepsIt()
     {

@@ -214,7 +214,7 @@ public class BattleBridgeTests
         var attach=cast.Events.Single(e=>e.Type=="attach");
         Assert.Equal(shield.InstanceId,attach.InstanceId);Assert.Equal(own.InstanceId,attach.TargetId);
         var types=cast.Events.Select(e=>e.Type).ToList();Assert.True(types.IndexOf("play")<types.IndexOf("attach"));
-        Assert.Contains(bridge.Snapshot().Player.Field.Single().Status,s=>s.StartsWith("能量護盾"));
+        Assert.Contains(bridge.Snapshot().Player.Field.Single().Status,s=>s.StartsWith("聖盾"));
     }
     [Fact] public void CoordinatorRejectsOldPresenterAndMismatchedAcknowledgement()
     {

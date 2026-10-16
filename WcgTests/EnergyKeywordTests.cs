@@ -8,7 +8,7 @@ namespace WcgTests;
 public sealed class EnergyKeywordTests
 {
     readonly CardDatabase cards;
-    public EnergyKeywordTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
+    public EnergyKeywordTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=CounterHistory.BeforeRulesSimplification(new(env.Object)); /* Pre-simplification rules, still used to replay saved ranked matches. */}
     GameEngine Scene(int energy=4){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.EnergyZone.Clear();for(int i=0;i<energy;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}g.Computer.IsAi=false;return g;}
     MonsterInstance Unit(PlayerState p,string id,int? power=null){var m=new MonsterInstance(cards.GetCard(id)!){Slot=p.Field.Count,IsTapped=false,HasSummoningSickness=false};if(power!=null)m.CurrentPP=power.Value;p.Field.Add(m);return m;}
     static void Choose(GameEngine g,string id)=>Assert.True(g.SelectChoice(g.CurrentPendingChoice!.Options.Single(o=>o.Id==id)));

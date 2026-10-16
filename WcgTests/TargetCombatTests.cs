@@ -6,7 +6,7 @@ namespace WcgTests;
 public class TargetCombatTests
 {
     readonly CardDatabase db;readonly GameEngine e;
-    public TargetCombatTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));db=new(env.Object);e=new(db);e.StartGame(db.PresetDecks[0],db.PresetDecks[1]);e.Player.Hand.Clear();e.Computer.Hand.Clear();}
+    public TargetCombatTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));db=CounterHistory.BeforeRulesSimplification(new(env.Object)); /* Pre-simplification rules, still used to replay saved ranked matches. */e=new(db);e.StartGame(db.PresetDecks[0],db.PresetDecks[1]);e.Player.Hand.Clear();e.Computer.Hand.Clear();}
     MonsterInstance Unit(PlayerState p,string id,int pp){var m=new MonsterInstance(db.GetCard(id)!){IsTapped=false,HasSummoningSickness=false,CurrentPP=pp};p.Field.Add(m);return m;}
     [Theory][InlineData(1000,1000,true,true)][InlineData(1500,1000,false,true)][InlineData(1000,1500,true,false)]
     public void FixedPPCombatRemovesCorrectUnits(int ap,int dp,bool adead,bool ddead){var a=Unit(e.Player,"WCG-101",ap);var d=Unit(e.Computer,"WCG-101",dp);Assert.True(e.Attack(e.Player,a,d));Assert.Equal(adead,!e.Player.Field.Contains(a));Assert.Equal(ddead,!e.Computer.Field.Contains(d));}

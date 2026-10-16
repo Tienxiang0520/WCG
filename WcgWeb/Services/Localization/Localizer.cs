@@ -70,7 +70,7 @@ public sealed class Localizer : IDisposable
     public string CardName(CardDefinition? card) => card == null ? "" : IsEnglish ? LocalizationCatalog.CardName(card.Id, card.Name) : card.Name;
     public string CardName(string id, string zhName) => IsEnglish ? LocalizationCatalog.CardName(id, zhName) : zhName;
     public string CardText(CardDefinition? card) => card == null ? "" : CardText(card.Id, card.Text);
-    public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, CardDefinition.NormalizeShieldName(zhText)) : CardDefinition.NormalizeShieldName(zhText);
+    public string CardText(string id, string zhText) => IsEnglish ? LocalizationCatalog.CardText(id, LocalizationCatalog.DisplayZh(id, zhText)) : LocalizationCatalog.DisplayZh(id, zhText);
     public string CardName(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardName(card.CardId, card.Name);
     public string CardText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : CardText(card.CardId, card.Text);
     // Text shown on card faces and detail panels: vanilla cards ("無。" / "None.") leave the box blank. Search keeps using CardText.
@@ -158,6 +158,8 @@ public static partial class LocalizationCatalog
     [GeneratedRegex(@"\{(\d+)\}", RegexOptions.CultureInvariant)]
     private static partial Regex Hole();
 
+    // Current card text that says 聖盾 means the per-turn Holy Shield; older catalogs' 聖盾 wording still displays as 能量護盾.
+    public static string DisplayZh(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.ZhText == zhText ? zhText : CardDefinition.NormalizeShieldName(zhText);
     public static string CardName(string id, string zhName) => data.Value.Cards.TryGetValue(id, out var c) && c.Name != "" ? c.Name : Translate(zhName);
     // Cards whose targeting changed pin the translated source text; historic cards use their own wording.
     public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != ""

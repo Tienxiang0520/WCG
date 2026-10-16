@@ -12,7 +12,7 @@ public sealed class DamageCounterTests
     {
         var env=new Mock<IWebHostEnvironment>();
         env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));
-        cards=new(env.Object);
+        cards=CounterHistory.BeforeRulesSimplification(new(env.Object)); /* Pre-simplification rules, still used to replay saved ranked matches. */
     }
     CardDefinition Card(int id)=>cards.GetCard($"WCG-{id:000}")!;
     GameEngine Scene()
