@@ -10,15 +10,15 @@ public partial class GameEngine
     // Width/Depth/Budget bound the turn search (beam over move sequences); Sigma is evaluation noise and
     // Blunder the chance of a random legal move, both deterministic (Noise()). Replies: end-of-turn candidates checked against the opponent's reply.
     // Calibrated with tools/RankedCheck --ai-vs/--v7-ladder: each tier beats v6 at the same tier and the v7 tier below.
-    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth, int Width, int Depth, int Budget, double Sigma, double Blunder, int Replies = 0);
+    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth, int Width, int Depth, int Budget, double Sigma, double Blunder, int Replies = 0, int ReplyPlies = 1);
     internal static V7Profile V7ProfileFor(int level) => Math.Clamp(level, 0, 5) switch
     {
         0 => new(.6, 60, 3, 2, 2, 30, 7.0, .32),
         1 => new(.9, 150, 4, 3, 3, 80, 5.0, .20),
         2 => new(1, 250, 5, 4, 3, 160, 3.5, .12),
         3 => new(1, 400, 6, 5, 4, 300, 2.5, .08, 1),
-        4 => new(1, 500, 6, 6, 5, 450, 1.5, .05, 3),
-        _ => new(1, 700, 7, 8, 6, 650, 0, 0, 6),
+        4 => new(1, 600, 6, 6, 5, 500, 1.5, .05, 4),
+        _ => new(1, 1200, 8, 8, 6, 1000, 0, 0, 20, 2),
     };
 
     internal sealed record SimMove(string Kind, Guid Source, Guid? Target = null)
@@ -102,13 +102,13 @@ public partial class GameEngine
         SearchNode best = candidates[0]; double bestValue = double.MinValue;
         foreach (var n in candidates)
         {
-            var value = n.G.IsOver ? n.Score : n.Score * (1 - ReplyWeight) + Reply(n.G, p.Id) * ReplyWeight;
+            var value = n.G.IsOver ? n.Score : n.Score * (1 - ReplyWeight) + Reply(n.G, p.Id, prof.ReplyPlies) * ReplyWeight;
             if (value > bestValue + 1e-9) { bestValue = value; best = n; }
         }
         return best;
     }
 
-    private double Reply(GameEngine leaf, string pid)
+    private double Reply(GameEngine leaf, string pid, int plies)
     {
         if (leaf.IsOver) return leaf.Evaluate(pid);
         var g = leaf.CloneQuiescent(SimSeed(), pid);
@@ -116,6 +116,15 @@ public partial class GameEngine
         g.AiLevel = 5; g.AiRevision = 6;
         for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId != pid; i++)
             if (!g.ExecuteAiStep()) break;
+        // Two plies (Master): also play our own next turn with the v6 master policy and average both positions,
+        // so lines that leave a good follow-up beat lines that only survive the reply.
+        if (plies >= 2 && !g.IsOver && g.CurrentTurnPlayerId == pid)
+        {
+            var mid = g.Evaluate(pid);
+            for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId == pid; i++)
+                if (!g.ExecuteAiStep()) break;
+            return (mid + g.Evaluate(pid)) / 2;
+        }
         return g.Evaluate(pid);
     }
 
