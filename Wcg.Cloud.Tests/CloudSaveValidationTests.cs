@@ -27,6 +27,12 @@ public sealed class CloudSaveValidationTests
             using var reader=new StreamReader(stream);return reader.ReadToEnd();
         }
         var definitions=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgCloud.Cards"))!;
+        if(era>=1)
+        {
+            /* 舊時代的對局是用規則簡化前的卡面建立的。 */
+            var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeRulesSimplification"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>prior.GetValueOrDefault(c.Id,c)).ToList();
+        }
         if(era>=1) definitions=definitions.Where(c=>c.Id is not ("WCG-201" or "WCG-202" or "WCG-203" or "WCG-204")).ToList();
         if(era>=2) definitions=definitions.Where(c=>c.Id!="WCG-200").ToList();
         if(era>=3)
