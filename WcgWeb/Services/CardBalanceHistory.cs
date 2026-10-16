@@ -9,8 +9,11 @@ internal static class CardBalanceHistory
     // Catalog before the PP/cost deflation (PR B); only PP and cost changed, effects and DP did not.
     // Catalog before the new cards 205–257 (PR D); existing cards are unchanged, so the old catalog is the current one without them.
     // Catalog before ability monsters were lowered below the vanilla PP curve (2026-10-16); only PP and design notes changed.
-    internal static CardDatabase BeforeAbilityPp(CardDatabase current) => current.GetCard("WCG-113")?.PP < 2000
-        ? Override(current, "WcgWeb.Balance.BeforeAbilityPp") : current;
+    // Catalog before 寂靜學者 (WCG-208, monster with an entry silence) became the attached spell 寂靜禁咒 (2026-10-16).
+    internal static CardDatabase BeforeSilenceSpell(CardDatabase current) => current.GetCard("WCG-208")?.IsSpell == true
+        ? Override(current, "WcgWeb.Balance.BeforeSilenceSpell") : current;
+    internal static CardDatabase BeforeAbilityPp(CardDatabase current) { current = BeforeSilenceSpell(current); return current.GetCard("WCG-113")?.PP < 2000
+        ? Override(current, "WcgWeb.Balance.BeforeAbilityPp") : current; }
     internal static CardDatabase BeforeNewCards(CardDatabase current) { current = BeforeAbilityPp(current); return NewCardsRemoved(current); }
     private static CardDatabase NewCardsRemoved(CardDatabase current) => !current.AllCards.Any(c => IsNewCard(c.Id)) ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c => !IsNewCard(c.Id))), PresetsBeforeNewCards(current.PresetDecks));

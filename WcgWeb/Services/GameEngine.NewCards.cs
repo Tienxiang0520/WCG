@@ -71,6 +71,7 @@ public partial class GameEngine
         return c.Id switch
         {
             "WCG-206" => enemy.Where(m => m.IsTaunt && !m.IsSilenced).ToList(),
+            "WCG-208" when c.IsSpell => enemy.Where(m => !m.IsSilenced).ToList(),
             "WCG-207" => enemy.Where(m => m.IsTaunt && m.CurrentPP >= 1800).ToList(),
             "WCG-220" or "WCG-221" => p.Field.ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
@@ -94,6 +95,7 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-205": case "WCG-209": BreakShield(p); break;
+            // Before the silence-spell change (2026-10-16) 寂靜學者 was a monster; old-era matches keep its entry effect.
             case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); }); break;
             case "WCG-212": Mill(e, 2); break;
             case "WCG-227": if (p.Hand.Count > e.Hand.Count) DrawMany(p, 1); break;
@@ -110,7 +112,7 @@ public partial class GameEngine
         bool Valid() => t != null && Alive(t) && SpellTargets(p, c).Contains(t);
         switch (c.Id)
         {
-            case "WCG-206": if (Valid()) Silence(p, source, t!); break;
+            case "WCG-206": case "WCG-208": if (Valid()) Silence(p, source, t!); break;
             case "WCG-207": case "WCG-246": if (Valid()) KillBatch([t!], c.Name); break;
             case "WCG-211": Mill(e, 3); break;
             case "WCG-214": Mill(e, Math.Min(8, GraveMonsters(p))); break;

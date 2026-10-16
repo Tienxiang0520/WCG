@@ -296,6 +296,8 @@ public partial class GameEngine
         };
         return Targetable(p, candidates).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(m)).ToList();
     }
+    // 寂靜禁咒 (WCG-208) needs a target only as a spell; in old-era catalogs it is the monster 寂靜學者.
+    private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) || card.Id == "WCG-208" && card.IsSpell;
     private static bool NeedsSpellTarget(string id) => NewNeedsTarget(id) || id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
     public string GetPlayProblem(PlayerState p, CardInstance c)
     {
@@ -313,7 +315,7 @@ public partial class GameEngine
         if (c.Card.Id == "WCG-090" && !p.Graveyard.Any(x => x.Card.IsMonster)) return "墓地沒有可回收的怪物。";
         if (c.Card.Id == "WCG-096" && p.Hp < 1) return "生命不足以支付。";
         if (NewPlayProblem(p, c.Card) is { Length: > 0 } extra) return extra;
-        if (NeedsSpellTarget(c.Card.Id) && SpellTargets(p, c.Card).Count == 0) return "沒有符合卡面條件的合法目標。";
+        if (NeedsSpellTarget(c.Card) && SpellTargets(p, c.Card).Count == 0) return "沒有符合卡面條件的合法目標。";
         return "";
     }
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
@@ -323,11 +325,11 @@ public partial class GameEngine
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
-        : NeedsSpellTarget(card.Id) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
+        : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
     public bool SummonMonster(PlayerState p, CardInstance c) => Change(() => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
     public bool CastSpell(PlayerState p, CardInstance c) => Change(() => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
-        c.Card.IsSpell && NeedsSpellTarget(c.Card.Id) && CanPlayCard(p, c) ? SpellTargets(p, c.Card) : [];
+        c.Card.IsSpell && NeedsSpellTarget(c.Card) && CanPlayCard(p, c) ? SpellTargets(p, c.Card) : [];
     public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => Change(() =>
         GetDirectPlayTargets(p, c).Contains(target) ? BeginPlay(p, c, initialTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
     public IReadOnlyList<PlayerState> GetDirectPlayerTargets(PlayerState p, CardInstance c) =>
@@ -364,7 +366,7 @@ public partial class GameEngine
             else CommitPlay(p, c, target, null, mode);
         }
         if (initialTarget != null) WithTarget(initialTarget);
-        else if (NeedsSpellTarget(c.Card.Id) || c.Card.Id == "WCG-046" && mode == "KILL") PickMonster(p, "選擇卡牌目標（尚未扣費，可取消）", SpellTargets(p, c.Card), m => WithTarget(m), true, c.InstanceId);
+        else if (NeedsSpellTarget(c.Card) || c.Card.Id == "WCG-046" && mode == "KILL") PickMonster(p, "選擇卡牌目標（尚未扣費，可取消）", SpellTargets(p, c.Card), m => WithTarget(m), true, c.InstanceId);
         else WithTarget(null);
         return true;
     }

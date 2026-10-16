@@ -87,7 +87,7 @@ public class CardDefinition
     [JsonIgnore] public bool HasTrample => Keywords.Contains("貫穿");
     [JsonIgnore] public bool HasPoison => Keywords.Contains("劇毒");
     [JsonIgnore] public bool HasStealth => false;
-    [JsonIgnore] public bool HasSilence => IsSpell && Id == "WCG-072";
+    [JsonIgnore] public bool HasSilence => IsSpell && Id is "WCG-072" or "WCG-206" or "WCG-208";
 
     public Dictionary<string, int> GetSpecificCost()
     {

@@ -1096,9 +1096,10 @@
   "text": "Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more."
  },
  "WCG-208": {
-  "zh": "寂靜學者",
-  "name": "Silent Scholar",
-  "text": "Deploy: Silence 1 enemy monster."
+  "zh": "寂靜禁咒",
+  "name": "Hush Hex",
+  "text": "Silence 1 enemy monster that is not already silenced (attach this card to it).",
+  "zh_text": "沉默 1 隻尚未被沉默的敵方怪物（將此卡附著其上）。"
  },
  "WCG-209": {
   "zh": "破甲工匠",
