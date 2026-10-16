@@ -87,7 +87,7 @@ public sealed class Localizer : IDisposable
 
 public static partial class LocalizationCatalog
 {
-    private sealed record CardEntry(string Name, string Text, string? ZhText = null);
+    private sealed record CardEntry(string Name, string Text, string? ZhText = null, Dictionary<string, string>? Prev = null);
     private sealed record DeckEntry(string Name, string Description, string ZhName, string ZhDescription);
     private sealed record Template(Regex Pattern, string English, int Weight);
 
@@ -123,7 +123,8 @@ public static partial class LocalizationCatalog
             foreach (var card in cards.RootElement.EnumerateObject())
             {
                 var entry = new CardEntry(card.Value.GetProperty("name").GetString() ?? "", card.Value.GetProperty("text").GetString() ?? "",
-                    card.Value.TryGetProperty("zh_text", out var zhText) ? zhText.GetString() : null);
+                    card.Value.TryGetProperty("zh_text", out var zhText) ? zhText.GetString() : null,
+                    card.Value.TryGetProperty("prev", out var prev) ? prev.EnumerateObject().ToDictionary(x => x.Name, x => x.Value.GetString() ?? "", StringComparer.Ordinal) : null);
                 result.Cards[card.Name] = entry;
                 if (card.Value.TryGetProperty("zh", out var zh) && zh.GetString() is { Length: > 0 } zhName) result.CardNamesByZh[zhName] = entry.Name;
             }
@@ -159,10 +160,12 @@ public static partial class LocalizationCatalog
     private static partial Regex Hole();
 
     // Current card text that says 聖盾 means the per-turn Holy Shield; older catalogs' 聖盾 wording still displays as 能量護盾.
-    public static string DisplayZh(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.ZhText == zhText ? zhText : CardDefinition.NormalizeShieldName(zhText);
+    // "prev" pins the wording of an earlier catalog era that already used today's 聖盾 name (per-turn shield, before 聖盾指示物).
+    public static string DisplayZh(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && (c.ZhText == zhText || c.Prev?.ContainsKey(zhText) == true) ? zhText : CardDefinition.NormalizeShieldName(zhText);
     public static string CardName(string id, string zhName) => data.Value.Cards.TryGetValue(id, out var c) && c.Name != "" ? c.Name : Translate(zhName);
     // Cards whose targeting changed pin the translated source text; historic cards use their own wording.
-    public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Text != ""
+    public static string CardText(string id, string zhText) => data.Value.Cards.TryGetValue(id, out var c) && c.Prev?.TryGetValue(zhText, out var prior) == true ? prior
+        : data.Value.Cards.TryGetValue(id, out c) && c.Text != ""
         && (c.ZhText == null || c.ZhText == zhText) ? c.Text : Translate(zhText);
     // Official deck texts now say 聖盾; saved matches may still carry the older 能量護盾 wording.
     private static string CurrentDeckText(string text) => text.Replace("能量護盾", "聖盾", StringComparison.Ordinal).Replace("冰凍、回手", "橫置、回手", StringComparison.Ordinal).Replace("理智冰凍配", "理智橫置配", StringComparison.Ordinal);

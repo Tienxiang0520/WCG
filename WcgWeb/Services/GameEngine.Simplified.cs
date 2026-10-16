@@ -11,7 +11,10 @@ public partial class GameEngine
     private int High(int printed) => !SimplifiedRules ? printed : 1800;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
-    private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? !m.ShieldSpent : Owner(m).AvailableEnergy > 0;
+    // 聖盾指示物 (2026-10-17): a monster that gains 聖盾 (on entry or later) gets one counter; the first combat destruction
+    // removes it instead. No refresh. Losing 聖盾 (silence, 147's arrow, condition ends) removes the counter. Older catalogs refresh each turn.
+    public bool ShieldCounterRules => CardBalanceHistory.ShieldCounterCatalog(_cardDb);
+    private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldCounterRules ? m.ShieldCounters > 0 : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
     private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     private bool FixedCombatBonus(MonsterInstance m) => SimplifiedRules && m.IsUnit && !m.IsSilenced && m.Card.Id == "WCG-203";
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
@@ -26,12 +29,14 @@ public partial class GameEngine
         RefreshBoard();
         Present("status", Owner(m), m.InstanceId, card: m.Card, label: "交戰後附著卡送入墓地");
     }
-    private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish)
+    private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish, bool lethal = true)
     {
         if (!hit || !Alive(m) || !m.HasShield || m.ShieldSpent) { finish(false); return; }
-        m.ShieldSpent = true;
-        Present("status", Owner(m), m.InstanceId, card: m.Card, label: "聖盾抵擋消滅");
-        Log($"【{m.Card.Name}】的聖盾抵擋了這次消滅（本回合已用）。", "combat");
+        if (ShieldCounterRules) { m.ShieldCounters = Math.Max(0, m.ShieldCounters - 1); m.ShieldQualified = m.ShieldCounters > 0; m.ShieldSpent = m.ShieldCounters == 0; }
+        else m.ShieldSpent = true;
+        Present("status", Owner(m), m.InstanceId, card: m.Card, label: lethal ? "聖盾抵擋消滅" : "受到攻擊，消耗聖盾");
+        if (ShieldCounterRules) Log(lethal ? $"【{m.Card.Name}】移除 1 個聖盾指示物，抵擋了這次消滅。" : $"【{m.Card.Name}】受到攻擊，移除 1 個聖盾指示物。", "combat");
+        else Log($"【{m.Card.Name}】的聖盾抵擋了這次消滅（本回合已用）。", "combat");
         finish(true);
     }
     private MonsterInstance[] OathGuards(PlayerState p) => p.Field.Where(m => m.IsUnit && !m.IsSilenced && !m.IsTapped && m.Card.Id == "WCG-200").ToArray();

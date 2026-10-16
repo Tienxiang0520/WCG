@@ -38,6 +38,10 @@ public class MonsterInstance
     public bool ShieldQualified { get; set; }
     // 聖盾 used this turn (simplified rules); every monster refreshes at each turn change.
     public bool ShieldSpent { get; set; }
+    // 聖盾指示物 (2026-10-17 catalog): counters on the card, the 聖盾 sources already counted, and whether it was silenced last check.
+    public int ShieldCounters { get; set; }
+    public HashSet<string> ShieldSources { get; set; } = [];
+    public bool WasSilenced { get; set; }
     public int NextCombatBonus { get; set; }
     public int TurnBonus { get; set; }
     public int TriggersThisTurn { get; set; }

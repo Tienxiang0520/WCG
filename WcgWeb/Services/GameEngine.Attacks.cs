@@ -21,7 +21,7 @@ public partial class GameEngine
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
     {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP),a.HasRage?Owner(a).AvailableEnergy:0);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
-        var ash=ah&&a.HasShield&&ShieldReady(a);var dsh=dh&&d.HasShield&&ShieldReady(d);
+        var ash=ah&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
         var guardSurvives=GetOpponent(Owner(a)).Field.Any(m=>m.HasHeroGuard&&(m!=d||!dh||dsh));
         var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0;
@@ -51,7 +51,8 @@ public partial class GameEngine
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
         var ap=a.CurrentPP;var dp=d.CurrentPP;var mirror=d.IsUnit&&!d.IsSilenced&&d.Card.Id=="WCG-258";var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
-        Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh,b=>dsaved=b),()=>
+        // 聖盾指示物: the defender spends 1 counter whenever it is attacked, even when it would survive anyway.
+        Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh||ShieldCounterRules,b=>dsaved=b,dh),()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();
@@ -70,9 +71,9 @@ public partial class GameEngine
     {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id=="WCG-109")DrawMany(p,1);
         if(m.Card.Id=="WCG-029"&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
         if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1,new(p,m.Card,m,"passive"));}
-    private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish)
+    private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish,bool lethal=true)
     {
-        if(SimplifiedRules){ApplyShield(m,hit,finish);return;}
+        if(SimplifiedRules){ApplyShield(m,hit,finish,lethal);return;}
         var p=Owner(m);if(!hit||!m.HasShield||p.AvailableEnergy==0){finish(false);return;}
         Ask(p,$"【{m.Card.Name}】將被交戰消滅，橫置1點能量保命？",[new(){Id="SHIELD",Title="橫置1點能量使用能量護盾"},new(){Id="SKIP",Title="不使用，接受消滅"}],o=>
         {var use=o.Id=="SHIELD"&&p.AvailableEnergy>0;if(use){p.EnergyZone.First(c=>!c.IsTapped).IsTapped=true;Present("status",p,m.InstanceId,card:m.Card,label:"橫置能量保命");}finish(use);});
@@ -122,7 +123,8 @@ public partial class GameEngine
         effects.Add(() => Observe(GetOpponent(p)));
         effects.Add(() =>
         {
-            foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;unit.ShieldSpent=false;}
+            var counters=ShieldCounterRules;
+            foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;if(!counters)unit.ShieldSpent=false;}
             p.NextCreatureDiscount=0;
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;
             Present("turn", ActivePlayer, label: $"第 {TurnNumber} 回合");

@@ -138,15 +138,15 @@ public static class TutorialLessons
         new()
         {
             Id = "shield", Icon = "shield", Title = "聖盾與箭頭",
-            Summary = "聖盾每回合擋下 1 次交戰消滅，不用付能量；學會用箭頭把聖盾交給相鄰的隊友。",
-            Topics = ["聖盾", "每回合重置", "箭頭 ← → ↑", "固定格位"],
+            Summary = "聖盾放 1 個指示物，受到 1 次攻擊就用掉；學會用箭頭把聖盾交給相鄰的隊友。",
+            Topics = ["聖盾", "聖盾指示物", "箭頭 ← → ↑", "固定格位"],
             Scene = new(
                 new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-155", 1)] }),
             Steps =
             [
                 new() { Title = "聖盾", Spot = ["own-card:WCG-154"],
-                    Text = "具聖盾的怪物每回合第一次在交戰中將被消滅時，改為存活。不用付能量，每個回合開始都會重置。" },
+                    Text = "怪物獲得聖盾時，在牌上放 1 個聖盾指示物。它受到攻擊時，不論會不會被消滅，都要移除 1 個指示物，並在這次交戰中存活。指示物用掉就沒了，不會每回合補回。" },
                 new() { Title = "放對格位", Spot = ["hand:WCG-061", "own:1"], Allow = [Play("WCG-061"), Slot(1)],
                     Done = e => Unit(e.Player, "WCG-061")?.Slot == 1,
                     Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-061"), CardEffect("WCG-061"), CardName("WCG-154")],
@@ -155,10 +155,10 @@ public static class TutorialLessons
                     Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了聖盾。", TextValues = [CardName("WCG-154")] },
                 new() { Title = "聖盾擋下", Spot = ["own-card:WCG-154", "enemy-card:WCG-155"], Allow = [Attack("WCG-154", "WCG-155")],
                     Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true, ShieldSpent: true } && Settled(e),
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，但聖盾會自動擋下這一次。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-155"), EnemyPP("WCG-155")],
+                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，但聖盾指示物會自動擋下這一次，然後被移除。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-155"), EnemyPP("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-155")] },
                 new() { Title = "本課重點",
-                    Text = "聖盾只防交戰中的消滅，每回合只擋 1 次，不擋法術消滅、犧牲或返回手牌。有的怪物天生具有聖盾，也有附著法術或箭頭能給予聖盾；沉默會讓怪物失去自身的聖盾。" }
+                    Text = "聖盾只防交戰中的消滅，指示物擋 1 次就用掉，不擋法術消滅、犧牲或返回手牌。有的怪物天生具有聖盾，也有附著法術或箭頭能給予聖盾；沉默會讓怪物失去自身的聖盾和指示物。" }
             ]
         },
         new()
@@ -331,7 +331,7 @@ public static class TutorialLessons
                     Text = "把「{0}」拖到「{1}」上，效果：{2}", TextValues = [CardName("WCG-135"), CardName("WCG-154"), CardEffect("WCG-135")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-135"), CardName("WCG-154")] },
                 new() { Title = "棘手的守衛", Spot = ["enemy-card:WCG-069"],
-                    Text = "「{0}」（{1} PP）的效果：{2} 就算你打贏它，聖盾也會讓它存活一次。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
+                    Text = "「{0}」（{1} PP）的效果：{2} 就算你打贏它，聖盾指示物也會讓它存活一次。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
                 new() { Title = "沉默", Spot = ["hand:WCG-072", "enemy-card:WCG-069"], Allow = [Play("WCG-072", "WCG-069"), Pick("WCG-069")],
                     Done = e => Unit(e.Computer, "WCG-069") is { IsSilenced: true } && Settled(e),
                     Text = "沉默會移除怪物卡面上的能力，包括嘲諷與聖盾。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
@@ -405,8 +405,8 @@ public static class TutorialLessons
         new()
         {
             Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、聖盾與雙色卡",
-            Summary = "PP 門檻只有三段；聖盾每回合只擋一次；雙色卡屬於兩個意志。",
-            Topics = ["PP 600／1100 以下、1800 以上", "聖盾每回合一次", "連續攻擊破盾", "雙色卡"],
+            Summary = "PP 門檻只有三段；聖盾指示物只擋一次；雙色卡屬於兩個意志。",
+            Topics = ["PP 600／1100 以下、1800 以上", "聖盾指示物一次", "連續攻擊破盾", "雙色卡"],
             Scene = new(
                 new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-031", 2), new("WCG-101", 4)] }),
@@ -416,11 +416,11 @@ public static class TutorialLessons
                     Text = "卡牌上的 PP 門檻只有三種：PP 600 以下、PP 1100 以下、PP 1800 以上。門檻看卡上數值加上目前加成。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
                     Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Settled(e),
-                    Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾會擋下這次消滅。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],
+                    Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾指示物會擋下這次消滅並被移除。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-031")] },
                 new() { Title = "同回合再攻擊", Spot = ["own-card:WCG-155", "enemy-card:WCG-031"], Allow = [Attack("WCG-155", "WCG-031")],
                     Done = e => !OnField(e.Computer, "WCG-031") && Settled(e),
-                    Text = "聖盾每回合只擋一次。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
+                    Text = "指示物已經用掉了，不會補回。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
                 new() { Title = "看門檻選目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),

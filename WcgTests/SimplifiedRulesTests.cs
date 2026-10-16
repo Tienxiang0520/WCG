@@ -25,9 +25,10 @@ public class SimplifiedRulesTests
         Assert.All(cards.AllCards,c=>Assert.DoesNotContain(c.Keywords,k=>k is "能量護盾" or "護主" or "怒擊" or "觀測" or "野性" or "回魂"));
     }
 
+    // Catalogs before 聖盾指示物 (2026-10-17) keep the per-turn refresh.
     [Fact] public void HolyShieldSavesOncePerTurnWithoutEnergyAndRefreshesEachTurn()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);var wall=Unit(g.Computer,155,3);var energy=g.Player.AvailableEnergy;Refresh(g);
+        var g=Game(CounterHistory.BeforeShieldCounter(cards));Assert.False(g.ShieldCounterRules);var knight=Unit(g.Player,69,1);var wall=Unit(g.Computer,155,3);var energy=g.Player.AvailableEnergy;Refresh(g);
         Assert.True(g.PreviewAttack(knight,wall)!.AttackerShieldBreaks);
         Assert.True(g.Attack(g.Player,knight,wall));Assert.False(g.IsWaiting);
         Assert.Contains(knight,g.Player.Field);Assert.True(knight.ShieldSpent);Assert.Equal(energy,g.Player.AvailableEnergy);

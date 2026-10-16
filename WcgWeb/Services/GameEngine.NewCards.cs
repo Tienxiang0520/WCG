@@ -19,10 +19,16 @@ public partial class GameEngine
         foreach (var c in milled) Present("discard", target, c.InstanceId, card: c.Card, label: "牌庫頂送入墓地");
         Log($"【{target.Name}】牌庫頂 {milled.Count} 張送入墓地，牌庫剩 {target.Deck.Count} 張。", "action");
     }
-    private void BreakShield(PlayerState p)
+    // 205 碎盾狂戰士 removes all 聖盾指示物 (its whole identity); 209 破甲工匠 is a cheap utility body and removes 1.
+    private void BreakShield(PlayerState p, bool all = true)
     {
-        PickMonster(p, "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
-        { x.ShieldSpent = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: "本回合失去聖盾"); });
+        var counters = ShieldCounterRules;
+        PickMonster(p, counters ? "選擇要移除聖盾指示物的敵方怪物" : "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
+        {
+            if (counters) { x.ShieldCounters = all ? 0 : Math.Max(0, x.ShieldCounters - 1); x.ShieldQualified = x.ShieldCounters > 0; x.ShieldSpent = x.ShieldCounters == 0; }
+            else x.ShieldSpent = true;
+            Present("status", Owner(x), x.InstanceId, card: x.Card, label: counters ? (all ? "移除所有聖盾指示物" : "移除 1 個聖盾指示物") : "本回合失去聖盾");
+        });
     }
 
     // Continuous board effects, recomputed by RefreshBoard.
@@ -96,7 +102,7 @@ public partial class GameEngine
         var e = GetOpponent(p);
         switch (m.Card.Id)
         {
-            case "WCG-205": case "WCG-209": BreakShield(p); break;
+            case "WCG-205": BreakShield(p); break; case "WCG-209": BreakShield(p, !ShieldCounterRules); break;
             // Before the silence-spell change (2026-10-16) 寂靜學者 was a monster; old-era matches keep its entry effect.
             case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); }); break;
             case "WCG-212": Mill(e, 2); break;

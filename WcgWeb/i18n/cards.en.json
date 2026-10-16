@@ -159,8 +159,11 @@
  "WCG-031": {
   "zh": "鏡像護衛",
   "name": "Mirror Guard",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-032": {
   "zh": "質能瓦解",
@@ -314,20 +317,29 @@
  "WCG-061": {
   "zh": "銀色誓言衛",
   "name": "Silver Oath Guard",
-  "text": "[Arrow: →] Your adjacent monster on the right has Holy Shield.",
-  "zh_text": "【箭頭：→】右側相鄰的己方怪物具有聖盾。"
+  "text": "[Arrow: →] Your adjacent monster on the right gets 1 Holy Shield counter (when the arrow starts pointing at it).",
+  "zh_text": "【箭頭：→】右側相鄰的己方怪物獲得 1 個聖盾指示物（開始指向時）。",
+  "prev": {
+   "【箭頭：→】右側相鄰的己方怪物具有聖盾。": "[Arrow: →] Your adjacent monster on the right has Holy Shield."
+  }
  },
  "WCG-062": {
   "zh": "保護之手",
   "name": "Hand of Protection",
-  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself.",
-  "zh_text": "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。"
+  "text": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then restore 1 life to yourself.",
+  "zh_text": "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後回復己方 1 點生命。",
+  "prev": {
+   "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself."
+  }
  },
  "WCG-063": {
   "zh": "聖印侍從",
   "name": "Sigil Squire",
-  "text": "Holy Shield.",
-  "zh_text": "聖盾。"
+  "text": "Holy Shield (enters with 1 counter).",
+  "zh_text": "聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "聖盾。": "Holy Shield."
+  }
  },
  "WCG-064": {
   "zh": "謙遜戒律",
@@ -359,8 +371,11 @@
  "WCG-069": {
   "zh": "鐵壁騎士",
   "name": "Bulwark Knight",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-070": {
   "zh": "崇高奉獻",
@@ -381,20 +396,29 @@
  "WCG-073": {
   "zh": "榮耀護衛官",
   "name": "Glory Warden",
-  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield.",
-  "zh_text": "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。"
+  "text": "Taunt. [Arrows: ← →] Your adjacent monsters on the left and right each get 1 Holy Shield counter (when the arrow starts pointing at them).",
+  "zh_text": "嘲諷；【箭頭：← →】左右相鄰的己方怪物各獲得 1 個聖盾指示物（開始指向時）。",
+  "prev": {
+   "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield."
+  }
  },
  "WCG-074": {
   "zh": "堅壁祈願",
   "name": "Prayer of the Bulwark",
-  "text": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card.",
-  "zh_text": "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。"
+  "text": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then draw 1 card.",
+  "zh_text": "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後抽 1 張牌。",
+  "prev": {
+   "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card."
+  }
  },
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Holy Shield. Deploy: Restore 1 life to yourself.",
-  "zh_text": "聖盾；進場：回復己方 1 點生命。"
+  "text": "Holy Shield (enters with 1 counter). Deploy: Restore 1 life to yourself.",
+  "zh_text": "聖盾（進場放 1 個指示物）；進場：回復己方 1 點生命。",
+  "prev": {
+   "聖盾；進場：回復己方 1 點生命。": "Holy Shield. Deploy: Restore 1 life to yourself."
+  }
  },
  "WCG-076": {
   "zh": "誓約封禁",
@@ -417,14 +441,20 @@
  "WCG-079": {
   "zh": "日耀聖堂巨像",
   "name": "Sunblaze Temple Colossus",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-080": {
   "zh": "光輝聖皇·弗丁",
   "name": "Radiant Holy Emperor, Fordin",
-  "text": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
-  "zh_text": "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。"
+  "text": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less.",
+  "zh_text": "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。",
+  "prev": {
+   "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less."
+  }
  },
  "WCG-081": {
   "zh": "虛空夜行魔",
@@ -699,8 +729,11 @@
  "WCG-133": {
   "zh": "厚甲石像鬼",
   "name": "Armored Gargoyle",
-  "text": "Taunt. While you have 3 or less life, this monster has Holy Shield.",
-  "zh_text": "嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。"
+  "text": "Taunt. Whenever your life drops to 3 or less, this monster gets 1 Holy Shield counter.",
+  "zh_text": "嘲諷；每當你的生命降到 3 點以下，此怪物獲得 1 個聖盾指示物。",
+  "prev": {
+   "嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。": "Taunt. While you have 3 or less life, this monster has Holy Shield."
+  }
  },
  "WCG-134": {
   "zh": "巡林驅邪工兵",
@@ -773,8 +806,11 @@
  "WCG-147": {
   "zh": "聖堂仲裁護衛",
   "name": "Temple Arbiter Guard",
-  "text": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield.",
-  "zh_text": "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。"
+  "text": "[Arrows: ← ↑] Your adjacent monster on the left gets 1 Holy Shield counter (when the arrow starts pointing at it); the enemy monster directly opposite loses all Holy Shield counters and can't get new ones.",
+  "zh_text": "【箭頭：← ↑】左側相鄰的己方怪物獲得 1 個聖盾指示物（開始指向時）；正對面的敵方怪物移除所有聖盾指示物，且不能獲得新的。",
+  "prev": {
+   "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield."
+  }
  },
  "WCG-148": {
   "zh": "墓園守夜人",
@@ -898,8 +934,11 @@
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself.",
-  "zh_text": "嘲諷；聖盾；進場：回復己方 2 點生命。"
+  "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore 2 life to yourself.",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：回復己方 2 點生命。",
+  "prev": {
+   "嘲諷；聖盾；進場：回復己方 2 點生命。": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself."
+  }
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -940,8 +979,11 @@
  "WCG-179": {
   "zh": "光輝至高大天使·阿曼蘇爾",
   "name": "Radiant Supreme Archangel, Amansul",
-  "text": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7).",
-  "zh_text": "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。"
+  "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore your life to its maximum (7).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：將你的生命回復至上限（7 點）。",
+  "prev": {
+   "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7)."
+  }
  },
  "WCG-180": {
   "zh": "戰歌號令",
@@ -992,8 +1034,11 @@
  "WCG-189": {
   "zh": "聖堂集結號角",
   "name": "Temple Rally Horn",
-  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
-  "zh_text": "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
+  "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
+  "zh_text": "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。",
+  "prev": {
+   "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it)."
+  }
  },
  "WCG-190": {
   "zh": "白銀軍團旗手",
@@ -1042,8 +1087,11 @@
  "WCG-198": {
   "zh": "神聖救贖誓約",
   "name": "Oath of Holy Redemption",
-  "text": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters Holy Shield (attach this card to it).",
-  "zh_text": "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得聖盾（將此卡附著其上）。"
+  "text": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
+  "zh_text": "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。",
+  "prev": {
+   "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters Holy Shield (attach this card to it)."
+  }
  },
  "WCG-199": {
   "zh": "亡魂索命陷阱",
@@ -1083,7 +1131,11 @@
  "WCG-205": {
   "zh": "碎盾狂戰士",
   "name": "Shieldbreaker Berserker",
-  "text": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+  "text": "Charge. Deploy: Remove all Holy Shield counters from 1 enemy monster.",
+  "zh_text": "衝鋒；進場：移除 1 隻敵方怪物的所有聖盾指示物。",
+  "prev": {
+   "衝鋒；進場：1 隻敵方怪物本回合失去聖盾。": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+  }
  },
  "WCG-206": {
   "zh": "纏根束縛",
@@ -1104,7 +1156,11 @@
  "WCG-209": {
   "zh": "破甲工匠",
   "name": "Armorbreaker Smith",
-  "text": "Deploy: 1 enemy monster loses Holy Shield this turn."
+  "text": "Deploy: Remove 1 Holy Shield counter from 1 enemy monster.",
+  "zh_text": "進場：移除 1 隻敵方怪物的 1 個聖盾指示物。",
+  "prev": {
+   "進場：1 隻敵方怪物本回合失去聖盾。": "Deploy: 1 enemy monster loses Holy Shield this turn."
+  }
  },
  "WCG-210": {
   "zh": "夜行越牆者",
@@ -1259,7 +1315,11 @@
  "WCG-240": {
   "zh": "聖焰騎士",
   "name": "Holy Flame Knight",
-  "text": "Charge. Holy Shield."
+  "text": "Charge. Holy Shield (enters with 1 counter).",
+  "zh_text": "衝鋒；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "衝鋒；聖盾。": "Charge. Holy Shield."
+  }
  },
  "WCG-241": {
   "zh": "熔岩衝陣者",

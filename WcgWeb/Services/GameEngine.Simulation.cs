@@ -33,7 +33,7 @@ public partial class GameEngine
                 var copy = new MonsterInstance(hidden ? HiddenCard : m.Card)
                 {
                     InstanceId = hidden ? NewId() : m.InstanceId, Slot = m.Slot, IsTapped = m.IsTapped, IsSet = m.IsSet,
-                    ShieldQualified = m.ShieldQualified, ShieldSpent = m.ShieldSpent, NextCombatBonus = m.NextCombatBonus, TurnBonus = m.TurnBonus,
+                    ShieldQualified = m.ShieldQualified, ShieldSpent = m.ShieldSpent, ShieldCounters = m.ShieldCounters, ShieldSources = [.. m.ShieldSources], WasSilenced = m.WasSilenced, NextCombatBonus = m.NextCombatBonus, TurnBonus = m.TurnBonus,
                     TriggersThisTurn = m.TriggersThisTurn, CombatPowerBonus = m.CombatPowerBonus, HasAttacked = m.HasAttacked,
                     HasSummoningSickness = m.HasSummoningSickness, IsSilenced = m.IsSilenced, IsStealthed = m.IsStealthed,
                     ExtraTaunt = m.ExtraTaunt, ExtraTrample = m.ExtraTrample, ShieldOwnerId = m.ShieldOwnerId, SilenceOwnerId = m.SilenceOwnerId,

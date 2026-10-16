@@ -232,12 +232,13 @@ public class NewCardTests
     }
 
     // ---- 5.1 反制 ----
-    [Fact] public void ShieldBreakersRemoveHolyShieldForThisTurnOnly()
+    // 聖盾指示物: 209 removes 1 counter for good; it does not come back next turn.
+    [Fact] public void ShieldBreakersRemoveTheHolyShieldCounter()
     {
-        var g=Game();var wall=Unit(g.Computer,31,2);Refresh(g);Assert.True(wall.HasShield);
+        var g=Game();var wall=Unit(g.Computer,31,2);Refresh(g);Assert.True(wall.HasShield);Assert.False(wall.ShieldSpent);
         Summon(g,209,0);Assert.True(g.SelectTarget(wall));Assert.True(wall.ShieldSpent);
         var hitter=Unit(g.Player,154,1);Assert.True(g.PreviewAttack(hitter,wall)!.DefenderDies);
-        EndTurnQuietly(g);Assert.False(wall.ShieldSpent);
+        EndTurnQuietly(g);Assert.True(wall.ShieldSpent);Assert.True(g.PreviewAttack(wall,hitter) is null or {AttackerShieldBreaks:false});
     }
     [Fact] public void TauntAnswersSilenceDestroyAndWalkPast()
     {
@@ -283,7 +284,7 @@ public class NewCardTests
         var g=Game();var mill=Hand(g,211,g.Computer);while(g.Player.Deck.Count>3)g.Player.Deck.RemoveAt(0);
         var rev=typeof(GameEngine).GetProperty("AiRevision",BindingFlags.NonPublic|BindingFlags.Instance)!;
         var value=typeof(GameEngine).GetMethod("NewPlayValue",BindingFlags.NonPublic|BindingFlags.Instance)!;
-        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(9,GameEngine.RankedAiVersion);
+        Assert.Equal(GameEngine.RankedAiVersion,(int)rev.GetValue(g)!);Assert.Equal(10,GameEngine.RankedAiVersion);
         Assert.True((double)value.Invoke(g,[g.Computer,mill])! >= 50);   // milling the last cards wins
         rev.SetValue(g,5);Assert.Null(value.Invoke(g,[g.Computer,mill]));
     }

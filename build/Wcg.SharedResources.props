@@ -4,6 +4,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-rules-simplification.json" LogicalName="WcgWeb.Balance.BeforeRulesSimplification" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-ability-pp.json" LogicalName="WcgWeb.Balance.BeforeAbilityPp" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-dual-will.json" LogicalName="WcgWeb.Balance.BeforeDualWill" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-shield-counter.json" LogicalName="WcgWeb.Balance.BeforeShieldCounter" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-reason-buff.json" LogicalName="WcgWeb.Balance.BeforeReasonBuff" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-silence-spell.json" LogicalName="WcgWeb.Balance.BeforeSilenceSpell" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-deflation.json" LogicalName="WcgWeb.Balance.BeforeDeflation" />
