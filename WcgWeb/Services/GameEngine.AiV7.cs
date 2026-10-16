@@ -26,6 +26,16 @@ public partial class GameEngine
         public override string ToString() => $"{Kind}:{Source}{(Target is { } t ? ">" + t : "")}";
     }
 
+    // Debug only (tools/RankedCheck --explain): receives a description of each v7 decision. Never cloned into
+    // simulations and never consulted by the AI, so tracing cannot change a decision or a replay.
+    internal Action<string>? AiTrace { get; set; }
+    private void Trace(string text) => AiTrace?.Invoke(text);
+    private string Describe(SimMove? m)
+    {
+        if (m == null) return "end turn";
+        string Name(Guid id) { var all = new[] { Player, Computer }; foreach (var pl in all) { if (pl.Board.FirstOrDefault(x => x.InstanceId == id) is { } b) return $"{b.Card.Name}({b.CurrentPP})"; if (pl.Hand.FirstOrDefault(x => x.InstanceId == id) is { } h) return h.Card.Name; } return id.ToString()[..8]; }
+        return $"{m.Kind} {Name(m.Source)}{(m.Target is { } t ? " -> " + (t == Guid.Empty ? "hero" : Name(t)) : "")}";
+    }
     private int _simCounter;
     private int SimSeed() { unchecked { return _aiSeed * 31 + (int)Revision * 7919 + TurnNumber * 104729 + ++_simCounter * 15485863; } }
 
@@ -39,14 +49,15 @@ public partial class GameEngine
         var prof = V7ProfileFor(AiLevel); _simCounter = 0;
         // Following a plan whose simulated position still matches skips both searches.
         var next = NextPlannedMove(p);
+        if (next != null) Trace($"plan: {Describe(next)}");
         if (next == null)
         {
-            if (Noise(101) < prof.LethalSight && FindLethal(p, prof) is { } lethal && ApplyMove(this, p.Id, lethal)) return true;
-            if (FillEnergyV6(p)) return true;
+            if (Noise(101) < prof.LethalSight && FindLethal(p, prof) is { } lethal) { Trace($"lethal: {Describe(lethal)}"); if (ApplyMove(this, p.Id, lethal)) return true; }
+            if (FillEnergyV6(p)) { Trace("energy (v6 rule)"); return true; }
             if (prof.Blunder > 0 && Noise(102) < prof.Blunder)
             {
                 var legal = GenerateMoves(p, energy: false);
-                if (legal.Count > 0 && ApplyMove(this, p.Id, Pick(legal, 103))) return true;
+                if (legal.Count > 0) { var pick = Pick(legal, 103); Trace($"blunder: {Describe(pick)}"); if (ApplyMove(this, p.Id, pick)) return true; }
             }
             next = SearchTurn(p, prof);
         }
@@ -103,6 +114,7 @@ public partial class GameEngine
         foreach (var n in candidates)
         {
             var value = n.G.IsOver ? n.Score : n.Score * (1 - ReplyWeight) + Reply(n.G, p.Id, prof.ReplyPlies) * ReplyWeight;
+            if (AiTrace != null) { var first = n; while (first.Parent?.Parent != null) first = first.Parent; Trace($"  reply {value,8:F2} (turn-end {n.Score:F2}) first {(first.Move == null ? "end turn" : Describe(first.Move))}"); }
             if (value > bestValue + 1e-9) { bestValue = value; best = n; }
         }
         return best;
@@ -159,9 +171,15 @@ public partial class GameEngine
             frontier = children.OrderByDescending(c => c.Score).Take(prof.Width).ToList();
         }
         if (prof.Replies > 0) best = BestAfterReply(p, prof, all, ref salt);
-        if (best == root) { _plan = null; return null; }
         var path = new List<SearchNode>();
         for (var n = best; n != root; n = n.Parent!) path.Insert(0, n);
+        if (AiTrace != null)
+        {
+            Trace($"search: {all.Count} nodes, root {root.Score:F2}, chosen {best.Score:F2}: " + (path.Count == 0 ? "end turn" : string.Join(" ; ", path.Select(n => n.Move!.Kind + (n.Move.Target is { } t ? ">" + (t == Guid.Empty ? "hero" : "unit") : "")))));
+            foreach (var c in all.Where(n => n.Parent == root).OrderByDescending(n => n.Score).Take(12))
+                Trace($"  first move {c.Score,8:F2}{(c == path.FirstOrDefault() ? " *" : "  ")} {Describe(c.Move)}");
+        }
+        if (best == root) { _plan = null; return null; }
         _plan = path.Skip(1).Select((n, i) => new PlanStep(n.Move!, PositionKey(n.G, p.Id))).ToList();
         _planBefore = PositionKey(path[0].G, p.Id);
         return path[0].Move;

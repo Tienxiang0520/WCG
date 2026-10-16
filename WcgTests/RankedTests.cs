@@ -836,4 +836,88 @@ public sealed class RankedTests : IDisposable
         var restored=Session();Assert.Empty(restored.Error);Assert.Single(restored.Read().Records!);
         Assert.NotEmpty(restored.BuildReplay(Guid.NewGuid()).Error);
     }
+
+    // ---- 對局代碼 (match code) ----
+    async Task<RankedSession> PlayFullMatch(int tier,int seed)
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        var profile=s.Read();profile.Match!.Seed=seed;profile.Match.PlayerFirst=true;profile.Match.Tier=tier;
+        profile.Match.ComputerDeck=DeckService.Copy(decks.All.First(x=>x.Tier==tier).Deck);store.Save(profile);s=Session();
+        for(int n=0;n<1500&&!s.Engine.IsOver;n++)
+        {
+            var state=s.Bridge.Snapshot();BattleResponse response;
+            if(state.DecisionPlayerId=="computer")
+            {
+                var token=s.Coordinator.Attach();s.Coordinator.Fast=true;using var cancel=new CancellationTokenSource();
+                await s.Coordinator.DriveAsync(token,r=>{Assert.True(r.Success,r.Message);cancel.Cancel();return Task.CompletedTask;},cancel.Token);
+                s.Coordinator.Detach(token);continue;
+            }
+            if(state.Pending is {} pending) response=pending.Kind=="choice"?Send(s,"choice",option:pending.Options[0].Id):Send(s,"target",target:Guid.Parse(pending.Targets[0]));
+            else if(state.Hand.Where(h=>h.CanEnergy&&state.Player.TotalEnergy<5).OrderByDescending(h=>h.Card.Cost).FirstOrDefault() is {} energy) response=Send(s,"energy",energy.Card.InstanceId);
+            else if(state.Hand.FirstOrDefault(h=>h.CanPlay) is {} card) response=Send(s,"play",card.Card.InstanceId);
+            else if(state.Player.Field.FirstOrDefault(m=>m.CanAttack&&m.Targets.Length>0) is {} monster)
+            { var target=monster.Targets.FirstOrDefault(t=>t.Id=="face")??monster.Targets[0]; response=Send(s,"attack",monster.Card.InstanceId,target.Id=="face"?null:Guid.Parse(target.Id)); }
+            else response=Send(s,"end");
+            Assert.True(response.Success,response.Message);
+        }
+        Assert.True(s.Engine.IsOver);return s;
+    }
+    static string FinalState(RankedReplay r)=>JsonSerializer.Serialize(PublicShape(r.Steps[^1].State));
+    [Fact] public async Task MatchCodeRoundTripsAndReplaysToTheSameFinalState()
+    {
+        var s=await PlayFullMatch(4,9123);var record=s.Read().Records!.Last();
+        var actions=RankedRecord.Decode(record.Actions);Assert.Contains(actions,a=>a.Type=="ai"&&a.RulesVersion==GameEngine.RankedAiVersion);
+        var code=s.MatchCodeFor(record.Id)!;Assert.StartsWith(MatchCode.Prefix,code);Assert.True(code.Length<record.Actions.Length+4000,code.Length.ToString());
+        var decoded=MatchCode.Decode(code,out var error,out var live)!;Assert.Equal("",error);Assert.False(live);
+        Assert.Equal(record.Seed,decoded.Seed);Assert.Equal(record.Tier,decoded.Tier);Assert.Equal(record.PlayerFirst,decoded.PlayerFirst);Assert.Equal(record.Rules,decoded.Rules);
+        Assert.Equal(record.Actions,decoded.Actions);Assert.Equal(record.PlayerDeck.CardIds,decoded.PlayerDeck.CardIds);Assert.Equal(record.ComputerDeck.CardIds,decoded.ComputerDeck.CardIds);
+        Assert.Equal(record.ComputerDeck.Id,decoded.ComputerDeck.Id);Assert.Equal(record.Won,decoded.Won);Assert.Equal(record.Turns,decoded.Turns);
+        var original=s.BuildReplay(record.Id);Assert.Empty(original.Error);
+        // A fresh session with no history (another player's device) replays the pasted code to the same end.
+        Directory.Delete(dir,true);var other=Session();var fromCode=other.BuildReplay(decoded);Assert.Empty(fromCode.Error);
+        Assert.Equal(original.Steps.Count,fromCode.Steps.Count);Assert.Equal(FinalState(original),FinalState(fromCode));Assert.True(fromCode.Steps[^1].State.IsOver);
+        // Whitespace and line breaks from chat apps are ignored.
+        var spaced=" \n"+string.Join("\n  ",code.Chunk(40).Select(c=>new string(c)))+"\t";
+        Assert.Equal(FinalState(original),FinalState(other.BuildReplay(MatchCode.Decode(spaced,out _,out _)!)));
+    }
+    [Fact] public void InProgressMatchCodeReplaysTheJournalSoFar()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        if(s.Engine.DecisionPlayerId=="player")Assert.True(Send(s,"energy",s.Engine.Player.Hand[0].InstanceId).Success);
+        var code=s.CurrentMatchCode()!;var record=MatchCode.Decode(code,out var error,out var live)!;Assert.Equal("",error);Assert.True(live);
+        var replay=s.BuildReplay(record);Assert.Empty(replay.Error);Assert.Equal(s.Read().Match!.Actions.Count+1,replay.Steps.Count);
+        Assert.True(Send(s,"surrender").Success);Assert.Null(s.CurrentMatchCode());
+    }
+    [Theory]
+    [InlineData("","請貼上對局代碼。")]
+    [InlineData("hello","這不是魂誓對局代碼（應以 WCG1- 開頭）。")]
+    [InlineData("WCG2-abc","這個對局代碼來自較新的版本，請更新遊戲後再試。")]
+    [InlineData("WCG1-***","對局代碼含有無效字元，可能複製不完整。")]
+    [InlineData("WCG1-AAAAAAAA","對局代碼已損壞或複製不完整。")]
+    public void InvalidMatchCodesExplainWhatIsWrong(string code,string message)
+    {
+        Assert.Null(MatchCode.Decode(code,out var error,out _));Assert.Equal(message,error);
+        var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(env.ContentRootPath,"i18n","en.json")))!;
+        Assert.True(en.ContainsKey(message),"missing English text: "+message);
+    }
+    [Fact] public async Task TruncatedMatchCodeIsRejected()
+    {
+        var s=await PlayFullMatch(1,777);var code=s.MatchCodeFor(s.Read().Records!.Last().Id)!;
+        Assert.Null(MatchCode.Decode(code[..(code.Length*2/3)],out var error,out _));Assert.Equal("對局代碼已損壞或複製不完整。",error);
+        Assert.Null(MatchCode.Decode(code[..^12],out error,out _));Assert.Equal("對局代碼已損壞或複製不完整。",error);
+    }
+    [Fact] public void OldEraMatchCodeReplaysWithItsOwnCatalog()
+    {
+        var prior=Overlay(cards,"balance-before-player-targets.json");
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(old.Start(HealingDeck()).Success);Assert.True(Send(old,"surrender").Success);
+        var record=old.Read().Records!.Last();var code=old.MatchCodeFor(record.Id)!;
+        Directory.Delete(dir,true);var current=Session();Assert.Null(current.MatchCodeFor(record.Id));
+        var decoded=MatchCode.Decode(code,out var error,out _)!;Assert.Equal("",error);Assert.Equal(record.Rules,decoded.Rules);
+        var replay=current.BuildReplay(decoded);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
+        // A code whose rules fingerprint matches no known era explains that it cannot be re-simulated.
+        var unknown=new RankedRecord{Rules="ranked-v06:"+new string('0',64),Tier=0,PlayerDeck=decoded.PlayerDeck,ComputerDeck=decoded.ComputerDeck,Actions=""};
+        Assert.NotEmpty(current.BuildReplay(MatchCode.Decode(MatchCode.Encode(unknown),out _,out _)!).Error);
+    }
 }

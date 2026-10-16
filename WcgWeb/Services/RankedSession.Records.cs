@@ -31,6 +31,29 @@ public sealed partial class RankedSession
         RankedRecord? record;
         lock (gate) record = profile.Records?.LastOrDefault(r => r.Id == id) is { } found ? RankedStore.Copy(new RankedProfile { Records = [found] }).Records![0] : null;
         if (record == null) return new(null, [], "找不到這場對局。");
+        return BuildReplay(record);
+    }
+    // 對局代碼 for a finished record, or null when it is not in the history.
+    public string? MatchCodeFor(Guid id)
+    {
+        lock (gate) return profile.Records?.LastOrDefault(r => r.Id == id) is { } r ? MatchCode.Encode(r) : null;
+    }
+    // 對局代碼 for the unfinished match in progress (its journal so far), or null when there is none.
+    public string? CurrentMatchCode()
+    {
+        lock (gate)
+        {
+            if (profile.Match is not { Settled: false } m) return null;
+            return MatchCode.Encode(new RankedRecord { Id = m.Id, Season = m.Season, Tier = m.Tier, Seed = m.Seed, PlayerFirst = m.PlayerFirst, Rules = m.Rules,
+                PlayerDeck = m.PlayerDeck, ComputerDeck = m.ComputerDeck, Archetype = RankedDecks.ArchetypeName(m.ComputerDeck), Before = profile.Stars,
+                Turns = Engine.TurnNumber, Actions = RankedRecord.Encode(m.Actions) }, inProgress: true);
+        }
+    }
+    // Re-simulates any record, including one decoded from a pasted 對局代碼 (never stored in the profile).
+    public RankedReplay BuildReplay(RankedRecord record) => BuildReplay(record, null);
+    // trace (debug, tools/RankedCheck --explain) receives (action index, AI decision text) for every computer step.
+    internal RankedReplay BuildReplay(RankedRecord record, Action<int, string>? trace)
+    {
         var steps = new List<RankedReplayStep>();
         try
         {
@@ -43,6 +66,7 @@ public sealed partial class RankedSession
             engine.ResetToNotStarted(); engine.UseMatchCatalog(catalog, limit, legacy);
             engine.SetReplaySeed(record.Seed); engine.AiLevel = record.Tier;
             engine.StartGame(record.PlayerDeck, record.ComputerDeck, record.PlayerFirst);
+            if (trace != null) engine.AiTrace = text => trace(steps.Count - 1, text);
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));
             foreach (var action in actions)
             {
