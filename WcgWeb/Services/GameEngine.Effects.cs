@@ -172,7 +172,7 @@ public partial class GameEngine
         var deaths = new List<(PlayerState owner, MonsterInstance monster, CardInstance grave)>();
         foreach (var m in victims)
         {
-            var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var grave = new CardInstance(m.Card) { InstanceId = m.InstanceId }; owner.Graveyard.Add(grave);
+            var owner = Owner(m); m.LostAttachments = m.Attachments.Where(a => a.OwnerId == owner.Id).Select(a => a.Card).ToList(); ReleaseAttachments(m); owner.Field.Remove(m); var grave = new CardInstance(m.Card) { InstanceId = m.InstanceId }; owner.Graveyard.Add(grave);
             m.CombatPowerBonus=0;m.AttackDamageBonus=0;
             deaths.Add((owner, m, grave)); Present("death", owner, m.InstanceId, card: m.Card, label: reason); Log($"【{m.Card.Name}】因 {reason} 送入墓地。", "combat");
         }
@@ -210,6 +210,7 @@ public partial class GameEngine
             case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>x.CurrentPP<=Low(700)).ToArray(),m.Card.Name);break;
             case "WCG-172":TopEnergy(p);break;
             case "WCG-204" when SimplifiedRules: Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); Recover(p, 2, 1, grave); break;
+            default: NewDeath(p, m, grave); break;
             case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, 3, grave, optional: !LegacyCardRules)); break;
         }
     }

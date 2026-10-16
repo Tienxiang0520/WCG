@@ -1716,5 +1716,14 @@
  "只看雙色卡": "Show only dual-will cards",
  "雙色卡需選齊這兩個意志": "Dual-will cards need both of their wills in the deck",
  "雙色卡：牌組必須選了這兩個意志": "Dual-will card: the deck must use both of these wills",
- "雙色卡【{0}】只能放進主色與副色剛好是{1}的牌組。": "Dual-will card \"{0}\" can only go in a deck whose main and second wills are exactly {1}."
+ "雙色卡【{0}】只能放進主色與副色剛好是{1}的牌組。": "Dual-will card \"{0}\" can only go in a deck whose main and second wills are exactly {1}.",
+ "本回合失去聖盾": "Loses Holy Shield this turn",
+ "牌庫頂送入墓地": "Top of deck to graveyard",
+ "選擇本回合失去聖盾的敵方怪物": "Choose an enemy monster to lose Holy Shield this turn",
+ "選擇要沉默的敵方怪物": "Choose an enemy monster to Silence",
+ "選擇與它交戰的敵方怪物": "Choose the enemy monster it battles",
+ "選擇 PP 比【{0}】低的敵方怪物": "Choose an enemy monster with less PP than {0}",
+ "選擇附著過的卡加入手牌": "Choose a card that was attached to put into your hand",
+ "選擇墓地的另 1 隻深淵怪物加入手牌": "Choose another Abyss monster in your graveyard to put into your hand",
+ "【{0}】牌庫頂 {1} 張送入墓地，牌庫剩 {2} 張。": "{0} puts the top {1} cards of their deck into the graveyard; {2} left in the deck."
 }

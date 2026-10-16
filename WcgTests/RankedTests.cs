@@ -287,6 +287,24 @@ public sealed class RankedTests : IDisposable
         current.Coordinator.Dispose();
     }
 
+    [Fact] public void NewCardsPreserveActiveMatchAndReplay()
+    {
+        var prior=CounterHistory.BeforeNewCards(cards);
+        Assert.Equal(204,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-205"));Assert.NotNull(cards.GetCard("WCG-257"));
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[4]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
+        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+        Assert.True(current.Start(deck).Success);Assert.Empty(current.BalanceNotice);Assert.NotEqual(rules,current.Read().Match!.Rules);
+        current.Coordinator.Dispose();
+    }
+
     [Fact] public void RulesSimplificationPreservesActiveMatchAndReplay()
     {
         var prior=CounterHistory.BeforeRulesSimplification(cards);
