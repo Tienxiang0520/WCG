@@ -8,16 +8,17 @@ public partial class GameEngine
 {
     // LethalSight: chance per turn decision to run the lethal search; LethalBudget/LethalDepth bound it.
     // Width/Depth/Budget bound the turn search (beam over move sequences); Sigma is evaluation noise and
-    // Blunder the chance of a random legal move, both deterministic (Noise()).
-    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth, int Width, int Depth, int Budget, double Sigma, double Blunder);
+    // Blunder the chance of a random legal move, both deterministic (Noise()). Replies: end-of-turn candidates checked against the opponent's reply.
+    // Calibrated with tools/RankedCheck --ai-vs/--v7-ladder: each tier beats v6 at the same tier and the v7 tier below.
+    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth, int Width, int Depth, int Budget, double Sigma, double Blunder, int Replies = 0, int ReplyPlies = 1);
     internal static V7Profile V7ProfileFor(int level) => Math.Clamp(level, 0, 5) switch
     {
-        0 => new(.6, 60, 3, 2, 2, 30, 7.0, .30),
-        1 => new(.9, 150, 4, 3, 3, 80, 5.0, .18),
-        2 => new(1, 250, 5, 4, 4, 160, 3.5, .10),
-        3 => new(1, 400, 6, 5, 5, 300, 2.2, .06),
-        4 => new(1, 500, 6, 6, 5, 450, 1.2, .03),
-        _ => new(1, 700, 7, 8, 6, 650, 0, 0),
+        0 => new(.6, 60, 3, 2, 2, 30, 7.0, .32),
+        1 => new(.9, 150, 4, 3, 3, 80, 5.0, .20),
+        2 => new(1, 250, 5, 4, 3, 160, 3.5, .12),
+        3 => new(1, 400, 6, 5, 4, 300, 2.5, .08, 1),
+        4 => new(1, 600, 6, 6, 5, 500, 1.5, .05, 4),
+        _ => new(1, 1200, 8, 8, 6, 1000, 0, 0, 20, 2),
     };
 
     internal sealed record SimMove(string Kind, Guid Source, Guid? Target = null)
@@ -88,6 +89,45 @@ public partial class GameEngine
         public GameEngine G = g; public SearchNode? Parent = parent; public SimMove? Move = move; public double Score = score;
     }
 
+    // Opponent reply (ai-design.md §2.5): the best few end-of-turn positions are played forward through the
+    // opponent's next turn with the v6 master policy. The opponent's hand stays unknown, so it can only use its
+    // board; its hidden cards are priced by the opponent model in Evaluate. Dealing it sampled hands from the
+    // public pool was tried and measured weaker (tools/RankedCheck), so it is not used.
+    // Share of the reply score in the final choice (tuned with tools/RankedCheck; .6 was weaker).
+    private const double ReplyWeight = .85;
+    private SearchNode BestAfterReply(PlayerState p, V7Profile prof, List<SearchNode> all, ref int salt)
+    {
+        var candidates = all.Where(n => n.Move == null || n.G.IsOver || n.G.IsQuiescent).OrderByDescending(n => n.Score).Take(prof.Replies).ToList();
+        if (!candidates.Contains(all[0])) candidates.Add(all[0]);
+        SearchNode best = candidates[0]; double bestValue = double.MinValue;
+        foreach (var n in candidates)
+        {
+            var value = n.G.IsOver ? n.Score : n.Score * (1 - ReplyWeight) + Reply(n.G, p.Id, prof.ReplyPlies) * ReplyWeight;
+            if (value > bestValue + 1e-9) { bestValue = value; best = n; }
+        }
+        return best;
+    }
+
+    private double Reply(GameEngine leaf, string pid, int plies)
+    {
+        if (leaf.IsOver) return leaf.Evaluate(pid);
+        var g = leaf.CloneQuiescent(SimSeed(), pid);
+        if (!g.SimApply(x => x.EndTurn())) return leaf.Evaluate(pid);
+        g.AiLevel = 5; g.AiRevision = 6;
+        for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId != pid; i++)
+            if (!g.ExecuteAiStep()) break;
+        // Two plies (Master): also play our own next turn with the v6 master policy and average both positions,
+        // so lines that leave a good follow-up beat lines that only survive the reply.
+        if (plies >= 2 && !g.IsOver && g.CurrentTurnPlayerId == pid)
+        {
+            var mid = g.Evaluate(pid);
+            for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId == pid; i++)
+                if (!g.ExecuteAiStep()) break;
+            return (mid + g.Evaluate(pid)) / 2;
+        }
+        return g.Evaluate(pid);
+    }
+
     // Turn search (ai-design.md §2.2–2.3): beam search over this turn's move sequences on hidden-information
     // clones, scoring each position with Evaluate. Returns the first move of the best sequence, or null to end
     // the turn. Ending the turn now is always a candidate.
@@ -96,7 +136,7 @@ public partial class GameEngine
         int budget = prof.Budget, salt = 200;
         var root = new SearchNode(CloneQuiescent(SimSeed(), p.Id), null, null, 0);
         root.Score = root.G.Evaluate(p.Id);
-        var best = root; var frontier = new List<SearchNode> { root };
+        var best = root; var frontier = new List<SearchNode> { root }; var all = new List<SearchNode> { root };
         for (int depth = 0; depth < prof.Depth && frontier.Count > 0 && budget > 0; depth++)
         {
             var children = new List<SearchNode>();
@@ -111,12 +151,14 @@ public partial class GameEngine
                     var score = child.Evaluate(p.Id) + (prof.Sigma > 0 ? (Noise(salt++) - .5) * 2 * prof.Sigma : 0);
                     var c = new SearchNode(child, node, m, score);
                     if (score > best.Score + 1e-9) best = c;
+                    all.Add(c);
                     if (!child.IsOver && child.CurrentTurnPlayerId == p.Id && child.IsQuiescent) children.Add(c);
                 }
                 if (budget < 0) break;
             }
             frontier = children.OrderByDescending(c => c.Score).Take(prof.Width).ToList();
         }
+        if (prof.Replies > 0) best = BestAfterReply(p, prof, all, ref salt);
         if (best == root) { _plan = null; return null; }
         var path = new List<SearchNode>();
         for (var n = best; n != root; n = n.Parent!) path.Insert(0, n);

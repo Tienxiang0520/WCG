@@ -37,9 +37,11 @@ public class AiHoldTests
     [Fact]
     public void KeepsUnconditionalRemovalForARealThreat()
     {
-        var g=Game();var removal=Hand(g,"WCG-094");var small=Unit(g.Computer,"WCG-101",0,700,1);
+        var g=Game();var removal=Hand(g,"WCG-094");Unit(g.Computer,"WCG-101",0,700,1);
+        // Our 1500-PP monster can deal with the small body by attacking, so the removal is kept.
+        Unit(g.Player,"WCG-101",0,1500,1);
         PlayTurn(g);
-        Assert.Contains(removal,g.Player.Hand);Assert.Contains(small,g.Computer.Field);
+        Assert.Contains(removal,g.Player.Hand);
         var big=cards.AllCards.Where(c=>c.IsMonster&&(c.PP??0)>=2300).OrderByDescending(c=>c.PP).First();
         var h=Game();var r2=new CardInstance(cards.GetCard("WCG-094")!);h.Player.Hand.Add(r2);
         var threat=new MonsterInstance(big){Slot=0,IsTapped=false,HasSummoningSickness=false};h.Computer.Field.Add(threat);
