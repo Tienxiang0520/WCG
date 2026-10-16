@@ -31,6 +31,9 @@ public sealed class CloudSaveValidationTests
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
             definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
+            /* 2026-10-17 聖盾指示物之前的卡文。 */
+            var shield=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeShieldCounter"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>shield.GetValueOrDefault(c.Id,c)).ToList();
             /* 2026-10-17 理智加強之前的數值與卡文。 */
             var reason=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeReasonBuff"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>reason.GetValueOrDefault(c.Id,c)).ToList();

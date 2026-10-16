@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Bump when ranked AI decisions change; RankedSession stores it with every journal action.
-    public const int RankedAiVersion = 9;
+    public const int RankedAiVersion = 10;
     private int _aiSeed;
     // Ranked replays seed this through SetReplaySeed; simulations may seed it directly.
     public void SeedRankedAi(int seed) => _aiSeed = seed;
@@ -39,7 +39,7 @@ public partial class GameEngine
     }
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
-    private static double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0) + (m.HasRage ? 2 : 0) + (m.HasObservation ? 3 : 0) + (m.HasWild ? 2 : 0) + (m.HasSoulReturn ? 1.5 : 0)
+    private double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (m.HasShield && !(V10 && m.ShieldSpent && ShieldCounterRules) ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0) + (m.HasRage ? 2 : 0) + (m.HasObservation ? 3 : 0) + (m.HasWild ? 2 : 0) + (m.HasSoulReturn ? 1.5 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0);
     private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0) + (c.HasHeroGuard ? 3 : 0) + (c.HasRage ? 2 : 0) + (c.HasObservation ? 3 : 0) + (c.HasWild ? 2 : 0) + (c.HasSoulReturn ? 1.5 : 0)
         : 3 + c.TotalCost * .6;

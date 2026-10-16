@@ -21,8 +21,9 @@ public partial class GameEngine
     }
     private void BreakShield(PlayerState p)
     {
-        PickMonster(p, "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
-        { x.ShieldSpent = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: "本回合失去聖盾"); });
+        var counters = ShieldCounterRules;
+        PickMonster(p, counters ? "選擇要移除聖盾指示物的敵方怪物" : "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
+        { x.ShieldSpent = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: counters ? "移除聖盾指示物" : "本回合失去聖盾"); });
     }
 
     // Continuous board effects, recomputed by RefreshBoard.

@@ -86,7 +86,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
         if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
         if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
-        if(m.IsTaunt)status.Add("嘲諷");if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(m.HasShield)status.Add(engine.ShieldCounterRules?(m.ShieldSpent?"聖盾（指示物已用）":"聖盾指示物"):engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");

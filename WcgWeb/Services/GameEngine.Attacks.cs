@@ -122,7 +122,8 @@ public partial class GameEngine
         effects.Add(() => Observe(GetOpponent(p)));
         effects.Add(() =>
         {
-            foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;unit.ShieldSpent=false;}
+            var counters=ShieldCounterRules;
+            foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;if(!counters)unit.ShieldSpent=false;}
             p.NextCreatureDiscount=0;
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;
             Present("turn", ActivePlayer, label: $"第 {TurnNumber} 回合");

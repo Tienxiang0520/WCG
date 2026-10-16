@@ -131,3 +131,13 @@
 .dual-print-card .print-card-meta { background: linear-gradient(90deg, var(--will-color) 42.5%, var(--will-color-2) 57.5%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .white-color .white-print-card.dual-print-card { border-color: transparent; border-image: linear-gradient(90deg, var(--will-color) 42.5%, var(--will-color-2) 57.5%) 1; }
 @media print { .dual-print-card .print-card-meta { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
+/* 聖盾指示物 token card: 12 round 15 mm counters, gold like the in-game counter; cut along the circles. */
+.shield-token-card { display: flex; flex-direction: column; gap: 1.5mm; }
+.shield-token-card h2 { font-size: 12pt; font-weight: 700; margin: 0; color: #111; text-shadow: none; }
+.shield-token-card p { font-size: 6.5pt; line-height: 1.35; margin: 0; }
+.shield-tokens { display: grid; grid-template-columns: repeat(3, 15mm); grid-auto-rows: 15mm; gap: 1mm 3mm; justify-content: center; flex: 1; align-content: center; }
+.shield-token { display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; border: .35mm dashed #6b4b00; background: radial-gradient(circle at 35% 30%, #fff8d8, #f2cf63 58%, #c8952e); color: #4a3200; line-height: 1; }
+.shield-token b { font-size: 11pt; }
+.shield-token small { font-size: 5pt; white-space: nowrap; font-weight: 700; margin-top: .6mm; }
+.ink-saving .shield-token, .white-color .shield-token { background: white; border-style: solid; }

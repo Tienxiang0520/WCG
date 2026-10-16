@@ -12,8 +12,12 @@ internal static class CardBalanceHistory
     // Catalog before 寂靜學者 (WCG-208, monster with an entry silence) became the attached spell 寂靜禁咒 (2026-10-16).
     // Catalog before seven single-will cards (027, 031, 058, 067, 211, 213, 234) became dual-will (2026-10-16); only wills and design notes changed.
     // Catalog before the 理智 buff (2026-10-17): ten 理智 cards had other numbers or text, and 258–262 did not exist.
+    // Catalog before 聖盾 became the one-time 聖盾指示物 (2026-10-17): holy-shield cards had the per-turn wording.
+    internal static bool ShieldCounterCatalog(CardDatabase cards) => cards.GetCard("WCG-205")?.Text.Contains("聖盾指示物", StringComparison.Ordinal) == true;
+    internal static CardDatabase BeforeShieldCounter(CardDatabase current) => ShieldCounterCatalog(current) ? Override(current, "WcgWeb.Balance.BeforeShieldCounter") : current;
     internal static CardDatabase BeforeReasonBuff(CardDatabase current)
     {
+        current = BeforeShieldCounter(current);
         if (current.GetCard("WCG-251")?.HasTaunt != true) return current;
         var old = Override(current, "WcgWeb.Balance.BeforeReasonBuff");
         return new(JsonSerializer.Serialize(old.AllCards.Where(c => !IsReasonBuffCard(c.Id))), JsonSerializer.Serialize(old.PresetDecks));

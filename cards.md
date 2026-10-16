@@ -55,7 +55,7 @@ source: WcgWeb/Data/cards.json
 | WCG-182 | 血怒百夫長 | 怪物 | 4 | 1600 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player. |
 | WCG-201 | 赤焰破陣者 | 怪物 | 3 | 1100 | 1 | — | 此怪物攻擊玩家時 DP +1。 | **Flamebreaker Vanguard** — When this monster attacks a player, it gets +1 DP. |
-| WCG-205 | 碎盾狂戰士 | 怪物 | 3 | 1400 | 1 | — | 衝鋒；進場：1 隻敵方怪物本回合失去聖盾。 | **Shieldbreaker Berserker** — Charge. Deploy: 1 enemy monster loses Holy Shield this turn. |
+| WCG-205 | 碎盾狂戰士 | 怪物 | 3 | 1400 | 1 | — | 衝鋒；進場：移除 1 隻敵方怪物的聖盾指示物。 | **Shieldbreaker Berserker** — Charge. Deploy: Remove the Holy Shield counter from 1 enemy monster. |
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 使 1 隻己方怪物 PP +300，攻擊玩家時 DP +1（將此卡附著其上）。 | **Flame War-Rune** — Give 1 of your monsters +300 PP and +1 DP when attacking the player (attach this card to it). |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 1100 | 1 | — | 陣亡：將附著在此怪物上的 1 張你的卡加入手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards that was attached to this monster to your hand. |
 | WCG-230 | 決鬥宣言 | 法術 | 2 | — | — | — | 橫置 1 隻己方直立怪物，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Declaration of Duel** — Tap 1 of your untapped monsters and have it battle 1 enemy monster (Taunt can't stop it). |
@@ -165,23 +165,23 @@ source: WcgWeb/Data/cards.json
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-061 | 銀色誓言衛 | 怪物 | 2 | 700 | 1 | → | 【箭頭：→】右側相鄰的己方怪物具有聖盾。 | **Silver Oath Guard** — [Arrow: →] Your adjacent monster on the right has Holy Shield. |
 | WCG-062 | 保護之手 | 法術 | 3 | — | — | — | 使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。 | **Hand of Protection** — Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself. |
-| WCG-063 | 聖印侍從 | 怪物 | 1 | 300 | 1 | — | 聖盾。 | **Sigil Squire** — Holy Shield. |
+| WCG-063 | 聖印侍從 | 怪物 | 1 | 300 | 1 | — | 聖盾（進場放 1 個指示物）。 | **Sigil Squire** — Holy Shield (enters with 1 counter). |
 | WCG-064 | 謙遜戒律 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的敵方怪物。 | **Edict of Humility** — Destroy 1 enemy monster that costs 2 or less. |
 | WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 1200 | 1 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
 | WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。 | **Blessing of Kings** — Choose either player and restore 2 life to them, then you draw 1 card. |
 | WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 消滅所有 PP 600 以下的敵方怪物。 | **Divine Judgment** — Destroy all enemy monsters with 600 PP or less. |
-| WCG-069 | 鐵壁騎士 | 怪物 | 3 | 1100 | 1 | — | 嘲諷；聖盾。 | **Bulwark Knight** — Taunt. Holy Shield. |
+| WCG-069 | 鐵壁騎士 | 怪物 | 3 | 1100 | 1 | — | 嘲諷；聖盾（進場放 1 個指示物）。 | **Bulwark Knight** — Taunt. Holy Shield (enters with 1 counter). |
 | WCG-070 | 崇高奉獻 | 法術 | 1 | — | — | — | 選擇任一玩家，回復其 1 點生命。 | **Noble Devotion** — Choose either player and restore 1 life to them. |
 | WCG-071 | 祈光神官 | 怪物 | 2 | 700 | 1 | — | 每當敵方怪物攻擊你的嘲諷怪物，回復己方 1 點生命。 | **Lightcaller Priest** — Whenever an enemy monster attacks one of your Taunt monsters, restore 1 life to yourself. |
 | WCG-072 | 淨化聖光 | 法術 | 3 | — | — | — | 沉默 1 隻尚未被沉默的怪物，然後抽 1 張牌。 | **Purifying Light** — Silence 1 monster that is not already silenced, then draw 1 card. |
 | WCG-073 | 榮耀護衛官 | 怪物 | 4 | 1600 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。 | **Glory Warden** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield. |
 | WCG-074 | 堅壁祈願 | 法術 | 3 | — | — | — | 使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。 | **Prayer of the Bulwark** — Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card. |
-| WCG-075 | 破邪大天使 | 怪物 | 5 | 1800 | 2 | — | 聖盾；進場：回復己方 1 點生命。 | **Evil-Breaker Archangel** — Holy Shield. Deploy: Restore 1 life to yourself. |
+| WCG-075 | 破邪大天使 | 怪物 | 5 | 1800 | 2 | — | 聖盾（進場放 1 個指示物）；進場：回復己方 1 點生命。 | **Evil-Breaker Archangel** — Holy Shield (enters with 1 counter). Deploy: Restore 1 life to yourself. |
 | WCG-076 | 誓約封禁 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 1800 以上的敵方怪物。 | **Oathbound Seal** — Destroy 1 enemy monster with 1800 PP or more. |
 | WCG-077 | 秩序聖裁者 | 怪物 | 5 | 1800 | 1 | — | 進場：消滅 1 隻 PP 1800 以上的敵方怪物。 | **Order Adjudicator** — Deploy: Destroy 1 enemy monster with 1800 PP or more. |
 | WCG-078 | 聖光普照 | 法術 | 4 | — | — | — | 消滅所有 PP 600 以下的敵方怪物，然後回復己方 1 點生命。 | **Radiant Dawn** — Destroy all enemy monsters with 600 PP or less, then restore 1 life to yourself. |
-| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 2100 | 1 | — | 嘲諷；聖盾。 | **Sunblaze Temple Colossus** — Taunt. Holy Shield. |
-| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 2100 | 2 | — | 聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less. |
+| WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 2100 | 1 | — | 嘲諷；聖盾（進場放 1 個指示物）。 | **Sunblaze Temple Colossus** — Taunt. Holy Shield (enters with 1 counter). |
+| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 2100 | 2 | — | 聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less. |
 | WCG-127 | 守誓者壁壘 | 結界 | 3 | — | — | — | 只要你場上有直立的怪物，敵方法術對你造成的傷害 -1。 | **Oathkeeper's Rampart** — While you have an untapped monster, damage enemy spells deal to you is reduced by 1. |
 | WCG-129 | 白銀哨衛 | 怪物 | 1 | 600 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
 | WCG-142 | 誓言枷鎖 | 法術 | 3 | — | — | — | 將 1 隻怪物橫置並把此卡附著其上：附著期間它不能攻擊，回合開始時也不會轉為直立。 | **Shackles of Oath** — Tap 1 monster and attach this card to it. While attached, it can't attack and doesn't untap at the start of turns. |
@@ -189,9 +189,9 @@ source: WcgWeb/Data/cards.json
 | WCG-152 | 禁魔石像 | 怪物 | 2 | 1100 | 0 | — | 嘲諷；不能成為法術的目標。 | **Spellward Statue** — Taunt. Can't be targeted by spells. |
 | WCG-158 | 白銀持戟禁衛 | 怪物 | 2 | 1300 | 0 | — | 無。 | **Silver Halberd Guard** — None. |
 | WCG-168 | 正義壓制 | 法術 | 0 | — | — | — | 附著：怪物 PP -500。它交戰後，此卡送入墓地。 | **Righteous Suppression** — Attach: The monster gets -500 PP. After it battles, put this card into the graveyard. |
-| WCG-171 | 聖光審判巨神 | 怪物 | 7 | 2300 | 2 | — | 嘲諷；聖盾；進場：回復己方 2 點生命。 | **Holy Light Judgment Colossus** — Taunt. Holy Shield. Deploy: Restore 2 life to yourself. |
+| WCG-171 | 聖光審判巨神 | 怪物 | 7 | 2300 | 2 | — | 嘲諷；聖盾（進場放 1 個指示物）；進場：回復己方 2 點生命。 | **Holy Light Judgment Colossus** — Taunt. Holy Shield (enters with 1 counter). Deploy: Restore 2 life to yourself. |
 | WCG-176 | 神聖至高審判 | 法術 | 8 | — | — | — | 消滅雙方所有 PP 1800 以上的怪物；回復己方 2 點生命。 | **Supreme Holy Judgment** — Destroy all monsters on both sides with 1800 PP or more. Restore 2 life to yourself. |
-| WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 2500 | 2 | — | 嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。 | **Radiant Supreme Archangel, Amansul** — Taunt. Holy Shield. Deploy: Restore your life to its maximum (7). |
+| WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 2500 | 2 | — | 嘲諷；聖盾（進場放 1 個指示物）；進場：將你的生命回復至上限（7 點）。 | **Radiant Supreme Archangel, Amansul** — Taunt. Holy Shield (enters with 1 counter). Deploy: Restore your life to its maximum (7). |
 | WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。 | **Temple Rally Horn** — Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it). |
 | WCG-190 | 白銀軍團旗手 | 怪物 | 4 | 1200 | 1 | — | 嘲諷；每當 1 隻【秩序】怪物進入你的場上（含此怪物與免費召喚），回復己方 1 點生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your side (including this one and free summons), restore 1 life to yourself. |
 | WCG-191 | 聖光大審判官 | 怪物 | 6 | 2300 | 1 | — | 嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 1800 以上的敵方怪物，並回復己方 1 點生命。 | **Grand Inquisitor of Holy Light** — Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 1800 PP or more and restore 1 life to yourself. |
@@ -279,7 +279,7 @@ source: WcgWeb/Data/cards.json
 | WCG-161 | 萬物終結者·世界之蝕 | 怪物 | 9 | 3300 | 3 | — | 進場：消滅雙方所有其他怪物與所有結界，並棄掉你的所有手牌。 | **World Ender, Eclipse** — Deploy: Destroy all other monsters on both sides and all Wards, and discard your entire hand. |
 | WCG-164 | 緊急調度 | 法術 | 0 | — | — | — | 額外代價：橫置 1 隻直立的己方怪物。抽 1 張牌。 | **Emergency Redeploy** — Additional cost: tap 1 of your untapped monsters. Draw 1 card. |
 | WCG-177 | 機械工廠巨像 | 怪物 | 8 | 2800 | 2 | — | 嘲諷；你的回合結束時，你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。 | **Mechanical Factory Colossus** — Taunt. At the end of your turn, you may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
-| WCG-209 | 破甲工匠 | 怪物 | 2 | 1100 | 1 | — | 進場：1 隻敵方怪物本回合失去聖盾。 | **Armorbreaker Smith** — Deploy: 1 enemy monster loses Holy Shield this turn. |
+| WCG-209 | 破甲工匠 | 怪物 | 2 | 1100 | 1 | — | 進場：移除 1 隻敵方怪物的聖盾指示物。 | **Armorbreaker Smith** — Deploy: Remove the Holy Shield counter from 1 enemy monster. |
 | WCG-210 | 夜行越牆者 | 怪物 | 4 | 1800 | 1 | — | 嘲諷擋不住此怪物。 | **Night Wallcrawler** — Taunt can't block this monster. |
 | WCG-219 | 方陣隊長 | 怪物 | 4 | 1800 | 1 | — | 你的 5 格都放滿時，你的怪物 PP +300。 | **Phalanx Captain** — While all 5 of your slots are filled, your monsters get +300 PP. |
 | WCG-227 | 靜默哨衛 | 怪物 | 4 | 1800 | 1 | — | 進場：若你的手牌比對手多，抽 1 張牌。 | **Silent Sentinel** — Deploy: If you have more cards in hand than your opponent, draw 1 card. |
@@ -296,7 +296,7 @@ source: WcgWeb/Data/cards.json
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-027 | 幻術編織者 | 怪物（理智／生機） | 3 | 1100 | 1 | — | 進場：你可以從手牌免費召喚 1 隻費用 1 以下的怪物（不觸發進場）。 | **Illusion Weaver** — Deploy: You may summon a monster that costs 1 or less from your hand for free (its Deploy does not trigger). |
-| WCG-031 | 鏡像護衛 | 怪物（理智／秩序） | 2 | 800 | 1 | — | 嘲諷；聖盾。 | **Mirror Guard** — Taunt. Holy Shield. |
+| WCG-031 | 鏡像護衛 | 怪物（理智／秩序） | 2 | 800 | 1 | — | 嘲諷；聖盾（進場放 1 個指示物）。 | **Mirror Guard** — Taunt. Holy Shield (enters with 1 counter). |
 | WCG-058 | 萬物復甦 | 法術（生機／深淵） | 3 | — | — | — | 從你的墓地將至多 2 張費用 2 以下的怪物牌加入手牌。 | **Revival of All** — Put up to 2 monster cards that cost 2 or less from your graveyard into your hand. |
 | WCG-067 | 正義裁判官 | 怪物（秩序／理智） | 4 | 1300 | 1 | — | 進場：將 1 隻費用 2 以下的敵方怪物移回手牌。 | **Righteous Arbiter** — Deploy: Return 1 enemy monster that costs 2 or less to its hand. |
 | WCG-211 | 思緒潰散 | 法術（理智／深淵） | 2 | — | — | — | 將對手牌庫頂 3 張牌送入墓地。 | **Shattered Thoughts** — Put the top 3 cards of your opponent's deck into their graveyard. |
@@ -311,4 +311,4 @@ source: WcgWeb/Data/cards.json
 | WCG-234 | 腐木巨像 | 怪物（生機／深淵） | 6 | 2200 | 2 | — | 嘲諷；你的墓地每有 3 隻怪物，此卡費用 -1（最低 2 費）。 | **Rotwood Colossus** — Taunt. This card costs 1 less for every 3 monsters in your graveyard (minimum 2). |
 | WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 1500 | 1 | — | 陣亡：你可以從墓地免費召喚 1 隻 1 費的生機怪物（不觸發進場）。 | **Corpse Bloom** — On Death: You may summon a 1-cost [Life] monster from your graveyard for free (its Deploy does not trigger). |
 | WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 2 | 1200 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
-| WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 1400 | 1 | — | 衝鋒；聖盾。 | **Holy Flame Knight** — Charge. Holy Shield. |
+| WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 1400 | 1 | — | 衝鋒；聖盾（進場放 1 個指示物）。 | **Holy Flame Knight** — Charge. Holy Shield (enters with 1 counter). |

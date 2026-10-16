@@ -18,7 +18,7 @@ public class DualWillCardTests
     {
         var now=cards.GetCard(id)!;Assert.True(now.IsDual);Assert.Equal(new[]{a,b}.Order(),now.Wills.Order());
         var old=CounterHistory.BeforeDualWill(cards).GetCard(id)!;Assert.False(old.IsDual);Assert.Equal(oldWill,old.Will);
-        Assert.Equal(now.PP,old.PP);Assert.Equal(now.Text,old.Text);Assert.Equal(now.TotalCost,old.TotalCost);
+        Assert.Equal(now.PP,old.PP);Assert.Equal(CounterHistory.BeforeShieldCounter(cards).GetCard(id)!.Text,old.Text);Assert.Equal(now.TotalCost,old.TotalCost);
         var runtime=CardBalanceHistory.BeforeDualWill(cards).GetCard(id)!;Assert.Equal(oldWill,runtime.Will);Assert.False(runtime.IsDual);
     }
     [Fact]

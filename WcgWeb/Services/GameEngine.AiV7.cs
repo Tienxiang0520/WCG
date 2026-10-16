@@ -36,9 +36,13 @@ public partial class GameEngine
     {
         var p = g.PlayerById(pid); var e = g.GetOpponent(p);
         string Side(PlayerState s) => $"{s.Hp}/{s.AvailableEnergy}/{s.Hand.Count}/{s.Deck.Count}/{s.Structures.Count}:" +
-            string.Join(",", s.Field.Where(m => m.InstanceId != exclude).Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{(m.HasShield ? 1 : 0)}:{m.Attachments.Count}:{(m.IsSilenced ? 1 : 0)}"));
+            string.Join(",", s.Field.Where(m => m.InstanceId != exclude).Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{ShieldMark(g, m)}:{m.Attachments.Count}:{(m.IsSilenced ? 1 : 0)}"));
         return Side(p) + "|" + Side(e);
     }
+    // v10 (RankedAiVersion 10): with 聖盾指示物 a used counter never comes back, so a spent counter is a real change
+    // in the keys and the body value; earlier steps replay with the older keys.
+    private bool V10 => AiRevision >= 10;
+    private static int ShieldMark(GameEngine g, MonsterInstance m) => !m.HasShield ? 0 : g.V10 && m.ShieldSpent && g.ShieldCounterRules ? 2 : 1;
     internal static bool PointlessAttack(GameEngine before, GameEngine after, string pid, SimMove m) =>
         m.Kind == "attack" && !after.IsOver && EffectKey(before, pid, m.Source) == EffectKey(after, pid, m.Source);
     // A pointless attack that also loses the attacker. Shield bumps that cost nothing stay in the turn search:
@@ -111,7 +115,7 @@ public partial class GameEngine
     {
         var p = g.PlayerById(pid); var e = g.GetOpponent(p);
         string Side(PlayerState s) => $"{s.Hp}/{s.AvailableEnergy}/{s.TotalEnergy}/{s.Hand.Count}/{s.Deck.Count}/{s.Graveyard.Count}:" +
-            string.Join(",", s.Board.Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{(m.HasShield ? 1 : 0)}:{m.Attachments.Count}"));
+            string.Join(",", s.Board.Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{ShieldMark(g, m)}:{m.Attachments.Count}"));
         return $"{g.TurnNumber}|{g.CurrentTurnPlayerId}|{Side(p)}|{string.Join(",", p.Hand.Select(c => c.InstanceId))}|{Side(e)}";
     }
     private SimMove? NextPlannedMove(PlayerState p)

@@ -21,9 +21,10 @@ public partial class GameEngine
     private void RefreshBoard()
     {
         EnsureSlots(Player); EnsureSlots(Computer);
+        var counters=ShieldCounterRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
-            var unit=m;unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
+            var unit=m;var hadShield=unit.ShieldQualified;unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+NewPower(p,unit));
@@ -33,6 +34,8 @@ public partial class GameEngine
                     && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Owner(source)!=p));
             // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
             if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
+            // 聖盾指示物: gaining 聖盾 places one counter; losing 聖盾 removes it. ShieldSpent means "no counter".
+            if (counters) { if (!unit.ShieldQualified) unit.ShieldSpent = true; else if (!hadShield) unit.ShieldSpent = false; }
         }
     }
     private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
@@ -55,7 +58,10 @@ public partial class GameEngine
     public int ActualCost(PlayerState p, CardDefinition card) => Math.Max(card.IsMonster && p.NextCreatureDiscount>0 ? 1 : 0,
         card.TotalCost-(card.Id=="WCG-160" ? 7-p.Hp : 0)-NewCostReduction(p,card)-(card.IsMonster ? p.NextCreatureDiscount : 0));
     private void Attach(PlayerState p, CardInstance card, MonsterInstance target, int? expire = null)
-    { if(!Alive(target)) return; p.Graveyard.Remove(card); target.Attachments.Add(new(card,p.Id,expire)); RefreshBoard(); Present("attach",p,card.InstanceId,target.InstanceId,card:card.Card,label:"附著"); }
+    { if(!Alive(target)) return; p.Graveyard.Remove(card); target.Attachments.Add(new(card,p.Id,expire)); RefreshBoard();
+      // 聖盾指示物: an attached spell that grants 聖盾 adds the counter even when the monster already had 聖盾 (max 1).
+      if(ShieldCounterRules && card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198" && target.ShieldQualified) target.ShieldSpent=false;
+      Present("attach",p,card.InstanceId,target.InstanceId,card:card.Card,label:"附著"); }
     private void ReadyMonster(MonsterInstance m) { if(!Alive(m))return; m.IsTapped=false;m.HasAttacked=false;m.HasSummoningSickness=false; }
     private void SummonStructure(PlayerState p, CardInstance c)
     { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場"); }

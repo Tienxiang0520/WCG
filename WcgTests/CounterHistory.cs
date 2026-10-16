@@ -13,8 +13,17 @@ internal static class CounterHistory
     // Catalog before 寂靜學者 (WCG-208) became the silence spell 寂靜禁咒.
     // Catalog before seven single-will cards became dual-will.
     // Catalog before the 理智 buff (ten cards changed, 258–262 added).
+    // Catalog before 聖盾 became the one-time 聖盾指示物 (11 cards had the per-turn wording).
+    internal static CardDatabase BeforeShieldCounter(CardDatabase current)
+    {
+        if(current.GetCard("WCG-205")?.Text.Contains("聖盾指示物")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-shield-counter.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeReasonBuff(CardDatabase current)
     {
+        current=BeforeShieldCounter(current);
         if(current.GetCard("WCG-251")?.HasTaunt!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-reason-buff.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

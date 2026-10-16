@@ -159,8 +159,11 @@
  "WCG-031": {
   "zh": "鏡像護衛",
   "name": "Mirror Guard",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-032": {
   "zh": "質能瓦解",
@@ -326,8 +329,11 @@
  "WCG-063": {
   "zh": "聖印侍從",
   "name": "Sigil Squire",
-  "text": "Holy Shield.",
-  "zh_text": "聖盾。"
+  "text": "Holy Shield (enters with 1 counter).",
+  "zh_text": "聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "聖盾。": "Holy Shield."
+  }
  },
  "WCG-064": {
   "zh": "謙遜戒律",
@@ -359,8 +365,11 @@
  "WCG-069": {
   "zh": "鐵壁騎士",
   "name": "Bulwark Knight",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-070": {
   "zh": "崇高奉獻",
@@ -393,8 +402,11 @@
  "WCG-075": {
   "zh": "破邪大天使",
   "name": "Evil-Breaker Archangel",
-  "text": "Holy Shield. Deploy: Restore 1 life to yourself.",
-  "zh_text": "聖盾；進場：回復己方 1 點生命。"
+  "text": "Holy Shield (enters with 1 counter). Deploy: Restore 1 life to yourself.",
+  "zh_text": "聖盾（進場放 1 個指示物）；進場：回復己方 1 點生命。",
+  "prev": {
+   "聖盾；進場：回復己方 1 點生命。": "Holy Shield. Deploy: Restore 1 life to yourself."
+  }
  },
  "WCG-076": {
   "zh": "誓約封禁",
@@ -417,14 +429,20 @@
  "WCG-079": {
   "zh": "日耀聖堂巨像",
   "name": "Sunblaze Temple Colossus",
-  "text": "Taunt. Holy Shield.",
-  "zh_text": "嘲諷；聖盾。"
+  "text": "Taunt. Holy Shield (enters with 1 counter).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "嘲諷；聖盾。": "Taunt. Holy Shield."
+  }
  },
  "WCG-080": {
   "zh": "光輝聖皇·弗丁",
   "name": "Radiant Holy Emperor, Fordin",
-  "text": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
-  "zh_text": "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。"
+  "text": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less.",
+  "zh_text": "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。",
+  "prev": {
+   "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less."
+  }
  },
  "WCG-081": {
   "zh": "虛空夜行魔",
@@ -898,8 +916,11 @@
  "WCG-171": {
   "zh": "聖光審判巨神",
   "name": "Holy Light Judgment Colossus",
-  "text": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself.",
-  "zh_text": "嘲諷；聖盾；進場：回復己方 2 點生命。"
+  "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore 2 life to yourself.",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：回復己方 2 點生命。",
+  "prev": {
+   "嘲諷；聖盾；進場：回復己方 2 點生命。": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself."
+  }
  },
  "WCG-172": {
   "zh": "遠古蠻荒巨獸",
@@ -940,8 +961,11 @@
  "WCG-179": {
   "zh": "光輝至高大天使·阿曼蘇爾",
   "name": "Radiant Supreme Archangel, Amansul",
-  "text": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7).",
-  "zh_text": "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。"
+  "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore your life to its maximum (7).",
+  "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：將你的生命回復至上限（7 點）。",
+  "prev": {
+   "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7)."
+  }
  },
  "WCG-180": {
   "zh": "戰歌號令",
@@ -1083,7 +1107,11 @@
  "WCG-205": {
   "zh": "碎盾狂戰士",
   "name": "Shieldbreaker Berserker",
-  "text": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+  "text": "Charge. Deploy: Remove the Holy Shield counter from 1 enemy monster.",
+  "zh_text": "衝鋒；進場：移除 1 隻敵方怪物的聖盾指示物。",
+  "prev": {
+   "衝鋒；進場：1 隻敵方怪物本回合失去聖盾。": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+  }
  },
  "WCG-206": {
   "zh": "纏根束縛",
@@ -1104,7 +1132,11 @@
  "WCG-209": {
   "zh": "破甲工匠",
   "name": "Armorbreaker Smith",
-  "text": "Deploy: 1 enemy monster loses Holy Shield this turn."
+  "text": "Deploy: Remove the Holy Shield counter from 1 enemy monster.",
+  "zh_text": "進場：移除 1 隻敵方怪物的聖盾指示物。",
+  "prev": {
+   "進場：1 隻敵方怪物本回合失去聖盾。": "Deploy: 1 enemy monster loses Holy Shield this turn."
+  }
  },
  "WCG-210": {
   "zh": "夜行越牆者",
@@ -1259,7 +1291,11 @@
  "WCG-240": {
   "zh": "聖焰騎士",
   "name": "Holy Flame Knight",
-  "text": "Charge. Holy Shield."
+  "text": "Charge. Holy Shield (enters with 1 counter).",
+  "zh_text": "衝鋒；聖盾（進場放 1 個指示物）。",
+  "prev": {
+   "衝鋒；聖盾。": "Charge. Holy Shield."
+  }
  },
  "WCG-241": {
   "zh": "熔岩衝陣者",

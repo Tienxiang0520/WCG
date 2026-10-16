@@ -5,14 +5,14 @@
 <section class="deck-print-overlay @StyleClass" role="dialog" aria-modal="true" aria-label="@L["實體牌組列印預覽"]" tabindex="-1" @ref="Root">
     <div class="print-controls">
         <div class="print-control-heading"><h1>@L["列印實體牌組"]</h1><button class="btn btn-outline-light" data-print-close @onclick="Close" disabled="@Printing">@L["返回編輯"]</button></div>
-        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
+        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] + L["＋1 張聖盾指示物"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
         <div class="print-options">
             <fieldset><legend>@L["卡面樣式"]</legend>
                 <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Style = PrintStyle.Color" disabled="@Printing" /> @L["彩色圖文"]</label>
                 <label><input type="radio" name="print-style" checked="@WhiteColor" @onchange="() => Style = PrintStyle.WhiteColor" disabled="@Printing" /> @L["白底彩色（小卡圖、黑字）"]</label>
                 <label><input type="radio" name="print-style" checked="@(Style == PrintStyle.Text)" @onchange="() => Style = PrintStyle.Text" disabled="@Printing" /> @L["省墨文字（不印圖片）"]</label>
             </fieldset>
-            <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡"]</label>
+            <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡與聖盾指示物"]</label>
             <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單"]</label>
         </div>
         <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
@@ -85,6 +85,14 @@
                                 @CropMarks
                             </article>
                         }
+                        @* 聖盾指示物: one-time Holy Shield counters to cut out and place on monsters (any small object works too). *@
+                        <article class="print-card shield-token-card" aria-label="@L["聖盾指示物"]">
+                            <h2>@L["聖盾指示物"]</h2>
+                            <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><b>✚</b><small>@L["聖盾"]</small></span> }</div>
+                            <p>@L["獲得聖盾時放 1 個在怪物上；擋下 1 次交戰消滅後拿掉，不會補回。"]</p>
+                            <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
+                            @CropMarks
+                        </article>
                     }
                 </div>
                 <footer class="print-page-footer">@L["63 × 88 mm · A4 · 100% 列印 · 沿四角裁切線裁切"]</footer>
@@ -102,7 +110,7 @@
                         <div><span>@L.CardName(group.First().Id, group.First().Name)</span><strong>× @group.Count()</strong></div>
                     }
                 </div>
-                <p class="print-reference-note">@L["生命計數卡不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
+                <p class="print-reference-note">@L["生命計數卡與聖盾指示物不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
             </section>
         }
     </div>
