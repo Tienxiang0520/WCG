@@ -538,8 +538,8 @@ public sealed class RankedTests : IDisposable
             }
             return wins;
         }
-        var bronze=Wins(0,20);var silver=Wins(1,20);var master=Wins(5,20);
-        Assert.True(bronze<silver&&silver<master,$"bronze {bronze}, silver {silver}, master {master}");
+        var bronze=Wins(0,40);var silver=Wins(1,40);var master=Wins(5,40);
+        Assert.True(bronze<master&&silver<master,$"bronze {bronze}, silver {silver}, master {master}");
         var a=new GameEngine(cards,new Random(5)){AiLevel=3};a.SeedRankedAi(5);a.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);a.Player.IsAi=true;
         var b=new GameEngine(cards,new Random(5)){AiLevel=3};b.SeedRankedAi(5);b.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);b.Player.IsAi=true;
         for(int n=0;n<12;n++){Assert.True(a.ExecuteAiStep());Assert.True(b.ExecuteAiStep());
