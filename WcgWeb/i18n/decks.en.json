@@ -6,9 +6,9 @@
   "description": "Trial deck for the new fixed slots, Holy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-REASON": {
-  "zhName": "v0.6 理智試玩",
+  "zhName": "v0.6 理智＋狂怒試玩",
   "zhDescription": "新版固定站位、聖盾與新機制試玩預組；尚未驗證競技平衡。",
-  "name": "v0.6 Reason Trial",
+  "name": "v0.6 Reason + Fury Trial",
   "description": "Trial deck for the new fixed slots, Holy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-VITALITY": {
@@ -18,9 +18,9 @@
   "description": "Trial deck for the new fixed slots, Holy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-ORDER": {
-  "zhName": "v0.6 秩序試玩",
+  "zhName": "v0.6 秩序＋生機試玩",
   "zhDescription": "新版固定站位、聖盾與新機制試玩預組；尚未驗證競技平衡。",
-  "name": "v0.6 Order Trial",
+  "name": "v0.6 Order + Life Trial",
   "description": "Trial deck for the new fixed slots, Holy Shields and new mechanics; competitive balance not yet verified."
  },
  "PRESET-ABYSS": {
@@ -54,15 +54,15 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-0-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-0-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-0-ORDER-AEGIS": {
@@ -78,9 +78,9 @@
   "description": "Small monsters trade to fill the graveyard; the Ambusher, Sylva and Hades keep reviving the army."
  },
  "RANKED-0-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-1-WRATH-BLITZ": {
@@ -96,9 +96,9 @@
   "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
  },
  "RANKED-1-WRATH-ASHFALL": {
-  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhName": "狂怒＋深淵・灰燼殉爆（連動）",
   "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
-  "name": "Fury · Ashfall Chain (Combo)",
+  "name": "Fury + Abyss · Ashfall Chain (Combo)",
   "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-1-REASON-FROST": {
@@ -120,9 +120,9 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-1-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-1-VITAL-BEHEMOTH": {
@@ -132,9 +132,9 @@
   "description": "Nourishing Bloom ramps energy so high-PP behemoths can crush the line with Trample and Taunt."
  },
  "RANKED-1-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-1-ORDER-AEGIS": {
@@ -150,15 +150,15 @@
   "description": "Small monsters trade to fill the graveyard; the Ambusher, Sylva and Hades keep reviving the army."
  },
  "RANKED-1-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-1-ABYSS-AMBUSH": {
-  "zhName": "深淵・深淵伏擊（快攻）",
+  "zhName": "深淵＋狂怒・深淵伏擊（快攻）",
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
-  "name": "Abyss · Abyssal Ambush (Aggro)",
+  "name": "Abyss + Fury · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
  },
  "RANKED-2-WRATH-BLITZ": {
@@ -174,15 +174,15 @@
   "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
  },
  "RANKED-2-WRATH-SCORCH": {
-  "zhName": "狂怒・焦土控場（控制）",
+  "zhName": "狂怒＋秩序・焦土控場（控制）",
   "zhDescription": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
-  "name": "Fury · Scorched Earth (Control)",
+  "name": "Fury + Order · Scorched Earth (Control)",
   "description": "Fury removal plus Order Taunt and healing stall until the Crimson Emperor and Skyfire Cataclysm clear the board."
  },
  "RANKED-2-WRATH-ASHFALL": {
-  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhName": "狂怒＋深淵・灰燼殉爆（連動）",
   "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
-  "name": "Fury · Ashfall Chain (Combo)",
+  "name": "Fury + Abyss · Ashfall Chain (Combo)",
   "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-2-REASON-FROST": {
@@ -204,9 +204,9 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-2-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-2-VITAL-BEHEMOTH": {
@@ -216,9 +216,9 @@
   "description": "Nourishing Bloom ramps energy so high-PP behemoths can crush the line with Trample and Taunt."
  },
  "RANKED-2-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-2-ORDER-AEGIS": {
@@ -234,15 +234,15 @@
   "description": "Small monsters trade to fill the graveyard; the Ambusher, Sylva and Hades keep reviving the army."
  },
  "RANKED-2-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-2-ABYSS-AMBUSH": {
-  "zhName": "深淵・深淵伏擊（快攻）",
+  "zhName": "深淵＋狂怒・深淵伏擊（快攻）",
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
-  "name": "Abyss · Abyssal Ambush (Aggro)",
+  "name": "Abyss + Fury · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
  },
  "RANKED-3-WRATH-BLITZ": {
@@ -258,15 +258,15 @@
   "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
  },
  "RANKED-3-WRATH-SCORCH": {
-  "zhName": "狂怒・焦土控場（控制）",
+  "zhName": "狂怒＋秩序・焦土控場（控制）",
   "zhDescription": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
-  "name": "Fury · Scorched Earth (Control)",
+  "name": "Fury + Order · Scorched Earth (Control)",
   "description": "Fury removal plus Order Taunt and healing stall until the Crimson Emperor and Skyfire Cataclysm clear the board."
  },
  "RANKED-3-WRATH-ASHFALL": {
-  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhName": "狂怒＋深淵・灰燼殉爆（連動）",
   "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
-  "name": "Fury · Ashfall Chain (Combo)",
+  "name": "Fury + Abyss · Ashfall Chain (Combo)",
   "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-3-REASON-FROST": {
@@ -282,9 +282,9 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-3-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-3-VITAL-BEHEMOTH": {
@@ -294,9 +294,9 @@
   "description": "Nourishing Bloom ramps energy so high-PP behemoths can crush the line with Trample and Taunt."
  },
  "RANKED-3-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-3-ORDER-AEGIS": {
@@ -312,9 +312,9 @@
   "description": "Small monsters trade to fill the graveyard; the Ambusher, Sylva and Hades keep reviving the army."
  },
  "RANKED-3-ABYSS-AMBUSH": {
-  "zhName": "深淵・深淵伏擊（快攻）",
+  "zhName": "深淵＋狂怒・深淵伏擊（快攻）",
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
-  "name": "Abyss · Abyssal Ambush (Aggro)",
+  "name": "Abyss + Fury · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
  },
  "RANKED-4-WRATH-BLITZ": {
@@ -330,15 +330,15 @@
   "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
  },
  "RANKED-4-WRATH-SCORCH": {
-  "zhName": "狂怒・焦土控場（控制）",
+  "zhName": "狂怒＋秩序・焦土控場（控制）",
   "zhDescription": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
-  "name": "Fury · Scorched Earth (Control)",
+  "name": "Fury + Order · Scorched Earth (Control)",
   "description": "Fury removal plus Order Taunt and healing stall until the Crimson Emperor and Skyfire Cataclysm clear the board."
  },
  "RANKED-4-WRATH-ASHFALL": {
-  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhName": "狂怒＋深淵・灰燼殉爆（連動）",
   "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
-  "name": "Fury · Ashfall Chain (Combo)",
+  "name": "Fury + Abyss · Ashfall Chain (Combo)",
   "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-4-REASON-FROST": {
@@ -348,15 +348,15 @@
   "description": "Tapping, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-4-REASON-GLACIER": {
-  "zhName": "理智・冰封堡壘（中速）",
+  "zhName": "理智＋秩序・冰封堡壘（中速）",
   "zhDescription": "理智橫置配秩序嘲諷聖盾，穩住場面再逐步推進。",
-  "name": "Reason · Frozen Fortress (Midrange)",
+  "name": "Reason + Order · Frozen Fortress (Midrange)",
   "description": "Reason tapping with Order Taunt and Holy Shield stabilizes the board, then pushes forward step by step."
  },
  "RANKED-4-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-4-VITAL-BEHEMOTH": {
@@ -366,9 +366,9 @@
   "description": "Nourishing Bloom ramps energy so high-PP behemoths can crush the line with Trample and Taunt."
  },
  "RANKED-4-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-4-ORDER-AEGIS": {
@@ -378,9 +378,9 @@
   "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-4-ORDER-GROVE": {
-  "zhName": "秩序・聖林守衛（中速）",
+  "zhName": "秩序＋生機・聖林守衛（中速）",
   "zhDescription": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
-  "name": "Order · Sacred Grove Guard (Midrange)",
+  "name": "Order + Life · Sacred Grove Guard (Midrange)",
   "description": "Order Holy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
  },
  "RANKED-4-ABYSS-REVENANT": {
@@ -396,9 +396,9 @@
   "description": "Rift Arrows, Soul Drain and the Comet pick off threats one by one while the Netherwyrm heals on every death."
  },
  "RANKED-4-ABYSS-AMBUSH": {
-  "zhName": "深淵・深淵伏擊（快攻）",
+  "zhName": "深淵＋狂怒・深淵伏擊（快攻）",
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
-  "name": "Abyss · Abyssal Ambush (Aggro)",
+  "name": "Abyss + Fury · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
  },
  "RANKED-5-WRATH-BLITZ": {
@@ -408,9 +408,9 @@
   "description": "Cheap monsters and Charge race for damage; Crimson War Axe and Boiling Rage finish the job."
  },
  "RANKED-5-WRATH-SCORCH": {
-  "zhName": "狂怒・焦土控場（控制）",
+  "zhName": "狂怒＋秩序・焦土控場（控制）",
   "zhDescription": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
-  "name": "Fury · Scorched Earth (Control)",
+  "name": "Fury + Order · Scorched Earth (Control)",
   "description": "Fury removal plus Order Taunt and healing stall until the Crimson Emperor and Skyfire Cataclysm clear the board."
  },
  "RANKED-5-REASON-FROST": {
@@ -420,9 +420,9 @@
   "description": "Tapping, bounces and Taunt Holy Shields control the tempo, then the Timestopper opens a window."
  },
  "RANKED-5-REASON-GLACIER": {
-  "zhName": "理智・冰封堡壘（中速）",
+  "zhName": "理智＋秩序・冰封堡壘（中速）",
   "zhDescription": "理智橫置配秩序嘲諷聖盾，穩住場面再逐步推進。",
-  "name": "Reason · Frozen Fortress (Midrange)",
+  "name": "Reason + Order · Frozen Fortress (Midrange)",
   "description": "Reason tapping with Order Taunt and Holy Shield stabilizes the board, then pushes forward step by step."
  },
  "RANKED-5-VITAL-BEHEMOTH": {
@@ -432,33 +432,33 @@
   "description": "Nourishing Bloom ramps energy so high-PP behemoths can crush the line with Trample and Taunt."
  },
  "RANKED-5-VITAL-THORN": {
-  "zhName": "生機・荊棘毒牙（中速）",
+  "zhName": "生機＋深淵・荊棘毒牙（中速）",
   "zhDescription": "劇毒小怪與高 PP 嘲諷互補，深淵裂箭負責點殺。",
-  "name": "Life · Thorn and Fang (Midrange)",
+  "name": "Life + Abyss · Thorn and Fang (Midrange)",
   "description": "Poisonous small monsters complement high-PP Taunt, with Abyss Rift Arrows for removal."
  },
  "RANKED-5-ORDER-AEGIS": {
-  "zhName": "秩序・聖盾防線（防守）",
+  "zhName": "秩序＋生機・聖盾防線（防守）",
   "zhDescription": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
-  "name": "Order · Holy Shield Line (Defense)",
+  "name": "Order + Life · Holy Shield Line (Defense)",
   "description": "Arrows and attached spells stack Holy Shields while Counters and Taunt wear the attack down."
  },
  "RANKED-5-ORDER-RAMPART": {
-  "zhName": "秩序・白銀長城（控制）",
+  "zhName": "秩序＋深淵・白銀長城（控制）",
   "zhDescription": "一排嘲諷加旗手與神官回血，最後由阿曼蘇爾補滿生命。",
-  "name": "Order · Silver Great Wall (Control)",
+  "name": "Order + Abyss · Silver Great Wall (Control)",
   "description": "A row of Taunt plus Standard-Bearers and Priests for healing, with Amansul topping life back up at the end."
  },
  "RANKED-5-ORDER-VERDICT": {
-  "zhName": "秩序・誓約審判（控制）",
+  "zhName": "秩序＋狂怒・誓約審判（控制）",
   "zhDescription": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁陣亡後再清場。",
-  "name": "Order · Oath Verdict (Control)",
+  "name": "Order + Fury · Oath Verdict (Control)",
   "description": "Oathbound Seal, the Adjudicator and Shackles lock down threats one by one; Fordin clears the board On Death."
  },
  "RANKED-5-ORDER-GROVE": {
-  "zhName": "秩序・聖林守衛（中速）",
+  "zhName": "秩序＋生機・聖林守衛（中速）",
   "zhDescription": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
-  "name": "Order · Sacred Grove Guard (Midrange)",
+  "name": "Order + Life · Sacred Grove Guard (Midrange)",
   "description": "Order Holy Shield arrows protect high-PP Life Taunt monsters for a steady advance."
  },
  "RANKED-5-ABYSS-REVENANT": {
@@ -474,9 +474,9 @@
   "description": "Rift Arrows, Soul Drain and the Comet pick off threats one by one while the Netherwyrm heals on every death."
  },
  "RANKED-5-ABYSS-AMBUSH": {
-  "zhName": "深淵・深淵伏擊（快攻）",
+  "zhName": "深淵＋狂怒・深淵伏擊（快攻）",
   "zhDescription": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
-  "name": "Abyss · Abyssal Ambush (Aggro)",
+  "name": "Abyss + Fury · Abyssal Ambush (Aggro)",
   "description": "Shadow Ambushers lock energy while Fury Charge and direct damage race — the fastest high-rank opponent."
  },
  "RANKED-0-WRATH-FORGE": {
@@ -492,9 +492,9 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-1-WRATH-REKINDLE": {
-  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhName": "狂怒＋理智・復燃連擊（連擊）",
   "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
-  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "name": "Fury + Reason · Rekindled Assault (Repeated Attacks)",
   "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
  },
  "RANKED-1-WRATH-FORGE": {
@@ -522,21 +522,21 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-1-ORDER-EXPEDITION": {
-  "zhName": "秩序・聖光遠征（進攻）",
+  "zhName": "秩序＋狂怒・聖光遠征（進攻）",
   "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
-  "name": "Order · Radiant Expedition (Offense)",
+  "name": "Order + Fury · Radiant Expedition (Offense)",
   "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-1-ABYSS-LOWLIFE": {
-  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhName": "深淵＋狂怒・殘血魔潮（殘血）",
   "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
-  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "name": "Abyss + Fury · Low-Life Demon Tide (Low Life)",
   "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  },
  "RANKED-2-WRATH-REKINDLE": {
-  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhName": "狂怒＋理智・復燃連擊（連擊）",
   "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
-  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "name": "Fury + Reason · Rekindled Assault (Repeated Attacks)",
   "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
  },
  "RANKED-2-WRATH-FORGE": {
@@ -552,9 +552,9 @@
   "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
  },
  "RANKED-2-REASON-TIME": {
-  "zhName": "理智・時空突擊（連擊）",
+  "zhName": "理智＋狂怒・時空突擊（連擊）",
   "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
-  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "name": "Reason + Fury · Temporal Assault (Repeated Attacks)",
   "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
  },
  "RANKED-2-VITAL-ROOTS": {
@@ -570,9 +570,9 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-2-ORDER-EXPEDITION": {
-  "zhName": "秩序・聖光遠征（進攻）",
+  "zhName": "秩序＋狂怒・聖光遠征（進攻）",
   "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
-  "name": "Order · Radiant Expedition (Offense)",
+  "name": "Order + Fury · Radiant Expedition (Offense)",
   "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-2-ORDER-PURIFY": {
@@ -588,9 +588,9 @@
   "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
  },
  "RANKED-2-ABYSS-LOWLIFE": {
-  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhName": "深淵＋狂怒・殘血魔潮（殘血）",
   "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
-  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "name": "Abyss + Fury · Low-Life Demon Tide (Low Life)",
   "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  },
  "RANKED-3-REASON-ARCANE": {
@@ -600,15 +600,15 @@
   "description": "Mass Disruption and the Arcane Nexus Warden clear the board while card draw builds toward the Starvault Lord."
  },
  "RANKED-3-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-3-WRATH-REKINDLE": {
-  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhName": "狂怒＋理智・復燃連擊（連擊）",
   "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
-  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "name": "Fury + Reason · Rekindled Assault (Repeated Attacks)",
   "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
  },
  "RANKED-3-WRATH-FORGE": {
@@ -624,9 +624,9 @@
   "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
  },
  "RANKED-3-REASON-TIME": {
-  "zhName": "理智・時空突擊（連擊）",
+  "zhName": "理智＋狂怒・時空突擊（連擊）",
   "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
-  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "name": "Reason + Fury · Temporal Assault (Repeated Attacks)",
   "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
  },
  "RANKED-3-VITAL-ROOTS": {
@@ -642,9 +642,9 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-3-ORDER-EXPEDITION": {
-  "zhName": "秩序・聖光遠征（進攻）",
+  "zhName": "秩序＋狂怒・聖光遠征（進攻）",
   "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
-  "name": "Order · Radiant Expedition (Offense)",
+  "name": "Order + Fury · Radiant Expedition (Offense)",
   "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-3-ORDER-PURIFY": {
@@ -660,9 +660,9 @@
   "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
  },
  "RANKED-3-ABYSS-LOWLIFE": {
-  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhName": "深淵＋狂怒・殘血魔潮（殘血）",
   "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
-  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "name": "Abyss + Fury · Low-Life Demon Tide (Low Life)",
   "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  },
  "RANKED-4-REASON-ARCANE": {
@@ -678,15 +678,15 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-4-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-4-WRATH-REKINDLE": {
-  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhName": "狂怒＋理智・復燃連擊（連擊）",
   "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
-  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "name": "Fury + Reason · Rekindled Assault (Repeated Attacks)",
   "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
  },
  "RANKED-4-WRATH-FORGE": {
@@ -702,9 +702,9 @@
   "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
  },
  "RANKED-4-REASON-TIME": {
-  "zhName": "理智・時空突擊（連擊）",
+  "zhName": "理智＋狂怒・時空突擊（連擊）",
   "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
-  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "name": "Reason + Fury · Temporal Assault (Repeated Attacks)",
   "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
  },
  "RANKED-4-VITAL-ROOTS": {
@@ -720,9 +720,9 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-4-ORDER-EXPEDITION": {
-  "zhName": "秩序・聖光遠征（進攻）",
+  "zhName": "秩序＋狂怒・聖光遠征（進攻）",
   "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
-  "name": "Order · Radiant Expedition (Offense)",
+  "name": "Order + Fury · Radiant Expedition (Offense)",
   "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-4-ORDER-PURIFY": {
@@ -738,9 +738,9 @@
   "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
  },
  "RANKED-4-ABYSS-LOWLIFE": {
-  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhName": "深淵＋狂怒・殘血魔潮（殘血）",
   "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
-  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "name": "Abyss + Fury · Low-Life Demon Tide (Low Life)",
   "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  },
  "RANKED-5-WRATH-WARBAND": {
@@ -750,9 +750,9 @@
   "description": "Drummers and Centurions stack up a Fury warband, picking off blockers to open attack lanes."
  },
  "RANKED-5-WRATH-ASHFALL": {
-  "zhName": "狂怒・灰燼殉爆（連動）",
+  "zhName": "狂怒＋深淵・灰燼殉爆（連動）",
   "zhDescription": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
-  "name": "Fury · Ashfall Chain (Combo)",
+  "name": "Fury + Abyss · Ashfall Chain (Combo)",
   "description": "On Death damage and sacrifice burn feed each other, with small Abyss monsters lighting the fuse for Fury."
  },
  "RANKED-5-REASON-ARCANE": {
@@ -768,27 +768,27 @@
   "description": "Many cheap spells and apprentices chain draws and filters, triggering the Runebound Colossus and Nexus Warden again and again."
  },
  "RANKED-5-VITAL-SWARM": {
-  "zhName": "生機・森林鋪場（鋪場）",
+  "zhName": "生機＋狂怒・森林鋪場（鋪場）",
   "zhDescription": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
-  "name": "Life · Forest Swarm (Go-wide)",
+  "name": "Life + Fury · Forest Swarm (Go-wide)",
   "description": "Spores, swarms and beastcallers fill all five slots fast, with Wild Sprouting powering up the key threats."
  },
  "RANKED-5-VITAL-STAMPEDE": {
-  "zhName": "生機・野性衝鋒（快攻）",
+  "zhName": "生機＋狂怒・野性衝鋒（快攻）",
   "zhDescription": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
-  "name": "Life · Wild Charge (Aggro)",
+  "name": "Life + Fury · Wild Charge (Aggro)",
   "description": "Cheap Life monsters plus Fury Charge grab early damage before the opponent can set up."
  },
  "RANKED-5-ABYSS-SOULFEAST": {
-  "zhName": "深淵・噬魂獻祭（連動）",
+  "zhName": "深淵＋狂怒・噬魂獻祭（連動）",
   "zhDescription": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
-  "name": "Abyss · Soul-Eating Offering (Combo)",
+  "name": "Abyss + Fury · Soul-Eating Offering (Combo)",
   "description": "The Necromancer, Well and Warmonger turn sacrifices into cards; Goblins and Boiling Rage finish the opponent."
  },
  "RANKED-5-WRATH-REKINDLE": {
-  "zhName": "狂怒・復燃連擊（連擊）",
+  "zhName": "狂怒＋理智・復燃連擊（連擊）",
   "zhDescription": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
-  "name": "Fury · Rekindled Assault (Repeated Attacks)",
+  "name": "Fury + Reason · Rekindled Assault (Repeated Attacks)",
   "description": "Frenzied Blood Feast and Countertide Mage ready Charge monsters for repeated attacks."
  },
  "RANKED-5-WRATH-FORGE": {
@@ -804,9 +804,9 @@
   "description": "Arcane Echo Tower recycles cheap spells, Nexus Warden removes threats, and Runebound Colossus advances."
  },
  "RANKED-5-REASON-TIME": {
-  "zhName": "理智・時空突擊（連擊）",
+  "zhName": "理智＋狂怒・時空突擊（連擊）",
   "zhDescription": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
-  "name": "Reason · Temporal Assault (Repeated Attacks)",
+  "name": "Reason + Fury · Temporal Assault (Repeated Attacks)",
   "description": "Bounce and tapping create openings; Countertide Mage readies Fury Charge monsters for another attack."
  },
  "RANKED-5-VITAL-ROOTS": {
@@ -822,9 +822,9 @@
   "description": "Spores and Broken Golems recover small monsters; Eggs and Beastcallers rebuild the board."
  },
  "RANKED-5-ORDER-EXPEDITION": {
-  "zhName": "秩序・聖光遠征（進攻）",
+  "zhName": "秩序＋狂怒・聖光遠征（進攻）",
   "zhDescription": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
-  "name": "Order · Radiant Expedition (Offense)",
+  "name": "Order + Fury · Radiant Expedition (Offense)",
   "description": "Holy Shield arrows protect Fury Charge monsters while healing supports proactive combat."
  },
  "RANKED-5-ORDER-PURIFY": {
@@ -840,141 +840,141 @@
   "description": "Plague and Withering reset the board, with On Death and revival preserving the next wave."
  },
  "RANKED-5-ABYSS-LOWLIFE": {
-  "zhName": "深淵・殘血魔潮（殘血）",
+  "zhName": "深淵＋狂怒・殘血魔潮（殘血）",
   "zhDescription": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
-  "name": "Abyss · Low-Life Demon Tide (Low Life)",
+  "name": "Abyss + Fury · Low-Life Demon Tide (Low Life)",
   "description": "Trade life for cards and Flesh Furnace discounts, then heal with Dragons and finish with burn."
  },
  "RANKED-3-REASON-TIDE": {
-  "zhName": "理智・記憶潮汐（磨牌）",
+  "zhName": "理智＋深淵・記憶潮汐（磨牌）",
   "zhDescription": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
-  "name": "Reason · Memory Tide (Mill)",
+  "name": "Reason + Abyss · Memory Tide (Mill)",
   "description": "Shattered Thoughts and the Gravewhisper Thief send the opponent's deck to the graveyard, and Tide of the End mills the rest in one go."
  },
  "RANKED-4-REASON-TIDE": {
-  "zhName": "理智・記憶潮汐（磨牌）",
+  "zhName": "理智＋深淵・記憶潮汐（磨牌）",
   "zhDescription": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
-  "name": "Reason · Memory Tide (Mill)",
+  "name": "Reason + Abyss · Memory Tide (Mill)",
   "description": "Shattered Thoughts and the Gravewhisper Thief send the opponent's deck to the graveyard, and Tide of the End mills the rest in one go."
  },
  "RANKED-5-REASON-TIDE": {
-  "zhName": "理智・記憶潮汐（磨牌）",
+  "zhName": "理智＋深淵・記憶潮汐（磨牌）",
   "zhDescription": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
-  "name": "Reason · Memory Tide (Mill)",
+  "name": "Reason + Abyss · Memory Tide (Mill)",
   "description": "Shattered Thoughts and the Gravewhisper Thief send the opponent's deck to the graveyard, and Tide of the End mills the rest in one go."
  },
  "RANKED-2-VITAL-PHALANX": {
-  "zhName": "生機・方陣列隊（站位）",
+  "zhName": "生機＋秩序・方陣列隊（站位）",
   "zhDescription": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
-  "name": "Life · Phalanx Line (Formation)",
+  "name": "Life + Order · Phalanx Line (Formation)",
   "description": "Rootwatch Sentries and Rootbound Elders line up in formation while the Vanguard Shieldguard pins the enemy in front of it."
  },
  "RANKED-3-VITAL-PHALANX": {
-  "zhName": "生機・方陣列隊（站位）",
+  "zhName": "生機＋秩序・方陣列隊（站位）",
   "zhDescription": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
-  "name": "Life · Phalanx Line (Formation)",
+  "name": "Life + Order · Phalanx Line (Formation)",
   "description": "Rootwatch Sentries and Rootbound Elders line up in formation while the Vanguard Shieldguard pins the enemy in front of it."
  },
  "RANKED-4-VITAL-PHALANX": {
-  "zhName": "生機・方陣列隊（站位）",
+  "zhName": "生機＋秩序・方陣列隊（站位）",
   "zhDescription": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
-  "name": "Life · Phalanx Line (Formation)",
+  "name": "Life + Order · Phalanx Line (Formation)",
   "description": "Rootwatch Sentries and Rootbound Elders line up in formation while the Vanguard Shieldguard pins the enemy in front of it."
  },
  "RANKED-5-VITAL-PHALANX": {
-  "zhName": "生機・方陣列隊（站位）",
+  "zhName": "生機＋秩序・方陣列隊（站位）",
   "zhDescription": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
-  "name": "Life · Phalanx Line (Formation)",
+  "name": "Life + Order · Phalanx Line (Formation)",
   "description": "Rootwatch Sentries and Rootbound Elders line up in formation while the Vanguard Shieldguard pins the enemy in front of it."
  },
  "RANKED-4-WRATH-WARRUNE": {
-  "zhName": "狂怒・戰紋巨獸（附著）",
+  "zhName": "狂怒＋生機・戰紋巨獸（附著）",
   "zhDescription": "荊棘甲殼與烈焰戰紋疊在共生巨蜥身上，一隻巨獸撞穿防線。",
-  "name": "Fury · War-Rune Beast (Attachments)",
+  "name": "Fury + Life · War-Rune Beast (Attachments)",
   "description": "Thorn Carapace and Flame War-Runes stack on the Symbiotic Monitor so one huge beast breaks through."
  },
  "RANKED-5-WRATH-WARRUNE": {
-  "zhName": "狂怒・戰紋巨獸（附著）",
+  "zhName": "狂怒＋生機・戰紋巨獸（附著）",
   "zhDescription": "荊棘甲殼與烈焰戰紋疊在共生巨蜥身上，一隻巨獸撞穿防線。",
-  "name": "Fury · War-Rune Beast (Attachments)",
+  "name": "Fury + Life · War-Rune Beast (Attachments)",
   "description": "Thorn Carapace and Flame War-Runes stack on the Symbiotic Monitor so one huge beast breaks through."
  },
  "RANKED-2-REASON-PROPHECY": {
-  "zhName": "理智・預言之盾（反擊）",
+  "zhName": "理智＋秩序・預言之盾（反擊）",
   "zhDescription": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
-  "name": "Reason · Prophecy Shield (Counter)",
+  "name": "Reason + Order · Prophecy Shield (Counter)",
   "description": "Keep Echo of Judgment and Foreseen Dodge in hand while the Vigilant Stargazer holds the front line with a full hand."
  },
  "RANKED-3-REASON-PROPHECY": {
-  "zhName": "理智・預言之盾（反擊）",
+  "zhName": "理智＋秩序・預言之盾（反擊）",
   "zhDescription": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
-  "name": "Reason · Prophecy Shield (Counter)",
+  "name": "Reason + Order · Prophecy Shield (Counter)",
   "description": "Keep Echo of Judgment and Foreseen Dodge in hand while the Vigilant Stargazer holds the front line with a full hand."
  },
  "RANKED-4-REASON-PROPHECY": {
-  "zhName": "理智・預言之盾（反擊）",
+  "zhName": "理智＋秩序・預言之盾（反擊）",
   "zhDescription": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
-  "name": "Reason · Prophecy Shield (Counter)",
+  "name": "Reason + Order · Prophecy Shield (Counter)",
   "description": "Keep Echo of Judgment and Foreseen Dodge in hand while the Vigilant Stargazer holds the front line with a full hand."
  },
  "RANKED-5-REASON-PROPHECY": {
-  "zhName": "理智・預言之盾（反擊）",
+  "zhName": "理智＋秩序・預言之盾（反擊）",
   "zhDescription": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
-  "name": "Reason · Prophecy Shield (Counter)",
+  "name": "Reason + Order · Prophecy Shield (Counter)",
   "description": "Keep Echo of Judgment and Foreseen Dodge in hand while the Vigilant Stargazer holds the front line with a full hand."
  },
  "RANKED-1-WRATH-LONEWOLF": {
-  "zhName": "狂怒・孤狼劍道（少怪）",
+  "zhName": "狂怒＋理智・孤狼劍道（少怪）",
   "zhDescription": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
-  "name": "Fury · Lone Wolf Blade (Few Monsters)",
+  "name": "Fury + Reason · Lone Wolf Blade (Few Monsters)",
   "description": "Keep only the Lone Wolf Swordmaster or Void Hermit on the field and clear the way with Declaration of Duel and spells."
  },
  "RANKED-2-WRATH-LONEWOLF": {
-  "zhName": "狂怒・孤狼劍道（少怪）",
+  "zhName": "狂怒＋理智・孤狼劍道（少怪）",
   "zhDescription": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
-  "name": "Fury · Lone Wolf Blade (Few Monsters)",
+  "name": "Fury + Reason · Lone Wolf Blade (Few Monsters)",
   "description": "Keep only the Lone Wolf Swordmaster or Void Hermit on the field and clear the way with Declaration of Duel and spells."
  },
  "RANKED-3-WRATH-LONEWOLF": {
-  "zhName": "狂怒・孤狼劍道（少怪）",
+  "zhName": "狂怒＋理智・孤狼劍道（少怪）",
   "zhDescription": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
-  "name": "Fury · Lone Wolf Blade (Few Monsters)",
+  "name": "Fury + Reason · Lone Wolf Blade (Few Monsters)",
   "description": "Keep only the Lone Wolf Swordmaster or Void Hermit on the field and clear the way with Declaration of Duel and spells."
  },
  "RANKED-4-WRATH-LONEWOLF": {
-  "zhName": "狂怒・孤狼劍道（少怪）",
+  "zhName": "狂怒＋理智・孤狼劍道（少怪）",
   "zhDescription": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
-  "name": "Fury · Lone Wolf Blade (Few Monsters)",
+  "name": "Fury + Reason · Lone Wolf Blade (Few Monsters)",
   "description": "Keep only the Lone Wolf Swordmaster or Void Hermit on the field and clear the way with Declaration of Duel and spells."
  },
  "RANKED-5-WRATH-LONEWOLF": {
-  "zhName": "狂怒・孤狼劍道（少怪）",
+  "zhName": "狂怒＋理智・孤狼劍道（少怪）",
   "zhDescription": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
-  "name": "Fury · Lone Wolf Blade (Few Monsters)",
+  "name": "Fury + Reason · Lone Wolf Blade (Few Monsters)",
   "description": "Keep only the Lone Wolf Swordmaster or Void Hermit on the field and clear the way with Declaration of Duel and spells."
  },
  "RANKED-2-VITAL-ROTCYCLE": {
-  "zhName": "生機・腐生循環（犧牲）",
+  "zhName": "生機＋深淵・腐生循環（犧牲）",
   "zhDescription": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
-  "name": "Life · Rot Cycle (Sacrifice)",
+  "name": "Life + Abyss · Rot Cycle (Sacrifice)",
   "description": "Sacrifice small monsters to draw and fill the graveyard, play the Rotwood Colossus cheaply, and let the Corpse Bloom keep the cycle going."
  },
  "RANKED-3-VITAL-ROTCYCLE": {
-  "zhName": "生機・腐生循環（犧牲）",
+  "zhName": "生機＋深淵・腐生循環（犧牲）",
   "zhDescription": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
-  "name": "Life · Rot Cycle (Sacrifice)",
+  "name": "Life + Abyss · Rot Cycle (Sacrifice)",
   "description": "Sacrifice small monsters to draw and fill the graveyard, play the Rotwood Colossus cheaply, and let the Corpse Bloom keep the cycle going."
  },
  "RANKED-4-VITAL-ROTCYCLE": {
-  "zhName": "生機・腐生循環（犧牲）",
+  "zhName": "生機＋深淵・腐生循環（犧牲）",
   "zhDescription": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
-  "name": "Life · Rot Cycle (Sacrifice)",
+  "name": "Life + Abyss · Rot Cycle (Sacrifice)",
   "description": "Sacrifice small monsters to draw and fill the graveyard, play the Rotwood Colossus cheaply, and let the Corpse Bloom keep the cycle going."
  },
  "RANKED-5-VITAL-ROTCYCLE": {
-  "zhName": "生機・腐生循環（犧牲）",
+  "zhName": "生機＋深淵・腐生循環（犧牲）",
   "zhDescription": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
-  "name": "Life · Rot Cycle (Sacrifice)",
+  "name": "Life + Abyss · Rot Cycle (Sacrifice)",
   "description": "Sacrifice small monsters to draw and fill the graveyard, play the Rotwood Colossus cheaply, and let the Corpse Bloom keep the cycle going."
  },
  "RANKED-0-ORDER-MERCENARY": {

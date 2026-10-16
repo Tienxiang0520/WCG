@@ -425,7 +425,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-0-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -522,7 +522,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-0-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -824,7 +824,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-0-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -1472,7 +1472,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-1-WRATH-ASHFALL",
-      "Name": "狂怒・灰燼殉爆（連動）",
+      "Name": "狂怒＋深淵・灰燼殉爆（連動）",
       "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -1904,7 +1904,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-1-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -2109,7 +2109,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-1-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -2411,7 +2411,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-1-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -2530,7 +2530,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-1-ABYSS-AMBUSH",
-      "Name": "深淵・深淵伏擊（快攻）",
+      "Name": "深淵＋狂怒・深淵伏擊（快攻）",
       "Description": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
       "MainWill": "深淵",
       "CardIds": [
@@ -2638,7 +2638,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-1-WRATH-REKINDLE",
-      "Name": "狂怒・復燃連擊（連擊）",
+      "Name": "狂怒＋理智・復燃連擊（連擊）",
       "Description": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -3178,7 +3178,7 @@
     "Archetype": "進攻",
     "Deck": {
       "Id": "RANKED-1-ORDER-EXPEDITION",
-      "Name": "秩序・聖光遠征（進攻）",
+      "Name": "秩序＋狂怒・聖光遠征（進攻）",
       "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
@@ -3286,7 +3286,7 @@
     "Archetype": "殘血",
     "Deck": {
       "Id": "RANKED-1-ABYSS-LOWLIFE",
-      "Name": "深淵・殘血魔潮（殘血）",
+      "Name": "深淵＋狂怒・殘血魔潮（殘血）",
       "Description": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -3394,7 +3394,7 @@
     "Archetype": "少怪",
     "Deck": {
       "Id": "RANKED-1-WRATH-LONEWOLF",
-      "Name": "狂怒・孤狼劍道（少怪）",
+      "Name": "狂怒＋理智・孤狼劍道（少怪）",
       "Description": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -3826,7 +3826,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-2-WRATH-SCORCH",
-      "Name": "狂怒・焦土控場（控制）",
+      "Name": "狂怒＋秩序・焦土控場（控制）",
       "Description": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -3934,7 +3934,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-2-WRATH-ASHFALL",
-      "Name": "狂怒・灰燼殉爆（連動）",
+      "Name": "狂怒＋深淵・灰燼殉爆（連動）",
       "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -4366,7 +4366,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-2-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -4571,7 +4571,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-2-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -4884,7 +4884,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-2-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -5003,7 +5003,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-2-ABYSS-AMBUSH",
-      "Name": "深淵・深淵伏擊（快攻）",
+      "Name": "深淵＋狂怒・深淵伏擊（快攻）",
       "Description": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
       "MainWill": "深淵",
       "CardIds": [
@@ -5111,7 +5111,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-2-WRATH-REKINDLE",
-      "Name": "狂怒・復燃連擊（連擊）",
+      "Name": "狂怒＋理智・復燃連擊（連擊）",
       "Description": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -5435,7 +5435,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-2-REASON-TIME",
-      "Name": "理智・時空突擊（連擊）",
+      "Name": "理智＋狂怒・時空突擊（連擊）",
       "Description": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
       "MainWill": "理智",
       "CardIds": [
@@ -5770,7 +5770,7 @@
     "Archetype": "進攻",
     "Deck": {
       "Id": "RANKED-2-ORDER-EXPEDITION",
-      "Name": "秩序・聖光遠征（進攻）",
+      "Name": "秩序＋狂怒・聖光遠征（進攻）",
       "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
@@ -6094,7 +6094,7 @@
     "Archetype": "殘血",
     "Deck": {
       "Id": "RANKED-2-ABYSS-LOWLIFE",
-      "Name": "深淵・殘血魔潮（殘血）",
+      "Name": "深淵＋狂怒・殘血魔潮（殘血）",
       "Description": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -6202,7 +6202,7 @@
     "Archetype": "站位",
     "Deck": {
       "Id": "RANKED-2-VITAL-PHALANX",
-      "Name": "生機・方陣列隊（站位）",
+      "Name": "生機＋秩序・方陣列隊（站位）",
       "Description": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
       "MainWill": "生機",
       "CardIds": [
@@ -6310,7 +6310,7 @@
     "Archetype": "反擊",
     "Deck": {
       "Id": "RANKED-2-REASON-PROPHECY",
-      "Name": "理智・預言之盾（反擊）",
+      "Name": "理智＋秩序・預言之盾（反擊）",
       "Description": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
       "MainWill": "理智",
       "CardIds": [
@@ -6418,7 +6418,7 @@
     "Archetype": "少怪",
     "Deck": {
       "Id": "RANKED-2-WRATH-LONEWOLF",
-      "Name": "狂怒・孤狼劍道（少怪）",
+      "Name": "狂怒＋理智・孤狼劍道（少怪）",
       "Description": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -6526,7 +6526,7 @@
     "Archetype": "犧牲",
     "Deck": {
       "Id": "RANKED-2-VITAL-ROTCYCLE",
-      "Name": "生機・腐生循環（犧牲）",
+      "Name": "生機＋深淵・腐生循環（犧牲）",
       "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
@@ -6958,7 +6958,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-3-WRATH-SCORCH",
-      "Name": "狂怒・焦土控場（控制）",
+      "Name": "狂怒＋秩序・焦土控場（控制）",
       "Description": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -7066,7 +7066,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-3-WRATH-ASHFALL",
-      "Name": "狂怒・灰燼殉爆（連動）",
+      "Name": "狂怒＋深淵・灰燼殉爆（連動）",
       "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -7509,7 +7509,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-3-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -7714,7 +7714,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-3-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -8038,7 +8038,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-3-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -8157,7 +8157,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-3-ABYSS-AMBUSH",
-      "Name": "深淵・深淵伏擊（快攻）",
+      "Name": "深淵＋狂怒・深淵伏擊（快攻）",
       "Description": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
       "MainWill": "深淵",
       "CardIds": [
@@ -8265,7 +8265,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-3-WRATH-REKINDLE",
-      "Name": "狂怒・復燃連擊（連擊）",
+      "Name": "狂怒＋理智・復燃連擊（連擊）",
       "Description": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -8589,7 +8589,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-3-REASON-TIME",
-      "Name": "理智・時空突擊（連擊）",
+      "Name": "理智＋狂怒・時空突擊（連擊）",
       "Description": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
       "MainWill": "理智",
       "CardIds": [
@@ -8935,7 +8935,7 @@
     "Archetype": "進攻",
     "Deck": {
       "Id": "RANKED-3-ORDER-EXPEDITION",
-      "Name": "秩序・聖光遠征（進攻）",
+      "Name": "秩序＋狂怒・聖光遠征（進攻）",
       "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
@@ -9259,7 +9259,7 @@
     "Archetype": "殘血",
     "Deck": {
       "Id": "RANKED-3-ABYSS-LOWLIFE",
-      "Name": "深淵・殘血魔潮（殘血）",
+      "Name": "深淵＋狂怒・殘血魔潮（殘血）",
       "Description": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -9367,7 +9367,7 @@
     "Archetype": "磨牌",
     "Deck": {
       "Id": "RANKED-3-REASON-TIDE",
-      "Name": "理智・記憶潮汐（磨牌）",
+      "Name": "理智＋深淵・記憶潮汐（磨牌）",
       "Description": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
       "MainWill": "理智",
       "CardIds": [
@@ -9475,7 +9475,7 @@
     "Archetype": "站位",
     "Deck": {
       "Id": "RANKED-3-VITAL-PHALANX",
-      "Name": "生機・方陣列隊（站位）",
+      "Name": "生機＋秩序・方陣列隊（站位）",
       "Description": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
       "MainWill": "生機",
       "CardIds": [
@@ -9583,7 +9583,7 @@
     "Archetype": "反擊",
     "Deck": {
       "Id": "RANKED-3-REASON-PROPHECY",
-      "Name": "理智・預言之盾（反擊）",
+      "Name": "理智＋秩序・預言之盾（反擊）",
       "Description": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
       "MainWill": "理智",
       "CardIds": [
@@ -9691,7 +9691,7 @@
     "Archetype": "少怪",
     "Deck": {
       "Id": "RANKED-3-WRATH-LONEWOLF",
-      "Name": "狂怒・孤狼劍道（少怪）",
+      "Name": "狂怒＋理智・孤狼劍道（少怪）",
       "Description": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -9799,7 +9799,7 @@
     "Archetype": "犧牲",
     "Deck": {
       "Id": "RANKED-3-VITAL-ROTCYCLE",
-      "Name": "生機・腐生循環（犧牲）",
+      "Name": "生機＋深淵・腐生循環（犧牲）",
       "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
@@ -10231,7 +10231,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-4-WRATH-SCORCH",
-      "Name": "狂怒・焦土控場（控制）",
+      "Name": "狂怒＋秩序・焦土控場（控制）",
       "Description": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -10339,7 +10339,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-4-WRATH-ASHFALL",
-      "Name": "狂怒・灰燼殉爆（連動）",
+      "Name": "狂怒＋深淵・灰燼殉爆（連動）",
       "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -10782,7 +10782,7 @@
     "Archetype": "中速",
     "Deck": {
       "Id": "RANKED-4-REASON-GLACIER",
-      "Name": "理智・冰封堡壘（中速）",
+      "Name": "理智＋秩序・冰封堡壘（中速）",
       "Description": "理智橫置配秩序嘲諷聖盾，穩住場面再逐步推進。",
       "MainWill": "理智",
       "CardIds": [
@@ -10890,7 +10890,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-4-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -11095,7 +11095,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-4-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -11322,7 +11322,7 @@
     "Archetype": "中速",
     "Deck": {
       "Id": "RANKED-4-ORDER-GROVE",
-      "Name": "秩序・聖林守衛（中速）",
+      "Name": "秩序＋生機・聖林守衛（中速）",
       "Description": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
       "MainWill": "秩序",
       "CardIds": [
@@ -11635,7 +11635,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-4-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -11754,7 +11754,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-4-ABYSS-AMBUSH",
-      "Name": "深淵・深淵伏擊（快攻）",
+      "Name": "深淵＋狂怒・深淵伏擊（快攻）",
       "Description": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
       "MainWill": "深淵",
       "CardIds": [
@@ -11862,7 +11862,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-4-WRATH-REKINDLE",
-      "Name": "狂怒・復燃連擊（連擊）",
+      "Name": "狂怒＋理智・復燃連擊（連擊）",
       "Description": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -12186,7 +12186,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-4-REASON-TIME",
-      "Name": "理智・時空突擊（連擊）",
+      "Name": "理智＋狂怒・時空突擊（連擊）",
       "Description": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
       "MainWill": "理智",
       "CardIds": [
@@ -12532,7 +12532,7 @@
     "Archetype": "進攻",
     "Deck": {
       "Id": "RANKED-4-ORDER-EXPEDITION",
-      "Name": "秩序・聖光遠征（進攻）",
+      "Name": "秩序＋狂怒・聖光遠征（進攻）",
       "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
@@ -12856,7 +12856,7 @@
     "Archetype": "殘血",
     "Deck": {
       "Id": "RANKED-4-ABYSS-LOWLIFE",
-      "Name": "深淵・殘血魔潮（殘血）",
+      "Name": "深淵＋狂怒・殘血魔潮（殘血）",
       "Description": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -12964,7 +12964,7 @@
     "Archetype": "磨牌",
     "Deck": {
       "Id": "RANKED-4-REASON-TIDE",
-      "Name": "理智・記憶潮汐（磨牌）",
+      "Name": "理智＋深淵・記憶潮汐（磨牌）",
       "Description": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
       "MainWill": "理智",
       "CardIds": [
@@ -13072,7 +13072,7 @@
     "Archetype": "站位",
     "Deck": {
       "Id": "RANKED-4-VITAL-PHALANX",
-      "Name": "生機・方陣列隊（站位）",
+      "Name": "生機＋秩序・方陣列隊（站位）",
       "Description": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
       "MainWill": "生機",
       "CardIds": [
@@ -13180,7 +13180,7 @@
     "Archetype": "附著",
     "Deck": {
       "Id": "RANKED-4-WRATH-WARRUNE",
-      "Name": "狂怒・戰紋巨獸（附著）",
+      "Name": "狂怒＋生機・戰紋巨獸（附著）",
       "Description": "荊棘甲殼與烈焰戰紋疊在共生巨蜥身上，一隻巨獸撞穿防線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -13288,7 +13288,7 @@
     "Archetype": "反擊",
     "Deck": {
       "Id": "RANKED-4-REASON-PROPHECY",
-      "Name": "理智・預言之盾（反擊）",
+      "Name": "理智＋秩序・預言之盾（反擊）",
       "Description": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
       "MainWill": "理智",
       "CardIds": [
@@ -13396,7 +13396,7 @@
     "Archetype": "少怪",
     "Deck": {
       "Id": "RANKED-4-WRATH-LONEWOLF",
-      "Name": "狂怒・孤狼劍道（少怪）",
+      "Name": "狂怒＋理智・孤狼劍道（少怪）",
       "Description": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -13504,7 +13504,7 @@
     "Archetype": "犧牲",
     "Deck": {
       "Id": "RANKED-4-VITAL-ROTCYCLE",
-      "Name": "生機・腐生循環（犧牲）",
+      "Name": "生機＋深淵・腐生循環（犧牲）",
       "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
@@ -13846,7 +13846,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-5-WRATH-SCORCH",
-      "Name": "狂怒・焦土控場（控制）",
+      "Name": "狂怒＋秩序・焦土控場（控制）",
       "Description": "狂怒點殺加秩序嘲諷與回復，拖到赤帝與天火浩劫清場。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -13909,7 +13909,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-5-WRATH-ASHFALL",
-      "Name": "狂怒・灰燼殉爆（連動）",
+      "Name": "狂怒＋深淵・灰燼殉爆（連動）",
       "Description": "陣亡傷害與犧牲直傷互相連動，深淵小怪替狂怒點燃引信。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -14161,7 +14161,7 @@
     "Archetype": "中速",
     "Deck": {
       "Id": "RANKED-5-REASON-GLACIER",
-      "Name": "理智・冰封堡壘（中速）",
+      "Name": "理智＋秩序・冰封堡壘（中速）",
       "Description": "理智橫置配秩序嘲諷聖盾，穩住場面再逐步推進。",
       "MainWill": "理智",
       "CardIds": [
@@ -14224,7 +14224,7 @@
     "Archetype": "鋪場",
     "Deck": {
       "Id": "RANKED-5-VITAL-SWARM",
-      "Name": "生機・森林鋪場（鋪場）",
+      "Name": "生機＋狂怒・森林鋪場（鋪場）",
       "Description": "孢子、蜂群與喚獸師快速鋪滿五格，用野性萌發強化主力。",
       "MainWill": "生機",
       "CardIds": [
@@ -14350,7 +14350,7 @@
     "Archetype": "中速",
     "Deck": {
       "Id": "RANKED-5-VITAL-THORN",
-      "Name": "生機・荊棘毒牙（中速）",
+      "Name": "生機＋深淵・荊棘毒牙（中速）",
       "Description": "劇毒小怪與高 PP 嘲諷互補，深淵裂箭負責點殺。",
       "MainWill": "生機",
       "CardIds": [
@@ -14413,7 +14413,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-5-VITAL-STAMPEDE",
-      "Name": "生機・野性衝鋒（快攻）",
+      "Name": "生機＋狂怒・野性衝鋒（快攻）",
       "Description": "生機低費鋪場搭配狂怒衝鋒，趁對手展開前搶下血量。",
       "MainWill": "生機",
       "CardIds": [
@@ -14476,7 +14476,7 @@
     "Archetype": "防守",
     "Deck": {
       "Id": "RANKED-5-ORDER-AEGIS",
-      "Name": "秩序・聖盾防線（防守）",
+      "Name": "秩序＋生機・聖盾防線（防守）",
       "Description": "箭頭與附著法術層層給聖盾，靠反擊與嘲諷拖垮攻勢。",
       "MainWill": "秩序",
       "CardIds": [
@@ -14486,8 +14486,6 @@
         "WCG-061",
         "WCG-062",
         "WCG-062",
-        "WCG-062",
-        "WCG-062",
         "WCG-063",
         "WCG-063",
         "WCG-063",
@@ -14508,12 +14506,10 @@
         "WCG-074",
         "WCG-075",
         "WCG-075",
-        "WCG-075",
-        "WCG-075",
         "WCG-080",
         "WCG-080",
-        "WCG-129",
-        "WCG-129",
+        "WCG-113",
+        "WCG-113",
         "WCG-129",
         "WCG-129",
         "WCG-147",
@@ -14524,12 +14520,16 @@
         "WCG-171",
         "WCG-189",
         "WCG-189",
-        "WCG-189",
-        "WCG-189",
         "WCG-198",
         "WCG-198",
         "WCG-198",
-        "WCG-198"
+        "WCG-198",
+        "WCG-218",
+        "WCG-218",
+        "WCG-219",
+        "WCG-219",
+        "WCG-234",
+        "WCG-234"
       ]
     },
     "Variants": []
@@ -14539,7 +14539,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-5-ORDER-RAMPART",
-      "Name": "秩序・白銀長城（控制）",
+      "Name": "秩序＋深淵・白銀長城（控制）",
       "Description": "一排嘲諷加旗手與神官回血，最後由阿曼蘇爾補滿生命。",
       "MainWill": "秩序",
       "CardIds": [
@@ -14565,12 +14565,12 @@
         "WCG-071",
         "WCG-075",
         "WCG-075",
-        "WCG-076",
-        "WCG-076",
         "WCG-078",
         "WCG-078",
         "WCG-080",
         "WCG-080",
+        "WCG-100",
+        "WCG-100",
         "WCG-113",
         "WCG-113",
         "WCG-113",
@@ -14579,20 +14579,20 @@
         "WCG-129",
         "WCG-129",
         "WCG-129",
+        "WCG-132",
+        "WCG-132",
+        "WCG-133",
+        "WCG-133",
         "WCG-152",
         "WCG-152",
         "WCG-152",
         "WCG-152",
-        "WCG-190",
-        "WCG-190",
+        "WCG-171",
+        "WCG-171",
         "WCG-190",
         "WCG-190",
         "WCG-191",
-        "WCG-191",
-        "WCG-198",
-        "WCG-198",
-        "WCG-198",
-        "WCG-198"
+        "WCG-191"
       ]
     },
     "Variants": []
@@ -14602,7 +14602,7 @@
     "Archetype": "控制",
     "Deck": {
       "Id": "RANKED-5-ORDER-VERDICT",
-      "Name": "秩序・誓約審判（控制）",
+      "Name": "秩序＋狂怒・誓約審判（控制）",
       "Description": "誓約封禁、聖裁者與枷鎖逐一封鎖威脅，弗丁陣亡後再清場。",
       "MainWill": "秩序",
       "CardIds": [
@@ -14612,8 +14612,6 @@
         "WCG-063",
         "WCG-064",
         "WCG-064",
-        "WCG-064",
-        "WCG-064",
         "WCG-065",
         "WCG-065",
         "WCG-065",
@@ -14632,6 +14630,8 @@
         "WCG-069",
         "WCG-069",
         "WCG-069",
+        "WCG-074",
+        "WCG-074",
         "WCG-076",
         "WCG-076",
         "WCG-076",
@@ -14654,8 +14654,8 @@
         "WCG-158",
         "WCG-158",
         "WCG-158",
-        "WCG-189",
-        "WCG-189"
+        "WCG-205",
+        "WCG-205"
       ]
     },
     "Variants": []
@@ -14665,7 +14665,7 @@
     "Archetype": "中速",
     "Deck": {
       "Id": "RANKED-5-ORDER-GROVE",
-      "Name": "秩序・聖林守衛（中速）",
+      "Name": "秩序＋生機・聖林守衛（中速）",
       "Description": "秩序聖盾箭頭保護生機高 PP 嘲諷，一路穩健推進。",
       "MainWill": "秩序",
       "CardIds": [
@@ -14677,8 +14677,8 @@
         "WCG-049",
         "WCG-049",
         "WCG-049",
-        "WCG-061",
-        "WCG-061",
+        "WCG-059",
+        "WCG-059",
         "WCG-061",
         "WCG-061",
         "WCG-062",
@@ -14689,8 +14689,6 @@
         "WCG-063",
         "WCG-063",
         "WCG-063",
-        "WCG-065",
-        "WCG-065",
         "WCG-065",
         "WCG-065",
         "WCG-066",
@@ -14705,6 +14703,8 @@
         "WCG-073",
         "WCG-073",
         "WCG-073",
+        "WCG-075",
+        "WCG-075",
         "WCG-129",
         "WCG-129",
         "WCG-146",
@@ -14854,7 +14854,7 @@
     "Archetype": "連動",
     "Deck": {
       "Id": "RANKED-5-ABYSS-SOULFEAST",
-      "Name": "深淵・噬魂獻祭（連動）",
+      "Name": "深淵＋狂怒・噬魂獻祭（連動）",
       "Description": "死靈術士、萬魂之井與嗜血戰狂把犧牲換成手牌，地精與怒意沸騰收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -14917,7 +14917,7 @@
     "Archetype": "快攻",
     "Deck": {
       "Id": "RANKED-5-ABYSS-AMBUSH",
-      "Name": "深淵・深淵伏擊（快攻）",
+      "Name": "深淵＋狂怒・深淵伏擊（快攻）",
       "Description": "暗影伏擊者鎖能量、狂怒衝鋒與直傷搶血，速度最快的高段對手。",
       "MainWill": "深淵",
       "CardIds": [
@@ -14980,7 +14980,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-5-WRATH-REKINDLE",
-      "Name": "狂怒・復燃連擊（連擊）",
+      "Name": "狂怒＋理智・復燃連擊（連擊）",
       "Description": "狂亂血宴與逆流法師恢復攻擊，衝鋒戰團反覆壓低對手生命。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -15169,7 +15169,7 @@
     "Archetype": "連擊",
     "Deck": {
       "Id": "RANKED-5-REASON-TIME",
-      "Name": "理智・時空突擊（連擊）",
+      "Name": "理智＋狂怒・時空突擊（連擊）",
       "Description": "回手與橫置製造空檔，逆流法師讓狂怒衝鋒再次攻擊。",
       "MainWill": "理智",
       "CardIds": [
@@ -15358,7 +15358,7 @@
     "Archetype": "進攻",
     "Deck": {
       "Id": "RANKED-5-ORDER-EXPEDITION",
-      "Name": "秩序・聖光遠征（進攻）",
+      "Name": "秩序＋狂怒・聖光遠征（進攻）",
       "Description": "聖盾箭頭保護狂怒衝鋒，以回復支撐主動交換與進攻。",
       "MainWill": "秩序",
       "CardIds": [
@@ -15547,7 +15547,7 @@
     "Archetype": "殘血",
     "Deck": {
       "Id": "RANKED-5-ABYSS-LOWLIFE",
-      "Name": "深淵・殘血魔潮（殘血）",
+      "Name": "深淵＋狂怒・殘血魔潮（殘血）",
       "Description": "失去生命換取手牌與熔爐巨怪折扣，以巨龍回復和直傷收尾。",
       "MainWill": "深淵",
       "CardIds": [
@@ -15610,7 +15610,7 @@
     "Archetype": "磨牌",
     "Deck": {
       "Id": "RANKED-5-REASON-TIDE",
-      "Name": "理智・記憶潮汐（磨牌）",
+      "Name": "理智＋深淵・記憶潮汐（磨牌）",
       "Description": "思緒潰散與墓語竊賊把對手牌庫送入墓地，終焉之潮一口氣磨空牌庫。",
       "MainWill": "理智",
       "CardIds": [
@@ -15673,7 +15673,7 @@
     "Archetype": "站位",
     "Deck": {
       "Id": "RANKED-5-VITAL-PHALANX",
-      "Name": "生機・方陣列隊（站位）",
+      "Name": "生機＋秩序・方陣列隊（站位）",
       "Description": "根鬚哨兵與連根古木排成方陣，前鋒盾衛擋住正對面的敵人。",
       "MainWill": "生機",
       "CardIds": [
@@ -15736,7 +15736,7 @@
     "Archetype": "附著",
     "Deck": {
       "Id": "RANKED-5-WRATH-WARRUNE",
-      "Name": "狂怒・戰紋巨獸（附著）",
+      "Name": "狂怒＋生機・戰紋巨獸（附著）",
       "Description": "荊棘甲殼與烈焰戰紋疊在共生巨蜥身上，一隻巨獸撞穿防線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -15799,7 +15799,7 @@
     "Archetype": "反擊",
     "Deck": {
       "Id": "RANKED-5-REASON-PROPHECY",
-      "Name": "理智・預言之盾（反擊）",
+      "Name": "理智＋秩序・預言之盾（反擊）",
       "Description": "手牌留著審判回響與預知閃避，伺守觀星者靠滿手牌擋在前線。",
       "MainWill": "理智",
       "CardIds": [
@@ -15862,7 +15862,7 @@
     "Archetype": "少怪",
     "Deck": {
       "Id": "RANKED-5-WRATH-LONEWOLF",
-      "Name": "狂怒・孤狼劍道（少怪）",
+      "Name": "狂怒＋理智・孤狼劍道（少怪）",
       "Description": "場上只留孤狼劍聖或虛空隱士，用決鬥宣言與法術清出路線。",
       "MainWill": "狂怒",
       "CardIds": [
@@ -15925,7 +15925,7 @@
     "Archetype": "犧牲",
     "Deck": {
       "Id": "RANKED-5-VITAL-ROTCYCLE",
-      "Name": "生機・腐生循環（犧牲）",
+      "Name": "生機＋深淵・腐生循環（犧牲）",
       "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [

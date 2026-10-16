@@ -261,6 +261,11 @@ def check(deck_will, ids, label):
             errors.append(f"雙色卡 {i} 不符主副色")
     if errors: raise SystemExit(f"{label} 不合法：" + "、".join(errors))
 
+# 雙色（兩派系）牌組名稱標出主色＋副色，例如「秩序＋生機」；中立不計。
+def deck_wills(will, ids):
+    second = sorted({w for i in ids for w in WILLS_OF(i) if w not in ("中立", will)})
+    return "＋".join([will] + second)
+
 def swap(counts, out, inn, n=2):
     c = dict(counts)
     if c.get(out, 0) < n: return None
@@ -311,7 +316,7 @@ def build():
                 "Archetype": a["style"],
                 "Deck": {
                     "Id": f"RANKED-{tier}-{a['key']}",
-                    "Name": f"{a['will']}・{a['name']}（{a['style']}）",
+                    "Name": f"{deck_wills(a['will'], ids)}・{a['name']}（{a['style']}）",
                     "Description": a["text"],
                     "MainWill": a["will"],
                     "CardIds": ids,
