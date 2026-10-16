@@ -11,8 +11,16 @@ internal static class CardBalanceHistory
     // Catalog before ability monsters were lowered below the vanilla PP curve (2026-10-16); only PP and design notes changed.
     // Catalog before 寂靜學者 (WCG-208, monster with an entry silence) became the attached spell 寂靜禁咒 (2026-10-16).
     // Catalog before seven single-will cards (027, 031, 058, 067, 211, 213, 234) became dual-will (2026-10-16); only wills and design notes changed.
-    internal static CardDatabase BeforeDualWill(CardDatabase current) => current.GetCard("WCG-031")?.IsDual == true
-        ? Override(current, "WcgWeb.Balance.BeforeDualWill") : current;
+    // Catalog before the 理智 buff (2026-10-17): ten 理智 cards had other numbers or text, and 258–262 did not exist.
+    internal static CardDatabase BeforeReasonBuff(CardDatabase current)
+    {
+        if (current.GetCard("WCG-251")?.HasTaunt != true) return current;
+        var old = Override(current, "WcgWeb.Balance.BeforeReasonBuff");
+        return new(JsonSerializer.Serialize(old.AllCards.Where(c => !IsReasonBuffCard(c.Id))), JsonSerializer.Serialize(old.PresetDecks));
+    }
+    internal static bool IsReasonBuffCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n >= 258;
+    internal static CardDatabase BeforeDualWill(CardDatabase current) { current = BeforeReasonBuff(current); return current.GetCard("WCG-031")?.IsDual == true
+        ? Override(current, "WcgWeb.Balance.BeforeDualWill") : current; }
     internal static CardDatabase BeforeSilenceSpell(CardDatabase current) { current = BeforeDualWill(current); return current.GetCard("WCG-208")?.IsSpell == true
         ? Override(current, "WcgWeb.Balance.BeforeSilenceSpell") : current; }
     internal static CardDatabase BeforeAbilityPp(CardDatabase current) { current = BeforeSilenceSpell(current); return current.GetCard("WCG-113")?.PP < 2000

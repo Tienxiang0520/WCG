@@ -20,6 +20,7 @@ public partial class GameEngine
         score += p.Structures.Sum(StructureValue) - e.Structures.Sum(m => m.IsSet ? 2.5 : StructureValue(m)); // their face-down cards are unknown
         score += p.Hand.Sum(c => HoldValue(p, c)) - e.Hand.Count * 1.6;
         score += (p.TotalEnergy - e.TotalEnergy) * .8;
+        if (V9) score += CounterReserve(p);
         if (p.Deck.Count == 0) score -= 12;
         if (e.Deck.Count == 0) score += 12;
         score -= Exposure(p, e);

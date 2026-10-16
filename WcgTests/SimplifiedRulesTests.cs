@@ -47,7 +47,7 @@ public class SimplifiedRulesTests
     [Theory]
     [InlineData(4,600,true)] [InlineData(4,700,false)]
     [InlineData(2,1100,true)] [InlineData(2,1200,false)]
-    [InlineData(32,1100,true)] [InlineData(32,1200,false)]
+    [InlineData(32,1600,true)] [InlineData(32,1700,false)]
     [InlineData(76,1800,true)] [InlineData(76,1700,false)]
     public void PrintedThresholdsUseThreeLevels(int spell,int pp,bool legal)
     {

@@ -12,8 +12,17 @@ internal static class CounterHistory
     // Catalog before ability monsters were lowered below the vanilla PP curve.
     // Catalog before 寂靜學者 (WCG-208) became the silence spell 寂靜禁咒.
     // Catalog before seven single-will cards became dual-will.
+    // Catalog before the 理智 buff (ten cards changed, 258–262 added).
+    internal static CardDatabase BeforeReasonBuff(CardDatabase current)
+    {
+        if(current.GetCard("WCG-251")?.HasTaunt!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-reason-buff.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..])<258).Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeDualWill(CardDatabase current)
     {
+        current=BeforeReasonBuff(current);
         if(current.GetCard("WCG-031")?.IsDual!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-dual-will.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
