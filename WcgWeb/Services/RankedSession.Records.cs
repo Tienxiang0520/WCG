@@ -52,8 +52,12 @@ public sealed partial class RankedSession
     // Re-simulates any record, including one decoded from a pasted 對局代碼 (never stored in the profile).
     public RankedReplay BuildReplay(RankedRecord record) => BuildReplay(record, null);
     // trace (debug, tools/RankedCheck --explain) receives (action index, AI decision text) for every computer step.
-    internal RankedReplay BuildReplay(RankedRecord record, Action<int, string>? trace)
+    internal RankedReplay BuildReplay(RankedRecord record, Action<int, string>? trace) => BuildReplay(record, trace, int.MaxValue, out _);
+    // Tests: the replayed engine after the first actionCount journal actions, positioned before the next one.
+    internal GameEngine? ReplayEngine(RankedRecord record, int actionCount) { var r = BuildReplay(record, null, actionCount, out var engine); return r.Error == "" ? engine : null; }
+    private RankedReplay BuildReplay(RankedRecord record, Action<int, string>? trace, int actionCount, out GameEngine? replayed)
     {
+        replayed = null;
         var steps = new List<RankedReplayStep>();
         try
         {
@@ -68,7 +72,8 @@ public sealed partial class RankedSession
             engine.StartGame(record.PlayerDeck, record.ComputerDeck, record.PlayerFirst);
             if (trace != null) engine.AiTrace = text => trace(steps.Count - 1, text);
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));
-            foreach (var action in actions)
+            replayed = engine;
+            foreach (var action in actions.Take(actionCount))
             {
                 engine.StackableShields = action.RulesVersion >= 2; engine.AiRevision = action.RulesVersion;
                 var response = action.Type == "ai" ? bridge.AiStepCore() : bridge.SubmitCore(Decode(engine, action));
