@@ -6,6 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- AI v7 simulation APIs stay internal; tests and the ladder tool use them directly. -->
+    <InternalsVisibleTo Include="WcgTests" />
+    <InternalsVisibleTo Include="RankedCheck" />
     <Content Remove="Client/**" />
     <None Remove="Client/node_modules/**" />
     <Content Update="wwwroot/battle/**/*.map" CopyToPublishDirectory="Never" />

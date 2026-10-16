@@ -98,7 +98,7 @@ public partial class GameEngine
         if (IsOver) { _effects.Clear(); CurrentPendingChoice = null; CurrentPendingTarget = null; }
     }
     private void Log(string message, string level = "info")
-    { Logs.Insert(0, new(message, level) { ActionNumber = Revision + 1 }); if (Logs.Count > 150) Logs.RemoveAt(Logs.Count - 1); }
+    { if (_simulation) return; Logs.Insert(0, new(message, level) { ActionNumber = Revision + 1 }); if (Logs.Count > 150) Logs.RemoveAt(Logs.Count - 1); }
     private bool IsCurrent(PlayerState p) => ReferenceEquals(p, Player) || ReferenceEquals(p, Computer);
     private bool Main(PlayerState p) => IsCurrent(p) && ReferenceEquals(p, ActivePlayer) && !IsOver && !IsWaiting && CurrentPhase == TurnPhase.MainPhase;
     private bool Alive(MonsterInstance m) => Player.Board.Contains(m) || Computer.Board.Contains(m);
