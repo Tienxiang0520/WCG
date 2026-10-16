@@ -18,7 +18,7 @@ public partial class GameEngine
 
     private bool CanDestroyDamageSource(DamageContext damage) => damage.Source?.Unit is { } unit
         && unit.IsUnit && Alive(unit) && (unit.IsSilenced || unit.Card.Id != "WCG-152");
-    private bool CanRecoverCounter(PlayerState p) => p.Graveyard.Any(c => c.Card.IsMonster && c.Card.Will == "深淵")
+    private bool CanRecoverCounter(PlayerState p) => p.Graveyard.Any(c => c.Card.IsMonster && c.Card.HasWill("深淵"))
         && p.Graveyard.Any(c => c.Card.IsMonster && c.Card.TotalCost <= 2);
     private bool CanReact(PlayerState p, CardInstance card, DamageContext damage)
     {

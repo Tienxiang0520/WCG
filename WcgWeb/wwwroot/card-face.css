@@ -89,7 +89,7 @@ article.wcg-face:not([data-will=order]) .face-name{background-size:100% 1.08em;b
 /* Keep the footer text clear of the larger corner ornaments. */
 article.wcg-face:not([data-will=order]) .face-foot{padding-left:6cqw;padding-right:6cqw}
 /* Fury: charred obsidian with ember cracks, molten bronze frame, flame ornaments. */
-article.wcg-face[data-will=wrath]{--accent:#ff7a3c;--gold-1:#ffd08c;--gold-2:#e07a2c;--gold-3:#a8481c;--gold-4:#55190a;--ink:#f8e6d6;--ink-soft:#eab595;
+:is(article.wcg-face,.face-dual)[data-will=wrath]{--accent:#ff7a3c;--gold-1:#ffd08c;--gold-2:#e07a2c;--gold-3:#a8481c;--gold-4:#55190a;--ink:#f8e6d6;--ink-soft:#eab595;
   --face-bg:radial-gradient(85% 45% at 50% 104%,rgba(255,96,24,.34),transparent 70%),radial-gradient(60% 35% at 15% 8%,rgba(255,130,50,.16),transparent 70%),
     repeating-linear-gradient(62deg,transparent 0 9px,rgba(255,96,32,.11) 9px 10px,transparent 10px 23px),repeating-linear-gradient(-48deg,transparent 0 13px,rgba(255,150,70,.08) 13px 14px,transparent 14px 31px),
     linear-gradient(165deg,#2c1612,#1b0d0a 55%,#110706);
@@ -98,7 +98,7 @@ article.wcg-face[data-will=wrath]{--accent:#ff7a3c;--gold-1:#ffd08c;--gold-2:#e0
   --band-bg:linear-gradient(90deg,rgba(255,110,40,.24),rgba(40,14,8,.65));--text-bg:rgba(16,6,4,.62);--art-bg:#1a0806 radial-gradient(circle,#4a1a0c,#140604);--art-rim:#3a150b;
   --arrow-1:#ffe4a6;--arrow-2:#ff8a2a;--arrow-3:#b5341a;--arrow-glow:rgba(255,110,30,.9);--arrow-edge:#1a0502;--emblem:#ff7a2e;--emblem-fill:rgba(255,110,40,.22);--emblem-op:.17}
 /* Reason: deep indigo with an arcane grid, silver filigree, runic geometry. */
-article.wcg-face[data-will=reason]{--accent:#8fb0ff;--gold-1:#ffffff;--gold-2:#c6d0e6;--gold-3:#8592b2;--gold-4:#434e6c;--ink:#ebf0ff;--ink-soft:#b3c2ea;
+:is(article.wcg-face,.face-dual)[data-will=reason]{--accent:#8fb0ff;--gold-1:#ffffff;--gold-2:#c6d0e6;--gold-3:#8592b2;--gold-4:#434e6c;--ink:#ebf0ff;--ink-soft:#b3c2ea;
   --face-bg:radial-gradient(90% 60% at 30% 12%,rgba(120,160,255,.24),transparent 65%),radial-gradient(70% 40% at 85% 95%,rgba(90,120,230,.2),transparent 70%),
     repeating-linear-gradient(0deg,rgba(150,180,255,.055) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,rgba(150,180,255,.055) 0 1px,transparent 1px 12px),
     linear-gradient(160deg,#1a2650,#111a38 55%,#0a1028);
@@ -107,7 +107,7 @@ article.wcg-face[data-will=reason]{--accent:#8fb0ff;--gold-1:#ffffff;--gold-2:#c
   --band-bg:linear-gradient(90deg,rgba(120,160,255,.22),rgba(12,18,46,.62));--text-bg:rgba(6,10,30,.56);--art-bg:#0a1028 radial-gradient(circle,#24346a,#0a1028);--art-rim:#1b2752;
   --arrow-1:#ffffff;--arrow-2:#bccaff;--arrow-3:#5a72c6;--arrow-glow:rgba(150,190,255,.9);--arrow-edge:#060a20;--emblem:#a9c0ff;--emblem-fill:rgba(140,170,255,.14);--emblem-op:.2}
 /* Life: warm wood grain with moss, living-bark frame, leaf and vine ornaments; pale leaf effect panel. */
-article.wcg-face[data-will=vitality]{--accent:#a6d873;--gold-1:#e2efb4;--gold-2:#94b752;--gold-3:#5b7a2e;--gold-4:#2d4214;--ink:#f6eedc;--ink-soft:#d9e6b6;
+:is(article.wcg-face,.face-dual)[data-will=vitality]{--accent:#a6d873;--gold-1:#e2efb4;--gold-2:#94b752;--gold-3:#5b7a2e;--gold-4:#2d4214;--ink:#f6eedc;--ink-soft:#d9e6b6;
   --face-bg:radial-gradient(75% 40% at 12% 102%,rgba(112,176,70,.42),transparent 70%),radial-gradient(60% 32% at 92% -2%,rgba(140,196,92,.3),transparent 70%),
     repeating-linear-gradient(93deg,transparent 0 5px,rgba(40,22,8,.2) 5px 6px,rgba(120,80,40,.09) 6px 11px),repeating-radial-gradient(ellipse 140% 30% at 50% 50%,transparent 0 10px,rgba(30,16,6,.08) 10px 12px),
     linear-gradient(170deg,#6e4c2d,#513621 55%,#3b2717);
@@ -116,7 +116,7 @@ article.wcg-face[data-will=vitality]{--accent:#a6d873;--gold-1:#e2efb4;--gold-2:
   --band-bg:linear-gradient(90deg,rgba(150,205,100,.3),rgba(36,22,10,.55));--text-bg:rgba(238,245,222,.9);--art-bg:#24180c radial-gradient(circle,#3e5a22,#1c1209);--art-rim:#3b2717;
   --arrow-1:#f4ffcc;--arrow-2:#a9d65b;--arrow-3:#4b7a26;--arrow-glow:rgba(190,240,120,.85);--arrow-edge:#142008;--emblem:#4f7a24;--emblem-fill:rgba(90,140,50,.14);--emblem-op:.22}
 /* Abyss: violet-black void, tarnished silver frame, thorns, eye and tentacles. */
-article.wcg-face[data-will=abyss]{--accent:#c08cf2;--gold-1:#ddd4e2;--gold-2:#9d90a8;--gold-3:#6a5c78;--gold-4:#2c2236;--ink:#efe5f8;--ink-soft:#c8afe2;
+:is(article.wcg-face,.face-dual)[data-will=abyss]{--accent:#c08cf2;--gold-1:#ddd4e2;--gold-2:#9d90a8;--gold-3:#6a5c78;--gold-4:#2c2236;--ink:#efe5f8;--ink-soft:#c8afe2;
   --face-bg:radial-gradient(70% 45% at 50% 48%,rgba(130,60,190,.24),transparent 70%),radial-gradient(45% 28% at 82% 92%,rgba(100,24,130,.38),transparent 70%),
     repeating-radial-gradient(circle at 50% 118%,transparent 0 14px,rgba(160,100,210,.07) 14px 15px),repeating-linear-gradient(28deg,transparent 0 17px,rgba(0,0,0,.18) 17px 18px),
     linear-gradient(165deg,#1f1129,#130a1b 55%,#09050e);
@@ -125,7 +125,7 @@ article.wcg-face[data-will=abyss]{--accent:#c08cf2;--gold-1:#ddd4e2;--gold-2:#9d
   --band-bg:linear-gradient(90deg,rgba(150,80,210,.24),rgba(12,6,20,.62));--text-bg:rgba(9,4,15,.6);--art-bg:#0c0612 radial-gradient(circle,#2e1846,#0c0612);--art-rim:#160c20;
   --arrow-1:#f3eaff;--arrow-2:#ad8ed4;--arrow-3:#573a7e;--arrow-glow:rgba(180,120,255,.85);--arrow-edge:#09040e;--emblem:#b98fea;--emblem-fill:rgba(160,110,220,.16);--emblem-op:.18}
 /* Neutral: grey chiselled stone, pewter frame, plain rivets; pale stone effect panel. */
-article.wcg-face[data-will=neutral]{--accent:#d0d0c8;--gold-1:#ececea;--gold-2:#abaca8;--gold-3:#7a7b78;--gold-4:#383938;--ink:#f4f4f0;--ink-soft:#d6d7d2;
+:is(article.wcg-face,.face-dual)[data-will=neutral]{--accent:#d0d0c8;--gold-1:#ececea;--gold-2:#abaca8;--gold-3:#7a7b78;--gold-4:#383938;--ink:#f4f4f0;--ink-soft:#d6d7d2;
   --face-bg:radial-gradient(100% 60% at 28% 12%,rgba(255,255,255,.14),transparent 60%),repeating-linear-gradient(135deg,rgba(0,0,0,.05) 0 2px,transparent 2px 6px),
     repeating-linear-gradient(0deg,transparent 0 22px,rgba(0,0,0,.12) 22px 23px),linear-gradient(160deg,#6e7074,#57595d 55%,#46484c);
   --edge:#1c1d1f;--line:rgba(210,210,205,.5);--text-ink:#24262a;--stat-ink:#ffffff;--foot-ink:#cfd0cb;--orn-glow:rgba(255,255,255,.35);
@@ -147,3 +147,38 @@ article.wcg-face[data-will=neutral] .face-frame .frame-inner{stroke-dasharray:.6
 .detail-face{width:100%}
 article.wcg-face.name-l .face-name{font-size:7cqw}article.wcg-face.name-xl .face-name{font-size:5.9cqw}
 .wcg-card.face-tile .face-qty.badge{left:9%;right:auto;top:30%;background:rgba(20,14,4,.86)!important;color:#f6e3a6;box-shadow:0 0 0 1px #c9a24b,0 2px 6px rgba(0,0,0,.5)!important}
+
+/* ===== Dual-will frame (雙色卡). The article carries the primary will's theme (left); .face-dual repaints the second will's
+   parchment and frame border on the right half, blended over the middle ~15%. Left/right follow the fixed will order
+   狂怒、理智、生機、秩序、深淵. The band shows both will marks with "／"; the effect box uses the mid colour of both accents. */
+/* Order's ivory parchment would wash out the other half's light ink, so on dual cards Order uses a dark antique-gold
+   parchment with the same gold frame (both as primary and as second will). */
+article.wcg-face.is-dual[data-will=order],.face-dual[data-will=order]{--gold-1:#f6e3a6;--gold-2:#d4ad55;--gold-3:#a07a2c;--gold-4:#6d4f17;
+  --face-bg:radial-gradient(90% 55% at 30% 14%,rgba(255,226,150,.22),transparent 65%),radial-gradient(70% 40% at 80% 92%,rgba(212,173,85,.2),transparent 70%),repeating-linear-gradient(115deg,rgba(255,220,140,.05) 0 2px,transparent 2px 7px),linear-gradient(160deg,#4a3a1c,#30250f 55%,#1f1709)}
+article.wcg-face.is-dual{--ink:#f6efe2;--ink-soft:#e2d6bf;--stat-ink:#ffffff;--foot-ink:#cbbd9f;--line:rgba(220,200,160,.45)}
+article.wcg-face .face-dual{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:0;background:var(--face-bg);
+  -webkit-mask:linear-gradient(90deg,transparent 42.5%,#000 57.5%);mask:linear-gradient(90deg,transparent 42.5%,#000 57.5%)}
+article.wcg-face .face-dual::before{content:"";position:absolute;inset:0;border-radius:inherit;
+  border:1.9cqw solid transparent;background:linear-gradient(135deg,var(--gold-1),var(--gold-2) 30%,var(--gold-4) 52%,var(--gold-2) 70%,var(--gold-1)) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+article.wcg-face[data-will2=wrath]{--accent-2:#ff7a3c;--gold2-2:#e07a2c;--orn2-glow:rgba(255,120,40,.85)}
+article.wcg-face[data-will2=reason]{--accent-2:#8fb0ff;--gold2-2:#c6d0e6;--orn2-glow:rgba(170,200,255,.85)}
+article.wcg-face[data-will2=vitality]{--accent-2:#a6d873;--gold2-2:#94b752;--orn2-glow:rgba(190,240,120,.7)}
+article.wcg-face[data-will2=order]{--accent-2:#e2bd5e;--gold2-2:#d4ad55;--orn2-glow:rgba(255,240,190,.9)}
+article.wcg-face[data-will2=abyss]{--accent-2:#c08cf2;--gold2-2:#9d90a8;--orn2-glow:rgba(180,120,255,.8)}
+/* Right-hand corner ornaments and the PP/DP gem take the second will's metal. */
+article.wcg-face.is-dual .face-star.tr,article.wcg-face.is-dual .face-star.br{fill:var(--gold2-2);filter:drop-shadow(0 0 .4cqw var(--orn2-glow))}
+article.wcg-face.is-dual .face-head{border-image:linear-gradient(90deg,var(--accent) 42.5%,var(--accent-2) 57.5%) 1}
+article.wcg-face.is-dual .face-cost{box-shadow:0 0 0 .7cqw var(--medal-ring),0 0 0 1.5cqw var(--accent-2),0 0 0 1.9cqw var(--medal-halo),0 .8cqw 2cqw rgba(0,0,0,.35)}
+article.wcg-face .face-band.dual-band{box-shadow:inset .9cqw 0 0 var(--accent),inset -.9cqw 0 0 var(--accent-2);
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 26%,transparent),rgba(12,10,16,.55) 42.5% 57.5%,color-mix(in srgb,var(--accent-2) 26%,transparent))}
+article.wcg-face .dual-wills{display:inline-flex;align-items:center;gap:.8cqw;color:var(--ink)!important}
+article.wcg-face .dual-wills b{font-weight:700;opacity:.8;margin:0 .4cqw}
+article.wcg-face .will-mark{display:inline-block;width:2.8cqw;height:2.8cqw;border-radius:50%;box-shadow:0 0 0 .35cqw rgba(0,0,0,.45),0 0 1cqw currentColor}
+article.wcg-face .will-mark.a{background:var(--accent);color:var(--accent)}article.wcg-face .will-mark.b{background:var(--accent-2);color:var(--accent-2)}
+/* Effect box: mid colour of both wills on a dark panel so the text reads on every pair. */
+article.wcg-face.is-dual{--text-ink:#f6f1ea;--emblem:color-mix(in srgb,var(--accent) 50%,var(--accent-2));--emblem-fill:color-mix(in srgb,var(--accent) 50%,var(--accent-2) 50%);--emblem-op:.14}
+article.wcg-face.is-dual .face-text{background:linear-gradient(0deg,color-mix(in srgb,color-mix(in srgb,var(--accent) 50%,var(--accent-2)) 22%,transparent),color-mix(in srgb,color-mix(in srgb,var(--accent) 50%,var(--accent-2)) 22%,transparent)),rgba(10,8,14,.72);
+  border-color:color-mix(in srgb,var(--accent) 50%,var(--accent-2))}
+article.wcg-face.is-dual .face-name{background:linear-gradient(180deg,#fffaf0,color-mix(in srgb,var(--accent) 50%,var(--accent-2)));-webkit-background-clip:text;background-clip:text;background-size:100% 1.08em;background-repeat:repeat-y}
+.filter-chip.will-dual .will-dot{background:linear-gradient(90deg,#ff7a3c,#8fb0ff 25%,#a6d873 50%,#e2bd5e 75%,#c08cf2)}
