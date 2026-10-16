@@ -16,6 +16,8 @@ public class PlayerTargetTests
         if (old)
         {
             cards = cards.Where(c => int.Parse(c.Id[4..]) < 205).ToList();
+            var abilityPp = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-ability-pp.json")))!.ToDictionary(c => c.Id);
+            cards = cards.Select(c => abilityPp.GetValueOrDefault(c.Id, c)).ToList();
             var deflation = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-deflation.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => deflation.GetValueOrDefault(c.Id, c)).ToList();
             var simplified = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-rules-simplification.json")))!.ToDictionary(c => c.Id);

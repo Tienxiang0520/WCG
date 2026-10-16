@@ -2,6 +2,7 @@
   <!-- Both hosts must embed the same historical catalogs and translations with stable names. -->
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-rules-simplification.json" LogicalName="WcgWeb.Balance.BeforeRulesSimplification" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-ability-pp.json" LogicalName="WcgWeb.Balance.BeforeAbilityPp" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-deflation.json" LogicalName="WcgWeb.Balance.BeforeDeflation" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-strong-build-adjustment.json" LogicalName="WcgWeb.Balance.BeforeStrongBuildAdjustment" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-october-13.json" LogicalName="WcgWeb.Balance.BeforeOctoberBalance" />

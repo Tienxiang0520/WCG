@@ -9,7 +9,16 @@ internal static class CounterHistory
     // Catalog before the rules simplification (energy only pays costs, per-turn Holy Shield, 3 PP thresholds).
     // Catalog before the PP/cost deflation (PR B).
     // Catalog before the new cards 205–257 (PR D).
-    internal static CardDatabase BeforeNewCards(CardDatabase current) => !current.AllCards.Any(c => int.Parse(c.Id[4..]) >= 205) ? current
+    // Catalog before ability monsters were lowered below the vanilla PP curve.
+    internal static CardDatabase BeforeAbilityPp(CardDatabase current)
+    {
+        if(!(current.GetCard("WCG-113")?.PP<2000))return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-ability-pp.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
+    internal static CardDatabase BeforeNewCards(CardDatabase current) => NewCardsRemoved(BeforeAbilityPp(current));
+    private static CardDatabase NewCardsRemoved(CardDatabase current) => !current.AllCards.Any(c => int.Parse(c.Id[4..]) >= 205) ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c => int.Parse(c.Id[4..]) < 205)), JsonSerializer.Serialize(current.PresetDecks).Replace("\"WCG-249\"","\"WCG-128\"").Replace("\"WCG-250\"","\"WCG-169\"").Replace("\"WCG-212\"","\"WCG-169\""));
     internal static CardDatabase BeforeDeflation(CardDatabase current)
     {

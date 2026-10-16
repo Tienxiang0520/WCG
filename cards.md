@@ -140,7 +140,7 @@ source: WcgWeb/Data/cards.json
 | WCG-131 | 棘刺巨蛋 | 怪物 | 2 | 1100 | 1 | — | 陣亡：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。 | **Thorned Giant Egg** — On Death: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-135 | 野性萌發 | 法術 | 2 | — | — | — | 使 1 隻己方怪物 PP +500（將此卡附著其上）。 | **Wild Sprouting** — Give 1 of your monsters +500 PP (attach this card to it). |
 | WCG-143 | 甦生甘霖 | 法術 | 1 | — | — | — | 附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。 | **Reviving Downpour** — Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard. |
-| WCG-146 | 荊棘巨龜 | 怪物 | 3 | 1500 | 0 | — | 嘲諷。 | **Thornback Tortoise** — Taunt. |
+| WCG-146 | 荊棘巨龜 | 怪物 | 3 | 1400 | 0 | — | 嘲諷。 | **Thornback Tortoise** — Taunt. |
 | WCG-157 | 蒼翠古樹衛士 | 怪物 | 4 | 2000 | 1 | — | 無。 | **Verdant Elder Warden** — None. |
 | WCG-162 | 遠古泰坦·世界樹之靈 | 怪物 | 9 | 3100 | 2 | — | 嘲諷；進場：回復己方 3 點生命，並抽 2 張牌。 | **Ancient Titan, Spirit of the World Tree** — Taunt. Deploy: Restore 3 life to yourself and draw 2 cards. |
 | WCG-167 | 萌芽喚醒 | 法術 | 0 | — | — | — | 將 1 隻橫置的己方怪物轉為直立（本回合可以攻擊）。 | **Sprouting Awakening** — Untap 1 of your tapped monsters (it can attack this turn). |
@@ -168,7 +168,7 @@ source: WcgWeb/Data/cards.json
 | WCG-062 | 保護之手 | 法術 | 3 | — | — | — | 使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。 | **Hand of Protection** — Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself. |
 | WCG-063 | 聖印侍從 | 怪物 | 1 | 300 | 1 | — | 聖盾。 | **Sigil Squire** — Holy Shield. |
 | WCG-064 | 謙遜戒律 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的敵方怪物。 | **Edict of Humility** — Destroy 1 enemy monster that costs 2 or less. |
-| WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 1200 | 1 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
+| WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 1100 | 1 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
 | WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。 | **Blessing of Kings** — Choose either player and restore 2 life to them, then you draw 1 card. |
 | WCG-067 | 正義裁判官 | 怪物 | 4 | 1300 | 1 | — | 進場：將 1 隻費用 2 以下的敵方怪物移回手牌。 | **Righteous Arbiter** — Deploy: Return 1 enemy monster that costs 2 or less to its hand. |
 | WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 消滅所有 PP 600 以下的敵方怪物。 | **Divine Judgment** — Destroy all enemy monsters with 600 PP or less. |
@@ -185,7 +185,7 @@ source: WcgWeb/Data/cards.json
 | WCG-079 | 日耀聖堂巨像 | 怪物 | 6 | 2100 | 1 | — | 嘲諷；聖盾。 | **Sunblaze Temple Colossus** — Taunt. Holy Shield. |
 | WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 2100 | 2 | — | 聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。 | **Radiant Holy Emperor, Fordin** — Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less. |
 | WCG-127 | 守誓者壁壘 | 結界 | 3 | — | — | — | 只要你場上有直立的怪物，敵方法術對你造成的傷害 -1。 | **Oathkeeper's Rampart** — While you have an untapped monster, damage enemy spells deal to you is reduced by 1. |
-| WCG-129 | 白銀哨衛 | 怪物 | 1 | 700 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
+| WCG-129 | 白銀哨衛 | 怪物 | 1 | 500 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
 | WCG-142 | 誓言枷鎖 | 法術 | 3 | — | — | — | 將 1 隻怪物橫置並把此卡附著其上：附著期間它不能攻擊，回合開始時也不會轉為直立。 | **Shackles of Oath** — Tap 1 monster and attach this card to it. While attached, it can't attack and doesn't untap at the start of turns. |
 | WCG-147 | 聖堂仲裁護衛 | 怪物 | 3 | 800 | 1 | ←↑ | 【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。 | **Temple Arbiter Guard** — [Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield. |
 | WCG-152 | 禁魔石像 | 怪物 | 2 | 1100 | 0 | — | 嘲諷；不能成為法術的目標。 | **Spellward Statue** — Taunt. Can't be targeted by spells. |
@@ -206,7 +206,7 @@ source: WcgWeb/Data/cards.json
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| WCG-081 | 虛空夜行魔 | 怪物 | 1 | 700 | 1 | — | 嘲諷。 | **Void Nightstalker** — Taunt. |
+| WCG-081 | 虛空夜行魔 | 怪物 | 1 | 500 | 1 | — | 嘲諷。 | **Void Nightstalker** — Taunt. |
 | WCG-082 | 暗影裂箭 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1100 以下的敵方怪物。 | **Shadow Rift Arrow** — Destroy 1 enemy monster with 1100 PP or less. |
 | WCG-083 | 腐爛食屍鬼 | 怪物 | 1 | 400 | 1 | — | 陣亡：消滅 1 隻 PP 600 以下的敵方怪物。 | **Rotting Ghoul** — On Death: Destroy 1 enemy monster with 600 PP or less. |
 | WCG-084 | 靈魂撕裂 | 法術 | 1 | — | — | — | 額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。 | **Soul Rend** — Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less. |
@@ -241,7 +241,7 @@ source: WcgWeb/Data/cards.json
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若你墓地有深淵怪物，可將墓地 1 隻 2 費以下怪物加入手牌。 | **Vengeful Spirit Trap** — [Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If your graveyard has an [Abyss] monster, you may put a monster costing 2 or less from your graveyard into your hand. |
 | WCG-204 | 冥河徘徊者 | 怪物 | 3 | 1200 | 1 | — | 陣亡：從墓地將另 1 隻 2 費以下怪物加入手牌。 | **Styx Wanderer** — On Death: Put another monster costing 2 or less from your graveyard into your hand. |
 | WCG-207 | 蝕骨詛咒 | 法術 | 3 | — | — | — | 額外代價：失去 1 點生命。消滅 1 隻 PP 1800 以上的敵方嘲諷怪物。 | **Bone-Rot Curse** — Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more. |
-| WCG-212 | 墓語竊賊 | 怪物 | 3 | 1500 | 1 | — | 進場：將對手牌庫頂 2 張牌送入墓地。 | **Gravewhisper Thief** — Deploy: Put the top 2 cards of your opponent's deck into their graveyard. |
+| WCG-212 | 墓語竊賊 | 怪物 | 3 | 1400 | 1 | — | 進場：將對手牌庫頂 2 張牌送入墓地。 | **Gravewhisper Thief** — Deploy: Put the top 2 cards of your opponent's deck into their graveyard. |
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 1800 | 1 | — | 嘲諷；陣亡：從你的墓地將另 1 隻深淵怪物加入手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你的墓地有 5 隻以上怪物，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead. |
 
@@ -261,7 +261,7 @@ source: WcgWeb/Data/cards.json
 | WCG-110 | 狼騎兵先遣隊 | 怪物 | 3 | 1100 | 1 | — | 衝鋒。 | **Wolf Rider Vanguard** — Charge. |
 | WCG-111 | 叢林獵豹 | 怪物 | 3 | 1200 | 1 | — | 貫穿。 | **Jungle Panther** — Trample. |
 | WCG-112 | 破咒者 | 怪物 | 3 | 1400 | 1 | — | 進場：你可以選 1 隻怪物，移除它的所有附著卡並解除沉默；或摧毀 1 個結界（雙方皆可選）。 | **Spellbreaker** — Deploy: You may choose 1 monster and remove all cards attached to it and its Silence; or destroy 1 Ward (either side). |
-| WCG-113 | 森金持盾衛 | 怪物 | 4 | 2000 | 1 | — | 嘲諷。 | **Senjin Shieldbearer** — Taunt. |
+| WCG-113 | 森金持盾衛 | 怪物 | 4 | 1800 | 1 | — | 嘲諷。 | **Senjin Shieldbearer** — Taunt. |
 | WCG-114 | 雪人巨獸 | 怪物 | 4 | 2000 | 1 | — | 無。 | **Yeti Behemoth** — None. |
 | WCG-115 | 阿古斯防衛者 | 怪物 | 4 | 1100 | 1 | — | 進場：你可以從手牌免費召喚 1 隻費用 1 以下的怪物（不觸發進場）。 | **Argus Defender** — Deploy: You may summon a monster that costs 1 or less from your hand for free (its Deploy does not trigger). |
 | WCG-116 | 碧藍魔龍 | 怪物 | 5 | 1900 | 1 | — | 進場：抽 1 張牌。 | **Azure Drake** — Deploy: Draw 1 card. |
@@ -299,11 +299,11 @@ source: WcgWeb/Data/cards.json
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-214 | 終焉之潮 | 法術（理智／深淵） | 5 | — | — | — | 將對手牌庫頂 X 張牌送入墓地。X＝你墓地的怪物數（最多 8）。 | **Tide of the End** — Put the top X cards of your opponent's deck into their graveyard. X = the number of monsters in your graveyard (up to 8). |
 | WCG-217 | 列陣號令 | 法術（生機／秩序） | 2 | — | — | — | 你場上每有 1 隻有箭頭的怪物，抽 1 張牌（最多 3 張）。 | **Call to Formation** — Draw 1 card for each monster with arrows you control (up to 3). |
-| WCG-218 | 連根古木 | 怪物（生機／秩序） | 5 | 2200 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有貫穿。 | **Rootbound Elder** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Trample. |
+| WCG-218 | 連根古木 | 怪物（生機／秩序） | 5 | 1900 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物具有貫穿。 | **Rootbound Elder** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Trample. |
 | WCG-222 | 共生巨蜥 | 怪物（狂怒／生機） | 3 | 1300 | 1 | — | 此怪物每附著 1 張卡，PP +500。 | **Symbiotic Monitor** — This monster gets +500 PP for each card attached to it. |
-| WCG-224 | 伺守觀星者 | 怪物（理智／秩序） | 3 | 1700 | 1 | — | 你的手牌在 5 張以上時，此怪物具有嘲諷。 | **Vigilant Stargazer** — While you have 5 or more cards in hand, this monster has Taunt. |
-| WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 1900 | 2 | — | 你場上每有 1 個空格，此怪物 PP +300。 | **Lone Wolf Swordmaster** — This monster gets +300 PP for each empty slot you have. |
+| WCG-224 | 伺守觀星者 | 怪物（理智／秩序） | 3 | 1400 | 1 | — | 你的手牌在 5 張以上時，此怪物具有嘲諷。 | **Vigilant Stargazer** — While you have 5 or more cards in hand, this monster has Taunt. |
+| WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 1600 | 2 | — | 你場上每有 1 個空格，此怪物 PP +300。 | **Lone Wolf Swordmaster** — This monster gets +300 PP for each empty slot you have. |
 | WCG-233 | 獻祭苗床 | 法術（生機／深淵） | 1 | — | — | — | 額外代價：犧牲 1 隻己方怪物。抽 1 張牌；若犧牲的是生機怪物，回復 1 點生命。 | **Sacrificial Seedbed** — Additional cost: sacrifice 1 of your monsters. Draw 1 card. If the sacrificed monster was [Life], restore 1 life. |
 | WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 1500 | 1 | — | 陣亡：你可以從墓地免費召喚 1 隻 1 費的生機怪物（不觸發進場）。 | **Corpse Bloom** — On Death: You may summon a 1-cost [Life] monster from your graveyard for free (its Deploy does not trigger). |
-| WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 2 | 1300 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
+| WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 2 | 1100 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
 | WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 1400 | 1 | — | 衝鋒；聖盾。 | **Holy Flame Knight** — Charge. Holy Shield. |
