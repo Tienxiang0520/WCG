@@ -7,15 +7,17 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // LethalSight: chance per turn decision to run the lethal search; LethalBudget/LethalDepth bound it.
-    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth);
+    // Width/Depth/Budget bound the turn search (beam over move sequences); Sigma is evaluation noise and
+    // Blunder the chance of a random legal move, both deterministic (Noise()).
+    internal sealed record V7Profile(double LethalSight, int LethalBudget, int LethalDepth, int Width, int Depth, int Budget, double Sigma, double Blunder);
     internal static V7Profile V7ProfileFor(int level) => Math.Clamp(level, 0, 5) switch
     {
-        0 => new(.6, 60, 3),
-        1 => new(.9, 150, 4),
-        2 => new(1, 400, 5),
-        3 => new(1, 800, 6),
-        4 => new(1, 1500, 6),
-        _ => new(1, 2000, 7),
+        0 => new(.6, 60, 3, 2, 2, 30, 7.0, .30),
+        1 => new(.9, 150, 4, 3, 3, 80, 5.0, .18),
+        2 => new(1, 250, 5, 4, 4, 160, 3.5, .10),
+        3 => new(1, 400, 6, 5, 5, 300, 2.2, .06),
+        4 => new(1, 500, 6, 6, 5, 450, 1.2, .03),
+        _ => new(1, 700, 7, 8, 6, 650, 0, 0),
     };
 
     internal sealed record SimMove(string Kind, Guid Source, Guid? Target = null)
@@ -32,9 +34,95 @@ public partial class GameEngine
         var p = PlayerById(DecisionPlayerId);
         // Choices and targets raised by our own actions keep the v6 logic, the same logic simulations use.
         if (IsWaiting || !Main(p) || !IsQuiescent) return ExecuteTieredAi();
+        if (p.Id != _planOwner) { _plan = null; _planOwner = p.Id; }
         var prof = V7ProfileFor(AiLevel); _simCounter = 0;
-        if (Noise(101) < prof.LethalSight && FindLethal(p, prof) is { } lethal && ApplyMove(this, p.Id, lethal)) return true;
-        return ExecuteTieredAi();
+        // Following a plan whose simulated position still matches skips both searches.
+        var next = NextPlannedMove(p);
+        if (next == null)
+        {
+            if (Noise(101) < prof.LethalSight && FindLethal(p, prof) is { } lethal && ApplyMove(this, p.Id, lethal)) return true;
+            if (FillEnergyV6(p)) return true;
+            if (prof.Blunder > 0 && Noise(102) < prof.Blunder)
+            {
+                var legal = GenerateMoves(p, energy: false);
+                if (legal.Count > 0 && ApplyMove(this, p.Id, Pick(legal, 103))) return true;
+            }
+            next = SearchTurn(p, prof);
+        }
+        if (next == null) { _plan = null; return EndTurn(); }
+        if (ApplyMove(this, p.Id, next)) return true;
+        _plan = null; return ExecuteTieredAi();
+    }
+
+    // Energy keeps the v6 rule and choice (fill while short of the hand's costs, never the last playable card).
+    private bool FillEnergyV6(PlayerState p)
+    {
+        if (p.HasFilledEnergyThisTurn || p.Hand.Count == 0 || !(p.Hand.Count > 1 || !p.Hand.Any(c => CanPlayCard(p, c)))) return false;
+        if (p.TotalEnergy >= Math.Max(5, p.Hand.Max(c => ActualCost(p, c.Card)))) return false;
+        var energy = p.Hand.OrderBy(c => (c.Card.IsCounter ? 3 : 0) + HandValue(p, c) + (p.Hand.Count(x => x.Card.Id == c.Card.Id) > 1 ? -2 : 0)).ThenBy(c => c.Card.Id, StringComparer.Ordinal).First();
+        return PlayEnergy(p, energy);
+    }
+
+    // Turn plan cache: the best sequence from the last search, followed while the real position matches
+    // the simulated one; any difference (random draws, hidden counters) triggers a fresh search.
+    private sealed record PlanStep(SimMove Move, string ExpectedAfter);
+    private List<PlanStep>? _plan;
+    private string _planBefore = "", _planOwner = "";
+    internal static string PositionKey(GameEngine g, string pid)
+    {
+        var p = g.PlayerById(pid); var e = g.GetOpponent(p);
+        string Side(PlayerState s) => $"{s.Hp}/{s.AvailableEnergy}/{s.TotalEnergy}/{s.Hand.Count}/{s.Deck.Count}/{s.Graveyard.Count}:" +
+            string.Join(",", s.Board.Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{(m.HasShield ? 1 : 0)}:{m.Attachments.Count}"));
+        return $"{g.TurnNumber}|{g.CurrentTurnPlayerId}|{Side(p)}|{string.Join(",", p.Hand.Select(c => c.InstanceId))}|{Side(e)}";
+    }
+    private SimMove? NextPlannedMove(PlayerState p)
+    {
+        if (_plan == null || _plan.Count == 0) return null;
+        if (PositionKey(this, p.Id) != _planBefore) { _plan = null; return null; }
+        var step = _plan[0]; _plan.RemoveAt(0); _planBefore = step.ExpectedAfter;
+        return step.Move;
+    }
+
+    private sealed class SearchNode(GameEngine g, SearchNode? parent, SimMove? move, double score)
+    {
+        public GameEngine G = g; public SearchNode? Parent = parent; public SimMove? Move = move; public double Score = score;
+    }
+
+    // Turn search (ai-design.md §2.2–2.3): beam search over this turn's move sequences on hidden-information
+    // clones, scoring each position with Evaluate. Returns the first move of the best sequence, or null to end
+    // the turn. Ending the turn now is always a candidate.
+    internal SimMove? SearchTurn(PlayerState p, V7Profile prof)
+    {
+        int budget = prof.Budget, salt = 200;
+        var root = new SearchNode(CloneQuiescent(SimSeed(), p.Id), null, null, 0);
+        root.Score = root.G.Evaluate(p.Id);
+        var best = root; var frontier = new List<SearchNode> { root };
+        for (int depth = 0; depth < prof.Depth && frontier.Count > 0 && budget > 0; depth++)
+        {
+            var children = new List<SearchNode>();
+            foreach (var node in frontier)
+            {
+                var me = node.G.PlayerById(p.Id);
+                foreach (var m in node.G.GenerateMoves(me, energy: false))
+                {
+                    if (--budget < 0) break;
+                    var child = node.G.CloneQuiescent(SimSeed(), p.Id);
+                    if (!child.SimApply(x => ApplyMove(x, p.Id, m), Math.Max(AiLevel, 0))) continue;
+                    var score = child.Evaluate(p.Id) + (prof.Sigma > 0 ? (Noise(salt++) - .5) * 2 * prof.Sigma : 0);
+                    var c = new SearchNode(child, node, m, score);
+                    if (score > best.Score + 1e-9) best = c;
+                    if (!child.IsOver && child.CurrentTurnPlayerId == p.Id && child.IsQuiescent) children.Add(c);
+                }
+                if (budget < 0) break;
+            }
+            frontier = children.OrderByDescending(c => c.Score).Take(prof.Width).ToList();
+        }
+        if (best == root) { _plan = null; return null; }
+        var path = new List<SearchNode>();
+        for (var n = best; n != root; n = n.Parent!) path.Insert(0, n);
+        _plan = path.Skip(1).Select((n, i) => new PlanStep(n.Move!, PositionKey(n.G, p.Id))).ToList();
+        _planBefore = PositionKey(path[0].G, p.Id);
+        return path[0].Move;
     }
 
     internal bool ApplyMove(GameEngine g, string pid, SimMove m)
