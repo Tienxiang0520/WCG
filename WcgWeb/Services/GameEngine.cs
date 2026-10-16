@@ -292,11 +292,11 @@ public partial class GameEngine
             "WCG-164" => p.Field.Where(m => !m.IsTapped),
             "WCG-169" => p.Field,
             "WCG-072" => p.Field.Concat(enemy).Where(m => !m.IsSilenced),
-            _ => Array.Empty<MonsterInstance>()
+            _ => NewSpellTargets(p, c) ?? []
         };
-        return Targetable(p, candidates).Where(m => m.IsSilenced || m.Card.Id != "WCG-152").ToList();
+        return Targetable(p, candidates).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(m)).ToList();
     }
-    private static bool NeedsSpellTarget(string id) => id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
+    private static bool NeedsSpellTarget(string id) => NewNeedsTarget(id) || id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
     public string GetPlayProblem(PlayerState p, CardInstance c)
     {
         if (!Main(p)) return "目前不是可出牌的行動階段，或仍有選擇待結算。";
@@ -312,12 +312,13 @@ public partial class GameEngine
         if (c.Card.Id is "WCG-006" or "WCG-088" or "WCG-096" && p.Field.Count == 0) return "需要犧牲 1 隻己方怪物。";
         if (c.Card.Id == "WCG-090" && !p.Graveyard.Any(x => x.Card.IsMonster)) return "墓地沒有可回收的怪物。";
         if (c.Card.Id == "WCG-096" && p.Hp < 1) return "生命不足以支付。";
+        if (NewPlayProblem(p, c.Card) is { Length: > 0 } extra) return extra;
         if (NeedsSpellTarget(c.Card.Id) && SpellTargets(p, c.Card).Count == 0) return "沒有符合卡面條件的合法目標。";
         return "";
     }
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
     // Describe the first step before payment using the same predicates as BeginPlay.
-    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096";
+    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233";
     // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
@@ -386,6 +387,8 @@ public partial class GameEngine
         if (id == "WCG-164" && target != null) target.IsTapped = true;
         if (id == "WCG-165") { PayLife(p, 1); if (IsOver) return; }
         if (id == "WCG-169" && target != null) KillBatch([target], "消滅代價");
+        if (id == "WCG-207") { PayLife(p, 1); if (IsOver) return; }
+        if (id == "WCG-233") lastSacrifice = sacrifice;
         if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: !LegacyCardRules);
         if (id == "WCG-096") { PayLife(p, 1); if (IsOver) return; }
         // Cost-caused death triggers precede the original card effect.

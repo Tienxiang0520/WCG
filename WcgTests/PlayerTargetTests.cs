@@ -15,6 +15,7 @@ public class PlayerTargetTests
         var cards = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "cards.json")))!;
         if (old)
         {
+            cards = cards.Where(c => int.Parse(c.Id[4..]) < 205).ToList();
             var deflation = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-deflation.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => deflation.GetValueOrDefault(c.Id, c)).ToList();
             var simplified = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-rules-simplification.json")))!.ToDictionary(c => c.Id);
@@ -31,7 +32,10 @@ public class PlayerTargetTests
             var prior = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-player-targets.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => prior.GetValueOrDefault(c.Id, c)).ToList();
         }
-        return new(JsonSerializer.Serialize(cards), File.ReadAllText(Path.Combine(Root, "preset_decks.json")));
+        var presets = File.ReadAllText(Path.Combine(Root, "preset_decks.json"));
+        // Before PR E the v0.6 深淵 preset had no new cards.
+        if (old) presets = presets.Replace("\"WCG-249\"", "\"WCG-128\"").Replace("\"WCG-250\"", "\"WCG-169\"").Replace("\"WCG-212\"", "\"WCG-169\"");
+        return new(JsonSerializer.Serialize(cards), presets);
     }
     private sealed class Storage : IPlayerStorage
     {

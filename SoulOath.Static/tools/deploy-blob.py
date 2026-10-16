@@ -94,8 +94,8 @@ def plan(source):
     if set(files) - excluded != seen:
         raise ValueError('Preload manifest must cover every game asset')
     cards = json.loads(files['data/cards.json'].read_text())
-    if len(cards) != 204:
-        raise ValueError('Expected 204 cards')
+    if len(cards) != 257:
+        raise ValueError('Expected 257 cards')
     for card in cards:
         if f"card-art/{card.get('Id', card.get('id'))}.webp" not in seen:
             raise ValueError('Missing card artwork')

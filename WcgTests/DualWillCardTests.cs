@@ -11,7 +11,7 @@ using WcgWeb.Services;
 
 namespace WcgTests;
 
-// 雙色卡 (dual-will) data model and deck legality. The dual card here is a test fixture only; real dual cards ship with the new-card PR.
+// 雙色卡 (dual-will) data model and deck legality. The dual card here is a test fixture; the real dual cards are 214/217/218/222/224/228/233/235/239/240.
 public class DualWillCardTests
 {
     private static readonly CardDatabase Db = Load();
@@ -50,9 +50,10 @@ public class DualWillCardTests
     }
 
     [Fact]
-    public void ExistingCatalogueStaysSingleWill()
+    public void CatalogueHasExactlyTheTenDesignedDualCards()
     {
-        Assert.All(Db.AllCards, c => Assert.Single(c.Wills));
+        Assert.Equal(["WCG-214", "WCG-217", "WCG-218", "WCG-222", "WCG-224", "WCG-228", "WCG-233", "WCG-235", "WCG-239", "WCG-240"], Db.AllCards.Where(c => c.IsDual).Select(c => c.Id));
+        Assert.All(Db.AllCards.Where(c => !c.IsDual), c => Assert.Single(c.Wills));
         Assert.All(Db.PresetDecks, d => Assert.True(d.IsValid(Db.GetCard, out var e), e));
     }
 

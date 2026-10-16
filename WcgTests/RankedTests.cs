@@ -175,7 +175,7 @@ public sealed class RankedTests : IDisposable
                 Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));Assert.True(restored.Engine.IsWaiting);
                 Assert.True(restored.Engine.DamageCounters);Assert.True(Send(restored,"choice",option:"SKIP").Success);
                 var after=JsonSerializer.Serialize(StateShape(restored.Engine));Assert.Equal(after,JsonSerializer.Serialize(StateShape(Session().Engine)));
-                Assert.Equal(5,restored.Read().Match!.Actions.Last().RulesVersion);return;
+                Assert.Equal(GameEngine.RankedAiVersion,restored.Read().Match!.Actions.Last().RulesVersion);return;
             }
             if(engine.DecisionPlayerId=="computer"){session.Coordinator.Resync(lease);Assert.True(session.Coordinator.StepAi(lease).Success);continue;}
             if(engine.CurrentPendingChoice is {} other){Assert.True(Send(session,"choice",option:other.Options.First().Id).Success);continue;}
@@ -284,6 +284,24 @@ public sealed class RankedTests : IDisposable
         deck.CardIds=Enumerable.Repeat("WCG-200",4).Concat(deck.CardIds.Skip(4)).ToList();
         Assert.True(deck.IsValid(cards.GetCard,out _));Assert.True(current.Start(deck).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
         Assert.Equal(4,current.Engine.Player.Hand.Concat(current.Engine.Player.Deck).Count(c=>c.Card.Id=="WCG-200"));
+        current.Coordinator.Dispose();
+    }
+
+    [Fact] public void NewCardsPreserveActiveMatchAndReplay()
+    {
+        var prior=CounterHistory.BeforeNewCards(cards);
+        Assert.Equal(204,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-205"));Assert.NotNull(cards.GetCard("WCG-257"));
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[4]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
+        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+        Assert.True(current.Start(deck).Success);Assert.Empty(current.BalanceNotice);Assert.NotEqual(rules,current.Read().Match!.Rules);
         current.Coordinator.Dispose();
     }
 
@@ -590,9 +608,17 @@ public sealed class RankedTests : IDisposable
         // Rebuilt draw, sacrifice and swarm themes remain available at high tiers; strong control stays gated above.
         foreach(var key in new[]{"REASON-ARCANE","ABYSS-SOULFEAST","REASON-ORACLE","WRATH-WARBAND"}) Assert.Contains(key,keys[5]);
         Assert.True(keys[5].IsSupersetOf(keys[0]));
-        Assert.Equal(new[]{11,20,24,24,27,30}, keys.Select(k=>k.Count));
+        Assert.Equal(new[]{12,22,29,30,34,37}, keys.Select(k=>k.Count));
+        // PR E 新流派：機制越複雜越晚出現。
+        Assert.Equal([0,1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-MERCENARY")));
+        Assert.Equal([1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-LONEWOLF")));
+        foreach(var key in new[]{"VITAL-PHALANX","REASON-PROPHECY","VITAL-ROTCYCLE"}) Assert.Equal([2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains(key)));
+        Assert.Equal([3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-TIDE")));
+        Assert.Equal([4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-WARRUNE")));
+        Assert.Contains(decks.Pool(5),e=>e.Deck.CardIds.Any(id=>cards.GetCard(id)!.Wills.Length==2));
+        Assert.Contains(decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="REASON-ARCANE").Deck.CardIds,id=>id=="WCG-252");
         Assert.DoesNotContain("白銀長城",decks.Summary(4));Assert.Contains("白銀長城",decks.Summary(5));
-        Assert.Equal(30,keys.SelectMany(k=>k).Distinct().Count());
+        Assert.Equal(37,keys.SelectMany(k=>k).Distinct().Count());
         // 大師使用完整牌表；同一流派在較低牌位的牌表是簡化版。
         var thorn=decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="VITAL-THORN").Deck;
         Assert.Contains(thorn.CardIds,id=>id=="WCG-082");

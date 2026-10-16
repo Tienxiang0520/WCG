@@ -25,11 +25,11 @@ public class DiversityBalanceTests
     [Fact] public void ReferenceDecksArePlayableCopiesAndDoNotWritePlayerData()
     {
         var cards=Cards();var ranked=new RankedDecks(cards,File.ReadAllText(Path.Combine(Root,"Data/ranked_decks.json")));var storage=new MemoryStorage();
-        var decks=new DeckService(cards,storage,ranked);var references=decks.GetReferenceDecks();Assert.Equal(30,references.Count);Assert.Equal(35,decks.GetAllAvailableDecks().Count);
+        var decks=new DeckService(cards,storage,ranked);var references=decks.GetReferenceDecks();Assert.Equal(37,references.Count);Assert.Equal(42,decks.GetAllAvailableDecks().Count);
         foreach(var d in references){Assert.True(ranked.IsLegal(d,out var error),error);Assert.NotNull(decks.GetDeck(d.Id));}
         references[0].CardIds.Clear();Assert.Equal(50,decks.GetReferenceDecks()[0].CardIds.Count);Assert.Equal(0,storage.Writes);
         var reference=decks.GetReferenceDecks()[0];Assert.Throws<ArgumentException>(()=>decks.SaveDeck(reference));Assert.Equal(0,storage.Writes);
-        reference.Id=Guid.NewGuid().ToString();decks.SaveDeck(reference);Assert.Equal(1,storage.Writes);Assert.Single(decks.GetCustomDecks());Assert.Equal(30,decks.GetReferenceDecks().Count);
+        reference.Id=Guid.NewGuid().ToString();decks.SaveDeck(reference);Assert.Equal(1,storage.Writes);Assert.Single(decks.GetCustomDecks());Assert.Equal(37,decks.GetReferenceDecks().Count);
     }
 
     [Fact] public void LookupReturnsIndependentCopiesAndKeepsCustomDeckPriority()

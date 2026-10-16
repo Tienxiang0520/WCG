@@ -30,6 +30,7 @@ public sealed class CloudSaveValidationTests
         if(era>=1)
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
+            definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
             var deflation=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeDeflation"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>deflation.GetValueOrDefault(c.Id,c)).ToList();
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeRulesSimplification"))!.ToDictionary(c=>c.Id);
@@ -47,7 +48,10 @@ public sealed class CloudSaveValidationTests
             var prior=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeOctoberBalance"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>prior.GetValueOrDefault(c.Id,c)).ToList();
         }
-        var cards=new CardDatabase(JsonSerializer.Serialize(definitions),Read("WcgCloud.Presets"));
+        var presets=Read("WcgCloud.Presets");
+        /* 舊時代的 v0.6 深淵預組還沒有 PR E 換入的新卡。 */
+        if(era>=1) presets=presets.Replace("\"WCG-249\"","\"WCG-128\"").Replace("\"WCG-250\"","\"WCG-169\"").Replace("\"WCG-212\"","\"WCG-169\"");
+        var cards=new CardDatabase(JsonSerializer.Serialize(definitions),presets);
         var opponents=new RankedDecks(cards,Read("WcgCloud.RankedDecks"));
         var storage=new MemoryStorage();var store=new RankedStore(storage);
         var session=new RankedSession(cards,new DeckService(cards,storage),store,opponents,NullLogger<BattleCoordinator>.Instance);

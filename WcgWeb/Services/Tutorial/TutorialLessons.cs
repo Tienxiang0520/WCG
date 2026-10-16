@@ -256,14 +256,14 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "戰鬥關鍵字", Spot = ["own-card:WCG-051", "own-card:WCG-053"],
-                    Text = "劇毒：與它交戰的怪物無論 PP 多高都會被消滅。貫穿：攻擊方存活並消滅防守方，且 PP 差距達 700 以上時，對敵方玩家造成 1 點傷害。" },
+                    Text = "劇毒：與它交戰的怪物無論 PP 多高都會被消滅。貫穿：攻擊方存活並在交戰中消滅防守方時，對敵方玩家造成 1 點傷害。" },
                 new() { Title = "劇毒", Spot = ["own-card:WCG-051", "enemy-card:WCG-157"], Allow = [Attack("WCG-051", "WCG-157")],
                     Done = e => !OnField(e.Computer, "WCG-157"),
                     Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。PP 較低的蜥蜴會被消滅，但劇毒也會帶走對方。", TextValues = [CardName("WCG-051"), OwnPP("WCG-051"), CardName("WCG-157"), EnemyPP("WCG-157")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-051"), CardName("WCG-157")] },
                 new() { Title = "貫穿", Spot = ["own-card:WCG-053", "enemy-card:WCG-154"], Allow = [Attack("WCG-053", "WCG-154")],
                     Done = e => !OnField(e.Computer, "WCG-154") && e.Computer.Hp == 6,
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。PP 差距達到貫穿門檻，會額外對電腦造成 1 點傷害。", TextValues = [CardName("WCG-053"), OwnPP("WCG-053"), CardName("WCG-154"), EnemyPP("WCG-154")],
+                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。攻擊方存活並消滅對方，貫穿會額外對電腦造成 1 點傷害。", TextValues = [CardName("WCG-053"), OwnPP("WCG-053"), CardName("WCG-154"), EnemyPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-053"), CardName("WCG-154")] },
                 new() { Title = "衝鋒", Spot = ["hand:WCG-110"], Allow = [Play("WCG-110"), Slot()],
                     Done = e => OnField(e.Player, "WCG-110"),
@@ -376,6 +376,62 @@ public static class TutorialLessons
         },
         new()
         {
+            Id = "mill", Icon = "spark", Title = "送入墓地：磨光牌庫",
+            Summary = "把對手牌庫頂的牌直接送入墓地，讓電腦在空牌庫中抽牌而落敗。",
+            Topics = ["送入墓地（磨牌）", "牌庫張數", "牌庫耗盡落敗", "新流派機制"],
+            Scene = new(
+                new() { Hand = ["WCG-212", "WCG-211"], Deck = Deck(), Energy = 5 },
+                new() { Hand = ["WCG-101"], Deck = ["WCG-101", "WCG-154", "WCG-101", "WCG-154", "WCG-101"], Energy = 1 }),
+            Steps =
+            [
+                new() { Title = "送入墓地", Spot = ["face"],
+                    Text = "「送入墓地」會把牌庫最上面的牌直接放進墓地，不算抽牌，也不會觸發陣亡。電腦的牌庫只剩 5 張。" },
+                new() { Title = "進場磨牌", Spot = ["hand:WCG-212"], Allow = [Play("WCG-212"), Slot()],
+                    Done = e => e.Computer.Deck.Count == 3 && Settled(e),
+                    Text = "召喚「{0}」，效果：{1}", TextValues = [CardName("WCG-212"), CardEffect("WCG-212")],
+                    Hint = "請召喚「{0}」。", HintValues = [CardName("WCG-212")] },
+                new() { Title = "法術磨牌", Spot = ["hand:WCG-211", "face"], Allow = [Play("WCG-211")],
+                    Done = e => e.Computer.Deck.Count == 0 && Settled(e),
+                    Text = "打出「{0}」，效果：{1}", TextValues = [CardName("WCG-211"), CardEffect("WCG-211")],
+                    Hint = "請打出「{0}」。", HintValues = [CardName("WCG-211")] },
+                new() { Title = "結束回合", Spot = ["end"], Allow = [End()],
+                    Done = e => e.Computer.HasLost,
+                    Text = "電腦的牌庫空了。按「結束回合」，它回合開始需要抽牌時就會落敗。",
+                    Hint = "請按「結束回合」。" },
+                new() { Title = "本課重點",
+                    Text = "磨牌適合對手牌庫快見底時收尾。其他新機制也會在對局中遇到：箭頭要看左右是否有隊友，附著卡疊在同一隻怪物上，手牌反擊在受到傷害時發動，有些卡看場上的空格數，犧牲與墓地怪物能讓大怪物降費，中立傭兵會互相加成。" }
+            ]
+        },
+        new()
+        {
+            Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、聖盾與雙色卡",
+            Summary = "PP 門檻只有三段；聖盾每回合只擋一次；雙色卡屬於兩個意志。",
+            Topics = ["PP 600／1100 以下、1800 以上", "聖盾每回合一次", "連續攻擊破盾", "雙色卡"],
+            Scene = new(
+                new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-031", 2), new("WCG-101", 4)] }),
+            Steps =
+            [
+                new() { Title = "三段門檻", Spot = ["enemy-card:WCG-157", "enemy-card:WCG-101"],
+                    Text = "卡牌上的 PP 門檻只有三種：PP 600 以下、PP 1100 以下、PP 1800 以上。門檻看卡上數值加上目前加成。" },
+                new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
+                    Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Settled(e),
+                    Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾會擋下這次消滅。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-031")] },
+                new() { Title = "同回合再攻擊", Spot = ["own-card:WCG-155", "enemy-card:WCG-031"], Allow = [Attack("WCG-155", "WCG-031")],
+                    Done = e => !OnField(e.Computer, "WCG-031") && Settled(e),
+                    Text = "聖盾每回合只擋一次。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
+                new() { Title = "看門檻選目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
+                    Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
+                    Text = "「{0}」的效果：{1} 「{2}」PP 太高不能選，請選「{3}」。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-157"), CardName("WCG-101")],
+                    Hint = "請打出「{0}」並選擇「{1}」。", HintValues = [CardName("WCG-246"), CardName("WCG-101")] },
+                new() { Title = "本課重點",
+                    Text = "雙色卡同時屬於兩個意志，只能放進主色與副色剛好是這兩個意志的牌組，也同時滿足兩個意志的條件。天梯對手牌組會用到這些新機制，牌位越高越常見。" }
+            ]
+        },
+        new()
+        {
             Id = "deckbuilding", Icon = "cards", Title = "牌組構築與五大意志",
             Summary = "在牌組構築室認識 50 張規則、單色／雙色、五大意志與儲存方式。",
             Topics = ["50 張牌組", "每張最多 4 張", "最多兩個派系（中立不計）", "主色", "單色／雙色", "五大意志", "篩選與搜尋", "預設牌組", "列印"],
@@ -385,7 +441,7 @@ public static class TutorialLessons
                 new("牌組構築室", "每副牌組必須剛好 50 張，同名卡最多 4 張，最多使用兩個意志（中立不計）。這次導覽不會改動你已儲存的牌組。", ".deck-page .page-hero"),
                 new("建立空白牌組", "按「新建」開始一副全新的牌組。", ".deck-panel-card .card-footer .btn-outline-secondary", "deck-new"),
                 new("選擇主色", "從「主色」選單選一個意志作為這副牌的主色。", "#main-will", "deck-main"),
-                new("單色或雙色", "單色只放主色與中立；雙色可再加一個副色。卡牌庫會自動只顯示這副牌能放入的卡，鎖住的意志會顯示鎖頭。", ".color-mode"),
+                new("單色或雙色", "單色只放主色與中立；雙色可再加一個副色，副色張數不限。雙色卡要主色與副色剛好是它的兩個意志才能放入。卡牌庫會自動只顯示這副牌能放入的卡，鎖住的意志會顯示鎖頭。", ".color-mode"),
                 new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、聖盾與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
                 new("加入卡片", "按任一張卡下方的「＋ 加入」，把它放進牌組。點卡面可以查看完整效果。", ".add-card-btn", "deck-add"),
                 new("張數與統計", "牌組面板會即時顯示張數進度、派系數與怪物／法術比例。湊滿 50 張才能儲存與出戰。", ".deck-panel-card .card-header"),

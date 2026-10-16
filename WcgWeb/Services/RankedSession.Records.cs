@@ -46,7 +46,7 @@ public sealed partial class RankedSession
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));
             foreach (var action in actions)
             {
-                engine.StackableShields = action.RulesVersion >= 2;
+                engine.StackableShields = action.RulesVersion >= 2; engine.AiRevision = action.RulesVersion;
                 var response = action.Type == "ai" ? bridge.AiStepCore() : bridge.SubmitCore(Decode(engine, action));
                 if (!response.Success) return new(record, steps, $"回顧在第 {steps.Count} 步無法還原，只顯示到這裡。");
                 steps.Add(new(steps.Count, action.Type == "ai" ? "computer" : "player", action.Type, response.State.Turn, response.State, response.Events));

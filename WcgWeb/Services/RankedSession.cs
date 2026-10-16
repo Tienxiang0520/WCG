@@ -44,7 +44,7 @@ public sealed partial class RankedSession
         }
         // Matches started before the card-text clarity update keep the old wording and the old engine behaviour (LegacyCardRules).
         // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
-        priorEras = [Era(CardBalanceHistory.BeforeDeflation(cards), false, false), Era(CardBalanceHistory.BeforeRulesSimplification(cards), false, false), Era(CardBalanceHistory.BeforeEnergyKeywords(cards), false, false), Era(CardBalanceHistory.BeforeHeroGuard(cards), false, false), Era(CardBalanceHistory.BeforeStrongBuildAdjustment(cards), false, false), Era(CardBalanceHistory.BeforeOctoberBalance(cards), false, false), Era(CardBalanceHistory.BeforeEnergyShield(cards), false, false), Era(CardBalanceHistory.BeforeDamageCounters(cards), false, false), Era(CardBalanceHistory.BeforePlayerTargets(cards), false, false), Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
+        priorEras = [Era(CardBalanceHistory.BeforeNewCards(cards), false, false), Era(CardBalanceHistory.BeforeDeflation(cards), false, false), Era(CardBalanceHistory.BeforeRulesSimplification(cards), false, false), Era(CardBalanceHistory.BeforeEnergyKeywords(cards), false, false), Era(CardBalanceHistory.BeforeHeroGuard(cards), false, false), Era(CardBalanceHistory.BeforeStrongBuildAdjustment(cards), false, false), Era(CardBalanceHistory.BeforeOctoberBalance(cards), false, false), Era(CardBalanceHistory.BeforeEnergyShield(cards), false, false), Era(CardBalanceHistory.BeforeDamageCounters(cards), false, false), Era(CardBalanceHistory.BeforePlayerTargets(cards), false, false), Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
             Era(CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards), true)];
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try
@@ -133,11 +133,11 @@ public sealed partial class RankedSession
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         foreach (var action in match.Actions)
         {
-            Engine.StackableShields = action.RulesVersion >= 2;
+            Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
             var response = action.Type == "ai" ? Bridge.AiStepCore() : Bridge.SubmitCore(Decode(action));
             if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
         }
-        Engine.StackableShields = true;
+        Engine.StackableShields = true; Engine.AiRevision = GameEngine.RankedAiVersion;
         if (match.Settled != Engine.IsOver) throw new InvalidOperationException("對局結算紀錄不一致。");
     }
     private BattleResponse Reject(string reason) => new(false, "ranked", reason, Guid.NewGuid(), Bridge.Snapshot(), []);

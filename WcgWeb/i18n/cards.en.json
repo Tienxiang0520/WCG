@@ -1079,5 +1079,270 @@
   "name": "Styx Wanderer",
   "text": "On Death: Put another monster costing 2 or less from your graveyard into your hand.",
   "zh_text": "陣亡：從墓地將另 1 隻 2 費以下怪物加入手牌。"
+ },
+ "WCG-205": {
+  "zh": "碎盾狂戰士",
+  "name": "Shieldbreaker Berserker",
+  "text": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+ },
+ "WCG-206": {
+  "zh": "纏根束縛",
+  "name": "Rootbind",
+  "text": "Silence 1 enemy Taunt monster."
+ },
+ "WCG-207": {
+  "zh": "蝕骨詛咒",
+  "name": "Bone-Rot Curse",
+  "text": "Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more."
+ },
+ "WCG-208": {
+  "zh": "寂靜學者",
+  "name": "Silent Scholar",
+  "text": "Deploy: Silence 1 enemy monster."
+ },
+ "WCG-209": {
+  "zh": "破甲工匠",
+  "name": "Armorbreaker Smith",
+  "text": "Deploy: 1 enemy monster loses Holy Shield this turn."
+ },
+ "WCG-210": {
+  "zh": "夜行越牆者",
+  "name": "Night Wallcrawler",
+  "text": "Taunt can't block this monster."
+ },
+ "WCG-211": {
+  "zh": "思緒潰散",
+  "name": "Shattered Thoughts",
+  "text": "Put the top 3 cards of your opponent's deck into their graveyard."
+ },
+ "WCG-212": {
+  "zh": "墓語竊賊",
+  "name": "Gravewhisper Thief",
+  "text": "Deploy: Put the top 2 cards of your opponent's deck into their graveyard."
+ },
+ "WCG-213": {
+  "zh": "記憶吞噬者",
+  "name": "Memory Devourer",
+  "text": "Taunt. At the end of your turn, if this monster is untapped, put the top card of your opponent's deck into their graveyard."
+ },
+ "WCG-214": {
+  "zh": "終焉之潮",
+  "name": "Tide of the End",
+  "text": "Put the top X cards of your opponent's deck into their graveyard. X = the number of monsters in your graveyard (up to 8)."
+ },
+ "WCG-215": {
+  "zh": "根鬚哨兵",
+  "name": "Rootwatch Sentry",
+  "text": "[Arrow: ← →] While you have monsters on both its left and right, this monster has Taunt."
+ },
+ "WCG-216": {
+  "zh": "前鋒盾衛",
+  "name": "Vanguard Shieldguard",
+  "text": "[Arrow: ↑] The enemy monster directly across can't attack."
+ },
+ "WCG-217": {
+  "zh": "列陣號令",
+  "name": "Call to Formation",
+  "text": "Draw 1 card for each monster with arrows you control (up to 3)."
+ },
+ "WCG-218": {
+  "zh": "連根古木",
+  "name": "Rootbound Elder",
+  "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Trample."
+ },
+ "WCG-219": {
+  "zh": "方陣隊長",
+  "name": "Phalanx Captain",
+  "text": "While all 5 of your slots are filled, your monsters get +300 PP."
+ },
+ "WCG-220": {
+  "zh": "荊棘甲殼",
+  "name": "Thorn Carapace",
+  "text": "Give 1 of your monsters Trample (attach this card to it)."
+ },
+ "WCG-221": {
+  "zh": "烈焰戰紋",
+  "name": "Flame War-Rune",
+  "text": "Give 1 of your monsters +300 PP and +1 DP when attacking the player (attach this card to it)."
+ },
+ "WCG-222": {
+  "zh": "共生巨蜥",
+  "name": "Symbiotic Monitor",
+  "text": "This monster gets +500 PP for each card attached to it."
+ },
+ "WCG-223": {
+  "zh": "戰紋傳承者",
+  "name": "Rune Inheritor",
+  "text": "On Death: Return 1 of your cards that was attached to this monster to your hand."
+ },
+ "WCG-224": {
+  "zh": "伺守觀星者",
+  "name": "Vigilant Stargazer",
+  "text": "While you have 5 or more cards in hand, this monster has Taunt."
+ },
+ "WCG-225": {
+  "zh": "審判回響",
+  "name": "Echo of Judgment",
+  "text": "[Counter] When you take damage from a monster: Cancel the damage and tap that monster."
+ },
+ "WCG-226": {
+  "zh": "預知閃避",
+  "name": "Foreseen Dodge",
+  "text": "[Counter] When you take damage from a spell: Cancel the damage and draw 1 card."
+ },
+ "WCG-227": {
+  "zh": "靜默哨衛",
+  "name": "Silent Sentinel",
+  "text": "Deploy: If you have more cards in hand than your opponent, draw 1 card."
+ },
+ "WCG-228": {
+  "zh": "孤狼劍聖",
+  "name": "Lone Wolf Swordmaster",
+  "text": "This monster gets +300 PP for each empty slot you have."
+ },
+ "WCG-229": {
+  "zh": "虛空隱士",
+  "name": "Void Hermit",
+  "text": "While this is your only monster, it can't be targeted by spells."
+ },
+ "WCG-230": {
+  "zh": "決鬥宣言",
+  "name": "Declaration of Duel",
+  "text": "Tap 1 of your untapped monsters and have it battle 1 enemy monster (Taunt can't stop it)."
+ },
+ "WCG-231": {
+  "zh": "空無祭壇",
+  "name": "Altar of Emptiness",
+  "text": "At the start of your turn, if you have exactly 1 monster, draw 1 card."
+ },
+ "WCG-232": {
+  "zh": "腐土苗床",
+  "name": "Rotsoil Seedbed",
+  "text": "On Death: Put the top card of your deck into your energy zone."
+ },
+ "WCG-233": {
+  "zh": "獻祭苗床",
+  "name": "Sacrificial Seedbed",
+  "text": "Additional cost: sacrifice 1 of your monsters. Draw 1 card. If the sacrificed monster was [Life], restore 1 life."
+ },
+ "WCG-234": {
+  "zh": "腐木巨像",
+  "name": "Rotwood Colossus",
+  "text": "Taunt. This card costs 1 less for every 3 monsters in your graveyard (minimum 2)."
+ },
+ "WCG-235": {
+  "zh": "屍花",
+  "name": "Corpse Bloom",
+  "text": "On Death: You may summon a 1-cost [Life] monster from your graveyard for free (its Deploy does not trigger)."
+ },
+ "WCG-236": {
+  "zh": "傭兵隊長",
+  "name": "Mercenary Captain",
+  "text": "Deploy: If all your other monsters are [Neutral], draw 1 card."
+ },
+ "WCG-237": {
+  "zh": "傭兵契約",
+  "name": "Mercenary Contract",
+  "text": "Look at the top 3 cards of your deck. Put 1 [Neutral] monster among them into your hand and the rest on the bottom."
+ },
+ "WCG-238": {
+  "zh": "流浪將軍",
+  "name": "Wandering General",
+  "text": "This monster gets +200 PP for each other [Neutral] monster you control."
+ },
+ "WCG-239": {
+  "zh": "灰燼獻祭者",
+  "name": "Ash Offerer",
+  "text": "On Death: Deal 1 damage to the enemy player."
+ },
+ "WCG-240": {
+  "zh": "聖焰騎士",
+  "name": "Holy Flame Knight",
+  "text": "Charge. Holy Shield."
+ },
+ "WCG-241": {
+  "zh": "熔岩衝陣者",
+  "name": "Lava Line-Breaker",
+  "text": "Charge. While all your monsters are [Fury], this monster gets +400 PP."
+ },
+ "WCG-242": {
+  "zh": "戰火補給",
+  "name": "War Supplies",
+  "text": "Draw 2 cards, then lose 1 life."
+ },
+ "WCG-243": {
+  "zh": "赤鱗護衛",
+  "name": "Red-Scale Guard",
+  "text": "Taunt. On Death: Deal 1 damage to the enemy player."
+ },
+ "WCG-244": {
+  "zh": "烽火戰旗",
+  "name": "Beacon War Banner",
+  "text": "At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player."
+ },
+ "WCG-245": {
+  "zh": "叢林統領",
+  "name": "Jungle Warlord",
+  "text": "Deploy: If all your other monsters are [Life], draw 1 card."
+ },
+ "WCG-246": {
+  "zh": "藤鞭絞殺",
+  "name": "Vine Strangle",
+  "text": "Destroy 1 enemy monster with 1100 PP or less."
+ },
+ "WCG-247": {
+  "zh": "大地之心",
+  "name": "Heart of the Earth",
+  "text": "At the start of your turn, if you have 3 or more [Life] monsters, draw 1 card."
+ },
+ "WCG-248": {
+  "zh": "蠻荒踐踏",
+  "name": "Primal Trample",
+  "text": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less PP than it."
+ },
+ "WCG-249": {
+  "zh": "墓穴守門人",
+  "name": "Crypt Gatekeeper",
+  "text": "Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand."
+ },
+ "WCG-250": {
+  "zh": "亡者低語",
+  "name": "Whispers of the Dead",
+  "text": "Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead."
+ },
+ "WCG-251": {
+  "zh": "秘法護衛",
+  "name": "Arcane Guard",
+  "text": "Deploy: If all your other monsters are [Reason], draw 1 card."
+ },
+ "WCG-252": {
+  "zh": "星界巨像",
+  "name": "Astral Colossus",
+  "text": "Whenever you cast a spell, this monster gets +300 PP this turn."
+ },
+ "WCG-253": {
+  "zh": "山岳巨人",
+  "name": "Mountain Giant",
+  "text": "None."
+ },
+ "WCG-254": {
+  "zh": "遠古石像巨神",
+  "name": "Ancient Stone Titan",
+  "text": "None."
+ },
+ "WCG-255": {
+  "zh": "天穹泰坦",
+  "name": "Skyvault Titan",
+  "text": "None."
+ },
+ "WCG-256": {
+  "zh": "符文哨兵",
+  "name": "Rune Sentry",
+  "text": "None."
+ },
+ "WCG-257": {
+  "zh": "傭兵重鎚手",
+  "name": "Mercenary Hammerer",
+  "text": "None."
  }
 }

@@ -7,8 +7,20 @@ internal static class CardBalanceHistory
 {
     // Catalog before the rules simplification (Holy Shield refresh, fixed 200–204 effects, 3 PP thresholds, attached 143/165/168).
     // Catalog before the PP/cost deflation (PR B); only PP and cost changed, effects and DP did not.
-    internal static CardDatabase BeforeDeflation(CardDatabase current) => DeflatedCatalog(current)
-        ? Override(current, "WcgWeb.Balance.BeforeDeflation") : current;
+    // Catalog before the new cards 205–257 (PR D); existing cards are unchanged, so the old catalog is the current one without them.
+    internal static CardDatabase BeforeNewCards(CardDatabase current) => !current.AllCards.Any(c => IsNewCard(c.Id)) ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c => !IsNewCard(c.Id))), PresetsBeforeNewCards(current.PresetDecks));
+    // PR E put new cards into the v0.6 深淵 preset; the older catalogs keep its original list (249 was 128, 250 and 212 were 169).
+    private static readonly Dictionary<string, string> PresetCardBeforeNewCards = new() { ["WCG-249"] = "WCG-128", ["WCG-250"] = "WCG-169", ["WCG-212"] = "WCG-169" };
+    internal static string PresetsBeforeNewCards(IEnumerable<Deck> presets) => JsonSerializer.Serialize(presets.Select(d =>
+    {
+        var copy = JsonSerializer.Deserialize<Deck>(JsonSerializer.Serialize(d))!;
+        copy.CardIds = copy.CardIds.Select(id => PresetCardBeforeNewCards.GetValueOrDefault(id, id)).ToList();
+        return copy;
+    }));
+    internal static bool IsNewCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n >= 205;
+    internal static CardDatabase BeforeDeflation(CardDatabase current) { current = BeforeNewCards(current); return DeflatedCatalog(current)
+        ? Override(current, "WcgWeb.Balance.BeforeDeflation") : current; }
     internal static bool DeflatedCatalog(CardDatabase cards) => cards.GetCard("WCG-161")?.PP < 4000;
     internal static CardDatabase BeforeRulesSimplification(CardDatabase current) { current = BeforeDeflation(current); return SimplifiedCatalog(current)
         ? Override(current, "WcgWeb.Balance.BeforeRulesSimplification") : current; }

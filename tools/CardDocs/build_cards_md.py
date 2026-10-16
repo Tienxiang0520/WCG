@@ -38,8 +38,12 @@ def build():
         "類型：" + "、".join(f"{t} {types[t]} 張" for t in sorted(types, key=lambda t: TYPE_ORDER.get(t, 9))) + "。",
         "白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。", "",
     ]
-    for will, will_en in WILLS:
-        group = sorted((c for c in cards if c["will"] == will), key=lambda c: c["id"])
+    sections = list(WILLS) + [("雙色", "Dual")]
+    for will, will_en in sections:
+        if will == "雙色":
+            group = sorted((c for c in cards if isinstance(c["will"], list)), key=lambda c: c["id"])
+        else:
+            group = sorted((c for c in cards if c["will"] == will), key=lambda c: c["id"])
         if not group:
             continue
         out += [f"## {will}（{will_en}，{len(group)} 張）", "",
@@ -51,7 +55,7 @@ def build():
             arrows = "".join(ARROWS.get(a, a) for a in c.get("arrows") or [])
             english = f"**{e.get('name', '')}** — {e.get('text', '')}" if e else ""
             out.append("| " + " | ".join(cell(x) for x in [
-                c["id"], c["name"], c["type"], c["total_cost"],
+                c["id"], c["name"], c["type"] + (f"（{'／'.join(c['will'])}）" if isinstance(c["will"], list) else ""), c["total_cost"],
                 c["pp"] if monster else "—", c["dp"] if monster else "—",
                 arrows or "—", c["text"], english]) + " |")
         out.append("")
