@@ -87,10 +87,7 @@
                         }
                         @* 聖盾指示物: one-time Holy Shield counters to cut out and place on monsters (any small object works too). *@
                         <article class="print-card shield-token-card" aria-label="@L["聖盾指示物"]">
-                            <h2>@L["聖盾指示物"]</h2>
-                            <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><b>✚</b><small>@L["聖盾"]</small></span> }</div>
-                            <p>@L["獲得聖盾時放 1 個在怪物上；擋下 1 次交戰消滅後拿掉，不會補回。"]</p>
-                            <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
+                            <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><ShieldIcon Class="shield-token-icon" /></span> }</div>
                             @CropMarks
                         </article>
                     }

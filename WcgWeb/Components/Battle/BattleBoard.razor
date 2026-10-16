@@ -29,7 +29,7 @@
                     <div class="field-card @(mine?"":"enemy-card") @(m.Status.Contains("嘲諷")?"has-taunt":"") @(m.Status.Any(x=>x.StartsWith("能量護盾")||x.StartsWith("聖盾"))?"has-shield":"") @(m.Status.Contains("沉默")?"is-silenced":"") @(m.Status.Contains("劇毒")?"is-poisonous":"") @(mine&&CanDrag&&(m.CanAttack||m.CanActivate)?"action-ready":"") @(mine&&m.CanAttack&&CanDrag?"attack-ready":"")" data-will="@(m.IsSet?null:WcgWeb.Components.Common.CardFaceThemes.Key(m.Card.Will))" aria-label="@L.CardName(m.Card)" data-drag-kind="@(mine&&m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
                     @if(m.IsSet){<div class="field-card-back" aria-hidden="true">@L["魂"]<br/>@L["誓"]</div>}
                     else{<div class="card-art-layer" aria-hidden="true"><CardImage CardId="@m.Card.CardId" Loading="eager" /></div>}
-                    @if(m.Status.Count(x=>x=="聖盾指示物") is var sc && sc>0){<span class="shield-counter" title="@L["聖盾指示物"]" aria-label="@L["聖盾指示物"] @sc">@(sc>1?$"✚{sc}":"✚")</span>}
+                    @if(m.Status.Count(x=>x=="聖盾指示物") is var sc && sc>0){<span class="shield-counter" title="@L["聖盾指示物"] ×@sc" role="img" aria-label="@L["聖盾指示物"] ×@sc"><WcgWeb.Components.Common.ShieldIcon Class="shield-counter-icon" />@if(sc>1){<b class="shield-counter-count">@sc</b>}</span>}
                     @if(m.Status.Contains("嘲諷")){<img class="taunt-frame" src="battle/taunt-frame.svg" alt="" aria-hidden="true" draggable="false" />}
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
                     <strong>@L.CardName(m.Card)</strong>

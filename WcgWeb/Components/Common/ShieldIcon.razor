@@ -1,0 +1,11 @@
+@* Pure-icon Holy Shield counter (heater shield emblem); no text so it works as a board-game token. *@
+<svg class="@Class" viewBox="0 0 64 72" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 3 L59 12 V34 C59 52 46 63 32 69 C18 63 5 52 5 34 V12 Z" fill="@(Ink ? "#ffffff" : "#b8862a")" stroke="#5a3b00" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M32 9 L53 16 V34 C53 49 43 58 32 63 C21 58 11 49 11 34 V16 Z" fill="@(Ink ? "#ffffff" : "#f6dc7a")" stroke="#7a5200" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M32 9 V63 M11 30 H53" stroke="#7a5200" stroke-width="2.4" fill="none"/>
+    @if (!Ink) { <path d="M15 18 L30 13 V28 H15 Z" fill="#fff8d8" opacity=".7"/> }
+</svg>
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Ink { get; set; }
+}
