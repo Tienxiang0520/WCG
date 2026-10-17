@@ -19,8 +19,43 @@ public sealed partial class RankedSession
     private readonly CardDatabase currentCards;
     // Earlier card catalogs, newest first. A saved match resumes and replays with the catalog and engine rules it started on.
     private sealed record CatalogEra(string Rules, string IdentifierRules, CardDatabase Cards, bool LimitFactionTriggers, bool LegacyCardRules);
-    private readonly CatalogEra[] priorEras;
-    private CatalogEra? PriorEra(string matchRules) => priorEras.FirstOrDefault(e => e.Rules == matchRules || e.IdentifierRules == matchRules);
+    // Engine flags per CardBalanceHistory.EraSteps entry (same order, newest first). Matches started before the card-text
+    // clarity update keep the old wording and engine behaviour (LegacyCardRules); matches started before the arrow-card
+    // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
+    // oldest catalog also limits faction triggers.
+    private static readonly (bool LimitFactionTriggers, bool LegacyCardRules)[] EraFlags =
+        [.. Enumerable.Repeat((false, false), 16), (false, true), (false, true), (true, true)];
+    // Built on demand: most visits only touch the current catalog, and a lookup stops at the first matching era,
+    // building each older catalog from the previous one in a single step (no repeated history chains).
+    private readonly object eraGate = new();
+    private readonly List<CatalogEra> priorEras = [];
+    private CatalogEra? PriorEra(string matchRules)
+    {
+        lock (eraGate)
+        {
+            foreach (var era in priorEras) if (era.Rules == matchRules || era.IdentifierRules == matchRules) return era;
+            while (priorEras.Count < CardBalanceHistory.EraSteps.Length)
+            {
+                var era = BuildEra(priorEras.Count);
+                priorEras.Add(era);
+                if (era.Rules == matchRules || era.IdentifierRules == matchRules) return era;
+            }
+            return null;
+        }
+    }
+    private CatalogEra BuildEra(int index)
+    {
+        var db = CardBalanceHistory.EraSteps[index](index == 0 ? currentCards : priorEras[index - 1].Cards);
+        var json = JsonSerializer.Serialize(db.AllCards);
+        var (limit, legacy) = EraFlags[index];
+        return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, legacy);
+    }
+    // Tests: every era fingerprint, building all of them.
+    internal IReadOnlyList<(string Rules, string IdentifierRules, bool LimitFactionTriggers, bool LegacyCardRules)> AllPriorEras()
+    {
+        PriorEra("");
+        lock (eraGate) return priorEras.Select(e => (e.Rules, e.IdentifierRules, e.LimitFactionTriggers, e.LegacyCardRules)).ToList();
+    }
     private RankedProfile profile = new();
     private readonly DeckService deckService;
     public GameEngine Engine { get; }
@@ -37,15 +72,6 @@ public sealed partial class RankedSession
         rules = Fingerprint(catalog);
         priorIdentifierRules = Fingerprint(catalog.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal));
         currentCards = cards;
-        CatalogEra Era(CardDatabase db, bool limit, bool legacy = true)
-        {
-            var json = JsonSerializer.Serialize(db.AllCards);
-            return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, legacy);
-        }
-        // Matches started before the card-text clarity update keep the old wording and the old engine behaviour (LegacyCardRules).
-        // Matches started before the arrow-card expansion keep their original cards; arrow effects are keyed to card arrows, so replays stay deterministic.
-        priorEras = [Era(CardBalanceHistory.BeforeShieldCounter(cards), false, false), Era(CardBalanceHistory.BeforeReasonBuff(cards), false, false), Era(CardBalanceHistory.BeforeDualWill(cards), false, false), Era(CardBalanceHistory.BeforeSilenceSpell(cards), false, false), Era(CardBalanceHistory.BeforeAbilityPp(cards), false, false), Era(CardBalanceHistory.BeforeNewCards(cards), false, false), Era(CardBalanceHistory.BeforeDeflation(cards), false, false), Era(CardBalanceHistory.BeforeRulesSimplification(cards), false, false), Era(CardBalanceHistory.BeforeEnergyKeywords(cards), false, false), Era(CardBalanceHistory.BeforeHeroGuard(cards), false, false), Era(CardBalanceHistory.BeforeStrongBuildAdjustment(cards), false, false), Era(CardBalanceHistory.BeforeOctoberBalance(cards), false, false), Era(CardBalanceHistory.BeforeEnergyShield(cards), false, false), Era(CardBalanceHistory.BeforeDamageCounters(cards), false, false), Era(CardBalanceHistory.BeforePlayerTargets(cards), false, false), Era(CardBalanceHistory.BeforeDiversity(cards), false, false), Era(CardBalanceHistory.BeforeCardText(cards), false), Era(CardBalanceHistory.BeforeArrowCards(cards), false),
-            Era(CardBalanceHistory.BeforeUnlimitedFactionTriggers(cards), true)];
         Engine = new(cards); Bridge = new(Engine, decks); Coordinator = new(Bridge, Engine, logger, this.clock);
         try
         {
