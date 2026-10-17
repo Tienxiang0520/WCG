@@ -153,7 +153,7 @@ public partial class GameEngine
                 if (p.Occupied < 5 && p.Hand.Any(x => x.Card.IsMonster && x.Card.TotalCost <= 1)) options.Add(new() { Id = "SUMMON", Title = "從手牌免費召喚 1 費以下怪物" });
                 Ask(p, "野性之力抉擇", options, o => { if (o.Id == "DRAW") DrawMany(p, 1); else FreeHand(p, 1, 1); }); break;
             case "WCG-044":
-                if (p.Deck.Count > 0) { var energy = p.Deck[0]; p.Deck.RemoveAt(0); energy.IsTapped = true; p.EnergyZone.Add(energy); Present("energy", p, energy.InstanceId, label: "額外背面能量"); Log("滋養萌發：額外能量背面橫置進場。"); } break;
+                if (p.Deck.Count > 0) { var energy = p.Deck[0]; p.Deck.RemoveAt(0); energy.IsTapped = true; energy.TemporaryEnergy = false; p.EnergyZone.Add(energy); Present("energy", p, energy.InstanceId, label: "額外背面能量"); Log("滋養萌發：額外能量背面橫置進場。"); } break;
             case "WCG-050": Heal(playerTarget ?? p, 2); break;
             case "WCG-052": FreeHand(p, 2, 2); break;
             case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
@@ -166,6 +166,10 @@ public partial class GameEngine
             case "WCG-094": Resolve(KillTarget, () => Heal(p, 1)); break;
             case "WCG-098": KillBatch(p.Field.Concat(enemy.Field).ToArray(), c.Name); break;
             case "WCG-121": DrawMany(p, 1); break;
+            case LuckyCoinId:
+                // Face up and untapped in the energy zone: 1 extra energy this turn only (EndTurn puts it into the graveyard).
+                if (p.Graveyard.Remove(source)) { source.IsTapped = false; source.TemporaryEnergy = true; p.EnergyZone.Add(source); Present("energy", p, source.InstanceId, card: c, label: "臨時能量"); Log($"【{p.Name}】獲得 1 點臨時能量（本回合）。", "action"); }
+                break;
             case "WCG-122": Search(p, 5, x => x.Card.IsMonster); break;
             default: ExtraSpell(p,source,target); break;
         }

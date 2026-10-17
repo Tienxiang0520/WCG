@@ -9,7 +9,7 @@
     }
     <div class="print-controls">
         <div class="print-control-heading"><h1>@L["列印實體牌組"]</h1><button class="btn btn-outline-light" data-print-close @onclick="Close" disabled="@Printing">@L["返回編輯"]</button></div>
-        <p>@L.Text(Plan.Name) · @(Pages.Count == 6 ? L["50 張牌 · 6 頁卡牌"] : L.F("50 張牌 · {0} 頁卡牌", Pages.Count))@(Tools ? L["＋2 張生命計數卡"] + L["＋1 張聖盾指示物"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
+        <p>@L.Text(Plan.Name) · @(Pages.Count == 6 ? L["50 張牌 · 6 頁卡牌"] : L.F("50 張牌 · {0} 頁卡牌", Pages.Count))@(Tools ? L["＋2 張生命計數卡"] + L["＋1 張聖盾指示物"] + L["＋1 張幸運幣（後攻用）"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
         <div class="print-options">
             <fieldset><legend>@L["卡面樣式"]</legend>
                 <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Style = PrintStyle.Color" disabled="@Printing" /> @L["彩色圖文"]</label>
@@ -21,7 +21,7 @@
                 <label><input type="radio" name="print-paper" checked="@(Paper == PrintPaper.Letter)" @onchange="() => Paper = PrintPaper.Letter" disabled="@Printing" /> @L["Letter（8.5 × 11 吋）"]</label>
             </fieldset>
             <label><input type="checkbox" @bind="BleedOption" disabled="@(Printing || !Color)" /> @L["加 3 mm 出血（僅彩色圖文；卡片橫放，A4 每頁 8 張、Letter 每頁 6 張）"]</label>
-            <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡與聖盾指示物"]</label>
+            <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡、聖盾指示物與幸運幣"]</label>
             <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單"]</label>
         </div>
         <p class="print-instructions">@L[Layout.IsA4 ? "A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。" : "Letter 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
@@ -101,6 +101,14 @@
                                 @CropMarks
                             </article>
                         }
+                        @* 幸運幣: the second player's extra opening card (outside the 50-card deck). *@
+                        <article class="print-card life-card coin-card" aria-label="@L.CardName("WCG-263", "幸運幣")">
+                            <h2>@L.CardName("WCG-263", "幸運幣") · 0 @L["費"]</h2><p>@L["中立 · 法術"]</p>
+                            <p>@L.CardText("WCG-263", "將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。")</p>
+                            <p>@L["後攻玩家開局多拿這 1 張。"]</p>
+                            <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
+                            @CropMarks
+                        </article>
                         @* 聖盾指示物: one-time Holy Shield counters to cut out and place on monsters (any small object works too). *@
                         <article class="print-card shield-token-card" aria-label="@L["聖盾指示物"]">
                             <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><ShieldIcon Class="shield-token-icon" /></span> }</div>

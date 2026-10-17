@@ -29,6 +29,12 @@ public partial class GameEngine
     // Ranked matches and replays recorded before the first-player life rule start both players at 7 (RankedMatch.StartRules 0).
     // Set it before StartGame; every new game uses the current rule (first player 6, second player 7).
     public bool EqualStartingLife { get; set; }
+    // The second player starts with 1 extra 幸運幣 (WCG-263) in hand, outside the 50-card deck (RankedMatch.StartRules 2, 2026-10-17).
+    // Older ranked matches and replays (StartRules below 2) and catalogs without the card start without it. Set before StartGame.
+    public bool SecondPlayerCoin { get; set; } = true;
+    public const string LuckyCoinId = "WCG-263";
+    // Cards that entered the match from outside both decks (the opening 幸運幣), for card-conservation checks.
+    public int OpeningCoins { get; private set; }
     internal void SetReplaySeed(int seed) { _random = new Random(seed); _aiSeed = seed; }
     private readonly object _gate = new();
     private readonly LinkedList<Action> _effects = new();
@@ -188,7 +194,14 @@ public partial class GameEngine
             if (!EqualStartingLife) ActivePlayer.Hp = PlayerState.FirstPlayerStartHp;
             Present("turn", ActivePlayer, label: "對局開始");
             for (int i = 0; i < 7; i++) { Draw(Player); Draw(Computer); }
-            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action"); return true;
+            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action");
+            OpeningCoins = 0;
+            if (SecondPlayerCoin && !EqualStartingLife && _cardDb.GetCard(LuckyCoinId) is { } coin)
+            {
+                var second = GetOpponent(ActivePlayer); second.Hand.Add(new(coin)); OpeningCoins = 1;
+                Log($"【{second.Name}】後攻，開局手牌多 1 張【{coin.Name}】。", "action");
+            }
+            return true;
         });
     }
     private void Shuffle<T>(List<T> list)
@@ -214,7 +227,7 @@ public partial class GameEngine
     public bool PlayEnergy(PlayerState p, CardInstance c) => Change(() =>
     {
         if (!CanPlayEnergy(p, c)) return Fail("填能量限自己行動階段每回合一次，且不能有待結算選擇。");
-        p.Hand.Remove(c); c.IsTapped = false; p.EnergyZone.Add(c); p.HasFilledEnergyThisTurn = true;
+        p.Hand.Remove(c); c.IsTapped = false; c.TemporaryEnergy = false; p.EnergyZone.Add(c); p.HasFilledEnergyThisTurn = true;
         Present("energy", p, c.InstanceId, label: "背面填能量");
         Log($"【{p.Name}】背面填入 1 張能量，不抽牌。", "action"); return true;
     });

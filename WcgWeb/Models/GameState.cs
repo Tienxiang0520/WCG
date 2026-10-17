@@ -14,6 +14,8 @@ public class CardInstance
     public CardDefinition Card { get; set; } = null!;
 
     public bool IsTapped { get; set; }
+    // 幸運幣 (WCG-263) placed face up in the energy zone: 1 energy for this turn only, put into the graveyard at the end of its owner's turn.
+    public bool TemporaryEnergy { get; set; }
 
     public CardInstance(CardDefinition card)
     {
@@ -122,6 +124,7 @@ public class PlayerState
     public int AvailableEnergy => EnergyZone.Count(e => !e.IsTapped);
     public int AttachedEnergy => Field.Where(m => m.ShieldOwnerId == Id).Sum(m => m.ShieldCount);
     public int TotalEnergy => EnergyZone.Count + AttachedEnergy;
+    public int TemporaryEnergy => EnergyZone.Count(e => e.TemporaryEnergy);
 
     public void ResetEnergyForOwnTurn()
     {

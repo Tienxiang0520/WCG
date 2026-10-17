@@ -23,7 +23,7 @@ public class GameEngineTests
     [Fact]
     public void TestCardDatabaseLoadsCards()
     {
-        Assert.Equal(262, _cardDb.AllCards.Count);
+        Assert.Equal(263, _cardDb.AllCards.Count);
         Assert.Null(_cardDb.GetCard("ENG-01"));
         Assert.NotNull(_cardDb.GetCard("WCG-001"));
         Assert.NotNull(_cardDb.GetCard("WCG-123"));
@@ -66,7 +66,7 @@ public class GameEngineTests
         Assert.Equal(6, engine.Player.Hp); // the first player starts one life short
         Assert.Equal(7, engine.Computer.Hp);
         Assert.Equal(7, engine.Player.Hand.Count);
-        Assert.Equal(7, engine.Computer.Hand.Count);
+        Assert.Equal(8, engine.Computer.Hand.Count); // 後攻 7 + 1 幸運幣
         Assert.Equal(43, engine.Player.Deck.Count); // 50 - 7
         Assert.Equal(43, engine.Computer.Deck.Count);
         Assert.Equal(TurnPhase.MainPhase, engine.CurrentPhase);

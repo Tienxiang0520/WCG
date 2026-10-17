@@ -57,7 +57,7 @@ if(args.Contains("--explain"))
   slowest=Math.Max(slowest,start.Elapsed.TotalMilliseconds);
  }
  if(!e.IsOver)throw new Exception("Timeout: "+deck.Name);
- if(new[]{e.Player,e.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null))!=100)
+ if(new[]{e.Player,e.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null))!=100+e.OpeningCoins)
   throw new Exception("Card count changed: "+deck.Name);
  return(e.Computer.HasLost,e.TurnNumber,slowest);
 }

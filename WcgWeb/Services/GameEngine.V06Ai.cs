@@ -45,7 +45,7 @@ public partial class GameEngine
         var reaction=p.Hand.FirstOrDefault(c=>c.Card.IsCounter&&p.AvailableEnergy>=c.Card.TotalCost);
         if(!DamageCounters&&reaction!=null&&p.Occupied<5&&!p.Structures.Any(x=>x.IsSet))return SetCard(p,reaction);
         var active=p.Structures.FirstOrDefault(x=>CanActivate(p,x));if(active!=null)return Activate(p,active);
-        var playable=p.Hand.Where(c=>CanPlayCard(p,c)).Where(c=>!(c.Card.Id=="WCG-019"&&p.Hp<=2||c.Card.Id=="WCG-165"&&p.Hp<=1||c.Card.Id=="WCG-085"&&p.Hp<=1))
+        var playable=p.Hand.Where(c=>CanPlayCard(p,c)).Where(c=>!(c.Card.Id=="WCG-019"&&p.Hp<=2||c.Card.Id=="WCG-165"&&p.Hp<=1||c.Card.Id=="WCG-085"&&p.Hp<=1||c.Card.Id==LuckyCoinId&&!CoinUseful(p,c)))
             .OrderByDescending(c=>c.Card.IsMonster).ThenBy(c=>ActualCost(p,c.Card)).FirstOrDefault(c=>!p.Structures.Any(x=>x.IsSet)&&!p.Field.Any(m=>m.HasShield)||p.AvailableEnergy-ActualCost(p,c.Card)>=1||p.Hand.Count<3);
         if(playable!=null)return playable.Card.IsMonster?SummonMonster(p,playable):playable.Card.IsEnchantment?PlayEnchantment(p,playable):CastSpell(p,playable);
         foreach(var m in p.Field.Where(CanAttack).OrderByDescending(x=>x.CurrentDP).ToArray())

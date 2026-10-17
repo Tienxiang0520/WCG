@@ -24,7 +24,7 @@ public class NewCardTests
     [Fact] public void CatalogHasAllDesignedCardsWithPlainText()
     {
         var added=cards.AllCards.Where(c=>int.Parse(c.Id[4..])>=205&&int.Parse(c.Id[4..])<258).ToArray();
-        Assert.Equal(53,added.Length);Assert.Equal("WCG-257",added[^1].Id);Assert.Null(cards.GetCard("WCG-263"));
+        Assert.Equal(53,added.Length);Assert.Equal("WCG-257",added[^1].Id);Assert.Null(cards.GetCard("WCG-264"));
         Assert.Equal(["WCG-253","WCG-254","WCG-255","WCG-256","WCG-257"],added.Where(c=>c.IsVanilla).Select(c=>c.Id));
         Assert.All(added.Where(c=>c.IsVanilla),c=>{Assert.Equal("無。",c.Text);Assert.Empty(c.Keywords);});
         Assert.All(added,c=>{Assert.DoesNotContain("能量護盾",c.Text);Assert.All(c.Keywords,k=>Assert.Contains(k,new[]{"嘲諷","衝鋒","聖盾","貫穿","劇毒","沉默"}));

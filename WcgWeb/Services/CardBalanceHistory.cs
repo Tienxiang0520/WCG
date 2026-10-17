@@ -34,6 +34,10 @@ internal static class CardBalanceHistory
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
     // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
     // 500-PP 聖印侍從 together with 2400-PP 日耀聖堂巨像 identifies the 聖盾 PP restore (063 was 300 from the deflation on, 800 before it).
+    // Catalog before 幸運幣 (WCG-263) existed (2026-10-17); nothing else changed.
+    internal static bool LuckyCoinCatalog(CardDatabase cards) => cards.GetCard("WCG-263") != null;
+    private static CardDatabase LuckyCoinStep(CardDatabase c) => !LuckyCoinCatalog(c) ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => x.Id != "WCG-263")), JsonSerializer.Serialize(c.PresetDecks));
     // Catalog before 冰霜魔導師 (029) and 時間靜止者 (035) worked directly on entry (2026-10-17); only their text changed.
     internal static bool MageDirectCatalog(CardDatabase cards) => cards.GetCard("WCG-029")?.Text.StartsWith("進場", StringComparison.Ordinal) == true;
     private static CardDatabase MageDirectStep(CardDatabase c) => MageDirectCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeMageDirect") : c;
@@ -78,12 +82,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeMageDirect(CardDatabase current) => MageDirectStep(current);
+    internal static CardDatabase BeforeLuckyCoin(CardDatabase current) => LuckyCoinStep(current);
+    internal static CardDatabase BeforeMageDirect(CardDatabase current) => MageDirectStep(BeforeLuckyCoin(current));
     internal static CardDatabase BeforeShieldPp(CardDatabase current) => ShieldPpStep(BeforeMageDirect(current));
     internal static CardDatabase BeforeCostUp(CardDatabase current) => CostUpStep(BeforeShieldPp(current));
     internal static CardDatabase BeforeShieldCounter(CardDatabase current) => ShieldCounterStep(BeforeCostUp(current));

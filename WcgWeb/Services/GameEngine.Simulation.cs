@@ -24,7 +24,7 @@ public partial class GameEngine
             CardInstance Card(CardInstance c, bool hidden)
             {
                 if (map.TryGetValue(c, out var done)) return (CardInstance)done;
-                var copy = new CardInstance(hidden ? HiddenCard : c.Card) { InstanceId = hidden ? NewId() : c.InstanceId, IsTapped = c.IsTapped };
+                var copy = new CardInstance(hidden ? HiddenCard : c.Card) { InstanceId = hidden ? NewId() : c.InstanceId, IsTapped = c.IsTapped, TemporaryEnergy = c.TemporaryEnergy };
                 map[c] = copy; return copy;
             }
             MonsterInstance Unit(MonsterInstance m, bool hidden)

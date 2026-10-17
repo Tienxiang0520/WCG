@@ -162,7 +162,7 @@ public partial class GameEngine
     {var list=candidates.Where(Alive).ToArray();if(list.Length==0)return;
         Ask(p,title,list.Select(m=>new ChoiceOption{Id=m.InstanceId.ToString(),Title=m.Card.Name,PreviewCard=m.Card}).Append(new(){Id="SKIP",Title="不使用此可選效果"}),o=>{if(o.Id!="SKIP")action(list.First(m=>m.InstanceId.ToString()==o.Id));});}
     private void TapEnemyEnergy(PlayerState e){var c=e.EnergyZone.FirstOrDefault(c=>!c.IsTapped);if(c!=null)c.IsTapped=true;}
-    private void TopEnergy(PlayerState p){if(p.Deck.Count==0)return;var c=p.Deck[0];p.Deck.RemoveAt(0);c.IsTapped=false;p.EnergyZone.Add(c);}
+    private void TopEnergy(PlayerState p){if(p.Deck.Count==0)return;var c=p.Deck[0];p.Deck.RemoveAt(0);c.IsTapped=false;c.TemporaryEnergy=false;p.EnergyZone.Add(c);}
     private void ExtraSpell(PlayerState p,CardInstance c,MonsterInstance? t)
     {
         var e=GetOpponent(p);switch(c.Card.Id)

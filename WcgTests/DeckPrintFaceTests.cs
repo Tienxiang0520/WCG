@@ -53,7 +53,8 @@ public class DeckPrintFaceTests
         var html = await Render(language, MixedPlan());
         Assert.DoesNotContain("print-card-art", html); // the old print layout is gone
         Assert.Equal(Mixed.Length, Regex.Matches(html, "class=\"print-card print-face-cell\"").Count);
-        Assert.Equal(Mixed.Length + 3, Regex.Matches(html, "class=\"crop-marks\"").Count); // + 2 life counter cards + 1 聖盾指示物 card
+        Assert.Equal(Mixed.Length + 4, Regex.Matches(html, "class=\"crop-marks\"").Count); // + 2 life counter cards + 1 聖盾指示物 card + 1 幸運幣
+        Assert.Single(Regex.Matches(html, "class=\"print-card life-card coin-card\""));
         Assert.Equal(12, Regex.Matches(html, "class=\"shield-token\"").Count);
         foreach (var id in Mixed)
         {

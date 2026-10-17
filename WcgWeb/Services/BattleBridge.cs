@@ -114,7 +114,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
             m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray());
     }
     private BattleSide Side(PlayerState p) => new(p.Id, p.Hp, p.Deck.Count, p.Hand.Count,
-        p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped)).ToArray(),
+        p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped) { Temporary = e.TemporaryEnergy }).ToArray(),
         p.Board.OrderBy(m=>m.Slot).Select(m => Monster(p, m)).ToArray(), p.Graveyard.Select(GameEngine.VisibleCard).ToArray());
     private BattleSnapshot BuildSnapshot()
     {

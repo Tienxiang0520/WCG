@@ -19,7 +19,12 @@ public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool Attac
     bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0);
 public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
     bool CanAttack, string Problem, BattleTarget[] Targets, BattleCard? Attachment, int Slot = -1, bool Tapped = false, bool IsSet = false, bool CanActivate = false, BattleCard[]? Attachments = null);
-public record BattleEnergy(Guid InstanceId, bool Tapped);
+public record BattleEnergy(Guid InstanceId, bool Tapped)
+{
+    // 幸運幣 face up in the energy zone: counts as energy this turn only. Omitted when false so older snapshots stay unchanged.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public bool Temporary { get; init; }
+}
 public record BattleSide(string Id, int Hp, int DeckCount, int HandCount, int AvailableEnergy,
     int TotalEnergy, BattleEnergy[] Energy, BattleMonster[] Field, BattleCard[] Graveyard);
 public record BattleOption(string Id, string Title, string Subtitle, BattleCard? Card);

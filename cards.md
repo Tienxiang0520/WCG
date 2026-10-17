@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 262
+total_cards: 263
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 262 張）
+# WCG 卡牌總表（共 263 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 158 張、法術 84 張、法術（反擊） 9 張、結界 11 張。
+類型：怪物 158 張、法術 85 張、法術（反擊） 9 張、結界 11 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -243,7 +243,7 @@ source: WcgWeb/Data/cards.json
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 1800 | 1 | — | 嘲諷；陣亡：從你的墓地將另 1 隻深淵怪物加入手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你的墓地有 5 隻以上怪物，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead. |
 
-## 中立（Neutral，43 張）
+## 中立（Neutral，44 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -290,6 +290,7 @@ source: WcgWeb/Data/cards.json
 | WCG-254 | 遠古石像巨神 | 怪物 | 8 | 3200 | 2 | — | 無。 | **Ancient Stone Titan** — None. |
 | WCG-255 | 天穹泰坦 | 怪物 | 9 | 3500 | 3 | — | 無。 | **Skyvault Titan** — None. |
 | WCG-257 | 傭兵重鎚手 | 怪物 | 5 | 2300 | 2 | — | 無。 | **Mercenary Hammerer** — None. |
+| WCG-263 | 幸運幣 | 法術 | 0 | — | — | — | 將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。 | **The Coin** — Put this card face up and untapped into your energy zone as 1 temporary energy. At the end of your turn, put it into your graveyard (whether or not it was used). |
 
 ## 雙色（Dual，17 張）
 

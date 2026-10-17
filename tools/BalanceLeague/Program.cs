@@ -28,7 +28,7 @@ Parallel.For(0,jobs.Length,new ParallelOptions{MaxDegreeOfParallelism=int.Parse(
         for(;steps<4000&&!g.IsOver;steps++)if(!g.ExecuteAiStep())throw new InvalidOperationException($"Stalled {pool[i].Deck.Name}/{pool[j].Deck.Name}: {g.LastError}");
         if(!g.IsOver)throw new InvalidOperationException("Action limit reached.");
         int count=new[]{g.Player,g.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
-        if(count!=100)throw new InvalidOperationException("Card conservation failed: "+count);
+        if(count!=100+g.OpeningCoins)throw new InvalidOperationException("Card conservation failed: "+count);
         bool won=g.Computer.HasLost;if(won)leftWins++;if(won==first)firstWins++;
         turns+=g.TurnNumber;actions+=steps;if(g.Player.LossReason.Contains("牌庫")||g.Computer.LossReason.Contains("牌庫"))fatigue++;
     }

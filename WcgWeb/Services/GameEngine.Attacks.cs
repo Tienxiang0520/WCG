@@ -123,6 +123,7 @@ public partial class GameEngine
         effects.Add(() => Observe(GetOpponent(p)));
         effects.Add(() =>
         {
+            foreach(var coin in p.EnergyZone.Where(x=>x.TemporaryEnergy).ToArray()){p.EnergyZone.Remove(coin);coin.TemporaryEnergy=false;coin.IsTapped=false;p.Graveyard.Add(coin);Present("discard",p,coin.InstanceId,card:coin.Card,label:"臨時能量消失");}
             var counters=ShieldCounterRules;
             foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TriggersThisTurn=0;if(!counters)unit.ShieldSpent=false;}
             p.NextCreatureDiscount=0;

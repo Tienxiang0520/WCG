@@ -204,8 +204,11 @@ public partial class GameEngine
         return enemy.OrderByDescending(m => BodyValue(m) + (m.IsTaunt ? 3 : 0)).FirstOrDefault() ?? (id == "WCG-072" ? null : own.FirstOrDefault());
     }
 
+    // 幸運幣 is only worth playing when its 1 temporary energy lets a card in hand be played this turn.
+    private bool CoinUseful(PlayerState p, CardInstance coin) => p.Hand.Any(x => x != coin && x.Card.Id != LuckyCoinId && !x.Card.IsCounter && ActualCost(p, x.Card) == p.AvailableEnergy + 1);
     private bool SelfHarmful(PlayerState p, CardInstance c) => c.Card.Id switch
     {
+        LuckyCoinId => !CoinUseful(p, c),
         "WCG-019" => p.Hp <= 2, "WCG-165" => p.Hp <= 1, "WCG-085" => p.Hp <= 1, "WCG-013" => p.Hp <= 1, "WCG-096" => p.Hp <= 1,
         "WCG-098" or "WCG-161" => AiLevel > 0 && GetOpponent(p).Field.Count <= p.Field.Count,
         _ => false,
@@ -277,6 +280,7 @@ public partial class GameEngine
     {
         var e = GetOpponent(p); var id = c.Card.Id;
         if (SelfHarmful(p, c)) return -100;
+        if (id == LuckyCoinId) return 8;
         double Sum(IEnumerable<MonsterInstance> ms) => ms.Sum(BodyValue);
         if (c.Card.IsMonster)
         {
