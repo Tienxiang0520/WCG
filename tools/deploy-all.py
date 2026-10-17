@@ -50,9 +50,18 @@ def system_env():
 
 
 def get_json(url, timeout=20):
-    request = urllib.request.Request(url, headers={'Cache-Control': 'no-cache', 'User-Agent': 'wcg-deploy-all'})
+    # Ask for an unencoded body: blobs are stored pre-compressed (Brotli) and urllib cannot decode them.
+    request = urllib.request.Request(url, headers={'Cache-Control': 'no-cache', 'User-Agent': 'wcg-deploy-all', 'Accept-Encoding': 'identity'})
     with urllib.request.urlopen(request, timeout=timeout) as response:
-        return json.loads(response.read().decode('utf-8'))
+        body = response.read()
+        encoding = response.headers.get('Content-Encoding', '').lower()
+    if encoding == 'br':
+        body = subprocess.run(['node', '-e', "process.stdout.write(require('zlib').brotliDecompressSync(require('fs').readFileSync(0)))"],
+                              input=body, capture_output=True, check=True).stdout
+    elif encoding == 'gzip':
+        import gzip
+        body = gzip.decompress(body)
+    return json.loads(body.decode('utf-8'))
 
 
 def expected_catalog():
