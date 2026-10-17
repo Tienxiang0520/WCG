@@ -36,7 +36,7 @@ node SoulOath.Static/tools/check-azure-output.mjs .build-tmp/azure-blob-site/dis
 python3 SoulOath.Static/tools/deploy-blob.py .build-tmp/azure-blob-site/dist
 ```
 
-最後一行只檢查部署內容，不會上傳。部署工具依現行卡表（`WcgWeb/Data/cards.json`）驗證資源清單、雜湊、卡圖、入口頁、私有檔案與符號連結；音效授權文字保留。忽略未使用的壓縮副本與其他主機設定，發布約 128 MB 的實際資源。
+最後一行只檢查部署內容，不會上傳。部署工具依現行卡表（`WcgWeb/Data/cards.json`）驗證資源清單、雜湊、卡圖、入口頁、私有檔案與符號連結；音效授權文字保留。忽略建置產生的 `.br`／`.gz` 副本與其他主機設定，改由部署工具自行壓縮（見下方「傳輸壓縮」）。
 
 上傳使用已登入的官方 Azure CLI 與 `azure-storage-blob` Python SDK。此工作站既有 Azure CLI 環境包含該 SDK，登入設定位於本機 `.runtime/azure-cli-config`；兩者都不提交 Git。換機時需先由使用者登入 Azure，並使用裝有該 SDK 的 Python 環境。
 
@@ -56,7 +56,22 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 
 `$web` 的首頁為 `index.html`；2026-10-13 核對時發現自訂錯誤頁尚未生效，已修正部署工具的 SDK 欄位名稱，下次發布會設定 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings`、`/tutorial` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。
 
-所有檔案明確設定 Content-Type，包含 `application/wasm`、JavaScript、WebP 與 Ogg。`Cache-Control: no-cache` 讓瀏覽器檢查網站更新；遊戲完整下載快取仍由既有 Service Worker 與資源雜湊控制，已下載的圖片不因重新開啟就全部重抓。
+所有檔案明確設定 Content-Type，包含 `application/wasm`、JavaScript、WebP 與 Ogg。
+
+### 傳輸壓縮
+
+Blob 靜態網站不會依瀏覽器的 `Accept-Encoding` 自動壓縮，因此部署工具把可壓縮的檔案（WASM、JS、CSS、JSON、ICU 資料、HTML 等）預先壓縮後上傳，並設定固定的 `Content-Encoding`。預設 `--encoding br`（Brotli；目前所有主流瀏覽器在 HTTPS 下都支援），`--encoding gzip` 為最保守的備案，`--encoding identity` 回到不壓縮。卡圖、列印圖與音效本身已壓縮，維持原樣。瀏覽器會先解壓再交給程式，所以資源清單的大小與 SHA-256、啟動時的完整性檢查與 Service Worker 快取都對應原始檔案，玩家仍是全部下載完才開始。
+
+Brotli 由 `SoulOath.Static/tools/brotli-encode.mjs`（Node.js 內建 zlib）產生，每個檔案都先解壓比對原始內容才使用；結果依原始雜湊快取在 `dist` 旁的 `encoded-cache/`，下次部署只重做變動檔案。改用不同編碼時，遠端屬性不符的檔案會重新上傳。
+
+上線前可在本機模擬 Blob 的實際回應（相同位元組與標頭，不協商編碼）：
+
+```sh
+python3 SoulOath.Static/tools/deploy-blob.py .build-tmp/azure-blob-site/dist --stage .build-tmp/blob-stage
+node SoulOath.Static/tools/serve-static.mjs --blob-stage .build-tmp/blob-stage 5291
+```
+
+2026-10-17 量測（1000px 卡圖版本）：全部資源 93.4 MB，Brotli 傳輸 68.1 MB（gzip 70.6 MB）；其中 `_framework` 29.5 → 8.6 MB、`lib` 2.4 → 0.3 MB。`Cache-Control: no-cache` 讓瀏覽器檢查網站更新；遊戲完整下載快取仍由既有 Service Worker 與資源雜湊控制，已下載的圖片不因重新開啟就全部重抓。
 
 ## 試玩
 
