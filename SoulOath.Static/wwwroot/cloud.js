@@ -64,9 +64,10 @@ async function initialize() {
         else {engine.attached=!!local.read();engine.signal('other-tab');}
         if(engine.attached){activeKey=accountKey;if(tabWritable())applyPrefs(local.read().preferences);}
         emit();
-        // Non-blocking: warn when the API validates against a different card catalog than this tab runs.
-        checkCloudCatalog(config.apiUrl).then(same=>{publicState.apiMismatch=same===false;emit();});
         if(!tabWritable())return;
+        // Non-blocking, only once this writer tab is talking to the API: warn when the API validates saves
+        // against a different card catalog than this tab runs (/health carries no player data or token).
+        if(engine.mode!=='reauth')checkCloudCatalog(config.apiUrl).then(same=>{if(same!==false||disposed)return;publicState.apiMismatch=true;emit();});
         if(engine.mode==='pending')schedule();
         timer=setInterval(async()=>{await engine.renew();if(engine.mode==='pending')schedule();},20000);
     } catch {publicState.mode='offline';emit();}

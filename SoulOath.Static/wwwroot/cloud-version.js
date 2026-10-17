@@ -15,8 +15,9 @@ export async function compareCatalog(health, hashOf) {
         if (data[key] !== await hashOf(path)) return false;
     return true;
 }
-export async function checkCloudCatalog(apiUrl, { fetchFile = fetch, base = document.baseURI } = {}) {
+export async function checkCloudCatalog(apiUrl, { fetchFile = globalThis.fetch, base } = {}) {
     try {
+        base ??= globalThis.document?.baseURI ?? globalThis.location?.href;
         const response = await fetchFile(apiUrl + '/health', { cache: 'no-store', signal: AbortSignal.timeout(10000) });
         if (!response.ok) return null;
         return await compareCatalog(await response.json(), path => sha256Of(new URL(path, base).href, fetchFile));
