@@ -13,6 +13,7 @@ internal static class CardBalanceHistory
     // Catalog before seven single-will cards (027, 031, 058, 067, 211, 213, 234) became dual-will (2026-10-16); only wills and design notes changed.
     // Catalog before the 理智 buff (2026-10-17): ten 理智 cards had other numbers or text, and 258–262 did not exist.
     // Catalog before 聖盾 became the one-time 聖盾指示物 (2026-10-17): holy-shield cards had the per-turn wording.
+    // Catalog before four cards cost 1 more (2026-10-17): 013, 018, 100 and 182 had their old cost and PP; text and DP did not change.
     internal static bool ShieldCounterCatalog(CardDatabase cards) => cards.GetCard("WCG-205")?.Text.Contains("聖盾指示物", StringComparison.Ordinal) == true;
     internal static bool IsReasonBuffCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n >= 258;
     // PR E put new cards into the v0.6 深淵 preset; the older catalogs keep its original list (249 was 128, 250 and 212 were 169).
@@ -30,6 +31,9 @@ internal static class CardBalanceHistory
     // One step per balance update, newest first: each turns the catalog after that update into the catalog before it.
     // Before*(current) applies every step from the newest down to its own, so EraSteps[k] applied to the result for
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
+    // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
+    internal static bool CostUpCatalog(CardDatabase cards) => cards.GetCard("WCG-100")?.TotalCost == 7;
+    private static CardDatabase CostUpStep(CardDatabase c) => CostUpCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeCostUp") : c;
     private static CardDatabase ShieldCounterStep(CardDatabase c) => ShieldCounterCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeShieldCounter") : c;
     private static CardDatabase ReasonBuffStep(CardDatabase c)
     {
@@ -67,12 +71,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeShieldCounter(CardDatabase current) => ShieldCounterStep(current);
+    internal static CardDatabase BeforeCostUp(CardDatabase current) => CostUpStep(current);
+    internal static CardDatabase BeforeShieldCounter(CardDatabase current) => ShieldCounterStep(BeforeCostUp(current));
     internal static CardDatabase BeforeReasonBuff(CardDatabase current) => ReasonBuffStep(BeforeShieldCounter(current));
     internal static CardDatabase BeforeDualWill(CardDatabase current) => DualWillStep(BeforeReasonBuff(current));
     internal static CardDatabase BeforeSilenceSpell(CardDatabase current) => SilenceSpellStep(BeforeDualWill(current));

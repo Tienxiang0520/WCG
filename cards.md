@@ -32,12 +32,12 @@ source: WcgWeb/Data/cards.json
 | WCG-010 | 戰鬥狂怒 | 法術 | 3 | — | — | — | 己方場上每有 1 隻怪物，抽 1 張牌（最多抽 2 張）。 | **Battle Fury** — Draw 1 card for each monster on your side (up to 2 cards). |
 | WCG-011 | 嗜血戰狂 | 怪物 | 3 | 1300 | 1 | — | 每當己方另 1 隻怪物被消滅，抽 1 張牌。 | **Bloodthirsty Warmonger** — Whenever another of your monsters is destroyed, draw 1 card. |
 | WCG-012 | 狂暴斬殺 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的敵方怪物。 | **Savage Execution** — Destroy 1 enemy monster that costs 2 or less. |
-| WCG-013 | 焦土縱火犯 | 怪物 | 3 | 1300 | 1 | — | 進場：對敵方玩家造成 1 點傷害，你失去 1 點生命。 | **Scorched-Earth Arsonist** — Deploy: Deal 1 damage to the enemy player. You lose 1 life. |
+| WCG-013 | 焦土縱火犯 | 怪物 | 4 | 1700 | 1 | — | 進場：對敵方玩家造成 1 點傷害，你失去 1 點生命。 | **Scorched-Earth Arsonist** — Deploy: Deal 1 damage to the enemy player. You lose 1 life. |
 | WCG-014 | 熾紅戰斧 | 法術 | 1 | — | — | — | 對敵方玩家造成 1 點傷害。 | **Crimson War Axe** — Deal 1 damage to the enemy player. |
 | WCG-015 | 炎息重騎兵 | 怪物 | 4 | 1800 | 2 | — | 進場：若敵方怪物比你的多，抽 1 張牌。 | **Flamebreath Lancer** — Deploy: If the enemy has more monsters than you, draw 1 card. |
 | WCG-016 | 灰燼復仇者 | 怪物 | 3 | 1100 | 1 | — | 陣亡：消滅 PP 最低的 1 隻敵方怪物。 | **Ashen Avenger** — On Death: Destroy the enemy monster with the lowest PP. |
 | WCG-017 | 滅絕怒火 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1100 以下的敵方怪物，並對敵方玩家造成 1 點傷害。 | **Annihilating Wrath** — Destroy 1 enemy monster with 1100 PP or less and deal 1 damage to the enemy player. |
-| WCG-018 | 地獄戰狂 | 怪物 | 4 | 1800 | 2 | — | 衝鋒。 | **Infernal Warmonger** — Charge. |
+| WCG-018 | 地獄戰狂 | 怪物 | 5 | 2100 | 2 | — | 衝鋒。 | **Infernal Warmonger** — Charge. |
 | WCG-019 | 燃血召喚 | 法術 | 3 | — | — | — | 你失去 2 點生命，抽 2 張牌。 | **Bloodcall** — You lose 2 life. Draw 2 cards. |
 | WCG-020 | 赤帝·燼滅之龍 | 怪物 | 6 | 2400 | 2 | — | 進場：消滅所有 PP 1100 以下的敵方怪物。 | **Crimson Emperor, Cinder Dragon** — Deploy: Destroy all enemy monsters with 1100 PP or less. |
 | WCG-124 | 血怒祭壇 | 結界 | 3 | — | — | — | 每當你的怪物在交戰中消滅敵方怪物，對敵方玩家造成 1 點傷害。 | **Bloodrage Altar** — Whenever one of your monsters destroys an enemy monster in combat, deal 1 damage to the enemy player. |
@@ -52,7 +52,7 @@ source: WcgWeb/Data/cards.json
 | WCG-178 | 滅世炎魔·薩弗拉斯 | 怪物 | 9 | 3100 | 3 | — | 衝鋒；嘲諷擋不住此怪物。此怪物攻擊時，先消滅所有敵方嘲諷怪物。 | **World-Burning Fire Fiend, Sulfras** — Charge. Taunt can't block this monster. When it attacks, first destroy all enemy Taunt monsters. |
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Warsong Command** — Look at the top 3 cards of your deck. Put 1 [Fury] monster card and 1 [Fury] spell card among them into your hand and the rest on the bottom in any order. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 1100 | 1 | — | 進場：若己方場上有其他【狂怒】怪物，你目前在場的所有【狂怒】怪物（含此怪物）本回合 PP +300。 | **Crimson Oath Drummer** — Deploy: If you have another [Fury] monster, all your [Fury] monsters currently in play (including this one) get +300 PP this turn. |
-| WCG-182 | 血怒百夫長 | 怪物 | 4 | 1600 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
+| WCG-182 | 血怒百夫長 | 怪物 | 5 | 1900 | 1 | — | 衝鋒；己方場上每有 1 隻其他【狂怒】怪物，此怪物 PP +300。 | **Bloodrage Centurion** — Charge. This monster gets +300 PP for each other [Fury] monster you have. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。 | **Molten Blast Trap** — [Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player. |
 | WCG-201 | 赤焰破陣者 | 怪物 | 3 | 1100 | 1 | — | 此怪物攻擊玩家時 DP +1。 | **Flamebreaker Vanguard** — When this monster attacks a player, it gets +1 DP. |
 | WCG-205 | 碎盾狂戰士 | 怪物 | 3 | 1400 | 1 | — | 衝鋒；進場：移除 1 隻敵方怪物的所有聖盾指示物。 | **Shieldbreaker Berserker** — Charge. Deploy: Remove all Holy Shield counters from 1 enemy monster. |
@@ -223,7 +223,7 @@ source: WcgWeb/Data/cards.json
 | WCG-097 | 亡靈女王·希爾瓦 | 怪物 | 5 | 1900 | 1 | — | 陣亡：消滅 PP 最高的 1 隻敵方怪物，然後你可以從墓地免費召喚 1 隻費用 3 以下的怪物（不觸發進場）。 | **Undead Queen, Sylva** — On Death: Destroy the enemy monster with the highest PP. Then you may summon a monster that costs 3 or less from your graveyard for free (its Deploy does not trigger). |
 | WCG-098 | 凋零降臨 | 法術 | 5 | — | — | — | 消滅雙方所有怪物。 | **Withering Descent** — Destroy all monsters on both sides. |
 | WCG-099 | 幽冥巨龍 | 怪物 | 6 | 2400 | 2 | — | 每當另 1 隻怪物（雙方皆算）被消滅，回復己方 1 點生命。 | **Netherwyrm** — Whenever another monster (on either side) is destroyed, restore 1 life to yourself. |
-| WCG-100 | 深淵之主·瑪爾加尼斯 | 怪物 | 6 | 2400 | 2 | — | 嘲諷；進場：回復己方 2 點生命，然後從你的墓地將另 1 張怪物牌加入手牌。 | **Abyss Lord, Malganis** — Taunt. Deploy: Restore 2 life to yourself, then put another monster card from your graveyard into your hand. |
+| WCG-100 | 深淵之主·瑪爾加尼斯 | 怪物 | 7 | 2700 | 2 | — | 嘲諷；進場：回復己方 2 點生命，然後從你的墓地將另 1 張怪物牌加入手牌。 | **Abyss Lord, Malganis** — Taunt. Deploy: Restore 2 life to yourself, then put another monster card from your graveyard into your hand. |
 | WCG-128 | 萬魂之井 | 結界 | 1 | — | — | — | 橫置此卡並犧牲 1 隻己方怪物：抽 1 張牌。 | **Well of Myriad Souls** — Tap this card and sacrifice 1 of your monsters: draw 1 card. |
 | WCG-132 | 腐肉食腐蛛 | 怪物 | 1 | 400 | 0 | — | 劇毒。 | **Carrion Spider** — Poison. |
 | WCG-138 | 暗影伏擊者 | 怪物 | 3 | 1100 | 1 | — | 衝鋒；進場：橫置對手 1 點直立能量。 | **Shadow Ambusher** — Charge. Deploy: Tap 1 ready enemy energy. |

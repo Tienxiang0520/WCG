@@ -14,8 +14,17 @@ internal static class CounterHistory
     // Catalog before seven single-will cards became dual-will.
     // Catalog before the 理智 buff (ten cards changed, 258–262 added).
     // Catalog before 聖盾 became the one-time 聖盾指示物 (11 cards had the per-turn wording).
+    // Catalog before 013, 018, 100 and 182 cost 1 more (cost and PP only).
+    internal static CardDatabase BeforeCostUp(CardDatabase current)
+    {
+        if(current.GetCard("WCG-100")?.TotalCost!=7)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-cost-up.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeShieldCounter(CardDatabase current)
     {
+        current=BeforeCostUp(current);
         if(current.GetCard("WCG-205")?.Text.Contains("聖盾指示物")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-shield-counter.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

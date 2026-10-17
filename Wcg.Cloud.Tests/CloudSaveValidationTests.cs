@@ -31,6 +31,9 @@ public sealed class CloudSaveValidationTests
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
             definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
+            /* 2026-10-17 四張卡費用 +1 之前的費用與 PP。 */
+            var costUp=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeCostUp"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>costUp.GetValueOrDefault(c.Id,c)).ToList();
             /* 2026-10-17 聖盾指示物之前的卡文。 */
             var shield=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeShieldCounter"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>shield.GetValueOrDefault(c.Id,c)).ToList();
