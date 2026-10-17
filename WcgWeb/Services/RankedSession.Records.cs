@@ -14,7 +14,7 @@ public sealed partial class RankedSession
         records.Add(new()
         {
             Id = match.Id, Season = match.Season, StartedAt = match.StartedAt, EndedAt = endedAt, Tier = match.Tier, Seed = match.Seed,
-            PlayerFirst = match.PlayerFirst, Rules = match.Rules, PlayerDeck = DeckService.Copy(match.PlayerDeck), ComputerDeck = DeckService.Copy(match.ComputerDeck),
+            PlayerFirst = match.PlayerFirst, Rules = match.Rules, StartRules = match.StartRules, PlayerDeck = DeckService.Copy(match.PlayerDeck), ComputerDeck = DeckService.Copy(match.ComputerDeck),
             Archetype = RankedDecks.ArchetypeName(match.ComputerDeck), Won = result.Won, Before = result.Before, After = result.After,
             Reason = result.Reason, Turns = turns, Actions = RankedRecord.Encode(match.Actions)
         });
@@ -44,7 +44,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (profile.Match is not { Settled: false } m) return null;
-            return MatchCode.Encode(new RankedRecord { Id = m.Id, Season = m.Season, Tier = m.Tier, Seed = m.Seed, PlayerFirst = m.PlayerFirst, Rules = m.Rules,
+            return MatchCode.Encode(new RankedRecord { Id = m.Id, Season = m.Season, Tier = m.Tier, Seed = m.Seed, PlayerFirst = m.PlayerFirst, Rules = m.Rules, StartRules = m.StartRules,
                 PlayerDeck = m.PlayerDeck, ComputerDeck = m.ComputerDeck, Archetype = RankedDecks.ArchetypeName(m.ComputerDeck), Before = profile.Stars,
                 Turns = Engine.TurnNumber, Actions = RankedRecord.Encode(m.Actions) }, inProgress: true);
         }
@@ -68,7 +68,7 @@ public sealed partial class RankedSession
             else return new(record, [], "這場對局使用的卡牌版本已更新，無法重新模擬回顧。");
             var engine = new GameEngine(currentCards); var bridge = new BattleBridge(engine, deckService);
             engine.ResetToNotStarted(); engine.UseMatchCatalog(catalog, limit, legacy);
-            engine.SetReplaySeed(record.Seed); engine.AiLevel = record.Tier;
+            engine.SetReplaySeed(record.Seed); engine.AiLevel = record.Tier; engine.EqualStartingLife = record.StartRules < 1;
             engine.StartGame(record.PlayerDeck, record.ComputerDeck, record.PlayerFirst);
             if (trace != null) engine.AiTrace = text => trace(steps.Count - 1, text);
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));

@@ -11,7 +11,7 @@
 @{ var match = Engine.MatchId; var revision = Engine.Revision; }
 <div @ref="DragRoot" class="battle-page @(Engine.CurrentPhase != TurnPhase.NotStarted ? "in-game" : "")" @onkeydown="PageKey">
     <header class="battle-heading">
-        <div><h1>@L["魂誓"]</h1><p>@L["50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 7 點生命"]</p></div>
+        <div><h1>@L["魂誓"]</h1><p>@L["50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 先攻 6／後攻 7 點生命"]</p></div>
         <a href="/battle" class="btn btn-outline-info">@L["新版對戰"]</a>
         <a href="/deckbuilder" class="btn btn-outline-info">@L["編輯牌組"]</a>
     </header>

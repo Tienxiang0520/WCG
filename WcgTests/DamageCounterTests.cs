@@ -19,6 +19,7 @@ public sealed class DamageCounterTests
     {
         var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
         foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.EnergyZone.Clear();Energy(p,12);}
+        g.Player.Hp=PlayerState.MaxHp; // fixed scene: both players at full life
         return g;
     }
     void Energy(PlayerState p,int count){for(int i=0;i<count;i++)p.EnergyZone.Add(new(Card(101)));}

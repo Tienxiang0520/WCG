@@ -112,7 +112,7 @@ public sealed partial class RankedSession
             var tier = RankedRules.Tier(profile.Stars); var seed = Random.Shared.Next();
             var previousOpponent = profile.Match?.ComputerDeck?.Id;
             profile.Match = new() { Season = profile.Season, Seed = seed, Tier = tier, PlayerFirst = Random.Shared.Next(2) == 0,
-                Rules = rules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed), previousOpponent), StartedAt = clock.GetUtcNow() };
+                Rules = rules, StartRules = RankedRules.CurrentStartRules, PlayerDeck = DeckService.Copy(deck), ComputerDeck = opponents.Pick(tier, new Random(seed), previousOpponent), StartedAt = clock.GetUtcNow() };
             profile.SelectedDeck = deck.Id; profile.Result = null;
             try { Restore(); store.Save(profile); }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException or InvalidOperationException)
@@ -146,7 +146,7 @@ public sealed partial class RankedSession
     }
     private void Restore()
     {
-        Engine.ResetToNotStarted();
+        Engine.ResetToNotStarted(); Engine.EqualStartingLife = false;
         Engine.UseMatchCatalog(currentCards, false); BalanceNotice = "";
         if (profile.Match is not { } match) return;
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
@@ -156,7 +156,7 @@ public sealed partial class RankedSession
             Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }
-        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier;
+        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules < 1;
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         foreach (var action in match.Actions)
         {

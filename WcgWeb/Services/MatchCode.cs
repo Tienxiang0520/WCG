@@ -11,6 +11,7 @@ namespace WcgWeb.Services;
 // It carries exactly what 對局回顧 needs to re-simulate the match offline: seed, tier (AI level), first player,
 // rules/catalog fingerprint (selects the card era), both deck snapshots and the action journal; each journal
 // action keeps its own RulesVersion (AI revision), so old-era codes replay with their era's rules and AI.
+// Sr is the starting-life rule (RankedRules.CurrentStartRules); codes without it predate the rule and replay with 7/7.
 // Format: "WCG1-" + base64url(zlib(UTF-8 JSON)). Whitespace and line breaks anywhere are ignored.
 public static class MatchCode
 {
@@ -20,13 +21,13 @@ public static class MatchCode
 
     private sealed record CodeDeck(string N, string W, string I, string C);
     private sealed record Payload(int V, string R, int T, int S, bool F, CodeDeck P, CodeDeck O, string A,
-        string? Ar = null, bool? Won = null, int? B = null, int? Af = null, string? Re = null, int? Tu = null, string? Se = null, Guid? Id = null, bool? Live = null);
+        string? Ar = null, bool? Won = null, int? B = null, int? Af = null, string? Re = null, int? Tu = null, string? Se = null, Guid? Id = null, bool? Live = null, int? Sr = null);
 
     public static string Encode(RankedRecord r, bool inProgress = false)
     {
         var payload = new Payload(1, r.Rules, r.Tier, r.Seed, r.PlayerFirst, Pack(r.PlayerDeck), Pack(r.ComputerDeck), r.Actions,
             r.Archetype == "" ? null : r.Archetype, inProgress ? null : r.Won, r.Before, inProgress ? null : r.After, r.Reason == "" ? null : r.Reason,
-            r.Turns, r.Season == "" ? null : r.Season, r.Id, inProgress ? true : null);
+            r.Turns, r.Season == "" ? null : r.Season, r.Id, inProgress ? true : null, r.StartRules == 0 ? null : r.StartRules);
         var bytes = JsonSerializer.SerializeToUtf8Bytes(payload, Json);
         using var output = new MemoryStream();
         using (var z = new ZLibStream(output, CompressionLevel.SmallestSize, leaveOpen: true)) z.Write(bytes);
@@ -63,7 +64,8 @@ public static class MatchCode
         }
         catch (Exception e) when (e is InvalidDataException or JsonException or IOException) { error = "對局代碼已損壞或複製不完整。"; return null; }
         if (p == null || p.P == null || p.O == null || p.R == null || p.A == null) { error = "對局代碼已損壞或複製不完整。"; return null; }
-        if (p.V != 1) { error = "這個對局代碼來自較新的版本，請更新遊戲後再試。"; return null; }
+        if (p.Sr is < 0) { error = "對局代碼的內容不正確。"; return null; }
+        if (p.V != 1 || p.Sr > RankedRules.CurrentStartRules) { error = "這個對局代碼來自較新的版本，請更新遊戲後再試。"; return null; }
         if (p.T is < 0 or > 5 || !p.R.StartsWith("ranked-", StringComparison.Ordinal)) { error = "對局代碼的內容不正確。"; return null; }
         RankedRecord record;
         try
@@ -71,7 +73,7 @@ public static class MatchCode
             RankedRecord.Decode(p.A);
             record = new()
             {
-                Id = p.Id ?? Guid.Empty, Season = p.Se ?? "", Tier = p.T, Seed = p.S, PlayerFirst = p.F, Rules = p.R,
+                Id = p.Id ?? Guid.Empty, Season = p.Se ?? "", Tier = p.T, Seed = p.S, PlayerFirst = p.F, Rules = p.R, StartRules = p.Sr ?? 0,
                 PlayerDeck = Unpack(p.P), ComputerDeck = Unpack(p.O), Archetype = p.Ar ?? "", Won = p.Won ?? false,
                 Before = p.B ?? 0, After = p.Af ?? p.B ?? 0, Reason = p.Re ?? "", Turns = p.Tu ?? 0, Actions = p.A
             };

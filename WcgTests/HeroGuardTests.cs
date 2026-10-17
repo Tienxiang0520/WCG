@@ -18,6 +18,7 @@ public sealed class HeroGuardTests
     {
         var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
         foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.EnergyZone.Clear();Energy(p,energy);}
+        g.Player.Hp=PlayerState.MaxHp; // fixed scene: both players at full life
         g.Computer.IsAi=false;return g;
     }
     void Energy(PlayerState p,int n){for(var i=0;i<n;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}
