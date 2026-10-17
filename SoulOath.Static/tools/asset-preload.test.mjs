@@ -77,3 +77,33 @@ test('manifest rejects external/traversal/duplicate paths and builds all media p
         const again=await createAssetManifest(dir);assert.equal(again.version,result.version);
     }finally{await rm(dir,{recursive:true,force:true});}
 });
+function fakeContainer({controller=null,active}={}){
+    const listeners=new Set();
+    const container={controller,ready:Promise.resolve({active}),
+        addEventListener(name,fn){if(name==='controllerchange')listeners.add(fn);},removeEventListener(name,fn){listeners.delete(fn);},
+        take(worker){container.controller=worker;for(const fn of [...listeners])fn();},listeners};
+    return container;
+}
+const memoryStorage=()=>{const m=new Map();return{getItem:k=>m.get(k)??null,setItem:(k,v)=>m.set(k,String(v)),removeItem:k=>m.delete(k),m};};
+test('hard reload: an uncontrolled tab asks the active worker to claim it and continues once controlled',async()=>{
+    const { ensureController }=await import('../wwwroot/asset-preload.js');
+    const messages=[];const worker={postMessage(m){messages.push(m);queueMicrotask(()=>container.take(worker));}};
+    const container=fakeContainer({active:worker});const storage=memoryStorage();
+    let reloaded=0;
+    await ensureController(container,{timeoutMs:50,reload:()=>reloaded++,storage});
+    assert.deepEqual(messages,[{type:'WCG_CLAIM'}]);assert.equal(container.controller,worker);assert.equal(reloaded,0);assert.equal(container.listeners.size,0);
+});
+test('controlled tab needs nothing; an unclaimable tab reloads once, then reports the error instead of looping',async()=>{
+    const { ensureController }=await import('../wwwroot/asset-preload.js');
+    const storage=memoryStorage();let reloaded=0;
+    const controlled=fakeContainer({controller:{},active:{postMessage(){throw new Error('unexpected');}}});
+    await ensureController(controlled,{timeoutMs:20,reload:()=>reloaded++,storage});assert.equal(reloaded,0);
+    // An older worker ignores WCG_CLAIM: one plain reload (which the worker controls) is the fallback.
+    const deaf=()=>fakeContainer({active:{postMessage(){}}});
+    const first=ensureController(deaf(),{timeoutMs:20,reload:()=>reloaded++,storage});
+    await new Promise(r=>setTimeout(r,60));assert.equal(reloaded,1);assert.equal(storage.getItem('wcg.controller-reload'),'1');
+    void first;
+    await assert.rejects(ensureController(deaf(),{timeoutMs:20,reload:()=>reloaded++,storage}),/遊戲資源儲存未啟動/);assert.equal(reloaded,1);
+    // Success clears the mark so a later hard reload may use the fallback again.
+    await ensureController(controlled,{timeoutMs:20,reload:()=>reloaded++,storage});assert.equal(storage.getItem('wcg.controller-reload'),null);
+});

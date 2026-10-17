@@ -76,3 +76,12 @@ test('after binding, closed tabs, their manifests and unreferenced files are rem
     stores.set('wcg-assets-v0',new Map());let done;handlers.activate({waitUntil(p){done=p;}});await done;
     assert.ok(!stores.has('wcg-assets-v0')&&stores.has('wcg-assets-v1'));
 });
+test('an uncontrolled (hard-reloaded) tab is claimed on request',async()=>{
+    const state=setup();let claimed=0,pending;
+    const handlers=[];const context={URL,Response,caches:state.caches,self:{registration:{scope:root},location:{origin:'https://game.test'},clients:{async claim(){claimed++;}},addEventListener(name,fn){if(name==='message')handlers.push(fn);}},fetch:async()=>new Response('network')};
+    vm.createContext(context);vm.runInContext(source,context);
+    for(const fn of handlers)fn({data:{type:'WCG_CLAIM'},source:{id:'tab'},ports:[],waitUntil(p){pending=p;}});
+    await pending;assert.equal(claimed,1);
+    pending=undefined;for(const fn of handlers)fn({data:{type:'OTHER'},source:{id:'tab'},ports:[],waitUntil(p){pending=p;}});
+    assert.equal(pending,undefined);assert.equal(claimed,1);
+});

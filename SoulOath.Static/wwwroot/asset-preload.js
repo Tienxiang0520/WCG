@@ -80,6 +80,30 @@ export async function preloadAssets(manifest, { base, cacheStorage = caches, fet
     }));
     await meta.put(manifestKey(base, manifest.version), new Response(JSON.stringify(manifest), { headers: { 'Content-Type': 'application/json' } }));
 }
+const RELOAD_MARK = 'wcg.controller-reload';
+// The asset worker must control this tab before the game starts. A hard reload (Ctrl+Shift+R / Cmd+Shift+R)
+// opens the page without its service worker even when one is already active, and an active worker never fires
+// activate again, so no controllerchange would come. Ask the active worker to claim the tab; if it cannot
+// (an older worker without that message), one plain reload brings the tab under the worker.
+export async function ensureController(container, { timeoutMs = 8000, reload = () => globalThis.location.reload(), storage = globalThis.sessionStorage } = {}) {
+    const mark = { get() { try { return storage?.getItem(RELOAD_MARK) === '1'; } catch { return false; } },
+        set() { try { storage?.setItem(RELOAD_MARK, '1'); return true; } catch { return false; } },
+        clear() { try { storage?.removeItem(RELOAD_MARK); } catch { /* storage blocked */ } } };
+    const registration = await container.ready;
+    if (!container.controller) await new Promise((resolve, reject) => {
+        let timeout;
+        function changed() { if (container.controller) { clearTimeout(timeout); container.removeEventListener('controllerchange', changed); resolve(); } }
+        container.addEventListener('controllerchange', changed);
+        timeout = setTimeout(() => {
+            container.removeEventListener('controllerchange', changed);
+            if (!mark.get() && mark.set()) { reload(); return; } // the reloaded page continues; this one is discarded
+            reject(new Error('遊戲資源儲存未啟動，請重新整理再試。'));
+        }, timeoutMs);
+        try { (registration?.active ?? container.controller)?.postMessage({ type: 'WCG_CLAIM' }); } catch { /* the timeout decides */ }
+        changed();
+    });
+    mark.clear();
+}
 export async function prepareGame(onProgress) {
     if (!navigator.serviceWorker || !globalThis.caches) throw new Error('請使用支援遊戲資源儲存的瀏覽器，並允許此網站儲存資料。');
     const base = document.baseURI;
@@ -87,12 +111,7 @@ export async function prepareGame(onProgress) {
     if (!response.ok) throw new Error('無法取得遊戲資源清單，請重新整理再試。');
     const manifest = validateManifest(await response.json());
     await navigator.serviceWorker.register(new URL('asset-worker.js', base), { scope: new URL('.', base).pathname, updateViaCache: 'none' });
-    await navigator.serviceWorker.ready;
-    if (!navigator.serviceWorker.controller) await new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => { navigator.serviceWorker.removeEventListener('controllerchange', changed); reject(new Error('遊戲資源儲存未啟動，請重新整理再試。')); }, 15000);
-        function changed() { if (navigator.serviceWorker.controller) { clearTimeout(timeout); navigator.serviceWorker.removeEventListener('controllerchange', changed); resolve(); } }
-        navigator.serviceWorker.addEventListener('controllerchange', changed); changed();
-    });
+    await ensureController(navigator.serviceWorker);
     await preloadAssets(manifest, { base, onProgress });
     // Bind this tab only after every file is verified and available. Other open tabs
     // keep their own rules/assets version, including after the worker restarts.

@@ -46,6 +46,10 @@ async function prune(current) {
         if (!wanted.has(url)) await assets.delete(url);
     }
 }
+// A hard-reloaded tab starts without a controller; the already-active worker takes it over on request (asset-preload.js).
+self.addEventListener('message', event => {
+    if (event.data?.type === 'WCG_CLAIM') event.waitUntil(self.clients.claim());
+});
 self.addEventListener('message', event => {
     if (event.data?.type !== 'WCG_BIND' || !event.source?.id || !/^[a-f0-9]{64}$/.test(event.data.version)) return;
     event.waitUntil((async () => {
