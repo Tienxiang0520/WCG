@@ -43,7 +43,7 @@ public sealed class AiV8Tests : IDisposable
 
     // Turn 15: v7 planned a "win" that needed one lucky simulated draw (奧術共鳴波 drawing 空間回折) and spent its
     // removal on it. v8 prices the draw over several samples and does not plan past it.
-    [Fact]
+    [Fact, Trait("Category", "Slow")]
     public void TurnFifteenNoLongerPlansOnALuckyDraw()
     {
         var v7=Turn(MatchAt(67),7).First(l=>l.StartsWith("search:"));Assert.True(Chosen(v7)>=1e6,v7);

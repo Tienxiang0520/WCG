@@ -201,7 +201,7 @@ public sealed class RankedTests : IDisposable
         deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-050" : id).ToList();
         return deck;
     }
-    [Fact] public void PlayerHealingJournalResumesAndReplaysBothHeroTargets()
+    [Fact, Trait("Category", "Slow")] public void PlayerHealingJournalResumesAndReplaysBothHeroTargets()
     {
         foreach (var target in new[] { GameEngine.PlayerTargetId, GameEngine.ComputerTargetId })
         {
@@ -524,7 +524,7 @@ public sealed class RankedTests : IDisposable
         Directory.CreateDirectory(dir);File.WriteAllText(store.Path,"{\"Version\":9}");var s=Session();Assert.NotEmpty(s.Error);Assert.False(s.Start(cards.PresetDecks[0]).Success);
         Assert.Equal("{\"Version\":9}",File.ReadAllText(store.Path));
     }
-    [Fact] public void HigherTiersWinMoreOftenAgainstTheTrialAiAndStayDeterministic()
+    [Fact, Trait("Category", "Slow")] public void HigherTiersWinMoreOftenAgainstTheTrialAiAndStayDeterministic()
     {
         int Wins(int level,int games)
         {
@@ -545,7 +545,7 @@ public sealed class RankedTests : IDisposable
         for(int n=0;n<12;n++){Assert.True(a.ExecuteAiStep());Assert.True(b.ExecuteAiStep());
             Assert.Equal(JsonSerializer.Serialize(StateShape(a)),JsonSerializer.Serialize(StateShape(b)));}
     }
-    [Fact] public void TieredAiReplaysWholeGamesIdenticallyDespiteFreshInstanceIds()
+    [Fact, Trait("Category", "Slow")] public void TieredAiReplaysWholeGamesIdenticallyDespiteFreshInstanceIds()
     {
         // Card instance ids are new GUIDs in every engine, as in a replay; decisions must not depend on them.
         string Play(int level,int seed,Deck mine,Deck theirs)
@@ -661,7 +661,7 @@ public sealed class RankedTests : IDisposable
             Assert.True(Send(s,"surrender").Success);
         }
     }
-    [Fact] public void EveryRankedDeckFinishesAndConservesCards()
+    [Fact, Trait("Category", "Slow")] public void EveryRankedDeckFinishesAndConservesCards()
     {
         foreach(var entry in decks.All)
         {
@@ -737,7 +737,7 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(a.Computer.EnergyZone.Select(c=>c.Card.Id),b.Computer.EnergyZone.Select(c=>c.Card.Id));
         Assert.Equal(a.Computer.Field.Select(c=>c.Card.Id),b.Computer.Field.Select(c=>c.Card.Id));
     }
-    [Fact] public async Task FullMatchJournalRestoresEveryPendingDecisionAndSettlesResult()
+    [Fact, Trait("Category", "Slow")] public async Task FullMatchJournalRestoresEveryPendingDecisionAndSettlesResult()
     {
         var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
         var profile=s.Read();profile.Match!.Seed=700;profile.Match.PlayerFirst=true;
@@ -863,7 +863,7 @@ public sealed class RankedTests : IDisposable
         Assert.True(s.Engine.IsOver);return s;
     }
     static string FinalState(RankedReplay r)=>JsonSerializer.Serialize(PublicShape(r.Steps[^1].State));
-    [Fact] public async Task MatchCodeRoundTripsAndReplaysToTheSameFinalState()
+    [Fact, Trait("Category", "Slow")] public async Task MatchCodeRoundTripsAndReplaysToTheSameFinalState()
     {
         var s=await PlayFullMatch(4,9123);var record=s.Read().Records!.Last();
         var actions=RankedRecord.Decode(record.Actions);Assert.Contains(actions,a=>a.Type=="ai"&&a.RulesVersion==GameEngine.RankedAiVersion);

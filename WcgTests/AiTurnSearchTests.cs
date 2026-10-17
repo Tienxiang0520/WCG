@@ -61,7 +61,7 @@ public class AiTurnSearchTests
         var a=Run("WCG-101");Assert.NotEmpty(a);Assert.Equal(a,Run("WCG-195"));Assert.Equal(a,Run("WCG-170"));
     }
 
-    [Fact]
+    [Fact, Trait("Category", "Slow")]
     public void FullV7MatchesFinishAtEveryTier()
     {
         for(int level=0;level<6;level++)
