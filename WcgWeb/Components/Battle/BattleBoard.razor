@@ -32,7 +32,6 @@
                     @if(m.Status.Count(x=>x=="聖盾指示物") is var sc && sc>0){<span class="shield-counter" title="@L["聖盾指示物"] ×@sc" role="img" aria-label="@L["聖盾指示物"] ×@sc"><WcgWeb.Components.Common.ShieldIcon Class="shield-counter-icon" />@if(sc>1){<b class="shield-counter-count">@sc</b>}</span>}
                     @if(m.Status.Contains("嘲諷")){<img class="taunt-frame" src="battle/taunt-frame.svg" alt="" aria-hidden="true" draggable="false" />}
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
-                    <strong>@L.CardName(m.Card)</strong>
                     @if(m.Card.PP!=null){<div class="field-stats"><b>@m.PP</b><b>@m.DP</b></div>}
                     </div>
                 }
