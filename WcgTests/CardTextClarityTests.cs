@@ -36,7 +36,7 @@ public class CardTextClarityTests
         foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("它交戰後，此卡送入墓地",cards.GetCard(id)!.Text);
         Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
         Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);
-        Assert.Equal(800,cards.GetCard("WCG-147")!.PP);
+        Assert.Equal(900,cards.GetCard("WCG-147")!.PP); // 800 until the 2026-10-17 聖盾 PP restore
         var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(root,"i18n/cards.en.json")))!;
         Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
         Assert.Equal(15,cards.AllCards.Count(c=>c.IsVanilla));

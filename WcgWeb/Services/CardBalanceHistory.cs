@@ -14,6 +14,7 @@ internal static class CardBalanceHistory
     // Catalog before the 理智 buff (2026-10-17): ten 理智 cards had other numbers or text, and 258–262 did not exist.
     // Catalog before 聖盾 became the one-time 聖盾指示物 (2026-10-17): holy-shield cards had the per-turn wording.
     // Catalog before four cards cost 1 more (2026-10-17): 013, 018, 100 and 182 had their old cost and PP; text and DP did not change.
+    // Catalog before the 聖盾 PP restore (2026-10-17): eleven holy-shield cards still carried the per-turn-shield PP cut; only PP changed.
     internal static bool ShieldCounterCatalog(CardDatabase cards) => cards.GetCard("WCG-205")?.Text.Contains("聖盾指示物", StringComparison.Ordinal) == true;
     internal static bool IsReasonBuffCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n >= 258;
     // PR E put new cards into the v0.6 深淵 preset; the older catalogs keep its original list (249 was 128, 250 and 212 were 169).
@@ -32,6 +33,9 @@ internal static class CardBalanceHistory
     // Before*(current) applies every step from the newest down to its own, so EraSteps[k] applied to the result for
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
     // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
+    // 500-PP 聖印侍從 together with 2400-PP 日耀聖堂巨像 identifies the 聖盾 PP restore (063 was 300 from the deflation on, 800 before it).
+    internal static bool ShieldPpCatalog(CardDatabase cards) => cards.GetCard("WCG-063")?.PP == 500 && cards.GetCard("WCG-079")?.PP == 2400;
+    private static CardDatabase ShieldPpStep(CardDatabase c) => ShieldPpCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeShieldPp") : c;
     internal static bool CostUpCatalog(CardDatabase cards) => cards.GetCard("WCG-100")?.TotalCost == 7;
     private static CardDatabase CostUpStep(CardDatabase c) => CostUpCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeCostUp") : c;
     private static CardDatabase ShieldCounterStep(CardDatabase c) => ShieldCounterCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeShieldCounter") : c;
@@ -71,12 +75,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeCostUp(CardDatabase current) => CostUpStep(current);
+    internal static CardDatabase BeforeShieldPp(CardDatabase current) => ShieldPpStep(current);
+    internal static CardDatabase BeforeCostUp(CardDatabase current) => CostUpStep(BeforeShieldPp(current));
     internal static CardDatabase BeforeShieldCounter(CardDatabase current) => ShieldCounterStep(BeforeCostUp(current));
     internal static CardDatabase BeforeReasonBuff(CardDatabase current) => ReasonBuffStep(BeforeShieldCounter(current));
     internal static CardDatabase BeforeDualWill(CardDatabase current) => DualWillStep(BeforeReasonBuff(current));
