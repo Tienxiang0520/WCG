@@ -36,7 +36,7 @@ node SoulOath.Static/tools/check-azure-output.mjs .build-tmp/azure-blob-site/dis
 python3 SoulOath.Static/tools/deploy-blob.py .build-tmp/azure-blob-site/dist
 ```
 
-最後一行只檢查部署內容，不會上傳。部署工具驗證資源清單、雜湊、199 張卡圖、入口頁、私有檔案與符號連結；音效授權文字保留。忽略未使用的壓縮副本與其他主機設定，發布約 128 MB 的實際資源。
+最後一行只檢查部署內容，不會上傳。部署工具依現行卡表（`WcgWeb/Data/cards.json`）驗證資源清單、雜湊、卡圖、入口頁、私有檔案與符號連結；音效授權文字保留。忽略未使用的壓縮副本與其他主機設定，發布約 128 MB 的實際資源。
 
 上傳使用已登入的官方 Azure CLI 與 `azure-storage-blob` Python SDK。此工作站既有 Azure CLI 環境包含該 SDK，登入設定位於本機 `.runtime/azure-cli-config`；兩者都不提交 Git。換機時需先由使用者登入 Azure，並使用裝有該 SDK 的 Python 環境。
 
