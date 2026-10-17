@@ -149,7 +149,7 @@
  "WCG-029": {
   "zh": "冰霜魔導師",
   "name": "Frost Magus",
-  "text": "Whenever this monster survives combat and so does the other monster: tap that monster; if it is already tapped, draw 1 card instead."
+  "text": "Deploy: Tap 1 untapped enemy monster, then draw 1 card."
  },
  "WCG-030": {
   "zh": "預言秘術",
@@ -184,7 +184,7 @@
  "WCG-035": {
   "zh": "時間靜止者",
   "name": "Timestopper",
-  "text": "Deploy: You may return 1 tapped enemy monster to its hand, then tap all enemy monsters."
+  "text": "Deploy: You may return 1 enemy monster to its hand, then tap all enemy monsters."
  },
  "WCG-036": {
   "zh": "虛空調度",

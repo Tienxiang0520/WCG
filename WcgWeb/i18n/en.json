@@ -1815,5 +1815,7 @@
  "出血版：卡框顏色向外多印 3 mm，裁切稍有偏差也不會露白邊。卡片橫放，裁切線標示的仍是 63 × 88 mm 成品尺寸；卡牌部分共 {0} 頁。": "Bleed: the frame colour extends 3 mm past each edge, so a slightly off cut shows no white edge. Cards are turned sideways; the crop marks still mark the finished 63 × 88 mm card. Card pages: {0}.",
  "63 × 88 mm＋3 mm 出血 · Letter · 100% 列印 · 沿四角裁切線裁切": "63 × 88 mm + 3 mm bleed · Letter · print at 100% · cut along the corner crop marks",
  "50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 先攻 6／後攻 7 點生命": "50-card decks · up to 12 off-color cards · any card can be energy · first player 6 life, second player 7",
- "先攻 6 點、後攻 7 點生命，回復上限 7 點。": "First player starts at 6 life, second player at 7; healing caps at 7."
+ "先攻 6 點、後攻 7 點生命，回復上限 7 點。": "First player starts at 6 life, second player at 7; healing caps at 7.",
+ "選擇直立的敵方怪物橫置": "Choose an untapped enemy monster to tap",
+ "可選敵怪回手": "You may return an enemy monster to its hand"
 }
