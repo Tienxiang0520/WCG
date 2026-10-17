@@ -11,7 +11,8 @@ public sealed class ShieldPpRestoreTests
     public ShieldPpRestoreTests()
     {
         var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));
-        cards=new(env.Object);
+        // The catalog right after this update: the later taunt+shield cut (2026-10-17) is undone first.
+        cards=CardBalanceHistory.BeforeTauntFaceCharge(new(env.Object));
     }
     [Theory]
     [InlineData("WCG-031",800,1100)][InlineData("WCG-061",700,900)][InlineData("WCG-063",300,500)][InlineData("WCG-069",1100,1400)]

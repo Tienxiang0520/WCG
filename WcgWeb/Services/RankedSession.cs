@@ -24,7 +24,7 @@ public sealed partial class RankedSession
     // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
     // oldest catalog also limits faction triggers.
     private static readonly (bool LimitFactionTriggers, bool LegacyCardRules)[] EraFlags =
-        [.. Enumerable.Repeat((false, false), 20), (false, true), (false, true), (true, true)];
+        [.. Enumerable.Repeat((false, false), 21), (false, true), (false, true), (true, true)];
     // Built on demand: most visits only touch the current catalog, and a lookup stops at the first matching era,
     // building each older catalog from the previous one in a single step (no repeated history chains).
     private readonly object eraGate = new();
