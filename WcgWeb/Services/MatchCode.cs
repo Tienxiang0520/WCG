@@ -11,7 +11,7 @@ namespace WcgWeb.Services;
 // It carries exactly what 對局回顧 needs to re-simulate the match offline: seed, tier (AI level), first player,
 // rules/catalog fingerprint (selects the card era), both deck snapshots and the action journal; each journal
 // action keeps its own RulesVersion (AI revision), so old-era codes replay with their era's rules and AI.
-// Sr is the starting-life rule (RankedRules.CurrentStartRules); codes without it predate the rule and replay with 7/7.
+// Sr is the starting rule (RankedRules.CurrentStartRules: 1 = first player 6 life, 2 = also the second player's 幸運幣); codes without it predate the rule and replay with 7/7.
 // Format: "WCG1-" + base64url(zlib(UTF-8 JSON)). Whitespace and line breaks anywhere are ignored.
 public static class MatchCode
 {

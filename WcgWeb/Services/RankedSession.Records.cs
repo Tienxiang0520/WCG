@@ -68,7 +68,7 @@ public sealed partial class RankedSession
             else return new(record, [], "這場對局使用的卡牌版本已更新，無法重新模擬回顧。");
             var engine = new GameEngine(currentCards); var bridge = new BattleBridge(engine, deckService);
             engine.ResetToNotStarted(); engine.UseMatchCatalog(catalog, limit, legacy);
-            engine.SetReplaySeed(record.Seed); engine.AiLevel = record.Tier; engine.EqualStartingLife = record.StartRules < 1;
+            engine.SetReplaySeed(record.Seed); engine.AiLevel = record.Tier; engine.EqualStartingLife = record.StartRules < 1; engine.SecondPlayerCoin = record.StartRules >= 2;
             engine.StartGame(record.PlayerDeck, record.ComputerDeck, record.PlayerFirst);
             if (trace != null) engine.AiTrace = text => trace(steps.Count - 1, text);
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));

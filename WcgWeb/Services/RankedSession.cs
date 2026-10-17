@@ -24,7 +24,7 @@ public sealed partial class RankedSession
     // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
     // oldest catalog also limits faction triggers.
     private static readonly (bool LimitFactionTriggers, bool LegacyCardRules)[] EraFlags =
-        [.. Enumerable.Repeat((false, false), 19), (false, true), (false, true), (true, true)];
+        [.. Enumerable.Repeat((false, false), 20), (false, true), (false, true), (true, true)];
     // Built on demand: most visits only touch the current catalog, and a lookup stops at the first matching era,
     // building each older catalog from the previous one in a single step (no repeated history chains).
     private readonly object eraGate = new();
@@ -146,7 +146,7 @@ public sealed partial class RankedSession
     }
     private void Restore()
     {
-        Engine.ResetToNotStarted(); Engine.EqualStartingLife = false;
+        Engine.ResetToNotStarted(); Engine.EqualStartingLife = false; Engine.SecondPlayerCoin = true;
         Engine.UseMatchCatalog(currentCards, false); BalanceNotice = "";
         if (profile.Match is not { } match) return;
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
@@ -156,7 +156,7 @@ public sealed partial class RankedSession
             Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }
-        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules < 1;
+        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules < 1; Engine.SecondPlayerCoin = match.StartRules >= 2;
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         foreach (var action in match.Actions)
         {

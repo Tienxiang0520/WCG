@@ -15,9 +15,16 @@ internal static class CounterHistory
     // Catalog before the 理智 buff (ten cards changed, 258–262 added).
     // Catalog before 聖盾 became the one-time 聖盾指示物 (11 cards had the per-turn wording).
     // Catalog before 013, 018, 100 and 182 cost 1 more (cost and PP only).
+    // Catalog before 幸運幣 (WCG-263) existed.
+    internal static CardDatabase BeforeLuckyCoin(CardDatabase current)
+    {
+        if(current.GetCard("WCG-263")==null)return current;
+        return new(JsonSerializer.Serialize(current.AllCards.Where(c=>c.Id!="WCG-263")),JsonSerializer.Serialize(current.PresetDecks));
+    }
     // Catalog before 冰霜魔導師 (029) and 時間靜止者 (035) worked directly on entry (2026-10-17); only their text changed.
     internal static CardDatabase BeforeMageDirect(CardDatabase current)
     {
+        current=BeforeLuckyCoin(current);
         if(current.GetCard("WCG-029")?.Text.StartsWith("進場")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-mage-direct.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

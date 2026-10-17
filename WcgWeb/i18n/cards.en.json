@@ -1430,5 +1430,10 @@
   "zh": "智識巨靈",
   "name": "Lore Colossus",
   "text": "This monster gets +100 PP for each card in your hand (up to +700)."
+ },
+ "WCG-263": {
+  "zh": "幸運幣",
+  "name": "The Coin",
+  "text": "Put this card face up and untapped into your energy zone as 1 temporary energy. At the end of your turn, put it into your graveyard (whether or not it was used)."
  }
 }

@@ -19,7 +19,7 @@ public partial class GameEngine
         score += p.Field.Sum(BodyValue) - e.Field.Sum(BodyValue);
         score += p.Structures.Sum(StructureValue) - e.Structures.Sum(m => m.IsSet ? 2.5 : StructureValue(m)); // their face-down cards are unknown
         score += p.Hand.Sum(c => HoldValue(p, c)) - e.Hand.Count * 1.6;
-        score += (p.TotalEnergy - e.TotalEnergy) * .8;
+        score += (p.TotalEnergy - p.TemporaryEnergy - e.TotalEnergy + e.TemporaryEnergy) * .8; // temporary 幸運幣 energy is gone at end of turn
         if (V9) score += CounterReserve(p);
         if (p.Deck.Count == 0) score -= 12;
         if (e.Deck.Count == 0) score += 12;
