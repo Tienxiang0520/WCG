@@ -66,7 +66,7 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
             while (!cancellation.IsCancellationRequested)
             {
                 await Task.Delay(Fast ? 100 : 450, cancellation);
-                BattleResponse? response = null;
+                BattleResponse? response = null; bool think = false;
                 lock (gate)
                 {
                     if (presenter != token) return;
@@ -78,17 +78,34 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
                     }
                     else if (!AiPaused && !IsBusy && Error == "" && engine.DecisionPlayerId == "computer" && !engine.IsOver)
                     {
-                        executing = true;
-                        try { response = bridge.AiStep(); Track(response); }
-                        catch (Exception ex) { logger.LogError(ex, "Battle AI failed"); Error = "電腦結算發生錯誤，請返回房間重開。";
-                            response = new(false, "ai-error", Error, Guid.NewGuid(), bridge.Snapshot(), []); }
-                        finally { executing = false; }
+                        executing = true; think = true;
                     }
+                }
+                // The step runs outside the lock and pauses between search slices so the page keeps rendering while the
+                // computer thinks; `executing` keeps every other command out until it is done. Same decision as AiStep.
+                if (think)
+                {
+                    try { response = await bridge.AiStepAsync(PauseEvery(SliceMilliseconds)); lock (gate) Track(response); }
+                    catch (Exception ex) { logger.LogError(ex, "Battle AI failed"); lock (gate) { Error = "電腦結算發生錯誤，請返回房間重開。";
+                        response = new(false, "ai-error", Error, Guid.NewGuid(), bridge.Snapshot(), []); } }
+                    finally { lock (gate) executing = false; }
                 }
                 if (response != null) await publish(response);
             }
         }
         catch (OperationCanceledException) when (cancellation.IsCancellationRequested) { }
+    }
+    // Longest stretch of AI work between two chances for the browser to render (WebAssembly runs on one thread).
+    internal static int SliceMilliseconds { get; set; } = 30;
+    internal static Func<ValueTask> PauseEvery(int milliseconds)
+    {
+        var since = System.Diagnostics.Stopwatch.StartNew();
+        return async () =>
+        {
+            if (since.ElapsedMilliseconds < milliseconds) return;
+            await Task.Delay(1); // a timer, not Task.Yield: the browser only paints between macrotasks
+            since.Restart();
+        };
     }
     public void Dispose() { lock (gate) { presenter = null; pending = null; } }
 }

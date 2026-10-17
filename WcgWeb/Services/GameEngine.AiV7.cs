@@ -69,12 +69,16 @@ public partial class GameEngine
     private int _simCounter;
     private int SimSeed() { unchecked { return _aiSeed * 31 + (int)Revision * 7919 + TurnNumber * 104729 + ++_simCounter * 15485863; } }
 
-    private bool ExecuteV7Ai()
+    // The searches below are iterators: each `yield return` marks a point between simulated positions where the
+    // browser may render (GameEngine.AiSlices.cs). They only touch clones there, so running them in one go
+    // (ExecuteV7Ai) or in slices (BeginAiStep) computes exactly the same decision.
+    private bool ExecuteV7Ai() { var r = new Out<bool>(); RunSlices(ExecuteV7AiSlices(r)); return r.Value; }
+    private IEnumerable<int> ExecuteV7AiSlices(Out<bool> result)
     {
-        if (IsOver || CurrentPhase == TurnPhase.NotStarted || !PlayerById(DecisionPlayerId).IsAi) return false;
+        if (IsOver || CurrentPhase == TurnPhase.NotStarted || !PlayerById(DecisionPlayerId).IsAi) { result.Value = false; yield break; }
         var p = PlayerById(DecisionPlayerId);
         // Choices and targets raised by our own actions keep the v6 logic, the same logic simulations use.
-        if (IsWaiting || !Main(p) || !IsQuiescent) return ExecuteTieredAi();
+        if (IsWaiting || !Main(p) || !IsQuiescent) { result.Value = ExecuteTieredAi(); yield break; }
         if (p.Id != _planOwner) { _plan = null; _planOwner = p.Id; }
         var prof = ProfileForDecision(); _simCounter = 0;
         // Following a plan whose simulated position still matches skips both searches.
@@ -82,19 +86,26 @@ public partial class GameEngine
         if (next != null) Trace($"plan: {Describe(next)}");
         if (next == null)
         {
-            if (Noise(101) < prof.LethalSight && FindLethal(p, prof) is { } lethal) { Trace($"lethal: {Describe(lethal)}"); if (ApplyMove(this, p.Id, lethal)) return true; }
-            if (FillEnergyV6(p)) { Trace("energy (v6 rule)"); return true; }
+            if (Noise(101) < prof.LethalSight)
+            {
+                var found = new Out<SimMove?>();
+                foreach (var slice in FindLethalSlices(p, prof, found)) yield return slice;
+                if (found.Value is { } lethal) { Trace($"lethal: {Describe(lethal)}"); if (ApplyMove(this, p.Id, lethal)) { result.Value = true; yield break; } }
+            }
+            if (FillEnergyV6(p)) { Trace("energy (v6 rule)"); result.Value = true; yield break; }
             if (prof.Blunder > 0 && Noise(102) < prof.Blunder)
             {
                 var legal = GenerateMoves(p, energy: false);
                 if (V8) legal = legal.Where(m => m.Kind != "attack" || (CloneQuiescent(SimSeed(), p.Id) is var c && c.SimApply(x => ApplyMove(x, p.Id, m)) && !PointlessAttack(this, c, p.Id, m))).ToList();
-                if (legal.Count > 0) { var pick = Pick(legal, 103); Trace($"blunder: {Describe(pick)}"); if (ApplyMove(this, p.Id, pick)) return true; }
+                if (legal.Count > 0) { var pick = Pick(legal, 103); Trace($"blunder: {Describe(pick)}"); if (ApplyMove(this, p.Id, pick)) { result.Value = true; yield break; } }
             }
-            next = SearchTurn(p, prof);
+            var searched = new Out<SimMove?>();
+            foreach (var slice in SearchTurnSlices(p, prof, searched)) yield return slice;
+            next = searched.Value;
         }
-        if (next == null) { _plan = null; return EndTurn(); }
-        if (ApplyMove(this, p.Id, next)) return true;
-        _plan = null; return ExecuteTieredAi();
+        if (next == null) { _plan = null; result.Value = EndTurn(); yield break; }
+        if (ApplyMove(this, p.Id, next)) { result.Value = true; yield break; }
+        _plan = null; result.Value = ExecuteTieredAi();
     }
 
     // Energy keeps the v6 rule and choice (fill while short of the hand's costs, never the last playable card).
@@ -137,44 +148,58 @@ public partial class GameEngine
     // public pool was tried and measured weaker (tools/RankedCheck), so it is not used.
     // Share of the reply score in the final choice (tuned with tools/RankedCheck; .6 was weaker).
     private const double ReplyWeight = .85;
-    private SearchNode BestAfterReply(PlayerState p, V7Profile prof, List<SearchNode> all, ref int salt)
+    private IEnumerable<int> BestAfterReplySlices(PlayerState p, V7Profile prof, List<SearchNode> all, Out<SearchNode> result)
     {
         var candidates = all.Where(n => n.Move == null || n.G.IsOver || n.G.IsQuiescent).OrderByDescending(n => n.Score).Take(prof.Replies).ToList();
         if (!candidates.Contains(all[0])) candidates.Add(all[0]);
         SearchNode best = candidates[0]; double bestValue = double.MinValue;
         foreach (var n in candidates)
         {
-            var value = n.G.IsOver ? n.Score : n.Score * (1 - ReplyWeight) + Reply(n.G, p.Id, prof.ReplyPlies) * ReplyWeight;
+            double value;
+            if (n.G.IsOver) value = n.Score;
+            else
+            {
+                var reply = new Out<double>();
+                foreach (var slice in ReplySlices(n.G, p.Id, prof.ReplyPlies, reply)) yield return slice;
+                value = n.Score * (1 - ReplyWeight) + reply.Value * ReplyWeight;
+            }
             if (AiTrace != null) { var first = n; while (first.Parent?.Parent != null) first = first.Parent; Trace($"  reply {value,8:F2} (turn-end {n.Score:F2}) first {(first.Move == null ? "end turn" : Describe(first.Move))}"); }
             if (value > bestValue + 1e-9) { bestValue = value; best = n; }
         }
-        return best;
+        result.Value = best;
     }
 
-    private double Reply(GameEngine leaf, string pid, int plies)
+    private IEnumerable<int> ReplySlices(GameEngine leaf, string pid, int plies, Out<double> result)
     {
-        if (leaf.IsOver) return leaf.Evaluate(pid);
+        if (leaf.IsOver) { result.Value = leaf.Evaluate(pid); yield break; }
         var g = leaf.CloneQuiescent(SimSeed(), pid);
-        if (!g.SimApply(x => x.EndTurn())) return leaf.Evaluate(pid);
+        if (!g.SimApply(x => x.EndTurn())) { result.Value = leaf.Evaluate(pid); yield break; }
         g.AiLevel = 5; g.AiRevision = 6;
         for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId != pid; i++)
+        {
             if (!g.ExecuteAiStep()) break;
+            yield return 0;
+        }
         // Two plies (Master): also play our own next turn with the v6 master policy and average both positions,
         // so lines that leave a good follow-up beat lines that only survive the reply.
         if (plies >= 2 && !g.IsOver && g.CurrentTurnPlayerId == pid)
         {
             var mid = g.Evaluate(pid);
             for (int i = 0; i < 40 && !g.IsOver && g.CurrentTurnPlayerId == pid; i++)
+            {
                 if (!g.ExecuteAiStep()) break;
-            return (mid + g.Evaluate(pid)) / 2;
+                yield return 0;
+            }
+            result.Value = (mid + g.Evaluate(pid)) / 2; yield break;
         }
-        return g.Evaluate(pid);
+        result.Value = g.Evaluate(pid);
     }
 
     // Turn search (ai-design.md §2.2–2.3): beam search over this turn's move sequences on hidden-information
     // clones, scoring each position with Evaluate. Returns the first move of the best sequence, or null to end
     // the turn. Ending the turn now is always a candidate.
-    internal SimMove? SearchTurn(PlayerState p, V7Profile prof)
+    internal SimMove? SearchTurn(PlayerState p, V7Profile prof) { var r = new Out<SimMove?>(); RunSlices(SearchTurnSlices(p, prof, r)); return r.Value; }
+    private IEnumerable<int> SearchTurnSlices(PlayerState p, V7Profile prof, Out<SimMove?> result)
     {
         int budget = prof.Budget, salt = 200;
         var root = new SearchNode(CloneQuiescent(SimSeed(), p.Id), null, null, 0);
@@ -189,6 +214,7 @@ public partial class GameEngine
                 foreach (var m in node.G.GenerateMoves(me, energy: false))
                 {
                     if (--budget < 0) break;
+                    yield return 0;
                     var child = node.G.CloneQuiescent(SimSeed(), p.Id);
                     if (!child.SimApply(x => ApplyMove(x, p.Id, m), Math.Max(AiLevel, 0))) continue;
                     bool leaf = false; var value = child.Evaluate(p.Id);
@@ -217,7 +243,12 @@ public partial class GameEngine
             }
             frontier = children.OrderByDescending(c => c.Score).Take(prof.Width).ToList();
         }
-        if (prof.Replies > 0) best = BestAfterReply(p, prof, all, ref salt);
+        if (prof.Replies > 0)
+        {
+            var replied = new Out<SearchNode>();
+            foreach (var slice in BestAfterReplySlices(p, prof, all, replied)) yield return slice;
+            best = replied.Value;
+        }
         var path = new List<SearchNode>();
         for (var n = best; n != root; n = n.Parent!) path.Insert(0, n);
         if (AiTrace != null)
@@ -226,10 +257,10 @@ public partial class GameEngine
             foreach (var c in all.Where(n => n.Parent == root).OrderByDescending(n => n.Score).Take(12))
                 Trace($"  first move {c.Score,8:F2}{(c == path.FirstOrDefault() ? " *" : "  ")} {Describe(c.Move)}");
         }
-        if (best == root) { _plan = null; return null; }
+        if (best == root) { _plan = null; result.Value = null; yield break; }
         _plan = path.Skip(1).Select((n, i) => new PlanStep(n.Move!, PositionKey(n.G, p.Id))).ToList();
         _planBefore = PositionKey(path[0].G, p.Id);
-        return path[0].Move;
+        result.Value = path[0].Move;
     }
 
     internal bool ApplyMove(GameEngine g, string pid, SimMove m)
@@ -312,32 +343,45 @@ public partial class GameEngine
 
     // Lethal search (ai-design.md §2.8): depth-first over every move sequence this turn on hidden-information
     // clones; returns the first move of a sequence that defeats the opponent, or null.
-    internal SimMove? FindLethal(PlayerState p, V7Profile prof)
+    internal SimMove? FindLethal(PlayerState p, V7Profile prof) { var r = new Out<SimMove?>(); RunSlices(FindLethalSlices(p, prof, r)); return r.Value; }
+    private IEnumerable<int> FindLethalSlices(PlayerState p, V7Profile prof, Out<SimMove?> result)
     {
+        result.Value = null;
         var e = GetOpponent(p);
-        if (DamageBound(p, e) < e.Hp) return null;
-        int budget = prof.LethalBudget;
-        SimMove? Search(GameEngine g, int depth)
+        if (DamageBound(p, e) < e.Hp) yield break;
+        var budget = new[] { prof.LethalBudget };
+        IEnumerable<int> Search(GameEngine g, int depth, Out<SimMove?> found)
         {
+            found.Value = null;
             var me = g.PlayerById(p.Id);
             foreach (var m in g.GenerateMoves(me, energy: !me.HasFilledEnergyThisTurn, sets: false))
             {
-                if (--budget < 0) return null;
+                if (--budget[0] < 0) yield break;
                 var child = g.CloneQuiescent(SimSeed(), p.Id);
-                if (!child.SimApply(x => ApplyMove(x, p.Id, m))) continue;
-                if (child.GetOpponent(child.PlayerById(p.Id)).HasLost && !child.PlayerById(p.Id).HasLost) return m;
+                var applied = child.SimApply(x => ApplyMove(x, p.Id, m));
+                yield return 0;
+                if (!applied) continue;
+                if (child.GetOpponent(child.PlayerById(p.Id)).HasLost && !child.PlayerById(p.Id).HasLost) { found.Value = m; yield break; }
                 if (V8 && (PointlessAttack(g, child, p.Id, m) || Drew(g, child, p.Id))) continue;
-                if (depth > 1 && !child.IsOver && child.CurrentTurnPlayerId == p.Id && Search(child, depth - 1) != null) return m;
+                if (depth > 1 && !child.IsOver && child.CurrentTurnPlayerId == p.Id)
+                {
+                    var deeper = new Out<SimMove?>();
+                    foreach (var slice in Search(child, depth - 1, deeper)) yield return slice;
+                    if (deeper.Value != null) { found.Value = m; yield break; }
+                }
             }
-            return null;
         }
-        if (!V8) return Search(CloneQuiescent(SimSeed(), p.Id), prof.LethalDepth);
+        if (!V8)
+        {
+            foreach (var slice in Search(CloneQuiescent(SimSeed(), p.Id), prof.LethalDepth, result)) yield return slice;
+            yield break;
+        }
         // Shortest first: a lethal that needs fewer moves never throws monsters at a taunt it does not have to.
         for (int depth = 1; depth <= prof.LethalDepth; depth++)
         {
-            budget = prof.LethalBudget;
-            if (Search(CloneQuiescent(SimSeed(), p.Id), depth) is { } found) return found;
+            budget[0] = prof.LethalBudget;
+            foreach (var slice in Search(CloneQuiescent(SimSeed(), p.Id), depth, result)) yield return slice;
+            if (result.Value != null) yield break;
         }
-        return null;
     }
 }

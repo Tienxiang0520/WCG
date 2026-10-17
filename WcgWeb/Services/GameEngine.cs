@@ -60,15 +60,21 @@ public partial class GameEngine
             publish = _mutationDepth++ == 0;
             try
             {
-                if (publish) { RefreshBoard(); LastError = ""; _presentation.Clear(); }
+                if (publish) BeginPublishedChange();
                 result = action();
-                if (publish && result) { Drain(); RefreshBoard(); Revision++; }
-                if (publish && !result) _presentation.Clear();
+                if (publish) EndPublishedChange(result);
             }
             finally { _mutationDepth--; }
         }
         if (publish) OnStateChanged?.Invoke();
         return result;
+    }
+    // The outermost change of a batch: shared with AiStepRun (GameEngine.AiSlices.cs) so both stay identical.
+    private void BeginPublishedChange() { RefreshBoard(); LastError = ""; _presentation.Clear(); }
+    private void EndPublishedChange(bool result)
+    {
+        if (result) { Drain(); RefreshBoard(); Revision++; }
+        else _presentation.Clear();
     }
     public GameActionResult ExecuteCommand(string actorId, Guid match, long revision, Func<bool> action, bool anyTurn = false)
     {
