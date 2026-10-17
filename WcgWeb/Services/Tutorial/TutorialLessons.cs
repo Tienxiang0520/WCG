@@ -25,7 +25,7 @@ public static class TutorialLessons
             Summary = "從填能量、召喚、結束回合到攻擊玩家，用一場小對局學會魂誓的基本流程。",
             Topics = ["對局目標", "填能量", "費用與出牌", "五個格位", "召喚橫置", "回合流程與抽牌", "攻擊玩家", "衝鋒", "法術", "勝利條件"],
             Scene = new(
-                new() { Hand = ["WCG-121", "WCG-101", "WCG-014", "WCG-154"], Deck = Deck("WCG-005"), Energy = 1 },
+                new() { Hand = ["WCG-121", "WCG-101", "WCG-014", "WCG-154"], Deck = Deck("WCG-005"), Energy = 3 },
                 new() { Hp = 3, Hand = ["WCG-154", "WCG-101"], Deck = Deck(), Energy = 1 }),
             Steps =
             [
@@ -34,7 +34,7 @@ public static class TutorialLessons
                 new() { Title = "手牌與卡面", Spot = ["hand"],
                     Text = "下方是你的手牌。卡面右上角是費用；怪物另有 PP（戰力，交戰時比大小）與 DP（攻擊玩家時造成的傷害）。點一下卡片可以放大查看完整效果。" },
                 new() { Title = "填能量", Spot = ["hand:WCG-121", "energy"], Allow = [Energy("WCG-121")],
-                    Done = e => e.Player.EnergyZone.Count == 2,
+                    Done = e => e.Player.EnergyZone.Count == 4,
                     Text = "每回合可以把任意 1 張手牌背面放進能量區，成為 1 點能量（不會抽牌）。請把「{0}」拖到左下角亮起的能量區並確認。", TextValues = [CardName("WCG-121")],
                     Hint = "這一步請把「{0}」拖到能量區。", HintValues = [CardName("WCG-121")] },
                 new() { Title = "召喚怪物", Spot = ["hand:WCG-101", "own:2"], Allow = [Play("WCG-101"), Slot()],
@@ -56,8 +56,8 @@ public static class TutorialLessons
                     Text = "把直立的「{0}」拖到上方的電腦頭像，直接攻擊玩家，造成等同 DP 的傷害。攻擊後怪物會橫置。", TextValues = [CardName("WCG-101")],
                     Hint = "請把「{0}」拖到電腦頭像。", HintValues = [CardName("WCG-101")] },
                 new() { Title = "再填一次能量", Spot = ["hand:WCG-154", "energy"], Allow = [Energy("WCG-154")],
-                    Done = e => e.Player.EnergyZone.Count == 3,
-                    Text = "每回合都能填 1 次能量。把「{0}」拖到能量區，讓你有 3 點能量。", TextValues = [CardName("WCG-154")],
+                    Done = e => e.Player.EnergyZone.Count == 5,
+                    Text = "每回合都能填 1 次能量。把「{0}」拖到能量區，讓你有 5 點能量。", TextValues = [CardName("WCG-154")],
                     Hint = "這一步請把「{0}」拖到能量區。", HintValues = [CardName("WCG-154")] },
                 new() { Title = "衝鋒", Spot = ["hand:WCG-005"], Allow = [Play("WCG-005"), Slot()],
                     Done = e => OnField(e.Player, "WCG-005"),
@@ -113,7 +113,7 @@ public static class TutorialLessons
             Summary = "嘲諷怪物會擋下攻擊；學會用法術越過嘲諷，再打穿防線。",
             Topics = ["嘲諷", "法術不受嘲諷限制", "指定目標法術", "DP 傷害"],
             Scene = new(
-                new() { Hand = ["WCG-002"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-156", 3)] },
+                new() { Hand = ["WCG-002"], Deck = Deck(), Energy = 3, Board = [new("WCG-114", 1), new("WCG-156", 3)] },
                 new() { Hp = 4, Deck = Deck(), Energy = 1, Board = [new("WCG-101", 0), new("WCG-049", 2)] }),
             Steps =
             [
@@ -167,7 +167,7 @@ public static class TutorialLessons
             Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭影響正對面的敵人。",
             Topics = ["箭頭 ← → ↑", "相鄰格光環", "正對面同列格", "五大意志的箭頭"],
             Scene = new(
-                new() { Hand = ["WCG-005", "WCG-033"], Deck = Deck(), Energy = 6, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
+                new() { Hand = ["WCG-005", "WCG-033"], Deck = Deck(), Energy = 7, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-132", 0), new("WCG-155", 2)] }),
             Steps =
             [
@@ -221,18 +221,18 @@ public static class TutorialLessons
             Summary = "認識進場與陣亡效果、免費召喚，以及效果依序結算的方式。",
             Topics = ["進場效果", "陣亡效果", "非付費召喚不觸發進場", "效果依序結算"],
             Scene = new(
-                new() { Hand = ["WCG-047", "WCG-003", "WCG-007"], Deck = Deck(), Energy = 4, Board = [new("WCG-083", 4)] },
+                new() { Hand = ["WCG-047", "WCG-102", "WCG-007"], Deck = Deck(), Energy = 4, Board = [new("WCG-083", 4)] },
                 new() { Deck = Deck(), Energy = 1, Graveyard = ["WCG-101"], Board = [new("WCG-158", 0), new("WCG-132", 1), new("WCG-043", 3)] }),
             Steps =
             [
                 new() { Title = "觸發效果", Spot = ["hand"],
                     Text = "「進場」在付費召喚後觸發；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。" },
-                new() { Title = "進場：免費召喚", Spot = ["hand:WCG-047", "dialog"], Allow = [Play("WCG-047"), Slot(), ChooseCard("WCG-003")],
-                    Done = e => OnField(e.Player, "WCG-047") && OnField(e.Player, "WCG-003") && Settled(e),
-                    Text = "召喚「{0}」，效果：{1} 選「{2}」，再為兩隻怪物各選一個空格。", TextValues = [CardName("WCG-047"), CardEffect("WCG-047"), CardName("WCG-003")],
-                    Hint = "請召喚「{0}」，並用進場效果免費召喚「{1}」。", HintValues = [CardName("WCG-047"), CardName("WCG-003")] },
-                new() { Title = "非付費召喚", Spot = ["own-card:WCG-003"],
-                    Text = "「{0}」是被效果免費召喚的，所以不會觸發它的進場效果；陣亡效果則照常有效。", TextValues = [CardName("WCG-003")] },
+                new() { Title = "進場：免費召喚", Spot = ["hand:WCG-047", "dialog"], Allow = [Play("WCG-047"), Slot(), ChooseCard("WCG-102")],
+                    Done = e => OnField(e.Player, "WCG-047") && OnField(e.Player, "WCG-102") && Settled(e),
+                    Text = "召喚「{0}」，效果：{1} 選「{2}」，再為兩隻怪物各選一個空格。", TextValues = [CardName("WCG-047"), CardEffect("WCG-047"), CardName("WCG-102")],
+                    Hint = "請召喚「{0}」，並用進場效果免費召喚「{1}」。", HintValues = [CardName("WCG-047"), CardName("WCG-102")] },
+                new() { Title = "非付費召喚", Spot = ["own-card:WCG-102"],
+                    Text = "「{0}」是被效果免費召喚的，所以不會觸發它的進場效果；陣亡效果則照常有效。", TextValues = [CardName("WCG-102")] },
                 new() { Title = "陣亡效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), Pick("WCG-132")],
                     Done = e => !OnField(e.Computer, "WCG-132") && !OnField(e.Player, "WCG-083") && Settled(e),
                     Text = "讓「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它會被消滅，陣亡效果：{4} 選擇「{5}」。", TextValues = [CardName("WCG-083"), OwnPP("WCG-083"), CardName("WCG-158"), EnemyPP("WCG-158"), CardEffect("WCG-083"), CardName("WCG-132")],
@@ -350,7 +350,7 @@ public static class TutorialLessons
             Summary = "犧牲怪物、支付生命換取效果，最後讓電腦牌庫抽空而落敗。",
             Topics = ["額外代價：犧牲", "以生命換取資源", "牌庫抽空落敗", "勝利條件總結"],
             Scene = new(
-                new() { Hand = ["WCG-006", "WCG-019"], Deck = Deck(), Energy = 4, Board = [new("WCG-101", 0)] },
+                new() { Hand = ["WCG-006", "WCG-019"], Deck = Deck(), Energy = 5, Board = [new("WCG-101", 0)] },
                 new() { Hp = 4, Hand = ["WCG-101"], Deck = [], Energy = 1 }),
             Steps =
             [

@@ -114,7 +114,7 @@ public class BattleBridgeTests
     }
     [Fact] public void SpellPreparationKeepsSourceAcrossChoiceAndTargetAndCanCancel()
     {
-        Energy();Field(engine.Computer,"WCG-003");var card=Hand("WCG-046");
+        Energy();Field(engine.Computer,"WCG-132");var card=Hand("WCG-046");
         var choice=bridge.Submit(Cmd("play",card.InstanceId));Assert.True(choice.Success);
         Assert.Equal(card.InstanceId,choice.State.Pending!.SourceInstanceId);
         var target=bridge.Submit(Cmd("choice",option:"KILL"));Assert.True(target.Success);

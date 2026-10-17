@@ -118,7 +118,7 @@ public class SimplifiedRulesTests
         Assert.False(g.IsWaiting);Assert.Equal(hp,g.Player.Hp);Assert.Contains(oath,g.Player.Hand);
 
         var h=Game();var goblin=Unit(h.Computer,3,1);var trap=new CardInstance(cards.GetCard("WCG-195")!);h.Player.Hand.Add(trap);var life=h.Player.Hp;var enemyLife=h.Computer.Hp;
-        Assert.True(h.CastSpellAt(h.Player,new CardInstance(cards.GetCard("WCG-004")!).Also(h.Player.Hand.Add),goblin));
+        Assert.True(h.CastSpellAt(h.Player,new CardInstance(cards.GetCard("WCG-002")!).Also(h.Player.Hand.Add),goblin)); // 熔岩地精 is 1000 PP since the 2026-10-17 cost-up
         Assert.Contains(h.CurrentPendingChoice!.Options,o=>o.Id==trap.InstanceId.ToString()); // Source already in the graveyard: the counter only cancels.
         Choose(h,o=>o.Id==trap.InstanceId.ToString());
         Assert.Equal(life,h.Player.Hp);Assert.Equal(enemyLife,h.Computer.Hp);

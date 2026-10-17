@@ -34,6 +34,11 @@ internal static class CardBalanceHistory
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
     // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
     // 500-PP 聖印侍從 together with 2400-PP 日耀聖堂巨像 identifies the 聖盾 PP restore (063 was 300 from the deflation on, 800 before it).
+    // Catalog before the taunt+shield / 狂怒 face-damage / 衝鋒 3-cost update (2026-10-17): six taunt+shield cards had higher PP,
+    // twelve 狂怒 cards that damage the enemy player directly cost 1 less, and 突擊狼騎兵 (005) cost 2; text and DP did not change.
+    // 3-cost 突擊狼騎兵 identifies it (005 has cost 2 in every older catalog).
+    internal static bool TauntFaceChargeCatalog(CardDatabase cards) => cards.GetCard("WCG-005")?.TotalCost == 3;
+    private static CardDatabase TauntFaceChargeStep(CardDatabase c) => TauntFaceChargeCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeTauntFaceCharge") : c;
     // Catalog before 幸運幣 (WCG-263) existed (2026-10-17); nothing else changed.
     internal static bool LuckyCoinCatalog(CardDatabase cards) => cards.GetCard("WCG-263") != null;
     private static CardDatabase LuckyCoinStep(CardDatabase c) => !LuckyCoinCatalog(c) ? c
@@ -82,12 +87,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeLuckyCoin(CardDatabase current) => LuckyCoinStep(current);
+    internal static CardDatabase BeforeTauntFaceCharge(CardDatabase current) => TauntFaceChargeStep(current);
+    internal static CardDatabase BeforeLuckyCoin(CardDatabase current) => LuckyCoinStep(BeforeTauntFaceCharge(current));
     internal static CardDatabase BeforeMageDirect(CardDatabase current) => MageDirectStep(BeforeLuckyCoin(current));
     internal static CardDatabase BeforeShieldPp(CardDatabase current) => ShieldPpStep(BeforeMageDirect(current));
     internal static CardDatabase BeforeCostUp(CardDatabase current) => CostUpStep(BeforeShieldPp(current));

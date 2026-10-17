@@ -266,7 +266,7 @@ public sealed class RankedTests : IDisposable
         Assert.True(Send(restored,"surrender").Success);
         var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.Equal(3,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost);
+        Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost); // 3 before the 2026-10-17 狂怒 face-damage cost-up
     }
     [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
     {
@@ -571,7 +571,7 @@ public sealed class RankedTests : IDisposable
             var e=new GameEngine(cards,new Random(1)){AiLevel=level,AiRevision=6};e.SeedRankedAi(1);e.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],false);
             e.Computer.Hand.Clear();e.Player.Hp=2;
             for(int i=0;i<2;i++)e.Computer.Field.Add(new(cards.GetCard("WCG-101")!){IsTapped=false,HasSummoningSickness=false});
-            e.Player.Field.Add(new(cards.GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false});
+            e.Player.Field.Add(new(CounterHistory.BeforeTauntFaceCharge(cards).GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false}); // the 400-PP goblin this v6 scene was written for
             return e;
         }
         var master=Setup(5);Assert.True(master.ExecuteAiStep());Assert.Equal(1,master.Player.Hp);Assert.True(master.ExecuteAiStep());Assert.True(master.Player.HasLost);

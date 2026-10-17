@@ -95,7 +95,7 @@ public class GameEngineTests
     {
         var engine = new GameEngine(_cardDb);
         engine.StartGame(_cardDb.PresetDecks[0], _cardDb.PresetDecks[1]);
-        var resources = Enumerable.Range(0, 2).Select(_ => new CardInstance(_cardDb.GetCard("WCG-101")!)).ToArray();
+        var resources = Enumerable.Range(0, 3).Select(_ => new CardInstance(_cardDb.GetCard("WCG-101")!)).ToArray();
         engine.Player.EnergyZone.AddRange(resources);
         var monster = new CardInstance(_cardDb.GetCard("WCG-005")!);
         engine.Player.Hand.Add(monster);
@@ -129,7 +129,7 @@ public class GameEngineTests
         engine.EndTurn();
         engine.Computer.IsAi = true;
         engine.Computer.Hand.Clear();
-        engine.Computer.Hand.Add(new CardInstance(_cardDb.GetCard("WCG-003")!));
+        engine.Computer.Hand.Add(new CardInstance(_cardDb.GetCard("WCG-101")!));
         engine.Computer.Hand.Add(new CardInstance(_cardDb.GetCard("WCG-018")!));
         engine.ExecuteAiTurn();
         Assert.Single(engine.Computer.EnergyZone);

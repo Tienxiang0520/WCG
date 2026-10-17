@@ -25,7 +25,7 @@ public class V06RulesTests
     [Fact]public void LegacyCounterStopsAttackAndLeavesAttackSpent(){var g=Game(true);var attacker=Unit(g.Player,156,1);var counter=new MonsterInstance(cards.GetCard("WCG-196")!){IsSet=true,Slot=2,IsTapped=false};g.Computer.Structures.Add(counter);for(int i=0;i<2;i++)g.Computer.EnergyZone.Add(new(cards.GetCard("WCG-101")!));Assert.True(g.Attack(g.Player,attacker));Finish(g);Assert.Equal(7,g.Computer.Hp);Assert.True(attacker.IsTapped);Assert.Empty(g.Computer.Structures);Assert.Contains(g.Computer.Graveyard,c=>c.Card.Id=="WCG-196");}
     [Fact]public void TwoFactionsHaveNoTwelveCardLimitButThirdIsRejected(){var d=new Deck{MainWill="狂怒",CardIds=Enumerable.Range(1,13).SelectMany(i=>Enumerable.Repeat($"WCG-{i:000}",4)).Take(50).ToList()};for(int i=0;i<20;i++)d.CardIds[i]=$"WCG-{21+i/4:000}";Assert.True(d.IsValid(cards.GetCard,out _));d.CardIds[20]="WCG-041";Assert.False(d.IsValid(cards.GetCard,out _));}
     [Fact]public void CurrentMissingHpSetsActualCost(){var g=Game();g.Player.Hp=3;Assert.Equal(4,g.ActualCost(g.Player,cards.GetCard("WCG-160")!));g.Player.Hp=6;Assert.Equal(7,g.ActualCost(g.Player,cards.GetCard("WCG-160")!));}
-    [Fact]public void DeployedBuffOnlyIncludesPresentRecipientsAndStacks(){var g=Game();var first=Unit(g.Player,3,0);Assert.True(g.SummonMonster(g.Player,Hand(g,181)));Finish(g,1);Assert.Equal(700,first.CurrentPP);Assert.True(g.SummonMonster(g.Player,Hand(g,181)));Finish(g,2);Assert.Equal(1000,first.CurrentPP);var later=Hand(g,3);Assert.True(g.SummonMonster(g.Player,later));Finish(g,3);Assert.Equal(400,g.Player.Field.Single(x=>x.InstanceId==later.InstanceId).CurrentPP);}
+    [Fact]public void DeployedBuffOnlyIncludesPresentRecipientsAndStacks(){var g=Game();var first=Unit(g.Player,3,0);Assert.True(g.SummonMonster(g.Player,Hand(g,181)));Finish(g,1);Assert.Equal(1300,first.CurrentPP);Assert.True(g.SummonMonster(g.Player,Hand(g,181)));Finish(g,2);Assert.Equal(1600,first.CurrentPP);var later=Hand(g,3);Assert.True(g.SummonMonster(g.Player,later));Finish(g,3);Assert.Equal(1000,g.Player.Field.Single(x=>x.InstanceId==later.InstanceId).CurrentPP);}
     [Theory][InlineData(195)][InlineData(196)][InlineData(197)][InlineData(198)][InlineData(199)]public void LegacyAllCountersResolveThroughAttack(int id){var g=Game(true);var a=Unit(g.Player,156,0);g.Computer.Structures.Add(new(cards.GetCard($"WCG-{id}")!){Slot=1,IsSet=true});Unit(g.Computer,101,2);for(int i=0;i<3;i++)g.Computer.EnergyZone.Add(new(cards.GetCard("WCG-101")!));Assert.True(g.Attack(g.Player,a));Finish(g);Assert.False(g.IsWaiting);Assert.Equal(7,g.Computer.Hp);}
     [Fact]public void EveryCardCanResolveWithoutUnimplementedEffects()
     {
@@ -49,19 +49,19 @@ public class V06RulesTests
         var g=Game();var altar=new MonsterInstance(cards.GetCard("WCG-124")!){Slot=2,IsTapped=false};g.Player.Structures.Add(altar);
         var a=Unit(g.Player,119,0);var b=Unit(g.Player,119,1);var x=Unit(g.Computer,101,0);var y=Unit(g.Computer,101,1);
         Assert.True(g.Attack(g.Player,a,x));Finish(g);Assert.True(g.Attack(g.Player,b,y));Finish(g);
-        Assert.Equal(5,g.Computer.Hp);Assert.False(altar.IsTapped);Assert.Equal(0,altar.TriggersThisTurn);Assert.Equal(3,altar.Card.TotalCost);
+        Assert.Equal(5,g.Computer.Hp);Assert.False(altar.IsTapped);Assert.Equal(0,altar.TriggersThisTurn);Assert.Equal(4,altar.Card.TotalCost); // 3 until the 2026-10-17 狂怒 face-damage cost-up
     }
     [Fact]public void PassiveEchoRecoversOnEveryQualifyingSpellWithoutTapping()
     {
         var g=Game();var tower=new MonsterInstance(cards.GetCard("WCG-153")!){Slot=2,IsTapped=false};g.Player.Structures.Add(tower);var m=Unit(g.Player,101,0);
-        g.Player.Graveyard.Add(new(cards.GetCard("WCG-014")!));g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));
+        g.Player.Graveyard.Add(new(cards.GetCard("WCG-046")!));g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));
         for(int i=0;i<2;i++){Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Equal(i+1,g.Player.Hand.Count);}
         Assert.Empty(g.Player.Graveyard);Assert.False(tower.IsTapped);Assert.Equal(0,tower.TriggersThisTurn);Assert.Equal(4,tower.Card.TotalCost);
     }
     [Fact]public void MultipleEchoTowersRecheckGraveyardBeforeEachRecovery()
     {
         var g=Game();for(int i=1;i<=2;i++)g.Player.Structures.Add(new(cards.GetCard("WCG-153")!){Slot=i});var m=Unit(g.Player,101,0);
-        var recovered=new CardInstance(cards.GetCard("WCG-014")!);g.Player.Graveyard.Add(recovered);
+        var recovered=new CardInstance(cards.GetCard("WCG-046")!);g.Player.Graveyard.Add(recovered);
         Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Single(g.Player.Hand);Assert.Same(recovered,g.Player.Hand[0]);Assert.Empty(g.Player.Graveyard);
         g.Player.Graveyard.Add(new(cards.GetCard("WCG-121")!));Assert.True(g.CastSpellAt(g.Player,Hand(g,62),m));Finish(g);Assert.Equal(2,g.Player.Hand.Count);
     }

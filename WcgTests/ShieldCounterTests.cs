@@ -19,7 +19,7 @@ public class ShieldCounterTests
 
     [Fact] public void BeingAttackedSpendsACounterEvenWhenItWouldSurvive()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,3,3);Refresh(g);ComputerTurn(g);
+        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,101,3);Refresh(g);ComputerTurn(g);
         Assert.True(knight.ShieldCounters>0&&small.CurrentPP<knight.CurrentPP);var before=knight.ShieldCounters;
         var preview=g.PreviewAttack(small,knight)!;Assert.True(preview.DefenderShieldBreaks);Assert.False(preview.DefenderDies);Assert.True(preview.AttackerDies);
         Assert.True(g.Attack(g.Computer,small,knight));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
@@ -28,7 +28,7 @@ public class ShieldCounterTests
 
     [Fact] public void AttackingDoesNotSpendACounterWhenItWins()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,3,3);Refresh(g);var before=knight.ShieldCounters;
+        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,101,3);Refresh(g);var before=knight.ShieldCounters;
         Assert.True(g.Attack(g.Player,knight,small));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
         Assert.Equal(before,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
     }

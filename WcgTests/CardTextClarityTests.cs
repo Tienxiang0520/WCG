@@ -153,7 +153,7 @@ public class CardTextClarityTests
     [Theory] [InlineData(false,true)] [InlineData(true,false)]
     public void ScoutTriggersWheneverItSurvivesItsAttack(bool legacy,bool triggers)
     {
-        var g=Game(legacy);var scout=Unit(g.Player,136,0);scout.IsTapped=true;Unit(g.Computer,3,1);
+        var g=Game(legacy);var scout=Unit(g.Player,136,0);scout.IsTapped=true;Unit(g.Computer,132,1);
         typeof(GameEngine).GetMethod("FinishAttack",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Player,scout]);
         Assert.Equal(triggers,g.CurrentPendingTarget!=null);
     }
