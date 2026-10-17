@@ -25,15 +25,15 @@ source: WcgWeb/Data/cards.json
 | WCG-003 | 熔岩地精 | 怪物 | 2 | 1000 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Lava Goblin** — On Death: Deal 1 damage to the enemy player. |
 | WCG-004 | 熾炎猛擊 | 法術 | 2 | — | — | — | 消滅 1 隻 PP 600 以下的敵方怪物，然後抽 1 張牌。 | **Blazing Smash** — Destroy 1 enemy monster with 600 PP or less, then draw 1 card. |
 | WCG-005 | 突擊狼騎兵 | 怪物 | 3 | 1000 | 1 | ←→ | 衝鋒；【箭頭：← →】左右相鄰的己方怪物 PP +200。 | **Raiding Wolf Rider** — Charge. [Arrow: ← →] Your adjacent monsters on the left and right get +200 PP. |
-| WCG-006 | 怒意沸騰 | 法術 | 2 | — | — | — | 額外代價：犧牲 1 隻己方怪物。對敵方玩家造成 2 點傷害。 | **Boiling Rage** — Additional cost: sacrifice 1 of your monsters. Deal 2 damage to the enemy player. |
+| WCG-006 | 怒意沸騰 | 法術 | 4 | — | — | — | 額外代價：犧牲 1 隻己方怪物。對敵方玩家造成 2 點傷害。 | **Boiling Rage** — Additional cost: sacrifice 1 of your monsters. Deal 2 damage to the enemy player. |
 | WCG-007 | 狂血投擲者 | 怪物 | 2 | 900 | 1 | — | 進場：消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。 | **Bloodfrenzy Hurler** — Deploy: Destroy the enemy monster with the lowest PP (only if it has 600 PP or less). |
 | WCG-008 | 烈焰旋風 | 法術 | 1 | — | — | — | 消滅雙方所有 PP 600 以下的怪物。 | **Flame Whirlwind** — Destroy all monsters on both sides with 600 PP or less. |
 | WCG-009 | 阿曼尼狂戰士 | 怪物 | 2 | 1100 | 1 | — | 敵方場上每有 1 隻怪物，此怪物 PP +200。 | **Amani Berserker** — This monster gets +200 PP for each enemy monster. |
 | WCG-010 | 戰鬥狂怒 | 法術 | 3 | — | — | — | 己方場上每有 1 隻怪物，抽 1 張牌（最多抽 2 張）。 | **Battle Fury** — Draw 1 card for each monster on your side (up to 2 cards). |
 | WCG-011 | 嗜血戰狂 | 怪物 | 3 | 1300 | 1 | — | 每當己方另 1 隻怪物被消滅，抽 1 張牌。 | **Bloodthirsty Warmonger** — Whenever another of your monsters is destroyed, draw 1 card. |
 | WCG-012 | 狂暴斬殺 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的敵方怪物。 | **Savage Execution** — Destroy 1 enemy monster that costs 2 or less. |
-| WCG-013 | 焦土縱火犯 | 怪物 | 4 | 1700 | 1 | — | 進場：對敵方玩家造成 1 點傷害，你失去 1 點生命。 | **Scorched-Earth Arsonist** — Deploy: Deal 1 damage to the enemy player. You lose 1 life. |
-| WCG-014 | 熾紅戰斧 | 法術 | 2 | — | — | — | 對敵方玩家造成 1 點傷害。 | **Crimson War Axe** — Deal 1 damage to the enemy player. |
+| WCG-013 | 焦土縱火犯 | 怪物 | 5 | 2000 | 1 | — | 進場：對敵方玩家造成 1 點傷害，你失去 1 點生命。 | **Scorched-Earth Arsonist** — Deploy: Deal 1 damage to the enemy player. You lose 1 life. |
+| WCG-014 | 熾紅戰斧 | 法術 | 3 | — | — | — | 對敵方玩家造成 1 點傷害。 | **Crimson War Axe** — Deal 1 damage to the enemy player. |
 | WCG-015 | 炎息重騎兵 | 怪物 | 4 | 1800 | 2 | — | 進場：若敵方怪物比你的多，抽 1 張牌。 | **Flamebreath Lancer** — Deploy: If the enemy has more monsters than you, draw 1 card. |
 | WCG-016 | 灰燼復仇者 | 怪物 | 3 | 1100 | 1 | — | 陣亡：消滅 PP 最低的 1 隻敵方怪物。 | **Ashen Avenger** — On Death: Destroy the enemy monster with the lowest PP. |
 | WCG-017 | 滅絕怒火 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 1100 以下的敵方怪物，並對敵方玩家造成 1 點傷害。 | **Annihilating Wrath** — Destroy 1 enemy monster with 1100 PP or less and deal 1 damage to the enemy player. |
@@ -43,11 +43,11 @@ source: WcgWeb/Data/cards.json
 | WCG-124 | 血怒祭壇 | 結界 | 4 | — | — | — | 每當你的怪物在交戰中消滅敵方怪物，對敵方玩家造成 1 點傷害。 | **Bloodrage Altar** — Whenever one of your monsters destroys an enemy monster in combat, deal 1 damage to the enemy player. |
 | WCG-136 | 狂戰士斥候 | 怪物 | 3 | 1100 | 1 | — | 衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 600 以下的敵方怪物。 | **Berserker Scout** — Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 600 PP or less. |
 | WCG-141 | 狂亂血宴 | 法術 | 1 | — | — | — | 使 1 隻己方怪物轉為直立（本回合可以攻擊，已攻擊過也能再攻擊），並在附著期間 PP +700。你的下個回合結束時，消滅它。 | **Frenzied Blood Feast** — Untap 1 of your monsters (it can attack this turn, even if it already attacked) and it gets +700 PP while this is attached. At the end of your next turn, destroy it. |
-| WCG-144 | 狂熱嘲弄者 | 怪物 | 3 | 1200 | 0 | — | 嘲諷；每當此怪物被攻擊後仍在場，對敵方玩家造成 1 點傷害。 | **Fanatical Taunter** — Taunt. Whenever this monster survives being attacked, deal 1 damage to the enemy player. |
+| WCG-144 | 狂熱嘲弄者 | 怪物 | 5 | 1900 | 0 | — | 嘲諷；每當此怪物被攻擊後仍在場，對敵方玩家造成 1 點傷害。 | **Fanatical Taunter** — Taunt. Whenever this monster survives being attacked, deal 1 damage to the enemy player. |
 | WCG-151 | 熔火鍛爐 | 結界 | 2 | — | — | — | 橫置此卡：消滅 1 隻 PP 600 以下的怪物。 | **Molten Forge** — Tap this card: destroy 1 monster with 600 PP or less. |
 | WCG-156 | 荒原巨槌食人魔 | 怪物 | 3 | 1600 | 2 | — | 無。 | **Wasteland Maul Ogre** — None. |
 | WCG-165 | 血祭狂暴 | 法術 | 0 | — | — | — | 代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。 | **Blood Sacrifice Frenzy** — Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard. |
-| WCG-170 | 天火浩劫 | 法術 | 7 | — | — | — | 消滅所有 PP 1500 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。 | **Skyfire Cataclysm** — Destroy all enemy monsters with 1500 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player. |
+| WCG-170 | 天火浩劫 | 法術 | 8 | — | — | — | 消滅所有 PP 1500 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。 | **Skyfire Cataclysm** — Destroy all enemy monsters with 1500 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player. |
 | WCG-174 | 熔岩黑龍軍團長 | 怪物 | 8 | 2600 | 2 | — | 衝鋒；貫穿。 | **Lava Black Dragon Warlord** — Charge. Trample. |
 | WCG-178 | 滅世炎魔·薩弗拉斯 | 怪物 | 9 | 3100 | 3 | — | 衝鋒；嘲諷擋不住此怪物。此怪物攻擊時，先消滅所有敵方嘲諷怪物。 | **World-Burning Fire Fiend, Sulfras** — Charge. Taunt can't block this monster. When it attacks, first destroy all enemy Taunt monsters. |
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張【狂怒】怪物牌與 1 張【狂怒】法術牌加入手牌，其餘依任意順序放到牌庫底。 | **Warsong Command** — Look at the top 3 cards of your deck. Put 1 [Fury] monster card and 1 [Fury] spell card among them into your hand and the rest on the bottom in any order. |
@@ -134,7 +134,7 @@ source: WcgWeb/Data/cards.json
 | WCG-055 | 沼澤巨鱷 | 怪物 | 4 | 2000 | 1 | — | 無。 | **Swamp Crocodile** — None. |
 | WCG-056 | 生態同調 | 法術 | 1 | — | — | — | 檢視牌庫頂 3 張，選 1 張費用 2 以下的怪物牌加入手牌，其餘依任意順序放到牌庫底。 | **Ecological Attunement** — Look at the top 3 cards of your deck. Put a monster card that costs 2 or less among them into your hand and the rest on the bottom in any order. |
 | WCG-057 | 遠古守護者 | 怪物 | 6 | 2400 | 1 | — | 嘲諷；進場：回復己方 1 點生命。 | **Ancient Guardian** — Taunt. Deploy: Restore 1 life to yourself. |
-| WCG-059 | 蓋亞暴龍 | 怪物 | 6 | 2400 | 2 | — | PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。 | **Gaia Tyrant** — Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player). |
+| WCG-059 | 蓋亞暴龍 | 怪物 | 7 | 2700 | 2 | — | PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。 | **Gaia Tyrant** — Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player). |
 | WCG-060 | 始祖母樹·伊瓦 | 怪物 | 6 | 2400 | 2 | — | 嘲諷；你的回合結束時，你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。 | **Progenitor Mother Tree, Iva** — Taunt. At the end of your turn, you may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
 | WCG-126 | 遠古母樹根鬚 | 結界 | 3 | — | — | — | 橫置此卡：本回合你召喚的下 1 隻怪物費用 -1（最低 1 費）。 | **Roots of the Ancient Mother** — Tap this card: the next monster you summon this turn costs 1 less (minimum 1). |
 | WCG-131 | 棘刺巨蛋 | 怪物 | 2 | 1100 | 1 | — | 陣亡：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。 | **Thorned Giant Egg** — On Death: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger). |
@@ -269,7 +269,7 @@ source: WcgWeb/Data/cards.json
 | WCG-120 | 炎魔·拉格納羅斯 | 怪物 | 8 | 2900 | 0 | — | 此怪物不能攻擊。你的回合結束時，消滅 PP 最低的 1 隻敵方怪物；若敵方沒有怪物，改為對敵方玩家造成 1 點傷害。 | **Fire Lord, Ragnaros** — This monster can't attack. At the end of your turn, destroy the enemy monster with the lowest PP; if the enemy has no monsters, deal 1 damage to the enemy player instead. |
 | WCG-121 | 冒險者行囊 | 法術 | 1 | — | — | — | 抽 1 張牌。 | **Adventurer's Pack** — Draw 1 card. |
 | WCG-122 | 傭兵號召 | 法術 | 2 | — | — | — | 檢視牌庫頂 5 張，選 1 張怪物牌加入手牌，其餘依任意順序放到牌庫底。 | **Call to Arms** — Look at the top 5 cards of your deck. Put a monster card among them into your hand and the rest on the bottom in any order. |
-| WCG-123 | 終焉彗星 | 法術 | 5 | — | — | — | 消滅 1 隻敵方怪物，並對敵方玩家造成 1 點傷害。 | **Doomsday Comet** — Destroy 1 enemy monster and deal 1 damage to the enemy player. |
+| WCG-123 | 終焉彗星 | 法術 | 6 | — | — | — | 消滅 1 隻敵方怪物，並對敵方玩家造成 1 點傷害。 | **Doomsday Comet** — Destroy 1 enemy monster and deal 1 damage to the enemy player. |
 | WCG-133 | 厚甲石像鬼 | 怪物 | 2 | 1100 | 0 | — | 嘲諷；每當你的生命降到 3 點以下，此怪物獲得 1 個聖盾指示物。 | **Armored Gargoyle** — Taunt. Whenever your life drops to 3 or less, this monster gets 1 Holy Shield counter. |
 | WCG-134 | 巡林驅邪工兵 | 怪物 | 2 | 1000 | 1 | — | 進場：你可以選 1 隻怪物，移除它的所有附著卡並解除沉默；或摧毀 1 個結界（雙方皆可選）。 | **Exorcist Ranger Sapper** — Deploy: You may choose 1 monster and remove all cards attached to it and its Silence; or destroy 1 Ward (either side). |
 | WCG-149 | 靈魂集市 | 結界 | 2 | — | — | — | 橫置此卡：將 1 張手牌放到牌庫底，然後抽 1 張牌。 | **Soul Bazaar** — Tap this card: put 1 card from your hand on the bottom of your deck, then draw 1 card. |

@@ -128,7 +128,7 @@ public class ReasonBuffTests
         var g=Game();g.AiLevel=5;Hand(g,259,g.Computer);var foe=Unit(g.Computer,154,0);
         Assert.True(g.CastSpellAt(g.Player,Hand(g,32),foe));Assert.True(g.ExecuteAiStep());Assert.Contains(foe,g.Computer.Field);
         g=Game();g.AiLevel=5;Hand(g,259,g.Computer);Unit(g.Computer,154,0);g.Computer.Hp=7;
-        Assert.True(g.CastSpell(g.Player,Hand(g,14)));Assert.True(g.ExecuteAiStep());Assert.Equal(6,g.Computer.Hp);Assert.Single(g.Computer.Hand);
+        Assert.True(g.CastSpell(g.Player,Hand(g,211)));Assert.True(g.ExecuteAiStep());Assert.Equal(7,g.Computer.Hp);Assert.Single(g.Computer.Hand); // 2-cost 思緒潰散 (熾紅戰斧 costs 3 since 2026-10-18)
     }
 
     [Fact] public void HumanGetsTheCounterPromptOnTheComputersTurn()
