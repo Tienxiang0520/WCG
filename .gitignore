@@ -16,6 +16,7 @@ SoulOath.Static/wwwroot/lib/
 SoulOath.Static/wwwroot/battle/
 SoulOath.Static/wwwroot/card-art/
 WcgWeb/wwwroot/card-art/*.webp
+WcgWeb/wwwroot/card-art/.webp-settings.json
 SoulOath.Static/wwwroot/data/
 SoulOath.Static/wwwroot/deck-print.css
 SoulOath.Static/wwwroot/card-face.css
