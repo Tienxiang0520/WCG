@@ -10,7 +10,11 @@ public sealed class CloudFunctions(CloudIdentity identity, CloudBlobStore store,
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
     [Function("Health")]
-    public IActionResult Health([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health")] HttpRequest request) => new OkObjectResult(new { service = "WCG Cloud Save", version = 1 });
+    public IActionResult Health([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "health")] HttpRequest request) 
+    {
+        request.HttpContext.Response.Headers.CacheControl = "no-store";
+        return new OkObjectResult(new { service = "WCG Cloud Save", version = 1, data = CloudCatalog.Hashes });
+    }
 
     [Function("PlayerSave")]
     public async Task<IActionResult> Save([HttpTrigger(AuthorizationLevel.Anonymous, "get", "put", Route = "save")] HttpRequest request, CancellationToken token)

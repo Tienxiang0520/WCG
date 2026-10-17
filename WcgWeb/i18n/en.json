@@ -1559,6 +1559,7 @@
  "訪客資料保存在這個瀏覽器；使用 Microsoft 帳號時，請確認雲端已同步。匯出備份可另外保存目前的牌組、天梯、頭像與設定。": "Guest data stays in this browser. When using a Microsoft account, check that cloud syncing has completed. Export a backup to keep an extra copy of your decks, ranked progress, avatar and settings.",
  "雲端存檔有衝突或正在其他裝置使用，請先到設定頁處理。": "Your cloud save has a conflict or is in use on another device. Resolve it in Settings first.",
  "雲端存檔驗證未通過，本機進度已保留": "Cloud save validation failed; local progress is kept.",
+ "雲端存檔伺服器與網站的卡表版本不同，同步可能被拒絕；進度會先保存在本機。請稍後重新整理再試。": "The cloud save server uses a different card catalog than this site, so syncing may be refused. Progress is kept on this device; refresh later and try again.",
  "本機進度": "Local progress",
  "雲端進度": "Cloud progress",
  "{0} 副牌組 · 天梯 {1} 星": "{0} decks · {1} ranked stars",

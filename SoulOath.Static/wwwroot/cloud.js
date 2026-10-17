@@ -1,11 +1,12 @@
 import { createAuth } from './cloud-auth.js';
 import { CloudSync } from './cloud-sync.js';
 import { browserLeaseId } from './cloud-device.js';
+import { checkCloudCatalog } from './cloud-version.js';
 
 const guestKey='soul-oath.player.v1', guestPreferencesKey='wcg.guest-preferences.v1';
 const prefKeys=['wcg.confirmEnergy','soul-oath.sidebar-width'];
 let config,auth,account,engine,activeKey=null,metaKey=null,recoveryKey=null,leaseId=null,timer=null,queued=null,disposed=false;
-let publicState={available:false,signedIn:false,mode:'guest',busy:false,name:'',lastSync:null,hasCloud:false};
+let publicState={available:false,signedIn:false,mode:'guest',busy:false,name:'',lastSync:null,hasCloud:false,apiMismatch:false};
 function summary(save){try{if(!save)return null;const rank=JSON.parse(save.data.ranked??'null');return {decks:JSON.parse(save.data.decks??'[]').length,stars:rank?.Stars??0,activeMatch:!!rank?.Match&&!rank.Match.Settled};}catch{return null;}}
 const emit=()=>{let current;try{current=engine?.local.read()??guest();}catch{}publicState={...publicState,...engine?.state(),signedIn:!!account,name:account?.name??account?.username??'',localSummary:summary(current),cloudSummary:summary(engine?.remoteSave?.save),hasRecovery:!!recoveryKey&&!!localStorage.getItem(recoveryKey)};window.dispatchEvent(new CustomEvent('wcg-cloud-status'));};
 const prefs=()=>Object.fromEntries(prefKeys.flatMap(key=>{const value=localStorage.getItem(key);return value===null?[]:[[key,value]];}));
@@ -64,6 +65,9 @@ async function initialize() {
         if(engine.attached){activeKey=accountKey;if(tabWritable())applyPrefs(local.read().preferences);}
         emit();
         if(!tabWritable())return;
+        // Non-blocking, only once this writer tab is talking to the API: warn when the API validates saves
+        // against a different card catalog than this tab runs (/health carries no player data or token).
+        if(engine.mode!=='reauth')checkCloudCatalog(config.apiUrl).then(same=>{if(same!==false||disposed)return;publicState.apiMismatch=true;emit();});
         if(engine.mode==='pending')schedule();
         timer=setInterval(async()=>{await engine.renew();if(engine.mode==='pending')schedule();},20000);
     } catch {publicState.mode='offline';emit();}

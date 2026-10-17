@@ -48,7 +48,7 @@ python3 tools/CloudSave/deploy_api.py --publish --az /home/pudding/project/WCG/.
 
 Functions SDK 會將索引資料產生至組件中，套件包含 `host.json`、`worker.config.json`、API 組件及依賴；不要求舊 SDK 的 `functions.metadata` 檔案。新 SDK 的還原需先對 Function 專案直接執行。
 
-網站部署沿用 `SoulOath.Static/tools/deploy-blob.py`。本地預覽採逐檔原子更新並保留舊資源；不修改玩家資料、原預覽服務或獨立的 Sites checkout。
+網站部署沿用 `SoulOath.Static/tools/deploy-blob.py`。平常更新請改用 `tools/deploy-all.py --publish`，它會依序發布 API 與網站，並確認 API 的 `/health` 卡表雜湊與網站一致（見 [Azure 部署](Azure部署說明.md)）；上面的分開指令只在單獨排查 API 時使用。本地預覽採逐檔原子更新並保留舊資源；不修改玩家資料、原預覽服務或獨立的 Sites checkout。
 
 ## 驗證範圍
 
