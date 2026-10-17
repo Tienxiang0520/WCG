@@ -1,5 +1,11 @@
 import { readdir, stat, readFile } from 'node:fs/promises';
-import { resolve, relative } from 'node:path';
+import { resolve, relative, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const toolsDir=dirname(fileURLToPath(import.meta.url));
+const catalog=JSON.parse(await readFile(resolve(toolsDir,'../../WcgWeb/Data/cards.json'),'utf8'));
+const expectedCards=new Set(catalog.map(card=>card.Id??card.id)).size;
+if(!expectedCards||catalog.some(card=>(card.Id??card.id)==null))
+    throw new Error('Current card catalog is missing card ids.');
 const directory=resolve(process.argv[2]??'.build-tmp/azure-site/dist');
 let bytes=0,files=0;
 async function inspect(folder){
@@ -19,8 +25,8 @@ const config=JSON.parse(await readFile(resolve(directory,'staticwebapp.config.js
 if(config.navigationFallback?.rewrite!=='/index.html'||config.mimeTypes?.['.wasm']!=='application/wasm')
     throw new Error('Missing Azure routing or WebAssembly configuration.');
 const cards=JSON.parse(await readFile(resolve(directory,'data/cards.json'),'utf8'));
-if(cards.length!==257)throw new Error('Expected v0.6 catalog with 257 cards.');
+if(cards.length!==expectedCards)throw new Error(`Expected current catalog with ${expectedCards} cards.`);
 for(const card of cards)await stat(resolve(directory,'card-art',`${card.Id??card.id}.webp`));
 for(const route of ['','battle','cards','deckbuilder','ranked','rules','settings','tutorial'])
     await stat(resolve(directory,route,'index.html'));
-console.log(`Azure Free package validated: ${files} files, ${(bytes/1_000_000).toFixed(1)} MB, 257 card images.`);
+console.log(`Azure Free package validated: ${files} files, ${(bytes/1_000_000).toFixed(1)} MB, ${expectedCards} card images.`);

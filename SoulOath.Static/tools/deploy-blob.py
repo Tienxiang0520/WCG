@@ -44,6 +44,18 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+# Current playable catalog used by the build (not balance-before-* era snapshots).
+CATALOG_PATH = Path(__file__).resolve().parents[2] / 'WcgWeb' / 'Data' / 'cards.json'
+
+
+def catalog_card_count(path=CATALOG_PATH):
+    cards = json.loads(Path(path).read_text())
+    ids = {card.get('Id') or card.get('id') for card in cards}
+    if not ids or None in ids:
+        raise ValueError('Current card catalog is missing card ids')
+    return len(ids)
+
+
 def public_path(name):
     parts = name.split('/')
     if any(p in PRIVATE or p.startswith('.') or p.startswith('.env') for p in parts):
@@ -94,8 +106,9 @@ def plan(source):
     if set(files) - excluded != seen:
         raise ValueError('Preload manifest must cover every game asset')
     cards = json.loads(files['data/cards.json'].read_text())
-    if len(cards) != 257:
-        raise ValueError('Expected 257 cards')
+    expected = catalog_card_count()
+    if len(cards) != expected:
+        raise ValueError(f'Expected {expected} cards from current catalog')
     for card in cards:
         if f"card-art/{card.get('Id', card.get('id'))}.webp" not in seen:
             raise ValueError('Missing card artwork')

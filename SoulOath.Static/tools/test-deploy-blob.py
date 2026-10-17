@@ -21,8 +21,9 @@ class BlobPlanTests(unittest.TestCase):
         self.write('index.html', b'<base href="/"><title>WCG</title>')
         self.write('asset-worker.js', b'/* offline worker */')
         self.write('_framework/runtime.hash123.wasm', b'\x00asm')
-        self.write('data/cards.json', json.dumps([{'Id': f'WCG-{i:03}'} for i in range(1,258)]).encode())
-        for i in range(1,258):
+        count = deploy.catalog_card_count()
+        self.write('data/cards.json', json.dumps([{'Id': f'WCG-{i:03}'} for i in range(1, count + 1)]).encode())
+        for i in range(1, count + 1):
             self.write(f'card-art/WCG-{i:03}.webp', b'test-art')
         for route in deploy.ROUTES:
             self.write(f'{route}/index.html', (self.root / 'index.html').read_bytes())
