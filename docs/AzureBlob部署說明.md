@@ -52,6 +52,16 @@ AZURE_CONFIG_DIR=/home/pudding/project/WCG/.runtime/azure-cli-config \
 
 工具比對遠端雜湊及 HTTP 屬性，只上傳變動檔案。先上傳並驗證資源，再發布清單及各入口，根首頁最後發布。部署回條只記錄主機、版本、檔案數與大小；原 App Service 回條保留。舊版本檔案不會自動刪除，讓已開啟的分頁繼續完成對戰。
 
+### 清理舊版本檔案
+
+確認所有玩家都已換到新版本（例如發布後隔一天）再清理。工具只在線上資源清單與這次建置相同時才會動作，預設只列出要刪的檔案：
+
+```sh
+.build-tmp/azure-cli/bin/python SoulOath.Static/tools/prune-blobs.py .build-tmp/azure-blob-site/dist
+```
+
+確認清單無誤後加上 `--delete` 才會真的刪除。瀏覽器端的 `asset-worker.js` 也會在分頁綁定新版本後，清掉已無分頁使用的舊版本快取。
+
 ## 頁面與檔案設定
 
 `$web` 的首頁為 `index.html`；2026-10-13 核對時發現自訂錯誤頁尚未生效，已修正部署工具的 SDK 欄位名稱，下次發布會設定 `not-found/index.html`。Blob 不讀取 IIS 或 Static Web Apps 的轉址設定，因此部署工具另外發布 `/cards`、`/deckbuilder`、`/ranked`、`/battle`、`/rules`、`/settings`、`/tutorial` 等實際 HTML Blob，支援直接開啟；各目錄的 `index.html` 同時保留。遺失資源仍回傳 HTTP 404。

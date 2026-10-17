@@ -1,7 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <Import Project="../build/Wcg.SharedResources.props" />
   <PropertyGroup>
-    <RootNamespace>WcgWeb</RootNamespace><PublishTrimmed>false</PublishTrimmed><JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault><OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <RootNamespace>WcgWeb</RootNamespace>
+    <!-- Trim only framework assemblies (TrimMode=partial): the game assembly (all shared WcgWeb code) is kept whole,
+         so reflection-based JSON on game types behaves exactly as before. -->
+    <PublishTrimmed>true</PublishTrimmed><TrimMode>partial</TrimMode><JsonSerializerIsReflectionEnabledByDefault>true</JsonSerializerIsReflectionEnabledByDefault>
+    <!-- One ICU file for every visitor: CJK contains zh and en, the only UI languages. -->
+    <BlazorIcuDataFileName>icudt_CJK.dat</BlazorIcuDataFileName><OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.12" />
