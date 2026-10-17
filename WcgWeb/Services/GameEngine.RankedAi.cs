@@ -54,13 +54,13 @@ public partial class GameEngine
 
         if (Noise(1) < prof.LethalSight && TryLethal(p, e, prof)) return true;
 
-        if (!p.HasFilledEnergyThisTurn && p.Hand.Count > 0 && (p.Hand.Count > 1 || !p.Hand.Any(c => CanPlayCard(p, c)))
+        if (!p.HasFilledEnergyThisTurn && EnergyFillCandidates(p) is { Count: > 0 } fill && (p.Hand.Count > 1 || !p.Hand.Any(c => CanPlayCard(p, c)))
             && p.TotalEnergy < Math.Max(5, p.Hand.Max(c => ActualCost(p, c.Card))))
         {
             var energy = prof.SmartEnergy
-                ? p.Hand.OrderBy(c => (c.Card.IsCounter ? 3 : 0) + HandValue(p, c) + (p.Hand.Count(x => x.Card.Id == c.Card.Id) > 1 ? -2 : 0)).ThenBy(c => c.Card.Id, StringComparer.Ordinal).First()
-                : AiLevel == 0 ? Pick(p.Hand, 2)
-                : p.Hand.OrderBy(c => c.Card.IsCounter ? 10 : 0).ThenByDescending(c => c.Card.TotalCost).First();
+                ? fill.OrderBy(c => (c.Card.IsCounter ? 3 : 0) + HandValue(p, c) + (p.Hand.Count(x => x.Card.Id == c.Card.Id) > 1 ? -2 : 0)).ThenBy(c => c.Card.Id, StringComparer.Ordinal).First()
+                : AiLevel == 0 ? Pick(fill, 2)
+                : fill.OrderBy(c => c.Card.IsCounter ? 10 : 0).ThenByDescending(c => c.Card.TotalCost).First();
             return PlayEnergy(p, energy);
         }
         if (!DamageCounters && prof.UseCounters && p.Occupied < 5 && !p.Structures.Any(x => x.IsSet) && (!prof.ScoredPlays || e.Field.Count > 0 || TurnNumber > 4))

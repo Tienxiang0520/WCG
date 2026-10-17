@@ -39,8 +39,8 @@ public partial class GameEngine
         var rage=p.Field.FirstOrDefault(m=>m.HasRage&&CanAttackPlayer(m)&&m.CurrentDP+p.AvailableEnergy-GuardReduction(e,m.CurrentDP+p.AvailableEnergy)>=e.Hp);if(rage!=null)return Attack(p,rage);
         var lethal=p.Field.Where(m=>CanAttackPlayer(m)&&m.CurrentDP>0).ToArray();if(lethal.Sum(m=>m.CurrentDP)>=e.Hp&&lethal.Length>0)return Attack(p,lethal[0]);
         var face=p.Field.FirstOrDefault(m=>CanAttackPlayer(m)&&m.CurrentDP>=e.Hp&&m.CurrentDP>0);if(face!=null)return Attack(p,face);
-        if(!p.HasFilledEnergyThisTurn&&p.Hand.Count>0&&(p.Hand.Count>1||!p.Hand.Any(c=>CanPlayCard(p,c)))&&p.TotalEnergy<Math.Max(5,p.Hand.Max(c=>ActualCost(p,c.Card))))
-        {var energy=p.Hand.OrderBy(c=>c.Card.IsCounter?10:0).ThenByDescending(c=>c.Card.TotalCost).First();return PlayEnergy(p,energy);}
+        if(!p.HasFilledEnergyThisTurn&&EnergyFillCandidates(p).Count>0&&(p.Hand.Count>1||!p.Hand.Any(c=>CanPlayCard(p,c)))&&p.TotalEnergy<Math.Max(5,p.Hand.Max(c=>ActualCost(p,c.Card))))
+        {var energy=EnergyFillCandidates(p).OrderBy(c=>c.Card.IsCounter?10:0).ThenByDescending(c=>c.Card.TotalCost).First();return PlayEnergy(p,energy);}
         // Keep real reaction cards and energy for the opponent; never read opponent set identities.
         var reaction=p.Hand.FirstOrDefault(c=>c.Card.IsCounter&&p.AvailableEnergy>=c.Card.TotalCost);
         if(!DamageCounters&&reaction!=null&&p.Occupied<5&&!p.Structures.Any(x=>x.IsSet))return SetCard(p,reaction);

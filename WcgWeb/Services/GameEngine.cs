@@ -221,9 +221,12 @@ public partial class GameEngine
         if (p.HasFilledEnergyThisTurn) return "本回合已填過能量。";
         if (!p.Hand.Contains(c)) return "卡牌已不在手牌。";
         if (!c.Card.IsMonster && !c.Card.IsSpell && !c.Card.IsEnchantment) return "此卡牌不能填能量。";
+        if (c.Card.Id == LuckyCoinId) return "幸運幣不能放入能量區當永久能量。";
         return "";
     }
     public bool CanPlayEnergy(PlayerState p, CardInstance c) => GetEnergyProblem(p, c) == "";
+    // Hand cards that may be filled face down as permanent energy (幸運幣 never can).
+    internal static List<CardInstance> EnergyFillCandidates(PlayerState p) => p.Hand.Where(c => c.Card.Id != LuckyCoinId).ToList();
     public bool PlayEnergy(PlayerState p, CardInstance c) => Change(() =>
     {
         if (!CanPlayEnergy(p, c)) return Fail("填能量限自己行動階段每回合一次，且不能有待結算選擇。");

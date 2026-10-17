@@ -62,11 +62,29 @@ public sealed class LuckyCoinTests
         var g=Game(1,"WCG-263");Assert.True(g.CastSpell(g.Player,Hand(g,"WCG-263")));Assert.Equal(2,g.Player.AvailableEnergy);
         Assert.True(g.EndTurn());Assert.Single(g.Player.EnergyZone);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");
     }
-    [Fact] public void CoinCanStillBeFilledAsNormalEnergy()
+    // 2026-10-17: the coin may never be filled face down as permanent energy (rule check, UI and every AI tier).
+    [Fact] public void CoinCannotBeFilledAsPermanentEnergy()
     {
-        var g=Game(1,"WCG-263");g.Player.HasFilledEnergyThisTurn=false;
-        Assert.True(g.PlayEnergy(g.Player,Hand(g,"WCG-263")));Assert.Equal(0,g.Player.TemporaryEnergy);
-        Assert.True(g.EndTurn());Assert.Equal(2,g.Player.EnergyZone.Count);
+        var g=Game(1,"WCG-263","WCG-101");g.Player.HasFilledEnergyThisTurn=false;var coin=Hand(g,"WCG-263");
+        Assert.Equal("幸運幣不能放入能量區當永久能量。",g.GetEnergyProblem(g.Player,coin));Assert.False(g.CanPlayEnergy(g.Player,coin));
+        Assert.False(g.PlayEnergy(g.Player,coin));Assert.Single(g.Player.EnergyZone);Assert.Contains(coin,g.Player.Hand);Assert.False(g.Player.HasFilledEnergyThisTurn);
+        Assert.True(g.CanPlayEnergy(g.Player,Hand(g,"WCG-101")));
+    }
+    [Fact] public void SnapshotDoesNotOfferCoinAsEnergy()
+    {
+        var g=Game(1,"WCG-263","WCG-101");g.Player.HasFilledEnergyThisTurn=false;var storage=new Mock<IPlayerStorage>();storage.Setup(x=>x.Gate).Returns(new object());var b=new BattleBridge(g,new DeckService(cards,storage.Object));
+        var hand=b.Snapshot().Hand;var coin=hand.Single(h=>h.Card.CardId=="WCG-263");
+        Assert.False(coin.CanEnergy);Assert.Equal("幸運幣不能放入能量區當永久能量。",coin.EnergyProblem);
+        Assert.True(hand.Single(h=>h.Card.CardId=="WCG-101").CanEnergy);
+    }
+    [Theory][InlineData(-1)][InlineData(0)][InlineData(1)][InlineData(2)][InlineData(3)][InlineData(4)][InlineData(5)][InlineData(6)]
+    public void AiNeverFillsTheCoin(int level)
+    {
+            // Coin plus an expensive card: the coin can't enable it, so the only legal fill is the other card.
+            var g=Game(0,"WCG-263","WCG-080");g.Player.HasFilledEnergyThisTurn=false;g.Player.IsAi=true;g.AiLevel=level;RunPlayerTurn(g);
+            Assert.DoesNotContain(g.Player.EnergyZone,e=>e.Card.Id=="WCG-263");
+            g=Game(0,"WCG-263");g.Player.HasFilledEnergyThisTurn=false;g.Player.IsAi=true;g.AiLevel=level;RunPlayerTurn(g);
+            Assert.DoesNotContain(g.Player.EnergyZone,e=>e.Card.Id=="WCG-263");
     }
     [Fact] public void SnapshotMarksTemporaryEnergy()
     {

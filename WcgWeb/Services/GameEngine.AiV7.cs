@@ -111,9 +111,10 @@ public partial class GameEngine
     // Energy keeps the v6 rule and choice (fill while short of the hand's costs, never the last playable card).
     private bool FillEnergyV6(PlayerState p)
     {
-        if (p.HasFilledEnergyThisTurn || p.Hand.Count == 0 || !(p.Hand.Count > 1 || !p.Hand.Any(c => CanPlayCard(p, c)))) return false;
+        var fill = EnergyFillCandidates(p);
+        if (p.HasFilledEnergyThisTurn || fill.Count == 0 || !(p.Hand.Count > 1 || !p.Hand.Any(c => CanPlayCard(p, c)))) return false;
         if (p.TotalEnergy >= Math.Max(5, p.Hand.Max(c => ActualCost(p, c.Card)))) return false;
-        var energy = p.Hand.OrderBy(c => (c.Card.IsCounter ? 3 : 0) + HandValue(p, c) + (p.Hand.Count(x => x.Card.Id == c.Card.Id) > 1 ? -2 : 0)).ThenBy(c => c.Card.Id, StringComparer.Ordinal).First();
+        var energy = fill.OrderBy(c => (c.Card.IsCounter ? 3 : 0) + HandValue(p, c) + (p.Hand.Count(x => x.Card.Id == c.Card.Id) > 1 ? -2 : 0)).ThenBy(c => c.Card.Id, StringComparer.Ordinal).First();
         return PlayEnergy(p, energy);
     }
 
