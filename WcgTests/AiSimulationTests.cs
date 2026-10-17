@@ -50,7 +50,7 @@ public class AiSimulationTests
         Assert.True(checkedPositions>20);
     }
 
-    [Fact]
+    [Fact, Trait("Category", "Slow")]
     public void SimulationNeverChangesTheRealMatch()
     {
         foreach(var g in Positions(cards,4,11))
