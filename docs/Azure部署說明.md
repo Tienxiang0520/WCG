@@ -2,6 +2,34 @@
 
 現行主機改為 **Azure Blob Storage 靜態網站、日本東部、Hot LRS**。新網址：[魂誓 WCG](https://wcggametienxiang0520.z11.web.core.windows.net/)。後續建置、更新與存檔搬移請依 [Azure Blob 部署說明](AzureBlob部署說明.md)。
 
+## 一鍵部署：網站＋雲端存檔 API
+
+網站與雲端存檔 API（Function `wcg-cloud-tienxiang0520`）一定要一起部署。兩邊各自用自己的卡表驗證存檔；只更新網站時，舊 API 不認得新卡，就會出現「雲端存檔驗證未通過」（2026-10-13 發生過）。統一用下面這支指令，在儲存庫根目錄執行：
+
+```sh
+# 只建置與驗證，不上傳
+python3 tools/deploy-all.py
+# 實際部署（需先 az login；用裝有 azure-storage-blob 的 Python 執行）
+/workspace/.azvenv/bin/python3 tools/deploy-all.py --publish --az "$(which az)"
+```
+
+流程：
+
+1. 跑 `WcgTests`（`--skip-tests` 可略過；API 打包時一定會跑 `Wcg.Cloud.Tests`）。
+2. 建置網站 `.build-tmp/azure-blob-site/dist`，執行 `check-azure-output.mjs`，並確認網站裡的 `data/cards.json`、`preset_decks.json`、`ranked_decks.json` 與 `WcgWeb/Data` 完全相同。
+3. `deploy-blob.py` 驗證網站部署內容（`--blob-arg` 可傳額外參數給它）。
+4. 打包 API（`tools/CloudSave/deploy_api.py`）。沒有 `--publish` 就到此為止，不上傳任何東西。
+5. 加 `--publish` 時，**先發布 API**（新卡表接受舊網站的存檔，反過來不行），再輪詢 API 的 `/health`，直到它回報的三個資料檔 SHA-256 與這次建置的網站相同（預設最多等 300 秒，`--api-timeout` 可調）；不一致就停止，不上傳網站。
+6. 上傳網站，確認線上的 `asset-manifest.json` 版本與本機建置相同，最後寫入回條 `.runtime/wcg-deployment.json`（commit、網站資源版本、API 卡表雜湊，不含任何憑證）。
+
+建置工具（卡圖需要 Pillow）會用系統的 `python3`，即使整支指令是用上傳用的虛擬環境執行；`--blob-python` 可以另外指定上傳網站用的 Python。
+
+### 版本檢查
+
+API 的 `GET /api/health` 回傳 `data: { cards, presets, rankedDecks }`，是它內建資料檔的 SHA-256。網站登入 Microsoft 後會在背景比對自己正在使用的同名資料檔；不一致時，「Microsoft 帳號與雲端存檔」面板會提示「雲端存檔伺服器與網站的卡表版本不同，同步可能被拒絕」，進度先保存在本機。舊版 API 沒有這個欄位時視為未知，不提示。
+
+---
+
 以下保留先前 Static Web Apps／Windows App Service F1 的部署紀錄供查考，並非現行更新指令。2026-10-13 已刪除舊 F1 資源 `wcg-game-tienxiang0520` 與方案 `ASP-wcggamerg-a454`；下方舊主機網址及指令僅作歷史紀錄。原始碼儲存庫已於 2026-10-09 依使用者要求改為公開。訪客進度保存在瀏覽器；Microsoft 玩家進度另存私人儲存體，詳見 [登入與雲端存檔](Microsoft登入與雲端存檔.md)。從修改程式到 Azure 操作的循序教材見 [專案自學與 Azure 操作教學](專案自學與Azure操作教學.md)。
 
 公開儲存庫：[Tienxiang0520/WCG](https://github.com/Tienxiang0520/WCG)，主分支 `main`。2026-10-08 首次上傳已完成。GitHub Actions 尚未實際執行：帳號的付款或花費上限設定阻止工作流程啟動。需由帳號擁有者檢查 Billing & plans；也可先用本機建置搭配 Azure 官方 CLI 直接部署，GitHub 繼續保存程式。此限制與 Azure Free 方案分開。

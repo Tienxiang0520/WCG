@@ -12,6 +12,7 @@
         else
         {
             <p class="cloud-name">@State.Name</p><p class="cloud-status" role="status">@L[StatusText]</p>
+            @if (State.ApiMismatch) { <p class="cloud-version" role="alert">@L["雲端存檔伺服器與網站的卡表版本不同，同步可能被拒絕；進度會先保存在本機。請稍後重新整理再試。"]</p> }
             @if (Compact) { <a href="settings" class="cloud-settings" aria-label="@L["管理雲端存檔"]" title="@L["管理雲端存檔"]">@L["管理雲端存檔"]</a> }
             else
             {
@@ -78,7 +79,7 @@
     }
     public sealed class CloudStatus
     {
-        public bool Available { get; set; } public bool SignedIn { get; set; } public bool Attached { get; set; } public bool Busy { get; set; } public bool HasCloud { get; set; } public bool HasRecovery { get; set; }
+        public bool Available { get; set; } public bool SignedIn { get; set; } public bool Attached { get; set; } public bool Busy { get; set; } public bool HasCloud { get; set; } public bool HasRecovery { get; set; } public bool ApiMismatch { get; set; }
         public string Name { get; set; } = ""; public string Mode { get; set; } = "guest"; public string? LastSync { get; set; }
         public SaveSummary? LocalSummary { get; set; } public SaveSummary? CloudSummary { get; set; }
     }
