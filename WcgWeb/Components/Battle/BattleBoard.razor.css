@@ -257,10 +257,10 @@
 .v06-board .battlefield{top:96px;bottom:var(--dock);left:6px;right:6px;padding:0;justify-content:center;gap:clamp(12px,4vh,40px)}
 .v06-row{gap:5px;height:auto;max-height:48%;align-items:stretch}
 .v06-slot{aspect-ratio:5/8.2;max-height:100%;border-radius:9px;min-width:0}
-.slot-number{font-size:8px;top:3px;left:4px}
+.slot-number{font-size:10px;top:3px;left:4px}
 .empty{font-size:16px}
 .field-card{padding:4px 3px 22px;border-radius:8px;border-width:1.5px;gap:2px}
-.field-card strong,.field-card>strong{font-size:9px;line-height:1.2;padding:1px 2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.field-card strong,.field-card>strong{font-size:10px;line-height:1.2;padding:1px 2px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .field-stats{left:3px;right:3px;bottom:3px;font-size:12px}
 .field-stats b{padding:2px 3px;min-width:17px}
 .arrowmark,.card-detail .arrowmark{width:15px;height:15px}
@@ -270,7 +270,7 @@
 .taunt-frame{left:-4px;top:-4px;width:calc(100% + 8px);height:calc(100% + 10px)}
 .has-shield::before{inset:-4px;border-radius:11px}
 .field-card.attack-ready::after{inset:-3px;border-radius:10px;box-shadow:0 0 10px 2px #6cffaa}
-.drop-hover.vacant::after{inset:6px;font-size:9px;border-radius:6px}
+.drop-hover.vacant::after{inset:6px;font-size:11px;border-radius:6px}
 /* Control strip: energy (left), your portrait (centre), end turn + log (right). */
 .player{bottom:calc(var(--peek) + 18px);padding:5px 12px;gap:8px;font-size:12px;white-space:nowrap}
 .energy-zone{left:6px;bottom:calc(var(--peek) + 10px);width:auto;min-width:74px;padding:5px 8px;gap:3px;border-radius:10px;border-width:1.5px}
@@ -288,14 +288,14 @@
 .v06-hand-card>strong{font-size:10px;padding-left:12px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .v06-hand-card>p,.v06-hand-card>small{display:none}
 .v06-hand-card .hand-art-layer{height:calc(var(--card-width) * .5);margin:2px 0}
-.v06-hand-card .stats{font-size:9px;white-space:nowrap}
+.v06-hand-card .stats{font-size:10.5px;white-space:nowrap}
 .v06-hand-card .mana{width:22px;height:22px;line-height:22px;font-size:14px;left:-5px;top:-5px;border-width:1.5px}
 .v06-hand-card .arrowmark{display:none}
-.hand-availability{font-size:8px;padding:2px 3px;white-space:nowrap;overflow:hidden}
+.hand-availability{font-size:10px;padding:2px 3px;white-space:nowrap;overflow:hidden}
 .v06-hand-card.available::after,.v06-hand-card.set-ready::after{inset:-3px;border-radius:11px;box-shadow:0 0 10px 2px #6cffaa}
 .v06-hand-card.set-ready::after{box-shadow:0 0 10px 2px #ffde7b}
 .back-emblem{padding:6px 10px;font-size:13px;margin-bottom:4px}
-.card-back>small{display:block;font-size:8px;text-align:center}
+.card-back>small{display:block;font-size:10px;text-align:center}
 .card-back>small+small{display:none}
 .v06-hand-card:hover,.dragging .v06-hand-card:hover{height:var(--hand-h);transform:translateX(calc(var(--offset) * var(--mstep))) rotate(calc(var(--angle) * .5))}
 /* Touching (or keyboard-focusing) a card raises it fully; it stays up while you aim a drag. */
@@ -580,7 +580,7 @@
 :root:lang(en) .v06-hand-card>strong{font-size:11.5px;letter-spacing:0;line-height:1.12;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;hyphens:auto}
 :root:lang(en) .field-card strong,:root:lang(en) .field-card>strong{letter-spacing:0;line-height:1.1;white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere;hyphens:auto}
 :root:lang(en) .hand-availability{letter-spacing:.01em;white-space:normal;line-height:1.15}
-@media (max-width:700px){:root:lang(en) .v06-hand-card>strong{font-size:9.5px}:root:lang(en) .field-card strong,:root:lang(en) .field-card>strong{font-size:8px}:root:lang(en) .hand-availability{font-size:7.5px}}
+@media (max-width:700px){:root:lang(en) .v06-hand-card>strong{font-size:10px}:root:lang(en) .field-card strong,:root:lang(en) .field-card>strong{font-size:9.5px}:root:lang(en) .hand-availability{font-size:9px}}
 :root:lang(en) .turn-chip{letter-spacing:.01em}
 @media(max-width:700px){:root:lang(en) .turn-chip{font-size:10px;padding:3px 5px;letter-spacing:0;text-overflow:clip}}
 /* ---- Sequenced effect presentation (effect-plan.js + battle-feedback.js) ---- */
