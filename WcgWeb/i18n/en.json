@@ -1804,5 +1804,13 @@
  "【{0}】受到攻擊，移除 1 個聖盾指示物。": "[{0}] was attacked and removed 1 Holy Shield counter.",
  "受到攻擊，消耗聖盾": "Attacked: Holy Shield counter used",
  "移除所有聖盾指示物": "All Holy Shield counters removed",
- "移除 1 個聖盾指示物": "1 Holy Shield counter removed"
+ "移除 1 個聖盾指示物": "1 Holy Shield counter removed",
+ "紙張": "Paper",
+ "A4（210 × 297 mm）": "A4 (210 × 297 mm)",
+ "Letter（8.5 × 11 吋）": "Letter (8.5 × 11 in)",
+ "加 3 mm 出血（僅彩色圖文；卡片橫放，A4 每頁 8 張、Letter 每頁 6 張）": "Add 3 mm bleed (full colour only; cards turned sideways, 8 per A4 page or 6 per Letter page)",
+ "50 張牌 · {0} 頁卡牌": "50 cards · {0} card pages",
+ "Letter 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。": "Letter portrait, actual size / 100%, single-sided, headers and footers off. For the colour version, enable background graphics. Cards are 63 × 88 mm; cut along the corner crop marks. Put them in opaque sleeves with a backing card so the back can serve as energy.",
+ "出血版：卡框顏色向外多印 3 mm，裁切稍有偏差也不會露白邊。卡片橫放，裁切線標示的仍是 63 × 88 mm 成品尺寸；卡牌部分共 {0} 頁。": "Bleed: the frame colour extends 3 mm past each edge, so a slightly off cut shows no white edge. Cards are turned sideways; the crop marks still mark the finished 63 × 88 mm card. Card pages: {0}.",
+ "63 × 88 mm＋3 mm 出血 · Letter · 100% 列印 · 沿四角裁切線裁切": "63 × 88 mm + 3 mm bleed · Letter · print at 100% · cut along the corner crop marks"
 }

@@ -138,3 +138,25 @@
 .shield-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #6b4b00; background: radial-gradient(circle at 35% 30%, #fffbe8, #f3e2a6 60%, #d9b45a); }
 .shield-token-icon { width: 11mm; height: 12.4mm; display: block; }
 .ink-saving .shield-token, .white-color .shield-token { background: white; border-style: solid; }
+
+/* Letter paper (215.9 × 279.4 mm). The 3 × 3 grid (193 × 268 mm) only fits with 5 mm top/bottom margins,
+   so the page heading and footer are left out. DeckPrintLayout holds the same numbers and checks they fit. */
+.print-sheet.paper-letter { width: 215.9mm; min-height: 279.4mm; }
+.print-sheet.paper-letter .print-card-grid { margin-inline: auto; }
+/* The outer crop-mark ticks below the last row would pass the 269.4 mm printable height; the inner ticks still guide every cut. */
+.print-sheet.paper-letter:not(.bleed) .print-card-grid { overflow-y: clip; }
+/* 3 mm bleed (full colour only): each card cell is 69 × 94 mm and turned sideways, 2 columns, no gutter.
+   The face is rotated in place, and an outer frame-coloured ring fills the bleed and the rounded corners,
+   so a slightly off cut never shows white. Crop marks sit in the bleed and still mark the 63 × 88 mm trim. */
+.print-sheet.bleed .print-card-grid { grid-template-columns: repeat(2, 94mm); grid-template-rows: none; grid-auto-rows: 69mm; gap: 0; width: 188mm; height: auto; margin-inline: auto; }
+/* The layout box stays upright (63 × 88) and ends at the row's bottom edge, so no page break is ever forced by it;
+   the transform then moves it 9.5 mm down (centring 88 mm in the 69 mm row) and turns it. */
+.print-sheet.bleed .print-card { justify-self: center; align-self: unsafe end; transform: translateY(9.5mm) rotate(90deg); }
+.print-sheet.bleed .print-face-cell article.wcg-face > .face-card { box-shadow: 0 0 0 3mm var(--gold-2); }
+.print-sheet.bleed .print-face-cell .crop-marks path { stroke: #000; stroke-width: .16; }
+/* Text overflow is measured on the unrotated card. */
+.deck-print-overlay.measuring .print-sheet.bleed .print-card { transform: none; }
+@media print {
+    .print-sheet.paper-letter { width: 203.9mm; min-height: 0; padding: 0; }
+    .print-sheet.paper-a4.bleed { padding: 0; }
+}

@@ -28,6 +28,7 @@ public sealed record DeckPrintPlan(string Name, string MainWill, IReadOnlyList<P
 {
     public const int CardsPerPage = 9;
     public IReadOnlyList<PrintedCard[]> Pages => Cards.Chunk(CardsPerPage).ToArray();
+    public IReadOnlyList<PrintedCard[]> PagesOf(int cardsPerPage) => Cards.Chunk(cardsPerPage).ToArray();
     public static DeckPrintPlan Create(Deck deck, CardDatabase database)
     {
         if (!deck.IsValid(database.GetCard, out var error)) throw new ArgumentException(error);

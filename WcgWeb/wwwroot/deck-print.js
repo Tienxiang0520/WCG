@@ -38,12 +38,17 @@ export async function printDeck(root) {
         if (!image.naturalWidth) throw new Error('卡圖尚未載入。');
     }));
     // The card face's effect box also holds an absolutely positioned emblem, so measure its paragraph instead of scrollHeight.
-    const overflow = [...root.querySelectorAll('.print-card-title,.print-card-text')]
-        .find(element => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1)
-        ?? [...root.querySelectorAll('.print-face .face-text > p')].find(text => {
-            const inner = text.getBoundingClientRect(), box = text.parentElement.getBoundingClientRect();
-            return inner.top < box.top - 1 || inner.bottom > box.bottom + 1;
-        });
+    // Bleed sheets turn cards sideways; measure them upright so top/bottom still mean the card's top/bottom.
+    root.classList?.add('measuring');
+    let overflow;
+    try {
+        overflow = [...root.querySelectorAll('.print-card-title,.print-card-text')]
+            .find(element => element.scrollHeight > element.clientHeight + 1 || element.scrollWidth > element.clientWidth + 1)
+            ?? [...root.querySelectorAll('.print-face .face-text > p')].find(text => {
+                const inner = text.getBoundingClientRect(), box = text.parentElement.getBoundingClientRect();
+                return inner.top < box.top - 1 || inner.bottom > box.bottom + 1;
+            });
+    } finally { root.classList?.remove('measuring'); }
     if (overflow) throw new Error('卡牌文字超出列印範圍，請選擇省墨文字版後再試。');
     window.print();
 }
