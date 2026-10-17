@@ -16,9 +16,18 @@ internal static class CounterHistory
     // Catalog before 聖盾 became the one-time 聖盾指示物 (11 cards had the per-turn wording).
     // Catalog before 013, 018, 100 and 182 cost 1 more (cost and PP only).
     // Catalog before 幸運幣 (WCG-263) existed.
+    // Catalog before the proportional direct-damage cost update (cost and PP only).
+    internal static CardDatabase BeforeBurnCost(CardDatabase current)
+    {
+        if(current.GetCard("WCG-006")?.TotalCost!=4)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-burn-cost.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     // Catalog before the taunt+shield / 狂怒 face-damage / 衝鋒 3-cost update (cost and PP only).
     internal static CardDatabase BeforeTauntFaceCharge(CardDatabase current)
     {
+        current=BeforeBurnCost(current);
         if(current.GetCard("WCG-005")?.TotalCost!=3)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-taunt-face-charge.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

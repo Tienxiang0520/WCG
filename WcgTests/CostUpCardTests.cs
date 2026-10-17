@@ -20,7 +20,8 @@ public sealed class CostUpCardTests
     [InlineData("WCG-182",4,1600,5,1900)]
     public void CostUpKeepsTheOffsetBelowVanillaAndOldErasKeepOldNumbers(string id,int oldCost,int oldPp,int newCost,int newPp)
     {
-        var now=cards.GetCard(id)!;var old=CardBalanceHistory.BeforeCostUp(cards).GetCard(id)!;
+        // 013 costs 1 more again since the 2026-10-18 direct-damage update, so compare against the catalog just before it.
+        var now=CardBalanceHistory.BeforeBurnCost(cards).GetCard(id)!;var old=CardBalanceHistory.BeforeCostUp(cards).GetCard(id)!;
         Assert.Equal(newCost,now.TotalCost);Assert.Equal(newPp,now.PP);
         Assert.Equal(oldCost,old.TotalCost);Assert.Equal(oldPp,old.PP);
         Assert.Equal(oldPp-Vanilla[oldCost],newPp-Vanilla[newCost]);Assert.True(now.PP<Vanilla[newCost]);

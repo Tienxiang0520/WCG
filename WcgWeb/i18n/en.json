@@ -1417,7 +1417,7 @@
  "回合開始時，你的能量與怪物全部轉回直立，並從牌庫抽 1 張牌。你抽到了「{0}」。牌庫抽空時若需要抽牌，就會直接落敗。": "At the start of your turn, all your energy and monsters untap and you draw 1 card. You drew {0}. If you must draw from an empty deck, you lose immediately.",
  "把直立的「{0}」拖到上方的電腦頭像，直接攻擊玩家，造成等同 DP 的傷害。攻擊後怪物會橫置。": "Drag the untapped {0} to the computer's portrait at the top to attack the player directly, dealing damage equal to its DP. The monster taps after attacking.",
  "請把「{0}」拖到電腦頭像。": "Drag {0} to the computer's portrait.",
- "每回合都能填 1 次能量。把「{0}」拖到能量區，讓你有 5 點能量。": "You can add energy once every turn. Drag {0} to the energy zone to reach 5 energy.",
+ "每回合都能填 1 次能量。把「{0}」拖到能量區，讓你有 6 點能量。": "You can add energy once every turn. Drag {0} to the energy zone to reach 6 energy.",
  "「{0}」具有衝鋒：進場時直立，這回合就能攻擊。把它拖到任一空格。": "{0} has Charge: it enters untapped and can attack this turn. Drag it to any empty slot.",
  "立刻用「{0}」攻擊電腦頭像。": "Attack the computer's portrait with {0} right away.",
  "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到電腦頭像，完成致命一擊。": "Spells resolve immediately and then go to the graveyard. {0} has this effect: {1} Drag it to the computer portrait for the finishing blow.",

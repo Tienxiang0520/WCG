@@ -30,7 +30,7 @@ public sealed class TauntFaceChargeTests
     [InlineData("WCG-239",2,3)][InlineData("WCG-243",3,4)][InlineData("WCG-244",3,4)]
     public void CostUpKeepsTheOffsetBelowVanillaAndOldErasKeepOldNumbers(string id,int oldCost,int newCost)
     {
-        var now=cards.GetCard(id)!;var old=CardBalanceHistory.BeforeTauntFaceCharge(cards).GetCard(id)!;
+        var now=CardBalanceHistory.BeforeBurnCost(cards).GetCard(id)!;var old=CardBalanceHistory.BeforeTauntFaceCharge(cards).GetCard(id)!;
         Assert.Equal(newCost,now.TotalCost);Assert.Equal(oldCost,old.TotalCost);
         Assert.Equal(old.Text,now.Text);Assert.Equal(old.DP,now.DP);
         if(now.PP is int pp){Assert.Equal(Vanilla[oldCost]-old.PP!.Value,Vanilla[newCost]-pp);Assert.True(pp<Vanilla[newCost]);}
