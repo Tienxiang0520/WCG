@@ -59,11 +59,11 @@ public sealed partial class RankedSession
         }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
         { logger.LogWarning(ex, "Ranked save could not be restored"); Error = "天梯存檔暫時無法載入，原檔已保留。"; }
-        Bridge.RankedSubmit = Submit; Bridge.RankedAi = Ai;
+        Bridge.RankedSubmit = Submit; Bridge.RankedAi = Ai; Bridge.RankedAiAsync = AiAsync;
     }
     public RankedProfile Read()
     {
-        lock (gate) { if (Error == "") RefreshSeason(); return RankedStore.Copy(profile); }
+        lock (gate) { if (Error == "" && !thinking) RefreshSeason(); return RankedStore.Copy(profile); }
     }
     private void RefreshSeason()
     {
@@ -77,6 +77,7 @@ public sealed partial class RankedSession
     {
         lock (gate)
         {
+            if (thinking) return Reject("電腦仍在思考。");
             if (Error != "") return Reject(Error);
             RefreshSeason();
             if (Error != "") return Reject(Error);
@@ -146,6 +147,7 @@ public sealed partial class RankedSession
     {
         lock (gate)
         {
+            if (thinking) return Reject("電腦仍在思考。");
             if (Error != "") return Reject(Error);
             if (command.Type is "start" or "reset") return Reject("請使用天梯大廳開始或繼續對局。");
             if (profile.Match is not { Settled: false }) return Reject("此天梯對局已結算。");
@@ -158,14 +160,37 @@ public sealed partial class RankedSession
     {
         lock (gate)
         {
+            if (thinking) return Reject("電腦仍在思考。");
             if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
             return Apply(new("ai", RulesVersion: GameEngine.RankedAiVersion), Bridge.AiStepCore);
         }
     }
+    // The computer's step with pauses between search slices (BattleBridge.AiStepAsync). The profile stays untouched
+    // while it thinks (`thinking` holds back season refresh and new matches), so the journal ends up exactly as with Ai.
+    private bool thinking;
+    private async Task<BattleResponse> AiAsync(Func<ValueTask> pause)
+    {
+        RankedProfile before; long revision;
+        lock (gate)
+        {
+            if (thinking) return Reject("電腦仍在思考。");
+            if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
+            before = RankedStore.Copy(profile); revision = Engine.Revision; thinking = true;
+        }
+        try
+        {
+            var response = await Bridge.AiStepCoreAsync(pause);
+            lock (gate) return Record(new("ai", RulesVersion: GameEngine.RankedAiVersion), before, revision, response);
+        }
+        finally { lock (gate) thinking = false; }
+    }
     private BattleResponse Apply(RankedAction action, Func<BattleResponse> apply)
     {
         var before = RankedStore.Copy(profile); var revision = Engine.Revision;
-        var response = apply();
+        return Record(action, before, revision, apply());
+    }
+    private BattleResponse Record(RankedAction action, RankedProfile before, long revision, BattleResponse response)
+    {
         if (!response.Success || revision == Engine.Revision) return response;
         profile.Match!.Actions.Add(action);
         if (Engine.IsOver)

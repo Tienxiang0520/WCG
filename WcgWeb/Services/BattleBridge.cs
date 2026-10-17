@@ -11,12 +11,21 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
     private Guid cachedMatch;
     public BattleSnapshot Snapshot() => engine.ReadConsistent(BuildSnapshot);
     internal BattleResponse AiStep() => RankedAi?.Invoke() ?? AiStepCore();
-    internal BattleResponse AiStepCore() => engine.ReadConsistent<BattleResponse>(() =>
+    internal BattleResponse AiStepCore() => engine.ReadConsistent<BattleResponse>(() => AiResponse(engine.ExecuteAiStep()));
+    private BattleResponse AiResponse(bool changed) => new(changed, changed ? "ok" : "idle", "", Guid.NewGuid(), BuildSnapshot(),
+        changed ? engine.PresentationEvents : []);
+    // Same step as AiStep, but awaits `pause` between search slices so the page keeps rendering while the
+    // computer thinks. The decision and the resulting state are identical to AiStep (GameEngine.AiSlices.cs).
+    internal Func<Func<ValueTask>, Task<BattleResponse>>? RankedAiAsync { get; set; }
+    internal Task<BattleResponse> AiStepAsync(Func<ValueTask> pause) =>
+        RankedAiAsync != null ? RankedAiAsync(pause) : RankedAi != null ? Task.FromResult(RankedAi()) : AiStepCoreAsync(pause);
+    internal async Task<BattleResponse> AiStepCoreAsync(Func<ValueTask> pause)
     {
-        var changed = engine.ExecuteAiStep();
-        return new(changed, changed ? "ok" : "idle", "", Guid.NewGuid(), BuildSnapshot(),
-            changed ? engine.PresentationEvents : []);
-    });
+        var run = engine.BeginAiStep();
+        try { while (!run.Advance()) await pause(); }
+        finally { if (!run.IsDone) run.Finish(); }
+        return engine.ReadConsistent(() => AiResponse(run.Result));
+    }
     public BattleResponse Submit(BattleCommand command) => RankedSubmit?.Invoke(command) ?? SubmitCore(command);
     internal BattleResponse SubmitCore(BattleCommand command) => engine.ReadConsistent(() =>
     {
