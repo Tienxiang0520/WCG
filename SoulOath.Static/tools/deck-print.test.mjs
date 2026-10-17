@@ -37,3 +37,11 @@ test('card-face effect text inside its box prints (the watermark emblem is not m
     const f = fixture(context, [], [], [faceText(110, 150), faceText(101, 159.5)]);
     await printDeck(f.root); assert.equal(f.prints(), 1);
 });
+test('overflow is measured on upright cards (bleed sheets rotate them) and the rotation is restored', async context => {
+    const f = fixture(context, [], [], [faceText(110, 150)]);
+    const seen = []; let measuring = false;
+    f.root.classList = { add(c) { if (c === 'measuring') measuring = true; seen.push('+' + c); }, remove(c) { if (c === 'measuring') measuring = false; seen.push('-' + c); } };
+    const query = f.root.querySelectorAll;
+    f.root.querySelectorAll = selector => { if (selector !== 'img') assert.equal(measuring, true); return query(selector); };
+    await printDeck(f.root); assert.deepEqual(seen, ['+measuring', '-measuring']); assert.equal(f.prints(), 1);
+});

@@ -3,19 +3,32 @@
 @implements IAsyncDisposable
 
 <section class="deck-print-overlay @StyleClass" role="dialog" aria-modal="true" aria-label="@L["實體牌組列印預覽"]" tabindex="-1" @ref="Root">
+    @if (Layout.PageRule is { } pageRule)
+    {
+        <style>@pageRule</style>
+    }
     <div class="print-controls">
         <div class="print-control-heading"><h1>@L["列印實體牌組"]</h1><button class="btn btn-outline-light" data-print-close @onclick="Close" disabled="@Printing">@L["返回編輯"]</button></div>
-        <p>@L.Text(Plan.Name) · @L["50 張牌 · 6 頁卡牌"]@(Tools ? L["＋2 張生命計數卡"] + L["＋1 張聖盾指示物"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
+        <p>@L.Text(Plan.Name) · @(Pages.Count == 6 ? L["50 張牌 · 6 頁卡牌"] : L.F("50 張牌 · {0} 頁卡牌", Pages.Count))@(Tools ? L["＋2 張生命計數卡"] + L["＋1 張聖盾指示物"] : "")@(Rules ? L["，另附規則速查表與牌組清單"] : "")</p>
         <div class="print-options">
             <fieldset><legend>@L["卡面樣式"]</legend>
                 <label><input type="radio" name="print-style" checked="@Color" @onchange="() => Style = PrintStyle.Color" disabled="@Printing" /> @L["彩色圖文"]</label>
                 <label><input type="radio" name="print-style" checked="@WhiteColor" @onchange="() => Style = PrintStyle.WhiteColor" disabled="@Printing" /> @L["白底彩色（小卡圖、黑字）"]</label>
                 <label><input type="radio" name="print-style" checked="@(Style == PrintStyle.Text)" @onchange="() => Style = PrintStyle.Text" disabled="@Printing" /> @L["省墨文字（不印圖片）"]</label>
             </fieldset>
+            <fieldset><legend>@L["紙張"]</legend>
+                <label><input type="radio" name="print-paper" checked="@(Paper == PrintPaper.A4)" @onchange="() => Paper = PrintPaper.A4" disabled="@Printing" /> @L["A4（210 × 297 mm）"]</label>
+                <label><input type="radio" name="print-paper" checked="@(Paper == PrintPaper.Letter)" @onchange="() => Paper = PrintPaper.Letter" disabled="@Printing" /> @L["Letter（8.5 × 11 吋）"]</label>
+            </fieldset>
+            <label><input type="checkbox" @bind="BleedOption" disabled="@(Printing || !Color)" /> @L["加 3 mm 出血（僅彩色圖文；卡片橫放，A4 每頁 8 張、Letter 每頁 6 張）"]</label>
             <label><input type="checkbox" @bind="Tools" disabled="@Printing" /> @L["在最後一頁空位加印生命計數卡與聖盾指示物"]</label>
             <label><input type="checkbox" @bind="Rules" disabled="@Printing" /> @L["附規則速查表與牌組清單"]</label>
         </div>
-        <p class="print-instructions">@L["A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
+        <p class="print-instructions">@L[Layout.IsA4 ? "A4 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。" : "Letter 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。"]</p>
+        @if (Layout.Bleed)
+        {
+            <p class="print-screen-note">@L.F("出血版：卡框顏色向外多印 3 mm，裁切稍有偏差也不會露白邊。卡片橫放，裁切線標示的仍是 63 × 88 mm 成品尺寸；卡牌部分共 {0} 頁。", Pages.Count)</p>
+        }
         @if (WhiteColor)
         {
             <p class="print-screen-note">@L["白底彩色保留小卡圖與意志色，文字使用黑色並加大。先用一般紙、一般品質試印一頁，再依實際效果調整印表機設定。"]</p>
@@ -24,11 +37,14 @@
         <p class="print-screen-note">@L["預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。卡牌共 6 頁；附錄頁數依語言與不同卡名數量增加。若卡牌部分超過 6 頁，請檢查紙張、縮放與頁首頁尾。"]</p>
     </div>
     <div class="print-pages">
-        @for (var pageIndex = 0; pageIndex < Plan.Pages.Count; pageIndex++)
+        @for (var pageIndex = 0; pageIndex < Pages.Count; pageIndex++)
         {
-            var page = Plan.Pages[pageIndex];
-            <section class="print-sheet card-sheet" aria-label="@L.F("卡牌第 {0} 頁", pageIndex + 1)">
-                <div class="print-page-heading"><span>@L["魂誓"] · @L.Text(Plan.Name)</span><span>@L.F("卡牌 {0} / {1}", pageIndex + 1, Plan.Pages.Count)</span></div>
+            var page = Pages[pageIndex];
+            <section class="print-sheet card-sheet @Layout.SheetClass" aria-label="@L.F("卡牌第 {0} 頁", pageIndex + 1)">
+                @if (Layout.ShowHeading)
+                {
+                    <div class="print-page-heading"><span>@L["魂誓"] · @L.Text(Plan.Name)</span><span>@L.F("卡牌 {0} / {1}", pageIndex + 1, Pages.Count)</span></div>
+                }
                 <div class="print-card-grid">
                     @foreach (var card in page)
                     {
@@ -72,7 +88,7 @@
                             </article>
                         }
                     }
-                    @if (Tools && pageIndex == Plan.Pages.Count - 1)
+                    @if (Tools && pageIndex == Pages.Count - 1)
                     {
                         @for (var player = 1; player <= 2; player++)
                         {
@@ -92,12 +108,15 @@
                         </article>
                     }
                 </div>
-                <footer class="print-page-footer">@L["63 × 88 mm · A4 · 100% 列印 · 沿四角裁切線裁切"]</footer>
+                @if (Layout.ShowFooter)
+                {
+                    <footer class="print-page-footer">@L[Layout.IsA4 ? "63 × 88 mm · A4 · 100% 列印 · 沿四角裁切線裁切" : "63 × 88 mm＋3 mm 出血 · Letter · 100% 列印 · 沿四角裁切線裁切"]</footer>
+                }
             </section>
         }
         @if (Rules)
         {
-            <section class="print-sheet reference-sheet" aria-label="@L["規則速查表與牌組清單"]">
+            <section class="print-sheet reference-sheet @Layout.SheetClass" aria-label="@L["規則速查表與牌組清單"]">
                 <h2 class="print-reference-title">@L["魂誓 · 規則速查表"]</h2>
                 <div class="print-rules"><GameRulesContent /></div>
                 <h3 class="print-list-title">@L.Text(Plan.Name) · @L.F("主色 {0}", Plan.MainWill) · @L["50 張"]</h3>
@@ -125,6 +144,11 @@
     private bool WhiteColor => Style == PrintStyle.WhiteColor;
     private string StyleClass => Style switch { PrintStyle.Color => "full-color", PrintStyle.WhiteColor => "white-color", _ => "ink-saving" };
     private bool Rules = true, Tools = true, Printing;
+    private PrintPaper Paper = PrintPaper.A4;
+    private bool BleedOption;
+    // Bleed only applies to the full-colour face; white and ink-saving cards have white edges anyway.
+    private DeckPrintLayout Layout => new(Paper, BleedOption && Color);
+    private IReadOnlyList<PrintedCard[]> Pages => Plan.PagesOf(Layout.CardsPerPage);
     private string Status = "";
     private static readonly System.Text.RegularExpressions.Regex ArrowPrefix = new(@"【箭頭：[^】]*】\s*|\[Arrows?:[^\]]*\]\s*");
     private string PrintedText(PrintedCard card)
