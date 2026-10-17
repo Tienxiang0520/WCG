@@ -120,6 +120,7 @@ internal static class CounterHistory
     {
         var old=Before(current); engine.ResetToNotStarted();
         typeof(GameEngine).GetMethod("UseMatchCatalog",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(engine,[old,false,false]);
+        engine.EqualStartingLife=true; // old-era matches start both players at 7
         engine.StartGame(old.PresetDecks[0],old.PresetDecks[1]);
     }
 }

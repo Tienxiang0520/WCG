@@ -63,7 +63,7 @@ public class GameEngineTests
 
         engine.StartGame(pDeck, cDeck, playerFirst: true);
 
-        Assert.Equal(7, engine.Player.Hp);
+        Assert.Equal(6, engine.Player.Hp); // the first player starts one life short
         Assert.Equal(7, engine.Computer.Hp);
         Assert.Equal(7, engine.Player.Hand.Count);
         Assert.Equal(7, engine.Computer.Hand.Count);

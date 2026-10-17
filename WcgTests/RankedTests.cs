@@ -920,4 +920,45 @@ public sealed class RankedTests : IDisposable
         var unknown=new RankedRecord{Rules="ranked-v06:"+new string('0',64),Tier=0,PlayerDeck=decoded.PlayerDeck,ComputerDeck=decoded.ComputerDeck,Actions=""};
         Assert.NotEmpty(current.BuildReplay(MatchCode.Decode(MatchCode.Encode(unknown),out _,out _)!).Error);
     }
+
+    // 先攻 6 點生命 (2026-10-17): new matches record StartRules 1; saves and codes without it keep both players at 7.
+    static (int First, int Second) StartLife(GameEngine e, bool playerFirst) => playerFirst ? (e.Player.Hp, e.Computer.Hp) : (e.Computer.Hp, e.Player.Hp);
+    [Fact] public void NewRankedMatchStartsTheFirstPlayerAtSixAndKeepsItOnReload()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);var match=s.Read().Match!;
+        Assert.Equal(RankedRules.CurrentStartRules,match.StartRules);
+        Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(s.Engine,match.PlayerFirst));
+        var reloaded=Session();Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(reloaded.Engine,match.PlayerFirst));
+        var record=MatchCode.Decode(reloaded.CurrentMatchCode(),out var error,out _)!;Assert.Equal("",error);Assert.Equal(RankedRules.CurrentStartRules,record.StartRules);
+        Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(reloaded.ReplayEngine(record,0)!,match.PlayerFirst));
+    }
+    [Fact] public void MatchesSavedBeforeTheFirstPlayerLifeRuleResumeAndReplayAtSevenSeven()
+    {
+        foreach(var first in new[]{true,false})
+        {
+            var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
+            var profile=s.Read();profile.Match!.PlayerFirst=first;profile.Match.StartRules=0;store.Save(profile);
+            // An older save has no StartRules field at all; it reads back as 0.
+            var json=File.ReadAllText(Path.Combine(dir,"ranked.json"));Assert.DoesNotContain("\"StartRules\":1",json);
+            var restored=Session();Assert.Equal((7,7),StartLife(restored.Engine,first));
+            var code=restored.CurrentMatchCode()!;var record=MatchCode.Decode(code,out var error,out _)!;Assert.Equal("",error);Assert.Equal(0,record.StartRules);
+            Assert.Equal((7,7),StartLife(restored.ReplayEngine(record,0)!,first));
+            record.StartRules=RankedRules.CurrentStartRules;Assert.Equal((PlayerState.FirstPlayerStartHp,7),StartLife(restored.ReplayEngine(record,0)!,first));
+            Assert.True(Send(restored,"surrender").Success);
+            // A new match after the old one uses the current rule on the same engine.
+            Assert.True(restored.Start(cards.PresetDecks[0]).Success);var next=restored.Read().Match!;
+            Assert.Equal((PlayerState.FirstPlayerStartHp,7),StartLife(restored.Engine,next.PlayerFirst));Assert.True(Send(restored,"surrender").Success);
+        }
+    }
+    [Fact] public void MatchCodesCarryTheStartingLifeRuleOnlyWhenItIsNew()
+    {
+        var deck=cards.PresetDecks[0];
+        RankedRecord Record(int rule)=>new(){Rules="ranked-v06:"+new string('0',64),Tier=0,PlayerDeck=deck,ComputerDeck=deck,Actions="",StartRules=rule};
+        Assert.Equal(0,MatchCode.Decode(MatchCode.Encode(Record(0)),out _,out _)!.StartRules);
+        Assert.Equal(1,MatchCode.Decode(MatchCode.Encode(Record(1)),out _,out _)!.StartRules);
+        // Old codes have no starting-life field, so a current code for an old match is byte-identical to what older builds wrote.
+        Assert.True(MatchCode.Encode(Record(0)).Length<MatchCode.Encode(Record(1)).Length);
+        Assert.Null(MatchCode.Decode(MatchCode.Encode(Record(RankedRules.CurrentStartRules+1)),out var error,out _));
+        Assert.Equal("這個對局代碼來自較新的版本，請更新遊戲後再試。",error);
+    }
 }

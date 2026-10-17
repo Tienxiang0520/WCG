@@ -12,7 +12,7 @@ public class AiHoldTests
     private GameEngine Game()
     {
         var g=new GameEngine(cards,new Random(17)){AiLevel=5,AiRevision=7};g.SeedRankedAi(17);g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
-        g.Player.IsAi=true;g.Player.Hand.Clear();g.Computer.Hand.Clear();g.Player.Field.Clear();g.Computer.Field.Clear();g.Player.Structures.Clear();g.Computer.Structures.Clear();g.Computer.Graveyard.Clear();
+        g.Player.IsAi=true;g.Player.Hp=PlayerState.MaxHp;g.Player.Hand.Clear();g.Computer.Hand.Clear();g.Player.Field.Clear();g.Computer.Field.Clear();g.Player.Structures.Clear();g.Computer.Structures.Clear();g.Computer.Graveyard.Clear();
         g.Player.EnergyZone.Clear();for(int i=0;i<8;i++)g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));g.Player.HasFilledEnergyThisTurn=true;
         for(int i=0;i<4;i++)g.Computer.Hand.Add(new(cards.GetCard("WCG-101")!));
         return g;

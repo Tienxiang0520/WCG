@@ -102,6 +102,8 @@ public class PlayerState
     public bool IsAi { get; set; }
     public int Hp { get; set; } = 7;
     public const int MaxHp = 7;
+    // The first player starts one life short (6 of 7) to offset the tempo of acting first; healing still caps at MaxHp.
+    public const int FirstPlayerStartHp = 6;
 
     public List<CardInstance> Deck { get; set; } = new();
     public List<CardInstance> Hand { get; set; } = new();

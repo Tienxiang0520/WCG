@@ -397,6 +397,7 @@
  "對局速覽": "Match overview",
  "對局開始": "Match start",
  "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。": "Match start: 50-card decks, 7-card opening hands; the first player skips the first draw.",
+ "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。": "Match start: 50-card decks, 7-card opening hands; the first player starts at 6 life and the second at 7, and the first player skips the first draw.",
  "對戰操作實驗室": "Battle controls lab",
  "對戰紀錄": "Battle log",
  "對戰紀錄與墓地": "Battle log and graveyards",
@@ -1077,7 +1078,7 @@
  "這回合能做的事都做完了。按「結束回合」，換電腦行動。": "You've done everything you can this turn. Press End turn to hand over to the computer.",
  "這場對局使用的卡牌版本已更新，無法重新模擬回顧。": "The card version used in this match has changed, so the replay can't be re-simulated.",
  "這張牌會背面放入能量區，不能再當手牌使用；不抽牌。": "This card goes face down into your energy zone and can't be used as a hand card again. You don't draw.",
- "這是一場固定場面的教學對局。上方是電腦，下方是你。雙方各有 7 點生命，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張，先攻玩家的第一回合不抽牌。": "This is a tutorial battle with a fixed setup. The computer is at the top and you're at the bottom. Each side has 7 life; reduce your opponent to zero first to win. Real matches start with 50-card decks and 7-card hands, and the first player doesn't draw on their first turn.",
+ "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；先攻玩家從 6 點生命開始、第一回合不抽牌，後攻玩家從 7 點生命開始。": "This is a tutorial battle with a fixed setup. The computer is at the top and you're at the bottom. Life caps at 7; reduce your opponent to zero first to win. Real matches start with 50-card decks and 7-card hands. The first player starts at 6 life and doesn't draw on their first turn; the second player starts at 7 life.",
  "這是已支付卡牌的必要結算，請完成選擇。": "This card has been paid for and must resolve; please finish the choice.",
  "這裡不能攻擊，卡片已回到原位。": "You can't attack there; the card returned to its place.",
  "通用": "Generic",
@@ -1161,7 +1162,7 @@
  "開始訓練": "Start training",
  "開始：{0}": "Start: {0}",
  "開局": "Setup",
- "開局 7 點 · 回復上限 7": "Start at 7 · heal up to 7",
+ "先攻開局 6 點 · 後攻開局 7 點 · 回復上限 7": "First player starts at 6 · second player at 7 · heal up to 7",
  "關鍵字": "Keyword",
  "關閉": "Close",
  "關閉卡片": "Close card",
@@ -1364,7 +1365,7 @@
  "生命降至 0，或需要抽牌時牌庫已空，立即敗北並停止剩餘結算；後面的回血、召喚或陣亡效果不能再救回來。抽最後一張牌本身不敗北，再需要抽牌才會敗北。檢視、檢索、回收與效果填能量不是抽牌，不會只因牌庫為空就觸發抽牌敗北。": "Reaching 0 health or needing to draw from an empty deck causes immediate defeat and stops remaining resolution. Later healing, summons or death effects cannot undo it. Drawing the final card is not itself defeat; the next required draw is. Looking, searching, recovery and placing energy by an effect are not draws, so an empty deck alone does not cause draw defeat for them.",
  "這些補充適用現行卡牌規則；已保存的舊版天梯對局與重播沿用建立時的規則。": "These rulings apply to the current card rules. Saved older ranked matches and replays retain the rules in effect when they were created.",
  "禁魔石像（152）不能成為雙方的法術目標，但不指定對象的全場法術仍能影響它；怪物能力與箭頭按各自卡文判定。這不是全面免疫，也不阻止它成為攻擊目標。": "Spellward Statue (152) cannot be targeted by either side's spells, but untargeted board-wide spells can still affect it. Monster abilities and arrows follow their own card text. This is not universal immunity and does not prevent it from being an attack target.",
- "50 張牌組、同卡最多4張，最多兩個派系，中立不計。7點生命，起手7張，先攻首回合不抽牌；致命傷害先結算反擊，再判定敗北；需要抽牌時無牌則立即敗北。": "50-card decks, up to 4 copies per card and two factions (Neutral does not count). Start at 7 life with 7 cards; the first player skips their first draw. Resolve damage counters before checking lethal. A required draw from an empty deck loses immediately.",
+ "50 張牌組、同卡最多4張，最多兩個派系，中立不計。生命上限7點：先攻玩家從6點開始，後攻玩家從7點開始；起手7張，先攻首回合不抽牌；致命傷害先結算反擊，再判定敗北；需要抽牌時無牌則立即敗北。": "50-card decks, up to 4 copies per card and two factions (Neutral does not count). Life caps at 7: the first player starts at 6 life and the second player at 7. Start with 7 cards; the first player skips their first draw. Resolve damage counters before checking lethal. A required draw from an empty deck loses immediately.",
  "怪物與結界共用五格，進場時選空格，不能換位。離場留下空格。←／→指己方相鄰格，↑指正對面敵方格，橫置不改箭頭方向。空格與結界不接受箭頭能量護盾。": "Monsters and wards share five fixed slots. Choose an empty slot on entry; units cannot move. Left/right arrows point to adjacent friendly slots; up points to the opposing slot. Tapping does not rotate arrows. Empty slots and wards cannot receive Energy Shield from arrows.",
  "法術、結界與反擊": "Spells, wards and counters",
  "反擊牌留在手牌；受到生命傷害後，先扣血，再檢查手牌。只有符合卡文的傷害來源、合法目標與費用條件，才顯示發動或略過；不符合不彈窗、不出牌、不扣費。198成功附著後留在怪物下方。": "Counters stay in hand. After taking life damage, deduct life and check the hand. Offer Activate or Skip only for cards with a valid damage source, legal targets and payable costs. Invalid cards create no popup, play or payment. An attached 198 remains beneath its monster.",
@@ -1812,5 +1813,7 @@
  "50 張牌 · {0} 頁卡牌": "50 cards · {0} card pages",
  "Letter 直向、原始大小／100%、單面，關閉頁首頁尾。彩色版請開啟背景圖形。卡牌 63 × 88 mm，沿四角裁切線裁切；放入不透明卡套並加背襯，背面即可當能量。": "Letter portrait, actual size / 100%, single-sided, headers and footers off. For the colour version, enable background graphics. Cards are 63 × 88 mm; cut along the corner crop marks. Put them in opaque sleeves with a backing card so the back can serve as energy.",
  "出血版：卡框顏色向外多印 3 mm，裁切稍有偏差也不會露白邊。卡片橫放，裁切線標示的仍是 63 × 88 mm 成品尺寸；卡牌部分共 {0} 頁。": "Bleed: the frame colour extends 3 mm past each edge, so a slightly off cut shows no white edge. Cards are turned sideways; the crop marks still mark the finished 63 × 88 mm card. Card pages: {0}.",
- "63 × 88 mm＋3 mm 出血 · Letter · 100% 列印 · 沿四角裁切線裁切": "63 × 88 mm + 3 mm bleed · Letter · print at 100% · cut along the corner crop marks"
+ "63 × 88 mm＋3 mm 出血 · Letter · 100% 列印 · 沿四角裁切線裁切": "63 × 88 mm + 3 mm bleed · Letter · print at 100% · cut along the corner crop marks",
+ "50 張牌組 · 混色最多 12 張 · 任意手牌填能量 · 先攻 6／後攻 7 點生命": "50-card decks · up to 12 off-color cards · any card can be energy · first player 6 life, second player 7",
+ "先攻 6 點、後攻 7 點生命，回復上限 7 點。": "First player starts at 6 life, second player at 7; healing caps at 7."
 }

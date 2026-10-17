@@ -28,6 +28,8 @@ public sealed class RankedMatch
     public int Tier { get; set; }
     public bool PlayerFirst { get; set; }
     public string Rules { get; set; } = "";
+    // Starting-life rule the match began with: 0 (older saves) = both players 7, 1 = first player 6. See RankedRules.CurrentStartRules.
+    public int StartRules { get; set; }
     public Deck PlayerDeck { get; set; } = new();
     public Deck ComputerDeck { get; set; } = new();
     public bool Settled { get; set; }
@@ -47,6 +49,8 @@ public sealed class RankedRecord
     public int Seed { get; set; }
     public bool PlayerFirst { get; set; }
     public string Rules { get; set; } = "";
+    // Starting-life rule (0 = both 7, older records and codes; 1 = first player 6).
+    public int StartRules { get; set; }
     public Deck PlayerDeck { get; set; } = new();
     public Deck ComputerDeck { get; set; } = new();
     public string Archetype { get; set; } = "";
@@ -81,6 +85,8 @@ public static class RankedRules
     public const int ProfileVersion = 2;
     // 對戰紀錄 keeps the most recent finished matches (each with its replay journal, a few KB).
     public const int MaxRecords = 30;
+    // Starting-life rule for new matches. 0: both players start at 7. 1: the first player starts at 6 (2026-10-17).
+    public const int CurrentStartRules = 1;
     public static readonly string[] Tiers = ["青銅", "白銀", "黃金", "白金", "鑽石", "大師"];
     public static int Tier(int stars) => Math.Min(5, Math.Max(0, stars) / 15);
     public static string Label(int stars) => Tier(stars) == 5 ? $"大師 · {stars - 75} 星" : $"{Tiers[Tier(stars)]} {new[] { "III", "II", "I" }[(stars % 15) / 5]}";

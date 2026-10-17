@@ -26,6 +26,9 @@ public partial class GameEngine
     }
     private Random _random;
     public int AiLevel { get; set; } = -1;
+    // Ranked matches and replays recorded before the first-player life rule start both players at 7 (RankedMatch.StartRules 0).
+    // Set it before StartGame; every new game uses the current rule (first player 6, second player 7).
+    public bool EqualStartingLife { get; set; }
     internal void SetReplaySeed(int seed) { _random = new Random(seed); _aiSeed = seed; }
     private readonly object _gate = new();
     private readonly LinkedList<Action> _effects = new();
@@ -182,9 +185,10 @@ public partial class GameEngine
             foreach (var id in computerDeck.CardIds) Computer.Deck.Add(new(_cardDb.GetCard(id)!));
             Shuffle(Player.Deck); Shuffle(Computer.Deck);
             CurrentTurnPlayerId = playerFirst ? Player.Id : Computer.Id; CurrentPhase = TurnPhase.MainPhase;
+            if (!EqualStartingLife) ActivePlayer.Hp = PlayerState.FirstPlayerStartHp;
             Present("turn", ActivePlayer, label: "對局開始");
             for (int i = 0; i < 7; i++) { Draw(Player); Draw(Computer); }
-            Log("對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。", "action"); return true;
+            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action"); return true;
         });
     }
     private void Shuffle<T>(List<T> list)
