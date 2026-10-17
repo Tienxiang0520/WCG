@@ -75,12 +75,12 @@ source: WcgWeb/Data/cards.json
 | WCG-025 | 智謀策士 | 怪物 | 2 | 1100 | 1 | — | 陣亡：抽 1 張牌。 | **Cunning Strategist** — On Death: Draw 1 card. |
 | WCG-026 | 空間回折 | 法術 | 2 | — | — | — | 將 1 隻敵方怪物移回手牌。 | **Spatial Fold** — Return 1 enemy monster to its hand. |
 | WCG-028 | 奧術靈感 | 法術 | 3 | — | — | — | 抽 2 張牌。 | **Arcane Insight** — Draw 2 cards. |
-| WCG-029 | 冰霜魔導師 | 怪物 | 4 | 1500 | 1 | — | 每當此怪物交戰後，若雙方都還在場：將對手怪物橫置；若它已橫置，改為抽 1 張牌。 | **Frost Magus** — Whenever this monster survives combat and so does the other monster: tap that monster; if it is already tapped, draw 1 card instead. |
+| WCG-029 | 冰霜魔導師 | 怪物 | 4 | 1500 | 1 | — | 進場：將 1 隻直立的敵方怪物橫置，然後抽 1 張牌。 | **Frost Magus** — Deploy: Tap 1 untapped enemy monster, then draw 1 card. |
 | WCG-030 | 預言秘術 | 法術 | 2 | — | — | — | 檢視牌庫頂 3 張，選 1 張加入手牌，其餘依任意順序放到牌庫底。 | **Prophetic Arts** — Look at the top 3 cards of your deck. Put 1 of them into your hand and the rest on the bottom in any order. |
 | WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。 | **Mass Disruption** — Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead. |
 | WCG-033 | 秘法竊取者 | 怪物 | 4 | 1600 | 1 | ↑ | 【箭頭：↑】進場：將正對面直立的敵方怪物橫置；若正對面沒有直立的敵方怪物，改為抽 1 張牌。 | **Arcane Thief** — [Arrow: ↑] Deploy: Tap the untapped enemy monster directly opposite. If there is no untapped enemy monster directly opposite, draw 1 card instead. |
 | WCG-034 | 思維超載 | 法術 | 4 | — | — | — | 抽 3 張牌。 | **Mind Overload** — Draw 3 cards. |
-| WCG-035 | 時間靜止者 | 怪物 | 4 | 1300 | 1 | — | 進場：你可以將 1 隻已橫置的敵方怪物移回手牌，然後將所有敵方怪物橫置。 | **Timestopper** — Deploy: You may return 1 tapped enemy monster to its hand, then tap all enemy monsters. |
+| WCG-035 | 時間靜止者 | 怪物 | 4 | 1300 | 1 | — | 進場：你可以將 1 隻敵方怪物移回手牌，然後將所有敵方怪物橫置。 | **Timestopper** — Deploy: You may return 1 enemy monster to its hand, then tap all enemy monsters. |
 | WCG-036 | 虛空調度 | 法術 | 1 | — | — | — | 將 1 隻己方怪物移回手牌，然後抽 1 張牌。 | **Void Recall** — Return 1 of your monsters to your hand, then draw 1 card. |
 | WCG-037 | 符文構裝巨像 | 怪物 | 4 | 1800 | 2 | — | 每當你施放 1 張法術牌，若你的手牌 3 張以下，抽 1 張牌。 | **Runebound Colossus** — Whenever you cast a spell, if you have 3 or fewer cards in hand, draw 1 card. |
 | WCG-038 | 逆流風暴 | 法術 | 4 | — | — | — | 將雙方所有費用 2 以下的怪物移回其擁有者的手牌。 | **Reverse Tide** — Return all monsters on both sides that cost 2 or less to their owners' hands. |

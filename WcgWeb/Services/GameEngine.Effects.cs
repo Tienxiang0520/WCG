@@ -32,6 +32,12 @@ public partial class GameEngine
                 else DrawMany(p, 1);
                 break;
             case "WCG-033": if (enemy.Hand.Count > p.Hand.Count) DrawMany(p, 1); break;
+            // 2026-10-17: 冰霜魔導師 and 時間靜止者 work directly on entry; older catalogs keep the combat / already-tapped versions.
+            case "WCG-029" when m.Card.Text.StartsWith("進場", StringComparison.Ordinal):
+                Resolve(() => PickMonster(p, "選擇直立的敵方怪物橫置", enemy.Field.Where(x => !x.IsTapped), x => { x.IsTapped = true; Present("status", enemy, x.InstanceId, card: x.Card, label: "橫置"); }), () => DrawMany(p, 1));
+                break;
+            case "WCG-035" when !m.Card.Text.Contains("已橫置", StringComparison.Ordinal):
+                foreach (var x in enemy.Field.Where(x => !x.IsTapped)) x.IsTapped = true; OptionalTarget(p, "可選敵怪回手", enemy.Field.ToArray(), Bounce); break;
             case "WCG-035": var tapped=enemy.Field.Where(x=>x.IsTapped).ToArray(); foreach(var x in enemy.Field.Where(x=>!x.IsTapped)) x.IsTapped=true; OptionalTarget(p,"可選原本橫置敵怪回手",tapped,Bounce); break;
             case "WCG-039": DrawMany(p, 2); break;
             case "WCG-040":

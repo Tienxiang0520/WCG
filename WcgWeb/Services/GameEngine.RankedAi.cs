@@ -286,7 +286,8 @@ public partial class GameEngine
             score += id switch
             {
                 "WCG-013" => e.Hp == 1 ? 1000 : 0,
-                "WCG-035" => e.Field.Count(m => !m.IsTapped) * 2,
+                "WCG-035" => e.Field.Count(m => !m.IsTapped) * 2 + (c.Card.Text.Contains("已橫置", StringComparison.Ordinal) ? 0 : e.Field.Select(BodyValue).DefaultIfEmpty(0).Max()),
+                "WCG-029" when c.Card.Text.StartsWith("進場", StringComparison.Ordinal) => (e.Field.Any(m => !m.IsTapped) ? 2 : 0) + (p.Deck.Count > 3 ? 3 : -5),
                 "WCG-020" => Sum(e.Field.Where(m => m.CurrentPP <= 1300)),
                 "WCG-091" => Sum(e.Field.Where(m => m.CurrentPP <= 500)),
                 "WCG-105" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)),

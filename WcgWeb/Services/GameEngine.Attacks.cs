@@ -69,7 +69,7 @@ public partial class GameEngine
     }
     private void Survived(PlayerState p,MonsterInstance m,MonsterInstance other,bool defending)
     {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id=="WCG-109")DrawMany(p,1);
-        if(m.Card.Id=="WCG-029"&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
+        if(m.Card.Id=="WCG-029"&&!m.Card.Text.StartsWith("進場",StringComparison.Ordinal)&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
         if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1,new(p,m.Card,m,"passive"));}
     private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish,bool lethal=true)
     {

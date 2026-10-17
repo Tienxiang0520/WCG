@@ -31,6 +31,9 @@ public sealed class CloudSaveValidationTests
         {
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
             definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
+            /* 2026-10-17 法師直接發動之前的 029、035 卡文。 */
+            var mageDirect=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeMageDirect"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>mageDirect.GetValueOrDefault(c.Id,c)).ToList();
             /* 2026-10-17 聖盾 PP 還原之前的 PP。 */
             var shieldPp=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeShieldPp"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>shieldPp.GetValueOrDefault(c.Id,c)).ToList();

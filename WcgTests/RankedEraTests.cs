@@ -35,7 +35,7 @@ public sealed class RankedEraTests : IDisposable
     {
         Func<CardDatabase, CardDatabase>[] chains =
         [
-            CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
+            CardBalanceHistory.BeforeMageDirect, CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
             CardBalanceHistory.BeforeAbilityPp, CardBalanceHistory.BeforeNewCards, CardBalanceHistory.BeforeDeflation, CardBalanceHistory.BeforeRulesSimplification,
             CardBalanceHistory.BeforeEnergyKeywords, CardBalanceHistory.BeforeHeroGuard, CardBalanceHistory.BeforeStrongBuildAdjustment, CardBalanceHistory.BeforeOctoberBalance,
             CardBalanceHistory.BeforeEnergyShield, CardBalanceHistory.BeforeDamageCounters, CardBalanceHistory.BeforePlayerTargets, CardBalanceHistory.BeforeDiversity,
@@ -49,8 +49,8 @@ public sealed class RankedEraTests : IDisposable
             var expected = chains[i](cards);
             Assert.Equal(Fingerprint(expected), eras[i].Rules);
             Assert.Equal(Fingerprint(expected, true), eras[i].IdentifierRules);
-            Assert.Equal(i == 20, eras[i].LimitFactionTriggers);
-            Assert.Equal(i >= 18, eras[i].LegacyCardRules);
+            Assert.Equal(i == 21, eras[i].LimitFactionTriggers);
+            Assert.Equal(i >= 19, eras[i].LegacyCardRules);
         }
     }
 }
