@@ -3,6 +3,13 @@
 No credentials or player data are written to the deployment package. Azure CLI
 must already be signed in; its account key is used only in this process's memory.
 Old assets are retained so open game tabs can finish using their own version.
+
+Transfer compression: Blob static websites do not negotiate encodings, so text-like
+files (WASM, JS, CSS, JSON, ICU data, HTML) are stored pre-compressed with a fixed
+Content-Encoding (Brotli by default; every current major browser decodes it over
+HTTPS, and `--encoding gzip` is the universal fallback). Browsers decode before
+scripts see the body, so the asset manifest sizes and SHA-256 values (and the
+preloader's integrity checks) always refer to the original, uncompressed bytes.
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -10,7 +17,9 @@ from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
+import gzip
 import re
+import shutil
 import subprocess
 
 ROUTES = ('battle', 'cards', 'deckbuilder', 'ranked', 'rules', 'settings', 'tutorial', 'legacy', 'not-found', 'auth/callback')
@@ -28,6 +37,12 @@ MIME = {
 PRIVATE = {'.git', '.openai', '.runtime', 'node_modules', '玩家存檔備份',
            'custom_decks.json', 'ranked.json', 'player_profile.json'}
 OMIT = {'staticwebapp.config.json', 'web.config'}
+# Already-compressed media (webp/jpg/png/ogg/mp3/woff2) gain nothing from transfer encoding.
+COMPRESSIBLE = {'.html', '.js', '.css', '.json', '.wasm', '.dat', '.blat', '.svg', '.ico',
+                '.ttf', '.wav', '.txt', '.md'}
+ENCODINGS = ('br', 'gzip', 'identity')
+# Keep an encoded payload only when it saves at least this share of the bytes.
+MIN_SAVING = 0.1
 
 
 @dataclass(frozen=True)
@@ -38,6 +53,18 @@ class Entry:
     size: int
     content_type: str
     phase: int
+    # Bytes actually stored in Blob: the source itself, or its pre-compressed payload.
+    upload: Path = None
+    upload_size: int = 0
+    encoding: str = ''
+
+    @property
+    def payload(self):
+        return self.upload or self.source
+
+    @property
+    def payload_size(self):
+        return self.upload_size if self.upload else self.size
 
 
 def digest(path):
@@ -131,6 +158,75 @@ def plan(source):
     return manifest['version'], sorted(entries, key=lambda e: (e.phase, e.name == 'index.html', e.name))
 
 
+def encode(entries, encoding, cache):
+    """Attach verified pre-compressed payloads to compressible entries."""
+    if encoding not in ENCODINGS:
+        raise ValueError(f'Unknown encoding: {encoding}')
+    if encoding == 'identity':
+        return entries
+    cache = Path(cache).resolve()
+    suffix = '.br' if encoding == 'br' else '.gz'
+    # Content-addressed by the source hash, so route aliases share one payload.
+    targets = {}
+    for entry in entries:
+        if entry.source.suffix in COMPRESSIBLE and entry.size >= 256:
+            targets.setdefault(entry.sha256, (entry.source, cache / encoding / (entry.sha256 + suffix)))
+    if encoding == 'gzip':
+        for source, output in targets.values():
+            data = source.read_bytes()
+            if output.exists():
+                try:
+                    if gzip.decompress(output.read_bytes()) == data:
+                        continue
+                except (OSError, EOFError):
+                    pass
+            packed = gzip.compress(data, compresslevel=9, mtime=0)
+            if gzip.decompress(packed) != data:
+                raise RuntimeError(f'gzip round trip failed: {source}')
+            output.parent.mkdir(parents=True, exist_ok=True)
+            output.write_bytes(packed)
+    else:
+        node = shutil.which('node')
+        if not node:
+            raise RuntimeError('Brotli encoding needs Node.js (or use --encoding gzip)')
+        jobs = [{'source': str(s), 'output': str(o)} for s, o in targets.values()]
+        result = subprocess.run([node, str(Path(__file__).with_name('brotli-encode.mjs'))],
+                                input=json.dumps(jobs), capture_output=True, text=True)
+        if result.returncode:
+            raise RuntimeError(f'Brotli encoding failed: {result.stderr.strip()[-500:]}')
+    encoded = []
+    for entry in entries:
+        target = targets.get(entry.sha256)
+        if target and entry.source.suffix in COMPRESSIBLE and entry.size >= 256:
+            size = target[1].stat().st_size
+            if size <= entry.size * (1 - MIN_SAVING):
+                entry = Entry(entry.name, entry.source, entry.sha256, entry.size, entry.content_type,
+                              entry.phase, target[1], size, encoding)
+        encoded.append(entry)
+    return encoded
+
+
+def stage(entries, directory):
+    """Write the exact blobs and headers that publish would store, for local emulation."""
+    directory = Path(directory).resolve()
+    if directory.exists():
+        # Only ever replace an earlier stage (or an empty folder), never other data.
+        if any(directory.iterdir()) and not (directory / 'headers.json').is_file():
+            raise ValueError(f'Stage folder is not empty and is not an earlier stage: {directory}')
+        shutil.rmtree(directory)
+    headers = {}
+    for entry in entries:
+        # Route aliases are extension-less blobs next to same-named virtual folders;
+        # keep the headers map authoritative instead of reproducing that on disk.
+        target = directory / 'blobs' / entry.name.replace('/', '%2F')
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(entry.payload, target)
+        headers[entry.name] = {'Content-Type': entry.content_type, 'Cache-Control': CACHE_CONTROL,
+                               **({'Content-Encoding': entry.encoding} if entry.encoding else {})}
+    (directory / 'headers.json').write_text(json.dumps(headers, indent=1, ensure_ascii=False))
+    return directory
+
+
 def az_json(az, args):
     result = subprocess.run([az, *args, '--only-show-errors', '--output', 'json'], capture_output=True, text=True)
     if result.returncode:
@@ -140,10 +236,10 @@ def az_json(az, args):
 
 
 def matches(remote, entry):
-    return (remote.metadata.get('sha256') == entry.sha256 and remote.size == entry.size
+    return (remote.metadata.get('sha256') == entry.sha256 and remote.size == entry.payload_size
             and remote.content_settings.content_type == entry.content_type
             and remote.content_settings.cache_control == CACHE_CONTROL
-            and not remote.content_settings.content_encoding)
+            and (remote.content_settings.content_encoding or '') == entry.encoding)
 
 
 def publish(args, version, entries):
@@ -166,14 +262,15 @@ def publish(args, version, entries):
     container = service.get_container_client('$web')
     existing = {b.name: b for b in container.list_blobs(include=['metadata'])}
     changed = [e for e in entries if e.name not in existing or not matches(existing[e.name], e)]
-    print(f'Upload {len(changed)}/{len(entries)} files, {sum(e.size for e in changed)/1e6:.1f} MB', flush=True)
+    print(f'Upload {len(changed)}/{len(entries)} files, {sum(e.payload_size for e in changed)/1e6:.1f} MB', flush=True)
 
     def upload(entry):
-        with entry.source.open('rb') as stream:
-            container.upload_blob(entry.name, stream, length=entry.size, overwrite=True,
+        with entry.payload.open('rb') as stream:
+            container.upload_blob(entry.name, stream, length=entry.payload_size, overwrite=True,
                                   metadata={'sha256': entry.sha256},
                                   content_settings=ContentSettings(content_type=entry.content_type,
-                                                                   cache_control=CACHE_CONTROL),
+                                                                   cache_control=CACHE_CONTROL,
+                                                                   content_encoding=entry.encoding or None),
                                   max_concurrency=1)
 
     def verify(entry):
@@ -207,11 +304,13 @@ def publish(args, version, entries):
         if entry.name == 'index.html':
             upload(entry)
     verify_all(entries)
-    if container.download_blob('asset-manifest.json').readall() != next(e.source.read_bytes() for e in entries if e.name == 'asset-manifest.json'):
+    # The SDK returns stored bytes as-is (no decoding), so compare with the uploaded payload.
+    if container.download_blob('asset-manifest.json').readall() != next(e.payload.read_bytes() for e in entries if e.name == 'asset-manifest.json'):
         raise RuntimeError('Published manifest differs from local build')
     endpoint = account['primaryEndpoints']['web']
     record = {'account': args.account, 'endpoint': endpoint, 'assetVersion': version,
-              'files': len(entries), 'bytes': sum(e.size for e in entries)}
+              'files': len(entries), 'bytes': sum(e.size for e in entries),
+              'encoding': args.encoding, 'transferBytes': sum(e.payload_size for e in entries)}
     if args.record:
         record_path = Path(args.record)
         record_path.parent.mkdir(parents=True, exist_ok=True)
@@ -230,9 +329,24 @@ def main():
     parser.add_argument('--az', default='az', help='Signed-in Azure CLI executable')
     parser.add_argument('--workers', type=int, choices=range(1, 9), default=6)
     parser.add_argument('--record', help='Local deployment receipt; contains no credentials')
+    parser.add_argument('--encoding', choices=ENCODINGS, default='br',
+                        help='Transfer encoding stored for compressible files (default: br)')
+    parser.add_argument('--encoded-cache', type=Path,
+                        help='Where compressed payloads are kept between runs (default: next to the source folder)')
+    parser.add_argument('--stage', type=Path,
+                        help='Also write the exact blobs and headers to this folder for local emulation (serve-static.mjs --blob-stage)')
     args = parser.parse_args()
     version, entries = plan(args.source)
-    print(f'Validated: {len(entries)} files, {sum(e.size for e in entries)/1e6:.1f} MB, version {version}', flush=True)
+    cache = args.encoded_cache or args.source.resolve().parent / 'encoded-cache'
+    if cache.resolve().is_relative_to(args.source.resolve()):
+        raise ValueError('Encoded cache must be outside the public package')
+    entries = encode(entries, args.encoding, cache)
+    total = sum(e.size for e in entries)
+    transfer = sum(e.payload_size for e in entries)
+    print(f'Validated: {len(entries)} files, {total/1e6:.1f} MB, version {version}', flush=True)
+    print(f'Transfer ({args.encoding}): {transfer/1e6:.1f} MB, {sum(1 for e in entries if e.encoding)} files encoded', flush=True)
+    if args.stage:
+        print(f'Staged blobs: {stage(entries, args.stage)}', flush=True)
     if args.publish:
         publish(args, version, entries)
 

@@ -1,9 +1,13 @@
 """Deployment boundary tests: public data only, complete preload, valid routes."""
 import hashlib
 import importlib.util
+import gzip
 import json
 from pathlib import Path
+import shutil
+import subprocess
 import sys
+from types import SimpleNamespace
 import tempfile
 import unittest
 
@@ -121,6 +125,75 @@ class BlobPlanTests(unittest.TestCase):
         self.assertNotIn('staticwebapp.config.json', names)
         self.assertNotIn('_framework/runtime.hash123.wasm.br', names)
         self.assertIn('battle/audio/licenses/test.txt', names)
+
+
+class EncodingTests(BlobPlanTests):
+    def setUp(self):
+        super().setUp()
+        self.write('_framework/runtime.hash123.wasm', b'\x00asm' + bytes(range(256)) * 64)
+        self.manifest()
+        self.cache = Path(self.temp.name + '-encoded')
+        self.addCleanup(shutil.rmtree, self.cache, True)
+
+    def encoded(self, encoding):
+        _, entries = deploy.plan(self.root)
+        return {e.name: e for e in deploy.encode(entries, encoding, self.cache)}
+
+    def test_gzip_payloads_decode_to_manifest_bytes(self):
+        entries = self.encoded('gzip')
+        for name in ('_framework/runtime.hash123.wasm', 'data/cards.json'):
+            entry = entries[name]
+            self.assertEqual(entry.encoding, 'gzip')
+            self.assertLess(entry.payload_size, entry.size)
+            self.assertEqual(gzip.decompress(entry.payload.read_bytes()), entry.source.read_bytes())
+            self.assertEqual(deploy.digest(entry.source), entry.sha256)
+        # Media is already compressed; tiny files stay identity.
+        self.assertEqual(entries['card-art/WCG-001.webp'].encoding, '')
+        self.assertEqual(entries['index.html'].encoding, '')
+        self.assertEqual(entries['card-art/WCG-001.webp'].payload, entries['card-art/WCG-001.webp'].source)
+
+    @unittest.skipUnless(shutil.which('node'), 'node is required for Brotli')
+    def test_brotli_payloads_round_trip_and_reuse_cache(self):
+        entries = self.encoded('br')
+        wasm = entries['_framework/runtime.hash123.wasm']
+        self.assertEqual(wasm.encoding, 'br')
+        decoded = subprocess.run(['node', '-e', 'process.stdout.write(require("zlib").brotliDecompressSync(require("fs").readFileSync(process.argv[1])))', str(wasm.payload)],
+                                 capture_output=True, check=True).stdout
+        self.assertEqual(decoded, wasm.source.read_bytes())
+        # A corrupted cached payload is detected and re-encoded instead of uploaded.
+        wasm.payload.write_bytes(b'garbage')
+        again = self.encoded('br')['_framework/runtime.hash123.wasm']
+        self.assertNotEqual(again.payload.read_bytes(), b'garbage')
+
+    def test_identity_and_remote_match_include_encoding(self):
+        plain = self.encoded('identity')['_framework/runtime.hash123.wasm']
+        packed = self.encoded('gzip')['_framework/runtime.hash123.wasm']
+        def remote(entry, encoding):
+            return SimpleNamespace(metadata={'sha256': entry.sha256}, size=entry.payload_size,
+                                   content_settings=SimpleNamespace(content_type=entry.content_type,
+                                                                    cache_control=deploy.CACHE_CONTROL,
+                                                                    content_encoding=encoding))
+        self.assertTrue(deploy.matches(remote(plain, None), plain))
+        self.assertTrue(deploy.matches(remote(packed, 'gzip'), packed))
+        # Switching encodings forces a re-upload.
+        self.assertFalse(deploy.matches(remote(plain, None), packed))
+        self.assertFalse(deploy.matches(remote(packed, 'gzip'), plain))
+
+    def test_stage_writes_exact_blobs_and_headers(self):
+        _, entries = deploy.plan(self.root)
+        entries = deploy.encode(entries, 'gzip', self.cache)
+        target = deploy.stage(entries, Path(self.temp.name + '-stage'))
+        self.addCleanup(shutil.rmtree, target, True)
+        headers = json.loads((target / 'headers.json').read_text())
+        self.assertEqual(headers['_framework/runtime.hash123.wasm']['Content-Encoding'], 'gzip')
+        self.assertNotIn('Content-Encoding', headers['card-art/WCG-001.webp'])
+        self.assertEqual((target / 'blobs' / 'cards').read_bytes(), (self.root / 'cards/index.html').read_bytes())
+        # Refuses to wipe a folder that is not an earlier stage.
+        other = Path(self.temp.name + '-other'); other.mkdir()
+        self.addCleanup(shutil.rmtree, other, True)
+        (other / 'keep.txt').write_text('x')
+        with self.assertRaisesRegex(ValueError, 'not an earlier stage'):
+            deploy.stage(entries, other)
 
 
 if __name__ == '__main__':
