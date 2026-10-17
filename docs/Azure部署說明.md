@@ -42,6 +42,8 @@ Azure 的預設 Blazor 工作流程不足以處理本專案共用元件、前端
 
 ## Windows App Service 本機部署
 
+> 歷史紀錄：App Service 已於 2026-10-13 刪除，打包工具 `SoulOath.Static/tools/prepare-appservice.py` 與 `deployment/azure/appservice-web.config` 也已於 2026-10-17 從專案移除。下方指令不能再執行，只保留作為紀錄。
+
 目前資源群組為 `wcg-game-rg`，方案 `ASP-wcggamerg-a454`、SKU `F1`、區域 `Japan East`。網站：
 
 [Azure 遊戲網址](https://wcg-game-tienxiang0520-a7hphvhuexh8ekbh.japaneast-01.azurewebsites.net/)

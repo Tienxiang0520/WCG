@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { cp, mkdir, copyFile } from 'node:fs/promises';
+import { cp, mkdir, copyFile, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -20,6 +20,8 @@ if (!existsSync(resolve(root, 'WcgWeb/wwwroot/battle/board.js'))
 }
 const printArt = spawnSync('python3', [resolve(root, 'WcgWeb/tools/prepare-print-art.py')], { stdio: 'inherit' });
 if (printArt.status !== 0) process.exit(printArt.status ?? 1);
+// Third-party files are mirrored exactly, so files removed from WcgWeb/wwwroot/lib do not linger in the static build.
+await rm(resolve(project,'wwwroot/lib'),{recursive:true,force:true});
 for (const name of ['app.css','wcg.css','favicon.png','sidebar.js','i18n.js','battle-drag.js','deck-print.css','card-face.css','deck-print.js','deck-picker.js','cloud-ui.js','print-art','lib','battle']) {
     await cp(resolve(root,'WcgWeb/wwwroot',name),resolve(project,'wwwroot',name),{recursive:true});
 }

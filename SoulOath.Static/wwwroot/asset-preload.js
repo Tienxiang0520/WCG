@@ -8,6 +8,8 @@ export function assetKey(base, asset) {
     return url.href;
 }
 export function manifestKey(base, version) { return new URL(`__wcg/manifest/${version}`, base).href; }
+// Marks a download in progress so the asset worker's cleanup keeps its files (see asset-worker.js prune).
+export function pendingKey(base, version) { return new URL(`__wcg/pending/${version}`, base).href; }
 export function validateManifest(manifest) {
     if (!manifest || !/^[a-f0-9]{64}$/.test(manifest.version) || !Array.isArray(manifest.assets) || !manifest.assets.length)
         throw new Error('資源清單不完整');
@@ -24,6 +26,9 @@ export function validateManifest(manifest) {
 export async function preloadAssets(manifest, { base, cacheStorage = caches, fetchFile = fetch, onProgress = () => {}, concurrency = 6 }) {
     validateManifest(manifest);
     const cache = await cacheStorage.open(ASSET_CACHE);
+    const meta = await cacheStorage.open(META_CACHE);
+    // Best effort: without the marker another tab's cleanup could only drop files that would be downloaded again.
+    try { await meta.put(pendingKey(base, manifest.version), new Response(JSON.stringify(manifest), { headers: { 'Content-Type': 'application/json', 'X-WCG-Started': String(Date.now()) } })); } catch { /* quota is reported by the downloads */ }
     const total = manifest.assets.reduce((sum, asset) => sum + asset.size, 0);
     const received = new Map();
     let cursor = 0, completed = 0, failed = false;
@@ -73,7 +78,7 @@ export async function preloadAssets(manifest, { base, cacheStorage = caches, fet
         try { while (!failed && cursor < manifest.assets.length) await download(manifest.assets[cursor++]); }
         catch (error) { failed = true; throw error; }
     }));
-    await (await cacheStorage.open(META_CACHE)).put(manifestKey(base, manifest.version), new Response(JSON.stringify(manifest), { headers: { 'Content-Type': 'application/json' } }));
+    await meta.put(manifestKey(base, manifest.version), new Response(JSON.stringify(manifest), { headers: { 'Content-Type': 'application/json' } }));
 }
 export async function prepareGame(onProgress) {
     if (!navigator.serviceWorker || !globalThis.caches) throw new Error('請使用支援遊戲資源儲存的瀏覽器，並允許此網站儲存資料。');

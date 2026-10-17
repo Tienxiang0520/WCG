@@ -15,7 +15,7 @@ export function fakeCaches() {
     return {stores,async open(name){
         if(!stores.has(name))stores.set(name,new Map());
         const store=stores.get(name);
-        return {async match(key){return store.get(String(key))?.clone();},async put(key,response){store.set(String(key),response.clone());}};
+        return {async match(key){return store.get(String(key))?.clone();},async put(key,response){store.set(String(key),response.clone());},async delete(key){return store.delete(String(key));}};
     }};
 }
 test('all files must finish and verify before entry; concurrent downloads stay bounded',async()=>{
@@ -37,7 +37,8 @@ test('interruption blocks entry; reload resumes verified files and retries missi
     const assets=[asset('card-art/a.webp','ok'),asset('card-art/b.webp','next')];const cacheStorage=fakeCaches();
     await assert.rejects(preloadAssets(manifest(assets),{base,cacheStorage,concurrency:1,fetchFile:async url=>new Response(url.endsWith('a.webp')?'ok':'broken')}),/下載未完成/);
     assert.equal(cacheStorage.stores.get(ASSET_CACHE).size,1);
-    assert.equal(cacheStorage.stores.has(META_CACHE),false);
+    // Only a download-in-progress marker exists; no version is recorded as complete.
+    assert.deepEqual([...(cacheStorage.stores.get(META_CACHE)?.keys()??[])].filter(k=>k.includes('/__wcg/manifest/')),[]);
     const requested=[];
     await preloadAssets(manifest(assets),{base,cacheStorage,fetchFile:async url=>{requested.push(url);return new Response('next');}});
     assert.deepEqual(requested,[`${base}card-art/b.webp`]);
@@ -50,7 +51,8 @@ test('update fetches only changed files and retains older versions for open game
     await preloadAssets(manifest(second),{base,cacheStorage,fetchFile:async url=>{requested.push(url);return new Response('new');}});
     assert.deepEqual(requested,[`${base}data/cards.json`]);
     assert.equal(await (await cacheStorage.open(ASSET_CACHE)).match(assetKey(base,first[0])).then(r=>r.text()),'old');
-    assert.equal(cacheStorage.stores.get(META_CACHE).size,2);
+    // Both versions are recorded; download markers stay until a tab binds the version (asset-worker.js).
+    assert.equal([...cacheStorage.stores.get(META_CACHE).keys()].filter(k=>k.includes('/__wcg/manifest/')).length,2);
 });
 test('streamed bytes report actual progress, corrupt/error responses never become ready',async()=>{
     const cacheStorage=fakeCaches();const states=[];const item=asset('battle/test.ogg','123456');
