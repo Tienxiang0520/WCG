@@ -9,6 +9,7 @@ function harness(t) {
         getAttributeNames() { return ['b-test']; }
         setAttribute(k, v) { this.attributes[k] = v; }
         addEventListener(type, callback) { (this.listeners ??= {})[type] = callback; }
+        removeEventListener(type, callback) { if (this.listeners?.[type] === callback) delete this.listeners[type]; }
         click() { assert.notEqual(this.style.pointerEvents, 'none', 'control must accept pointer input'); this.listeners?.click?.({stopPropagation(){}}); }
         append(...els) { for (const el of els) { el.parent = this; this.children.push(el); } }
         remove() { if (this.parent) this.parent.children = this.parent.children.filter(x => x !== this); }
@@ -43,12 +44,12 @@ function harness(t) {
 function text(el) {return [el.textContent,...el.children.map(text)].join(' ');}
 function descendants(el) { return [el, ...el.children.flatMap(descendants)]; }
 
-test('enemy energy stays face down and input unlocks only after snapshot commit', async t=>{
+test('enemy energy stays face down; playback marks the board (actions blocked in C#) without making it inert', async t=>{
     const h=harness(t);
     await h.settle(h.feedback.present(h.state,h.state,[{type:'energy',side:'computer',instanceId:'private-card',order:0,label:'填能量'}]));
     const flying=h.record.find(r=>r.el.className.includes('event-card'));assert.match(text(flying.el),/背面卡片/);assert.doesNotMatch(text(flying.el),/private-card/);
     assert.equal(descendants(flying.el).filter(el=>el.tag==='img').length,0,'hidden energy must not request card artwork');
-    assert.equal(h.root.inert,true);h.feedback.clear();assert.equal(h.root.inert,false);assert.equal(h.body.children.length,0);
+    assert.equal(h.root.inert,false,'card zoom stays clickable');assert.equal(h.root.dataset.wcgPlayback,'1');h.feedback.clear();assert.equal(h.root.dataset.wcgPlayback,undefined);assert.equal(h.body.children.length,0);
 });
 test('draws start at the right deck edge; opponent draws never expose artwork', async t=>{
     const h=harness(t);
@@ -139,21 +140,21 @@ test('vanilla text (無。 / None.) leaves the effect box blank but keeps the wi
         h.feedback.clear();
     }
 });
-test('fast-forward shortens the remaining animations and is offered as a button and a board-wide tap', async t=>{
+test('fast-forward shortens the remaining animations: the button, or a tap on empty board (cards still zoom)', async t=>{
     resetFastForward();
     const h=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];
     await h.settle(h.feedback.present(h.state,h.state,events));
     const normal=h.record.find(r=>r.el.dataset.wcgEffect==='damage').options.duration;
     const layer=h.body.children[0];
     assert.ok(descendants(layer).some(el=>el.className==='event-ff'),'fast-forward button');
-    assert.ok(descendants(layer).some(el=>el.className==='event-skip'),'tap anywhere on the board');
+    assert.equal(typeof h.root.listeners.click,'function','tap on empty board');
     const normalHeal=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
     h.feedback.clear();h.record.length=0;
     const pending=h.feedback.present(h.state,h.state,events),fastLayer=h.body.children[0];
     const button=descendants(fastLayer).find(el=>el.className==='event-ff');
     button.click();assert.equal(fastLayer.attributes['data-fast'],'3');
-    const catcher=descendants(fastLayer).find(el=>el.className==='event-skip');
-    catcher.click();assert.equal(fastLayer.attributes['data-fast'],'12');
+    h.root.listeners.click({target:{closest:()=>({})},stopPropagation(){}});assert.equal(fastLayer.attributes['data-fast'],'3','a click on a card zooms instead');
+    h.root.listeners.click({target:{closest:()=>null},stopPropagation(){}});assert.equal(fastLayer.attributes['data-fast'],'12');
     await h.settle(pending);
     const fast=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
     assert.ok(fast<=normalHeal/12+1,`${fast} vs ${normalHeal}`);
@@ -202,5 +203,21 @@ test('a shield that breaks in combat shatters its icon', async t=>{
     const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:[],pp:1000}]},computer:{field:[]}};
     await h.settle(h.feedback.present(before,after,[{type:'attack',side:'computer',instanceId:'dead',order:0}]));
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='shield-break'));
+    h.feedback.clear();
+});
+test('幸運幣 skips the showcase and only pops the gold energy diamond; own spells are shown briefly', async t=>{
+    resetFastForward();
+    const h=harness(t),coin={instanceId:'c',cardId:'WCG-263',name:'幸運幣',type:'法術'};
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'c',card:coin,order:0},{type:'energy',side:'player',instanceId:'c',card:coin,label:'臨時能量',order:1}]));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='showcase').length,0);
+    assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='coin-energy'));
+    h.feedback.clear();h.record.length=0;
+    const bolt={instanceId:'b',cardId:'WCG-101',name:'b',type:'法術'};
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'b',card:bolt,order:0}]));
+    const own=h.record.filter(r=>r.el.dataset.wcgEffect==='showcase').reduce((n,r)=>n+r.options.duration,0);
+    h.feedback.clear();h.record.length=0;
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'computer',instanceId:'b',card:bolt,order:0}]));
+    const enemy=h.record.filter(r=>r.el.dataset.wcgEffect==='showcase').reduce((n,r)=>n+r.options.duration,0);
+    assert.ok(own<=500&&own<enemy,`${own} vs ${enemy}`);
     h.feedback.clear();
 });

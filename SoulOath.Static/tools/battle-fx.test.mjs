@@ -11,6 +11,7 @@ function dom(t, { reduce = false, store = storage() } = {}) {
         getAttributeNames() { return ['b-test']; }
         setAttribute(k, v) { this.attributes[k] = v; } removeAttribute(k) { delete this.attributes[k]; }
         addEventListener() { }
+        removeEventListener() { }
         append(...els) { for (const el of els) { el.parent = this; this.children.push(el); } }
         remove() { if (this.parent) { this.parent.children = this.parent.children.filter(x => x !== this); this.parent = null; } }
         getBoundingClientRect() { return { x: 10, y: 20, width: 160, height: 200 }; }
@@ -75,7 +76,7 @@ test('disposing mid-effect cancels everything immediately', async t => {
     await fx.burst(d.root); assert.equal(d.body.children.length, 0, 'no effects after dispose');
 });
 
-test('feedback with effects still releases the input lock on commit and keeps hidden cards hidden', async t => {
+test('feedback with effects still releases the playback lock on commit and keeps hidden cards hidden', async t => {
     const d = dom(t);
     const own = new d.El(), enemy = new d.El(), status = new d.El(), field = new d.El(), unit = new d.El(), zone = new d.El();
     zone.dataset.target = 'dead'; zone.selectors = { '.field-card': unit };
@@ -93,10 +94,10 @@ test('feedback with effects still releases the input lock on commit and keeps hi
     const done = feedback.present(state, state, events);
     for (let i = 0; i < 60; i++) { for (const a of d.running) a.finish(); await new Promise(setImmediate); }
     await done;
-    assert.equal(d.root.inert, true, 'board stays locked until the snapshot is committed');
+    assert.equal(d.root.dataset.wcgPlayback, '1', 'actions stay blocked until the snapshot is committed');
     const texts = d.created.map(el => el.textContent).join(' ');
     assert.match(texts, /你的回合/); assert.doesNotMatch(texts, /secret/);
-    feedback.clear(); assert.equal(d.root.inert, false);
+    feedback.clear(); assert.equal(d.root.dataset.wcgPlayback, undefined);
     feedback.dispose(); assert.equal(d.body.children.length, 0);
 });
 

@@ -158,6 +158,8 @@
     protected override async Task OnAfterRenderAsync(bool first){if(first){Preferences=await JS.InvokeAsync<IJSObjectReference>("import","./battle/preferences.js");ConfirmEnergy=await Preferences.InvokeAsync<bool>("readEnergyConfirmation");ShowBreakdown=await Preferences.InvokeAsync<bool>("readStatBreakdown");DragModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/fan-drag.js");Self=DotNetObjectReference.Create(this);DragBinding=await DragModule.InvokeAsync<IJSObjectReference>("bind",BoardElement,Self);SoundEnabled=await DragBinding.InvokeAsync<bool>("readSound");MotionReduced=await DragBinding.InvokeAsync<bool>("readMotion");StateHasChanged();if(InitialResponse!=null)await Publish(InitialResponse);await Ready.InvokeAsync();}}
     private async Task ToggleMotion(){if(DragBinding!=null)MotionReduced=await DragBinding.InvokeAsync<bool>("toggleMotion");}
     private async Task ToggleSound(){if(DragBinding!=null)SoundEnabled=await DragBinding.InvokeAsync<bool>("toggleSound");}
+    // A card zoomed during playback stays open with its committed values; it closes only if it left public view.
+    private static BattleCard? Refresh(BattleCard? d,BattleSnapshot s)=>d==null?null:s.Player.Field.Concat(s.Computer.Field).Select(m=>m.Card).Concat(s.Hand.Select(h=>h.Card)).FirstOrDefault(c=>c.InstanceId==d.InstanceId);
     private void OpenCard(BattleCard c){if(!TrainingToolsOpen)Detail=c;}
     private async Task OpenSlot(BattleMonster? m){if(m==null||TrainingToolsOpen)return;if(State?.Pending?.Targets.Contains(m.Card.InstanceId.ToString())==true)await Send("target",target:m.Card.InstanceId);else Detail=m.Card;}
     // Touch screens have no right click: the zoomed card offers the same face toggle.
@@ -220,7 +222,7 @@
                 catch(JSException){await DragBinding!.InvokeVoidAsync("clearEvents");Presenting=false;}
             }
             if(Disposed)return;
-            State=response.State;Message=response.Success?"":response.Message;Dragging=null;Detail=null;
+            State=response.State;Message=response.Success?"":response.Message;Dragging=null;Detail=Refresh(Detail,State);
             if(!response.Success&&DragBinding!=null)await DragBinding.InvokeVoidAsync("playError");
             SetModes.IntersectWith(State.Hand.Select(h=>h.Card.InstanceId));
             foreach(var ev in response.Events)History.Insert(0,new HistoryEntry(ev.Side=="player"?"我方":"敵方",ev.Label,ev.Card));
