@@ -10,6 +10,10 @@ public partial class GameEngine
     private int Low(int printed) => !SimplifiedRules ? printed : CardBalanceHistory.CardFixesCatalog(_cardDb) ? (printed <= 800 ? 900 : 1200) : (printed <= 800 ? 600 : 1100);
     private int High(int printed) => !SimplifiedRules ? printed : 1800;
     private int SkyfireLimit() => CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2300 : 1500;
+    // PP thresholds ("PP n 以下／以上", 059's taunt limit, 195's bonus) check the target's printed PP from the 2026-10-22 catalog on;
+    // bonuses and penalties are ignored. Older catalogs keep checking the current PP so saved matches replay unchanged.
+    public bool PrintedPpThresholds => CardBalanceHistory.CardFixesCatalog(_cardDb);
+    private int ThresholdPP(MonsterInstance m) => PrintedPpThresholds ? m.Card.PP ?? 0 : m.CurrentPP;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
     // 聖盾指示物 (2026-10-17): a monster that gains 聖盾 (on entry or later) gets one counter; the first combat destruction

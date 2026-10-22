@@ -99,7 +99,7 @@ public partial class GameEngine
         if (SimplifiedRules && card.Card.Id is "WCG-195" or "WCG-199")
         {
             // If the monster already left the board, the counter only cancels the damage.
-            var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? source!.CurrentPP : 0;
+            var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? ThresholdPP(source!) : 0;
             Resolve(() => ReverseDamage(damage), () => { if (killable) KillBatch([source!], card.Card.Name); },
                 () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= 1800) SpellDamage(p, enemy, 1, card.Card); } else if (CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
             return;

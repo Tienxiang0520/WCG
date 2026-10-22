@@ -14,15 +14,15 @@ public partial class GameEngine
             case "WCG-001": case "WCG-102":
                 var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張，然後棄 1 張" } };
                 var small = Low(500);
-                if (Targetable(p, enemy.Field.Where(x => x.CurrentPP <= small)).Count > 0)
+                if (Targetable(p, enemy.Field.Where(x => ThresholdPP(x) <= small)).Count > 0)
                     modes.Insert(0, new() { Id = "KILL", Title = $"消滅 1 隻 PP {small} 以下敵怪" });
                 Ask(p, $"【{m.Card.Name}】進場抉擇", modes, o =>
-                { if (o.Id == "LOOT") Loot(p); else PickMonster(p, $"選擇 PP {small} 以下敵怪", enemy.Field.Where(x => x.CurrentPP <= small), x => KillBatch(new[] { x }, m.Card.Name)); });
+                { if (o.Id == "LOOT") Loot(p); else PickMonster(p, $"選擇 PP {small} 以下敵怪", enemy.Field.Where(x => ThresholdPP(x) <= small), x => KillBatch(new[] { x }, m.Card.Name)); });
                 break;
-            case "WCG-007": PickLowest(p, enemy.Field.Where(x => x.CurrentPP <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-007": PickLowest(p, enemy.Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-013": Resolve(() => Damage(enemy, 1, new(p,m.Card,m,"deploy")), () => Damage(p, 1, new(p,m.Card,m,"deploy"))); break;
             case "WCG-015": if (enemy.Field.Count > p.Field.Count) DrawMany(p, 1); break;
-            case "WCG-020": KillBatch(enemy.Field.Where(x => x.CurrentPP <= Low(1300)).ToArray(), m.Card.Name); break;
+            case "WCG-020": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(1300)).ToArray(), m.Card.Name); break;
             case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
             case "WCG-047": FreeHand(p, 1, 1); break;
@@ -53,14 +53,14 @@ public partial class GameEngine
             case "WCG-061": break;
             case "WCG-073": break;
             case "WCG-057": case "WCG-075": case "WCG-106": Heal(p, 1); break;
-            case "WCG-077": PickMonster(p, $"選擇 PP {High(2300)} 以上敵怪", enemy.Field.Where(x => x.CurrentPP >= High(2300)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-077": PickMonster(p, $"選擇 PP {High(2300)} 以上敵怪", enemy.Field.Where(x => ThresholdPP(x) >= High(2300)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-085": Damage(p, 1, new(p,m.Card,m,"deploy")); break;
             case "WCG-087": if (p.Graveyard.Count >= 5) Heal(p, 1); break;
-            case "WCG-091": KillBatch(enemy.Field.Where(x => x.CurrentPP <= Low(500)).ToArray(), m.Card.Name); break;
+            case "WCG-091": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name); break;
             case "WCG-100": Resolve(() => Heal(p, 2), () => Recover(p, int.MaxValue, 1)); break;
-            case "WCG-105": KillBatch(p.Field.Concat(enemy.Field).Where(x => x != m && x.CurrentPP <= Low(500)).ToArray(), m.Card.Name); break;
+            case "WCG-105": KillBatch(p.Field.Concat(enemy.Field).Where(x => x != m && ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name); break;
             case "WCG-112": if (LegacyCardRules) Dispel(p); else OptionalDispel(p, m); break;
-            case "WCG-117": PickLowest(p, enemy.Field.Where(x => x.CurrentPP <= Low(1000)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-117": PickLowest(p, enemy.Field.Where(x => ThresholdPP(x) <= Low(1000)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-202" when SimplifiedRules: Search(p, 2, _ => true); break;
             default: ExtraDeploy(p,m); break;
             // Remaining monsters are printed keywords, plain stats, continuous/event or death abilities.
@@ -137,7 +137,7 @@ public partial class GameEngine
             case "WCG-070": Heal(playerTarget ?? p, 1); break;
             case "WCG-072": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
             case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1,c); }); break;
-            case "WCG-008": KillBatch(p.Field.Concat(enemy.Field).Where(m => m.CurrentPP <= Low(500)).ToArray(), c.Name); break;
+            case "WCG-008": KillBatch(p.Field.Concat(enemy.Field).Where(m => ThresholdPP(m) <= Low(500)).ToArray(), c.Name); break;
             case "WCG-010": DrawMany(p, Math.Min(2, p.Field.Count)); break;
             case "WCG-064": case "WCG-012": case "WCG-032": case "WCG-076": case "WCG-082": case "WCG-084": case "WCG-088": KillTarget(); break;
             case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
@@ -161,11 +161,11 @@ public partial class GameEngine
             case "WCG-052": FreeHand(p, 2, 2); break;
             case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;
-            case "WCG-068": KillBatch(enemy.Field.Where(m => m.CurrentPP <= Low(700)).ToArray(), c.Name); break;
-            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => m.CurrentPP <= Low(CardBalanceHistory.CardFixesCatalog(_cardDb) ? 1000 : 700)).ToArray(), c.Name), () => Heal(p, 1)); break;
+            case "WCG-068": KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(700)).ToArray(), c.Name); break;
+            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(CardBalanceHistory.CardFixesCatalog(_cardDb) ? 1000 : 700)).ToArray(), c.Name), () => Heal(p, 1)); break;
             case "WCG-086": Resolve(KillTarget, () => DrawMany(p, 1)); break;
             case "WCG-090": Recover(p, int.MaxValue, 1); break;
-            case "WCG-092": KillBatch(p.Field.Concat(enemy.Field).Where(m => m.CurrentPP <= Low(800)).ToArray(), c.Name); break;
+            case "WCG-092": KillBatch(p.Field.Concat(enemy.Field).Where(m => ThresholdPP(m) <= Low(800)).ToArray(), c.Name); break;
             case "WCG-094": Resolve(KillTarget, () => Heal(p, 1)); break;
             case "WCG-098": KillBatch(p.Field.Concat(enemy.Field).ToArray(), c.Name); break;
             case "WCG-121": DrawMany(p, 1); break;
@@ -216,11 +216,11 @@ public partial class GameEngine
             case "WCG-016": PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-025": case "WCG-103": DrawMany(p, 1); break;
             case "WCG-043": case "WCG-108": Recover(p, 1, 1, grave); break;
-            case "WCG-080": KillBatch(enemy.Field.Where(x => x.CurrentPP <= Low(1000)).ToArray(), m.Card.Name); break;
-            case "WCG-083": PickMonster(p, $"腐爛食屍鬼陣亡：選擇 PP {Low(500)} 以下敵怪", enemy.Field.Where(x => x.CurrentPP <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-080": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(1000)).ToArray(), m.Card.Name); break;
+            case "WCG-083": PickMonster(p, $"腐爛食屍鬼陣亡：選擇 PP {Low(500)} 以下敵怪", enemy.Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-093": Revive(p, 2, grave, optional: true); break;
             case "WCG-131":FreeHand(p,2,1);break;
-            case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>x.CurrentPP<=Low(700)).ToArray(),m.Card.Name);break;
+            case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>ThresholdPP(x)<=Low(700)).ToArray(),m.Card.Name);break;
             case "WCG-172":TopEnergy(p);break;
             case "WCG-204" when SimplifiedRules: Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); Recover(p, 2, 1, grave); break;
             default: NewDeath(p, m, grave); break;

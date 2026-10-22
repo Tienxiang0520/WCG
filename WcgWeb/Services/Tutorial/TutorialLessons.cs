@@ -413,7 +413,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "三段門檻", Spot = ["enemy-card:WCG-157", "enemy-card:WCG-101"],
-                    Text = "卡牌上的 PP 門檻只有三種：PP 900 以下、PP 1200 以下、PP 1800 以上。門檻看卡上數值加上目前加成。" },
+                    Text = "卡牌上的 PP 門檻只有三種：PP 900 以下、PP 1200 以下、PP 1800 以上。門檻只看怪物卡上印的 PP，不計加成與減益。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
                     Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Settled(e),
                     Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾指示物會擋下這次消滅並被移除。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],

@@ -157,7 +157,7 @@ public partial class GameEngine
         if (damage - GuardReduction(e,damage) >= e.Hp && face.Length > 0) return Attack(p, face.OrderByDescending(m => m.CurrentDP).First());
         if (!prof.BurnLethal) return false;
         int Burn(CardInstance c) => !CanPlayCard(p, c) ? 0 : c.Card.Id switch
-        { "WCG-014" => 1, "WCG-006" => 2, "WCG-017" or "WCG-123" => 1, "WCG-013" => p.Hp > 1 ? 1 : 0, "WCG-170" => e.Field.All(m => m.CurrentPP <= SkyfireLimit()) ? 2 : 0, _ => 0 };
+        { "WCG-014" => 1, "WCG-006" => 2, "WCG-017" or "WCG-123" => 1, "WCG-013" => p.Hp > 1 ? 1 : 0, "WCG-170" => e.Field.All(m => ThresholdPP(m) <= SkyfireLimit()) ? 2 : 0, _ => 0 };
         var burn = p.Hand.Select(c => (card: c, dmg: Burn(c))).Where(x => x.dmg > 0).OrderByDescending(x => x.dmg).FirstOrDefault();
         if (burn.card != null && damage + burn.dmg >= e.Hp)
         {
@@ -346,7 +346,7 @@ public partial class GameEngine
             "WCG-092" => Sum(e.Field.Where(m => m.CurrentPP <= 800)) - Sum(p.Field.Where(m => m.CurrentPP <= 800)) - 2,
             "WCG-008" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)) - 2,
             "WCG-038" => Sum(e.Field.Where(m => m.Card.TotalCost <= 2)) - Sum(p.Field.Where(m => m.Card.TotalCost <= 2)) - 2,
-            "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => m.CurrentPP <= SkyfireLimit())) - 2,
+            "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => ThresholdPP(m) <= SkyfireLimit())) - 2,
             "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= 1500)) - Sum(p.Field.Where(m => m.CurrentPP >= 1500)) + (p.Hp < 7 ? 2 : 0) - 2,
             "WCG-173" => Sum(e.Field) - Sum(p.Field) + 2,
             "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? 5 : -1,

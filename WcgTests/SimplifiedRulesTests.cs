@@ -12,7 +12,9 @@ public class SimplifiedRulesTests
     public SimplifiedRulesTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
     private GameEngine Game(CardDatabase? db=null){db??=cards;var g=new GameEngine(db,new Random(17));g.StartGame(db.PresetDecks[0],db.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();}for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));return g;}
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
-    private MonsterInstance Unit(PlayerState p,int n,int slot,int? pp=null,CardDatabase? db=null){db??=cards;var m=new MonsterInstance(db.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};if(pp!=null)m.CurrentPP=pp.Value;p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
+    private MonsterInstance Unit(PlayerState p,int n,int slot,int? pp=null,CardDatabase? db=null){db??=cards;var card=db.GetCard($"WCG-{n:000}")!;if(pp!=null)card=Printed(card,pp.Value);var m=new MonsterInstance(card){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
+    // PP thresholds read the printed PP, so a test monster with another PP gets its own printed copy of the card.
+    private static CardDefinition Printed(CardDefinition c,int pp){var copy=System.Text.Json.JsonSerializer.Deserialize<CardDefinition>(System.Text.Json.JsonSerializer.Serialize(c))!;copy.PP=pp;return copy;}
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
     private static void Choose(GameEngine g,Func<ChoiceOption,bool> pick)=>Assert.True(g.SelectChoice(g.CurrentPendingChoice!.Options.First(pick)));
     // Computer's turn without running its AI: tests drive the computer's attacks directly.

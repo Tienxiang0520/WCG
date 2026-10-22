@@ -297,16 +297,16 @@ public partial class GameEngine
     {
         var enemy = GetOpponent(p).Field; IEnumerable<MonsterInstance> candidates = c.Id switch
         {
-            "WCG-002" or "WCG-086" => enemy.Where(m => m.CurrentPP <= Low(1000)),
+            "WCG-002" or "WCG-086" => enemy.Where(m => ThresholdPP(m) <= Low(1000)),
             "WCG-012" or "WCG-064" => enemy.Where(m => m.Card.TotalCost <= 2),
-            "WCG-004" or "WCG-046" => enemy.Where(m => m.CurrentPP <= Low(500)),
-            "WCG-048" => enemy.Where(m => m.CurrentPP <= p.Field.Count * 500),
+            "WCG-004" or "WCG-046" => enemy.Where(m => ThresholdPP(m) <= Low(500)),
+            "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * 500),
             "WCG-024" or "WCG-137" or "WCG-184" => enemy,
             "WCG-062" or "WCG-074" => p.Field.Where(CanShield),
-            "WCG-032" when ReasonBuff => enemy.Where(m => m.CurrentPP <= (m.IsTapped ? 2300 : 1600)),
-            "WCG-017" or "WCG-032" => enemy.Where(m => m.CurrentPP <= Low(1700)),
-            "WCG-082" or "WCG-084" => enemy.Where(m => m.CurrentPP <= Low(1300)),
-            "WCG-076" => enemy.Where(m => m.CurrentPP >= High(1700)),
+            "WCG-032" when ReasonBuff => enemy.Where(m => ThresholdPP(m) <= (m.IsTapped ? 2300 : 1600)),
+            "WCG-017" or "WCG-032" => enemy.Where(m => ThresholdPP(m) <= Low(1700)),
+            "WCG-082" or "WCG-084" => enemy.Where(m => ThresholdPP(m) <= Low(1300)),
+            "WCG-076" => enemy.Where(m => ThresholdPP(m) >= High(1700)),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => enemy,
             "WCG-036" or "WCG-135" => p.Field,
             "WCG-141" when !LegacyCardRules => p.Field,
@@ -442,7 +442,7 @@ public partial class GameEngine
         _effects.AddLast(() =>
         {
             foreach (var juggler in p.Field.Where(x => x != m && !x.IsSilenced && x.Card.Id == "WCG-107").ToArray())
-                _effects.AddLast(() => PickLowest(p, GetOpponent(p).Field.Where(x => x.CurrentPP <= Low(500)), x => KillBatch(new[] { x }, "飛刀投擲手")));
+                _effects.AddLast(() => PickLowest(p, GetOpponent(p).Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, "飛刀投擲手")));
         });
     }
     private void UsedSpell(PlayerState p, CardDefinition? spell = null)

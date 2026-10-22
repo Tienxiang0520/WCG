@@ -11,7 +11,7 @@ source: WcgWeb/Data/cards.json
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
-> 規則與名詞（進場、陣亡、犧牲、能量護盾、箭頭等）以 `規則.md` 為準。
+> 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
 類型：怪物 158 張、法術 85 張、法術（反擊） 9 張、結界 11 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。

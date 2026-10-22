@@ -159,9 +159,8 @@ public class CardTextClarityTests
     }
     [Fact] public void ScoutDestroysAfterAttackingThePlayer()
     {
-        var g=Game();var scout=Unit(g.Player,136,0);var tiny=Unit(g.Computer,101,2);
-        // 101 is 1000 PP; 正義壓制 brings it to 500 so the scout has a legal victim (<= 900 PP).
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,168),tiny));Assert.Equal(500,tiny.CurrentPP);
+        var g=Game();var scout=Unit(g.Player,136,0);var tiny=Unit(g.Computer,23,2);
+        // 023 is printed 800 PP, a legal victim (<= 900 PP); thresholds read the printed PP, so a PP penalty would not help.
         Assert.True(g.Attack(g.Player,scout));Assert.NotNull(g.CurrentPendingTarget);Assert.True(g.SelectTarget(tiny));Assert.DoesNotContain(tiny,g.Computer.Field);
     }
     [Theory] [InlineData(false)] [InlineData(true)]

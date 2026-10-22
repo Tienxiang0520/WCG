@@ -29,8 +29,10 @@ public sealed class CardFixesTests
     private MonsterInstance Unit(PlayerState p, string id, int slot, int? pp = null, CardDatabase? db = null)
     {
         db ??= cards;
-        var m = new MonsterInstance(db.GetCard(id)!) { Slot = slot, IsTapped = false, HasSummoningSickness = false };
-        if (pp != null) m.CurrentPP = pp.Value;
+        var card = db.GetCard(id)!;
+        // PP thresholds read the printed PP, so a test monster with another PP gets its own printed copy of the card.
+        if (pp != null) { card = System.Text.Json.JsonSerializer.Deserialize<CardDefinition>(System.Text.Json.JsonSerializer.Serialize(card))!; card.PP = pp.Value; }
+        var m = new MonsterInstance(card) { Slot = slot, IsTapped = false, HasSummoningSickness = false };
         p.Field.Add(m);
         p.Field.Sort((a, b) => a.Slot.CompareTo(b.Slot));
         return m;
@@ -138,5 +140,30 @@ public sealed class CardFixesTests
         Assert.DoesNotContain(taunt1900, g.Computer.Field);
         Assert.DoesNotContain(big2300, g.Computer.Field);
         Assert.Contains(big2400, g.Computer.Field);
+    }
+
+    // From the 2026-10-22 catalog, PP thresholds check the printed PP only; bonuses and penalties don't move a monster across them.
+    [Fact]
+    public void PpThresholdsIgnoreBonusesAndOldEraStillCountsThem()
+    {
+        var g = Game();
+        Assert.True(g.PrintedPpThresholds);
+        var buffed = Unit(g.Computer, "WCG-101", 0); buffed.CurrentPP = 1500;   // printed 1000, +500
+        var weakened = Unit(g.Computer, "WCG-055", 1); weakened.CurrentPP = 1100; // printed 1900, -800
+        var strangle = new CardInstance(cards.GetCard("WCG-246")!); g.Player.Hand.Add(strangle);
+        Assert.False(g.CastSpellAt(g.Player, strangle, weakened));
+        Assert.True(g.CastSpellAt(g.Player, strangle, buffed));
+        Assert.DoesNotContain(buffed, g.Computer.Field);
+
+        var gaia = Unit(g.Player, "WCG-059", 0);
+        var taunt = Unit(g.Computer, "WCG-113", 2, 1800); taunt.CurrentPP = 2500;
+        Assert.True(g.CanAttackPlayer(gaia));
+
+        var old = CardBalanceHistory.BeforeCardFixes(cards);
+        var o = Game(old);
+        Assert.False(o.PrintedPpThresholds);
+        var oldBuffed = Unit(o.Computer, "WCG-101", 0, db: old); oldBuffed.CurrentPP = 1500;
+        var oldStrangle = new CardInstance(old.GetCard("WCG-246")!); o.Player.Hand.Add(oldStrangle);
+        Assert.False(o.CastSpellAt(o.Player, oldStrangle, oldBuffed));
     }
 }
