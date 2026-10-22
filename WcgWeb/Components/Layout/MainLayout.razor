@@ -17,6 +17,11 @@
         </article>
     </main>
 </div>
+@* Phone gate: shown instead of the game on phone-sized touch screens (rule in wcg.css and SoulOath.Static/wwwroot/phone-gate.js). *@
+<div class="phone-gate" role="alert">
+    <p class="phone-gate-title">@L["魂誓"]</p>
+    <p>@L["本遊戲目前只支援平板與電腦，請改用大螢幕遊玩"]</p>
+</div>
 @* Outside the language-keyed subtree so 「稍後再說」 survives a language switch. *@
 <WcgWeb.Components.Tutorial.TutorialPrompt />
 

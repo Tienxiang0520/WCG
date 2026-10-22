@@ -1087,3 +1087,17 @@ html[data-wcg-motion="reduced"] .coach-notice, html[data-wcg-motion="reduced"] .
 @media (max-width: 600px) {
     :root:lang(en) .tutorial-game .coach-body:not(.coach-complete):not(.coach-failed) h2 { white-space: normal; overflow: hidden; font-size: .86rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
 }
+
+/* Phone gate: only tablets and computers are supported. A touch-first device (coarse primary pointer) whose shorter
+   viewport side is under 600 CSS px sees a notice instead of the game. Mouse/trackpad windows are never gated.
+   Keep in sync with SoulOath.Static/wwwroot/phone-gate.js. The mobile layout rules stay in place, only hidden. */
+.phone-gate { display: none; }
+@media (pointer: coarse) and (max-width: 599.98px), (pointer: coarse) and (max-height: 599.98px) {
+    .phone-gate {
+        display: flex; position: fixed; inset: 0; z-index: 3000; flex-direction: column; align-items: center; justify-content: center;
+        padding: 2rem 1.5rem; text-align: center; background: #090b11; color: #ece5d6;
+    }
+    .phone-gate p { margin: .4rem 0; max-width: 24rem; color: #b9b3a6; }
+    .phone-gate .phone-gate-title { font-size: 2rem; letter-spacing: .3em; text-indent: .3em; color: #f3dca3; }
+    .page, .tutorial-prompt-shade { display: none !important; }
+}
