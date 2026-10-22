@@ -133,7 +133,7 @@ public sealed class RankedTests : IDisposable
         var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
         Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
         Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).Concat(restored.Engine.Player.EnergyZone).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
-        Assert.Equal(4,cards.GetCard("WCG-185")!.TotalCost);Assert.Equal(4,cards.GetCard("WCG-190")!.TotalCost);
+        Assert.Equal(4,cards.GetCard("WCG-185")!.TotalCost);Assert.Equal(3,cards.GetCard("WCG-190")!.TotalCost);
         Assert.True(Send(restored,"surrender").Success);Assert.True(restored.Start(deck).Success);
         Assert.Empty(restored.BalanceNotice);
         Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
@@ -416,8 +416,9 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
         Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
         var arrow=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-082");
-        Assert.Equal(3,arrow.Card.TotalCost);
-        Assert.Equal(3,cards.GetCard("WCG-082")!.TotalCost);
+        Assert.Equal(2,arrow.Card.TotalCost);
+        Assert.Equal(2,cards.GetCard("WCG-082")!.TotalCost);
+        Assert.Equal(3,CounterHistory.BeforeCardFixes(cards).GetCard("WCG-082")!.TotalCost);
         Assert.Equal(8,cards.GetCard("WCG-160")!.TotalCost);
     }
 

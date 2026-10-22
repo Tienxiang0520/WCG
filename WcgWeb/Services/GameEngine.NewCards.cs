@@ -83,7 +83,7 @@ public partial class GameEngine
             "WCG-207" => enemy.Where(m => m.IsTaunt && m.CurrentPP >= 1800).ToList(),
             "WCG-220" or "WCG-221" => p.Field.ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
-            "WCG-246" => enemy.Where(m => m.CurrentPP <= 1100).ToList(),
+            "WCG-246" => enemy.Where(m => m.CurrentPP <= Low(1100)).ToList(),
             "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => x.CurrentPP < m.CurrentPP)).ToList(),
             _ => null
         };

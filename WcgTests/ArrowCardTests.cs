@@ -42,7 +42,7 @@ public class ArrowCardTests
     public void SideArrowsBoostBothAdjacentAllies(int id,int bonus)
     {
         var g=Game();var left=Unit(g.Player,101,1);var src=Unit(g.Player,id,2);var right=Unit(g.Player,154,3);var far=Unit(g.Player,101,4);var foe=Unit(g.Computer,101,2);Refresh(g);
-        Assert.Equal(700+bonus,left.CurrentPP);Assert.Equal(1300+bonus,right.CurrentPP);Assert.Equal(700,far.CurrentPP);Assert.Equal(700,foe.CurrentPP);
+        Assert.Equal(1000+bonus,left.CurrentPP);Assert.Equal(1300+bonus,right.CurrentPP);Assert.Equal(1000,far.CurrentPP);Assert.Equal(1000,foe.CurrentPP);
         Assert.Equal(src.Card.PP,src.CurrentPP);
     }
     [Fact] public void UpArrowWeakensOnlyTheEnemyStraightAhead()
@@ -53,12 +53,12 @@ public class ArrowCardTests
     [Fact] public void SilenceTurnsAurasOffAndArrowCardsDoNotGrantShields()
     {
         var g=Game();var src=Unit(g.Player,49,1);var t=Unit(g.Player,101,2);Refresh(g);
-        Assert.Equal(900,t.CurrentPP);Assert.False(t.HasShield);
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,72),src));Assert.True(src.IsSilenced);Assert.Equal(700,t.CurrentPP);
+        Assert.Equal(1200,t.CurrentPP);Assert.False(t.HasShield);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,72),src));Assert.True(src.IsSilenced);Assert.Equal(1000,t.CurrentPP);
     }
     [Fact] public void AuraEndsWhenTheSourceLeaves()
     {
-        var g=Game();var src=Unit(g.Player,5,1);var t=Unit(g.Player,101,0);Refresh(g);Assert.Equal(900,t.CurrentPP);g.Player.Field.Remove(src);Refresh(g);Assert.Equal(700,t.CurrentPP);
+        var g=Game();var src=Unit(g.Player,5,1);var t=Unit(g.Player,101,0);Refresh(g);Assert.Equal(1200,t.CurrentPP);g.Player.Field.Remove(src);Refresh(g);Assert.Equal(1000,t.CurrentPP);
     }
     [Theory] [InlineData(true,2)] [InlineData(false,1)]
     public void ApprenticeDrawsTwoBetweenTwoAllies(bool both,int draws)
@@ -75,7 +75,7 @@ public class ArrowCardTests
     [Fact] public void VanillaCardsHaveNoPositionalEffects()
     {
         var g=Game();var small=Unit(g.Computer,101,0);var ally=Unit(g.Player,101,3);Unit(g.Player,114,2);Unit(g.Player,157,1);Refresh(g);
-        Summon(g,156,4);Assert.Contains(small,g.Computer.Field);Assert.Equal(700,ally.CurrentPP);
+        Summon(g,156,4);Assert.Contains(small,g.Computer.Field);Assert.Equal(1000,ally.CurrentPP);
     }
     [Fact] public void PreArrowCatalogKeepsTheOldCards()
     {
@@ -83,7 +83,7 @@ public class ArrowCardTests
         Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-085"],prior.Keys.Order(StringComparer.Ordinal));
         var old=new CardDatabase(JsonSerializer.Serialize(cards.AllCards.Select(c=>prior.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(cards.PresetDecks));
         var g=Game(old);var foe=Unit(g.Computer,101,2,old);var left=Unit(g.Player,101,3,old);Unit(g.Player,5,4,old);Unit(g.Player,49,0,old);var mid=Unit(g.Player,101,1,old);Refresh(g);
-        Assert.Equal(700,left.CurrentPP);Assert.Equal(700,mid.CurrentPP);
+        Assert.Equal(1000,left.CurrentPP);Assert.Equal(1000,mid.CurrentPP);
         var c=Hand(g,33,old);Assert.True(g.SummonMonster(g.Player,c));Finish(g,2);Assert.False(foe.IsTapped);
     }
 }

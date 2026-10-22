@@ -18,11 +18,12 @@ public class MageDirectTests
 
     [Fact] public void TextsChangedAndOldEraKeepsTheOldTexts()
     {
-        Assert.Equal("進場：將 1 隻直立的敵方怪物橫置，然後抽 1 張牌。",cards.GetCard("WCG-029")!.Text);
-        Assert.Equal("進場：你可以將 1 隻敵方怪物移回手牌，然後將所有敵方怪物橫置。",cards.GetCard("WCG-035")!.Text);
+        var now=CardBalanceHistory.BeforeCardFixes(cards);
+        Assert.Equal("進場：將 1 隻直立的敵方怪物橫置，然後抽 1 張牌。",now.GetCard("WCG-029")!.Text);
+        Assert.Equal("進場：你可以將 1 隻敵方怪物移回手牌，然後將所有敵方怪物橫置。",now.GetCard("WCG-035")!.Text);
         var old=CardBalanceHistory.BeforeMageDirect(cards);
         Assert.StartsWith("每當此怪物交戰後",old.GetCard("WCG-029")!.Text);Assert.Contains("已橫置",old.GetCard("WCG-035")!.Text);
-        foreach(var id in new[]{"WCG-029","WCG-035"}){Assert.Equal(old.GetCard(id)!.PP,cards.GetCard(id)!.PP);Assert.Equal(old.GetCard(id)!.TotalCost,cards.GetCard(id)!.TotalCost);}
+        foreach(var id in new[]{"WCG-029","WCG-035"}){Assert.Equal(old.GetCard(id)!.PP,now.GetCard(id)!.PP);Assert.Equal(old.GetCard(id)!.TotalCost,now.GetCard(id)!.TotalCost);}
         Assert.True(CardBalanceHistory.MageDirectCatalog(cards));Assert.False(CardBalanceHistory.MageDirectCatalog(old));
     }
 

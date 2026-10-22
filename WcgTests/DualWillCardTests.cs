@@ -16,7 +16,7 @@ public class DualWillCardTests
     [Theory, MemberData(nameof(Changed))]
     public void CardIsDualNowAndSingleInOldCatalog(string id,string oldWill,string a,string b)
     {
-        var now=cards.GetCard(id)!;Assert.True(now.IsDual);Assert.Equal(new[]{a,b}.Order(),now.Wills.Order());
+        var now=CardBalanceHistory.BeforeCardFixes(cards).GetCard(id)!;Assert.True(now.IsDual);Assert.Equal(new[]{a,b}.Order(),now.Wills.Order());
         var old=CounterHistory.BeforeDualWill(cards).GetCard(id)!;Assert.False(old.IsDual);Assert.Equal(oldWill,old.Will);
         Assert.Equal(CardBalanceHistory.BeforeShieldPp(cards).GetCard(id)!.PP,old.PP);Assert.Equal(CounterHistory.BeforeShieldCounter(cards).GetCard(id)!.Text,old.Text);Assert.Equal(now.TotalCost,old.TotalCost);
         var runtime=CardBalanceHistory.BeforeDualWill(cards).GetCard(id)!;Assert.Equal(oldWill,runtime.Will);Assert.False(runtime.IsDual);

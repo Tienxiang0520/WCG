@@ -18,12 +18,11 @@ public class ReasonBuffTests
 
     [Fact] public void AbilityMonstersStayBelowTheVanillaCurve()
     {
-        int[] vanilla=[0,700,1300,1600,2000,2300,2600,2900,3200,3500];
+        int[] vanilla=[0,1000,1300,1600,1900,2300,2600,2900,3200,3500];
         foreach(var id in new[]{"WCG-023","WCG-033","WCG-163","WCG-202","WCG-229","WCG-251","WCG-258","WCG-261","WCG-262"})
         {var c=cards.GetCard(id)!;Assert.True(c.PP<vanilla[c.TotalCost],id);}
-        Assert.True(1800+700<2600); // 智識巨靈 at its cap stays below the 6-cost vanilla
-        Assert.Equal(1100,cards.GetCard("WCG-251")!.PP);Assert.True(cards.GetCard("WCG-251")!.HasTaunt);
-        Assert.Equal(1100,cards.GetCard("WCG-258")!.PP);Assert.True(cards.GetCard("WCG-258")!.HasTaunt);
+        Assert.Equal(1300,cards.GetCard("WCG-251")!.PP);Assert.True(cards.GetCard("WCG-251")!.HasTaunt);
+        Assert.Equal(1300,cards.GetCard("WCG-258")!.PP);Assert.True(cards.GetCard("WCG-258")!.HasTaunt);
     }
 
     [Fact] public void OldEraKeepsTheOldCardsAndHasNoNewOnes()
@@ -86,9 +85,9 @@ public class ReasonBuffTests
 
     [Fact] public void LoreColossusGrowsWithHandSizeUpTo700()
     {
-        var g=Game();var giant=Unit(g.Player,262,0);Refresh(g);Assert.Equal(1800,giant.CurrentPP);
-        for(int i=0;i<3;i++)Hand(g,101);Refresh(g);Assert.Equal(2100,giant.CurrentPP);
-        for(int i=0;i<6;i++)Hand(g,101);Refresh(g);Assert.Equal(2500,giant.CurrentPP);
+        var g=Game();var giant=Unit(g.Player,262,0);Refresh(g);Assert.Equal(2100,giant.CurrentPP);
+        for(int i=0;i<3;i++)Hand(g,101);Refresh(g);Assert.Equal(2400,giant.CurrentPP);
+        for(int i=0;i<6;i++)Hand(g,101);Refresh(g);Assert.Equal(2800,giant.CurrentPP);
     }
 
     [Fact] public void WordOfDenialNegatesAnEnemySpellFromHand()

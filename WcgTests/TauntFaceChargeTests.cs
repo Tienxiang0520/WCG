@@ -19,7 +19,7 @@ public sealed class TauntFaceChargeTests
     [InlineData("WCG-079",2400,2000)][InlineData("WCG-171",2600,2300)][InlineData("WCG-179",2800,2700)]
     public void TauntShieldCardsDropPpOnly(string id,int oldPp,int newPp)
     {
-        var now=cards.GetCard(id)!;var old=CardBalanceHistory.BeforeTauntFaceCharge(cards).GetCard(id)!;
+        var now=CardBalanceHistory.BeforeCardFixes(cards).GetCard(id)!;var old=CardBalanceHistory.BeforeTauntFaceCharge(cards).GetCard(id)!;
         Assert.True(now.HasTaunt);Assert.Equal(newPp,now.PP);Assert.Equal(oldPp,old.PP);
         Assert.Equal(old.TotalCost,now.TotalCost);Assert.Equal(old.Text,now.Text);Assert.Equal(old.DP,now.DP);
         Assert.True(now.PP<=Vanilla[now.TotalCost]-400);

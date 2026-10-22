@@ -41,17 +41,17 @@ public class TrainingTests
     {
         var(g,b)=Game();Assert.True(Edit(b,"training-place",new(CardId:"WCG-061",Slot:0)).Success);Assert.True(Edit(b,"training-place",new(CardId:"WCG-101",Slot:1)).Success);
         Assert.True(Edit(b,"training-hand",new(CardId:"WCG-135")).Success);Assert.True(Edit(b,"training-resources",new(Hp:3,TotalEnergy:8,AvailableEnergy:5)).Success);
-        var target=g.Player.Field.Single(m=>m.Card.Id=="WCG-101");var buff=g.Player.Hand.Last();Assert.True(g.CastSpellAt(g.Player,buff,target));Assert.Equal(1200,target.CurrentPP);Assert.True(target.HasShield);
+        var target=g.Player.Field.Single(m=>m.Card.Id=="WCG-101");var buff=g.Player.Hand.Last();Assert.True(g.CastSpellAt(g.Player,buff,target));Assert.Equal(1500,target.CurrentPP);Assert.True(target.HasShield);
         var saved=g.ExportTrainingScene();var oldMatch=g.MatchId;
         for(var i=0;i<2;i++)
         {
             Assert.True(Edit(b,"training-grave",id:g.Player.Field.Single(m=>m.Card.Id=="WCG-101").InstanceId).Success);
             Assert.True(Edit(b,"training-restore",new(Scene:saved)).Success);Assert.NotEqual(oldMatch,g.MatchId);oldMatch=g.MatchId;
-            target=g.Player.Field.Single(m=>m.Card.Id=="WCG-101");Assert.Equal(700,target.BasePP);Assert.Equal(1200,target.CurrentPP);Assert.True(target.HasShield);Assert.Single(target.Attachments);
+            target=g.Player.Field.Single(m=>m.Card.Id=="WCG-101");Assert.Equal(1000,target.BasePP);Assert.Equal(1500,target.CurrentPP);Assert.True(target.HasShield);Assert.Single(target.Attachments);
             Assert.Equal(3,g.Player.Hp);Assert.Equal(8,g.Player.TotalEnergy);Assert.Same(cards.GetCard("WCG-101"),target.Card);
             Assert.All(g.Player.Hand,c=>Assert.Same(cards.GetCard(c.Card.Id),c.Card));
         }
-        var fresh=GameEngine.CreateTraining(cards);var freshBridge=new BattleBridge(fresh,decks);Assert.True(Edit(freshBridge,"training-restore",new(Scene:saved)).Success);Assert.Equal(1200,fresh.Player.Field.Single(m=>m.Card.Id=="WCG-101").CurrentPP);
+        var fresh=GameEngine.CreateTraining(cards);var freshBridge=new BattleBridge(fresh,decks);Assert.True(Edit(freshBridge,"training-restore",new(Scene:saved)).Success);Assert.Equal(1500,fresh.Player.Field.Single(m=>m.Card.Id=="WCG-101").CurrentPP);
     }
     [Fact]public void InvalidEditsAndCorruptScenesKeepCurrentMatch()
     {

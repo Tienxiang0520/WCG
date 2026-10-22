@@ -35,7 +35,7 @@ public class NewCardTests
     // Design rule: any monster with an ability or keyword has PP below the same-cost vanilla curve.
     [Fact] public void AbilityMonstersStayBelowTheVanillaCurve()
     {
-        var vanilla=new Dictionary<int,int>{[1]=700,[2]=1300,[3]=1600,[4]=2000,[5]=2300,[6]=2600,[7]=2900,[8]=3200,[9]=3500};
+        var vanilla=new Dictionary<int,int>{[1]=1000,[2]=1300,[3]=1600,[4]=1900,[5]=2300,[6]=2600,[7]=2900,[8]=3200,[9]=3500};
         var over=cards.AllCards.Where(c=>c.IsMonster&&c.Text.Trim() is not (""or"無"or"無。")&&vanilla.ContainsKey(c.TotalCost)&&(c.PP??0)>=vanilla[c.TotalCost]).Select(c=>c.Id).ToList();
         Assert.Empty(over);
     }
@@ -123,8 +123,8 @@ public class NewCardTests
     }
     [Fact] public void PhalanxCaptainBuffsOnlyWithAFullBoard()
     {
-        var g=Game();Unit(g.Player,219,0);var a=Unit(g.Player,101,1);Unit(g.Player,101,2);Unit(g.Player,101,3);Refresh(g);Assert.Equal(700,a.CurrentPP);
-        Structure(g.Player,231,4);Refresh(g);Assert.Equal(1000,a.CurrentPP);
+        var g=Game();Unit(g.Player,219,0);var a=Unit(g.Player,101,1);Unit(g.Player,101,2);Unit(g.Player,101,3);Refresh(g);Assert.Equal(1000,a.CurrentPP);
+        Structure(g.Player,231,4);Refresh(g);Assert.Equal(1300,a.CurrentPP);
     }
 
     // ---- C 戰紋巨獸：附著 ----
@@ -166,8 +166,8 @@ public class NewCardTests
     // ---- E 孤狼劍道：空格獎勵 ----
     [Fact] public void LoneSwordmasterGainsPowerPerEmptySlot()
     {
-        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1900+4*300,m.CurrentPP);
-        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1900+2*300,m.CurrentPP);
+        var g=Game();var m=Unit(g.Player,228,0);Refresh(g);Assert.Equal(1800+4*300,m.CurrentPP);
+        Unit(g.Player,101,1);Structure(g.Player,231,2);Refresh(g);Assert.Equal(1800+2*300,m.CurrentPP);
     }
     // 2026-10-17 理智加強: enemy spells can never target it, alone or not; its owner's spells still can.
     [Fact] public void VoidHermitCannotBeTargetedByEnemySpells()

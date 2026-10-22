@@ -36,7 +36,7 @@ public class CardTextClarityTests
         foreach(var id in new[]{"WCG-143","WCG-165","WCG-168"})Assert.Contains("它交戰後，此卡送入墓地",cards.GetCard(id)!.Text);
         Assert.Contains("你可以從墓地免費召喚",cards.GetCard("WCG-097")!.Text);
         Assert.StartsWith("進場：你可以",cards.GetCard("WCG-112")!.Text);Assert.Equal(cards.GetCard("WCG-112")!.Text,cards.GetCard("WCG-134")!.Text);
-        Assert.Equal(900,cards.GetCard("WCG-147")!.PP); // 800 until the 2026-10-17 聖盾 PP restore
+        Assert.Equal(1300,cards.GetCard("WCG-147")!.PP); // 800 until the 2026-10-17 聖盾 PP restore, 900 until the 2026-10-22 curve update
         var en=JsonSerializer.Deserialize<Dictionary<string,JsonElement>>(File.ReadAllText(Path.Combine(root,"i18n/cards.en.json")))!;
         Assert.All(en.Values,v=>{var t=v.GetProperty("text").GetString()!;Assert.DoesNotContain("Departure",t);Assert.DoesNotContain("without paying",t);Assert.DoesNotContain("in combat for",t);});
         Assert.Equal(15,cards.AllCards.Count(c=>c.IsVanilla));
@@ -85,7 +85,7 @@ public class CardTextClarityTests
         Assert.DoesNotContain(prior,p=>p.Text=="無。");
     }
 
-    [Theory] [InlineData(false,5,3)] [InlineData(true,4,2)]
+    [Theory] [InlineData(false,5,4)] [InlineData(true,4,3)]
     public void SacrificeCountsAsDestroyed(bool legacy,int hp,int drawn)
     {
         var g=Game(legacy);g.Player.Hp=5;Unit(g.Player,11,0);Unit(g.Player,99,1);var victim=Unit(g.Player,3,2);var deck=g.Player.Deck.Count;
@@ -160,8 +160,8 @@ public class CardTextClarityTests
     [Fact] public void ScoutDestroysAfterAttackingThePlayer()
     {
         var g=Game();var scout=Unit(g.Player,136,0);var tiny=Unit(g.Computer,101,2);
-        // 101 is 700 PP; 正義壓制 brings it to 200 so the scout has a legal victim.
-        Assert.True(g.CastSpellAt(g.Player,Hand(g,168),tiny));Assert.Equal(200,tiny.CurrentPP);
+        // 101 is 1000 PP; 正義壓制 brings it to 500 so the scout has a legal victim (<= 900 PP).
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,168),tiny));Assert.Equal(500,tiny.CurrentPP);
         Assert.True(g.Attack(g.Player,scout));Assert.NotNull(g.CurrentPendingTarget);Assert.True(g.SelectTarget(tiny));Assert.DoesNotContain(tiny,g.Computer.Field);
     }
     [Theory] [InlineData(false)] [InlineData(true)]

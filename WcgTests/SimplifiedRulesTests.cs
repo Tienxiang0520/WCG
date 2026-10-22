@@ -10,9 +10,9 @@ public class SimplifiedRulesTests
 {
     private readonly CardDatabase cards;
     public SimplifiedRulesTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
-    private GameEngine Game(CardDatabase? db=null){db??=cards;var g=new GameEngine(db,new Random(17));g.StartGame(db.PresetDecks[0],db.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();}for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));return g;}
+    private GameEngine Game(CardDatabase? db=null){db??=cards;var g=new GameEngine(db,new Random(17));g.StartGame(db.PresetDecks[0],db.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();}for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));return g;}
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
-    private MonsterInstance Unit(PlayerState p,int n,int slot,int? pp=null){var m=new MonsterInstance(cards.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};if(pp!=null)m.CurrentPP=pp.Value;p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
+    private MonsterInstance Unit(PlayerState p,int n,int slot,int? pp=null,CardDatabase? db=null){db??=cards;var m=new MonsterInstance(db.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};if(pp!=null)m.CurrentPP=pp.Value;p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
     private static void Choose(GameEngine g,Func<ChoiceOption,bool> pick)=>Assert.True(g.SelectChoice(g.CurrentPendingChoice!.Options.First(pick)));
     // Computer's turn without running its AI: tests drive the computer's attacks directly.
@@ -46,8 +46,8 @@ public class SimplifiedRulesTests
     }
 
     [Theory]
-    [InlineData(4,600,true)] [InlineData(4,700,false)]
-    [InlineData(2,1100,true)] [InlineData(2,1200,false)]
+    [InlineData(4,900,true)] [InlineData(4,1000,false)]
+    [InlineData(2,1200,true)] [InlineData(2,1300,false)]
     [InlineData(32,1600,true)] [InlineData(32,1700,false)]
     [InlineData(76,1800,true)] [InlineData(76,1700,false)]
     public void PrintedThresholdsUseThreeLevels(int spell,int pp,bool legal)
@@ -59,7 +59,7 @@ public class SimplifiedRulesTests
 
     [Fact] public void AreaThresholdsUseThreeLevels()
     {
-        var g=Game();var low=Unit(g.Computer,101,0,600);var mid=Unit(g.Computer,101,1,650);
+        var g=Game();var low=Unit(g.Computer,101,0,900);var mid=Unit(g.Computer,101,1,950);
         Assert.True(g.CastSpell(g.Player,Hand(g,68)));Assert.DoesNotContain(low,g.Computer.Field);Assert.Contains(mid,g.Computer.Field);
     }
 
@@ -74,10 +74,11 @@ public class SimplifiedRulesTests
 
     [Fact] public void FixedAttackAndCombatBonusesReplaceEnergyKeywords()
     {
-        var g=Game();var breaker=Unit(g.Player,201,0);Refresh(g);var hp=g.Computer.Hp;var energy=g.Player.AvailableEnergy;
+        var old=CardBalanceHistory.BeforeCardFixes(cards);
+        var g=Game(old);var breaker=Unit(g.Player,201,0,db:old);Refresh(g);var hp=g.Computer.Hp;var energy=g.Player.AvailableEnergy;
         Assert.Equal(2,g.PreviewAttack(breaker)!.PlayerDamage);
         Assert.True(g.Attack(g.Player,breaker));Assert.False(g.IsWaiting);Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(1,breaker.CurrentDP);
-        var beast=Unit(g.Player,203,1);var yeti=Unit(g.Computer,114,2);Refresh(g);
+        var beast=Unit(g.Player,203,1,db:old);var yeti=Unit(g.Computer,114,2,db:old);Refresh(g);
         Assert.True(g.PreviewAttack(beast,yeti)!.DefenderDies);
         Assert.True(g.Attack(g.Player,beast,yeti));Assert.False(g.IsWaiting);Assert.Contains(beast,g.Player.Field);Assert.DoesNotContain(yeti,g.Computer.Field);
         Assert.Equal(1600,beast.CurrentPP);Assert.Equal(energy,g.Player.AvailableEnergy);
@@ -106,7 +107,7 @@ public class SimplifiedRulesTests
         croc.IsTapped=false;var foe=Unit(g.Computer,155,2);
         Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(1300,croc.CurrentPP);
         Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
-        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(1500,weak.CurrentPP);
+        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(1400,weak.CurrentPP);
     }
 
     [Fact] public void OnlyOneCounterPerDamageAndDeadSourceStillCancels()

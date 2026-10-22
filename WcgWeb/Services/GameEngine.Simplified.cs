@@ -6,16 +6,17 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     public bool SimplifiedRules => CardBalanceHistory.SimplifiedCatalog(_cardDb);
-    // Printed "PP n 以下" thresholds collapse to 600 / 1100; "PP n 以上" thresholds collapse to 1800.
-    private int Low(int printed) => !SimplifiedRules ? printed : printed <= 800 ? 600 : 1100;
+    // Printed "PP n 以下" thresholds collapse to 600 / 1100 (or 900 / 1200 after the 2026-10-22 curve update); "PP n 以上" thresholds collapse to 1800.
+    private int Low(int printed) => !SimplifiedRules ? printed : CardBalanceHistory.CardFixesCatalog(_cardDb) ? (printed <= 800 ? 900 : 1200) : (printed <= 800 ? 600 : 1100);
     private int High(int printed) => !SimplifiedRules ? printed : 1800;
+    private int SkyfireLimit() => CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2300 : 1500;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
     // 聖盾指示物 (2026-10-17): a monster that gains 聖盾 (on entry or later) gets one counter; the first combat destruction
     // removes it instead. No refresh. Losing 聖盾 (silence, 147's arrow, condition ends) removes the counter. Older catalogs refresh each turn.
     public bool ShieldCounterRules => CardBalanceHistory.ShieldCounterCatalog(_cardDb);
     private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldCounterRules ? m.ShieldCounters > 0 : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
-    private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
+    private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     private bool FixedCombatBonus(MonsterInstance m) => SimplifiedRules && m.IsUnit && !m.IsSilenced && m.Card.Id == "WCG-203";
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
     internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168";

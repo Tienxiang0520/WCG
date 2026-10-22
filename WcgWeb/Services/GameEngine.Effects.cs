@@ -25,8 +25,10 @@ public partial class GameEngine
             case "WCG-020": KillBatch(enemy.Field.Where(x => x.CurrentPP <= Low(1300)).ToArray(), m.Card.Name); break;
             case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
-            case "WCG-027": case "WCG-047": case "WCG-115": FreeHand(p, 1, 1); break;
-            case "WCG-067": case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
+            case "WCG-047": FreeHand(p, 1, 1); break;
+            case "WCG-027": case "WCG-115": FreeHand(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1, 1); break;
+            case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
+            case "WCG-067": var maxBounce = CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2; PickMonster(p, $"選擇費用 {maxBounce} 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= maxBounce), Bounce); break;
             case "WCG-033" when m.Card.Arrows.Length > 0:
                 if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
                 else DrawMany(p, 1);
@@ -139,11 +141,12 @@ public partial class GameEngine
             case "WCG-010": DrawMany(p, Math.Min(2, p.Field.Count)); break;
             case "WCG-064": case "WCG-012": case "WCG-032": case "WCG-076": case "WCG-082": case "WCG-084": case "WCG-088": KillTarget(); break;
             case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
-            case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, 2)); break;
+            case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 4 : 2)); break;
             case "WCG-022": Search(p, 3, x => x.Card.IsSpell, optional: true); break;
             case "WCG-024": if(target!=null&&Alive(target)){if(target.IsTapped)Loot(p);else target.IsTapped=true;} break;
             case "WCG-026": if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); break;
-            case "WCG-028": case "WCG-096": DrawMany(p, 2); break;
+            case "WCG-028": DrawMany(p, 2); break;
+            case "WCG-096": DrawMany(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2); break;
             case "WCG-030": Search(p, 3, _ => true); break;
             case "WCG-034": DrawMany(p, 3); break;
             case "WCG-036": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); }, () => DrawMany(p, 1)); break;
@@ -159,7 +162,7 @@ public partial class GameEngine
             case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;
             case "WCG-068": KillBatch(enemy.Field.Where(m => m.CurrentPP <= Low(700)).ToArray(), c.Name); break;
-            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => m.CurrentPP <= Low(700)).ToArray(), c.Name), () => Heal(p, 1)); break;
+            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => m.CurrentPP <= Low(CardBalanceHistory.CardFixesCatalog(_cardDb) ? 1000 : 700)).ToArray(), c.Name), () => Heal(p, 1)); break;
             case "WCG-086": Resolve(KillTarget, () => DrawMany(p, 1)); break;
             case "WCG-090": Recover(p, int.MaxValue, 1); break;
             case "WCG-092": KillBatch(p.Field.Concat(enemy.Field).Where(m => m.CurrentPP <= Low(800)).ToArray(), c.Name); break;

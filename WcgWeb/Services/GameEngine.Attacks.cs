@@ -8,8 +8,9 @@ public partial class GameEngine
     public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
     {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
-    // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1300 or less, 178 past every taunt.
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261"))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>Low(1300))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1800 or less (1100/1300 in older eras), 178/201/210/261 past every taunt.
+    private int GaiaTauntLimit()=>CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||m.CurrentPP>GaiaTauntLimit())&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int RageEnergy=0,int WildEnergy=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)

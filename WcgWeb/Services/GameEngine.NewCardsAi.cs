@@ -45,9 +45,10 @@ public partial class GameEngine
         if (!c.Card.IsMonster) return null;
         var bonus = id switch
         {
+            "WCG-201" when CardBalanceHistory.CardFixesCatalog(_cardDb) => e.Field.Any(m => m.IsTaunt) ? 2 : 0,
             "WCG-205" or "WCG-209" => e.Field.Any(m => m.HasShield && !m.ShieldSpent) ? 3 : 0,
             "WCG-208" => e.Field.Where(m => !m.IsSilenced).Select(m => (m.IsTaunt ? 2 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + (m.Card.IsVanilla ? 0 : 1)).DefaultIfEmpty(0).Max(),
-            "WCG-210" => e.Field.Any(m => m.IsTaunt) ? 2 : 0,
+            "WCG-210" or "WCG-261" => e.Field.Any(m => m.IsTaunt) ? 2 : 0,
             "WCG-212" => Mill(2) * .7,
             "WCG-213" => e.Deck.Count <= 12 ? 2 : 0,
             "WCG-219" => p.Occupied >= 4 ? 2 : -1,

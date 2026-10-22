@@ -12,9 +12,10 @@ public static class PlayerBackupValidator
         var values = data.EnumerateObject().ToDictionary(p => p.Name, p => p.Value.GetString()!);
         var storage = new SnapshotStorage(values);
         var decks = new DeckService(cards, storage);
-        // Decks built before seven cards became dual-will (2026-10-16) may no longer fit; keep accepting them so old saves still sync.
+        // Decks built before seven cards became dual-will (2026-10-16) or before WCG-067 became single-will 理智 (2026-10-22) may no longer fit; keep accepting them so old saves still sync.
+        var beforeCardFixes = CardBalanceHistory.BeforeCardFixes(cards);
         var beforeDual = CardBalanceHistory.BeforeDualWill(cards);
-        bool Legal(Deck deck, out string? error) => deck.IsValid(cards.GetCard, out error) || deck.IsValid(beforeDual.GetCard, out _);
+        bool Legal(Deck deck, out string? error) => deck.IsValid(cards.GetCard, out error) || deck.IsValid(beforeCardFixes.GetCard, out _) || deck.IsValid(beforeDual.GetCard, out _);
         foreach (var deck in decks.GetCustomDecks())
         {
             if (!Legal(deck, out var error)) throw new InvalidDataException(error);

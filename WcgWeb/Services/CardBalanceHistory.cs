@@ -34,6 +34,8 @@ internal static class CardBalanceHistory
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
     // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
     // 500-PP 聖印侍從 together with 2400-PP 日耀聖堂巨像 identifies the 聖盾 PP restore (063 was 300 from the deflation on, 800 before it).
+    internal static bool CardFixesCatalog(CardDatabase cards) => cards.GetCard("WCG-003")?.DP == 0;
+    private static CardDatabase CardFixesStep(CardDatabase c) => CardFixesCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeCardFixes") : c;
     // Catalog before the proportional direct-damage cost update (2026-10-18, scheme B): 006, 014, 013, 123, 170, 059 and 144
     // cost less (monsters keep their offset below vanilla); text and DP did not change.
     // 4-cost 怒意沸騰 identifies it (006 cost 1 or 2 in every older catalog).
@@ -51,7 +53,7 @@ internal static class CardBalanceHistory
     // Catalog before 冰霜魔導師 (029) and 時間靜止者 (035) worked directly on entry (2026-10-17); only their text changed.
     internal static bool MageDirectCatalog(CardDatabase cards) => cards.GetCard("WCG-029")?.Text.StartsWith("進場", StringComparison.Ordinal) == true;
     private static CardDatabase MageDirectStep(CardDatabase c) => MageDirectCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeMageDirect") : c;
-    internal static bool ShieldPpCatalog(CardDatabase cards) => cards.GetCard("WCG-063")?.PP == 500 && cards.GetCard("WCG-079")?.PP == 2400;
+    internal static bool ShieldPpCatalog(CardDatabase cards) => cards.GetCard("WCG-063")?.PP >= 500 && cards.GetCard("WCG-079")?.PP is 2000 or 2400;
     private static CardDatabase ShieldPpStep(CardDatabase c) => ShieldPpCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeShieldPp") : c;
     internal static bool CostUpCatalog(CardDatabase cards) => cards.GetCard("WCG-100")?.TotalCost == 7;
     private static CardDatabase CostUpStep(CardDatabase c) => CostUpCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeCostUp") : c;
@@ -92,12 +94,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeBurnCost(CardDatabase current) => BurnCostStep(current);
+    internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(current);
+    internal static CardDatabase BeforeBurnCost(CardDatabase current) => BurnCostStep(BeforeCardFixes(current));
     internal static CardDatabase BeforeTauntFaceCharge(CardDatabase current) => TauntFaceChargeStep(BeforeBurnCost(current));
     internal static CardDatabase BeforeLuckyCoin(CardDatabase current) => LuckyCoinStep(BeforeTauntFaceCharge(current));
     internal static CardDatabase BeforeMageDirect(CardDatabase current) => MageDirectStep(BeforeLuckyCoin(current));

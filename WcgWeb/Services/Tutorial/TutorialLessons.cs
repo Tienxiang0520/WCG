@@ -406,14 +406,14 @@ public static class TutorialLessons
         {
             Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、聖盾與雙色卡",
             Summary = "PP 門檻只有三段；聖盾指示物只擋一次；雙色卡屬於兩個意志。",
-            Topics = ["PP 600／1100 以下、1800 以上", "聖盾指示物一次", "連續攻擊破盾", "雙色卡"],
+            Topics = ["PP 900／1200 以下、1800 以上", "聖盾指示物一次", "連續攻擊破盾", "雙色卡"],
             Scene = new(
                 new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-031", 2), new("WCG-101", 4)] }),
             Steps =
             [
                 new() { Title = "三段門檻", Spot = ["enemy-card:WCG-157", "enemy-card:WCG-101"],
-                    Text = "卡牌上的 PP 門檻只有三種：PP 600 以下、PP 1100 以下、PP 1800 以上。門檻看卡上數值加上目前加成。" },
+                    Text = "卡牌上的 PP 門檻只有三種：PP 900 以下、PP 1200 以下、PP 1800 以上。門檻看卡上數值加上目前加成。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
                     Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Settled(e),
                     Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾指示物會擋下這次消滅並被移除。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],

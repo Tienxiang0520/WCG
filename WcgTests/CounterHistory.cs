@@ -17,8 +17,16 @@ internal static class CounterHistory
     // Catalog before 013, 018, 100 and 182 cost 1 more (cost and PP only).
     // Catalog before 幸運幣 (WCG-263) existed.
     // Catalog before the proportional direct-damage cost update (cost and PP only).
+    internal static CardDatabase BeforeCardFixes(CardDatabase current)
+    {
+        if(current.GetCard("WCG-003")?.DP!=0)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-card-fixes.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeBurnCost(CardDatabase current)
     {
+        current=BeforeCardFixes(current);
         if(current.GetCard("WCG-006")?.TotalCost!=4)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-burn-cost.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

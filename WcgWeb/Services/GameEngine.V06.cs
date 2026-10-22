@@ -129,7 +129,7 @@ public partial class GameEngine
     {
         if(spell==null)return;
         foreach(var x in p.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-185"&&(!LimitFactionTriggers||x.TriggersThisTurn<2)).ToArray())
-            if(spell.HasWill("理智")){if(LimitFactionTriggers)x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x))PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>m.CurrentPP<=(SimplifiedRules?600:1000)),m=>KillBatch([m],x.Card.Name));});}
+            if(spell.HasWill("理智")){if(LimitFactionTriggers)x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x))PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>m.CurrentPP<=(SimplifiedRules?Low(600):1000)),m=>KillBatch([m],x.Card.Name));});}
         NewSpellCast(p);
         foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-153").ToArray())
             if(spell.TotalCost>=2){_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);}});}
@@ -179,7 +179,7 @@ public partial class GameEngine
             case "WCG-166":CardChoice(p,"選擇另一張手牌置底",p.Hand,x=>{p.Hand.Remove(x);p.Deck.Add(x);DrawMany(p,1);});break;
             case "WCG-167":if(t!=null)ReadyMonster(t);break;
             case "WCG-168":if(t!=null){if(SimplifiedRules)Attach(p,c,t);else t.NextCombatBonus-=500;}break;
-            case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>x.CurrentPP<=1500).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2,c.Card);});break;
+            case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>x.CurrentPP<=SkyfireLimit()).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2,c.Card);});break;
             case "WCG-173":Resolve(()=>{foreach(var x in p.Field.Concat(e.Field).ToArray())Bounce(x);},()=>DrawMany(p,2));break;
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>x.CurrentPP>=High(1500)).ToArray(),c.Card.Name),()=>Heal(p,2));break;
             case "WCG-180":SearchTwoKinds(p);break;

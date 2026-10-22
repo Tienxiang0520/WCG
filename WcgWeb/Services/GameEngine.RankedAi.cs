@@ -157,7 +157,7 @@ public partial class GameEngine
         if (damage - GuardReduction(e,damage) >= e.Hp && face.Length > 0) return Attack(p, face.OrderByDescending(m => m.CurrentDP).First());
         if (!prof.BurnLethal) return false;
         int Burn(CardInstance c) => !CanPlayCard(p, c) ? 0 : c.Card.Id switch
-        { "WCG-014" => 1, "WCG-006" => 2, "WCG-017" or "WCG-123" => 1, "WCG-013" => p.Hp > 1 ? 1 : 0, "WCG-170" => e.Field.All(m => m.CurrentPP <= 1500) ? 2 : 0, _ => 0 };
+        { "WCG-014" => 1, "WCG-006" => 2, "WCG-017" or "WCG-123" => 1, "WCG-013" => p.Hp > 1 ? 1 : 0, "WCG-170" => e.Field.All(m => m.CurrentPP <= SkyfireLimit()) ? 2 : 0, _ => 0 };
         var burn = p.Hand.Select(c => (card: c, dmg: Burn(c))).Where(x => x.dmg > 0).OrderByDescending(x => x.dmg).FirstOrDefault();
         if (burn.card != null && damage + burn.dmg >= e.Hp)
         {
@@ -297,7 +297,8 @@ public partial class GameEngine
                 "WCG-105" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)),
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
                 "WCG-095" => -4,
-                "WCG-047" or "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
+                "WCG-047" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
+                "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1)) ? 4 : 0,
                 "WCG-001" or "WCG-007" or "WCG-102" => e.Field.Any(m => m.CurrentPP <= 500) ? 3 : 0,
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= 2300) ? 6 : 0,
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= 2000) ? 6 : 0,
@@ -345,7 +346,7 @@ public partial class GameEngine
             "WCG-092" => Sum(e.Field.Where(m => m.CurrentPP <= 800)) - Sum(p.Field.Where(m => m.CurrentPP <= 800)) - 2,
             "WCG-008" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)) - 2,
             "WCG-038" => Sum(e.Field.Where(m => m.Card.TotalCost <= 2)) - Sum(p.Field.Where(m => m.Card.TotalCost <= 2)) - 2,
-            "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => m.CurrentPP <= 1500)) - 2,
+            "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => m.CurrentPP <= SkyfireLimit())) - 2,
             "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= 1500)) - Sum(p.Field.Where(m => m.CurrentPP >= 1500)) + (p.Hp < 7 ? 2 : 0) - 2,
             "WCG-173" => Sum(e.Field) - Sum(p.Field) + 2,
             "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? 5 : -1,
@@ -365,7 +366,7 @@ public partial class GameEngine
         int budget = prof.PlanBudget;
         var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldCounterRules;
         PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (!fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m),
-            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && m.Card.Id is "WCG-210" or "WCG-178", !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
+            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
         {
             if (hp <= 0) return 10000;
@@ -389,7 +390,7 @@ public partial class GameEngine
             if (left == 0 || hp <= 0) return;
             foreach (var a in own.Where(u => u.Ready).ToArray())
             {
-                var taunts = opp.Where(u => u.Taunt && (!a.IgnoresLowTaunt || !fresh && u.PP > 1300 || fresh && p.Field.First(m => m.InstanceId == a.Id).Card.Id == "WCG-059" && u.PP > 1100)).ToList();
+                var taunts = opp.Where(u => u.Taunt && (!a.IgnoresLowTaunt || !fresh && u.PP > 1300 || fresh && p.Field.First(m => m.InstanceId == a.Id).Card.Id == "WCG-059" && u.PP > GaiaTauntLimit())).ToList();
                 var targets = taunts.Count > 0 ? taunts.Cast<PlanUnit?>().ToList() : opp.Cast<PlanUnit?>().Append(null).ToList();
                 foreach (var d in targets)
                 {

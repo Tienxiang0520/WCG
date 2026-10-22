@@ -19,7 +19,7 @@ public sealed class BurnCostTests
     [InlineData("WCG-123",5,6,null,null)][InlineData("WCG-170",7,8,null,null)][InlineData("WCG-059",6,7,2400,2700)][InlineData("WCG-144",3,5,1200,1900)]
     public void DirectDamageCostsMoreAndOldErasKeepOldNumbers(string id,int oldCost,int newCost,int? oldPp,int? newPp)
     {
-        var now=cards.GetCard(id)!;var old=CardBalanceHistory.BeforeBurnCost(cards).GetCard(id)!;
+        var now=CardBalanceHistory.BeforeCardFixes(cards).GetCard(id)!;var old=CardBalanceHistory.BeforeBurnCost(cards).GetCard(id)!;
         Assert.Equal(newCost,now.TotalCost);Assert.Equal(oldCost,old.TotalCost);Assert.Equal(newPp,now.PP);Assert.Equal(oldPp,old.PP);
         Assert.Equal(old.Text,now.Text);Assert.Equal(old.DP,now.DP);
         if(now.PP is int pp)Assert.Equal(Vanilla[oldCost]-old.PP!.Value,Vanilla[newCost]-pp);
@@ -27,12 +27,13 @@ public sealed class BurnCostTests
     [Fact]
     public void OnlyTheSchemeBCardsChangedAndTheCatalogIsDetected()
     {
+        var now=CardBalanceHistory.BeforeCardFixes(cards);
         var old=CardBalanceHistory.BeforeBurnCost(cards);
-        var changed=cards.AllCards.Where(c=>old.GetCard(c.Id)!.TotalCost!=c.TotalCost||old.GetCard(c.Id)!.PP!=c.PP).Select(c=>c.Id).OrderBy(x=>x,StringComparer.Ordinal);
+        var changed=now.AllCards.Where(c=>old.GetCard(c.Id)!.TotalCost!=c.TotalCost||old.GetCard(c.Id)!.PP!=c.PP).Select(c=>c.Id).OrderBy(x=>x,StringComparer.Ordinal);
         Assert.Equal(["WCG-006","WCG-013","WCG-014","WCG-059","WCG-123","WCG-144","WCG-170"],changed);
-        Assert.Equal(2,cards.GetCard("WCG-261")!.TotalCost);Assert.Equal(9,cards.GetCard("WCG-178")!.TotalCost);
-        Assert.True(CardBalanceHistory.BurnCostCatalog(cards));
+        Assert.Equal(2,now.GetCard("WCG-261")!.TotalCost);Assert.Equal(9,now.GetCard("WCG-178")!.TotalCost);
+        Assert.True(CardBalanceHistory.BurnCostCatalog(now));
         Assert.False(CardBalanceHistory.BurnCostCatalog(old));
-        Assert.Equal(cards.AllCards.Count,old.AllCards.Count);
+        Assert.Equal(now.AllCards.Count,old.AllCards.Count);
     }
 }
