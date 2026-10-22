@@ -457,7 +457,7 @@ public partial class GameEngine
     private void Bounce(MonsterInstance m)
     { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); owner.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); Present("bounce", owner, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
     private void PickLowest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
-    { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最低 PP 的怪物", list.Where(m => m.CurrentPP == list.Min(x => x.CurrentPP)), action); }
+    { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最低 PP 的怪物", list.Where(m => ThresholdPP(m) == list.Min(ThresholdPP)), action); }
     private void PickHighest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
     { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最高 PP 的怪物", list.Where(m => m.CurrentPP == list.Max(x => x.CurrentPP)), action); }
 }

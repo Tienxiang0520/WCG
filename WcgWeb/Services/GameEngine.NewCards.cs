@@ -84,7 +84,7 @@ public partial class GameEngine
             "WCG-220" or "WCG-221" => p.Field.ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
             "WCG-246" => enemy.Where(m => ThresholdPP(m) <= Low(1100)).ToList(),
-            "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => x.CurrentPP < m.CurrentPP)).ToList(),
+            "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
             _ => null
         };
     }
@@ -139,7 +139,7 @@ public partial class GameEngine
             case "WCG-242": Resolve(() => DrawMany(p, 2), () => PayLife(p, 1)); break;
             case "WCG-248":
                 if (t == null || !Alive(t)) break;
-                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", e.Field.Where(x => x.CurrentPP < t.CurrentPP), x => KillBatch([x], c.Name));
+                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t)), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
             default: return false;

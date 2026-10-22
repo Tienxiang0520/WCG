@@ -166,4 +166,38 @@ public sealed class CardFixesTests
         var oldStrangle = new CardInstance(old.GetCard("WCG-246")!); o.Player.Hand.Add(oldStrangle);
         Assert.False(o.CastSpellAt(o.Player, oldStrangle, oldBuffed));
     }
+
+    // From the 2026-10-22 catalog, 248's "PP 比它低" and the "PP 最低" picks compare printed PP; older catalogs keep current PP.
+    [Fact]
+    public void StampedeAndLowestPpPicksUsePrintedPpAndOldEraUsesCurrent()
+    {
+        var nature = cards.AllCards.First(c => c.IsMonster && c.HasWill("生機")).Id;
+        var g = Game();
+        var mine = Unit(g.Player, nature, 0, 1000); mine.CurrentPP = 3000;      // printed 1000, buffed to 3000
+        var big = Unit(g.Computer, "WCG-101", 0, 1500); big.CurrentPP = 900;    // printed 1500, weakened to 900
+        var small = Unit(g.Computer, "WCG-101", 1, 800); small.CurrentPP = 2000; // printed 800, buffed to 2000
+        var stomp = new CardInstance(cards.GetCard("WCG-248")!); g.Player.Hand.Add(stomp);
+        Assert.True(g.CastSpellAt(g.Player, stomp, mine));
+        var target = g.CurrentPendingTarget!;
+        Assert.False(target.Validator!(big));
+        Assert.True(g.SelectTarget(small));
+        Assert.DoesNotContain(small, g.Computer.Field);
+        Assert.Contains(big, g.Computer.Field);
+
+        var pick = typeof(GameEngine).GetMethod("PickLowest", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        var g2 = Game();
+        var lowPrinted = Unit(g2.Computer, "WCG-101", 0, 800); lowPrinted.CurrentPP = 2500;
+        var lowCurrent = Unit(g2.Computer, "WCG-101", 1, 1500); lowCurrent.CurrentPP = 500;
+        pick.Invoke(g2, [g2.Player, g2.Computer.Field.ToList(), new Action<MonsterInstance>(_ => { })]);
+        Assert.True(g2.CurrentPendingTarget!.Validator!(lowPrinted));
+        Assert.False(g2.CurrentPendingTarget!.Validator!(lowCurrent));
+
+        var old = CardBalanceHistory.BeforeCardFixes(cards);
+        var o = Game(old);
+        var oPrinted = Unit(o.Computer, "WCG-101", 0, 800, old); oPrinted.CurrentPP = 2500;
+        var oCurrent = Unit(o.Computer, "WCG-101", 1, 1500, old); oCurrent.CurrentPP = 500;
+        pick.Invoke(o, [o.Player, o.Computer.Field.ToList(), new Action<MonsterInstance>(_ => { })]);
+        Assert.True(o.CurrentPendingTarget!.Validator!(oCurrent));
+        Assert.False(o.CurrentPendingTarget!.Validator!(oPrinted));
+    }
 }

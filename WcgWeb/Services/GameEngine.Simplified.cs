@@ -13,6 +13,7 @@ public partial class GameEngine
     // PP thresholds ("PP n 以下／以上", 059's taunt limit, 195's bonus) check the target's printed PP from the 2026-10-22 catalog on;
     // bonuses and penalties are ignored. Older catalogs keep checking the current PP so saved matches replay unchanged.
     public bool PrintedPpThresholds => CardBalanceHistory.CardFixesCatalog(_cardDb);
+    // From the same catalog, "PP 最低" picks (007/016/107/117/120, ties chosen by the controller) and 248's "PP 比它低" compare printed PP too.
     private int ThresholdPP(MonsterInstance m) => PrintedPpThresholds ? m.Card.PP ?? 0 : m.CurrentPP;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
