@@ -148,7 +148,7 @@ public partial class GameEngine
             case "WCG-171":Heal(p,2);break;
             case "WCG-175":FreeFaction(p,5,"",true);break;
             case "WCG-179":Heal(p,7);break;
-            case "WCG-181":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("狂怒")))foreach(var x in p.Field.Where(x=>x.Card.HasWill("狂怒")))x.TurnBonus+=300;break;
+            case "WCG-181":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("狂怒")))foreach(var x in p.Field.Where(x=>x.Card.HasWill("狂怒")))AddTurnBonus(x,300,m.Card);break;
             case "WCG-183":Search(p,3,c=>c.Card.IsSpell);break;
             case "WCG-187":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("生機")))FreeFaction(p,2,"生機");break;
             case "WCG-188":Heal(p,p.Field.Count(x=>x!=m&&x.Card.HasWill("生機")));break;
@@ -173,12 +173,12 @@ public partial class GameEngine
             case "WCG-140":var owner=t==null?p:Owner(t);Resolve(()=>{if(t!=null)KillBatch([t],c.Card.Name);},()=>DrawMany(owner,1));break;
             case "WCG-141":if(t!=null){Attach(p,c,t,TurnNumber+(Owner(t)==ActivePlayer?2:1));ReadyMonster(t);}break;
             case "WCG-142":if(t!=null){Attach(p,c,t);t.IsTapped=true;}break;
-            case "WCG-143":if(t!=null){if(SimplifiedRules){Attach(p,c,t);ReadyMonster(t);}else{ReadyMonster(t);t.NextCombatBonus+=500;}}break;
+            case "WCG-143":if(t!=null){if(SimplifiedRules){Attach(p,c,t);ReadyMonster(t);}else{ReadyMonster(t);AddNextCombatBonus(t,500,c.Card);}}break;
             case "WCG-164":case "WCG-169":DrawMany(p,1);break;
-            case "WCG-165":if(t!=null&&Alive(t)){if(SimplifiedRules)Attach(p,c,t);else t.NextCombatBonus+=500;}break;
+            case "WCG-165":if(t!=null&&Alive(t)){if(SimplifiedRules)Attach(p,c,t);else AddNextCombatBonus(t,500,c.Card);}break;
             case "WCG-166":CardChoice(p,"選擇另一張手牌置底",p.Hand,x=>{p.Hand.Remove(x);p.Deck.Add(x);DrawMany(p,1);});break;
             case "WCG-167":if(t!=null)ReadyMonster(t);break;
-            case "WCG-168":if(t!=null){if(SimplifiedRules)Attach(p,c,t);else t.NextCombatBonus-=500;}break;
+            case "WCG-168":if(t!=null){if(SimplifiedRules)Attach(p,c,t);else AddNextCombatBonus(t,-500,c.Card);}break;
             case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>ThresholdPP(x)<=SkyfireLimit()).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2,c.Card);});break;
             case "WCG-173":Resolve(()=>{foreach(var x in p.Field.Concat(e.Field).ToArray())Bounce(x);},()=>DrawMany(p,2));break;
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>ThresholdPP(x)>=High(1500)).ToArray(),c.Card.Name),()=>Heal(p,2));break;

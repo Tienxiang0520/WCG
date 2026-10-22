@@ -179,6 +179,6 @@ public partial class GameEngine
     }
     private void NewSpellCast(PlayerState p)
     {
-        foreach (var m in p.Field.Where(x => Active(x, "WCG-252"))) m.TurnBonus += 300;
+        foreach (var m in p.Field.Where(x => Active(x, "WCG-252"))) AddTurnBonus(m, 300, m.Card);
     }
 }

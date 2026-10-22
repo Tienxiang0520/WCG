@@ -27,6 +27,18 @@
                 <span>@L[ConfirmEnergy ? "開啟" : "關閉"]</span>
             </button>
         </div>
+        <div class="setting-row">
+            <div>
+                <h3 id="stat-breakdown-label">@L["顯示原始數值與加成"]</h3>
+                <p id="stat-breakdown-help">@L["開啟時，場上怪物顯示印刷數值與增減（例如 1000 +300）。關閉時只顯示目前數值，高於印刷值為綠色、低於為紅色。點開卡片一律會列出每個加成的來源。"]</p>
+            </div>
+            <button type="button" class="setting-switch" role="switch" aria-checked="@(ShowBreakdown ? "true" : "false")"
+                    aria-labelledby="stat-breakdown-label" aria-describedby="stat-breakdown-help"
+                    disabled="@(!Loaded || Saving)" @onclick="ToggleStatBreakdown">
+                <span class="switch-track" aria-hidden="true"><span></span></span>
+                <span>@L[ShowBreakdown ? "開啟" : "關閉"]</span>
+            </button>
+        </div>
     </section>
     <AudioSettings />
     <section class="settings-panel" aria-labelledby="avatar-settings">
@@ -40,7 +52,7 @@
 @code {
     [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
     private IJSObjectReference? Module;
-    private bool ConfirmEnergy = true, Loaded, Saving;
+    private bool ConfirmEnergy = true, ShowBreakdown, Loaded, Saving;
     private string Status = "載入設定…";
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -49,6 +61,7 @@
         {
             Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/preferences.js");
             ConfirmEnergy = await Module.InvokeAsync<bool>("readEnergyConfirmation");
+            ShowBreakdown = await Module.InvokeAsync<bool>("readStatBreakdown");
             Loaded = true; Status = "設定會自動儲存。";
         }
         catch (JSException) { Status = "設定載入失敗，請重新整理再試。"; }
@@ -63,6 +76,19 @@
             var next = !ConfirmEnergy;
             await Module.InvokeVoidAsync("saveEnergyConfirmation", next);
             ConfirmEnergy = next; Status = "已儲存。";
+        }
+        catch (JSException) { Status = "無法儲存設定，已保留原本的選擇。"; }
+        finally { Saving = false; }
+    }
+    private async Task ToggleStatBreakdown()
+    {
+        if (!Loaded || Saving || Module == null) return;
+        Saving = true;
+        try
+        {
+            var next = !ShowBreakdown;
+            await Module.InvokeVoidAsync("saveStatBreakdown", next);
+            ShowBreakdown = next; Status = "已儲存。";
         }
         catch (JSException) { Status = "無法儲存設定，已保留原本的選擇。"; }
         finally { Saving = false; }

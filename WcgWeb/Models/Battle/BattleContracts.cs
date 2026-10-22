@@ -18,7 +18,16 @@ public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);
 public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks,
     bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0);
 public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
-    bool CanAttack, string Problem, BattleTarget[] Targets, BattleCard? Attachment, int Slot = -1, bool Tapped = false, bool IsSet = false, bool CanActivate = false, BattleCard[]? Attachments = null);
+    bool CanAttack, string Problem, BattleTarget[] Targets, BattleCard? Attachment, int Slot = -1, bool Tapped = false, bool IsSet = false, bool CanActivate = false, BattleCard[]? Attachments = null)
+{
+    // PP/DP modifiers (display only). Omitted when there are none so older snapshots stay unchanged.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public BattleStatPart[]? PpParts { get; init; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public BattleStatPart[]? DpParts { get; init; }
+}
+// One line of a PP/DP breakdown: the card that caused it (CardId null for engine effects such as 戰鬥加成) and its amount.
+public record BattleStatPart(string Label, string? CardId, int Amount);
 public record BattleEnergy(Guid InstanceId, bool Tapped)
 {
     // 幸運幣 face up in the energy zone: counts as energy this turn only. Omitted when false so older snapshots stay unchanged.

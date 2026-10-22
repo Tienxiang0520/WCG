@@ -13,3 +13,14 @@ export function saveEnergyConfirmation(enabled:boolean):void {
     localStorage.removeItem(legacyEnergyConfirmationKey);
     window.dispatchEvent(new CustomEvent('wcg-preference-saved'));
 }
+
+// 「顯示原始數值與加成」: off by default. Kept in this browser only (not part of cloud saves or backups).
+const statBreakdownKey='wcg.showStatBreakdown';
+export function readStatBreakdown():boolean {
+    try { return localStorage.getItem(statBreakdownKey)==='true'; }
+    catch { return false; }
+}
+export function saveStatBreakdown(enabled:boolean):void {
+    localStorage.setItem(statBreakdownKey,String(enabled));
+    window.dispatchEvent(new CustomEvent('wcg-preference-saved'));
+}

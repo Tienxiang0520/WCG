@@ -1830,5 +1830,14 @@
  "中立 · 法術": "Neutral · Spell",
  "後攻玩家開局多拿這 1 張。": "The second player starts with this extra card.",
  "＋1 張幸運幣（後攻用）": " + 1 The Coin (for the second player)",
+ "顯示原始數值與加成": "Show printed values and modifiers",
+ "開啟時，場上怪物顯示印刷數值與增減（例如 1000 +300）。關閉時只顯示目前數值，高於印刷值為綠色、低於為紅色。點開卡片一律會列出每個加成的來源。": "When on, monsters on the battlefield show the printed value and the change (for example 1000 +300). When off, only the current value is shown, green when above the printed value and red when below. The enlarged card always lists the source of every modifier.",
+ "數值明細": "Stat breakdown",
+ "印刷": "Printed",
+ "目前": "Current",
+ "下次戰鬥加成": "Next combat bonus",
+ "本回合加成": "This turn's bonus",
+ "戰鬥加成": "Combat bonus",
+ "攻擊加成": "Attack bonus",
  "本遊戲目前只支援平板與電腦，請改用大螢幕遊玩": "Soul Oath currently supports tablets and computers only. Please play on a larger screen."
 }
