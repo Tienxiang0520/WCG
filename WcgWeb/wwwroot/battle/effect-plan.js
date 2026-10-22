@@ -6,7 +6,7 @@
 //   showcase  a spell is enlarged in the centre before its effects resolve
 //   source    a passive / trigger / deploy ability: the source card flashes with a badge (`entry`: no badge)
 //   badge     a keyword or status a unit gains after entering (嘲諷, 能量護盾, 沉默 …), optionally with a beam from an aura source
-//   stat      a unit's PP changed (buff / debuff)
+//   stat      a unit's PP or DP changed (buff / debuff); `stat: 'DP'` marks a DP change
 //   tap       a unit was tapped or readied by an effect (not by attacking)
 
 export const BADGE_KEYWORDS = ['能量護盾', '聖盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
@@ -83,6 +83,8 @@ export function planSteps(previous, next, events) {
         }
         const delta = (Number(unit.pp) || 0) - (Number(old.pp) || 0);
         if (delta && Number.isFinite(delta)) steps.push({ kind: 'stat', target: id, delta });
+        const dpDelta = (Number(unit.dp) || 0) - (Number(old.dp) || 0);
+        if (dpDelta && Number.isFinite(dpDelta)) steps.push({ kind: 'stat', target: id, delta: dpDelta, stat: 'DP' });
         // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
         if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
     }

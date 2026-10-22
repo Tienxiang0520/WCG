@@ -24,7 +24,9 @@ export const CUES = {
     trigger: ['pluck_001.ogg', .45, 'battle'], turn: ['impactWood_heavy_000.ogg', .65, 'battle'], timer: ['tick_001.ogg', .5, 'battle'],
     victory: ['jingles_PIZZI02.ogg', .6, 'battle'], defeat: ['jingles_PIZZI01.ogg', .55, 'battle'],
     cancel: ['back_001.ogg', .4, 'battle'], error: ['error_002.ogg', .4, 'battle'], button: ['click_001.ogg', .45, 'battle'],
-    gameover: ['confirmation_004.ogg', .55, 'battle'], glass: ['impactGlass_light_003.ogg', .55, 'battle']
+    gameover: ['confirmation_004.ogg', .55, 'battle'], glass: ['impactGlass_light_003.ogg', .55, 'battle'],
+    // PP / DP changes: soft clicks, so a buff never sounds like a heal or a hit on life.
+    statUp: ['toggle_001.ogg', .4, 'battle'], statDown: ['toggle_002.ogg', .4, 'battle']
 };
 export const ALIASES = { play: 'place', recover: 'draw', take: 'draw', bounce: 'draw', status: 'trigger', reveal: 'flip' };
 export const CATEGORIES = ['ui', 'battle'];
