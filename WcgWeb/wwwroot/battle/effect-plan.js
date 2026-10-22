@@ -4,8 +4,8 @@
 // Step kinds
 //   event     the engine event itself (attack, summon, death, damage …); `from` names the effect source, if any
 //   showcase  a spell is enlarged in the centre before its effects resolve
-//   source    a passive / trigger / deploy ability: the source card flashes with a badge
-//   badge     a keyword or status appears on a unit (嘲諷, 能量護盾, 沉默 …), optionally with a beam from an aura source
+//   source    a passive / trigger / deploy ability: the source card flashes with a badge (`entry`: no badge)
+//   badge     a keyword or status a unit gains after entering (嘲諷, 能量護盾, 沉默 …), optionally with a beam from an aura source
 //   stat      a unit's PP changed (buff / debuff)
 //   tap       a unit was tapped or readied by an effect (not by attacking)
 
@@ -42,6 +42,7 @@ export function planSteps(previous, next, events) {
     const ordered = [...(events ?? [])].sort((a, b) => a.order - b.order);
     const badged = new Set(), attacked = new Set(), turnStart = ordered.some(ev => ev.type === 'turn');
     let source = null;
+    const summoned = new Set();
     const target = ev => ev.type === 'attach' ? ev.targetId : ev.instanceId;
     for (const ev of ordered) {
         if (ev.type === 'play' && isSpellCard(ev.card)) {
@@ -49,7 +50,11 @@ export function planSteps(previous, next, events) {
             source = { id: ev.instanceId, showcase: true };
             continue;
         }
-        if (SOURCE_TYPES.has(ev.type)) { steps.push({ kind: 'source', ev }); source = { id: ev.instanceId }; continue; }
+        if (SOURCE_TYPES.has(ev.type)) {
+            // The deploy ability of a unit summoned in this batch glows without a text popup; other triggers keep their label.
+            const entry = ev.type === 'effect' && summoned.has(ev.instanceId);
+            steps.push({ kind: 'source', ev, ...(entry ? { entry: true } : {}) }); source = { id: ev.instanceId }; continue;
+        }
         if (ev.type === 'attack') { attacked.add(ev.instanceId); source = null; }
         if (ev.type === 'turn' || ev.type === 'play') source = null;
         const step = { kind: 'event', ev };
@@ -58,12 +63,11 @@ export function planSteps(previous, next, events) {
         if (ev.type === 'death' && keywordOf(ev.label)) badged.add(`${ev.instanceId}:${keywordOf(ev.label)}`);
         if (ev.type === 'status' && keywordOf(ev.label)) badged.add(`${ev.instanceId}:${keywordOf(ev.label)}`);
         if (ev.type === 'summon') {
+            summoned.add(ev.instanceId);
             source = { id: ev.instanceId };
             const unit = after.get(ev.instanceId);
-            for (const k of keywords(unit)) {
-                badged.add(`${ev.instanceId}:${k}`);
-                steps.push({ kind: 'badge', target: ev.instanceId, keyword: k, from: (k === '能量護盾' || k === '聖盾') && unit ? auraSource(unit, after, k) : null });
-            }
+            // Keywords a unit enters with are shown by its persistent board icons (shield, poison, taunt frame), not text popups.
+            for (const k of keywords(unit)) badged.add(`${ev.instanceId}:${k}`);
         }
     }
     // Results that have no engine event of their own: auras, buffs, debuffs and taps, read from the public snapshots.

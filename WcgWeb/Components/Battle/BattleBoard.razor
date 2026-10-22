@@ -30,6 +30,7 @@
                     @if(m.IsSet){<div class="field-card-back" aria-hidden="true">@L["魂"]<br/>@L["誓"]</div>}
                     else{<div class="card-art-layer" aria-hidden="true"><CardImage CardId="@m.Card.CardId" Loading="eager" /></div>}
                     @if(m.Status.Count(x=>x=="聖盾指示物") is var sc && sc>0){<span class="shield-counter" title="@L["聖盾指示物"] ×@sc" role="img" aria-label="@L["聖盾指示物"] ×@sc"><WcgWeb.Components.Common.ShieldIcon Class="shield-counter-icon" />@if(sc>1){<b class="shield-counter-count">@sc</b>}</span>}
+                    @if(m.Status.Contains("劇毒")){<span class="poison-marker" title="@L["劇毒"]" role="img" aria-label="@L["劇毒"]"><WcgWeb.Components.Common.PoisonIcon Class="poison-marker-icon" /></span>}
                     @if(m.Status.Contains("嘲諷")){<img class="taunt-frame" src="battle/taunt-frame.svg" alt="" aria-hidden="true" draggable="false" />}
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
                     @if(m.Card.PP!=null){<div class="field-stats @(ShowBreakdown?"breakdown":"")" title="@L.F("目前數值：{0}", $"{m.PP} PP · {m.DP} DP")">@FieldStat(m.PP,m.Card.PP??0)@FieldStat(m.DP,m.Card.DP??1)</div>}

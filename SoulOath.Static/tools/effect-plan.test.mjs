@@ -23,6 +23,7 @@ test('deploy abilities and triggers badge their source, then beam to what they a
         { type: 'trigger', side: 'computer', instanceId: 'foe', label: '離場能力', order: 3 },
         { type: 'heal', side: 'computer', amount: 1, order: 4 }]);
     assert.deepEqual(kinds(steps), ['summon', 'source:effect', 'bounce<mage', 'source:trigger', 'heal<foe']);
+    assert.equal(steps[1].entry, true); assert.equal(steps[3].entry, undefined);
 });
 test('attacks and new turns end the previous source so combat results are not attributed to a spell', () => {
     const steps = planSteps(snap([unit('a', 0)], [unit('b', 0)]), snap([unit('a', 0)]), [
@@ -30,12 +31,12 @@ test('attacks and new turns end the previous source so combat results are not at
         { type: 'death', side: 'computer', instanceId: 'b', label: '交戰', order: 2 }]);
     assert.deepEqual(kinds(steps), ['source:trigger', 'attack', 'death']);
 });
-test('summoned keywords badge once; an arrow aura names the neighbour that grants energy shield', () => {
+test('summoned keywords show no popup (board icons show them); an aura gained later still badges and names its source names the neighbour that grants energy shield', () => {
     const guard = unit('guard', 1, {}, { text: '嘲諷；【箭頭：← →】左右兩側相鄰格的己方怪物具有能量護盾。', arrows: ['left', 'right'] });
     const before = snap([guard, unit('ally', 2)]);
     const after = snap([{ ...guard, status: ['嘲諷', '直立'] }, unit('ally', 2, { status: ['能量護盾', '直立'] }), unit('new', 0, { status: ['能量護盾', '直立'] })]);
     const steps = planSteps(before, after, [{ type: 'summon', side: 'player', instanceId: 'new', card: card('new'), order: 0 }]);
-    assert.deepEqual(kinds(steps), ['summon', 'badge:能量護盾<guard', 'badge:嘲諷', 'badge:能量護盾<guard']);
+    assert.deepEqual(kinds(steps), ['summon', 'badge:嘲諷', 'badge:能量護盾<guard']);
 });
 test('silence status events are not badged twice; pp changes and effect taps come from the snapshot diff', () => {
     const before = snap([unit('x', 0), unit('y', 1)]);
@@ -60,4 +61,9 @@ test('helpers: aura rule, keyword parsing, spell detection and long-batch pacing
     assert.equal(keywordOf('能量護盾（附著）'), '能量護盾'); assert.equal(keywordOf('直立'), null);
     assert.equal(isSpellCard({ type: '法術（反擊）' }), true); assert.equal(isSpellCard({ type: '結界' }), false);
     assert.equal(batchSpeed(3), 1); assert.ok(batchSpeed(20) > batchSpeed(10));
+});
+test('a unit entering with 劇毒 / 聖盾 / 嘲諷 / 衝鋒 gets no keyword popup at all', () => {
+    const fresh = unit('v', 0, { status: ['劇毒', '聖盾指示物', '嘲諷', '衝鋒', '直立'] });
+    const steps = planSteps(snap(), snap([fresh]), [{ type: 'summon', side: 'player', instanceId: 'v', card: card('v'), order: 0 }]);
+    assert.deepEqual(kinds(steps), ['summon']);
 });
