@@ -23,6 +23,9 @@ public class CardInstance
     }
 }
 
+// One line of a PP/DP breakdown: the card that caused it (null for engine-wide effects) and a zh-Hant label key.
+public record StatSource(CardDefinition? Source, string Label, int Amount);
+
 public record AttachedSpell(CardInstance Card, string OwnerId, int? ExpireTurn = null);
 
 public class MonsterInstance
@@ -46,6 +49,9 @@ public class MonsterInstance
     public bool WasSilenced { get; set; }
     public int NextCombatBonus { get; set; }
     public int TurnBonus { get; set; }
+    // Display only (stat breakdown): which cards gave TurnBonus / NextCombatBonus. Never read by rules or AI.
+    public List<StatSource> TurnBonusSources { get; } = [];
+    public List<StatSource> NextCombatSources { get; } = [];
     public int TriggersThisTurn { get; set; }
     public List<AttachedSpell> Attachments { get; set; } = [];
     public bool AttackLocked => Attachments.Any(a => a.Card.Card.Id == "WCG-142");

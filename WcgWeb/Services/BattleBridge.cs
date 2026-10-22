@@ -111,8 +111,11 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         var visible = m.IsSet ? new BattleCard(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被攻擊時可翻開。","") : GameEngine.VisibleCard(m.Card,m.InstanceId);
         return new(visible, m.CurrentPP, m.CurrentDP,
             status.ToArray(), canAttack, problem, targets.ToArray(),
-            m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray());
+            m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray())
+            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)) };
     }
+    private static BattleStatPart[]? Parts(IReadOnlyList<StatSource> parts) =>
+        parts.Count == 0 ? null : parts.Select(x => new BattleStatPart(x.Label, x.Source?.Id, x.Amount)).ToArray();
     private BattleSide Side(PlayerState p) => new(p.Id, p.Hp, p.Deck.Count, p.Hand.Count,
         p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped) { Temporary = e.TemporaryEnergy }).ToArray(),
         p.Board.OrderBy(m=>m.Slot).Select(m => Monster(p, m)).ToArray(), p.Graveyard.Select(GameEngine.VisibleCard).ToArray());
