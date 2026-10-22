@@ -5,6 +5,8 @@
     const status = document.getElementById('startup-status');
     const detail = document.getElementById('startup-detail');
     if (!progress || !percentage || !status) return;
+    // Phone-sized touch screen: phone-gate.js already showed the notice; do not download the game.
+    if (window.wcgPhoneGate?.blocked) return;
     // Loading-screen language: the last language the app applied (mirrored by i18n.js), otherwise the same
     // browser rule as Localizer.PickFromBrowser (English only when the first preference is en/en-*). Default zh-Hant.
     const english = (() => {
