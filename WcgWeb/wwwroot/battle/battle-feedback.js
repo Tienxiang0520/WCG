@@ -378,7 +378,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             const ev = step.ev, el = visual(ev.instanceId) ?? hero(ev.side);
             banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
             void sound?.play('trigger'); void fx?.ring(el, '#ffe5a1', .9); void fx?.glow(el, '#ffd77a', 360);
-            await Promise.all([flash(el, '#ffe5a1'), badge(el, ev.label, 'source')]);
+            await Promise.all([flash(el, '#ffe5a1'), step.entry ? null : badge(el, ev.label, 'source')]);
             return;
         }
         if (step.kind === 'badge') {

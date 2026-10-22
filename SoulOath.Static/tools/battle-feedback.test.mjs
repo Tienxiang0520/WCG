@@ -159,6 +159,14 @@ test('fast-forward shortens the remaining animations and is offered as a button 
     assert.ok(fast<=normalHeal/12+1,`${fast} vs ${normalHeal}`);
     h.feedback.clear();resetFastForward();
 });
+test('a freshly summoned unit\'s deploy ability glows without a text badge', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const after={player:{field:[{card:{instanceId:'mage',name:'m'},slot:0,status:['劇毒','直立'],pp:1000}]},computer:{field:[]}};
+    await h.settle(h.feedback.present({player:{field:[]},computer:{field:[]}},after,[{type:'summon',side:'player',instanceId:'mage',card:{instanceId:'mage',name:'m'},order:0},{type:'effect',side:'player',instanceId:'mage',label:'進場能力',order:1},{type:'heal',side:'player',amount:1,order:2}]));
+    assert.deepEqual(h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent),[]);
+    h.feedback.clear();
+});
 test('a deploy ability badges its source before its result, and keyword statuses from the snapshot are badged', async t=>{
     resetFastForward();
     const h=harness(t);
