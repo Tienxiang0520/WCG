@@ -14,6 +14,8 @@ const SOURCE_TYPES = new Set(['effect', 'trigger']);
 const TARGETED = new Set(['death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
 export const isSpellCard = card => !!card && /^法術/.test(String(card.type ?? ''));
+// 幸運幣 (WCG-263) skips the spell showcase; it only pops its temporary energy.
+export const isCoin = card => card?.cardId === 'WCG-263';
 export function keywordOf(status) { return BADGE_KEYWORDS.find(k => String(status).startsWith(k)) ?? null; }
 function units(snapshot) {
     const map = new Map();
@@ -45,7 +47,7 @@ export function planSteps(previous, next, events) {
     const summoned = new Set();
     const target = ev => ev.type === 'attach' ? ev.targetId : ev.instanceId;
     for (const ev of ordered) {
-        if (ev.type === 'play' && isSpellCard(ev.card)) {
+        if (ev.type === 'play' && isSpellCard(ev.card) && !isCoin(ev.card)) {
             steps.push({ kind: 'showcase', ev });
             source = { id: ev.instanceId, showcase: true };
             continue;
@@ -88,4 +90,7 @@ export function planSteps(previous, next, events) {
 }
 
 // Long batches (a whole AI combo) speed up a little so a turn stays readable without dragging on.
-export function batchSpeed(stepCount) { return stepCount > 14 ? 1.8 : stepCount > 8 ? 1.35 : 1; }
+export function batchSpeed(stepCount) { return stepCount > 14 ? 1.8 : stepCount > 8 ? 1.5 : stepCount > 4 ? 1.25 : 1; }
+// Pause after a step: small results (status, stat, tap, keyword, pay, energy) follow quickly; bigger beats get a breath.
+const SMALL_EVENTS = new Set(['pay', 'energy', 'status', 'reveal', 'attach']);
+export function stepGap(step) { return step.kind === 'event' ? (SMALL_EVENTS.has(step.ev?.type) ? 60 : 170) : step.kind === 'showcase' ? 120 : step.kind === 'source' ? 120 : 60; }

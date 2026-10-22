@@ -598,6 +598,7 @@
 .event-badge[data-tone="source"]{font-size:12px;background:linear-gradient(180deg,#fff7dc,#f0c86c)}
 .event-beam{z-index:4;border-radius:6px;filter:drop-shadow(0 0 6px rgba(255,220,140,.9))}
 .event-orb{z-index:5;border-radius:50%;filter:drop-shadow(0 0 10px rgba(255,210,150,.95))}
+.event-coin-energy{z-index:7;background:linear-gradient(180deg,#fff4c8,#f2c14e 50%,#b8860b);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 0 6px #ffd76a)}
 .event-icon{z-index:7;filter:drop-shadow(0 0 4px #ffe08acc) drop-shadow(0 2px 2px #0009)}.event-icon.poison{filter:drop-shadow(0 0 4px #8dff6acc) drop-shadow(0 2px 2px #0009)}
 .event-stat{z-index:6;text-align:center;font:900 22px/34px var(--wcg-font-num,system-ui);text-shadow:0 2px 2px #000}
 .event-stat.up{color:#b5ffd2;-webkit-text-stroke:1px #0d3b24}.event-stat.down{color:#ffb4a4;-webkit-text-stroke:1px #4a0f06}
