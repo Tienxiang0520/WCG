@@ -221,3 +221,36 @@ test('幸運幣 skips the showcase and only pops the gold energy diamond; own sp
     assert.ok(own<=500&&own<enemy,`${own} vs ${enemy}`);
     h.feedback.clear();
 });
+test('DP changes get their own number; stat changes use stat sounds, not heal/damage', async t=>{
+    resetFastForward();
+    const h=harness(t),played=[];h.feedback.dispose();
+    const fb=bindFeedback(h.root,{play:n=>{played.push(n);}});
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:[],pp:1000,dp:1}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:[],pp:1300,dp:2}]},computer:{field:[]}};
+    await h.settle(fb.present(before,after,[{type:'status',side:'player',instanceId:'dead',label:'加成',order:0}]));
+    const stats=h.record.filter(r=>r.el.dataset.wcgEffect==='stat').map(r=>r.el.textContent);
+    assert.deepEqual(stats,['+300 PP','+1 DP']);
+    assert.ok(played.includes('statUp')&&!played.includes('heal'),played.join());
+    fb.clear();
+});
+test('a player attack without a drag lunge gets the same lunge as the computer; a dragged one does not repeat it', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'attack',side:'player',instanceId:'dead',order:0}]));
+    assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='attack'&&r.el.dataset.wcgAttackSide==='player'));
+    h.feedback.clear();h.record.length=0;
+    h.feedback.markLunge('dead');
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'attack',side:'player',instanceId:'dead',order:0}]));
+    assert.ok(!h.record.some(r=>r.el.dataset.wcgEffect==='attack'));
+    h.feedback.clear();
+});
+test('the computer\'s permanent energy flies to its energy readout', async t=>{
+    resetFastForward();
+    const h=harness(t),dots={getBoundingClientRect:()=>({x:500,y:40,width:80,height:16})};
+    h.root.selectors['.enemy-energy']=dots;
+    await h.settle(h.feedback.present(h.state,h.state,[{type:'energy',side:'computer',instanceId:'e',order:0}]));
+    const flyer=h.record.find(r=>r.el.className.includes('event-card-back'));
+    const last=flyer.frames.at(-1).transform;
+    assert.match(last,/translate\(/);assert.doesNotMatch(last,/translate\(0px,0px\)/);
+    h.feedback.clear();
+});

@@ -32,7 +32,7 @@ const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) 
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, locked = false, skipClick = null, speed = 1, pauser = null, banner = null, showcase = null;
-    const animations = new Set(), hidden = new Map(), ghosts = new Map();
+    const animations = new Set(), hidden = new Map(), ghosts = new Map(), lunged = new Set();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
     const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
     // A energy shield that was up before this batch and is gone afterwards (unit still alive) shattered in combat.
@@ -193,9 +193,10 @@ export function bindFeedback(root, sound = null, fx = null) {
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
         const broken = [ev.targetId, ev.instanceId].filter(shieldBroke);
         const shatterAll = () => { for (const id of broken) shieldShatter(visual(id)); };
-        if (ev.side === 'player') { shatterAll(); await flash(destination); return; } // Player already lunged (with contact sparks) on release.
+        // A dragged attack already lunged on release (fan-drag); every other attack, either side, uses the same lunge here.
+        if (ev.side === 'player' && lunged.delete(ev.instanceId)) { shatterAll(); await flash(destination); return; }
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
-        const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; hide(source);
+        const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; moving.dataset.wcgAttackSide = ev.side; hide(source);
         const dx = to.x + to.width / 2 - from.x - from.width / 2, dy = to.y + to.height / 2 - from.y - from.height / 2;
         void sound?.play('swing'); void sound?.play('attack', .23);
         // Wind-up, fast lunge that stops just short of the target, then recoil home.
@@ -368,7 +369,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         } else if (ev.type === 'energy' && isCoin(ev.card)) await coinPop(ev.side);
         else if (ev.type === 'energy') {
             if (from) await beam(from, ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
-            if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); await fly(originCard(ev.side, null), hero(ev.side)); }
+            if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); const dots = root.querySelector('.enemy-energy') ?? hero(ev.side); await fly(originCard(ev.side, null), dots); void fx?.burst(dots, { color: '#8ad7ff', count: 10, spread: 45, size: 5, rise: 16 }); await flash(dots, '#8ad7ff'); }
             else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
         } else if (ev.type === 'status' || ev.type === 'reveal') {
             const target = visual(ev.instanceId) ?? hero(ev.side);
@@ -441,9 +442,9 @@ export function bindFeedback(root, sound = null, fx = null) {
         }
         if (step.kind === 'stat') {
             const el = visual(step.target); if (!el) return;
-            const up = step.delta > 0, c = center(el);
-            const pop = place(node('div', `event-stat ${up ? 'up' : 'down'}`, `${up ? '+' : '−'}${Math.abs(step.delta)} PP`), { x: c.x - 70, y: c.r.y + c.r.height * .35, width: 140, height: 34 });
-            pop.dataset.wcgEffect = 'stat'; void sound?.play(up ? 'heal' : 'damage', 0);
+            const up = step.delta > 0, c = center(el), dp = step.stat === 'DP';
+            const pop = place(node('div', `event-stat ${up ? 'up' : 'down'} ${dp ? 'dp' : ''}`, `${up ? '+' : '−'}${Math.abs(step.delta)} ${dp ? 'DP' : 'PP'}`), { x: c.x - 70, y: c.r.y + c.r.height * (dp ? .6 : .35), width: 140, height: 34 });
+            pop.dataset.wcgEffect = 'stat'; void sound?.play(up ? 'statUp' : 'statDown', 0);
             void fx?.glow(el, up ? '#9dffc9' : '#ff8a7a', 320);
             await animate(pop, [{ opacity: 0, transform: 'scale(.5)' }, { opacity: 1, transform: 'scale(1.15)', offset: .25 }, { opacity: 1, transform: 'translateY(-10px) scale(1)', offset: .7 }, { opacity: 0, transform: 'translateY(-28px)' }], 760);
             pop.remove(); return;
@@ -498,9 +499,9 @@ export function bindFeedback(root, sound = null, fx = null) {
                 await runStep(step, { destination, played });
                 if (index < steps.length - 1) await pause(stepGap(step));
             }
-            dropShowcase();
-        } catch (error) { clear(); throw error; }
+            dropShowcase(); lunged.clear();
+        } catch (error) { lunged.clear(); clear(); throw error; }
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
-    return { present, clear, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };
+    return { present, clear, markLunge(id) { if (id) lunged.add(String(id)); }, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };
 }

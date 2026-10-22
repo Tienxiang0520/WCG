@@ -249,7 +249,7 @@ export function bind(root, dotnet) {
         const animation = clone.animate(frames, { duration, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
         const spell = !source.classList.contains('card-back') && source.dataset.cardType?.startsWith('法術');
         const fieldCard = !source.classList.contains('card-back') && source.dataset.cardType?.includes('結界');
-        if (attack) void sound.play('swing');
+        if (attack) { void sound.play('swing'); feedback.markLunge?.(source.dataset.dragId); }
         void sound.play(attack ? 'attack' : zone === 'energy' ? 'energy' : source.classList.contains('card-back') ? 'set' : spell ? 'spell' : fieldCard ? 'field' : 'place', attack ? .18 : .25);
         // Decorative contact effects; the drop itself is still resolved by the engine afterwards.
         const contact = setTimeout(() => {
