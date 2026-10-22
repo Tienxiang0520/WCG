@@ -167,7 +167,7 @@ test('a freshly summoned unit\'s deploy ability glows without a text badge', asy
     assert.deepEqual(h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent),[]);
     h.feedback.clear();
 });
-test('a deploy ability badges its source before its result, and keyword statuses from the snapshot are badged', async t=>{
+test('a deploy ability badges its source before its result; a keyword gained mid-game pops its icon, not text', async t=>{
     resetFastForward();
     const h=harness(t);
     const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000}]},computer:{field:[]}};
@@ -176,7 +176,31 @@ test('a deploy ability badges its source before its result, and keyword statuses
     const effects=h.record.map(r=>r.el.dataset.wcgEffect).filter(Boolean);
     assert.ok(effects.indexOf('badge')<effects.indexOf('heal'),effects.join());
     const badges=h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent);
-    assert.deepEqual(badges,['進場能力','能量護盾']);
+    assert.deepEqual(badges,['進場能力']);
+    assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='icon'&&r.el.dataset.keyword==='能量護盾'));
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='stat'&&r.el.textContent==='+500 PP'));
+    h.feedback.clear();
+});
+test('effect taps and attachments show no text; banners never show raw event types', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000,tapped:false}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000,tapped:true}]},computer:{field:[]}};
+    const banners=[];
+    const pending=h.feedback.present(before,after,[{type:'pay',side:'player',order:0},{type:'attach',side:'player',targetId:'dead',order:1}]);
+    const banner=h.body.children[0].children.find(el=>el.className==='event-banner');
+    await h.settle(pending.then(()=>{}));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='badge').length,0);
+    assert.doesNotMatch(banner.textContent,/pay|attach/);
+    assert.match(banner.textContent,/附著/);
+    h.feedback.clear();
+});
+test('a shield that breaks in combat shatters its icon', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['聖盾指示物'],pp:1000}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:[],pp:1000}]},computer:{field:[]}};
+    await h.settle(h.feedback.present(before,after,[{type:'attack',side:'computer',instanceId:'dead',order:0}]));
+    assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='shield-break'));
     h.feedback.clear();
 });

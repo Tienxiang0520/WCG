@@ -6,7 +6,19 @@ const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背
     '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
     '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
     '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
+    '攻擊': 'Attack', '召喚': 'Summon', '蓋牌': 'Set', '出牌': 'Play', '支付能量': 'Pay energy', '獲得能量': 'Energy', '陣亡': 'Destroyed', '造成傷害': 'Damage', '回復生命': 'Heal',
+    '狀態變化': 'Status', '翻開': 'Reveal', '回到手牌': 'Return to hand', '加入手牌': 'Add to hand', '回收': 'Recover', '效果': 'Effect', '觸發': 'Trigger', '回合開始': 'Turn start', '對戰結束': 'Game over', '選擇': 'Choice', '選擇目標': 'Target',
     '中立': 'Neutral', '深淵': 'Abyss', '狂怒': 'Fury', '理智': 'Reason', '生機': 'Life', '秩序': 'Order' };
+// Banner words for events that arrive without a label; unknown types show nothing rather than an internal name.
+const TYPE_WORDS = { attack: '攻擊', summon: '召喚', set: '蓋牌', play: '出牌', pay: '支付能量', energy: '獲得能量', death: '陣亡', damage: '造成傷害', heal: '回復生命', status: '狀態變化',
+    reveal: '翻開', bounce: '回到手牌', draw: '抽牌', take: '加入手牌', recover: '回收', discard: '棄牌', attach: '附著', effect: '效果', trigger: '觸發', turn: '回合開始', gameover: '對戰結束', choice: '選擇', target: '選擇目標' };
+export const eventWord = ev => ev?.label || t(TYPE_WORDS[ev?.type] ?? '');
+// Icon-only keyword marks, same artwork as Components/Common/ShieldIcon.razor and PoisonIcon.razor.
+const ICONS = {
+    shield: '<path d="M32 3 L59 12 V34 C59 52 46 63 32 69 C18 63 5 52 5 34 V12 Z" fill="#b8862a" stroke="#5a3b00" stroke-width="3" stroke-linejoin="round"/><path d="M32 9 L53 16 V34 C53 49 43 58 32 63 C21 58 11 49 11 34 V16 Z" fill="#f6dc7a" stroke="#7a5200" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 9 V63 M11 30 H53" stroke="#7a5200" stroke-width="2.4" fill="none"/>',
+    poison: '<path d="M32 3 C40 18 57 32 57 47 C57 61 46 69 32 69 C18 69 7 61 7 47 C7 32 24 18 32 3 Z" fill="#2f7d2a" stroke="#143a10" stroke-width="3" stroke-linejoin="round"/><path d="M32 11 C39 24 51 35 51 47 C51 57 43 63 32 63 C21 63 13 57 13 47 C13 35 25 24 32 11 Z" fill="#7fcf4f" stroke="#1d4a17" stroke-width="1.6" stroke-linejoin="round"/><circle cx="32" cy="47" r="7" fill="#1d4a17"/>' };
+export const iconOf = keyword => keyword === '能量護盾' || keyword === '聖盾' ? 'shield' : keyword === '劇毒' ? 'poison' : null;
+const KEYWORD_COLORS = { '沉默': '#c49bff', '劇毒': '#8dff6a', '嘲諷': '#cfd8ea', '衝鋒': '#ffb27a', '貫穿': '#ffb27a', '反擊': '#9fd8ff' };
 const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
 const STAR = 'M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z';
 // Per-will ornaments (corner, name spark, gem, emblem) — keep in sync with Services/CardFaceThemes.cs (CardFaceTests checks).
@@ -179,8 +191,9 @@ export function bindFeedback(root, sound = null, fx = null) {
         const source = visual(ev.instanceId), destination = ev.targetId ? visual(ev.targetId) : hero(ev.side === 'player' ? 'computer' : 'player');
         if (!source || !destination) return;
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
-        for (const id of [ev.targetId, ev.instanceId]) if (shieldBroke(id)) void sound?.play('shieldBreak', ev.side === 'player' ? 0 : .3);
-        if (ev.side === 'player') { await flash(destination); return; } // Player already lunged (with contact sparks) on release.
+        const broken = [ev.targetId, ev.instanceId].filter(shieldBroke);
+        const shatterAll = () => { for (const id of broken) shieldShatter(visual(id)); };
+        if (ev.side === 'player') { shatterAll(); await flash(destination); return; } // Player already lunged (with contact sparks) on release.
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
         const moving = place(source.cloneNode(true), from); moving.dataset.wcgEffect = 'attack'; hide(source);
         const dx = to.x + to.width / 2 - from.x - from.width / 2, dy = to.y + to.height / 2 - from.y - from.height / 2;
@@ -190,7 +203,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             { transform: 'translate(0,0) scale(1)' },
             { transform: `translate(${-dx * .06}px,${-dy * .06}px) scale(1.08) rotate(${dx > 0 ? -3 : 3}deg)`, offset: .22 },
             { transform: `translate(${dx * .86}px,${dy * .86}px) scale(1.1)`, offset: .5 }], 300, 'cubic-bezier(.5,0,.75,.4)');
-        void fx?.impact(destination, moving, power);
+        void fx?.impact(destination, moving, power); shatterAll();
         await animate(moving, [
             { transform: `translate(${dx * .86}px,${dy * .86}px) scale(1.1)` },
             { transform: `translate(${dx * .7}px,${dy * .7}px) scale(1.04)`, offset: .25 },
@@ -229,6 +242,29 @@ export function bindFeedback(root, sound = null, fx = null) {
             { opacity: 1, transform: 'translateY(-6px) scale(1)', offset: .75 },
             { opacity: 0, transform: 'translateY(-16px) scale(.96)' }], 900, 'cubic-bezier(.2,.8,.3,1)');
         pill.remove();
+    }
+    // A keyword gained mid-game: its board icon pops in where it will sit (shield above poison); keywords without an icon just ring.
+    function iconMark(el, kind) {
+        const r = el.getBoundingClientRect(), mark = place(node('div', `event-icon ${kind}`), { x: r.x + r.width - 27, y: r.y + r.height * .2 + (kind === 'poison' ? 31 : 0), width: 24, height: 27 });
+        mark.innerHTML = `<svg viewBox="0 0 64 72" width="24" height="27" aria-hidden="true">${ICONS[kind]}</svg>`;
+        return mark;
+    }
+    async function keywordPulse(el, keyword) {
+        if (!el || !keyword) return;
+        const kind = iconOf(keyword);
+        if (!kind) { void fx?.ring(el, KEYWORD_COLORS[keyword] ?? '#ffe08a', .8); await flash(el, KEYWORD_COLORS[keyword] ?? '#ffe08a'); return; }
+        const mark = iconMark(el, kind); mark.dataset.wcgEffect = 'icon'; mark.dataset.keyword = keyword;
+        void fx?.ring(mark, kind === 'poison' ? '#8dff6a' : '#ffe08a', .45);
+        await animate(mark, [{ opacity: 0, transform: 'scale(.3)' }, { opacity: 1, transform: 'scale(1.6)', offset: .35 }, { opacity: 1, transform: 'scale(1)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], 560, 'cubic-bezier(.2,.8,.3,1.4)');
+        mark.remove();
+    }
+    // The shield counter breaks into shards at the moment the hit lands.
+    function shieldShatter(el) {
+        if (!el) return;
+        void sound?.play('shieldBreak');
+        const mark = iconMark(el, 'shield'); mark.dataset.wcgEffect = 'shield-break';
+        void fx?.burst(mark, { color: '#ffe08a', count: 12, spread: 50, size: 5 });
+        if (fx && !motionReduced()) void fx.shatter(mark).then(() => mark.remove()); else void animate(mark, [{ opacity: 1 }, { opacity: 0, transform: 'scale(1.4)' }], 300).then(() => mark.remove());
     }
     // A beam from the effect source to what it affects; `orb` sends a projectile instead (damage / attach).
     async function beam(from, to, color = '#ffd77a', orb = false) {
@@ -287,7 +323,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         else if (ev.type === 'death') {
             const target = visual(ev.instanceId);
             if (from && target) { await beam(from, target, '#ff7a6a', true); void fx?.impact(target, from, .7); }
-            if (keywordOf(ev.label)) await badge(target, t(keywordOf(ev.label)), keywordOf(ev.label));
+            if (keywordOf(ev.label)) await keywordPulse(target, keywordOf(ev.label));
             await death(ev);
         }
         else if (ev.type === 'play') {
@@ -325,13 +361,13 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (from) await beam(from, target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1');
             void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
             void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
-            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), keywordOf(ev.label) ? badge(target, t(keywordOf(ev.label)), keywordOf(ev.label)) : null]);
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), keywordOf(ev.label) && iconOf(keywordOf(ev.label)) ? keywordPulse(target, keywordOf(ev.label)) : null]);
         } else if (ev.type === 'attach') {
             const target = visual(ev.targetId);
             void sound?.play('glass');
             if (from ?? hero(ev.side)) await beam(from ?? hero(ev.side), target, '#ffe08a', true);
             void fx?.ring(target, '#ffe08a', .8);
-            await Promise.all([flash(target, '#ffe08a'), badge(target, t('附著'), 'attach')]);
+            await flash(target, '#ffe08a');
         } else if (ev.type === 'bounce') {
             const source = visual(ev.instanceId);
             if (from && source) await beam(from, source, '#9fd8ff');
@@ -373,10 +409,10 @@ export function bindFeedback(root, sound = null, fx = null) {
         else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
     }
     async function runStep(step, state) {
-        if (step.kind === 'showcase') { banner.textContent = `${t(step.ev.side === 'player' ? '我方' : '電腦')} · ${step.ev.label || ''} · ${step.ev.card?.name ?? ''}`; hide(hand(step.ev.instanceId)); state.played.add(step.ev.instanceId); await showSpell(step.ev); return; }
+        if (step.kind === 'showcase') { banner.textContent = `${t(step.ev.side === 'player' ? '我方' : '電腦')} · ${eventWord(step.ev)} · ${step.ev.card?.name ?? ''}`; hide(hand(step.ev.instanceId)); state.played.add(step.ev.instanceId); await showSpell(step.ev); return; }
         if (step.kind === 'source') {
             const ev = step.ev, el = visual(ev.instanceId) ?? hero(ev.side);
-            banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
+            banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${eventWord(ev)}${ev.card ? ` · ${ev.card.name}` : ''}`;
             void sound?.play('trigger'); void fx?.ring(el, '#ffe5a1', .9); void fx?.glow(el, '#ffd77a', 360);
             await Promise.all([flash(el, '#ffe5a1'), step.entry ? null : badge(el, ev.label, 'source')]);
             return;
@@ -385,8 +421,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             const el = visual(step.target); if (!el) return;
             if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
             if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
-            void fx?.ring(el, step.keyword === '沉默' ? '#c49bff' : '#ffe08a', .6);
-            await badge(el, t(step.keyword), step.keyword);
+            await keywordPulse(el, step.keyword);
             return;
         }
         if (step.kind === 'stat') {
@@ -401,11 +436,11 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (step.kind === 'tap') {
             const el = visual(step.target); if (!el) return;
             void sound?.play('flip');
-            await Promise.all([animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420), badge(el, t(step.tapped ? '橫置' : '直立'), 'tap')]);
+            await animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420);
             return;
         }
         const ev = step.ev;
-        banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${ev.label || ev.type}${ev.card ? ` · ${ev.card.name}` : ''}`;
+        banner.textContent = `${t(ev.side === 'player' ? '我方' : '電腦')} · ${eventWord(ev)}${ev.card ? ` · ${ev.card.name}` : ''}`;
         if (ev.type === 'turn' || ev.type === 'attack' || (ev.type === 'play' && !isSpellCard(ev.card))) dropShowcase();
         await runEvent(step, state);
     }
