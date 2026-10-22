@@ -38,8 +38,8 @@ public partial class GameEngine
             case "WCG-237": return p.Deck.Count > 3 ? 3 : -5;
             case "WCG-242": return p.Hp <= 2 ? -20 : Draw(2) - 1.5;
             case "WCG-248":
-                var strongest = p.Field.Where(m => m.Card.HasWill("生機")).Select(m => m.CurrentPP).DefaultIfEmpty(0).Max();
-                return Best(e.Field.Where(m => m.CurrentPP < strongest)) + 1 - 1.5;
+                var strongest = p.Field.Where(m => m.Card.HasWill("生機")).Select(ThresholdPP).DefaultIfEmpty(0).Max();
+                return Best(e.Field.Where(m => ThresholdPP(m) < strongest)) + 1 - 1.5;
             case "WCG-250": return Draw(p.Graveyard.Count(x => x.Card.IsMonster) >= 5 ? 2 : 1);
         }
         if (!c.Card.IsMonster) return null;
