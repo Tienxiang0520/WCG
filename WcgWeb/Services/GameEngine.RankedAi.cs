@@ -226,6 +226,7 @@ public partial class GameEngine
         if (ReasonChoice(p, e, choice, prof) is { } reason) return SelectChoice(reason);
         if (NewAi && OathChoice(p, choice) is { } oath) return SelectChoice(oath);
         if (NewAi && VaultChoice(p, choice) is { } vault) return SelectChoice(vault);
+        if (NewAi && EmberChoice(p, choice) is { } ember) return SelectChoice(ember);
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
         if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return NewSlot(p, choice) is { } slot ? SelectChoice(slot) : ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));

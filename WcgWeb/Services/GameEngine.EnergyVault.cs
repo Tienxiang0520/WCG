@@ -84,7 +84,7 @@ public partial class GameEngine
                     Present("draw", p, en.InstanceId, label: "能量牌回到手牌");
                 }), true);
                 break;
-            default: return false;
+            default: return EmberDeploy(p, m);
         }
         return true;
     }
@@ -96,7 +96,7 @@ public partial class GameEngine
             case "WCG-303": OfferEnergySummon(p, EnergySummonTitle, c => c.Card.TotalCost <= 4, true, false); break;
             case "WCG-307": OfferEnergySummon(p, EnergySummonTitle, _ => true, false, false, () => OfferEnergySummon(p, EnergySummonMoreTitle, _ => true, false, true)); break;
             case "WCG-309": p.EnergyAmbushTurn = TurnNumber; Log($"【{p.Name}】本回合從能量區召喚的怪物直立進場、可以攻擊，PP +300。", "action"); break;
-            default: return false;
+            default: return EmberSpell(p, source);
         }
         return true;
     }
@@ -106,11 +106,11 @@ public partial class GameEngine
         "WCG-307" when !RealEnergy(p).Any(x => x.Card.IsMonster) => "能量區沒有怪物牌。",
         "WCG-303" or "WCG-307" when p.Occupied >= 5 => "場上沒有空位。",
         "WCG-302" when p.Hand.Count < 2 => "沒有其他手牌可以放入能量區。",
-        _ => ""
+        _ => EmberPlayProblem(p, c)
     };
     private bool VaultDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
-        if (m.Card.Id != "WCG-305") return false;
+        if (m.Card.Id != "WCG-305") return EmberDeath(p, m, grave);
         if (p.Graveyard.Remove(grave)) { Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); PutIntoEnergy(p, grave); }
         return true;
     }
@@ -133,7 +133,7 @@ public partial class GameEngine
             case "WCG-301": return p.Hand.Any(x => x.Card.IsMonster && x.Card.TotalCost >= 5) ? 1.5 : 0;
             case "WCG-308": return p.Hand.Any(x => x.Card.IsMonster && x.Card.TotalCost >= 5) || RealEnergy(p).Any(x => !x.Card.IsMonster) ? 1 : 0;
         }
-        return null;
+        return EmberPlayValue(p, c);
     }
     // Which hand card to hide: the biggest monster we can't cast soon (it comes back with 303/307), else the least useful card.
     private double HideScore(PlayerState p, CardInstance c) => (c.Card.IsMonster ? c.Card.TotalCost * 2 + (c.Card.TotalCost > p.TotalEnergy + 1 ? 4 : 0) : 0) - HoldValue(p, c) * .5;
