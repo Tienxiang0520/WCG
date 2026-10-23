@@ -34,4 +34,15 @@ public class EnergyZoneViewerTests
         Assert.Contains("背面能量牌", panel);
         Assert.Contains("s.Player,s.Computer", panel);
     }
+
+    [Fact]
+    public void EnergyPanelDoesNotReuseGlobalEnergyBackClass()
+    {
+        // wcg.css styles .energy-back as a 34px (22px in-game) column tile; reusing it squeezed the label one character per line.
+        var src = Board();
+        var panel = src[src.IndexOf("@if(ShowEnergy)")..];
+        panel = panel[..panel.IndexOf("</section></div>}")];
+        Assert.DoesNotMatch("class=\"[^\"]*\\benergy-back\\b", panel);
+        Assert.Contains("energy-dialog-back", panel);
+    }
 }

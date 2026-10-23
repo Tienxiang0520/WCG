@@ -699,4 +699,7 @@
 .locked .field-card .card-art-layer,.locked .field-card .taunt-frame{filter:grayscale(1) brightness(.62) contrast(.95)}
 .locked .field-card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(60,62,68,.28);pointer-events:none;z-index:1}
 .locked .field-card .field-stats,.locked .field-card .shield-counter,.locked .field-card .poison-marker,.locked .field-card .arrowmark{position:relative;z-index:2}
-.energy-zone{cursor:pointer}.energy-zone:focus-visible{outline:2px solid #8ad7ff;outline-offset:2px}.energy-dialog .energy-card.spent,.energy-dialog .energy-back.spent{opacity:.7}.energy-dialog .energy-back{font-style:italic}
+.energy-zone{cursor:pointer}.energy-zone:focus-visible{outline:2px solid #8ad7ff;outline-offset:2px}.energy-dialog .energy-card.spent,.energy-dialog .energy-dialog-back.spent{opacity:.7}.energy-dialog .energy-dialog-back{font-style:italic}
+.energy-dialog .energy-row{min-width:0}.energy-dialog .log-card{display:inline-flex;align-items:center;flex:0 1 auto;width:auto;height:auto;min-width:0;max-width:100%;white-space:nowrap;writing-mode:horizontal-tb;transform:none;margin:0}
+.energy-dialog .energy-dialog-back{cursor:default;text-decoration:none;background:#1f3a52;border-color:#5e91b6;color:#dcebf7}
+.energy-dialog .energy-card small,.energy-dialog .energy-dialog-back small{font-size:inherit;font-weight:500;margin-left:.2em}
