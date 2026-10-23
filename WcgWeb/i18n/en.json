@@ -1852,6 +1852,7 @@
  "選擇決鬥的敵方嘲諷怪物": "Choose the enemy Taunt monster to duel",
  "【{0}】因【{1}】獲得 1 個聖盾指示物。": "{0} gains 1 Holy Shield counter from {1}.",
  "【{0}】與【{1}】決鬥。": "{0} duels {1}.",
+ "選擇本回合 PP -300 的敵方怪物": "Choose an enemy monster to get -300 PP this turn",
  "我的能量區": "Your energy zone",
  "對手能量區": "Opponent's energy zone",
  "可用 {0} / {1}，已使用 {2}。": "Available {0} / {1}, used {2}.",

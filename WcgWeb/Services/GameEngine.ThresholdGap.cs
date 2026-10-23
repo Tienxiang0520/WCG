@@ -17,13 +17,13 @@ public partial class GameEngine
         _ => 0
     };
     // Combat-only modifiers added by later archetypes; 274's own +300 is in CombatPower.
-    private int ArchetypeCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => 0;
+    private int ArchetypeCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => RotCombatPower(m, other, attacking);
     private bool GapDeploy(PlayerState p, MonsterInstance m)
     {
         switch (m.Card.Id)
         {
             case "WCG-278": DrawMany(p, 1); break;
-            default: return false;
+            default: return RotDeploy(p, m);
         }
         return true;
     }
@@ -34,10 +34,10 @@ public partial class GameEngine
         {
             "WCG-277" => p.Field.Concat(enemy).ToList(),
             "WCG-282" => enemy.Where(InPrintedGap).ToList(),
-            _ => null
+            _ => RotSpellTargets(p, c)
         };
     }
-    private static bool GapNeedsTarget(string id) => id is "WCG-277" or "WCG-282";
+    private static bool GapNeedsTarget(string id) => id is "WCG-277" or "WCG-282" || RotNeedsTarget(id);
     private bool GapSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
@@ -45,7 +45,7 @@ public partial class GameEngine
             case "WCG-277": if (t != null && Alive(t)) Attach(p, source, t); break;
             case "WCG-280": var more = p.Field.Any(m => m.IsUnit && (m.Card.PP ?? 0) >= 1300); DrawMany(p, more ? 2 : 1); break;
             case "WCG-282": if (t != null && Alive(t) && InPrintedGap(t)) KillBatch([t], source.Card.Name); break;
-            default: return false;
+            default: return RotSpell(p, source, t);
         }
         return true;
     }
@@ -64,6 +64,6 @@ public partial class GameEngine
             case "WCG-281": return p.Field.Count(InPrintedGap) * 200 / 450d;
             case "WCG-278": return Draw(1);
         }
-        return null;
+        return RotPlayValue(p, c);
     }
 }

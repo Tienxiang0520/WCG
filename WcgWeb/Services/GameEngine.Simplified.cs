@@ -29,8 +29,8 @@ public partial class GameEngine
     private void ApplyCombatPower(MonsterInstance a, MonsterInstance d)
     { var x = CombatPower(a, d, true); var y = CombatPower(d, a, false); if (x != 0) a.CombatPowerBonus = x; if (y != 0) d.CombatPowerBonus = y; }
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
-    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277";
-    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, "WCG-277" => 500, _ => 0 };
+    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277" or "WCG-284";
+    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, "WCG-277" => 500, "WCG-284" => -700, "WCG-288" => -500, _ => 0 };
     private void SpendCombatAttachments(MonsterInstance m)
     {
         if (!Alive(m)) return;

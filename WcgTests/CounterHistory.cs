@@ -21,8 +21,11 @@ internal static class CounterHistory
     // Catalog before every printed-PP check said 「印刷 PP」 (text of 39 cards only).
     // Catalog before the 誓劍決鬥 cards WCG-264–272 existed.
     // Catalog before the 翠語夾縫 cards WCG-273–282 existed.
-    internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => current.GetCard("WCG-273")==null ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 273 or > 282)),JsonSerializer.Serialize(current.PresetDecks));
+    // Catalog before the 腐萎侵蝕 cards WCG-283–291 existed.
+    internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => current.GetCard("WCG-283")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 283 or > 291)),JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) { current=BeforeRotErosionCards(current); return current.GetCard("WCG-273")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 273 or > 282)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforeOathDuelCards(CardDatabase current) { current=BeforeThresholdGapCards(current); return current.GetCard("WCG-264")==null ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 264 or > 272)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforePrintedPpText(CardDatabase current)

@@ -1024,5 +1024,11 @@
   "zhDescription": "理智與生機的 1300–1700 中堅，卡在多數單解的門檻之間，靠交戰加值與嘲諷穩住場面。",
   "name": "Reason + Vitality · Verdant Gap (Midrange)",
   "description": "Reason and Vitality 1300–1700 midrange bodies that slip between most removal thresholds, holding the board with combat bonuses and taunts."
+ },
+ "RANKED-5-ABYSS-ROTEROSION": {
+  "zhName": "深淵・腐萎侵蝕（減益）",
+  "zhDescription": "用箭頭、附著和本回合減益把敵方嘲諷縮小，讓中型怪打得贏再打臉。",
+  "name": "Abyss · Rot Erosion (Debuff)",
+  "description": "Shrink enemy Taunt monsters with arrows, attachments and this-turn debuffs so midsize monsters win the fight, then hit face."
  }
 }

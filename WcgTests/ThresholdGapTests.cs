@@ -24,7 +24,7 @@ public class ThresholdGapTests
     {
         var old=CardBalanceHistory.BeforeThresholdGapCards(cards);
         for(int n=273;n<=282;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsThresholdGapCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=282&&!CardBalanceHistory.IsThresholdGapCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeThresholdGapCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void GapMonstersPrintBetweenTheRemovalThresholds()

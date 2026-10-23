@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 282
+total_cards: 291
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 282 張）
+# WCG 卡牌總表（共 291 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 171 張、法術 90 張、法術（反擊） 9 張、結界 12 張。
+類型：怪物 177 張、法術 92 張、法術（反擊） 9 張、結界 13 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -216,7 +216,7 @@ source: WcgWeb/Data/cards.json
 | WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：怪物 PP +400。它交戰後，此卡送入墓地。 | **Dueling Blade** — Attach: The monster gets +400 PP. After it fights, put this card into the graveyard. |
 | WCG-272 | 終局騎士團長 | 怪物 | 7 | 2500 | 2 | — | 聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。 | **Grand Marshal of the Last Oath** — Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight). |
 
-## 深淵（Abyss，38 張）
+## 深淵（Abyss，46 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -258,8 +258,16 @@ source: WcgWeb/Data/cards.json
 | WCG-212 | 墓語竊賊 | 怪物 | 3 | 1500 | 1 | — | 進場：將對手牌庫頂 2 張牌送入墓地。 | **Gravewhisper Thief** — Deploy: Put the top 2 cards of your opponent's deck into their graveyard. |
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 1700 | 1 | — | 嘲諷；陣亡：從你的墓地將另 1 隻深淵怪物加入手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你的墓地有 5 隻以上怪物，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead. |
+| WCG-283 | 枯骨低語者 | 怪物 | 1 | 700 | 1 | ↑ | 【箭頭：↑】正對面的敵方怪物 PP -300。 | **Bonewhisper** — [Arrow: ↑] The enemy monster directly opposite gets -300 PP. |
+| WCG-284 | 凋萎觸鬚 | 法術 | 1 | — | — | — | 附著於 1 隻敵方怪物：它 PP -700。它交戰後，此卡送入墓地。 | **Withering Tendril** — Attach to an enemy monster: it gets -700 PP. After it fights, put this card into the graveyard. |
+| WCG-285 | 腐蝕號角手 | 怪物 | 2 | 1000 | 1 | — | 進場：所有敵方嘲諷怪物本回合 PP -400。 | **Corrosion Hornblower** — Deploy: All enemy Taunt monsters get -400 PP this turn. |
+| WCG-286 | 枯萎獵手 | 怪物 | 3 | 1300 | 1 | — | 此怪物攻擊時，與它交戰的怪物 PP -400。 | **Blight Stalker** — When this monster attacks, the monster it fights gets -400 PP. |
+| WCG-287 | 疫母巢主 | 怪物 | 4 | 1700 | 1 | ↑ | 【箭頭：↑】正對面的敵方怪物 PP -500。 | **Plague Broodmother** — [Arrow: ↑] The enemy monster directly opposite gets -500 PP. |
+| WCG-288 | 啃噬詛咒 | 法術 | 2 | — | — | — | 附著於 1 隻敵方怪物：它 PP -500。若它是嘲諷怪物，抽 1 張牌。 | **Gnawing Curse** — Attach to an enemy monster: it gets -500 PP. If it has Taunt, draw 1 card. |
+| WCG-289 | 瘴氣沼澤 | 結界 | 3 | — | — | — | 敵方嘲諷怪物 PP -300。 | **Miasma Bog** — Enemy Taunt monsters get -300 PP. |
+| WCG-290 | 深淵穿顱者 | 怪物 | 5 | 2000 | 2 | — | 貫穿；PP 比此怪物低的敵方嘲諷怪物擋不住此怪物。 | **Abyssal Skullpiercer** — Trample. Enemy Taunt monsters with lower PP than this monster can't block it. |
 
-## 中立（Neutral，45 張）
+## 中立（Neutral，46 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -308,6 +316,7 @@ source: WcgWeb/Data/cards.json
 | WCG-257 | 傭兵重鎚手 | 怪物 | 5 | 2300 | 2 | — | 無。 | **Mercenary Hammerer** — None. |
 | WCG-263 | 幸運幣 | 法術 | 0 | — | — | — | 將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。 | **The Coin** — Put this card face up and untapped into your energy zone as 1 temporary energy. At the end of your turn, put it into your graveyard (whether or not it was used). |
 | WCG-282 | 夾縫狙擊 | 法術 | 4 | — | — | — | 消滅 1 隻印刷 PP 在 1300～1700 之間的敵方怪物。 | **Gap Snipe** — Destroy 1 enemy monster with printed PP from 1300 to 1700. |
+| WCG-291 | 衰朽行者 | 怪物 | 2 | 1100 | 1 | — | 進場：使 1 隻敵方怪物本回合 PP -300。 | **Decaying Wanderer** — Deploy: An enemy monster gets -300 PP this turn. |
 
 ## 雙色（Dual，19 張）
 
