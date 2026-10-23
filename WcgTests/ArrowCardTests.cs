@@ -20,10 +20,10 @@ public class ArrowCardTests
     private MonsterInstance Summon(GameEngine g,int n,int slot){var c=Hand(g,n);Assert.True(g.SummonMonster(g.Player,c));Finish(g,slot);return g.Player.Field.Single(m=>m.InstanceId==c.InstanceId);}
 
     static readonly string[] Vanilla = ["WCG-156", "WCG-055", "WCG-157", "WCG-159", "WCG-114"];
-    [Fact] public void CatalogHasElevenArrowCardsAndOnlyThreeShieldArrows()
+    [Fact] public void CatalogHasThirteenArrowCardsAndOnlyThreeShieldArrows()
     {
         var arrows=cards.AllCards.Where(c=>c.Arrows.Length>0).Select(c=>c.Id).ToArray();
-        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-061","WCG-073","WCG-085","WCG-147","WCG-215","WCG-216","WCG-218"],arrows);
+        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-061","WCG-073","WCG-085","WCG-147","WCG-215","WCG-216","WCG-218","WCG-283","WCG-287"],arrows);
         Assert.Equal(["WCG-061","WCG-073","WCG-147"],arrows.Where(GameEngine.ShieldArrows));
         Assert.All(arrows,id=>Assert.Contains("【箭頭：",cards.GetCard(id)!.Text));
         // Every will except Neutral has positional arrows.
