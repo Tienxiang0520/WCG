@@ -1900,5 +1900,8 @@
  "對敵方玩家造成 1 點傷害": "Deal 1 damage to the enemy player",
  "消滅 1 隻印刷 PP 900 以下的敵方怪物": "Destroy 1 enemy monster with printed PP 900 or less",
  "選擇印刷 PP 900 以下的敵方怪物": "Choose an enemy monster with printed PP 900 or less",
- "能量區不足 2 張牌可以送入墓地。": "You need at least 2 cards in your energy zone to put into your graveyard."
+ "能量區不足 2 張牌可以送入墓地。": "You need at least 2 cards in your energy zone to put into your graveyard.",
+ "點擊查看能量牌": "Tap to view energy cards",
+ "查看能量區": "View energy zone",
+ "能量區": "Energy zone"
 }
