@@ -42,7 +42,7 @@
     }
     </div>
     <div class="player hero @HeroClass(s,s.Player,true) @(LegalHero(true)?"legal":"")" data-drop-zone="own-face" data-target="@GameEngine.PlayerTargetId" role="button" tabindex="0" title="@L[LegalHero(true)?"選擇此玩家作為目標":"點擊更換頭像"]" aria-label="@L.F("你的頭像 · 生命 {0} / 7", s.Player.Hp)" @onclick="() => HeroClicked(true)" @onkeydown="e => HeroKey(true, e)">@HeroFace(s.Player,true)<div class="hero-meta"><strong>@L["你"]</strong><small>@L.F("牌庫 {0}", s.Player.DeckCount)</small></div></div>
-    <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy"><strong>@L["能量"] <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>@L["拖手牌到這裡填能量"]</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"") @(energy.Temporary?"temporary":"")" title="@(energy.Temporary?L["臨時能量（本回合結束時消失）"]:null)"></i>}</div></aside>
+    <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy" role="button" tabindex="0" title="@L["點擊查看能量牌"]" aria-label="@L["查看能量區"]" @onclick="OpenEnergy" @onkeydown="EnergyKey"><strong>@L["能量"] <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>@L["拖手牌到這裡填能量"]</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"") @(energy.Temporary?"temporary":"")" title="@(energy.Temporary?L["臨時能量（本回合結束時消失）"]:null)"></i>}</div></aside>
     <aside class="turn-controls"><button class="end-turn @(NoMovesLeft?"no-moves":"")" title="@(NoMovesLeft?L["沒有可用的行動了"]:"")" disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>@L["結束回合"]</button><button @onclick="()=>ShowHistory=true">@L["紀錄／墓地"]</button></aside>
     <div class="v06-hand" aria-label="@L["扇形手牌"]">
     @for(var i=0;i<s.Hand.Length;i++)
@@ -63,6 +63,7 @@
     @if(!Busy&&!Presenting&&s.Pending is {Kind:"target"} targetPending){<div class="target-banner">@L.F("{0}：點選亮起的頭像或卡片選擇目標", targetPending.Title) @if(targetPending.CanCancel){<button @onclick='()=>Send("cancel")'>@L["取消"]</button>}</div>}
     @if(EnergyCandidate is {} energyId){<div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="@L["填能量確認"]"><h3>@L["填能量"]</h3><p>@L.F("將「{0}」轉為能量？不抽牌。", L.CardName(s.Hand.FirstOrDefault(h=>h.Card.InstanceId==energyId)?.Card))</p><button @onclick='()=>Send("energy",energyId,force:true)'>@L["確認填能量"]</button><button @onclick="CancelEnergy">@L["取消"]</button></section></div>}
     @if(ShowHistory){<div class="modal-shade" @onclick="()=>ShowHistory=false"><section class="v06-dialog history-dialog" role="dialog" aria-label="@L["對戰紀錄與墓地"]" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>ShowHistory=false">@L["關閉"]</button><h3>@L["雙方墓地"]</h3>@foreach(var side in new[]{s.Player,s.Computer}){<div class="grave-row"><span class="grave-side">@L[side.Id=="player"?"我方":"敵方"]</span>@if(side.Graveyard.Length==0){<span class="grave-empty">@L["（無）"]</span>}else{@foreach(var c in side.Graveyard){<button type="button" class="log-card" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(c))" @onclick="()=>Detail=c">@L.CardName(c)</button>}}</div>}<h3>@L["對戰紀錄"]</h3><small class="history-hint">@L["點卡名可查看卡片。"]</small>@foreach(var line in History.Take(60)){<p class="log-line"><span>@L[line.Side] @L.Text(line.Label)</span>@if(line.Card is {} lc){<button type="button" class="log-card" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(lc))" @onclick="()=>Detail=lc">@L.CardName(lc)</button>}</p>}</section></div>}
+    @if(ShowEnergy){<div class="modal-shade" @onclick="()=>ShowEnergy=false"><section class="v06-dialog history-dialog energy-dialog" role="dialog" aria-label="@L["能量區"]" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>ShowEnergy=false">@L["關閉"]</button>@foreach(var side in new[]{s.Player,s.Computer}){var mine=side.Id=="player";<h3>@L[mine?"我的能量區":"對手能量區"]</h3><small class="history-hint">@L.F("可用 {0} / {1}，已使用 {2}。", side.AvailableEnergy, side.TotalEnergy, side.Energy.Count(e=>e.Tapped))@if(!mine){@(" ")@L["對手的能量牌背面朝上，只能看到張數。"]}</small><div class="grave-row energy-row" data-energy-side="@side.Id">@if(side.Energy.Length==0){<span class="grave-empty">@L["（無）"]</span>}else{@foreach(var e in side.Energy){if(e.Card is {} ec){<button type="button" class="log-card energy-card @(e.Tapped?"spent":"") @(e.Temporary?"temporary":"")" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(ec))" @onclick="()=>{ShowEnergy=false;Detail=ec;}">@L.CardName(ec)@if(e.Tapped){<small> · @L["已使用"]</small>}@if(e.Temporary){<small> · @L["臨時能量"]</small>}</button>}else{<span class="log-card energy-back @(e.Tapped?"spent":"")">@L["背面能量牌"]@if(e.Tapped){<small> · @L["已使用"]</small>}</span>}}}</div>}</section></div>}
     @if(AvatarOpen){<div class="modal-shade" @onclick="()=>AvatarOpen=false"><section class="v06-dialog avatar-dialog" role="dialog" aria-label="@L["選擇頭像"]" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>AvatarOpen=false">@L["完成"]</button><h3>@L["選擇頭像"]</h3><AvatarPicker /></section></div>}
     @if(Detail is {} card){<div class="modal-shade" @onclick="()=>Detail=null"><section class="v06-dialog card-detail" role="dialog" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true"><button class="close-dialog" @onclick="()=>Detail=null">@L["關閉"]</button><h2 class="visually-hidden">@L.CardName(card)</h2><CardFace Battle="card" Class="face-preview detail-face" Loading="eager" />@if(s.Player.Field.Concat(s.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==card.InstanceId) is {} own){@if(own.Card.PP!=null){<div class="stat-breakdown" aria-label="@L["數值明細"]">@StatBreakdown("PP",own.Card.PP??0,own.PpParts,own.PP)@StatBreakdown("DP",own.Card.DP??1,own.DpParts,own.DP)</div>}<p>@string.Join(" · ",own.Status.Select(L.Text))</p>@foreach(var a in own.Attachments??[]){<p class="attachment">@L.CardName(a)@L["："]@L.FaceText(a)</p>}@if(own.Attachment!=null){<p class="attachment">@L["沉默"]@L["："]@L.CardName(own.Attachment) · @L.FaceText(own.Attachment)</p>}@if(own.CanActivate){<button @onclick='()=>ActivateDetail(card.InstanceId)'>@L["發動結界"]</button>}}@if(CanAct&&s.Pending==null&&EnergyCandidate==null&&s.Hand.Any(h=>h.Card.InstanceId==card.InstanceId&&h.CanSet)){<button class="detail-set-toggle" @onclick="()=>ToggleSetFromDetail(card.InstanceId)">@L[SetModes.Contains(card.InstanceId)?"翻回正面":"切換為蓋牌"]</button>}<small>@L["關閉後拖曳卡片進行操作。"]</small></section></div>}
 </section>
@@ -85,7 +86,7 @@
     [Parameter] public bool TrainingAiPaused {get;set;}
     [Parameter] public EventCallback OpenTraining {get;set;}
     private BattleSnapshot? State;
-    private bool Busy,Presenting,Disposed,ShowHistory,AvatarOpen;
+    private bool Busy,Presenting,Disposed,ShowHistory,AvatarOpen,ShowEnergy;
     private Guid? EnergyCandidate,Dragging;
     private string DragKind="";
     private HashSet<Guid> SetModes=[];
@@ -128,7 +129,10 @@
         return cards.Select(c=>c.Will).Where(w=>!string.IsNullOrEmpty(w)&&w!="中立").GroupBy(w=>w).OrderByDescending(g=>g.Count()).ThenBy(g=>g.Key,StringComparer.Ordinal).Select(g=>g.Key).FirstOrDefault();
     }
     private RenderFragment HeroFace(BattleSide side,bool mine)=>@<div class="hero-face"><div class="hero-portrait"><img class="@(mine&&Profile.IsCustom?"custom":"")" src="@(mine?Profile.AvatarUrl:"battle/avatars/computer.svg")" alt="" draggable="false" /></div><span class="hero-crack" aria-hidden="true"></span><b class="hero-hp hp-value" @key="side.Hp" title="@L.F("生命 {0} / 7", side.Hp)">@side.Hp</b></div>;
-    private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory;
+    // Tap the energy zone: your own energy cards face up; the opponent's hidden energy only as backs (BattleBridge sends no face).
+    private void OpenEnergy(){if(Dragging==null&&EnergyCandidate==null)ShowEnergy=true;}
+    private void EnergyKey(KeyboardEventArgs e){if(e.Key is "Enter" or " ")OpenEnergy();}
+    private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory&&!ShowEnergy;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
     private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
     private bool UntargetedDrag=>DragKind=="hand"&&DragHand is {CanPlay:true,PlayTargets.Length:0} h&&!SetModes.Contains(h.Card.InstanceId)&&h.Card.Type is not ("怪物" or "結界");
@@ -213,7 +217,7 @@
     {
         if(Disposed)return;
         var previous=State;
-        if(previous?.MatchId!=response.State.MatchId){History.Clear();SetModes.Clear();EnergyCandidate=null;ShowHistory=false;}
+        if(previous?.MatchId!=response.State.MatchId){History.Clear();SetModes.Clear();EnergyCandidate=null;ShowHistory=false;ShowEnergy=false;}
         Presenting=response.Success&&previous!=null&&previous.MatchId==response.State.MatchId&&previous.Revision!=response.State.Revision&&response.Events.Length>0&&DragBinding!=null;
         try{
             if(Presenting){
