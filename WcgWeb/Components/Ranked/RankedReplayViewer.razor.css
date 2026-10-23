@@ -44,6 +44,8 @@
 .replay-name { position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 4px 4px; font-size: .68rem; line-height: 1.2; text-align: center; background: linear-gradient(transparent, rgba(5, 7, 12, .92) 45%); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .replay-pp, .replay-dp { position: absolute; top: 4px; min-width: 20px; padding: 1px 5px; border-radius: 6px; font-size: .72rem; font-weight: 700; background: rgba(5, 7, 12, .85); }
 .replay-pp { left: 4px; color: #ffb4a8; } .replay-dp { right: 4px; color: #a8d8ff; }
+.replay-pp.stat-up, .replay-dp.stat-up { background: #14612c; color: #fff; box-shadow: 0 0 0 1.5px #7dffa0; }
+.replay-pp.stat-down, .replay-dp.stat-down { background: #a3161a; color: #fff; box-shadow: 0 0 0 1.5px #ffb3ad; }
 .replay-slot.set { display: grid; place-items: center; background: linear-gradient(160deg, #2a2440, #141224); box-shadow: inset 0 0 0 1px rgba(214, 180, 108, .4); }
 .replay-back { font-family: var(--wcg-font-display); color: var(--wcg-gold); text-align: center; letter-spacing: .2em; line-height: 1.2; font-size: .9rem; }
 .replay-divider { display: flex; align-items: center; gap: 10px; color: var(--wcg-text-3); font-size: .72rem; letter-spacing: .2em; }
