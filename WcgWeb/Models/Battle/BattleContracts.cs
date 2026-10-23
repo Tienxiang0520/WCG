@@ -36,6 +36,9 @@ public record BattleEnergy(Guid InstanceId, bool Tapped)
     // 幸運幣 face up in the energy zone: counts as energy this turn only. Omitted when false so older snapshots stay unchanged.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
     public bool Temporary { get; init; }
+    // Card face: sent for your own energy, and for the opponent's only when public (face-up 幸運幣). Hidden energy stays null.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public BattleCard? Card { get; init; }
 }
 public record BattleSide(string Id, int Hp, int DeckCount, int HandCount, int AvailableEnergy,
     int TotalEnergy, BattleEnergy[] Energy, BattleMonster[] Field, BattleCard[] Graveyard);
