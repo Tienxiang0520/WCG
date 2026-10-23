@@ -10,6 +10,10 @@ public partial class GameEngine
     internal const string ShieldGiftTitle = "選擇獲得聖盾指示物的己方怪物";
     internal const string ArenaFighterTitle = "選擇橫置並決鬥的己方怪物";
     internal const string ArenaTauntTitle = "選擇決鬥的敵方嘲諷怪物";
+    internal const string ArenaFoeTitle = "選擇決鬥的敵方怪物";
+    // 決鬥競技場 only targeted taunts before 2026-10-23; older catalogs keep that wording and rule.
+    private static bool ArenaTauntOnly(MonsterInstance s) => ArenaTauntOnly(s.Card.Text);
+    private static bool ArenaTauntOnly(string text) => text.Contains("嘲諷怪物", StringComparison.Ordinal);
 
     private void GainShieldCounter(MonsterInstance m, CardDefinition source)
     {
@@ -85,11 +89,11 @@ public partial class GameEngine
         }
         return true;
     }
-    private bool CanActivateOath(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-268" && p.Field.Any(m => !m.IsTapped) && GetOpponent(p).Field.Any(m => m.IsTaunt);
+    private bool CanActivateOath(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-268" && p.Field.Any(m => !m.IsTapped) && GetOpponent(p).Field.Any(m => !ArenaTauntOnly(s) || m.IsTaunt);
     private void ActivateOath(PlayerState p, MonsterInstance s)
     {
         var e = GetOpponent(p);
-        PickMonster(p, ArenaFighterTitle, p.Field.Where(m => !m.IsTapped), f => PickMonster(p, ArenaTauntTitle, e.Field.Where(x => x.IsTaunt), d =>
+        PickMonster(p, ArenaFighterTitle, p.Field.Where(m => !m.IsTapped), f => PickMonster(p, ArenaTauntOnly(s) ? ArenaTauntTitle : ArenaFoeTitle, e.Field.Where(x => !ArenaTauntOnly(s) || x.IsTaunt), d =>
         {
             if (!Alive(f) || f.IsTapped) return;
             s.IsTapped = true; f.IsTapped = true; Present("status", p, f.InstanceId, card: f.Card, label: "橫置");

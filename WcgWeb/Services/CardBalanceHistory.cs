@@ -96,6 +96,10 @@ internal static class CardBalanceHistory
     // Catalog before faction triggers became unlimited. Applied on top of the pre-arrow catalog so its fingerprint matches the original release.
     private static CardDatabase UnlimitedFactionTriggersStep(CardDatabase c) => Override(c, "WcgWeb.Balance.BeforeUnlimitedFactionTriggers");
 
+    // Catalog before 決鬥競技場 (WCG-268) could duel any enemy monster (2026-10-23): it only targeted taunts; only its text and design note changed.
+    internal static bool ArenaAnyEnemyCatalog(CardDatabase cards) => cards.GetCard("WCG-268")?.Text?.Contains("敵方怪物交戰（嘲諷擋不住）", StringComparison.Ordinal) == true;
+    private static CardDatabase ArenaAnyEnemyStep(CardDatabase c) => ArenaAnyEnemyCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeArenaAnyEnemy") : c;
+
     // Catalog before 巨熊咆哮 (WCG-048) was reworded (2026-10-23, PR #63): only its text changed; the new wording marks the catalog.
     internal static bool BearRoarTextCatalog(CardDatabase cards) => cards.GetCard("WCG-048")?.Text?.Contains("己方場上怪物數 × 500", StringComparison.Ordinal) == true;
     private static CardDatabase BearRoarTextStep(CardDatabase c) => BearRoarTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeBearRoarText") : c;
@@ -121,12 +125,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => RotErosionCardsStep(current);
+    internal static CardDatabase BeforeArenaAnyEnemy(CardDatabase current) => ArenaAnyEnemyStep(current);
+    internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => RotErosionCardsStep(BeforeArenaAnyEnemy(current));
     internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => ThresholdGapCardsStep(BeforeRotErosionCards(current));
     internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => OathDuelCardsStep(BeforeThresholdGapCards(current));
     internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(BeforeOathDuelCards(current));

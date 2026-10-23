@@ -34,7 +34,7 @@ public partial class GameEngine
                 var best = p.Field.Where(a => !a.IsTapped && CanShield(a)).SelectMany(a => e.Field.Select(d => DuelValue(a, d, true))).DefaultIfEmpty(-6).Max();
                 return best - 1.5;
             case "WCG-271": return p.Field.Any(CanAttack) && e.Field.Count > 0 ? 2 : -2;
-            case "WCG-268": return e.Field.Any(m => m.IsTaunt) ? 2 : 1;
+            case "WCG-268": return ArenaTauntOnly(c.Card.Text) ? (e.Field.Any(m => m.IsTaunt) ? 2 : 1) : e.Field.Count > 0 ? 2 : 1;
             case "WCG-264": return p.Field.Any(m => CanShield(m) && !m.HasShield) ? 2 : 1;
             case "WCG-266": case "WCG-269": return EntryDuelValue(c.Card, e.Field);
             case "WCG-272":
@@ -55,9 +55,11 @@ public partial class GameEngine
                 var a = p.Field.Where(m => m.IsTapped).OrderByDescending(m => m.CurrentPP).FirstOrDefault();
                 return a == null ? null : legal.OrderByDescending(d => DuelValue(a, d)).First();
             case ArenaFighterTitle:
-                var taunts = e.Field.Where(m => m.IsTaunt).ToArray();
-                return legal.OrderByDescending(f => taunts.Select(d => DuelValue(f, d)).DefaultIfEmpty(-9).Max()).First();
+                var arena = p.Structures.FirstOrDefault(s => s.Card.Id == "WCG-268");
+                var foes = e.Field.Where(m => m.IsTaunt || arena != null && !ArenaTauntOnly(arena)).ToArray();
+                return legal.OrderByDescending(f => foes.Select(d => DuelValue(f, d)).DefaultIfEmpty(-9).Max()).First();
             case ArenaTauntTitle:
+            case ArenaFoeTitle:
                 var f2 = p.Field.Where(m => !m.IsTapped).OrderByDescending(m => m.CurrentPP).FirstOrDefault();
                 return f2 == null ? null : legal.OrderByDescending(d => DuelValue(f2, d)).First();
         }

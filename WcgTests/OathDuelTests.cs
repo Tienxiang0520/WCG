@@ -11,7 +11,8 @@ public class OathDuelTests
 {
     private readonly CardDatabase cards;
     public OathDuelTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
-    private GameEngine Game(){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.Structures.Clear();p.EnergyZone.Clear();for(int i=0;i<12;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}Assert.Equal("player",g.CurrentTurnPlayerId);return g;}
+    private GameEngine Game()=>Game(cards);
+    private static GameEngine Game(CardDatabase cards){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.Structures.Clear();p.EnergyZone.Clear();for(int i=0;i<12;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}Assert.Equal("player",g.CurrentTurnPlayerId);return g;}
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private MonsterInstance Unit(PlayerState p,int n,int slot,bool tapped=false){var m=new MonsterInstance(cards.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=tapped,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
@@ -88,9 +89,20 @@ public class OathDuelTests
         Assert.Contains(mine,g.Player.Field);Assert.True(mine.IsTapped);Assert.Equal(0,mine.ShieldCounters);Assert.Contains(big,g.Computer.Field);
         var tapped=Unit(g.Player,155,2,tapped:true);var spell2=Hand(g,267);Assert.DoesNotContain(tapped,g.GetDirectPlayTargets(g.Player,spell2));
     }
-    [Fact] public void ArenaDuelsAnEnemyTauntAndTapsBoth()
+    [Fact] public void ArenaDuelsAnyEnemyMonsterAndTapsBoth()
     {
         var g=Game();var arena=new MonsterInstance(cards.GetCard("WCG-268")!){Slot=4,IsTapped=false,HasSummoningSickness=false};g.Player.Structures.Add(arena);
+        var mine=Unit(g.Player,155,0);Refresh(g);Assert.False(g.CanActivate(g.Player,arena));
+        var foe=Unit(g.Computer,101,1);var taunt=Unit(g.Computer,65,2);Refresh(g);Assert.True(g.CanActivate(g.Player,arena));
+        Assert.True(g.Activate(g.Player,arena));Assert.True(g.SelectTarget(mine));Assert.Equal(GameEngine.ArenaFoeTitle,g.CurrentPendingTarget!.Title);
+        Assert.True(g.SelectTarget(foe));Settle(g);
+        Assert.DoesNotContain(foe,g.Computer.Field);Assert.Contains(taunt,g.Computer.Field);Assert.True(mine.IsTapped);Assert.True(arena.IsTapped);
+    }
+    [Fact] public void PreArenaAnyEnemyCatalogStillDuelsOnlyTaunts()
+    {
+        var old=CardBalanceHistory.BeforeArenaAnyEnemy(cards);Assert.Contains("敵方嘲諷怪物交戰",old.GetCard("WCG-268")!.Text);
+        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)),old.AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)));
+        var g=Game(old);var arena=new MonsterInstance(old.GetCard("WCG-268")!){Slot=4,IsTapped=false,HasSummoningSickness=false};g.Player.Structures.Add(arena);
         var mine=Unit(g.Player,155,0);var foe=Unit(g.Computer,101,1);Refresh(g);Assert.False(g.CanActivate(g.Player,arena));
         var taunt=Unit(g.Computer,65,2);Refresh(g);Assert.True(g.CanActivate(g.Player,arena));
         Assert.True(g.Activate(g.Player,arena));Assert.True(g.SelectTarget(mine));Assert.Equal(GameEngine.ArenaTauntTitle,g.CurrentPendingTarget!.Title);Assert.True(g.SelectTarget(taunt));Settle(g);
