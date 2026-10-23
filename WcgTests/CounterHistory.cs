@@ -18,8 +18,17 @@ internal static class CounterHistory
     // Catalog before 幸運幣 (WCG-263) existed.
     // Catalog before the proportional direct-damage cost update (cost and PP only).
     // Catalog before 聖盾交戰必扣 (design notes of the nine native holy-shield cards only).
+    // Catalog before every printed-PP check said 「印刷 PP」 (text of 39 cards only).
+    internal static CardDatabase BeforePrintedPpText(CardDatabase current)
+    {
+        if(current.GetCard("WCG-082")?.Text.Contains("印刷 PP")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-printed-pp-text.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current)
     {
+        current=BeforePrintedPpText(current);
         if(current.GetCard("WCG-063")?.DesignNote.Contains("聖盾交戰必扣")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-shield-any-combat.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

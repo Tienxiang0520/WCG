@@ -100,14 +100,19 @@ internal static class CardBalanceHistory
     internal static bool BearRoarTextCatalog(CardDatabase cards) => cards.GetCard("WCG-048")?.Text?.Contains("己方場上怪物數 × 500", StringComparison.Ordinal) == true;
     private static CardDatabase BearRoarTextStep(CardDatabase c) => BearRoarTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeBearRoarText") : c;
 
+    // Catalog before every printed-PP check said 「印刷 PP」 (2026-10-23): only the text of 39 cards changed; 暗影裂箭's new wording marks the catalog.
+    internal static bool PrintedPpTextCatalog(CardDatabase cards) => cards.GetCard("WCG-082")?.Text?.Contains("印刷 PP", StringComparison.Ordinal) == true;
+    private static CardDatabase PrintedPpTextStep(CardDatabase c) => PrintedPpTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforePrintedPpText") : c;
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current) => ShieldAnyCombatStep(current);
+    internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(current);
+    internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current) => ShieldAnyCombatStep(BeforePrintedPpText(current));
     internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(BeforeShieldAnyCombat(current));
     internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(BeforeBearRoarText(current));
     internal static CardDatabase BeforeBurnCost(CardDatabase current) => BurnCostStep(BeforeCardFixes(current));

@@ -2,19 +2,21 @@
   "WCG-001": {
     "zh": "赤誓殘酷監工",
     "name": "Crimson Oath Taskmaster",
-    "text": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-    "zh_text": "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
+    "text": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+    "zh_text": "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
     "prev": {
-      "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card."
+      "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+      "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card."
     }
   },
   "WCG-002": {
     "zh": "致死衝擊",
     "name": "Lethal Strike",
-    "text": "Destroy 1 enemy monster with 1200 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player.",
-    "zh_text": "消滅 1 隻 PP 1200 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。",
+    "text": "Destroy 1 enemy monster with 1200 printed PP or less. If you have 3 or less life, also deal 1 damage to the enemy player.",
+    "zh_text": "消滅 1 隻印刷 PP 1200 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。",
     "prev": {
-      "消滅 1 隻 PP 1100 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1100 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player."
+      "消滅 1 隻 PP 1100 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1100 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player.",
+      "消滅 1 隻 PP 1200 以下的敵方怪物；若你的生命在 3 點以下，再對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1200 PP or less. If you have 3 or less life, also deal 1 damage to the enemy player."
     }
   },
   "WCG-003": {
@@ -25,10 +27,11 @@
   "WCG-004": {
     "zh": "熾炎猛擊",
     "name": "Blazing Smash",
-    "text": "Destroy 1 enemy monster with 900 PP or less, then draw 1 card.",
-    "zh_text": "消滅 1 隻 PP 900 以下的敵方怪物，然後抽 1 張牌。",
+    "text": "Destroy 1 enemy monster with 900 printed PP or less, then draw 1 card.",
+    "zh_text": "消滅 1 隻印刷 PP 900 以下的敵方怪物，然後抽 1 張牌。",
     "prev": {
-      "消滅 1 隻 PP 600 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 600 PP or less, then draw 1 card."
+      "消滅 1 隻 PP 600 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 600 PP or less, then draw 1 card.",
+      "消滅 1 隻 PP 900 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 900 PP or less, then draw 1 card."
     }
   },
   "WCG-005": {
@@ -44,19 +47,21 @@
   "WCG-007": {
     "zh": "狂血投擲者",
     "name": "Bloodfrenzy Hurler",
-    "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 900 PP or less).",
-    "zh_text": "進場：消滅 PP 最低的 1 隻敵方怪物（須在 900 以下）。",
+    "text": "Deploy: Destroy the enemy monster with the lowest printed PP (only if it has 900 printed PP or less).",
+    "zh_text": "進場：消滅印刷 PP 最低的 1 隻敵方怪物（須在 900 以下）。",
     "prev": {
-      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 600 PP or less)."
+      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 600 PP or less).",
+      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 900 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 900 PP or less)."
     }
   },
   "WCG-008": {
     "zh": "烈焰旋風",
     "name": "Flame Whirlwind",
-    "text": "Destroy all monsters on both sides with 900 PP or less.",
-    "zh_text": "消滅雙方所有 PP 900 以下的怪物。",
+    "text": "Destroy all monsters on both sides with 900 printed PP or less.",
+    "zh_text": "消滅雙方所有印刷 PP 900 以下的怪物。",
     "prev": {
-      "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less."
+      "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
+      "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less."
     }
   },
   "WCG-009": {
@@ -97,15 +102,20 @@
   "WCG-016": {
     "zh": "灰燼復仇者",
     "name": "Ashen Avenger",
-    "text": "On Death: Destroy the enemy monster with the lowest PP."
+    "text": "On Death: Destroy the enemy monster with the lowest printed PP.",
+    "prev": {
+      "陣亡：消滅 PP 最低的 1 隻敵方怪物。": "On Death: Destroy the enemy monster with the lowest PP."
+    },
+    "zh_text": "陣亡：消滅印刷 PP 最低的 1 隻敵方怪物。"
   },
   "WCG-017": {
     "zh": "滅絕怒火",
     "name": "Annihilating Wrath",
-    "text": "Destroy 1 enemy monster with 1200 PP or less and deal 1 damage to the enemy player.",
-    "zh_text": "消滅 1 隻 PP 1200 以下的敵方怪物，並對敵方玩家造成 1 點傷害。",
+    "text": "Destroy 1 enemy monster with 1200 printed PP or less and deal 1 damage to the enemy player.",
+    "zh_text": "消滅 1 隻印刷 PP 1200 以下的敵方怪物，並對敵方玩家造成 1 點傷害。",
     "prev": {
-      "消滅 1 隻 PP 1100 以下的敵方怪物，並對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1100 PP or less and deal 1 damage to the enemy player."
+      "消滅 1 隻 PP 1100 以下的敵方怪物，並對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1100 PP or less and deal 1 damage to the enemy player.",
+      "消滅 1 隻 PP 1200 以下的敵方怪物，並對敵方玩家造成 1 點傷害。": "Destroy 1 enemy monster with 1200 PP or less and deal 1 damage to the enemy player."
     }
   },
   "WCG-018": {
@@ -125,10 +135,11 @@
   "WCG-020": {
     "zh": "赤帝·燼滅之龍",
     "name": "Crimson Emperor, Cinder Dragon",
-    "text": "Deploy: Destroy all enemy monsters with 1200 PP or less.",
-    "zh_text": "進場：消滅所有 PP 1200 以下的敵方怪物。",
+    "text": "Deploy: Destroy all enemy monsters with 1200 printed PP or less.",
+    "zh_text": "進場：消滅所有印刷 PP 1200 以下的敵方怪物。",
     "prev": {
-      "進場：消滅所有 PP 1100 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1100 PP or less."
+      "進場：消滅所有 PP 1100 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1100 PP or less.",
+      "進場：消滅所有 PP 1200 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1200 PP or less."
     }
   },
   "WCG-021": {
@@ -197,8 +208,11 @@
   "WCG-032": {
     "zh": "質能瓦解",
     "name": "Mass Disruption",
-    "text": "Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead.",
-    "zh_text": "消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。"
+    "text": "Destroy 1 enemy monster with 1600 printed PP or less; if the target is tapped, 2300 printed PP or less instead.",
+    "zh_text": "消滅 1 隻印刷 PP 1600 以下的敵方怪物；若目標已橫置，改為印刷 PP 2300 以下。",
+    "prev": {
+      "消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。": "Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead."
+    }
   },
   "WCG-033": {
     "zh": "秘法竊取者",
@@ -268,10 +282,11 @@
   "WCG-046": {
     "zh": "自然之怒",
     "name": "Nature's Wrath",
-    "text": "Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-    "zh_text": "抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
+    "text": "Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+    "zh_text": "抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
     "prev": {
-      "抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card."
+      "抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+      "抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card."
     }
   },
   "WCG-047": {
@@ -282,7 +297,11 @@
   "WCG-048": {
     "zh": "巨熊咆哮",
     "name": "Ursine Roar",
-    "text": "Destroy 1 enemy monster with PP at or below (the number of monsters you have × 500), then draw 1 card."
+    "text": "Destroy 1 enemy monster with printed PP at or below (the number of monsters you have × 500), then draw 1 card.",
+    "prev": {
+      "消滅 1 隻 PP 不高於（己方場上怪物數 × 500）的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with PP at or below (the number of monsters you have × 500), then draw 1 card."
+    },
+    "zh_text": "消滅 1 隻印刷 PP 不高於（己方場上怪物數 × 500）的敵方怪物，然後抽 1 張牌。"
   },
   "WCG-049": {
     "zh": "鐵木樹人",
@@ -338,10 +357,11 @@
   "WCG-059": {
     "zh": "蓋亞暴龍",
     "name": "Gaia Tyrant",
-    "text": "Enemy Taunt monsters with 1800 PP or less can't block this monster (it may attack past them, including the player).",
-    "zh_text": "PP 1800 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。",
+    "text": "Enemy Taunt monsters with 1800 printed PP or less can't block this monster (it may attack past them, including the player).",
+    "zh_text": "印刷 PP 1800 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。",
     "prev": {
-      "PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。": "Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player)."
+      "PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。": "Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player).",
+      "PP 1800 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。": "Enemy Taunt monsters with 1800 PP or less can't block this monster (it may attack past them, including the player)."
     }
   },
   "WCG-060": {
@@ -404,10 +424,11 @@
   "WCG-068": {
     "zh": "神聖審判",
     "name": "Divine Judgment",
-    "text": "Destroy all enemy monsters with 900 PP or less.",
-    "zh_text": "消滅所有 PP 900 以下的敵方怪物。",
+    "text": "Destroy all enemy monsters with 900 printed PP or less.",
+    "zh_text": "消滅所有印刷 PP 900 以下的敵方怪物。",
     "prev": {
-      "消滅所有 PP 600 以下的敵方怪物。": "Destroy all enemy monsters with 600 PP or less."
+      "消滅所有 PP 600 以下的敵方怪物。": "Destroy all enemy monsters with 600 PP or less.",
+      "消滅所有 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 PP or less."
     }
   },
   "WCG-069": {
@@ -465,22 +486,29 @@
   "WCG-076": {
     "zh": "誓約封禁",
     "name": "Oathbound Seal",
-    "text": "Destroy 1 enemy monster with 1800 PP or more.",
-    "zh_text": "消滅 1 隻 PP 1800 以上的敵方怪物。"
+    "text": "Destroy 1 enemy monster with 1800 printed PP or more.",
+    "zh_text": "消滅 1 隻印刷 PP 1800 以上的敵方怪物。",
+    "prev": {
+      "消滅 1 隻 PP 1800 以上的敵方怪物。": "Destroy 1 enemy monster with 1800 PP or more."
+    }
   },
   "WCG-077": {
     "zh": "秩序聖裁者",
     "name": "Order Adjudicator",
-    "text": "Deploy: Destroy 1 enemy monster with 1800 PP or more.",
-    "zh_text": "進場：消滅 1 隻 PP 1800 以上的敵方怪物。"
+    "text": "Deploy: Destroy 1 enemy monster with 1800 printed PP or more.",
+    "zh_text": "進場：消滅 1 隻印刷 PP 1800 以上的敵方怪物。",
+    "prev": {
+      "進場：消滅 1 隻 PP 1800 以上的敵方怪物。": "Deploy: Destroy 1 enemy monster with 1800 PP or more."
+    }
   },
   "WCG-078": {
     "zh": "聖光普照",
     "name": "Radiant Dawn",
-    "text": "Destroy all enemy monsters with 1200 PP or less, then restore 1 life to yourself.",
-    "zh_text": "消滅所有 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。",
+    "text": "Destroy all enemy monsters with 1200 printed PP or less, then restore 1 life to yourself.",
+    "zh_text": "消滅所有印刷 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。",
     "prev": {
-      "消滅所有 PP 600 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 600 PP or less, then restore 1 life to yourself."
+      "消滅所有 PP 600 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 600 PP or less, then restore 1 life to yourself.",
+      "消滅所有 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 1200 PP or less, then restore 1 life to yourself."
     }
   },
   "WCG-079": {
@@ -495,11 +523,12 @@
   "WCG-080": {
     "zh": "光輝聖皇·弗丁",
     "name": "Radiant Holy Emperor, Fordin",
-    "text": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 PP or less.",
-    "zh_text": "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1200 以下的敵方怪物。",
+    "text": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 printed PP or less.",
+    "zh_text": "聖盾（進場放 1 個指示物）；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。",
     "prev": {
       "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
-      "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less."
+      "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less.",
+      "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 PP or less."
     }
   },
   "WCG-081": {
@@ -510,28 +539,31 @@
   "WCG-082": {
     "zh": "暗影裂箭",
     "name": "Shadow Rift Arrow",
-    "text": "Destroy 1 enemy monster with 1200 PP or less.",
-    "zh_text": "消滅 1 隻 PP 1200 以下的敵方怪物。",
+    "text": "Destroy 1 enemy monster with 1200 printed PP or less.",
+    "zh_text": "消滅 1 隻印刷 PP 1200 以下的敵方怪物。",
     "prev": {
-      "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less."
+      "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
+      "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less."
     }
   },
   "WCG-083": {
     "zh": "腐爛食屍鬼",
     "name": "Rotting Ghoul",
-    "text": "On Death: Destroy 1 enemy monster with 900 PP or less.",
-    "zh_text": "陣亡：消滅 1 隻 PP 900 以下的敵方怪物。",
+    "text": "On Death: Destroy 1 enemy monster with 900 printed PP or less.",
+    "zh_text": "陣亡：消滅 1 隻印刷 PP 900 以下的敵方怪物。",
     "prev": {
-      "陣亡：消滅 1 隻 PP 600 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 600 PP or less."
+      "陣亡：消滅 1 隻 PP 600 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 600 PP or less.",
+      "陣亡：消滅 1 隻 PP 900 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 900 PP or less."
     }
   },
   "WCG-084": {
     "zh": "靈魂撕裂",
     "name": "Soul Rend",
-    "text": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 PP or less.",
-    "zh_text": "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1200 以下的敵方怪物。",
+    "text": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 printed PP or less.",
+    "zh_text": "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻印刷 PP 1200 以下的敵方怪物。",
     "prev": {
-      "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less."
+      "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less.",
+      "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 PP or less."
     }
   },
   "WCG-085": {
@@ -542,10 +574,11 @@
   "WCG-086": {
     "zh": "衰竭詛咒",
     "name": "Curse of Exhaustion",
-    "text": "Destroy 1 enemy monster with 1200 PP or less, then draw 1 card.",
-    "zh_text": "消滅 1 隻 PP 1200 以下的敵方怪物，然後抽 1 張牌。",
+    "text": "Destroy 1 enemy monster with 1200 printed PP or less, then draw 1 card.",
+    "zh_text": "消滅 1 隻印刷 PP 1200 以下的敵方怪物，然後抽 1 張牌。",
     "prev": {
-      "消滅 1 隻 PP 1100 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 1100 PP or less, then draw 1 card."
+      "消滅 1 隻 PP 1100 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 1100 PP or less, then draw 1 card.",
+      "消滅 1 隻 PP 1200 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 1200 PP or less, then draw 1 card."
     }
   },
   "WCG-087": {
@@ -571,19 +604,21 @@
   "WCG-091": {
     "zh": "哀慟女妖",
     "name": "Wailing Banshee",
-    "text": "Deploy: Destroy all enemy monsters with 900 PP or less.",
-    "zh_text": "進場：消滅所有 PP 900 以下的敵方怪物。",
+    "text": "Deploy: Destroy all enemy monsters with 900 printed PP or less.",
+    "zh_text": "進場：消滅所有印刷 PP 900 以下的敵方怪物。",
     "prev": {
-      "進場：消滅所有 PP 600 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 600 PP or less."
+      "進場：消滅所有 PP 600 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 600 PP or less.",
+      "進場：消滅所有 PP 900 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 900 PP or less."
     }
   },
   "WCG-092": {
     "zh": "絕望疫病",
     "name": "Plague of Despair",
-    "text": "Destroy all monsters on both sides with 900 PP or less.",
-    "zh_text": "消滅雙方所有 PP 900 以下的怪物。",
+    "text": "Destroy all monsters on both sides with 900 printed PP or less.",
+    "zh_text": "消滅雙方所有印刷 PP 900 以下的怪物。",
     "prev": {
-      "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less."
+      "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
+      "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less."
     }
   },
   "WCG-093": {
@@ -638,10 +673,11 @@
   "WCG-102": {
     "zh": "精靈遊俠",
     "name": "Elven Ranger",
-    "text": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-    "zh_text": "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
+    "text": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+    "zh_text": "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。",
     "prev": {
-      "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card."
+      "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
+      "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card."
     }
   },
   "WCG-103": {
@@ -657,10 +693,11 @@
   "WCG-105": {
     "zh": "狂暴投彈手",
     "name": "Mad Bomber",
-    "text": "Deploy: Destroy all other monsters on both sides with 900 PP or less.",
-    "zh_text": "進場：消滅雙方所有其他 PP 900 以下的怪物。",
+    "text": "Deploy: Destroy all other monsters on both sides with 900 printed PP or less.",
+    "zh_text": "進場：消滅雙方所有其他印刷 PP 900 以下的怪物。",
     "prev": {
-      "進場：消滅雙方所有其他 PP 600 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 600 PP or less."
+      "進場：消滅雙方所有其他 PP 600 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 600 PP or less.",
+      "進場：消滅雙方所有其他 PP 900 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 900 PP or less."
     }
   },
   "WCG-106": {
@@ -671,10 +708,11 @@
   "WCG-107": {
     "zh": "飛刀投擲手",
     "name": "Knife Juggler",
-    "text": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 900 PP or less).",
-    "zh_text": "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅 PP 最低的 1 隻敵方怪物（須在 900 以下）。",
+    "text": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest printed PP (only if it has 900 printed PP or less).",
+    "zh_text": "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅印刷 PP 最低的 1 隻敵方怪物（須在 900 以下）。",
     "prev": {
-      "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 600 PP or less)."
+      "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 600 PP or less).",
+      "每當你正常召喚另 1 隻怪物（免費召喚不算），消滅 PP 最低的 1 隻敵方怪物（須在 900 以下）。": "Whenever you summon another monster by paying its cost (free summons don't count), destroy the enemy monster with the lowest PP (only if it has 900 PP or less)."
     }
   },
   "WCG-108": {
@@ -729,10 +767,11 @@
   "WCG-117": {
     "zh": "狂奔科多獸",
     "name": "Stampeding Kodo",
-    "text": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1200 PP or less).",
-    "zh_text": "進場：消滅 PP 最低的 1 隻敵方怪物（須在 1200 以下）。",
+    "text": "Deploy: Destroy the enemy monster with the lowest printed PP (only if it has 1200 printed PP or less).",
+    "zh_text": "進場：消滅印刷 PP 最低的 1 隻敵方怪物（須在 1200 以下）。",
     "prev": {
-      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 1100 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1100 PP or less)."
+      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 1100 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1100 PP or less).",
+      "進場：消滅 PP 最低的 1 隻敵方怪物（須在 1200 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 1200 PP or less)."
     }
   },
   "WCG-118": {
@@ -748,7 +787,11 @@
   "WCG-120": {
     "zh": "炎魔·拉格納羅斯",
     "name": "Fire Lord, Ragnaros",
-    "text": "This monster can't attack. At the end of your turn, destroy the enemy monster with the lowest PP; if the enemy has no monsters, deal 1 damage to the enemy player instead."
+    "text": "This monster can't attack. At the end of your turn, destroy the enemy monster with the lowest printed PP; if the enemy has no monsters, deal 1 damage to the enemy player instead.",
+    "prev": {
+      "此怪物不能攻擊。你的回合結束時，消滅 PP 最低的 1 隻敵方怪物；若敵方沒有怪物，改為對敵方玩家造成 1 點傷害。": "This monster can't attack. At the end of your turn, destroy the enemy monster with the lowest PP; if the enemy has no monsters, deal 1 damage to the enemy player instead."
+    },
+    "zh_text": "此怪物不能攻擊。你的回合結束時，消滅印刷 PP 最低的 1 隻敵方怪物；若敵方沒有怪物，改為對敵方玩家造成 1 點傷害。"
   },
   "WCG-121": {
     "zh": "冒險者行囊",
@@ -832,10 +875,11 @@
   "WCG-136": {
     "zh": "狂戰士斥候",
     "name": "Berserker Scout",
-    "text": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 PP or less.",
-    "zh_text": "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 900 以下的敵方怪物。",
+    "text": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 printed PP or less.",
+    "zh_text": "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻印刷 PP 900 以下的敵方怪物。",
     "prev": {
-      "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 600 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 600 PP or less."
+      "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 600 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 600 PP or less.",
+      "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 900 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 PP or less."
     }
   },
   "WCG-137": {
@@ -912,19 +956,21 @@
   "WCG-150": {
     "zh": "自爆發條偶",
     "name": "Self-Destructing Clockwork",
-    "text": "On Death: Destroy all monsters on both sides with 900 PP or less.",
-    "zh_text": "陣亡：消滅雙方所有 PP 900 以下的怪物。",
+    "text": "On Death: Destroy all monsters on both sides with 900 printed PP or less.",
+    "zh_text": "陣亡：消滅雙方所有印刷 PP 900 以下的怪物。",
     "prev": {
-      "陣亡：消滅雙方所有 PP 600 以下的怪物。": "On Death: Destroy all monsters on both sides with 600 PP or less."
+      "陣亡：消滅雙方所有 PP 600 以下的怪物。": "On Death: Destroy all monsters on both sides with 600 PP or less.",
+      "陣亡：消滅雙方所有 PP 900 以下的怪物。": "On Death: Destroy all monsters on both sides with 900 PP or less."
     }
   },
   "WCG-151": {
     "zh": "熔火鍛爐",
     "name": "Molten Forge",
-    "text": "Tap this card: destroy 1 monster with 900 PP or less.",
-    "zh_text": "橫置此卡：消滅 1 隻 PP 900 以下的怪物。",
+    "text": "Tap this card: destroy 1 monster with 900 printed PP or less.",
+    "zh_text": "橫置此卡：消滅 1 隻印刷 PP 900 以下的怪物。",
     "prev": {
-      "橫置此卡：消滅 1 隻 PP 600 以下的怪物。": "Tap this card: destroy 1 monster with 600 PP or less."
+      "橫置此卡：消滅 1 隻 PP 600 以下的怪物。": "Tap this card: destroy 1 monster with 600 PP or less.",
+      "橫置此卡：消滅 1 隻 PP 900 以下的怪物。": "Tap this card: destroy 1 monster with 900 PP or less."
     }
   },
   "WCG-152": {
@@ -1022,11 +1068,12 @@
   "WCG-170": {
     "zh": "天火浩劫",
     "name": "Skyfire Cataclysm",
-    "text": "Destroy all enemy monsters with 2300 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player.",
+    "text": "Destroy all enemy monsters with 2300 printed PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player.",
     "prev": {
-      "消滅所有 PP 1500 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。": "Destroy all enemy monsters with 1500 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player."
+      "消滅所有 PP 1500 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。": "Destroy all enemy monsters with 1500 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player.",
+      "消滅所有 PP 2300 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。": "Destroy all enemy monsters with 2300 PP or less. Then, if the enemy has no monsters, deal 2 damage to the enemy player."
     },
-    "zh_text": "消滅所有 PP 2300 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。"
+    "zh_text": "消滅所有印刷 PP 2300 以下的敵方怪物；然後若敵方沒有怪物，對敵方玩家造成 2 點傷害。"
   },
   "WCG-171": {
     "zh": "聖光審判巨神",
@@ -1060,8 +1107,11 @@
   "WCG-176": {
     "zh": "神聖至高審判",
     "name": "Supreme Holy Judgment",
-    "text": "Destroy all monsters on both sides with 1800 PP or more. Restore 2 life to yourself.",
-    "zh_text": "消滅雙方所有 PP 1800 以上的怪物；回復己方 2 點生命。"
+    "text": "Destroy all monsters on both sides with 1800 printed PP or more. Restore 2 life to yourself.",
+    "zh_text": "消滅雙方所有印刷 PP 1800 以上的怪物；回復己方 2 點生命。",
+    "prev": {
+      "消滅雙方所有 PP 1800 以上的怪物；回復己方 2 點生命。": "Destroy all monsters on both sides with 1800 PP or more. Restore 2 life to yourself."
+    }
   },
   "WCG-177": {
     "zh": "機械工廠巨像",
@@ -1110,10 +1160,11 @@
   "WCG-185": {
     "zh": "魔導樞紐守衛",
     "name": "Arcane Nexus Warden",
-    "text": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 PP or less.",
-    "zh_text": "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 900 以下的敵方怪物。",
+    "text": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 printed PP or less.",
+    "zh_text": "每當你施放 1 張【理智】法術牌，消滅 1 隻印刷 PP 900 以下的敵方怪物。",
     "prev": {
-      "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less."
+      "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less.",
+      "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 PP or less."
     }
   },
   "WCG-186": {
@@ -1148,8 +1199,11 @@
   "WCG-191": {
     "zh": "聖光大審判官",
     "name": "Grand Inquisitor of Holy Light",
-    "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 1800 PP or more and restore 1 life to yourself.",
-    "zh_text": "嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 1800 以上的敵方怪物，並回復己方 1 點生命。"
+    "text": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 1800 printed PP or more and restore 1 life to yourself.",
+    "zh_text": "嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻印刷 PP 1800 以上的敵方怪物，並回復己方 1 點生命。",
+    "prev": {
+      "嘲諷；進場：若己方場上有其他【秩序】怪物，消滅 1 隻 PP 1800 以上的敵方怪物，並回復己方 1 點生命。": "Taunt. Deploy: If you have another [Order] monster, destroy 1 enemy monster with 1800 PP or more and restore 1 life to yourself."
+    }
   },
   "WCG-192": {
     "zh": "冥河引魂術",
@@ -1169,8 +1223,11 @@
   "WCG-195": {
     "zh": "熔火爆炸陷阱",
     "name": "Molten Blast Trap",
-    "text": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
-    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。"
+    "text": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 printed PP or more, deal 1 damage to the enemy player.",
+    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它印刷 PP 1800 以上，對敵方玩家造成 1 點傷害。",
+    "prev": {
+      "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player."
+    }
   },
   "WCG-196": {
     "zh": "維度時空屏障",
@@ -1248,7 +1305,11 @@
   "WCG-207": {
     "zh": "蝕骨詛咒",
     "name": "Bone-Rot Curse",
-    "text": "Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more."
+    "text": "Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 printed PP or more.",
+    "prev": {
+      "額外代價：失去 1 點生命。消滅 1 隻 PP 1800 以上的敵方嘲諷怪物。": "Additional cost: lose 1 life. Destroy 1 enemy Taunt monster with 1800 PP or more."
+    },
+    "zh_text": "額外代價：失去 1 點生命。消滅 1 隻印刷 PP 1800 以上的敵方嘲諷怪物。"
   },
   "WCG-208": {
     "zh": "寂靜禁咒",
@@ -1452,11 +1513,12 @@
   "WCG-246": {
     "zh": "藤鞭絞殺",
     "name": "Vine Strangle",
-    "text": "Destroy 1 enemy monster with 1200 PP or less.",
+    "text": "Destroy 1 enemy monster with 1200 printed PP or less.",
     "prev": {
-      "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less."
+      "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
+      "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less."
     },
-    "zh_text": "消滅 1 隻 PP 1200 以下的敵方怪物。"
+    "zh_text": "消滅 1 隻印刷 PP 1200 以下的敵方怪物。"
   },
   "WCG-247": {
     "zh": "大地之心",
@@ -1466,7 +1528,11 @@
   "WCG-248": {
     "zh": "蠻荒踐踏",
     "name": "Primal Trample",
-    "text": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less PP than it."
+    "text": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP.",
+    "prev": {
+      "選 1 隻己方生機怪物，消滅 1 隻 PP 比它低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less PP than it."
+    },
+    "zh_text": "選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。"
   },
   "WCG-249": {
     "zh": "墓穴守門人",
