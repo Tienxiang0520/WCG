@@ -1030,5 +1030,11 @@
   "zhDescription": "用箭頭、附著和本回合減益把敵方嘲諷縮小，讓中型怪打得贏再打臉。",
   "name": "Abyss · Rot Erosion (Debuff)",
   "description": "Shrink enemy Taunt monsters with arrows, attachments and this-turn debuffs so midsize monsters win the fight, then hit face."
+ },
+ "RANKED-5-ORDER-BEACONWATCH": {
+  "zhName": "秩序・烽火守望（烽火）",
+  "zhDescription": "怪物直立待命，回合結束時造成傷害或回復；嘲諷擋住對手，不攻擊也能贏。",
+  "name": "Order · Beacon Watch (Beacon)",
+  "description": "Monsters stand upright on watch and deal damage or heal at the end of your turn; Taunts hold the line, so you can win without attacking."
  }
 }

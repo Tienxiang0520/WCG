@@ -1863,5 +1863,11 @@
  "未使用": "Unused",
  "幸運幣・本回合暫時能量": "Lucky Coin · temporary energy this turn",
  "點擊查看張數。": "Tap to see the count.",
- "將手牌拖入此區填能量；點擊查看能量牌。": "Drag a hand card here to add energy; tap to view energy cards."
+ "將手牌拖入此區填能量；點擊查看能量牌。": "Drag a hand card here to add energy; tap to view energy cards.",
+ "烽火": "Beacon",
+ "守望": "Vigil",
+ "烽火傳令": "Beacon Herald",
+ "烽火塔樓": "Beacon Tower",
+ "轉為直立": "Untapped",
+ "【{0}】的橫置怪物轉為直立（本回合不能攻擊）。": "{0}'s tapped monsters untap (they can't attack this turn)."
 }

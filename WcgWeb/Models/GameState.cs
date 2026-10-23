@@ -60,6 +60,8 @@ public class MonsterInstance
     private int baseDP;
     public int CurrentDP { get => baseDP + AttackDamageBonus; set => baseDP = value; }
     public bool HasAttacked { get; set; }
+    // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
+    public bool AttackBanned { get; set; }
     public bool HasSummoningSickness { get; set; }
     public bool IsSilenced { get; set; }
     public bool IsStealthed { get; set; }
@@ -100,6 +102,7 @@ public class MonsterInstance
         TriggersThisTurn = 0;
         HasAttacked = false;
         HasSummoningSickness = false;
+        AttackBanned = false;
     }
 }
 

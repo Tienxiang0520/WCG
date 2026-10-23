@@ -36,6 +36,7 @@ public partial class GameEngine
     {
         var bonus = 0;
         if (p.Occupied >= 5) bonus += 300 * p.Field.Count(x => Active(x, "WCG-219"));
+        bonus += BeaconPower(p, m);
         if (m.IsSilenced) return bonus;
         switch (m.Card.Id)
         {

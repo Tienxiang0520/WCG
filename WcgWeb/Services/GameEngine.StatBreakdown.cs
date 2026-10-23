@@ -42,7 +42,8 @@ public partial class GameEngine
         foreach (var bog in GetOpponent(owner).Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-289")) if (m.IsTaunt) Add(bog.Card, bog.Card.Name, -300);
         if (owner.Occupied >= 5) foreach (var x in owner.Field.Where(x => Active(x, "WCG-219"))) Add(x.Card, x.Card.Name, 300);
         // Self abilities of NewPower: the remainder after the shared 219 aura.
-        var self = NewPower(owner, m) - (owner.Occupied >= 5 ? 300 * owner.Field.Count(x => Active(x, "WCG-219")) : 0);
+        foreach (var (source, amount) in BeaconPowerSources(owner, m)) Add(source, source.Name, amount);
+        var self = NewPower(owner, m) - (owner.Occupied >= 5 ? 300 * owner.Field.Count(x => Active(x, "WCG-219")) : 0) - BeaconPower(owner, m);
         Add(m.Card, m.Card.Name, self);
         // One line per card name: repeated buffs from the same card (or copies of it) are summed.
         return list.GroupBy(x => (x.Source?.Id, x.Label)).Select(g => new StatSource(g.First().Source, g.Key.Label, g.Sum(x => x.Amount)))
