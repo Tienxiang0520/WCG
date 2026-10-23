@@ -44,6 +44,7 @@ public partial class GameEngine
             case "WCG-238": bonus += 200 * p.Field.Count(x => x != m && x.Card.IsNeutral); break;
             case "WCG-262": bonus += 100 * Math.Min(7, p.Hand.Count); break;
             case "WCG-241": if (p.Field.All(x => x.Card.HasWill("狂怒"))) bonus += 400; break;
+            default: bonus += GapPower(p, m); break;
         }
         return bonus;
     }

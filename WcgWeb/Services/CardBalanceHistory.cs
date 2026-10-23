@@ -109,14 +109,20 @@ internal static class CardBalanceHistory
     private static CardDatabase OathDuelCardsStep(CardDatabase c) => c.GetCard("WCG-264") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsOathDuelCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // Catalog before the 翠語夾縫 archetype and its answer card (WCG-273–282, 2026-10-23) existed; nothing else changed.
+    internal static bool IsThresholdGapCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 273 and <= 282;
+    private static CardDatabase ThresholdGapCardsStep(CardDatabase c) => c.GetCard("WCG-273") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsThresholdGapCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => OathDuelCardsStep(current);
+    internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => ThresholdGapCardsStep(current);
+    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => OathDuelCardsStep(BeforeThresholdGapCards(current));
     internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(BeforeOathDuelCards(current));
     internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current) => ShieldAnyCombatStep(BeforePrintedPpText(current));
     internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(BeforeShieldAnyCombat(current));

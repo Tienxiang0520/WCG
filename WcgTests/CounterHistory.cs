@@ -20,8 +20,11 @@ internal static class CounterHistory
     // Catalog before 聖盾交戰必扣 (design notes of the nine native holy-shield cards only).
     // Catalog before every printed-PP check said 「印刷 PP」 (text of 39 cards only).
     // Catalog before the 誓劍決鬥 cards WCG-264–272 existed.
-    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => current.GetCard("WCG-264")==null ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 264 or > 272)),JsonSerializer.Serialize(current.PresetDecks));
+    // Catalog before the 翠語夾縫 cards WCG-273–282 existed.
+    internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => current.GetCard("WCG-273")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 273 or > 282)),JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) { current=BeforeThresholdGapCards(current); return current.GetCard("WCG-264")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 264 or > 272)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforePrintedPpText(CardDatabase current)
     {
         current=BeforeOathDuelCards(current);

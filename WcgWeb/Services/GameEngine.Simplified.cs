@@ -24,10 +24,13 @@ public partial class GameEngine
     public bool ShieldAnyCombatRules => ShieldCounterRules && CardBalanceHistory.ShieldAnyCombatCatalog(_cardDb);
     private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldCounterRules ? m.ShieldCounters > 0 : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
     private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
-    private bool FixedCombatBonus(MonsterInstance m) => SimplifiedRules && m.IsUnit && !m.IsSilenced && m.Card.Id == "WCG-203";
+    // Fixed bonuses that only exist during an attack's combat (203 +500; from 2026-10-23 also 274 +300 for itself).
+    private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking);
+    private void ApplyCombatPower(MonsterInstance a, MonsterInstance d)
+    { var x = CombatPower(a, d, true); var y = CombatPower(d, a, false); if (x != 0) a.CombatPowerBonus = x; if (y != 0) d.CombatPowerBonus = y; }
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
-    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271";
-    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, _ => 0 };
+    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277";
+    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, "WCG-277" => 500, _ => 0 };
     private void SpendCombatAttachments(MonsterInstance m)
     {
         if (!Alive(m)) return;
