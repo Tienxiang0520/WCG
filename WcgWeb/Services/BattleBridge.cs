@@ -117,7 +117,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
     private static BattleStatPart[]? Parts(IReadOnlyList<StatSource> parts) =>
         parts.Count == 0 ? null : parts.Select(x => new BattleStatPart(x.Label, x.Source?.Id, x.Amount)).ToArray();
     private BattleSide Side(PlayerState p) => new(p.Id, p.Hp, p.Deck.Count, p.Hand.Count,
-        p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped) { Temporary = e.TemporaryEnergy }).ToArray(),
+        p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped) { Temporary = e.TemporaryEnergy,
+            Card = p == engine.Player || e.TemporaryEnergy ? GameEngine.VisibleCard(e.Card, e.InstanceId) : null }).ToArray(),
         p.Board.OrderBy(m=>m.Slot).Select(m => Monster(p, m)).ToArray(), p.Graveyard.Select(GameEngine.VisibleCard).ToArray());
     private BattleSnapshot BuildSnapshot()
     {
