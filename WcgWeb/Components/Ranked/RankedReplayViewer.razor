@@ -154,6 +154,8 @@
         for (var i = Math.Min(Index, Replay.Steps.Count - 1); i >= 0; i--)
             foreach (var ev in Replay.Steps[i].Events.Reverse()) yield return (i, ev);
     }
+    // Same green/red badge as the battlefield, against the printed value.
+    private static string StatClass(int? current, int? printed) => current > printed ? "stat-up" : current < printed ? "stat-down" : "";
     private static string ActorLabel(string actor) => actor switch { "computer" => "電腦", "player" => "你", _ => "開局" };
     private static string ActionLabel(string action) => action switch
     {
@@ -205,7 +207,7 @@
                     <button type="button" class="replay-slot unit @(m.Tapped ? "tapped" : "") @(m.Locked ? "locked" : "") @(m.Status.Contains("嘲諷") ? "taunt" : "")" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(m.Card))" @onclick="() => Open(m.Card)">
                         <span class="replay-art"><CardImage CardId="@m.Card.CardId" /></span>
                         <span class="replay-name">@L.CardName(m.Card)</span>
-                        @if (m.Card.PP != null) { <span class="replay-pp wcg-num">@m.PP</span><span class="replay-dp wcg-num">@m.DP</span> }
+                        @if (m.Card.PP != null) { <span class="replay-pp wcg-num @StatClass(m.PP, m.Card.PP)">@m.PP</span><span class="replay-dp wcg-num @StatClass(m.DP, m.Card.DP)">@m.DP</span> }
                     </button>
                 }
             }

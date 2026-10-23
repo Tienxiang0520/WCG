@@ -683,17 +683,15 @@
 .energy-dots i.temporary{background:linear-gradient(180deg,#fff4c8,#f2c14e 50%,#b8860b);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 0 3px #ffd76a)}
 
 /* Stat breakdown: green/red against the printed value; 「顯示原始數值與加成」 turns the badges into `printed +delta` pills. */
-.field-stats b.stat-up{color:#9dffab}
-.field-stats b.stat-down{color:#ffd2cd;text-decoration:underline 2px #ff5a4f;text-underline-offset:2px}
-.field-stats b:first-child.stat-up,.field-stats b:last-child.stat-up{box-shadow:0 0 0 2px #5fe07a,0 3px 8px rgba(0,0,0,.6)}
-.field-stats b:first-child.stat-down,.field-stats b:last-child.stat-down{box-shadow:0 0 0 2px #ff5a4f,0 3px 8px rgba(0,0,0,.6)}
+.field-stats b.stat-up,.field-stats b:first-child.stat-up,.field-stats b:last-child.stat-up{background:#14612c;color:#fff;text-shadow:none;font-weight:900;box-shadow:0 0 0 2px #7dffa0,0 3px 8px rgba(0,0,0,.6)}
+.field-stats b.stat-down,.field-stats b:first-child.stat-down,.field-stats b:last-child.stat-down{background:#a3161a;color:#fff;text-shadow:none;font-weight:900;box-shadow:0 0 0 2px #ffb3ad,0 3px 8px rgba(0,0,0,.6)}
+.is-poisonous .field-stats b:first-child.stat-up,.is-poisonous .field-stats b:first-child.stat-down{box-shadow:0 0 0 2px #b8ff9e,0 0 10px rgba(109,255,90,.6)}
 .field-stats.breakdown b{display:flex;flex-direction:column;align-items:center;justify-content:center;width:auto;height:auto;min-height:28px;border-radius:10px;padding:1px 5px;font-size:13px;line-height:1.05}
 .field-stats.breakdown .stat-delta{font-size:11px;font-weight:700}
-.field-stats.breakdown b.stat-down{text-decoration:none}
 .stat-breakdown{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0}
 .stat-lines{list-style:none;margin:0;padding:0;font-variant-numeric:tabular-nums;line-height:1.5}
 .stat-lines .stat-name{font-weight:800;color:#f3dca3}
-.stat-lines .stat-up{color:#8fe59c}.stat-lines .stat-down{color:#ff958c}
+.stat-lines .stat-up{color:#8fe59c;font-weight:700}.stat-lines .stat-down{color:#ff9d94;font-weight:700}
 .stat-lines .stat-current{font-weight:700;border-top:1px solid rgba(214,180,108,.4);margin-top:2px;padding-top:2px}
 
 /* Locked by an attachment (誓言枷鎖): grey art and frame; stats, icons and the attached-card marker stay readable. */
