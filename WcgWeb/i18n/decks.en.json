@@ -1020,9 +1020,9 @@
   "description": "Shielded knights challenge chosen enemy monsters, using combat as removal to break through Taunt."
  },
  "RANKED-5-REASON-VERDANTGAP": {
-  "zhName": "理智・翠語夾縫（中速）",
+  "zhName": "理智＋生機・翠語夾縫（中速）",
   "zhDescription": "理智與生機的 1300–1700 中堅，卡在多數單解的門檻之間，靠交戰加值與嘲諷穩住場面。",
-  "name": "Reason · Verdant Gap (Midrange)",
+  "name": "Reason + Vitality · Verdant Gap (Midrange)",
   "description": "Reason and Vitality 1300–1700 midrange bodies that slip between most removal thresholds, holding the board with combat bonuses and taunts."
  }
 }
