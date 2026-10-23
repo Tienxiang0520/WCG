@@ -74,7 +74,7 @@ public class CardDefinition
     public static bool IsVanillaText(string? text) => (text ?? "").Trim() is "" or "無" or "無。" or "None" or "None.";
     [JsonIgnore] public bool IsVanilla => IsVanillaText(Text);
     [JsonIgnore] public bool IsCounter => Type == "法術（反擊）";
-    [JsonIgnore] public bool CannotAttack => IsMonster && Id == "WCG-120";
+    [JsonIgnore] public bool CannotAttack => IsMonster && Id is "WCG-120" or "WCG-296";
     [JsonIgnore] public bool HasTaunt => Keywords.Contains("嘲諷");
     [JsonIgnore] public bool HasCharge => Keywords.Contains("衝鋒");
     public static string NormalizeShieldName(string text) => text.Replace("聖盾", "能量護盾", StringComparison.Ordinal).Replace("能量能量護盾", "能量護盾", StringComparison.Ordinal);

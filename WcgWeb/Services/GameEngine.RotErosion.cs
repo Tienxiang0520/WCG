@@ -23,20 +23,20 @@ public partial class GameEngine
         {
             case "WCG-285": foreach (var x in e.Field.Where(x => x.IsUnit && x.IsTaunt)) AddTurnBonus(x, -400, m.Card); break;
             case "WCG-291": PickMonster(p, DecayTitle, e.Field.Where(x => x.IsUnit), x => AddTurnBonus(x, -300, m.Card)); break;
-            default: return false;
+            default: return BeaconDeploy(p, m);
         }
         return true;
     }
     private List<MonsterInstance>? RotSpellTargets(PlayerState p, CardDefinition c) =>
-        c.Id is "WCG-284" or "WCG-288" ? GetOpponent(p).Field.Where(x => x.IsUnit).ToList() : null;
-    private static bool RotNeedsTarget(string id) => id is "WCG-284" or "WCG-288";
+        c.Id is "WCG-284" or "WCG-288" ? GetOpponent(p).Field.Where(x => x.IsUnit).ToList() : BeaconSpellTargets(p, c);
+    private static bool RotNeedsTarget(string id) => id is "WCG-284" or "WCG-288" || BeaconNeedsTarget(id);
     private bool RotSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
         {
             case "WCG-284": if (t != null && Alive(t)) Attach(p, source, t); break;
             case "WCG-288": if (t != null && Alive(t)) { var taunt = t.IsTaunt; Attach(p, source, t); if (taunt) DrawMany(p, 1); } break;
-            default: return false;
+            default: return BeaconSpell(p, source, t);
         }
         return true;
     }
@@ -52,8 +52,8 @@ public partial class GameEngine
             case "WCG-285": return e.Field.Count(m => m.IsTaunt) * 400 / 450d;
             case "WCG-291": return e.Field.Count > 0 ? 300 / 450d : 0;
         }
-        return null;
+        return BeaconPlayValue(p, c);
     }
     private MonsterInstance? RotTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) =>
-        pending.Title == DecayTitle ? legal.OrderByDescending(m => (m.IsTaunt ? 3 : 0) + BodyValue(m)).FirstOrDefault() : null;
+        pending.Title == DecayTitle ? legal.OrderByDescending(m => (m.IsTaunt ? 3 : 0) + BodyValue(m)).FirstOrDefault() : BeaconTarget(p, pending, legal);
 }

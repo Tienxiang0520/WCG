@@ -119,14 +119,20 @@ internal static class CardBalanceHistory
     private static CardDatabase ThresholdGapCardsStep(CardDatabase c) => c.GetCard("WCG-273") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsThresholdGapCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // Catalog before the 烽火守望 archetype (WCG-292–300, 2026-10-23) existed; nothing else changed.
+    internal static bool IsBeaconWatchCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 292 and <= 300;
+    private static CardDatabase BeaconWatchCardsStep(CardDatabase c) => c.GetCard("WCG-292") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsBeaconWatchCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        BeaconWatchCardsStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => RotErosionCardsStep(current);
+    internal static CardDatabase BeforeBeaconWatchCards(CardDatabase current) => BeaconWatchCardsStep(current);
+    internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => RotErosionCardsStep(BeforeBeaconWatchCards(current));
     internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => ThresholdGapCardsStep(BeforeRotErosionCards(current));
     internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => OathDuelCardsStep(BeforeThresholdGapCards(current));
     internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(BeforeOathDuelCards(current));

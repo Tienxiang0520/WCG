@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 291
+total_cards: 300
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 291 張）
+# WCG 卡牌總表（共 300 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 177 張、法術 92 張、法術（反擊） 9 張、結界 13 張。
+類型：怪物 182 張、法術 95 張、法術（反擊） 9 張、結界 14 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -116,7 +116,7 @@ source: WcgWeb/Data/cards.json
 | WCG-273 | 林語抄寫員 | 怪物 | 3 | 1300 | 1 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +500）。 | **Sylvan Scribe** — This monster gets +100 PP for each card in your hand (up to +500). |
 | WCG-279 | 學識守門人 | 怪物 | 4 | 1500 | 1 | — | 嘲諷；你的手牌在 5 張以上時，此怪物 PP +500。 | **Lore Gatekeeper** — Taunt. While you have 5 or more cards in hand, this monster gets +500 PP. |
 
-## 生機（Life，45 張）
+## 生機（Life，48 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -165,8 +165,11 @@ source: WcgWeb/Data/cards.json
 | WCG-276 | 碧根巨鹿 | 怪物 | 4 | 1600 | 1 | — | 貫穿；你的手牌在 4 張以上時，此怪物 PP +400。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, this monster gets +400 PP. |
 | WCG-277 | 沃土灌注 | 法術 | 1 | — | — | — | 附著：怪物 PP +500。它交戰後，此卡送入墓地。 | **Fertile Infusion** — Attach: The monster gets +500 PP. After it fights, put this card into the graveyard. |
 | WCG-281 | 終章巨木 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；己方場上每有 1 隻印刷 PP 在 1300～1700 之間的其他怪物，此怪物 PP +200。 | **Final Chapter Elder** — Taunt. This monster gets +200 PP for each other monster you have with printed PP from 1300 to 1700. |
+| WCG-293 | 林間守望者 | 怪物 | 3 | 1200 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，回復你 1 點生命。 | **Grove Warden** — Taunt. At the end of your turn, if this monster is upright, you recover 1 life. |
+| WCG-296 | 不動古樹 | 怪物 | 5 | 2100 | 2 | — | 嘲諷；此怪物不能攻擊。此怪物直立時，你的其他直立怪物 PP +200。 | **Unmoving Elder Tree** — Taunt. This monster can't attack. While this monster is upright, your other upright monsters get +200 PP. |
+| WCG-299 | 晨露滋養 | 法術 | 2 | — | — | — | 你場上每有 1 隻直立的怪物，回復你 1 點生命（最多 3 點）。 | **Morning Dew** — You recover 1 life for each upright monster you have (up to 3). |
 
-## 秩序（Order，45 張）
+## 秩序（Order，51 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -215,6 +218,12 @@ source: WcgWeb/Data/cards.json
 | WCG-270 | 誓約持旗官 | 怪物 | 4 | 1600 | 1 | — | 每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。 | **Oath Standard-Bearer** — Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn). |
 | WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：怪物 PP +400。它交戰後，此卡送入墓地。 | **Dueling Blade** — Attach: The monster gets +400 PP. After it fights, put this card into the graveyard. |
 | WCG-272 | 終局騎士團長 | 怪物 | 7 | 2500 | 2 | — | 聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。 | **Grand Marshal of the Last Oath** — Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight). |
+| WCG-292 | 烽火哨兵 | 怪物 | 2 | 900 | 1 | — | 你的回合結束時，若此怪物直立，對敵方玩家造成 1 點傷害。 | **Beacon Sentry** — At the end of your turn, if this monster is upright, deal 1 damage to the enemy player. |
+| WCG-294 | 堅守號角 | 法術 | 2 | — | — | — | 將你所有橫置的怪物轉為直立；它們本回合不能攻擊。 | **Horn of Holding** — Untap all your tapped monsters. They can't attack this turn. |
+| WCG-295 | 烽火塔樓 | 結界 | 3 | — | — | — | 你的回合結束時，若你場上有 3 隻以上直立的怪物，對敵方玩家造成 1 點傷害。 | **Beacon Tower** — At the end of your turn, if you have 3 or more upright monsters, deal 1 damage to the enemy player. |
+| WCG-297 | 守夜祈禱 | 法術 | 1 | — | — | — | 附著：附著的己方怪物直立時，PP +400。 | **Vigil Prayer** — Attach to 1 of your monsters: while it is upright, it gets +400 PP. |
+| WCG-298 | 烽火傳令官 | 怪物 | 4 | 1500 | 1 | ←→ | 【箭頭：← →】你的回合結束時，箭頭指向的每隻直立己方怪物，各對敵方玩家造成 1 點傷害。 | **Beacon Herald** — [Arrow: ← →] At the end of your turn, each upright monster of yours these arrows point at deals 1 damage to the enemy player. |
+| WCG-300 | 堡壘指揮官 | 怪物 | 6 | 2300 | 2 | — | 嘲諷；進場：你場上每有 1 隻直立的其他怪物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Bastion Commander** — Taunt. Deploy: Deal 1 damage to the enemy player for each other upright monster you have (up to 3). |
 
 ## 深淵（Abyss，46 張）
 
