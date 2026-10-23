@@ -112,7 +112,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         return new(visible, m.CurrentPP, m.CurrentDP,
             status.ToArray(), canAttack, problem, targets.ToArray(),
             m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray())
-            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)) };
+            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)), Locked = !m.IsSet && m.AttackLocked };
     }
     private static BattleStatPart[]? Parts(IReadOnlyList<StatSource> parts) =>
         parts.Count == 0 ? null : parts.Select(x => new BattleStatPart(x.Label, x.Source?.Id, x.Amount)).ToArray();

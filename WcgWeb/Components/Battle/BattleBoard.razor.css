@@ -695,3 +695,9 @@
 .stat-lines .stat-name{font-weight:800;color:#f3dca3}
 .stat-lines .stat-up{color:#8fe59c}.stat-lines .stat-down{color:#ff958c}
 .stat-lines .stat-current{font-weight:700;border-top:1px solid rgba(214,180,108,.4);margin-top:2px;padding-top:2px}
+
+/* Locked by an attachment (誓言枷鎖): grey art and frame; stats, icons and the attached-card marker stay readable. */
+.locked .field-card{filter:none;border-color:#7d7f84;box-shadow:inset 0 0 0 2px rgba(150,152,158,.55)}
+.locked .field-card .card-art-layer,.locked .field-card .taunt-frame{filter:grayscale(1) brightness(.62) contrast(.95)}
+.locked .field-card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:rgba(60,62,68,.28);pointer-events:none;z-index:1}
+.locked .field-card .field-stats,.locked .field-card .shield-counter,.locked .field-card .poison-marker,.locked .field-card .arrowmark{position:relative;z-index:2}

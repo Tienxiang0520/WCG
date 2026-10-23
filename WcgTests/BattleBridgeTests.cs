@@ -298,4 +298,18 @@ public class BattleBridgeTests
         Assert.Equal("WCG-121", response.State.Pending.Options[0].Card!.CardId);
     }
 
+    [Fact]
+    public void OathShacklesMarksMonsterLockedUntilAttachmentLeaves()
+    {
+        var mine=Field(engine.Player,"WCG-101");var theirs=Field(engine.Computer,"WCG-101");
+        Assert.All(bridge.Snapshot().Player.Field.Concat(bridge.Snapshot().Computer.Field),m=>Assert.False(m.Locked));
+        theirs.IsTapped=true;theirs.Attachments.Add(new(new CardInstance(db.GetCard("WCG-142")!),engine.Player.Id));
+        var snap=bridge.Snapshot();
+        Assert.True(snap.Computer.Field.Single(m=>m.Card.InstanceId==theirs.InstanceId).Locked);
+        Assert.False(snap.Player.Field.Single(m=>m.Card.InstanceId==mine.InstanceId).Locked);
+        Assert.Contains("\"Locked\":true",JsonSerializer.Serialize(snap));
+        theirs.Attachments.Clear();
+        Assert.False(bridge.Snapshot().Computer.Field.Single(m=>m.Card.InstanceId==theirs.InstanceId).Locked);
+        Assert.DoesNotContain("\"Locked\"",JsonSerializer.Serialize(bridge.Snapshot()));
+    }
 }
