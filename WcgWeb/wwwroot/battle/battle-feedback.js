@@ -37,6 +37,11 @@ export function bindFeedback(root, sound = null, fx = null) {
     const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
     // A energy shield that was up before this batch and is gone afterwards (unit still alive) shattered in combat.
     const shieldBroke = id => !!id && shielded(priorUnits, id) && nextUnits.has(id) && !shielded(nextUnits, id);
+    // A status label can name a keyword it removes (「聖盾抵擋消滅」 spends the shield), so only a keyword the unit really
+    // gained in this batch may pop its icon; otherwise a spent shield would flash back onto the card.
+    const has = (units, id, keyword) => !!units.get(id)?.status?.some(x => keywordOf(x) === keyword || (keyword === '聖盾' || keyword === '能量護盾') && (String(x).startsWith('聖盾') || String(x).startsWith('能量護盾')));
+    const gained = (id, keyword) => !!id && !!keyword && has(nextUnits, id, keyword) && !has(priorUnits, id, keyword);
+    const shattered = new Set();
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
     function node(tag, className, text = '') {
         const el = document.createElement(tag); el.className = className; el.textContent = text;
@@ -47,7 +52,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         for (const animation of animations) animation.cancel(); animations.clear();
         for (const [el, visibility] of hidden) el.style.visibility = visibility;
         hidden.clear(); ghosts.clear(); layer?.remove(); layer = null; pauser = null; banner = null; showcase = null;
-        publicUnits.clear();
+        publicUnits.clear(); shattered.clear();
         if (locked) { delete root.dataset.wcgPlayback; if (skipClick) root.removeEventListener('click', skipClick, true); }
         locked = false; skipClick = null;
     }
@@ -192,7 +197,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (!source || !destination) return;
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
         const broken = [ev.targetId, ev.instanceId].filter(shieldBroke);
-        const shatterAll = () => { for (const id of broken) shieldShatter(visual(id)); };
+        const shatterAll = () => { for (const id of broken) if (!shattered.has(id)) { shattered.add(id); shieldShatter(visual(id)); } };
         // A dragged attack already lunged on release (fan-drag); every other attack, either side, uses the same lunge here.
         if (ev.side === 'player' && lunged.delete(ev.instanceId)) { shatterAll(); await flash(destination); return; }
         const from = source.getBoundingClientRect(), to = destination.getBoundingClientRect();
@@ -376,7 +381,9 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (from) await beam(from, target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1');
             void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
             void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
-            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), keywordOf(ev.label) && iconOf(keywordOf(ev.label)) ? keywordPulse(target, keywordOf(ev.label)) : null]);
+            const k = keywordOf(ev.label);
+            if (iconOf(k) === 'shield' && shieldBroke(ev.instanceId) && !shattered.has(ev.instanceId)) { shattered.add(ev.instanceId); shieldShatter(target); }
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null]);
         } else if (ev.type === 'attach') {
             const target = visual(ev.targetId);
             void sound?.play('glass');

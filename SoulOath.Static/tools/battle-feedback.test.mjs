@@ -254,3 +254,17 @@ test('the computer\'s permanent energy flies to its energy readout', async t=>{
     assert.match(last,/translate\(/);assert.doesNotMatch(last,/translate\(0px,0px\)/);
     h.feedback.clear();
 });
+test('a shield spent in combat never pops back: 「聖盾抵擋消滅」 shatters it once and shows no shield icon', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['聖盾指示物','直立'],pp:1000}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000}]},computer:{field:[]}};
+    await h.settle(h.feedback.present(before,after,[{type:'attack',side:'computer',instanceId:'dead',order:0},{type:'status',side:'player',instanceId:'dead',label:'聖盾抵擋消滅',order:1}]));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='icon').length,0,'no gained-shield pop');
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='shield-break').length,1,'shatters once');
+    h.feedback.clear();h.record.length=0;
+    await h.settle(h.feedback.present(before,after,[{type:'status',side:'player',instanceId:'dead',label:'聖盾抵擋消滅',order:0}]));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='icon').length,0);
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='shield-break').length,1,'status alone still shows the break');
+    h.feedback.clear();
+});
