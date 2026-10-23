@@ -125,7 +125,7 @@ source: WcgWeb/Data/cards.json
 | WCG-045 | 叢林行者 | 怪物 | 2 | 1100 | 1 | — | 進場：若己方場上有其他怪物，抽 1 張牌，然後棄 1 張手牌。 | **Jungle Strider** — Deploy: If you have another monster, draw 1 card, then discard 1 card. |
 | WCG-046 | 自然之怒 | 法術 | 1 | — | — | — | 抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。 | **Nature's Wrath** — Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card. |
 | WCG-047 | 繁衍蜂群 | 怪物 | 2 | 1100 | 1 | — | 進場：你可以從手牌免費召喚 1 隻費用 1 以下的怪物（不觸發進場）。 | **Breeding Swarm** — Deploy: You may summon a monster that costs 1 or less from your hand for free (its Deploy does not trigger). |
-| WCG-048 | 巨熊咆哮 | 法術 | 3 | — | — | — | 己方場上每有 1 隻怪物，可消滅的 PP 上限 +500。消滅 1 隻 PP 在上限以下的敵方怪物，然後抽 1 張牌。 | **Ursine Roar** — The PP limit is 500 for each monster you have. Destroy 1 enemy monster with PP at or below that limit, then draw 1 card. |
+| WCG-048 | 巨熊咆哮 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 不高於（己方場上怪物數 × 500）的敵方怪物，然後抽 1 張牌。 | **Ursine Roar** — Destroy 1 enemy monster with PP at or below (the number of monsters you have × 500), then draw 1 card. |
 | WCG-049 | 鐵木樹人 | 怪物 | 3 | 1400 | 1 | ←→ | 嘲諷；【箭頭：← →】左右相鄰的己方怪物 PP +200。 | **Ironwood Treant** — Taunt. [Arrow: ← →] Your adjacent monsters on the left and right get +200 PP. |
 | WCG-050 | 甦生之雨 | 法術 | 2 | — | — | — | 選擇任一玩家，回復其 2 點生命。 | **Reviving Rain** — Choose either player and restore 2 life to them. |
 | WCG-051 | 猛毒荊棘蜥 | 怪物 | 2 | 800 | 1 | — | 劇毒。 | **Venomthorn Lizard** — Poison. |
