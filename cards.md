@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 272
+total_cards: 282
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 272 張）
+# WCG 卡牌總表（共 282 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 164 張、法術 87 張、法術（反擊） 9 張、結界 12 張。
+類型：怪物 171 張、法術 90 張、法術（反擊） 9 張、結界 12 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -64,7 +64,7 @@ source: WcgWeb/Data/cards.json
 | WCG-243 | 赤鱗護衛 | 怪物 | 4 | 1700 | 1 | — | 嘲諷；陣亡：對敵方玩家造成 1 點傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-244 | 烽火戰旗 | 結界 | 4 | — | — | — | 你的回合結束時，若你場上有怪物且都是狂怒，對敵方玩家造成 1 點傷害。 | **Beacon War Banner** — At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player. |
 
-## 理智（Reason，45 張）
+## 理智（Reason，47 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -113,8 +113,10 @@ source: WcgWeb/Data/cards.json
 | WCG-260 | 退潮令 | 法術（反擊） | 3 | — | — | — | 【反擊】敵方付費召喚怪物時：將該怪物移回持有者手上（不觸發進場）。 | **Ebb Tide Edict** — [Counter] When an enemy summons a monster with payment: Return that monster to its owner's hand (its Deploy doesn't trigger). |
 | WCG-261 | 霧翼斥候 | 怪物 | 2 | 1000 | 1 | — | 此怪物攻擊時可以無視嘲諷。 | **Mistwing Scout** — This monster can ignore Taunt when it attacks. |
 | WCG-262 | 智識巨靈 | 怪物 | 6 | 2100 | 2 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +700）。 | **Lore Colossus** — This monster gets +100 PP for each card in your hand (up to +700). |
+| WCG-273 | 林語抄寫員 | 怪物 | 3 | 1300 | 1 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +500）。 | **Sylvan Scribe** — This monster gets +100 PP for each card in your hand (up to +500). |
+| WCG-279 | 學識守門人 | 怪物 | 4 | 1500 | 1 | — | 嘲諷；你的手牌在 5 張以上時，此怪物 PP +500。 | **Lore Gatekeeper** — Taunt. While you have 5 or more cards in hand, this monster gets +500 PP. |
 
-## 生機（Life，41 張）
+## 生機（Life，45 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -159,6 +161,10 @@ source: WcgWeb/Data/cards.json
 | WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Vine Strangle** — Destroy 1 enemy monster with 1200 printed PP or less. |
 | WCG-247 | 大地之心 | 結界 | 3 | — | — | — | 你的回合開始時，若你場上有 3 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — At the start of your turn, if you have 3 or more [Life] monsters, draw 1 card. |
 | WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。 | **Primal Trample** — Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP. |
+| WCG-274 | 年輪守望者 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；此怪物交戰時 PP +300。 | **Ringwood Warden** — Taunt. This monster gets +300 PP while it fights. |
+| WCG-276 | 碧根巨鹿 | 怪物 | 4 | 1600 | 1 | — | 貫穿；你的手牌在 4 張以上時，此怪物 PP +400。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, this monster gets +400 PP. |
+| WCG-277 | 沃土灌注 | 法術 | 1 | — | — | — | 附著：怪物 PP +500。它交戰後，此卡送入墓地。 | **Fertile Infusion** — Attach: The monster gets +500 PP. After it fights, put this card into the graveyard. |
+| WCG-281 | 終章巨木 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；己方場上每有 1 隻印刷 PP 在 1300～1700 之間的其他怪物，此怪物 PP +200。 | **Final Chapter Elder** — Taunt. This monster gets +200 PP for each other monster you have with printed PP from 1300 to 1700. |
 
 ## 秩序（Order，45 張）
 
@@ -253,7 +259,7 @@ source: WcgWeb/Data/cards.json
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 1700 | 1 | — | 嘲諷；陣亡：從你的墓地將另 1 隻深淵怪物加入手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster from your graveyard to your hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你的墓地有 5 隻以上怪物，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card. If you have 5 or more monsters in your graveyard, draw 2 instead. |
 
-## 中立（Neutral，44 張）
+## 中立（Neutral，45 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -301,8 +307,9 @@ source: WcgWeb/Data/cards.json
 | WCG-255 | 天穹泰坦 | 怪物 | 9 | 3500 | 3 | — | 無。 | **Skyvault Titan** — None. |
 | WCG-257 | 傭兵重鎚手 | 怪物 | 5 | 2300 | 2 | — | 無。 | **Mercenary Hammerer** — None. |
 | WCG-263 | 幸運幣 | 法術 | 0 | — | — | — | 將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。 | **The Coin** — Put this card face up and untapped into your energy zone as 1 temporary energy. At the end of your turn, put it into your graveyard (whether or not it was used). |
+| WCG-282 | 夾縫狙擊 | 法術 | 4 | — | — | — | 消滅 1 隻印刷 PP 在 1300～1700 之間的敵方怪物。 | **Gap Snipe** — Destroy 1 enemy monster with printed PP from 1300 to 1700. |
 
-## 雙色（Dual，16 張）
+## 雙色（Dual，19 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -322,3 +329,6 @@ source: WcgWeb/Data/cards.json
 | WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 1500 | 1 | — | 陣亡：你可以從墓地免費召喚 1 隻 1 費的生機怪物（不觸發進場）。 | **Corpse Bloom** — On Death: You may summon a 1-cost [Life] monster from your graveyard for free (its Deploy does not trigger). |
 | WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 3 | 1500 | 1 | — | 陣亡：對敵方玩家造成 1 點傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
 | WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 1400 | 1 | — | 衝鋒；聖盾（進場放 1 個指示物）。 | **Holy Flame Knight** — Charge. Holy Shield (enters with 1 counter). |
+| WCG-275 | 翠晶巨像 | 怪物（理智／生機） | 4 | 1700 | 1 | — | 己方場上每有 1 隻其他怪物，此怪物 PP +200。 | **Verdant Crystal Colossus** — This monster gets +200 PP for each other monster you have. |
+| WCG-278 | 古樹書庫長 | 怪物（理智／生機） | 4 | 1700 | 1 | — | 進場：抽 1 張牌。 | **Elder Tree Archivist** — Deploy: Draw 1 card. |
+| WCG-280 | 思緒滋長 | 法術（理智／生機） | 2 | — | — | — | 抽 1 張牌；若己方場上有印刷 PP 1300 以上的怪物，再抽 1 張牌。 | **Growing Thoughts** — Draw 1 card. If you have a monster with 1300 printed PP or more, draw 1 more card. |

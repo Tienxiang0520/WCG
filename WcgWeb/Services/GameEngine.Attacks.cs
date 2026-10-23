@@ -15,9 +15,9 @@ public partial class GameEngine
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
     {
-        if(AttackDpBonus(a)==0&&!FixedCombatBonus(a)&&(d==null||!FixedCombatBonus(d)))return CompareAttackCore(a,d);
+        if(AttackDpBonus(a)==0&&(d==null||CombatPower(a,d,true)==0&&CombatPower(d,a,false)==0))return CompareAttackCore(a,d);
         var ad=a.AttackDamageBonus;var ac=a.CombatPowerBonus;var dc=d?.CombatPowerBonus??0;
-        try{if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else{if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}return CompareAttackCore(a,d);}
+        try{if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else{ApplyCombatPower(a,d);}return CompareAttackCore(a,d);}
         finally{a.AttackDamageBonus=ad;a.CombatPowerBonus=ac;if(d!=null)d.CombatPowerBonus=dc;}
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
@@ -38,7 +38,7 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else if(Alive(d)){if(FixedCombatBonus(a))a.CombatPowerBonus=500;if(FixedCombatBonus(d))d.CombatPowerBonus=500;}}
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else if(Alive(d)){ApplyCombatPower(a,d);}}
                     else if(d==null) RageDecision(p,a); else if(Alive(d)) WildDecision(p,a,d);},
                 ()=>{if(!SimplifiedRules && d!=null && Alive(a)&&Alive(d)) WildDecision(e,d,a);},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a);});return true;

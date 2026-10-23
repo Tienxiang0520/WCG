@@ -41,7 +41,7 @@ public partial class GameEngine
                 return e.Field.Where(m => m.IsTaunt).Select(d => EntryDuelValue(c.Card, [d])).OrderByDescending(v => v).Take(2).Sum();
             case "WCG-270": return p.Field.Count >= 2 ? 1.5 : .5;
         }
-        return null;
+        return GapPlayValue(p, c);
     }
     private MonsterInstance? OathTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal)
     {

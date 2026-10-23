@@ -24,9 +24,9 @@ public class OathDuelTests
     {
         var old=CardBalanceHistory.BeforeOathDuelCards(cards);
         for(int n=264;n<=272;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
-        Assert.Equal(cards.AllCards.Count-9,old.AllCards.Count);
+        Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=272)-9,old.AllCards.Count);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeOathDuelCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsOathDuelCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=272&&!CardBalanceHistory.IsOathDuelCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
     [Fact] public void DuelMonstersStayBelowTheVanillaCurve()
     {

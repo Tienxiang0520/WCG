@@ -47,7 +47,7 @@ public partial class GameEngine
             case "WCG-264": PickMonster(p, ShieldGiftTitle, p.Field.Where(CanShield), x => GainShieldCounter(x, m.Card)); break;
             case "WCG-266": case "WCG-269": OfferDuel(p, m, e.Field); break;
             case "WCG-272": OfferDuel(p, m, e.Field.Where(x => x.IsTaunt), () => { if (Alive(m) && !m.IsSilenced) OfferDuel(p, m, e.Field.Where(x => x.IsTaunt)); }); break;
-            default: return false;
+            default: return GapDeploy(p, m);
         }
         return true;
     }
@@ -58,10 +58,10 @@ public partial class GameEngine
         {
             "WCG-267" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
             "WCG-271" => p.Field.Concat(enemy).ToList(),
-            _ => null
+            _ => GapSpellTargets(p, c)
         };
     }
-    private static bool OathNeedsTarget(string id) => id is "WCG-267" or "WCG-271";
+    private static bool OathNeedsTarget(string id) => id is "WCG-267" or "WCG-271" || GapNeedsTarget(id);
     private bool OathSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         var e = GetOpponent(p);
@@ -74,7 +74,7 @@ public partial class GameEngine
                 PickMonster(p, DuelTitle, e.Field, d => Duel(p, t, d));
                 break;
             case "WCG-271": if (t != null && Alive(t)) Attach(p, source, t); break;
-            default: return false;
+            default: return GapSpell(p, source, t);
         }
         return true;
     }

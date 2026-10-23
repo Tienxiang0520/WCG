@@ -1653,5 +1653,55 @@
     "zh": "終局騎士團長",
     "name": "Grand Marshal of the Last Oath",
     "text": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight)."
+  },
+  "WCG-273": {
+    "zh": "林語抄寫員",
+    "name": "Sylvan Scribe",
+    "text": "This monster gets +100 PP for each card in your hand (up to +500)."
+  },
+  "WCG-274": {
+    "zh": "年輪守望者",
+    "name": "Ringwood Warden",
+    "text": "Taunt. This monster gets +300 PP while it fights."
+  },
+  "WCG-275": {
+    "zh": "翠晶巨像",
+    "name": "Verdant Crystal Colossus",
+    "text": "This monster gets +200 PP for each other monster you have."
+  },
+  "WCG-276": {
+    "zh": "碧根巨鹿",
+    "name": "Bluroot Stag",
+    "text": "Trample. While you have 4 or more cards in hand, this monster gets +400 PP."
+  },
+  "WCG-277": {
+    "zh": "沃土灌注",
+    "name": "Fertile Infusion",
+    "text": "Attach: The monster gets +500 PP. After it fights, put this card into the graveyard."
+  },
+  "WCG-278": {
+    "zh": "古樹書庫長",
+    "name": "Elder Tree Archivist",
+    "text": "Deploy: Draw 1 card."
+  },
+  "WCG-279": {
+    "zh": "學識守門人",
+    "name": "Lore Gatekeeper",
+    "text": "Taunt. While you have 5 or more cards in hand, this monster gets +500 PP."
+  },
+  "WCG-280": {
+    "zh": "思緒滋長",
+    "name": "Growing Thoughts",
+    "text": "Draw 1 card. If you have a monster with 1300 printed PP or more, draw 1 more card."
+  },
+  "WCG-281": {
+    "zh": "終章巨木",
+    "name": "Final Chapter Elder",
+    "text": "Taunt. This monster gets +200 PP for each other monster you have with printed PP from 1300 to 1700."
+  },
+  "WCG-282": {
+    "zh": "夾縫狙擊",
+    "name": "Gap Snipe",
+    "text": "Destroy 1 enemy monster with printed PP from 1300 to 1700."
   }
 }
