@@ -35,7 +35,7 @@ public sealed class RankedEraTests : IDisposable
     {
         Func<CardDatabase, CardDatabase>[] chains =
         [
-            CardBalanceHistory.BeforeCardFixes, CardBalanceHistory.BeforeBurnCost, CardBalanceHistory.BeforeTauntFaceCharge, CardBalanceHistory.BeforeLuckyCoin, CardBalanceHistory.BeforeMageDirect, CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
+            CardBalanceHistory.BeforeShieldAnyCombat, CardBalanceHistory.BeforeCardFixes, CardBalanceHistory.BeforeBurnCost, CardBalanceHistory.BeforeTauntFaceCharge, CardBalanceHistory.BeforeLuckyCoin, CardBalanceHistory.BeforeMageDirect, CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
             CardBalanceHistory.BeforeAbilityPp, CardBalanceHistory.BeforeNewCards, CardBalanceHistory.BeforeDeflation, CardBalanceHistory.BeforeRulesSimplification,
             CardBalanceHistory.BeforeEnergyKeywords, CardBalanceHistory.BeforeHeroGuard, CardBalanceHistory.BeforeStrongBuildAdjustment, CardBalanceHistory.BeforeOctoberBalance,
             CardBalanceHistory.BeforeEnergyShield, CardBalanceHistory.BeforeDamageCounters, CardBalanceHistory.BeforePlayerTargets, CardBalanceHistory.BeforeDiversity,
@@ -49,8 +49,8 @@ public sealed class RankedEraTests : IDisposable
             var expected = chains[i](cards);
             Assert.Equal(Fingerprint(expected), eras[i].Rules);
             Assert.Equal(Fingerprint(expected, true), eras[i].IdentifierRules);
-            Assert.Equal(i == 25, eras[i].LimitFactionTriggers);
-            Assert.Equal(i >= 23, eras[i].LegacyCardRules);
+            Assert.Equal(i == 26, eras[i].LimitFactionTriggers);
+            Assert.Equal(i >= 24, eras[i].LegacyCardRules);
         }
     }
 }

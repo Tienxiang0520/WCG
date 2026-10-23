@@ -254,6 +254,16 @@ test('the computer\'s permanent energy flies to its energy readout', async t=>{
     assert.match(last,/translate\(/);assert.doesNotMatch(last,/translate\(0px,0px\)/);
     h.feedback.clear();
 });
+test('an attacker that wins still spends its shield: 「聖盾交戰消耗」 shatters once with no shield pop', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'a',name:'m'},slot:0,status:['聖盾指示物','直立'],pp:1000}]},computer:{field:[{card:{instanceId:'d',name:'n'},slot:0,status:['直立'],pp:500}]}};
+    const after={player:{field:[{card:{instanceId:'a',name:'m'},slot:0,status:['橫置'],pp:1000}]},computer:{field:[]}};
+    await h.settle(h.feedback.present(before,after,[{type:'attack',side:'player',instanceId:'a',targetId:'d',order:0},{type:'status',side:'player',instanceId:'a',label:'聖盾交戰消耗',order:1},{type:'death',side:'computer',instanceId:'d',label:'交戰',order:2}]));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='icon').length,0,'no gained-shield pop');
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='shield-break').length,1,'shatters once');
+    h.feedback.clear();
+});
 test('a shield spent in combat never pops back: 「聖盾抵擋消滅」 shatters it once and shows no shield icon', async t=>{
     resetFastForward();
     const h=harness(t);

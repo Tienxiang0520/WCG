@@ -26,9 +26,30 @@ public class ShieldCounterTests
         Assert.Contains(knight,g.Player.Field);Assert.Equal(before-1,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
     }
 
-    [Fact] public void AttackingDoesNotSpendACounterWhenItWins()
+    // 聖盾交戰必扣 (2026-10-23): attacking spends a counter too, even when the attacker wins.
+    [Fact] public void AttackingSpendsACounterEvenWhenItWins()
     {
-        var g=Game();var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,101,3);Refresh(g);var before=knight.ShieldCounters;
+        var g=Game();Assert.True(g.ShieldAnyCombatRules);var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,101,3);Refresh(g);var before=knight.ShieldCounters;
+        Assert.True(before>0&&small.CurrentPP<knight.CurrentPP);
+        var preview=g.PreviewAttack(knight,small)!;Assert.True(preview.AttackerShieldBreaks);Assert.False(preview.AttackerDies);Assert.True(preview.DefenderDies);
+        Assert.True(g.Attack(g.Player,knight,small));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
+        Assert.Contains(knight,g.Player.Field);Assert.Equal(before-1,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
+        Assert.Contains(g.Logs,x=>x.Message.Contains("交戰，移除 1 個聖盾指示物"));
+    }
+
+    [Fact] public void BothShieldedMonstersSpendACounterInOneCombat()
+    {
+        var g=Game();var knight=Unit(g.Player,69,1);var squire=Unit(g.Computer,63,3);Refresh(g);
+        int kb=knight.ShieldCounters,sb=squire.ShieldCounters;Assert.True(kb>0&&sb>0);
+        Assert.True(g.Attack(g.Player,knight,squire));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
+        Assert.Contains(knight,g.Player.Field);Assert.Contains(squire,g.Computer.Field);Assert.Equal(kb-1,knight.ShieldCounters);Assert.Equal(sb-1,squire.ShieldCounters);
+    }
+
+    [Fact] public void OlderCatalogAttackingDoesNotSpendACounterWhenItWins()
+    {
+        var old=CardBalanceHistory.BeforeShieldAnyCombat(cards);
+        Assert.Equal(System.Text.Json.JsonSerializer.Serialize(CounterHistory.BeforeShieldAnyCombat(cards).AllCards),System.Text.Json.JsonSerializer.Serialize(old.AllCards));
+        var g=Game(old);Assert.True(g.ShieldCounterRules);Assert.False(g.ShieldAnyCombatRules);var knight=Unit(g.Player,69,1);var small=Unit(g.Computer,101,3);Refresh(g);var before=knight.ShieldCounters;
         Assert.True(g.Attack(g.Player,knight,small));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.Last()));
         Assert.Equal(before,knight.ShieldCounters);Assert.DoesNotContain(small,g.Computer.Field);
     }
