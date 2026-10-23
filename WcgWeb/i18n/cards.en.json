@@ -1808,5 +1808,59 @@
     "name": "Bastion Commander",
     "text": "Taunt. Deploy: Deal 1 damage to the enemy player for each other upright monster you have (up to 3).",
     "zh_text": "嘲諷；進場：你場上每有 1 隻直立的其他怪物，對敵方玩家造成 1 點傷害（最多 3 點）。"
+  },
+  "WCG-301": {
+    "zh": "伏能學徒",
+    "name": "Hidden-Energy Apprentice",
+    "text": "Deploy: You may put 1 monster card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn).",
+    "zh_text": "進場：你可以將 1 張手牌的怪物牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。"
+  },
+  "WCG-302": {
+    "zh": "秘藏封印",
+    "name": "Vault Seal",
+    "text": "Put 1 card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn). Draw 1 card.",
+    "zh_text": "將 1 張手牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。抽 1 張牌。"
+  },
+  "WCG-303": {
+    "zh": "甦醒之印",
+    "name": "Sigil of Awakening",
+    "text": "Choose a monster card with cost 4 or less in your energy zone and summon it for free (it enters upright; Deploy doesn't trigger).",
+    "zh_text": "從你的能量區選 1 張費用 4 以下的怪物牌，不付費召喚到戰場（直立進場，不觸發進場）。"
+  },
+  "WCG-304": {
+    "zh": "能量哨兵",
+    "name": "Energy Sentinel",
+    "text": "Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter.",
+    "zh_text": "嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。"
+  },
+  "WCG-305": {
+    "zh": "星庫守門人",
+    "name": "Star-Vault Keeper",
+    "text": "On Death: Put this card into your energy zone face down and tapped (instead of the graveyard).",
+    "zh_text": "陣亡：將此卡背面朝上、橫置放入你的能量區（不送入墓地）。"
+  },
+  "WCG-306": {
+    "zh": "沉睡巨像",
+    "name": "Slumbering Colossus",
+    "text": "When this card is summoned from your energy zone, it gets +300 PP (for as long as it stays in play).",
+    "zh_text": "此卡從你的能量區被召喚時，PP +300（在場期間一直有效）。"
+  },
+  "WCG-307": {
+    "zh": "群星歸位",
+    "name": "Stars Realign",
+    "text": "Choose up to 2 monster cards in your energy zone and summon them for free (they enter tapped; Deploy doesn't trigger).",
+    "zh_text": "從你的能量區選至多 2 張怪物牌，不付費召喚到戰場（橫置進場，不觸發進場）。"
+  },
+  "WCG-308": {
+    "zh": "能量占卜師",
+    "name": "Energy Diviner",
+    "text": "Deploy: You may swap 1 card in your energy zone with 1 card in your hand (the card put in is face down and keeps the original card's upright or tapped state).",
+    "zh_text": "進場：你可以將你能量區 1 張牌和你的 1 張手牌交換（換進能量區的牌背面朝上，保持原本那張的直立或橫置）。"
+  },
+  "WCG-309": {
+    "zh": "伏兵號令",
+    "name": "Ambush Order",
+    "text": "This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn.",
+    "zh_text": "本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。"
   }
 }

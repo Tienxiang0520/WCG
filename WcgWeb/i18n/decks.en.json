@@ -1036,5 +1036,11 @@
   "zhDescription": "怪物直立待命，回合結束時造成傷害或回復；嘲諷擋住對手，不攻擊也能贏。",
   "name": "Order · Beacon Watch (Beacon)",
   "description": "Monsters stand upright on watch and deal damage or heal at the end of your turn; Taunts hold the line, so you can win without attacking."
+ },
+ "RANKED-5-REASON-ENERGYVAULT": {
+  "zhName": "理智・伏能喚醒（伏能）",
+  "zhDescription": "把大怪蓋進能量區，再不付費從能量區叫出來，用大身材打穿嘲諷。",
+  "name": "Reason · Hidden Energy Awakening (Vault)",
+  "description": "Hide big monsters in your energy zone, then summon them from it without paying and break through Taunts with their size."
  }
 }

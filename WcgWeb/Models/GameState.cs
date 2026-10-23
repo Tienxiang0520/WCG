@@ -62,6 +62,8 @@ public class MonsterInstance
     public bool HasAttacked { get; set; }
     // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
     public bool AttackBanned { get; set; }
+    // Summoned out of its owner's energy zone (伏能喚醒, WCG-301–309); 沉睡巨像 checks it.
+    public bool FromEnergy { get; set; }
     public bool HasSummoningSickness { get; set; }
     public bool IsSilenced { get; set; }
     public bool IsStealthed { get; set; }
@@ -130,6 +132,8 @@ public class PlayerState
     public string LossReason { get; set; } = "";
 
     public bool HasFilledEnergyThisTurn { get; set; }
+    // 伏兵號令 (WCG-309): the turn number it was cast; energy summons that turn enter ready with +300.
+    public int EnergyAmbushTurn { get; set; } = -1;
     public int AvailableEnergy => EnergyZone.Count(e => !e.IsTapped);
     public int AttachedEnergy => Field.Where(m => m.ShieldOwnerId == Id).Sum(m => m.ShieldCount);
     public int TotalEnergy => EnergyZone.Count + AttachedEnergy;
