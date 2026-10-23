@@ -1703,5 +1703,50 @@
     "zh": "夾縫狙擊",
     "name": "Gap Snipe",
     "text": "Destroy 1 enemy monster with printed PP from 1300 to 1700."
+  },
+  "WCG-283": {
+    "zh": "枯骨低語者",
+    "name": "Bonewhisper",
+    "text": "[Arrow: ↑] The enemy monster directly opposite gets -300 PP."
+  },
+  "WCG-284": {
+    "zh": "凋萎觸鬚",
+    "name": "Withering Tendril",
+    "text": "Attach to an enemy monster: it gets -700 PP. After it fights, put this card into the graveyard."
+  },
+  "WCG-285": {
+    "zh": "腐蝕號角手",
+    "name": "Corrosion Hornblower",
+    "text": "Deploy: All enemy Taunt monsters get -400 PP this turn."
+  },
+  "WCG-286": {
+    "zh": "枯萎獵手",
+    "name": "Blight Stalker",
+    "text": "When this monster attacks, the monster it fights gets -400 PP."
+  },
+  "WCG-287": {
+    "zh": "疫母巢主",
+    "name": "Plague Broodmother",
+    "text": "[Arrow: ↑] The enemy monster directly opposite gets -500 PP."
+  },
+  "WCG-288": {
+    "zh": "啃噬詛咒",
+    "name": "Gnawing Curse",
+    "text": "Attach to an enemy monster: it gets -500 PP. If it has Taunt, draw 1 card."
+  },
+  "WCG-289": {
+    "zh": "瘴氣沼澤",
+    "name": "Miasma Bog",
+    "text": "Enemy Taunt monsters get -300 PP."
+  },
+  "WCG-290": {
+    "zh": "深淵穿顱者",
+    "name": "Abyssal Skullpiercer",
+    "text": "Trample. Enemy Taunt monsters with lower PP than this monster can't block it."
+  },
+  "WCG-291": {
+    "zh": "衰朽行者",
+    "name": "Decaying Wanderer",
+    "text": "Deploy: An enemy monster gets -300 PP this turn."
   }
 }

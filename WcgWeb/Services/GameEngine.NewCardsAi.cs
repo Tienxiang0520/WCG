@@ -84,6 +84,7 @@ public partial class GameEngine
     {
         if (!NewAi) return null;
         if (OathTarget(p, pending, legal) is { } oath) return oath;
+        if (RotTarget(p, pending, legal) is { } rot) return rot;
         if (pending.Title == "選擇與它交戰的敵方怪物")
         {
             var power = p.Field.Where(m => m.IsTapped).Select(m => m.CurrentPP).DefaultIfEmpty(0).Max();

@@ -1851,5 +1851,6 @@
  "選擇橫置並決鬥的己方怪物": "Choose your monster to tap and duel",
  "選擇決鬥的敵方嘲諷怪物": "Choose the enemy Taunt monster to duel",
  "【{0}】因【{1}】獲得 1 個聖盾指示物。": "{0} gains 1 Holy Shield counter from {1}.",
- "【{0}】與【{1}】決鬥。": "{0} duels {1}."
+ "【{0}】與【{1}】決鬥。": "{0} duels {1}.",
+ "選擇本回合 PP -300 的敵方怪物": "Choose an enemy monster to get -300 PP this turn"
 }
