@@ -252,6 +252,14 @@ for _key, _swaps in REASON_SWAPS.items():
         _a["down"] = [_inn if d == _out else d for d in _a["down"]]
         _a["var"] = [v for v in _a["var"] if v[0] != _out]
 
+# 2026-10-23 新流派（new-archetypes-plan.md）：先只放大師，勝率不調。
+ARCHETYPES += [
+  dict(key="ORDER-OATHDUEL", will="秩序", name="誓劍決鬥", style="決鬥", tiers=(5,),
+       text="帶聖盾的騎士指定敵方怪物決鬥，用交戰當解場打穿嘲諷。",
+       cards={264:4,265:4,266:4,267:4,268:2,269:4,270:2,271:4,272:2,63:4,69:4,61:2,74:2,76:2,77:2,113:2,64:2},
+       down=[269,267,266,264], var=[]),
+]
+
 # 每個流派只在 tiers 列出的牌位出現（不再自動繼承低牌位流派）。
 # 依 2026-10-09 分級電腦模擬（tools/RankedCheck 搭配 --all-tiers）決定：
 # 2026-10-10 多樣性調整：抽牌、獻祭與鋪場重新構築後也可進入高牌位；強控制仍維持高段限定。

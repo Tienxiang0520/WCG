@@ -299,7 +299,7 @@ public sealed class RankedTests : IDisposable
         var prior=CardBalanceHistory.BeforePrintedPpText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforePrintedPpText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
         Assert.Equal("消滅 1 隻 PP 1200 以下的敵方怪物。",prior.GetCard("WCG-082")!.Text);Assert.Contains("印刷 PP",cards.GetCard("WCG-082")!.Text);
-        var changed=cards.AllCards.Where(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
+        var changed=cards.AllCards.Where(c=>prior.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
         Assert.All(changed,c=>{Assert.Contains("印刷 PP",c.Text);Assert.DoesNotContain("印刷",prior.GetCard(c.Id)!.Text);var o=JsonSerializer.Deserialize<CardDefinition>(JsonSerializer.Serialize(prior.GetCard(c.Id)))!;o.Text=c.Text;Assert.Equal(JsonSerializer.Serialize(c),JsonSerializer.Serialize(o));});
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
@@ -661,7 +661,7 @@ public sealed class RankedTests : IDisposable
         // Rebuilt draw, sacrifice and swarm themes remain available at high tiers; strong control stays gated above.
         foreach(var key in new[]{"REASON-ARCANE","ABYSS-SOULFEAST","REASON-ORACLE","WRATH-WARBAND"}) Assert.Contains(key,keys[5]);
         Assert.True(keys[5].IsSupersetOf(keys[0]));
-        Assert.Equal(new[]{12,22,29,30,34,37}, keys.Select(k=>k.Count));
+        Assert.Equal(new[]{12,22,29,30,34,38}, keys.Select(k=>k.Count));
         // PR E 新流派：機制越複雜越晚出現。
         Assert.Equal([0,1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-MERCENARY")));
         Assert.Equal([1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-LONEWOLF")));
@@ -671,7 +671,9 @@ public sealed class RankedTests : IDisposable
         Assert.Contains(decks.Pool(5),e=>e.Deck.CardIds.Any(id=>cards.GetCard(id)!.Wills.Length==2));
         Assert.Contains(decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="REASON-ARCANE").Deck.CardIds,id=>id=="WCG-252");
         Assert.DoesNotContain("白銀長城",decks.Summary(4));Assert.Contains("白銀長城",decks.Summary(5));
-        Assert.Equal(37,keys.SelectMany(k=>k).Distinct().Count());
+        // 2026-10-23 新流派：先只放大師。
+        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-OATHDUEL")));
+        Assert.Equal(38,keys.SelectMany(k=>k).Distinct().Count());
         // 大師使用完整牌表；同一流派在較低牌位的牌表是簡化版。
         var thorn=decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="VITAL-THORN").Deck;
         Assert.Contains(thorn.CardIds,id=>id=="WCG-082");

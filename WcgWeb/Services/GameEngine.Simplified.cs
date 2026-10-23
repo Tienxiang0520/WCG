@@ -26,8 +26,8 @@ public partial class GameEngine
     private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     private bool FixedCombatBonus(MonsterInstance m) => SimplifiedRules && m.IsUnit && !m.IsSilenced && m.Card.Id == "WCG-203";
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
-    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168";
-    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, _ => 0 };
+    internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271";
+    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, _ => 0 };
     private void SpendCombatAttachments(MonsterInstance m)
     {
         if (!Alive(m)) return;

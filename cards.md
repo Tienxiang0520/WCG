@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 263
+total_cards: 272
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 263 張）
+# WCG 卡牌總表（共 272 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 158 張、法術 85 張、法術（反擊） 9 張、結界 11 張。
+類型：怪物 164 張、法術 87 張、法術（反擊） 9 張、結界 12 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -160,7 +160,7 @@ source: WcgWeb/Data/cards.json
 | WCG-247 | 大地之心 | 結界 | 3 | — | — | — | 你的回合開始時，若你場上有 3 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — At the start of your turn, if you have 3 or more [Life] monsters, draw 1 card. |
 | WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。 | **Primal Trample** — Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP. |
 
-## 秩序（Order，36 張）
+## 秩序（Order，45 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -200,6 +200,15 @@ source: WcgWeb/Data/cards.json
 | WCG-200 | 護誓守衛 | 怪物 | 4 | 1600 | 1 | — | 你受到傷害時，可橫置此怪物，使傷害 -1。 | **Oathguard** — When you take damage, you may tap this monster to reduce that damage by 1. |
 | WCG-216 | 前鋒盾衛 | 怪物 | 3 | 1300 | 1 | ↑ | 【箭頭：↑】正對面的敵方怪物不能攻擊。 | **Vanguard Shieldguard** — [Arrow: ↑] The enemy monster directly across can't attack. |
 | WCG-225 | 審判回響 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。 | **Echo of Judgment** — [Counter] When you take damage from a monster: Cancel the damage and tap that monster. |
+| WCG-264 | 決鬥見證官 | 怪物 | 2 | 1000 | 1 | — | 進場：使 1 隻己方怪物獲得 1 個聖盾指示物。 | **Duel Witness** — Deploy: 1 of your monsters gains 1 Holy Shield counter. |
+| WCG-265 | 誓劍侍從 | 怪物 | 1 | 700 | 1 | — | 聖盾（進場放 1 個指示物）；每當此怪物交戰後仍在場，抽 1 張牌。 | **Oathblade Squire** — Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card. |
+| WCG-266 | 挑戰騎士 | 怪物 | 3 | 1300 | 1 | — | 進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Challenger Knight** — Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it). |
+| WCG-267 | 榮譽決鬥 | 法術 | 3 | — | — | — | 使 1 隻己方直立怪物獲得 1 個聖盾指示物，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Duel of Honor** — 1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it). |
+| WCG-268 | 決鬥競技場 | 結界 | 3 | — | — | — | 橫置此卡並橫置 1 隻直立的己方怪物：令它與 1 隻敵方嘲諷怪物交戰。 | **Dueling Arena** — Tap this card and tap 1 of your upright monsters: it fights 1 enemy Taunt monster. |
+| WCG-269 | 冠軍騎士 | 怪物 | 5 | 1900 | 2 | — | 聖盾（進場放 1 個指示物）；進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Champion Knight** — Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it). |
+| WCG-270 | 誓約持旗官 | 怪物 | 4 | 1600 | 1 | — | 每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。 | **Oath Standard-Bearer** — Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn). |
+| WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：怪物 PP +400。它交戰後，此卡送入墓地。 | **Dueling Blade** — Attach: The monster gets +400 PP. After it fights, put this card into the graveyard. |
+| WCG-272 | 終局騎士團長 | 怪物 | 7 | 2500 | 2 | — | 聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。 | **Grand Marshal of the Last Oath** — Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight). |
 
 ## 深淵（Abyss，38 張）
 

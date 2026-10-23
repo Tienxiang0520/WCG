@@ -104,14 +104,20 @@ internal static class CardBalanceHistory
     internal static bool PrintedPpTextCatalog(CardDatabase cards) => cards.GetCard("WCG-082")?.Text?.Contains("印刷 PP", StringComparison.Ordinal) == true;
     private static CardDatabase PrintedPpTextStep(CardDatabase c) => PrintedPpTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforePrintedPpText") : c;
 
+    // Catalog before the 誓劍決鬥 archetype (WCG-264–272, 2026-10-23) existed; nothing else changed.
+    internal static bool IsOathDuelCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 264 and <= 272;
+    private static CardDatabase OathDuelCardsStep(CardDatabase c) => c.GetCard("WCG-264") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsOathDuelCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(current);
+    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => OathDuelCardsStep(current);
+    internal static CardDatabase BeforePrintedPpText(CardDatabase current) => PrintedPpTextStep(BeforeOathDuelCards(current));
     internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current) => ShieldAnyCombatStep(BeforePrintedPpText(current));
     internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(BeforeShieldAnyCombat(current));
     internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(BeforeBearRoarText(current));

@@ -85,10 +85,10 @@ public partial class GameEngine
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
             "WCG-246" => enemy.Where(m => ThresholdPP(m) <= Low(1100)).ToList(),
             "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
-            _ => null
+            _ => OathSpellTargets(p, c)
         };
     }
-    private static bool NewNeedsTarget(string id) => id is "WCG-206" or "WCG-207" or "WCG-220" or "WCG-221" or "WCG-230" or "WCG-246" or "WCG-248";
+    private static bool NewNeedsTarget(string id) => id is "WCG-206" or "WCG-207" or "WCG-220" or "WCG-221" or "WCG-230" or "WCG-246" or "WCG-248" || OathNeedsTarget(id);
     private string NewPlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
         "WCG-233" when p.Field.Count == 0 => "需要犧牲 1 隻己方怪物。",
@@ -111,7 +111,7 @@ public partial class GameEngine
             case "WCG-245": if (OthersAre(p, m, c => c.HasWill("生機"))) DrawMany(p, 1); break;
             case "WCG-251" when ReasonBuff: DrawMany(p, 1); break;
             case "WCG-251": if (OthersAre(p, m, c => c.HasWill("理智"))) DrawMany(p, 1); break;
-            default: return false;
+            default: return OathDeploy(p, m);
         }
         return true;
     }
@@ -142,7 +142,7 @@ public partial class GameEngine
                 PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t)), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
-            default: return false;
+            default: return OathSpell(p, source, t);
         }
         return true;
     }
