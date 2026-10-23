@@ -25,9 +25,18 @@ internal static class CounterHistory
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
         return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
     }
-    internal static CardDatabase BeforeCardFixes(CardDatabase current)
+    // Catalog before 巨熊咆哮 (WCG-048) was reworded (text only).
+    internal static CardDatabase BeforeBearRoarText(CardDatabase current)
     {
         current=BeforeShieldAnyCombat(current);
+        if(current.GetCard("WCG-048")?.Text.Contains("己方場上怪物數 × 500")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-bear-roar-text.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
+    internal static CardDatabase BeforeCardFixes(CardDatabase current)
+    {
+        current=BeforeBearRoarText(current);
         if(current.GetCard("WCG-003")?.DP!=0)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-card-fixes.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
