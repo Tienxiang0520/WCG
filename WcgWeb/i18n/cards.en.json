@@ -1612,12 +1612,14 @@
   "WCG-264": {
     "zh": "決鬥見證官",
     "name": "Duel Witness",
-    "text": "Deploy: 1 of your monsters gains 1 Holy Shield counter."
+    "text": "Deploy: 1 of your monsters gains 1 Holy Shield counter.",
+    "zh_text": "進場：使 1 隻己方怪物獲得 1 個聖盾指示物。"
   },
   "WCG-265": {
     "zh": "誓劍侍從",
     "name": "Oathblade Squire",
-    "text": "Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card."
+    "text": "Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card.",
+    "zh_text": "聖盾（進場放 1 個指示物）；每當此怪物交戰後仍在場，抽 1 張牌。"
   },
   "WCG-266": {
     "zh": "挑戰騎士",
@@ -1627,7 +1629,8 @@
   "WCG-267": {
     "zh": "榮譽決鬥",
     "name": "Duel of Honor",
-    "text": "1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it)."
+    "text": "1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it).",
+    "zh_text": "使 1 隻己方直立怪物獲得 1 個聖盾指示物，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。"
   },
   "WCG-268": {
     "zh": "決鬥競技場",
@@ -1637,12 +1640,14 @@
   "WCG-269": {
     "zh": "冠軍騎士",
     "name": "Champion Knight",
-    "text": "Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it)."
+    "text": "Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it).",
+    "zh_text": "聖盾（進場放 1 個指示物）；進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。"
   },
   "WCG-270": {
     "zh": "誓約持旗官",
     "name": "Oath Standard-Bearer",
-    "text": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn)."
+    "text": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn).",
+    "zh_text": "每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。"
   },
   "WCG-271": {
     "zh": "決鬥之劍",
@@ -1652,7 +1657,8 @@
   "WCG-272": {
     "zh": "終局騎士團長",
     "name": "Grand Marshal of the Last Oath",
-    "text": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight)."
+    "text": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight).",
+    "zh_text": "聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。"
   },
   "WCG-273": {
     "zh": "林語抄寫員",
