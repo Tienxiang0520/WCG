@@ -198,4 +198,13 @@ public sealed class LocalizationTests
         Assert.Contains("我的牌組", LocalizationCatalog.Translate("我的牌組"));
         Assert.False(Han(LocalizationCatalog.Translate(deck.Name)));
     }
+
+    // Current card text must display exactly as cards.json; only older eras' 聖盾 wording becomes 能量護盾.
+    [Fact] public void CurrentCardChineseTextDisplaysUnchanged()
+    {
+        var wrong = cards.AllCards.Where(c => LocalizationCatalog.DisplayZh(c.Id, c.Text) != c.Text || LocalizationCatalog.DisplayZh(c.Id, c.Text).Contains("能量護盾"))
+            .Select(c => $"  {c.Id} {c.Name}: {LocalizationCatalog.DisplayZh(c.Id, c.Text)}").ToList();
+        Assert.True(wrong.Count == 0, "current card text altered:\n" + string.Join("\n", wrong));
+        Assert.Equal("能量護盾", LocalizationCatalog.DisplayZh("WCG-265", "聖盾"));
+    }
 }
