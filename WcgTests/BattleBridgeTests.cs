@@ -166,14 +166,15 @@ public class BattleBridgeTests
         Assert.False(bridge.Submit(Cmd("execute-arbitrary-function")).Success);
         Assert.Contains(c,engine.Player.Hand);Assert.Empty(engine.Player.EnergyZone);
     }
-    [Fact] public void VisibleStateNeverSerializesHiddenHandDeckOrEnergyFaces()
+    [Fact] public void VisibleStateNeverSerializesHiddenHandDeckOrOpponentEnergyFaces()
     {
         engine.Computer.Hand.Clear();engine.Computer.Hand.Add(new(db.GetCard("WCG-040")!));
         engine.Computer.Deck.Clear();engine.Computer.Deck.Add(new(db.GetCard("WCG-098")!));
         engine.Player.EnergyZone.Add(new(db.GetCard("WCG-096")!));engine.Computer.EnergyZone.Add(new(db.GetCard("WCG-095")!));
         var json=JsonSerializer.Serialize(bridge.Snapshot());
         Assert.DoesNotContain("WCG-040",json);Assert.DoesNotContain("WCG-098",json);
-        Assert.DoesNotContain("WCG-096",json);Assert.DoesNotContain("WCG-095",json);
+        // Own energy faces are shown in the energy viewer (like your own hand); the opponent's stay hidden.
+        Assert.Contains("WCG-096",json);Assert.DoesNotContain("WCG-095",json);
     }
     [Fact] public void TargetCancellationPreservesHandAndEnergyThenCanonicalTargetResolves()
     {
@@ -311,5 +312,19 @@ public class BattleBridgeTests
         theirs.Attachments.Clear();
         Assert.False(bridge.Snapshot().Computer.Field.Single(m=>m.Card.InstanceId==theirs.InstanceId).Locked);
         Assert.DoesNotContain("\"Locked\"",JsonSerializer.Serialize(bridge.Snapshot()));
+    }
+    [Fact]
+    public void EnergySnapshotShowsOwnCardsButHidesOpponentFaceDownEnergy()
+    {
+        engine.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!){IsTapped=true});
+        engine.Computer.EnergyZone.Add(new(db.GetCard("WCG-101")!));
+        engine.Computer.EnergyZone.Add(new(db.GetCard("WCG-263")!){TemporaryEnergy=true});
+        var s=bridge.Snapshot();
+        var mine=s.Player.Energy.Last();
+        Assert.True(mine.Tapped);Assert.Equal("WCG-101",mine.Card!.CardId);
+        Assert.Null(s.Computer.Energy[^2].Card);
+        Assert.Equal("WCG-263",s.Computer.Energy[^1].Card!.CardId);
+        var json=JsonSerializer.Serialize(s.Computer.Energy[^2]);
+        Assert.DoesNotContain("WCG-",json);Assert.DoesNotContain("card",json,StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -1841,5 +1841,16 @@
  "本回合加成": "This turn's bonus",
  "戰鬥加成": "Combat bonus",
  "攻擊加成": "Attack bonus",
- "本遊戲目前只支援平板與電腦，請改用大螢幕遊玩": "Soul Oath currently supports tablets and computers only. Please play on a larger screen."
+ "本遊戲目前只支援平板與電腦，請改用大螢幕遊玩": "Soul Oath currently supports tablets and computers only. Please play on a larger screen.",
+ "我的能量區": "Your energy zone",
+ "對手能量區": "Opponent's energy zone",
+ "可用 {0} / {1}，已使用 {2}。": "Available {0} / {1}, used {2}.",
+ "對手的能量牌背面朝上，只能看到張數。": "Opponent energy is face down; only the count is visible.",
+ "能量區目前沒有卡牌": "No cards in the energy zone",
+ "背面能量牌": "Face-down energy",
+ "已使用": "Used",
+ "未使用": "Unused",
+ "幸運幣・本回合暫時能量": "Lucky Coin · temporary energy this turn",
+ "點擊查看張數。": "Tap to see the count.",
+ "將手牌拖入此區填能量；點擊查看能量牌。": "Drag a hand card here to add energy; tap to view energy cards."
 }
