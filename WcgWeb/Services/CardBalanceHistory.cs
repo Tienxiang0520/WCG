@@ -34,6 +34,10 @@ internal static class CardBalanceHistory
     // EraSteps[k-1] gives exactly Before*(current) for era k (RankedSession builds its eras this way, one step each).
     // 7-cost 瑪爾加尼斯 identifies the cost-up update (地獄戰狂 also cost 5 before the October 13 balance, so it cannot).
     // 500-PP 聖印侍從 together with 2400-PP 日耀聖堂巨像 identifies the 聖盾 PP restore (063 was 300 from the deflation on, 800 before it).
+    // Catalog before 聖盾 was spent in every combat (2026-10-23): an attacker only lost a counter when it would be destroyed.
+    // Only design notes of the nine native holy-shield cards changed; the note marks the catalog.
+    internal static bool ShieldAnyCombatCatalog(CardDatabase cards) => cards.GetCard("WCG-063")?.DesignNote?.Contains("聖盾交戰必扣", StringComparison.Ordinal) == true;
+    private static CardDatabase ShieldAnyCombatStep(CardDatabase c) => ShieldAnyCombatCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeShieldAnyCombat") : c;
     internal static bool CardFixesCatalog(CardDatabase cards) => cards.GetCard("WCG-003")?.DP == 0;
     private static CardDatabase CardFixesStep(CardDatabase c) => CardFixesCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeCardFixes") : c;
     // Catalog before the proportional direct-damage cost update (2026-10-18, scheme B): 006, 014, 013, 123, 170, 059 and 144
@@ -98,12 +102,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(current);
+    internal static CardDatabase BeforeShieldAnyCombat(CardDatabase current) => ShieldAnyCombatStep(current);
+    internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(BeforeShieldAnyCombat(current));
     internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(BeforeBearRoarText(current));
     internal static CardDatabase BeforeBurnCost(CardDatabase current) => BurnCostStep(BeforeCardFixes(current));
     internal static CardDatabase BeforeTauntFaceCharge(CardDatabase current) => TauntFaceChargeStep(BeforeBurnCost(current));

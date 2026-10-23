@@ -32,6 +32,9 @@ public sealed class CloudSaveValidationTests
             /* 舊時代的對局是用規則簡化前的卡面建立的。 */
             definitions=definitions.Where(c=>int.Parse(c.Id[4..])<205).ToList();
             /* 2026-10-22 數值能力修正之前的卡面。 */
+            /* 2026-10-23 聖盾交戰必扣之前的設計備註。 */
+            var shieldAny=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeShieldAnyCombat"))!.ToDictionary(c=>c.Id);
+            definitions=definitions.Select(c=>shieldAny.GetValueOrDefault(c.Id,c)).ToList();
             /* 2026-10-23 巨熊咆哮文字白話化之前的卡文。 */
             var bearRoar=JsonSerializer.Deserialize<List<CardDefinition>>(Read("WcgWeb.Balance.BeforeBearRoarText"))!.ToDictionary(c=>c.Id);
             definitions=definitions.Select(c=>bearRoar.GetValueOrDefault(c.Id,c)).ToList();

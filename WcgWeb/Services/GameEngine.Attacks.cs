@@ -22,7 +22,7 @@ public partial class GameEngine
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
     {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP),a.HasRage?Owner(a).AvailableEnergy:0);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
-        var ash=ah&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
+        var ash=(ah||SimplifiedRules&&ShieldAnyCombatRules)&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
         var guardSurvives=GetOpponent(Owner(a)).Field.Any(m=>m.HasHeroGuard&&(m!=d||!dh||dsh));
         var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0;
@@ -52,8 +52,9 @@ public partial class GameEngine
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
         var ap=a.CurrentPP;var dp=d.CurrentPP;var mirror=d.IsUnit&&!d.IsSilenced&&d.Card.Id=="WCG-258";var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
-        // 聖盾指示物: the defender spends 1 counter whenever it is attacked, even when it would survive anyway.
-        Resolve(()=>ShieldDecision(a,ah,b=>asaved=b),()=>ShieldDecision(d,dh||ShieldCounterRules,b=>dsaved=b,dh),()=>
+        // 聖盾指示物: the defender spends 1 counter whenever it is attacked, even when it would survive anyway;
+        // from 聖盾交戰必扣 the attacker does too.
+        Resolve(()=>ShieldDecision(a,ah||ShieldAnyCombatRules,b=>asaved=b,ah),()=>ShieldDecision(d,dh||ShieldCounterRules,b=>dsaved=b,dh),()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();

@@ -274,7 +274,7 @@ public sealed class RankedTests : IDisposable
         var prior=CardBalanceHistory.BeforeBearRoarText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBearRoarText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
         Assert.Contains("可消滅的 PP 上限 +500",prior.GetCard("WCG-048")!.Text);Assert.Contains("己方場上怪物數 × 500",cards.GetCard("WCG-048")!.Text);
-        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeShieldAnyCombat(cards).AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)));
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
         var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
