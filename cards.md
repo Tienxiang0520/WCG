@@ -223,7 +223,7 @@ source: WcgWeb/Data/cards.json
 | WCG-265 | 誓劍侍從 | 怪物 | 1 | 700 | 1 | — | 聖盾（進場放 1 個指示物）；每當此怪物交戰後仍在場，抽 1 張牌。 | **Oathblade Squire** — Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card. |
 | WCG-266 | 挑戰騎士 | 怪物 | 3 | 1300 | 1 | — | 進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Challenger Knight** — Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it). |
 | WCG-267 | 榮譽決鬥 | 法術 | 3 | — | — | — | 使 1 隻己方直立怪物獲得 1 個聖盾指示物，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Duel of Honor** — 1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it). |
-| WCG-268 | 決鬥競技場 | 結界 | 3 | — | — | — | 橫置此卡並橫置 1 隻直立的己方怪物：令它與 1 隻敵方嘲諷怪物交戰。 | **Dueling Arena** — Tap this card and tap 1 of your upright monsters: it fights 1 enemy Taunt monster. |
+| WCG-268 | 決鬥競技場 | 結界 | 3 | — | — | — | 橫置此卡並橫置 1 隻直立的己方怪物：令它與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Dueling Arena** — Tap this card and tap 1 of your upright monsters: it fights 1 enemy monster (Taunt can't stop it). |
 | WCG-269 | 冠軍騎士 | 怪物 | 5 | 1900 | 2 | — | 聖盾（進場放 1 個指示物）；進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。 | **Champion Knight** — Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it). |
 | WCG-270 | 誓約持旗官 | 怪物 | 4 | 1600 | 1 | — | 每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。 | **Oath Standard-Bearer** — Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn). |
 | WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：怪物 PP +400。它交戰後，此卡送入墓地。 | **Dueling Blade** — Attach: The monster gets +400 PP. After it fights, put this card into the graveyard. |

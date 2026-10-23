@@ -24,7 +24,7 @@ public class RotErosionTests
     {
         var old=CardBalanceHistory.BeforeRotErosionCards(cards);
         for(int n=283;n<=291;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
-        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=291&&!CardBalanceHistory.IsRotErosionCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeArenaAnyEnemy(cards).AllCards.Where(c=>int.Parse(c.Id[4..])<=291&&!CardBalanceHistory.IsRotErosionCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeRotErosionCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void ArrowsShrinkTheEnemyOppositeButNotItsPrintedThreshold()

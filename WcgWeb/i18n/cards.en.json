@@ -1635,7 +1635,8 @@
   "WCG-268": {
     "zh": "決鬥競技場",
     "name": "Dueling Arena",
-    "text": "Tap this card and tap 1 of your upright monsters: it fights 1 enemy Taunt monster."
+    "text": "Tap this card and tap 1 of your upright monsters: it fights 1 enemy monster (Taunt can't stop it).",
+    "zh_text": "橫置此卡並橫置 1 隻直立的己方怪物：令它與 1 隻敵方怪物交戰（嘲諷擋不住）。"
   },
   "WCG-269": {
     "zh": "冠軍騎士",
