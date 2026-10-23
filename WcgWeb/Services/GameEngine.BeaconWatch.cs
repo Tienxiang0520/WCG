@@ -31,6 +31,7 @@ public partial class GameEngine
     private IEnumerable<(CardDefinition Source, int Amount)> BeaconPowerSources(PlayerState p, MonsterInstance m)
     {
         if (!m.IsUnit) yield break;
+        foreach (var x in VaultPowerSources(p, m)) yield return x;
         if (Upright(m))
         {
             foreach (var tree in p.Field.Where(x => x != m && Active(x, "WCG-296") && Upright(x))) yield return (tree.Card, 200);
@@ -47,7 +48,7 @@ public partial class GameEngine
                 var n = Math.Min(3, p.Field.Count(x => x != m && Upright(x)));
                 if (n > 0) Damage(GetOpponent(p), n, new(p, m.Card, m, "deploy"));
                 break;
-            default: return false;
+            default: return VaultDeploy(p, m);
         }
         return true;
     }
@@ -67,7 +68,7 @@ public partial class GameEngine
                 var n = Math.Min(3, p.Field.Count(Upright));
                 if (n > 0) Heal(p, n);
                 break;
-            default: return false;
+            default: return VaultSpell(p, source);
         }
         return true;
     }
@@ -90,7 +91,7 @@ public partial class GameEngine
             case "WCG-299": return Math.Min(3, p.Field.Count(Upright)) * (p.Hp <= 4 ? 3 : 1.2) - (p.Hp >= 7 ? 5 : 1.5);
             case "WCG-300": return Math.Min(3, p.Field.Count(Upright)) * (e.Hp <= 3 ? 6 : 4);
         }
-        return null;
+        return VaultPlayValue(p, c);
     }
     private double BeaconBodyValueIfUpright(MonsterInstance m) { var t = m.IsTapped; m.IsTapped = false; var v = BeaconBodyValue(m); m.IsTapped = t; return v; }
     private MonsterInstance? BeaconTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;

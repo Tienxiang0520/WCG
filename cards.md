@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 300
+total_cards: 309
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 300 張）
+# WCG 卡牌總表（共 309 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 182 張、法術 95 張、法術（反擊） 9 張、結界 14 張。
+類型：怪物 187 張、法術 99 張、法術（反擊） 9 張、結界 14 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，43 張）
@@ -64,7 +64,7 @@ source: WcgWeb/Data/cards.json
 | WCG-243 | 赤鱗護衛 | 怪物 | 4 | 1700 | 1 | — | 嘲諷；陣亡：對敵方玩家造成 1 點傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-244 | 烽火戰旗 | 結界 | 4 | — | — | — | 你的回合結束時，若你場上有怪物且都是狂怒，對敵方玩家造成 1 點傷害。 | **Beacon War Banner** — At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player. |
 
-## 理智（Reason，47 張）
+## 理智（Reason，52 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -115,6 +115,11 @@ source: WcgWeb/Data/cards.json
 | WCG-262 | 智識巨靈 | 怪物 | 6 | 2100 | 2 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +700）。 | **Lore Colossus** — This monster gets +100 PP for each card in your hand (up to +700). |
 | WCG-273 | 林語抄寫員 | 怪物 | 3 | 1300 | 1 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +500）。 | **Sylvan Scribe** — This monster gets +100 PP for each card in your hand (up to +500). |
 | WCG-279 | 學識守門人 | 怪物 | 4 | 1500 | 1 | — | 嘲諷；你的手牌在 5 張以上時，此怪物 PP +500。 | **Lore Gatekeeper** — Taunt. While you have 5 or more cards in hand, this monster gets +500 PP. |
+| WCG-301 | 伏能學徒 | 怪物 | 2 | 1000 | 1 | — | 進場：你可以將 1 張手牌的怪物牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。 | **Hidden-Energy Apprentice** — Deploy: You may put 1 monster card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn). |
+| WCG-302 | 秘藏封印 | 法術 | 1 | — | — | — | 將 1 張手牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。抽 1 張牌。 | **Vault Seal** — Put 1 card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn). Draw 1 card. |
+| WCG-305 | 星庫守門人 | 怪物 | 5 | 2100 | 2 | — | 陣亡：將此卡背面朝上、橫置放入你的能量區（不送入墓地）。 | **Star-Vault Keeper** — On Death: Put this card into your energy zone face down and tapped (instead of the graveyard). |
+| WCG-307 | 群星歸位 | 法術 | 6 | — | — | — | 從你的能量區選至多 2 張怪物牌，不付費召喚到戰場（橫置進場，不觸發進場）。 | **Stars Realign** — Choose up to 2 monster cards in your energy zone and summon them for free (they enter tapped; Deploy doesn't trigger). |
+| WCG-308 | 能量占卜師 | 怪物 | 4 | 1700 | 1 | — | 進場：你可以將你能量區 1 張牌和你的 1 張手牌交換（換進能量區的牌背面朝上，保持原本那張的直立或橫置）。 | **Energy Diviner** — Deploy: You may swap 1 card in your energy zone with 1 card in your hand (the card put in is face down and keeps the original card's upright or tapped state). |
 
 ## 生機（Life，48 張）
 
@@ -169,7 +174,7 @@ source: WcgWeb/Data/cards.json
 | WCG-296 | 不動古樹 | 怪物 | 5 | 2100 | 2 | — | 嘲諷；此怪物不能攻擊。此怪物直立時，你的其他直立怪物 PP +200。 | **Unmoving Elder Tree** — Taunt. This monster can't attack. While this monster is upright, your other upright monsters get +200 PP. |
 | WCG-299 | 晨露滋養 | 法術 | 2 | — | — | — | 你場上每有 1 隻直立的怪物，回復你 1 點生命（最多 3 點）。 | **Morning Dew** — You recover 1 life for each upright monster you have (up to 3). |
 
-## 秩序（Order，51 張）
+## 秩序（Order，55 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -224,6 +229,10 @@ source: WcgWeb/Data/cards.json
 | WCG-297 | 守夜祈禱 | 法術 | 1 | — | — | — | 附著：附著的己方怪物直立時，PP +400。 | **Vigil Prayer** — Attach to 1 of your monsters: while it is upright, it gets +400 PP. |
 | WCG-298 | 烽火傳令官 | 怪物 | 4 | 1500 | 1 | ←→ | 【箭頭：← →】你的回合結束時，箭頭指向的每隻直立己方怪物，各對敵方玩家造成 1 點傷害。 | **Beacon Herald** — [Arrow: ← →] At the end of your turn, each upright monster of yours these arrows point at deals 1 damage to the enemy player. |
 | WCG-300 | 堡壘指揮官 | 怪物 | 6 | 2300 | 2 | — | 嘲諷；進場：你場上每有 1 隻直立的其他怪物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Bastion Commander** — Taunt. Deploy: Deal 1 damage to the enemy player for each other upright monster you have (up to 3). |
+| WCG-303 | 甦醒之印 | 法術 | 3 | — | — | — | 從你的能量區選 1 張費用 4 以下的怪物牌，不付費召喚到戰場（直立進場，不觸發進場）。 | **Sigil of Awakening** — Choose a monster card with cost 4 or less in your energy zone and summon it for free (it enters upright; Deploy doesn't trigger). |
+| WCG-304 | 能量哨兵 | 怪物 | 3 | 1400 | 1 | — | 嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。 | **Energy Sentinel** — Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter. |
+| WCG-306 | 沉睡巨像 | 怪物 | 6 | 2500 | 2 | — | 此卡從你的能量區被召喚時，PP +300（在場期間一直有效）。 | **Slumbering Colossus** — When this card is summoned from your energy zone, it gets +300 PP (for as long as it stays in play). |
+| WCG-309 | 伏兵號令 | 法術 | 2 | — | — | — | 本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。 | **Ambush Order** — This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn. |
 
 ## 深淵（Abyss，46 張）
 

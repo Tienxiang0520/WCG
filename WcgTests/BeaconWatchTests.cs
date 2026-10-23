@@ -22,9 +22,9 @@ public class BeaconWatchTests
     {
         var old=CardBalanceHistory.BeforeBeaconWatchCards(cards);
         for(int n=292;n<=300;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
-        Assert.Equal(cards.AllCards.Count-9,old.AllCards.Count);
+        Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=300)-9,old.AllCards.Count);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBeaconWatchCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsBeaconWatchCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=300&&!CardBalanceHistory.IsBeaconWatchCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.All(cards.AllCards.Where(c=>CardBalanceHistory.IsBeaconWatchCard(c.Id)),c=>{Assert.All(c.Keywords,k=>Assert.Contains(k,new[]{"嘲諷"}));Assert.Contains(c.Will,new[]{"秩序","生機"});});
     }
     [Fact] public void SentryBurnsOnlyWhileUpright()
