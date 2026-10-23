@@ -56,6 +56,25 @@ public class OathDuelTests
         var g2=Game();var foe=Unit(g2.Computer,101,1);Refresh(g2);var k2=Summon(g2,266,0);Choose(g2,o=>o.Id=="SKIP");Settle(g2);
         Assert.Contains(foe,g2.Computer.Field);Assert.Contains(k2,g2.Player.Field);
     }
+    // Effect-started combats present as a normal attack (source = the fighter, target = the chosen enemy) so the client plays the lunge.
+    private static void AssertLunge(GameEngine g,MonsterInstance a,MonsterInstance d,int from)
+    {
+        var evs=g.PresentationEvents.Skip(from).ToList();var hit=evs.FindIndex(e=>e.Type=="attack"&&e.InstanceId==a.InstanceId&&e.TargetId==d.InstanceId);
+        Assert.True(hit>=0);Assert.Equal("player",evs[hit].Side);
+        var death=evs.FindIndex(e=>e.Type=="death"&&e.InstanceId==d.InstanceId);if(death>=0)Assert.True(hit<death);
+        Assert.Null(g.LastAttack);
+    }
+    [Fact] public void EntryDuelPresentsAsAnAttackLunge()
+    {
+        var g=Game();var small=Unit(g.Computer,101,1);Refresh(g);var knight=Summon(g,266,0);Duel(g,small);AssertLunge(g,knight,small,0);Settle(g);Assert.DoesNotContain(small,g.Computer.Field);
+    }
+    [Fact] public void SpellDuelsPresentAsAnAttackLunge()
+    {
+        var g=Game();var mine=Unit(g.Player,101,0);var big=Unit(g.Computer,155,1);Refresh(g);var spell=Hand(g,267);
+        Assert.True(g.CastSpellAt(g.Player,spell,mine));Assert.True(g.SelectTarget(big));AssertLunge(g,mine,big,0);Settle(g);
+        var g2=Game();var m2=Unit(g2.Player,155,0);var foe=Unit(g2.Computer,101,1);Refresh(g2);var decl=Hand(g2,230);
+        Assert.True(g2.CastSpellAt(g2.Player,decl,m2));Assert.True(g2.SelectTarget(foe));AssertLunge(g2,m2,foe,0);Settle(g2);Assert.DoesNotContain(foe,g2.Computer.Field);
+    }
     [Fact] public void ChampionDuelsABigTauntAndSurvivesWithItsCounter()
     {
         var g=Game();var wall=Unit(g.Computer,113,0);Refresh(g);var champ=Summon(g,269,0);Assert.Equal(1,champ.ShieldCounters);
