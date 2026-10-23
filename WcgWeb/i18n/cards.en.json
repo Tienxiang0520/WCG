@@ -282,7 +282,7 @@
   "WCG-048": {
     "zh": "巨熊咆哮",
     "name": "Ursine Roar",
-    "text": "The PP limit is 500 for each monster you have. Destroy 1 enemy monster with PP at or below that limit, then draw 1 card."
+    "text": "Destroy 1 enemy monster with PP at or below (the number of monsters you have × 500), then draw 1 card."
   },
   "WCG-049": {
     "zh": "鐵木樹人",
