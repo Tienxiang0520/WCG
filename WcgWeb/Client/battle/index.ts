@@ -166,8 +166,14 @@ class BattleScene extends Phaser.Scene {
         this.energyLabels.set(side,this.text(z.x,z.y+(this.compact&&!mine?7:0),'',this.compact?17:20,'#93d8ff'));
         this.paintEnergy(side);
         this.add.zone(z.x,z.y,z.width,z.height).setInteractive().on('pointerover',()=>{
-            if(this.drag||this.owner.busy)return;const e=this.visualEnergy.get(side);if(e)this.owner.status.textContent=`${mine?'己方':'對手'}能量：可用 ${e.available} / ${e.total}，已使用 ${e.used}。${mine?'將手牌拖入此區填能量。':''}`;
-        }).on('pointerout',()=>{if(!this.drag&&!this.owner.busy)this.owner.status.textContent=this.owner.actionHint();});
+            if(this.drag||this.owner.busy)return;const e=this.visualEnergy.get(side);if(e)this.owner.status.textContent=`${mine?'己方':'對手'}能量：可用 ${e.available} / ${e.total}，已使用 ${e.used}。${mine?'將手牌拖入此區填能量；點擊查看能量牌。':'點擊查看張數。'}`;
+        }).on('pointerout',()=>{if(!this.drag&&!this.owner.busy)this.owner.status.textContent=this.owner.actionHint();})
+        .on('pointerup',(pointer:Phaser.Input.Pointer)=>{
+            // Tap to list energy cards. Skipped while dragging/selecting so dropping a card to fill energy still works.
+            if(pointer.downElement!==this.game.canvas||pointer.upElement!==this.game.canvas)return;
+            if(this.drag||this.selected||this.owner.busy||this.owner.energyCandidate||this.owner.state?.pending||performance.now()<=this.suppressUntil)return;
+            this.owner.openPanel(mine?'energy-player':'energy-computer');
+        });
     }
     paintEnergy(side:string){const e=this.visualEnergy.get(side);if(!e)return;
         this.energyLabels.get(side)?.setText(`◆ ${e.available}/${e.total}`);
@@ -727,13 +733,13 @@ class Board {
         if(this.selected&&s.player.field.find(m=>m.card.instanceId===this.selected?.instanceId)?.targets.some(t=>t.id==='face'))accessible.append(button('攻擊對手頭像',()=>this.intent('attack',this.selected!.instanceId),this.busy));
         this.controls.append(accessible);
         if(this.energyCandidate)this.panel='energy';
-        else if(p?.kind==='choice'&&!directChoice&&!['settings','logs','player','computer','reveal'].includes(this.panel??''))this.panel='choice';
+        else if(p?.kind==='choice'&&!directChoice&&!['settings','logs','player','computer','reveal','energy-player','energy-computer'].includes(this.panel??''))this.panel='choice';
         else if(this.panel==='energy'||this.panel==='choice')this.panel=null;
         if(this.panel){
             const scroll=this.modal.scrollTop;
             const active=this.modal.querySelector<HTMLElement>(':focus')?.dataset.key;
             const content=el('div','','battle-modal-content');
-            const title=this.panel==='energy'?'確認填能量':this.panel==='choice'?p!.title:this.panel==='settings'?'設定':this.panel==='logs'?'對戰紀錄':this.panel==='reveal'?s.revealTitle:this.panel==='player'?'我的墓地':'對手墓地';
+            const title=this.panel==='energy'?'確認填能量':this.panel==='choice'?p!.title:this.panel==='settings'?'設定':this.panel==='logs'?'對戰紀錄':this.panel==='reveal'?s.revealTitle:this.panel==='energy-player'?'我的能量區':this.panel==='energy-computer'?'對手能量區':this.panel==='player'?'我的墓地':'對手墓地';
             const heading=el('h2',title);heading.id='battle-modal-title';content.append(heading);this.modal.setAttribute('aria-labelledby',heading.id);
             const canClose=this.panel!=='choice'||!!p?.canCancel;
             if(canClose)content.append(button(this.panel==='energy'?'取消':'關閉',()=>this.closePanel(),this.busy));
@@ -776,6 +782,20 @@ class Board {
                     }else{line.textContent=entry.text;row.append(line);}
                     content.append(row);
                 }
+            }else if(this.panel==='energy-player'||this.panel==='energy-computer'){
+                const mine=this.panel==='energy-player',side=mine?s.player:s.computer,used=side.energy.filter(e=>e.tapped).length;
+                content.append(el('p',`可用 ${side.availableEnergy} / ${side.totalEnergy}，已使用 ${used}。`));
+                if(!mine)content.append(el('p','對手的能量牌背面朝上，只能看到張數。','battle-energy-note'));
+                if(!side.energy.length)content.append(el('p','能量區目前沒有卡牌'));
+                const list=el('div','','battle-card-collection battle-energy-collection');
+                for(const e of side.energy){
+                    const wrap=el('div','',`battle-energy-card${e.tapped?' tapped':''}${e.temporary?' temporary':''}`);
+                    if(e.card)wrap.append(this.cardDetail(e.card));
+                    else{const back=el('article','','battle-card-detail battle-energy-back');back.append(el('h3','背面能量牌'));wrap.append(back);}
+                    wrap.append(el('p',[e.tapped?'已使用':'未使用',...(e.temporary?['幸運幣・本回合暫時能量']:[])].join(' · '),'battle-energy-state'));
+                    list.append(wrap);
+                }
+                content.append(list);
             }else{
                 const cards=this.panel==='reveal'?s.revealedCards:(this.panel==='player'?s.player:s.computer).graveyard;
                 if(!cards.length)content.append(el('p','墓地目前沒有卡牌'));
