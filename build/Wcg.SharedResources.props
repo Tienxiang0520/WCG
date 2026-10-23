@@ -6,6 +6,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-dual-will.json" LogicalName="WcgWeb.Balance.BeforeDualWill" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-shield-counter.json" LogicalName="WcgWeb.Balance.BeforeShieldCounter" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-cost-up.json" LogicalName="WcgWeb.Balance.BeforeCostUp" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-bear-roar-text.json" LogicalName="WcgWeb.Balance.BeforeBearRoarText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-card-fixes.json" LogicalName="WcgWeb.Balance.BeforeCardFixes" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-burn-cost.json" LogicalName="WcgWeb.Balance.BeforeBurnCost" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-taunt-face-charge.json" LogicalName="WcgWeb.Balance.BeforeTauntFaceCharge" />

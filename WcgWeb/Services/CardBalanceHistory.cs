@@ -92,14 +92,19 @@ internal static class CardBalanceHistory
     // Catalog before faction triggers became unlimited. Applied on top of the pre-arrow catalog so its fingerprint matches the original release.
     private static CardDatabase UnlimitedFactionTriggersStep(CardDatabase c) => Override(c, "WcgWeb.Balance.BeforeUnlimitedFactionTriggers");
 
+    // Catalog before 巨熊咆哮 (WCG-048) was reworded (2026-10-23, PR #63): only its text changed; the new wording marks the catalog.
+    internal static bool BearRoarTextCatalog(CardDatabase cards) => cards.GetCard("WCG-048")?.Text?.Contains("己方場上怪物數 × 500", StringComparison.Ordinal) == true;
+    private static CardDatabase BearRoarTextStep(CardDatabase c) => BearRoarTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeBearRoarText") : c;
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(current);
+    internal static CardDatabase BeforeBearRoarText(CardDatabase current) => BearRoarTextStep(current);
+    internal static CardDatabase BeforeCardFixes(CardDatabase current) => CardFixesStep(BeforeBearRoarText(current));
     internal static CardDatabase BeforeBurnCost(CardDatabase current) => BurnCostStep(BeforeCardFixes(current));
     internal static CardDatabase BeforeTauntFaceCharge(CardDatabase current) => TauntFaceChargeStep(BeforeBurnCost(current));
     internal static CardDatabase BeforeLuckyCoin(CardDatabase current) => LuckyCoinStep(BeforeTauntFaceCharge(current));

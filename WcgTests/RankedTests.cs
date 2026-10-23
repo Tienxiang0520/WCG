@@ -268,6 +268,31 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
         Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost); // 3 before the 2026-10-17 狂怒 face-damage cost-up
     }
+    // 2026-10-22 卡表（PR #63 巨熊咆哮文字白話化之前）開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
+    [Fact] public void PreBearRoarTextMatchResumesReplaysAndItsCodeReplays()
+    {
+        var prior=CardBalanceHistory.BeforeBearRoarText(cards);
+        Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBearRoarText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
+        Assert.Contains("可消滅的 PP 上限 +500",prior.GetCard("WCG-048")!.Text);Assert.Contains("己方場上怪物數 × 500",cards.GetCard("WCG-048")!.Text);
+        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)));
+        Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
+        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
+        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
+        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;
+        var liveCode=old.CurrentMatchCode()!;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
+        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
+        Assert.False(CardTextClarityTests.IsLegacy(current.Engine));
+        var fromLive=current.BuildReplay(MatchCode.Decode(liveCode,out var liveError,out _)!);Assert.Equal("",liveError);Assert.Empty(fromLive.Error);
+        Assert.True(Send(current,"surrender").Success);var record=current.Read().Records!.Last();Assert.Empty(current.BuildReplay(record.Id).Error);
+        var code=current.MatchCodeFor(record.Id)!;current.Coordinator.Dispose();
+        Directory.Delete(dir,true);var other=Session();var fromCode=other.BuildReplay(MatchCode.Decode(code,out var error,out _)!);Assert.Equal("",error);Assert.Empty(fromCode.Error);
+        other.Coordinator.Dispose();
+    }
     [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
     {
         var prior=CounterHistory.BeforeHeroGuard(cards);Assert.Equal(199,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-200"));
