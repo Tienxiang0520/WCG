@@ -23,7 +23,14 @@ public partial class GameEngine
         if (!Alive(m) || !Alive(d) || Owner(d) == p) return;
         Present("effect", p, m.InstanceId, d.InstanceId, card: m.Card, label: "決鬥");
         Log($"【{m.Card.Name}】與【{d.Card.Name}】決鬥。", "action");
-        ResolveAttack(p, m, d);
+        EffectCombat(p, m, d);
+    }
+    // Combats started by an effect (duels, 決鬥宣言) present as an ordinary attack so the client plays the shared lunge.
+    // Presentation only: the rules still go straight to ResolveAttack (no tap, no attack triggers, LastAttack unchanged).
+    private void EffectCombat(PlayerState p, MonsterInstance a, MonsterInstance d)
+    {
+        Present("attack", p, a.InstanceId, d.InstanceId, card: a.Card, label: "交戰");
+        ResolveAttack(p, a, d);
     }
     // "你可以令此怪物立刻與 1 隻敵方怪物交戰": an optional pick, skipped with SKIP.
     private void OfferDuel(PlayerState p, MonsterInstance m, IEnumerable<MonsterInstance> candidates, Action? after = null)

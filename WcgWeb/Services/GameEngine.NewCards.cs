@@ -131,7 +131,7 @@ public partial class GameEngine
             case "WCG-230":
                 if (t == null || !Alive(t) || t.IsTapped) break;
                 t.IsTapped = true; Present("status", p, t.InstanceId, card: t.Card, label: "橫置");
-                PickMonster(p, "選擇與它交戰的敵方怪物", e.Field, d => { if (Alive(t)) ResolveAttack(p, t, d); });
+                PickMonster(p, "選擇與它交戰的敵方怪物", e.Field, d => { if (Alive(t) && Alive(d)) EffectCombat(p, t, d); });
                 break;
             case "WCG-233":
                 var nature = lastSacrifice?.Card.HasWill("生機") == true; lastSacrifice = null;

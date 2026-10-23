@@ -244,6 +244,15 @@ test('a player attack without a drag lunge gets the same lunge as the computer; 
     assert.ok(!h.record.some(r=>r.el.dataset.wcgEffect==='attack'));
     h.feedback.clear();
 });
+test('an effect-started duel lunges like a normal attack on either side, even when the player dragged nothing', async t=>{
+    resetFastForward();
+    for(const side of ['player','computer']){
+        const h=harness(t);
+        await h.settle(h.feedback.present(h.state,h.state,[{type:'effect',side,instanceId:'dead',label:'決鬥',order:0},{type:'attack',side,instanceId:'dead',label:'交戰',order:1}]));
+        assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='attack'&&r.el.dataset.wcgAttackSide===side),side);
+        h.feedback.clear();
+    }
+});
 test('the computer\'s permanent energy flies to its energy readout', async t=>{
     resetFastForward();
     const h=harness(t),dots={getBoundingClientRect:()=>({x:500,y:40,width:80,height:16})};

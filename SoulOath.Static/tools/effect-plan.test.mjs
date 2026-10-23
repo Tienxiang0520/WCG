@@ -72,3 +72,11 @@ test('pacing: speed-up starts above 4 steps; small results follow with a short g
     assert.ok(stepGap({ kind: 'stat' }) < stepGap({ kind: 'event', ev: { type: 'attack' } }));
     assert.ok(stepGap({ kind: 'event', ev: { type: 'pay' } }) < stepGap({ kind: 'event', ev: { type: 'death' } }));
 });
+test('an effect duel (決鬥 badge, then the engine attack event) plays as an attack and its deaths are combat, not effect beams', () => {
+    const steps = planSteps(snap([], [unit('foe', 1)]), snap([unit('knight', 0, { tapped: false })]), [
+        { type: 'summon', side: 'player', instanceId: 'knight', card: card('knight'), order: 0 },
+        { type: 'effect', side: 'player', instanceId: 'knight', targetId: 'foe', label: '決鬥', order: 1 },
+        { type: 'attack', side: 'player', instanceId: 'knight', targetId: 'foe', label: '交戰', order: 2 },
+        { type: 'death', side: 'computer', instanceId: 'foe', label: '交戰', order: 3 }]);
+    assert.deepEqual(kinds(steps), ['summon', 'source:effect', 'attack', 'death']);
+});
