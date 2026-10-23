@@ -129,14 +129,20 @@ internal static class CardBalanceHistory
     private static CardDatabase EnergyVaultCardsStep(CardDatabase c) => c.GetCard("WCG-301") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsEnergyVaultCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // Catalog before the 焚能爆破 archetype (WCG-310–318, 2026-10-23) existed; nothing else changed.
+    internal static bool IsEnergyBurnCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 310 and <= 318;
+    private static CardDatabase EnergyBurnCardsStep(CardDatabase c) => c.GetCard("WCG-310") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsEnergyBurnCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        EnergyVaultCardsStep, BeaconWatchCardsStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) => EnergyVaultCardsStep(current);
+    internal static CardDatabase BeforeEnergyBurnCards(CardDatabase current) => EnergyBurnCardsStep(current);
+    internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) => EnergyVaultCardsStep(BeforeEnergyBurnCards(current));
     internal static CardDatabase BeforeBeaconWatchCards(CardDatabase current) => BeaconWatchCardsStep(BeforeEnergyVaultCards(current));
     internal static CardDatabase BeforeRotErosionCards(CardDatabase current) => RotErosionCardsStep(BeforeBeaconWatchCards(current));
     internal static CardDatabase BeforeThresholdGapCards(CardDatabase current) => ThresholdGapCardsStep(BeforeRotErosionCards(current));

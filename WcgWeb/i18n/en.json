@@ -1885,5 +1885,20 @@
  "能量區沒有費用 4 以下的怪物牌。": "There is no monster card with cost 4 or less in your energy zone.",
  "能量區沒有怪物牌。": "There is no monster card in your energy zone.",
  "場上沒有空位。": "There is no free slot on your field.",
- "沒有其他手牌可以放入能量區。": "You have no other card in hand to put into your energy zone."
+ "沒有其他手牌可以放入能量區。": "You have no other card in hand to put into your energy zone.",
+ "選擇送入墓地的能量牌": "Choose an energy card to put into your graveyard",
+ "可選擇送入墓地的能量牌": "You may choose an energy card to put into your graveyard",
+ "焚世魔焰：這張能量換什麼？": "World-Burning Flame: what does this energy buy?",
+ "選擇從墓地召喚的費用 3 以下怪物": "Choose a monster with cost 3 or less to summon from your graveyard",
+ "選擇背面放入能量區的墓地牌": "Choose a card in your graveyard to put into your energy zone face down",
+ "橫置（已使用）": "Tapped (used)",
+ "直立（未使用）": "Upright (unused)",
+ "不送入墓地": "Don't put any",
+ "停止": "Stop",
+ "能量送入墓地": "Energy put into graveyard",
+ "【{0}】將能量區的【{1}】送入墓地。": "{0} puts {1} from their energy zone into their graveyard.",
+ "對敵方玩家造成 1 點傷害": "Deal 1 damage to the enemy player",
+ "消滅 1 隻印刷 PP 900 以下的敵方怪物": "Destroy 1 enemy monster with printed PP 900 or less",
+ "選擇印刷 PP 900 以下的敵方怪物": "Choose an enemy monster with printed PP 900 or less",
+ "能量區不足 2 張牌可以送入墓地。": "You need at least 2 cards in your energy zone to put into your graveyard."
 }

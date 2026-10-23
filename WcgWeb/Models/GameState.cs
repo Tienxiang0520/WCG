@@ -134,6 +134,7 @@ public class PlayerState
     public bool HasFilledEnergyThisTurn { get; set; }
     // 伏兵號令 (WCG-309): the turn number it was cast; energy summons that turn enter ready with +300.
     public int EnergyAmbushTurn { get; set; } = -1;
+    public Dictionary<Guid, int> BurnedEnergy { get; set; } = []; // energy card → turn it was burned (WCG-314)
     public int AvailableEnergy => EnergyZone.Count(e => !e.IsTapped);
     public int AttachedEnergy => Field.Where(m => m.ShieldOwnerId == Id).Sum(m => m.ShieldCount);
     public int TotalEnergy => EnergyZone.Count + AttachedEnergy;

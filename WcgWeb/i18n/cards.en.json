@@ -1862,5 +1862,59 @@
     "name": "Ambush Order",
     "text": "This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn.",
     "zh_text": "本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。"
+  },
+  "WCG-310": {
+    "zh": "灰燼點火者",
+    "name": "Ash Kindler",
+    "text": "Deploy: You may put 1 card from your energy zone into the graveyard. If you do, deal 1 damage to the enemy player.",
+    "zh_text": "進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-311": {
+    "zh": "焚能彈",
+    "name": "Energy Burn Shot",
+    "text": "As an additional cost, put 2 cards from your energy zone into the graveyard. Deal 2 damage to the enemy player.",
+    "zh_text": "將你能量區 2 張牌送入墓地，作為額外代價；對敵方玩家造成 2 點傷害。"
+  },
+  "WCG-312": {
+    "zh": "餘燼祭司",
+    "name": "Cinder Priest",
+    "text": "Whenever you put cards from your energy zone into the graveyard, this monster gets +300 PP for each card until end of turn.",
+    "zh_text": "每當你將能量區的牌送入墓地，每送 1 張，此怪物 PP +300 直到回合結束。"
+  },
+  "WCG-313": {
+    "zh": "熔核潛伏者",
+    "name": "Molten-Core Lurker",
+    "text": "Charge. Deploy: You may put 1 card from your energy zone into the graveyard. If you do, this monster gets +500 PP until end of turn.",
+    "zh_text": "衝鋒；進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，此怪物 PP +500 直到回合結束。"
+  },
+  "WCG-314": {
+    "zh": "灰燼回收",
+    "name": "Ash Reclamation",
+    "text": "Choose a monster card with cost 3 or less in your graveyard and summon it for free (Deploy doesn't trigger). If it was put there from your energy zone this turn, it enters upright.",
+    "zh_text": "從你的墓地選 1 張費用 3 以下的怪物牌，不付費召喚到戰場（不觸發進場）。若它是本回合從能量區送入墓地的，它直立進場。"
+  },
+  "WCG-315": {
+    "zh": "燃盡之怒",
+    "name": "Burnout Fury",
+    "text": "Put up to 3 tapped cards from your energy zone into the graveyard. Deal 1 damage to the enemy player for each card.",
+    "zh_text": "將你能量區至多 3 張橫置的牌送入墓地；每送 1 張，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-316": {
+    "zh": "焦土殘兵",
+    "name": "Scorched Remnant",
+    "text": "On Death: Put 1 card from your energy zone into the graveyard. If you do, deal 1 damage to the enemy player.",
+    "zh_text": "陣亡：將你能量區 1 張牌送入墓地；若你這麼做，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-317": {
+    "zh": "血灰契約",
+    "name": "Blood-Ash Pact",
+    "text": "Put 1 card from your graveyard into your energy zone face down and tapped. Draw 1 card.",
+    "zh_text": "將你墓地 1 張牌背面朝上、橫置放入你的能量區。抽 1 張牌。"
+  },
+  "WCG-318": {
+    "zh": "焚世魔焰",
+    "name": "World-Burning Flame",
+    "text": "Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player.",
+    "zh_text": "進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。"
   }
 }

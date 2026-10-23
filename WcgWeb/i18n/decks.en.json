@@ -1042,5 +1042,11 @@
   "zhDescription": "把大怪蓋進能量區，再不付費從能量區叫出來，用大身材打穿嘲諷。",
   "name": "Reason · Hidden Energy Awakening (Vault)",
   "description": "Hide big monsters in your energy zone, then summon them from it without paying and break through Taunts with their size."
+ },
+ "RANKED-5-WRATH-ENERGYBURN": {
+  "zhName": "狂怒＋深淵・焚能爆破（焚能）",
+  "zhDescription": "前期快攻打臉，後期把用不到的能量送入墓地，用很低的費用打出直傷收尾。",
+  "name": "Wrath · Energy Burn (Burn)",
+  "description": "Rush your opponent early, then put energy you no longer need into your graveyard to finish with cheap direct damage."
  }
 }
