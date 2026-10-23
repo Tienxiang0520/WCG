@@ -4,7 +4,7 @@ public partial class GameEngine
 {
     public record AttackPresentation(Guid AttackerId, Guid? TargetId, long ActionNumber);
     public AttackPresentation? LastAttack {get;private set;}
-    public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&!Pinned(m)&&(m.IsSilenced||!m.Card.CannotAttack);
+    public bool CanAttack(MonsterInstance m)=>Main(ActivePlayer)&&ActivePlayer.Field.Contains(m)&&!m.IsTapped&&!m.AttackLocked&&!m.AttackBanned&&!Pinned(m)&&(m.IsSilenced||!m.Card.CannotAttack);
     public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
     {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
@@ -120,6 +120,7 @@ public partial class GameEngine
             if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
         }
         NewEndTurn(p, effects);
+        BeaconEndTurn(p, effects);
         foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
             effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
         effects.Add(() => Observe(GetOpponent(p)));

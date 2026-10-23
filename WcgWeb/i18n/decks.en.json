@@ -1030,5 +1030,23 @@
   "zhDescription": "用箭頭、附著和本回合減益把敵方嘲諷縮小，讓中型怪打得贏再打臉。",
   "name": "Abyss · Rot Erosion (Debuff)",
   "description": "Shrink enemy Taunt monsters with arrows, attachments and this-turn debuffs so midsize monsters win the fight, then hit face."
+ },
+ "RANKED-5-ORDER-BEACONWATCH": {
+  "zhName": "秩序・烽火守望（烽火）",
+  "zhDescription": "怪物直立待命，回合結束時造成傷害或回復；嘲諷擋住對手，不攻擊也能贏。",
+  "name": "Order · Beacon Watch (Beacon)",
+  "description": "Monsters stand upright on watch and deal damage or heal at the end of your turn; Taunts hold the line, so you can win without attacking."
+ },
+ "RANKED-5-REASON-ENERGYVAULT": {
+  "zhName": "理智・伏能喚醒（伏能）",
+  "zhDescription": "把大怪蓋進能量區，再不付費從能量區叫出來，用大身材打穿嘲諷。",
+  "name": "Reason · Hidden Energy Awakening (Vault)",
+  "description": "Hide big monsters in your energy zone, then summon them from it without paying and break through Taunts with their size."
+ },
+ "RANKED-5-WRATH-ENERGYBURN": {
+  "zhName": "狂怒＋深淵・焚能爆破（焚能）",
+  "zhDescription": "前期快攻打臉，後期把用不到的能量送入墓地，用很低的費用打出直傷收尾。",
+  "name": "Wrath · Energy Burn (Burn)",
+  "description": "Rush your opponent early, then put energy you no longer need into your graveyard to finish with cheap direct damage."
  }
 }

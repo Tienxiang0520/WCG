@@ -23,7 +23,7 @@ public class GameEngineTests
     [Fact]
     public void TestCardDatabaseLoadsCards()
     {
-        Assert.Equal(291, _cardDb.AllCards.Count);
+        Assert.Equal(318, _cardDb.AllCards.Count);
         Assert.Null(_cardDb.GetCard("ENG-01"));
         Assert.NotNull(_cardDb.GetCard("WCG-001"));
         Assert.NotNull(_cardDb.GetCard("WCG-123"));

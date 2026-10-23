@@ -101,7 +101,7 @@ public class OathDuelTests
     [Fact] public void PreArenaAnyEnemyCatalogStillDuelsOnlyTaunts()
     {
         var old=CardBalanceHistory.BeforeArenaAnyEnemy(cards);Assert.Contains("敵方嘲諷怪物交戰",old.GetCard("WCG-268")!.Text);
-        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)),old.AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeBeaconWatchCards(cards).AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)),old.AllCards.Where(c=>c.Id!="WCG-268").Select(c=>System.Text.Json.JsonSerializer.Serialize(c)));
         var g=Game(old);var arena=new MonsterInstance(old.GetCard("WCG-268")!){Slot=4,IsTapped=false,HasSummoningSickness=false};g.Player.Structures.Add(arena);
         var mine=Unit(g.Player,155,0);var foe=Unit(g.Computer,101,1);Refresh(g);Assert.False(g.CanActivate(g.Player,arena));
         var taunt=Unit(g.Computer,65,2);Refresh(g);Assert.True(g.CanActivate(g.Player,arena));

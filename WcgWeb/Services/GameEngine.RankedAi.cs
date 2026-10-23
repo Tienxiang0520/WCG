@@ -40,7 +40,7 @@ public partial class GameEngine
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
     private double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (V10 && ShieldCounterRules ? 2 * Math.Min(m.ShieldCounters, 2) : m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0) + (m.HasHeroGuard ? 3 : 0) + (m.HasRage ? 2 : 0) + (m.HasObservation ? 3 : 0) + (m.HasWild ? 2 : 0) + (m.HasSoulReturn ? 1.5 : 0)
-        + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0);
+        + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0) + BeaconBodyValue(m);
     private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0) + (c.HasHeroGuard ? 3 : 0) + (c.HasRage ? 2 : 0) + (c.HasObservation ? 3 : 0) + (c.HasWild ? 2 : 0) + (c.HasSoulReturn ? 1.5 : 0)
         : 3 + c.TotalCost * .6;
 
@@ -190,6 +190,7 @@ public partial class GameEngine
     private MonsterInstance? BestSpellTarget(PlayerState p, PlayerState e, string id, IReadOnlyList<MonsterInstance> targets)
     {
         var own = targets.Where(p.Field.Contains).ToArray(); var enemy = targets.Where(e.Field.Contains).ToArray();
+        if (NewAi && ArchSpellTarget(p, id, own) is { } arch) return arch;
         if (id is "WCG-036" or "WCG-164" or "WCG-169") return own.OrderBy(BodyValue).FirstOrDefault();
         if (NewAi && id is "WCG-220" or "WCG-221" or "WCG-230" or "WCG-248")
             return own.OrderByDescending(m => id switch
@@ -224,6 +225,8 @@ public partial class GameEngine
             return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
         if (ReasonChoice(p, e, choice, prof) is { } reason) return SelectChoice(reason);
         if (NewAi && OathChoice(p, choice) is { } oath) return SelectChoice(oath);
+        if (NewAi && VaultChoice(p, choice) is { } vault) return SelectChoice(vault);
+        if (NewAi && EmberChoice(p, choice) is { } ember) return SelectChoice(ember);
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
         if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return NewSlot(p, choice) is { } slot ? SelectChoice(slot) : ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));

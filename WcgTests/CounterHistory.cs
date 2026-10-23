@@ -23,8 +23,18 @@ internal static class CounterHistory
     // Catalog before the 翠語夾縫 cards WCG-273–282 existed.
     // Catalog before the 腐萎侵蝕 cards WCG-283–291 existed.
     // Catalog before 決鬥競技場 (WCG-268) could duel any enemy monster (its text and design note only).
+    // Catalog before the 烽火守望 cards WCG-292–300 existed.
+    // Catalog before the 伏能喚醒 cards WCG-301–309 existed.
+    // Catalog before the 焚能爆破 cards WCG-310–318 existed.
+    internal static CardDatabase BeforeEnergyBurnCards(CardDatabase current) => current.GetCard("WCG-310")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 310 or > 318)),JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) { current=BeforeEnergyBurnCards(current); return current.GetCard("WCG-301")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 301 or > 309)),JsonSerializer.Serialize(current.PresetDecks)); }
+    internal static CardDatabase BeforeBeaconWatchCards(CardDatabase current) { current=BeforeEnergyVaultCards(current); return current.GetCard("WCG-292")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 292 or > 300)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforeArenaAnyEnemy(CardDatabase current)
     {
+        current=BeforeBeaconWatchCards(current);
         if(current.GetCard("WCG-268")?.Text.Contains("敵方怪物交戰（嘲諷擋不住）")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-arena-any-enemy.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

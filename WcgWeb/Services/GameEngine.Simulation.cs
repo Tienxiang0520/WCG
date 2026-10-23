@@ -34,7 +34,7 @@ public partial class GameEngine
                 {
                     InstanceId = hidden ? NewId() : m.InstanceId, Slot = m.Slot, IsTapped = m.IsTapped, IsSet = m.IsSet,
                     ShieldQualified = m.ShieldQualified, ShieldSpent = m.ShieldSpent, ShieldCounters = m.ShieldCounters, ShieldSources = [.. m.ShieldSources], WasSilenced = m.WasSilenced, NextCombatBonus = m.NextCombatBonus, TurnBonus = m.TurnBonus,
-                    TriggersThisTurn = m.TriggersThisTurn, CombatPowerBonus = m.CombatPowerBonus, HasAttacked = m.HasAttacked,
+                    TriggersThisTurn = m.TriggersThisTurn, CombatPowerBonus = m.CombatPowerBonus, HasAttacked = m.HasAttacked, AttackBanned = m.AttackBanned, FromEnergy = m.FromEnergy,
                     HasSummoningSickness = m.HasSummoningSickness, IsSilenced = m.IsSilenced, IsStealthed = m.IsStealthed,
                     ExtraTaunt = m.ExtraTaunt, ExtraTrample = m.ExtraTrample, ShieldOwnerId = m.ShieldOwnerId, SilenceOwnerId = m.SilenceOwnerId,
                 };
@@ -47,18 +47,20 @@ public partial class GameEngine
                 copy.SilenceSpell = m.SilenceSpell == null ? null : Card(m.SilenceSpell, false);
                 return copy;
             }
+            var hideEnergy = _cardDb.GetCard("WCG-301") != null;
             PlayerState Side(PlayerState s)
             {
                 bool viewer = s.Id == viewerId;
                 var copy = new PlayerState
                 {
                     Id = s.Id, Name = s.Name, IsAi = true, Hp = s.Hp, NextCreatureDiscount = s.NextCreatureDiscount,
-                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn,
+                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, BurnedEnergy = new(s.BurnedEnergy),
                 };
                 copy.Hand = s.Hand.Select(c => Card(c, !viewer)).ToList();
                 copy.Deck = s.Deck.Select(c => Card(c, !viewer)).ToList();
                 if (viewer) for (int i = copy.Deck.Count - 1; i > 0; i--) { int j = rng.Next(i + 1); (copy.Deck[i], copy.Deck[j]) = (copy.Deck[j], copy.Deck[i]); }
-                copy.EnergyZone = s.EnergyZone.Select(c => Card(c, false)).ToList();
+                // From the 伏能喚醒 catalog on, energy cards matter (they can be summoned), so the opponent's face-down energy is hidden too.
+                copy.EnergyZone = s.EnergyZone.Select(c => Card(c, hideEnergy && !viewer && !c.TemporaryEnergy)).ToList();
                 copy.Graveyard = s.Graveyard.Select(c => Card(c, false)).ToList();
                 copy.Field = s.Field.Select(m => Unit(m, false)).ToList();
                 copy.Structures = s.Structures.Select(m => Unit(m, m.IsSet && !viewer)).ToList();

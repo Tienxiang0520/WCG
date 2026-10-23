@@ -2,21 +2,21 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 291
+total_cards: 318
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 291 張）
+# WCG 卡牌總表（共 318 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 177 張、法術 92 張、法術（反擊） 9 張、結界 13 張。
+類型：怪物 192 張、法術 103 張、法術（反擊） 9 張、結界 14 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，43 張）
+## 狂怒（Fury，48 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -63,8 +63,13 @@ source: WcgWeb/Data/cards.json
 | WCG-242 | 戰火補給 | 法術 | 2 | — | — | — | 抽 2 張牌，然後失去 1 點生命。 | **War Supplies** — Draw 2 cards, then lose 1 life. |
 | WCG-243 | 赤鱗護衛 | 怪物 | 4 | 1700 | 1 | — | 嘲諷；陣亡：對敵方玩家造成 1 點傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-244 | 烽火戰旗 | 結界 | 4 | — | — | — | 你的回合結束時，若你場上有怪物且都是狂怒，對敵方玩家造成 1 點傷害。 | **Beacon War Banner** — At the end of your turn, if you have monsters and all of them are [Fury], deal 1 damage to the enemy player. |
+| WCG-310 | 灰燼點火者 | 怪物 | 1 | 900 | 1 | — | 進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，對敵方玩家造成 1 點傷害。 | **Ash Kindler** — Deploy: You may put 1 card from your energy zone into the graveyard. If you do, deal 1 damage to the enemy player. |
+| WCG-311 | 焚能彈 | 法術 | 1 | — | — | — | 將你能量區 2 張牌送入墓地，作為額外代價；對敵方玩家造成 2 點傷害。 | **Energy Burn Shot** — As an additional cost, put 2 cards from your energy zone into the graveyard. Deal 2 damage to the enemy player. |
+| WCG-313 | 熔核潛伏者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，此怪物 PP +500 直到回合結束。 | **Molten-Core Lurker** — Charge. Deploy: You may put 1 card from your energy zone into the graveyard. If you do, this monster gets +500 PP until end of turn. |
+| WCG-315 | 燃盡之怒 | 法術 | 3 | — | — | — | 將你能量區至多 3 張橫置的牌送入墓地；每送 1 張，對敵方玩家造成 1 點傷害。 | **Burnout Fury** — Put up to 3 tapped cards from your energy zone into the graveyard. Deal 1 damage to the enemy player for each card. |
+| WCG-318 | 焚世魔焰 | 怪物 | 5 | 2000 | 2 | — | 進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。 | **World-Burning Flame** — Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player. |
 
-## 理智（Reason，47 張）
+## 理智（Reason，52 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -115,8 +120,13 @@ source: WcgWeb/Data/cards.json
 | WCG-262 | 智識巨靈 | 怪物 | 6 | 2100 | 2 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +700）。 | **Lore Colossus** — This monster gets +100 PP for each card in your hand (up to +700). |
 | WCG-273 | 林語抄寫員 | 怪物 | 3 | 1300 | 1 | — | 你每有 1 張手牌，此怪物 PP +100（最多 +500）。 | **Sylvan Scribe** — This monster gets +100 PP for each card in your hand (up to +500). |
 | WCG-279 | 學識守門人 | 怪物 | 4 | 1500 | 1 | — | 嘲諷；你的手牌在 5 張以上時，此怪物 PP +500。 | **Lore Gatekeeper** — Taunt. While you have 5 or more cards in hand, this monster gets +500 PP. |
+| WCG-301 | 伏能學徒 | 怪物 | 2 | 1000 | 1 | — | 進場：你可以將 1 張手牌的怪物牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。 | **Hidden-Energy Apprentice** — Deploy: You may put 1 monster card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn). |
+| WCG-302 | 秘藏封印 | 法術 | 1 | — | — | — | 將 1 張手牌背面朝上、橫置放入你的能量區（不佔本回合填能量次數）。抽 1 張牌。 | **Vault Seal** — Put 1 card from your hand into your energy zone face down and tapped (this doesn't count as your energy fill this turn). Draw 1 card. |
+| WCG-305 | 星庫守門人 | 怪物 | 5 | 2100 | 2 | — | 陣亡：將此卡背面朝上、橫置放入你的能量區（不送入墓地）。 | **Star-Vault Keeper** — On Death: Put this card into your energy zone face down and tapped (instead of the graveyard). |
+| WCG-307 | 群星歸位 | 法術 | 6 | — | — | — | 從你的能量區選至多 2 張怪物牌，不付費召喚到戰場（橫置進場，不觸發進場）。 | **Stars Realign** — Choose up to 2 monster cards in your energy zone and summon them for free (they enter tapped; Deploy doesn't trigger). |
+| WCG-308 | 能量占卜師 | 怪物 | 4 | 1700 | 1 | — | 進場：你可以將你能量區 1 張牌和你的 1 張手牌交換（換進能量區的牌背面朝上，保持原本那張的直立或橫置）。 | **Energy Diviner** — Deploy: You may swap 1 card in your energy zone with 1 card in your hand (the card put in is face down and keeps the original card's upright or tapped state). |
 
-## 生機（Life，45 張）
+## 生機（Life，48 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -165,8 +175,11 @@ source: WcgWeb/Data/cards.json
 | WCG-276 | 碧根巨鹿 | 怪物 | 4 | 1600 | 1 | — | 貫穿；你的手牌在 4 張以上時，此怪物 PP +400。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, this monster gets +400 PP. |
 | WCG-277 | 沃土灌注 | 法術 | 1 | — | — | — | 附著：怪物 PP +500。它交戰後，此卡送入墓地。 | **Fertile Infusion** — Attach: The monster gets +500 PP. After it fights, put this card into the graveyard. |
 | WCG-281 | 終章巨木 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；己方場上每有 1 隻印刷 PP 在 1300～1700 之間的其他怪物，此怪物 PP +200。 | **Final Chapter Elder** — Taunt. This monster gets +200 PP for each other monster you have with printed PP from 1300 to 1700. |
+| WCG-293 | 林間守望者 | 怪物 | 3 | 1200 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，回復你 1 點生命。 | **Grove Warden** — Taunt. At the end of your turn, if this monster is upright, you recover 1 life. |
+| WCG-296 | 不動古樹 | 怪物 | 5 | 2100 | 2 | — | 嘲諷；此怪物不能攻擊。此怪物直立時，你的其他直立怪物 PP +200。 | **Unmoving Elder Tree** — Taunt. This monster can't attack. While this monster is upright, your other upright monsters get +200 PP. |
+| WCG-299 | 晨露滋養 | 法術 | 2 | — | — | — | 你場上每有 1 隻直立的怪物，回復你 1 點生命（最多 3 點）。 | **Morning Dew** — You recover 1 life for each upright monster you have (up to 3). |
 
-## 秩序（Order，45 張）
+## 秩序（Order，55 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -215,8 +228,18 @@ source: WcgWeb/Data/cards.json
 | WCG-270 | 誓約持旗官 | 怪物 | 4 | 1600 | 1 | — | 每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。 | **Oath Standard-Bearer** — Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn). |
 | WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：怪物 PP +400。它交戰後，此卡送入墓地。 | **Dueling Blade** — Attach: The monster gets +400 PP. After it fights, put this card into the graveyard. |
 | WCG-272 | 終局騎士團長 | 怪物 | 7 | 2500 | 2 | — | 聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。 | **Grand Marshal of the Last Oath** — Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight). |
+| WCG-292 | 烽火哨兵 | 怪物 | 2 | 900 | 1 | — | 你的回合結束時，若此怪物直立，對敵方玩家造成 1 點傷害。 | **Beacon Sentry** — At the end of your turn, if this monster is upright, deal 1 damage to the enemy player. |
+| WCG-294 | 堅守號角 | 法術 | 2 | — | — | — | 將你所有橫置的怪物轉為直立；它們本回合不能攻擊。 | **Horn of Holding** — Untap all your tapped monsters. They can't attack this turn. |
+| WCG-295 | 烽火塔樓 | 結界 | 3 | — | — | — | 你的回合結束時，若你場上有 3 隻以上直立的怪物，對敵方玩家造成 1 點傷害。 | **Beacon Tower** — At the end of your turn, if you have 3 or more upright monsters, deal 1 damage to the enemy player. |
+| WCG-297 | 守夜祈禱 | 法術 | 1 | — | — | — | 附著：附著的己方怪物直立時，PP +400。 | **Vigil Prayer** — Attach to 1 of your monsters: while it is upright, it gets +400 PP. |
+| WCG-298 | 烽火傳令官 | 怪物 | 4 | 1500 | 1 | ←→ | 【箭頭：← →】你的回合結束時，箭頭指向的每隻直立己方怪物，各對敵方玩家造成 1 點傷害。 | **Beacon Herald** — [Arrow: ← →] At the end of your turn, each upright monster of yours these arrows point at deals 1 damage to the enemy player. |
+| WCG-300 | 堡壘指揮官 | 怪物 | 6 | 2300 | 2 | — | 嘲諷；進場：你場上每有 1 隻直立的其他怪物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Bastion Commander** — Taunt. Deploy: Deal 1 damage to the enemy player for each other upright monster you have (up to 3). |
+| WCG-303 | 甦醒之印 | 法術 | 3 | — | — | — | 從你的能量區選 1 張費用 4 以下的怪物牌，不付費召喚到戰場（直立進場，不觸發進場）。 | **Sigil of Awakening** — Choose a monster card with cost 4 or less in your energy zone and summon it for free (it enters upright; Deploy doesn't trigger). |
+| WCG-304 | 能量哨兵 | 怪物 | 3 | 1400 | 1 | — | 嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。 | **Energy Sentinel** — Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter. |
+| WCG-306 | 沉睡巨像 | 怪物 | 6 | 2500 | 2 | — | 此卡從你的能量區被召喚時，PP +300（在場期間一直有效）。 | **Slumbering Colossus** — When this card is summoned from your energy zone, it gets +300 PP (for as long as it stays in play). |
+| WCG-309 | 伏兵號令 | 法術 | 2 | — | — | — | 本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。 | **Ambush Order** — This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn. |
 
-## 深淵（Abyss，46 張）
+## 深淵（Abyss，50 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -266,6 +289,10 @@ source: WcgWeb/Data/cards.json
 | WCG-288 | 啃噬詛咒 | 法術 | 2 | — | — | — | 附著於 1 隻敵方怪物：它 PP -500。若它是嘲諷怪物，抽 1 張牌。 | **Gnawing Curse** — Attach to an enemy monster: it gets -500 PP. If it has Taunt, draw 1 card. |
 | WCG-289 | 瘴氣沼澤 | 結界 | 3 | — | — | — | 敵方嘲諷怪物 PP -300。 | **Miasma Bog** — Enemy Taunt monsters get -300 PP. |
 | WCG-290 | 深淵穿顱者 | 怪物 | 5 | 2000 | 2 | — | 貫穿；PP 比此怪物低的敵方嘲諷怪物擋不住此怪物。 | **Abyssal Skullpiercer** — Trample. Enemy Taunt monsters with lower PP than this monster can't block it. |
+| WCG-312 | 餘燼祭司 | 怪物 | 3 | 1300 | 1 | — | 每當你將能量區的牌送入墓地，每送 1 張，此怪物 PP +300 直到回合結束。 | **Cinder Priest** — Whenever you put cards from your energy zone into the graveyard, this monster gets +300 PP for each card until end of turn. |
+| WCG-314 | 灰燼回收 | 法術 | 2 | — | — | — | 從你的墓地選 1 張費用 3 以下的怪物牌，不付費召喚到戰場（不觸發進場）。若它是本回合從能量區送入墓地的，它直立進場。 | **Ash Reclamation** — Choose a monster card with cost 3 or less in your graveyard and summon it for free (Deploy doesn't trigger). If it was put there from your energy zone this turn, it enters upright. |
+| WCG-316 | 焦土殘兵 | 怪物 | 2 | 1100 | 1 | — | 陣亡：將你能量區 1 張牌送入墓地；若你這麼做，對敵方玩家造成 1 點傷害。 | **Scorched Remnant** — On Death: Put 1 card from your energy zone into the graveyard. If you do, deal 1 damage to the enemy player. |
+| WCG-317 | 血灰契約 | 法術 | 2 | — | — | — | 將你墓地 1 張牌背面朝上、橫置放入你的能量區。抽 1 張牌。 | **Blood-Ash Pact** — Put 1 card from your graveyard into your energy zone face down and tapped. Draw 1 card. |
 
 ## 中立（Neutral，46 張）
 
