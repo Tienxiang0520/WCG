@@ -1608,5 +1608,50 @@
     "zh": "幸運幣",
     "name": "The Coin",
     "text": "Put this card face up and untapped into your energy zone as 1 temporary energy. At the end of your turn, put it into your graveyard (whether or not it was used)."
+  },
+  "WCG-264": {
+    "zh": "決鬥見證官",
+    "name": "Duel Witness",
+    "text": "Deploy: 1 of your monsters gains 1 Holy Shield counter."
+  },
+  "WCG-265": {
+    "zh": "誓劍侍從",
+    "name": "Oathblade Squire",
+    "text": "Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card."
+  },
+  "WCG-266": {
+    "zh": "挑戰騎士",
+    "name": "Challenger Knight",
+    "text": "Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it)."
+  },
+  "WCG-267": {
+    "zh": "榮譽決鬥",
+    "name": "Duel of Honor",
+    "text": "1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it)."
+  },
+  "WCG-268": {
+    "zh": "決鬥競技場",
+    "name": "Dueling Arena",
+    "text": "Tap this card and tap 1 of your upright monsters: it fights 1 enemy Taunt monster."
+  },
+  "WCG-269": {
+    "zh": "冠軍騎士",
+    "name": "Champion Knight",
+    "text": "Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it)."
+  },
+  "WCG-270": {
+    "zh": "誓約持旗官",
+    "name": "Oath Standard-Bearer",
+    "text": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn)."
+  },
+  "WCG-271": {
+    "zh": "決鬥之劍",
+    "name": "Dueling Blade",
+    "text": "Attach: The monster gets +400 PP. After it fights, put this card into the graveyard."
+  },
+  "WCG-272": {
+    "zh": "終局騎士團長",
+    "name": "Grand Marshal of the Last Oath",
+    "text": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight)."
   }
 }

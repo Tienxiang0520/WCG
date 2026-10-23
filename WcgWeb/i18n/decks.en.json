@@ -1012,5 +1012,11 @@
   "zhDescription": "大量中立傭兵互相加成，傭兵契約找人、流浪將軍壓陣。",
   "name": "Order · Bannerless Mercenaries (Neutral)",
   "description": "Many Neutral mercenaries boost each other; Mercenary Contract finds them and the Wandering General leads."
+ },
+ "RANKED-5-ORDER-OATHDUEL": {
+  "zhName": "秩序・誓劍決鬥（決鬥）",
+  "zhDescription": "帶聖盾的騎士指定敵方怪物決鬥，用交戰當解場打穿嘲諷。",
+  "name": "Order · Oathblade Duel (Duel)",
+  "description": "Shielded knights challenge chosen enemy monsters, using combat as removal to break through Taunt."
  }
 }

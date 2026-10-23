@@ -19,8 +19,12 @@ internal static class CounterHistory
     // Catalog before the proportional direct-damage cost update (cost and PP only).
     // Catalog before 聖盾交戰必扣 (design notes of the nine native holy-shield cards only).
     // Catalog before every printed-PP check said 「印刷 PP」 (text of 39 cards only).
+    // Catalog before the 誓劍決鬥 cards WCG-264–272 existed.
+    internal static CardDatabase BeforeOathDuelCards(CardDatabase current) => current.GetCard("WCG-264")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 264 or > 272)),JsonSerializer.Serialize(current.PresetDecks));
     internal static CardDatabase BeforePrintedPpText(CardDatabase current)
     {
+        current=BeforeOathDuelCards(current);
         if(current.GetCard("WCG-082")?.Text.Contains("印刷 PP")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-printed-pp-text.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

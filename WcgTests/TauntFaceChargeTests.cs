@@ -41,6 +41,6 @@ public sealed class TauntFaceChargeTests
         Assert.All(cards.AllCards.Where(c=>c.Keywords.Contains("衝鋒")),c=>Assert.True(c.TotalCost>=3,c.Id));
         Assert.True(CardBalanceHistory.TauntFaceChargeCatalog(cards));
         Assert.False(CardBalanceHistory.TauntFaceChargeCatalog(CardBalanceHistory.BeforeTauntFaceCharge(cards)));
-        Assert.Equal(cards.AllCards.Count,CardBalanceHistory.BeforeTauntFaceCharge(cards).AllCards.Count);
+        Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=263),CardBalanceHistory.BeforeTauntFaceCharge(cards).AllCards.Count);
     }
 }

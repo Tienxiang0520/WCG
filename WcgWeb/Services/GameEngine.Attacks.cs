@@ -65,12 +65,12 @@ public partial class GameEngine
                     foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a))triggers.Add(()=>Damage(p,1,new(e,x.Card,x,"passive")));
                     if(DamageCounters) Resolve(triggers.ToArray()); else foreach(var trigger in triggers)trigger();
                 },
-                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{if(mirror&&Alive(a))Bounce(a);},()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
+                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{OathCombatWon(p,a,d);OathCombatWon(e,d,a);},()=>{if(mirror&&Alive(a))Bounce(a);},()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
             KillBatch(dead,"交戰");
         });
     }
     private void Survived(PlayerState p,MonsterInstance m,MonsterInstance other,bool defending)
-    {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id=="WCG-109")DrawMany(p,1);
+    {if(!Alive(m)||m.IsSilenced)return;if(m.Card.Id is "WCG-109" or "WCG-265")DrawMany(p,1);
         if(m.Card.Id=="WCG-029"&&!m.Card.Text.StartsWith("進場",StringComparison.Ordinal)&&Alive(other)){if(other.IsTapped)DrawMany(p,1);else other.IsTapped=true;}
         if(defending&&m.Card.Id=="WCG-144")Damage(GetOpponent(p),1,new(p,m.Card,m,"passive"));}
     private void ShieldDecision(MonsterInstance m,bool hit,Action<bool> finish,bool lethal=true)

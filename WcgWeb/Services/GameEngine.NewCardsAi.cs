@@ -17,6 +17,7 @@ public partial class GameEngine
         double Draw(int n) => p.Deck.Count <= n + 2 ? -10 : n * 2.2;
         double Best(IEnumerable<MonsterInstance> ms) => ms.Select(BodyValue).DefaultIfEmpty(0).Max();
         var others = p.Field.ToArray();
+        if (OathPlayValue(p, c) is { } oath) return oath;
         switch (id)
         {
             case "WCG-208" when c.Card.IsSpell:
@@ -82,6 +83,7 @@ public partial class GameEngine
     private MonsterInstance? NewTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal)
     {
         if (!NewAi) return null;
+        if (OathTarget(p, pending, legal) is { } oath) return oath;
         if (pending.Title == "選擇與它交戰的敵方怪物")
         {
             var power = p.Field.Where(m => m.IsTapped).Select(m => m.CurrentPP).DefaultIfEmpty(0).Max();

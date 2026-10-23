@@ -82,7 +82,7 @@ public partial class GameEngine
     public bool SetCard(PlayerState p, CardInstance c) => Change(()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
-    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>false });
+    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m) });
     public bool Activate(PlayerState p, MonsterInstance m)=>Change(()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
@@ -95,6 +95,7 @@ public partial class GameEngine
             case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1));KillBatch([x],"犧牲",!LegacyCardRules);}));break;
             case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);DrawMany(p,1);}));break;
             case "WCG-151":PickMonster(p,$"選擇 PP {Low(800)} 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>ThresholdPP(x)<=Low(800)),x=>Pay(()=>KillBatch([x],m.Card.Name)));break;
+            case "WCG-268":ActivateOath(p,m);break;
         }
         return true;
     });

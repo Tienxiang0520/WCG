@@ -223,6 +223,7 @@ public partial class GameEngine
         if (choice.Title == "受到傷害，可從手牌發動反擊")
             return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
         if (ReasonChoice(p, e, choice, prof) is { } reason) return SelectChoice(reason);
+        if (NewAi && OathChoice(p, choice) is { } oath) return SelectChoice(oath);
         if (choice.Title.Contains("翻開")) return SelectChoice(choice.Options.FirstOrDefault(o => o.Id != "SKIP") ?? choice.Options[0]);
         if (choice.Title.Contains("固定進場格位") && AiLevel >= 1) return NewSlot(p, choice) is { } slot ? SelectChoice(slot) : ExecuteV06Ai();
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));
