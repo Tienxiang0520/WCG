@@ -143,14 +143,20 @@ internal static class CardBalanceHistory
     private static CardDatabase HoofCrushCardsStep(CardDatabase c) => c.GetCard("WCG-337") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsHoofCrushCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // Catalog before the 斷路突襲 archetype (WCG-319–327, 2026-10-24) existed; nothing else changed.
+    internal static bool IsLaneRaidCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 319 and <= 327;
+    private static CardDatabase LaneRaidCardsStep(CardDatabase c) => c.GetCard("WCG-319") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsLaneRaidCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) => HoofCrushCardsStep(current);
+    internal static CardDatabase BeforeLaneRaidCards(CardDatabase current) => LaneRaidCardsStep(current);
+    internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) => HoofCrushCardsStep(BeforeLaneRaidCards(current));
     internal static CardDatabase BeforeEnergyBurnCards(CardDatabase current) => EnergyBurnCardsStep(BeforeHoofCrushCards(current));
     internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) => EnergyVaultCardsStep(BeforeEnergyBurnCards(current));
     internal static CardDatabase BeforeBeaconWatchCards(CardDatabase current) => BeaconWatchCardsStep(BeforeEnergyVaultCards(current));

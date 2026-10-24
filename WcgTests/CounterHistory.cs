@@ -27,8 +27,11 @@ internal static class CounterHistory
     // Catalog before the 伏能喚醒 cards WCG-301–309 existed.
     // Catalog before the 焚能爆破 cards WCG-310–318 existed.
     // Catalog before the 重蹄碾壓 cards WCG-337–345 existed.
-    internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) => current.GetCard("WCG-337")==null ? current
-        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 337 or > 345)),JsonSerializer.Serialize(current.PresetDecks));
+    // Catalog before the 斷路突襲 cards WCG-319–327 existed.
+    internal static CardDatabase BeforeLaneRaidCards(CardDatabase current) => current.GetCard("WCG-319")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 319 or > 327)),JsonSerializer.Serialize(current.PresetDecks));
+    internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) { current=BeforeLaneRaidCards(current); return current.GetCard("WCG-337")==null ? current
+        : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 337 or > 345)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforeEnergyBurnCards(CardDatabase current) { current=BeforeHoofCrushCards(current); return current.GetCard("WCG-310")==null ? current
         : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 310 or > 318)),JsonSerializer.Serialize(current.PresetDecks)); }
     internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) { current=BeforeEnergyBurnCards(current); return current.GetCard("WCG-301")==null ? current

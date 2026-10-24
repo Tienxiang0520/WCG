@@ -2,21 +2,21 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 327
+total_cards: 336
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 327 張）
+# WCG 卡牌總表（共 336 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 196 張、法術 107 張、法術（反擊） 9 張、結界 15 張。
+類型：怪物 202 張、法術 110 張、法術（反擊） 9 張、結界 15 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，52 張）
+## 狂怒（Fury，58 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -68,12 +68,18 @@ source: WcgWeb/Data/cards.json
 | WCG-313 | 熔核潛伏者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，此怪物 PP +500 直到回合結束。 | **Molten-Core Lurker** — Charge. Deploy: You may put 1 card from your energy zone into the graveyard. If you do, this monster gets +500 PP until end of turn. |
 | WCG-315 | 燃盡之怒 | 法術 | 3 | — | — | — | 將你能量區至多 3 張橫置的牌送入墓地；每送 1 張，對敵方玩家造成 1 點傷害。 | **Burnout Fury** — Put up to 3 tapped cards from your energy zone into the graveyard. Deal 1 damage to the enemy player for each card. |
 | WCG-318 | 焚世魔焰 | 怪物 | 5 | 2000 | 2 | — | 進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。 | **World-Burning Flame** — Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player. |
+| WCG-319 | 斷路斥候 | 怪物 | 1 | 800 | 1 | ↑ | 【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物。 | **Lane Scout** — [Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster. |
+| WCG-320 | 空巷獵手 | 怪物 | 2 | 1000 | 1 | ↑ | 【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物，且它攻擊敵方玩家時 DP +1。 | **Empty Alley Hunter** — [Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster, and it gets +1 DP when attacking the enemy player. |
+| WCG-322 | 疾風穿巷 | 法術 | 2 | — | — | — | 使 1 隻己方怪物本回合 PP +300；若它正對面沒有敵方怪物，它轉為直立。 | **Gale Through the Lanes** — 1 of your monsters gets +300 PP this turn; if there is no enemy monster directly opposite it, ready it. |
+| WCG-324 | 側翼包抄者 | 怪物 | 3 | 1300 | 1 | ↑ | 衝鋒；【箭頭：↑】正對面沒有敵方怪物時，此怪物 PP +300。 | **Flanking Rider** — Charge; [Arrow: ↑] While there is no enemy monster directly opposite, this monster gets +300 PP. |
+| WCG-326 | 開路先鋒 | 怪物 | 5 | 1900 | 2 | ↑ | 衝鋒；【箭頭：↑】進場：消滅正對面 1 隻印刷 PP 1800 以下的敵方怪物。正對面沒有敵方怪物時，嘲諷擋不住此怪物。 | **Trailblazer Vanguard** — Charge; [Arrow: ↑] On deploy: destroy the enemy monster directly opposite with printed PP 1800 or less. While there is no enemy monster directly opposite, Taunt can't stop this monster. |
+| WCG-327 | 千路齊進 | 法術 | 4 | — | — | — | 本回合你的每隻正對面沒有敵方怪物的怪物，攻擊敵方玩家時 DP +1。 | **Thousand Roads Charge** — This turn, each of your monsters with no enemy monster directly opposite gets +1 DP when attacking the enemy player. |
 | WCG-338 | 重蹄蹄鐵 | 法術 | 1 | — | — | — | 附著於 1 隻己方怪物：它 DP +1、PP +200。 | **Heavy Horseshoe** — Attach to 1 of your monsters: it gets +1 DP and +200 PP. |
 | WCG-340 | 破欄衝撞 | 法術 | 2 | — | — | — | 選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。 | **Fence-Breaking Charge** — Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead. |
 | WCG-341 | 怒蹄戰士 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；此怪物攻擊敵方玩家時，你場上每有 1 隻 DP 2 以上的其他怪物，此怪物 DP +1。 | **Raging Hoof Warrior** — Charge. When this monster attacks the enemy player, it gets +1 DP for each of your other monsters with 2 or more DP. |
 | WCG-345 | 致命頂撞 | 法術 | 3 | — | — | — | 使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。 | **Lethal Ram** — Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn. |
 
-## 理智（Reason，52 張）
+## 理智（Reason，55 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -129,6 +135,9 @@ source: WcgWeb/Data/cards.json
 | WCG-305 | 星庫守門人 | 怪物 | 5 | 2100 | 2 | — | 陣亡：將此卡背面朝上、橫置放入你的能量區（不送入墓地）。 | **Star-Vault Keeper** — On Death: Put this card into your energy zone face down and tapped (instead of the graveyard). |
 | WCG-307 | 群星歸位 | 法術 | 6 | — | — | — | 從你的能量區選至多 2 張怪物牌，不付費召喚到戰場（橫置進場，不觸發進場）。 | **Stars Realign** — Choose up to 2 monster cards in your energy zone and summon them for free (they enter tapped; Deploy doesn't trigger). |
 | WCG-308 | 能量占卜師 | 怪物 | 4 | 1700 | 1 | — | 進場：你可以將你能量區 1 張牌和你的 1 張手牌交換（換進能量區的牌背面朝上，保持原本那張的直立或橫置）。 | **Energy Diviner** — Deploy: You may swap 1 card in your energy zone with 1 card in your hand (the card put in is face down and keeps the original card's upright or tapped state). |
+| WCG-321 | 路障觀測者 | 怪物 | 2 | 1100 | 1 | ↑ | 【箭頭：↑】進場：若正對面有敵方怪物，將它移回手牌；它的費用必須在 2 以下。若正對面沒有敵方怪物，改為抽 1 張牌。 | **Barricade Observer** — [Arrow: ↑] On deploy: if there is an enemy monster directly opposite, return it to its owner's hand; it must cost 2 or less. If there is no enemy monster directly opposite, draw 1 card instead. |
+| WCG-323 | 清道令 | 法術 | 2 | — | — | — | 將 1 隻敵方怪物移回手牌；它必須在你 1 隻有 ↑ 箭頭的怪物正對面。若它是嘲諷怪物，抽 1 張牌。 | **Clear-the-Road Edict** — Return 1 enemy monster to its owner's hand; it must be directly opposite 1 of your monsters with a ↑ arrow. If it has Taunt, draw 1 card. |
+| WCG-325 | 斷橋術士 | 怪物 | 4 | 1600 | 1 | ↑ | 【箭頭：↑】進場：將正對面的敵方怪物橫置；若正對面沒有敵方怪物，改為抽 1 張牌。正對面的敵方怪物在回合開始時不會轉為直立。 | **Bridgebreaker Mage** — [Arrow: ↑] On deploy: tap the enemy monster directly opposite; if there is none, draw 1 card instead. The enemy monster directly opposite doesn't ready at the start of its turn. |
 
 ## 生機（Life，53 張）
 

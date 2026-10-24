@@ -56,8 +56,8 @@ public partial class GameEngine
         !attacking && other.IsUnit && !other.IsSilenced && other.Card.Id == "WCG-343" && other.CurrentDP - other.AttackDamageBonus >= 3 ? -500 : 0;
 
     private List<MonsterInstance>? HoofSpellTargets(PlayerState p, CardDefinition c) =>
-        c.Id is "WCG-338" or "WCG-345" ? p.Field.Where(x => x.IsUnit).ToList() : null;
-    private static bool HoofNeedsTarget(string id) => id is "WCG-338" or "WCG-345";
+        c.Id is "WCG-338" or "WCG-345" ? p.Field.Where(x => x.IsUnit).ToList() : LaneSpellTargets(p, c);
+    private static bool HoofNeedsTarget(string id) => id is "WCG-338" or "WCG-345" || LaneNeedsTarget(id);
     private bool HoofSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
@@ -77,7 +77,7 @@ public partial class GameEngine
                 Present("status", p, t.InstanceId, card: source.Card, label: $"本回合 DP ×2（{t.CurrentDP}）");
                 if (t.CurrentDP - t.AttackDamageBonus >= 4) MakeUnblockable(p, t);
                 break;
-            default: return false;
+            default: return LaneSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -85,7 +85,7 @@ public partial class GameEngine
     private string HoofPlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
         "WCG-338" or "WCG-340" or "WCG-345" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
-        _ => ""
+        _ => LanePlayProblem(p, c)
     };
 
     // ── 天梯電腦 ──
@@ -109,13 +109,13 @@ public partial class GameEngine
                 var best = ready.Max(x => Dp(x) * 2 >= 4 || CanAttackPlayer(x) ? Dp(x) * 2 : 0);
                 return best >= e.Hp ? 1000 : best >= 4 ? best * 1.5 : -2;
         }
-        return null;
+        return LanePlayValue(p, c);
     }
     private MonsterInstance? HoofSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
         "WCG-338" => own.OrderByDescending(m => (CanAttack(m) ? 3 : 0) + (m.Card.Id is "WCG-337" or "WCG-339" or "WCG-343" ? 2 : 0) + Dp(m) + BodyValue(m) * .2).FirstOrDefault(),
         "WCG-345" => own.Where(CanAttack).OrderByDescending(Dp).FirstOrDefault() ?? own.OrderByDescending(Dp).FirstOrDefault(),
-        _ => null
+        _ => LaneSpellTarget(p, id, own)
     };
     private MonsterInstance? HoofTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
     {
