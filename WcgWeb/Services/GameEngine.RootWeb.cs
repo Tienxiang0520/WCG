@@ -14,7 +14,7 @@ public partial class GameEngine
     private bool PointedBy(PlayerState owner, MonsterInstance unit, string id) =>
         Player.Field.Concat(Computer.Field).Any(s => s != unit && Active(s, id) && PointsAt(Owner(s), s, owner, unit));
     // 357 根脈樞紐: +400 PP for each arrow pointing at it.
-    private int RootPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-357" ? 400 * ArrowsAt(p, m) : 0;
+    private int RootPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-357" ? 400 * ArrowsAt(p, m) : BloodPower(p, m);
     // 357's arrows: the monsters they point at get +1 DP while pointed at (no counter).
     private int RootDp(PlayerState p, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Count(s => s != unit && Active(s, "WCG-357") && PointsAt(Owner(s), s, p, unit));
@@ -40,7 +40,7 @@ public partial class GameEngine
             case "WCG-363":
                 foreach (var x in p.Field.Where(x => x.IsUnit && ArrowsAt(p, x) > 0).ToArray()) AddDpCounter(x, m.Card);
                 break;
-            default: return false;
+            default: return BloodDeploy(p, m);
         }
         return true;
     }
@@ -66,8 +66,8 @@ public partial class GameEngine
                 DrawMany(p, 1);
             });
     }
-    private static List<MonsterInstance>? RootSpellTargets(PlayerState p, CardDefinition c) => null;
-    private static bool RootNeedsTarget(string id) => false;
+    private static List<MonsterInstance>? RootSpellTargets(PlayerState p, CardDefinition c) => BloodSpellTargets(p, c);
+    private static bool RootNeedsTarget(string id) => BloodNeedsTarget(id);
     // 358 地脈回響: links = your monsters' ← → arrows pointing at another monster of yours (at most 4).
     private int RootLinks(PlayerState p) => Math.Min(4, p.Field.Where(s => s.IsUnit && !s.IsSilenced && (s.Card.Arrows.Contains("left") || s.Card.Arrows.Contains("right")))
         .Sum(s => p.Field.Count(t => t != s && t.IsUnit && ReferenceEquals(RowOf(s), RowOf(t)) && PointsAt(p, s, p, t))));
@@ -76,7 +76,7 @@ public partial class GameEngine
         switch (source.Card.Id)
         {
             case "WCG-358": RootEcho(p, RootLinks(p)); break;
-            default: return false;
+            default: return BloodSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -93,9 +93,10 @@ public partial class GameEngine
     private string RootPlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
         "WCG-362" when !RootSqueezeSlot(p) => "只能放在兩隻己方怪物之間的空格。",
-        _ => ""
+        _ => BloodPlayProblem(p, c)
     };
     private static bool RootCanActivate(PlayerState p, MonsterInstance s) => false;
+    private int RootAndBloodDp(PlayerState p, MonsterInstance unit) => RootDp(p, unit) + BloodDp(p, unit);
 
     // ── 天梯電腦 ──
     private double? RootPlayValue(PlayerState p, CardInstance c)
@@ -104,13 +105,13 @@ public partial class GameEngine
         {
             case "WCG-358": var n = RootLinks(p); return n == 0 ? -5 : n * 1.8 - 1;
         }
-        return null;
+        return BloodPlayValue(p, c);
     }
-    private static MonsterInstance? RootTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;
+    private static MonsterInstance? RootTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => BloodTarget(p, pending, legal);
     // 361: only pick up a tapped cheap monster whose 進場 can be used again; otherwise keep the board.
     private ChoiceOption? ArchChoice(PlayerState p, PendingChoice choice)
     {
-        if (choice.Title != RootReturnTitle) return null;
+        if (choice.Title != RootReturnTitle) return BloodChoice(p, choice);
         var reuse = p.Field.Where(x => x.IsUnit && x.IsTapped && x.Card.TotalCost <= 3 && x.Card.Text.Contains("進場：", StringComparison.Ordinal) && !CardBalanceHistory.IsRootWebCard(x.Card.Id))
             .OrderByDescending(x => x.Card.TotalCost).FirstOrDefault();
         return choice.Options.FirstOrDefault(o => reuse != null && o.Id == reuse.InstanceId.ToString()) ?? choice.Options.First(o => o.Id == "SKIP");

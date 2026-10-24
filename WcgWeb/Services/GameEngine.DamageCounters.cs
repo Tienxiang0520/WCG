@@ -36,7 +36,7 @@ public partial class GameEngine
                 "WCG-197" or "WCG-198" => true,
                 "WCG-225" => monster,
                 "WCG-226" => damage.Source?.Card.IsSpell == true,
-                _ => false
+                _ => BloodCanReact(p, card, damage)
             };
         }
         var enemySource = damage.Source is { } source && source.Owner != p;
@@ -47,7 +47,7 @@ public partial class GameEngine
             "WCG-196" or "WCG-197" => enemySource,
             "WCG-198" => true,
             "WCG-199" => enemyMonster && (CanDestroyDamageSource(damage) || CanRecoverCounter(p)),
-            _ => false
+            _ => BloodCanReact(p, card, damage)
         };
     }
     private void DamageReaction(DamageContext damage)
@@ -95,6 +95,7 @@ public partial class GameEngine
             Resolve(() => ReverseDamage(damage), () => { if (source != null && Alive(source) && source.IsUnit && !source.IsTapped) { source.IsTapped = true; Present("status", Owner(source), source.InstanceId, card: source.Card, label: "橫置"); } });
             return;
         }
+        if (BloodCounterCard(card.Card.Id)) { BloodResolveCounter(p, card, damage); return; }
         if (card.Card.Id == "WCG-226") { Resolve(() => ReverseDamage(damage), () => DrawMany(p, 1)); return; }
         if (SimplifiedRules && card.Card.Id is "WCG-195" or "WCG-199")
         {

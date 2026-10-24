@@ -31,7 +31,7 @@ public partial class GameEngine
     // 350 冥誓審判官: the monster its ↑ arrow points at gets -200 PP per 5 cards in its controller's graveyard.
     // Arrow effects with a value that changes during play, one entry per source (also listed in the PP breakdown).
     private IEnumerable<(CardDefinition Source, int Amount)> ArchArrowSources(PlayerState owner, MonsterInstance unit) =>
-        Player.Field.Concat(Computer.Field).Where(s => s != unit && Active(s, "WCG-350") && PointsAt(Owner(s), s, owner, unit)).Select(s => (s.Card, -200 * (Grave(Owner(s)) / 5)));
+        Player.Field.Concat(Computer.Field).Where(s => s != unit && Active(s, "WCG-350") && PointsAt(Owner(s), s, owner, unit)).Select(s => (s.Card, -200 * (Grave(Owner(s)) / 5))).Concat(BloodArrowSources(owner, unit));
     private int GraveArrowPower(PlayerState owner, MonsterInstance unit) => ArchArrowSources(owner, unit).Sum(x => x.Amount);
     private int GraveCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-353" ? p.Graveyard.Count(c => c.Card.IsMonster) : 0;
 

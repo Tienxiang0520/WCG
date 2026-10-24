@@ -129,6 +129,7 @@
                 </div>
                 <p class="print-reference-note">@L["生命計數卡與聖盾指示物不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
                 <p class="print-reference-note">@L["DP 指示物：每個使怪物 DP +1，可以疊加；被沉默或怪物離場時移除。"]</p>
+                <p class="print-reference-note">@L["血誓指示物：放在血誓祭壇上，沉默不影響；祭壇離場時一起移除。"]</p>
                 <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。奪魂指示物：永久控制，離場時回到擁有者那邊；被沉默或驅散時移除，怪物歸還擁有者。"]</p>
             </section>
         }
@@ -169,7 +170,7 @@
     }
     private static string ToolName(PrintTool t) => t switch
     {
-        PrintTool.Life => "生命計數卡", PrintTool.Coin => "幸運幣（後攻用）", PrintTool.ShieldTokens => "聖盾指示物卡（12 個）", PrintTool.DpTokens => "DP 指示物卡（12 個）", _ => "奪魂指示物卡（12 個）"
+        PrintTool.Life => "生命計數卡", PrintTool.Coin => "幸運幣（後攻用）", PrintTool.ShieldTokens => "聖盾指示物卡（12 個）", PrintTool.DpTokens => "DP 指示物卡（12 個）", PrintTool.BloodTokens => "血誓指示物卡（12 個）", _ => "奪魂指示物卡（12 個）"
     };
     private string ToolSummary => string.Concat(DeckPrintTools.Order.Where(t => Count(t) > 0).Select(t => L.F("＋{0} 張{1}", Count(t), L[ToolName(t)])));
     private RenderFragment ToolCard(PrintToolItem item) => __builder =>
@@ -201,6 +202,13 @@
                 @* 聖盾指示物: one-time Holy Shield counters to cut out and place on monsters (any small object works too). *@
                 <article class="print-card shield-token-card" aria-label="@L["聖盾指示物"]">
                     <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><ShieldIcon Class="shield-token-icon" /></span> }</div>
+                    @CropMarks
+                </article>
+                break;
+            case PrintTool.BloodTokens:
+                @* 血誓指示物 (血誓反擊): stacked on 364 血誓祭壇, one per damage event you took. *@
+                <article class="print-card shield-token-card blood-token-card" aria-label="@L["血誓指示物"]">
+                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="blood-token"><BloodTokenIcon Class="blood-token-icon" Ink="@(!Color)" /></span> }</div>
                     @CropMarks
                 </article>
                 break;

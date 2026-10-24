@@ -1967,5 +1967,13 @@
  "直立進場": "Enters upright",
  "可選擇 1 隻己方怪物移回手牌": "You may return 1 of your monsters to hand",
  "只能放在兩隻己方怪物之間的空格。": "Can only be placed in an empty slot between two of your monsters.",
- "地脈回響：選擇回復 1 點生命或抽 1 張牌（還有 {0} 次）": "Ley Echo: choose to heal 1 life or draw 1 card ({0} left)"
+ "地脈回響：選擇回復 1 點生命或抽 1 張牌（還有 {0} 次）": "Ley Echo: choose to heal 1 life or draw 1 card ({0} left)",
+ "血誓指示物": "Blood Oath counter",
+ "血誓指示物卡（12 個）": "Blood Oath counter card (12)",
+ "血誓指示物：放在血誓祭壇（結界）上，每個代表你受到過 1 次傷害；卡面寫「移除血誓指示物」時從你場上的祭壇移除。沉默不影響血誓指示物；血誓祭壇離場（例如被驅散摧毀）時，上面的血誓指示物一起移除。": "Blood Oath counters: they sit on a Blood Oath Altar (an enchantment); each one stands for 1 time you took damage. When a card says to remove Blood Oath counters, take them from the altars on your side of the field. Silence doesn't affect Blood Oath counters; when a Blood Oath Altar leaves play (for example destroyed by a dispel), the counters on it are removed with it.",
+ "血誓指示物：放在血誓祭壇上，沉默不影響；祭壇離場時一起移除。": "Blood Oath counters: placed on a Blood Oath Altar; silence doesn't affect them; removed when the altar leaves play.",
+ "血帳清算：選擇消滅的敵方怪物（移除 2 個血誓指示物）": "Settling the Blood Debt: choose an enemy monster to destroy (remove 2 Blood Oath counters)",
+ "你場上的血誓指示物不足 2 個。": "You have fewer than 2 Blood Oath counters on your side of the field.",
+ "敵方場上沒有怪物。": "The enemy has no monsters on the field.",
+ "【{0}】移除 {1} 個血誓指示物。": "[{0}] removes {1} Blood Oath counters."
 }
