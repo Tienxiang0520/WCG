@@ -2089,5 +2089,59 @@
     "name": "Lethal Ram",
     "text": "Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn.",
     "zh_text": "使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。"
+  },
+  "WCG-346": {
+    "zh": "墓典抄錄員",
+    "name": "Grave Codex Scribe",
+    "text": "On deploy: put the top 3 cards of your deck into your graveyard.",
+    "zh_text": "進場：將你牌庫最上面 3 張牌送入墓地。"
+  },
+  "WCG-347": {
+    "zh": "列隊亡兵",
+    "name": "Ranked Dead Soldier",
+    "text": "This monster gets +300 PP for every 5 cards in your graveyard. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "你的墓地每有 5 張牌，此怪物 PP +300；【箭頭：← →】箭頭指向的怪物 PP +200。"
+  },
+  "WCG-348": {
+    "zh": "葬禮號令",
+    "name": "Funeral Command",
+    "text": "Additional cost: sacrifice 1 of your monsters. Draw 2 cards, then put the top 2 cards of your deck into your graveyard.",
+    "zh_text": "額外代價：犧牲 1 隻己方怪物。抽 2 張牌，將你牌庫最上面 2 張牌送入墓地。"
+  },
+  "WCG-349": {
+    "zh": "骸骨軍旗",
+    "name": "Bone Standard",
+    "text": "Active: tap this card and shuffle 3 other cards from your graveyard to the bottom of your deck: summon 1 monster with printed PP 1200 or less from your graveyard for free.",
+    "zh_text": "主動：橫置此卡，把你墓地的另外 3 張牌洗回牌庫底：從你的墓地免費召喚 1 隻印刷 PP 1200 以下的怪物。"
+  },
+  "WCG-350": {
+    "zh": "冥誓審判官",
+    "name": "Underworld Oath Judge",
+    "text": "On deploy: if you have 10 or more cards in your graveyard, destroy 1 enemy monster. [Arrow: ↑] The monster the arrow points at gets -200 PP for every 5 cards in your graveyard.",
+    "zh_text": "進場：若你的墓地有 10 張以上，消滅 1 隻敵方怪物。【箭頭：↑】你的墓地每有 5 張牌，箭頭指向的怪物 PP -200。"
+  },
+  "WCG-351": {
+    "zh": "不朽方陣兵",
+    "name": "Undying Phalanx",
+    "text": "Taunt. On Death: if you have 8 or more cards in your graveyard, summon this monster from your graveyard to an empty slot of yours for free (once per turn).",
+    "zh_text": "嘲諷；陣亡：若你的墓地有 8 張以上，從你的墓地免費召喚此怪物到你的空格（每回合限 1 次）。"
+  },
+  "WCG-352": {
+    "zh": "亡魂點名",
+    "name": "Roll Call of the Dead",
+    "text": "Deal 1 damage to the enemy player for every 4 cards in your graveyard (up to 3).",
+    "zh_text": "你的墓地每有 4 張牌，對敵方玩家造成 1 點傷害（最多 3 點）。"
+  },
+  "WCG-353": {
+    "zh": "墓土巨像",
+    "name": "Graveearth Colossus",
+    "text": "Trample. This card costs 1 less for each monster card in your graveyard.",
+    "zh_text": "貫穿；你的墓地每有 1 張怪物牌，此卡費用 -1。"
+  },
+  "WCG-354": {
+    "zh": "萬骸歸列",
+    "name": "Return of Ten Thousand Bones",
+    "text": "Summon monsters with printed PP 1800 or less from your graveyard for free until your slots are full. Ready them; they can attack this turn.",
+    "zh_text": "從你的墓地免費召喚印刷 PP 1800 以下的怪物，直到你的空格全滿；它們轉為直立，本回合可以攻擊。"
   }
 }

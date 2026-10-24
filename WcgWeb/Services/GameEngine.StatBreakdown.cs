@@ -39,6 +39,7 @@ public partial class GameEngine
             var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, m)) continue;
             var aura = ArrowAura(source.Card.Id); Add(source.Card, source.Card.Name, Across(source, m) ? aura.Enemy : aura.Ally);
         }
+        foreach (var (source, amount) in ArchArrowSources(owner, m)) Add(source, source.Name, amount);
         foreach (var bog in GetOpponent(owner).Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-289")) if (m.IsTaunt) Add(bog.Card, bog.Card.Name, -300);
         if (owner.Occupied >= 5) foreach (var x in owner.Field.Where(x => Active(x, "WCG-219"))) Add(x.Card, x.Card.Name, 300);
         // Self abilities of NewPower: the remainder after the shared 219 aura.

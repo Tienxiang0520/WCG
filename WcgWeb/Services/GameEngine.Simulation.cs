@@ -74,6 +74,7 @@ public partial class GameEngine
             g.TrainingMode = TrainingMode; g.AiLevel = AiLevel; g.AiRevision = AiRevision; g._aiSeed = _aiSeed;
             foreach (var (k, v) in plannedSlots) g.plannedSlots[k] = v;
             g.soulPactForeign = soulPactForeign;
+            foreach (var (k, v) in graveReviveTurn) g.graveReviveTurn[k] = v;
             g.lastSacrifice = lastSacrifice != null && map.TryGetValue(lastSacrifice, out var ls) ? (MonsterInstance)ls : null;
             g.RefreshBoard();
             return g;
