@@ -2143,5 +2143,59 @@
     "name": "Return of Ten Thousand Bones",
     "text": "Summon monsters with printed PP 1800 or less from your graveyard for free until your slots are full. Ready them; they can attack this turn.",
     "zh_text": "從你的墓地免費召喚印刷 PP 1800 以下的怪物，直到你的空格全滿；它們轉為直立，本回合可以攻擊。"
+  },
+  "WCG-355": {
+    "zh": "嫩根幼苗",
+    "name": "Tender Rootling",
+    "text": "[Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "【箭頭：← →】箭頭指向的怪物 PP +200。"
+  },
+  "WCG-356": {
+    "zh": "連枝守衛",
+    "name": "Linked-Branch Warden",
+    "text": "Taunt. While 2 or more arrows point at it, it gets 1 Holy Shield counter (1 each time this starts applying). [Arrow: ← →] Only links the rootweb; no other effect.",
+    "zh_text": "嘲諷；被至少 2 個箭頭指向時，獲得 1 個聖盾指示物（每次開始成立時放 1 個）。【箭頭：← →】只用來連結根脈，沒有其他效果。"
+  },
+  "WCG-357": {
+    "zh": "根脈樞紐",
+    "name": "Rootweb Nexus",
+    "text": "This monster gets +400 PP for each arrow pointing at it. [Arrow: ← →] The monsters the arrows point at get +1 DP (no counter; it ends when the arrow stops pointing at them).",
+    "zh_text": "每有 1 個箭頭指向此怪物，此怪物 PP +400；【箭頭：← →】箭頭指向的怪物 DP +1（不放指示物，箭頭停止指向就消失）。"
+  },
+  "WCG-358": {
+    "zh": "地脈回響",
+    "name": "Leyline Echo",
+    "text": "For each ← → arrow of your monsters pointing at another of your monsters, choose: recover 1 life or draw 1 card (up to 4 times in total).",
+    "zh_text": "你的怪物每有 1 個 ← → 箭頭指向你的另 1 隻怪物，選擇：回復 1 點生命或抽 1 張牌（合計最多 4 次）。"
+  },
+  "WCG-359": {
+    "zh": "斷根反噬",
+    "name": "Severed-Root Backlash",
+    "text": "[Arrow: ← →] On Death: put 1 DP counter on each monster its arrows pointed at, and deal 1 damage to the enemy player.",
+    "zh_text": "【箭頭：← →】陣亡：箭頭原本指向的每隻怪物各放置 1 個 DP 指示物，並對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-360": {
+    "zh": "林冠滿營",
+    "name": "Full Canopy Camp",
+    "text": "At the start of your turn, if all 5 of your slots are full, your monsters get +300 PP this turn and you draw 1 card.",
+    "zh_text": "你的回合開始時，若你的 5 格全滿，你的所有怪物本回合 PP +300，抽 1 張牌。"
+  },
+  "WCG-361": {
+    "zh": "纏繞樹人",
+    "name": "Entwining Treant",
+    "text": "On deploy: you may return 1 of your monsters to your hand. [Arrow: ← → ↑] The monsters the arrows point at get +300 PP (including the one directly across).",
+    "zh_text": "進場：你可以將 1 隻己方怪物移回手牌。【箭頭：← → ↑】箭頭指向的怪物 PP +300（包括 ↑ 正對面的怪物）。"
+  },
+  "WCG-362": {
+    "zh": "擠枝新芽",
+    "name": "Squeezing Sprout",
+    "text": "Can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP.",
+    "zh_text": "只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。"
+  },
+  "WCG-363": {
+    "zh": "世界樹之心",
+    "name": "Heart of the World Tree",
+    "text": "On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn).",
+    "zh_text": "進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。"
   }
 }
