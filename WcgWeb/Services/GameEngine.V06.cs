@@ -8,7 +8,7 @@ public partial class GameEngine
     private void ChooseSlot(PlayerState p, CardDefinition card, Action<int> action, bool cancel = false, Guid? source = null)
     {
         EnsureSlots(p);
-        var slots = Enumerable.Range(0,5).Where(i => !RowTaken(p, i)).ToArray();
+        var slots = Enumerable.Range(0,5).Where(i => !RowTaken(p, i) && (source == null || RootSlotAllowed(p, card, i))).ToArray();
         if (slots.Length == 0) return;
         Ask(p, "選擇固定進場格位", slots.Select(i => new ChoiceOption { Id=$"SLOT:{i}", Title=$"第 {i+1} 格", Subtitle=card.Arrows.Length == 0 ? "進場後不能換位" : $"箭頭：{string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))}，進場後不能換位" }), o => action(int.Parse(o.Id[5..])), cancel, source);
         if(CurrentPendingChoice != null) CurrentPendingChoice.SourceCard=card;
@@ -25,7 +25,7 @@ public partial class GameEngine
         var counters=ShieldCounterRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
-            var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338");unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
+            var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338")+RootDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
@@ -45,6 +45,7 @@ public partial class GameEngine
     {
         var now = new HashSet<string>();
         if (!unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id == "WCG-133" && p.Hp <= 3)) now.Add("native");
+        if (RootShield(p, unit)) now.Add("root");
         foreach (var a in unit.Attachments.Where(a => a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")) now.Add("T:" + a.Card.InstanceId);
         foreach (var source in Player.Field.Concat(Computer.Field).Where(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length > 0 && PointsAt(Owner(source), source, p, unit)
             && !(source.Card.Id == "WCG-147" && !LegacyCardRules && Across(source, unit)))) now.Add("A:" + source.InstanceId);
@@ -65,7 +66,7 @@ public partial class GameEngine
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), _ => (0, 0) };
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), "WCG-355" => (200, 0), "WCG-361" => (300, 300), "WCG-362" => (300, 0), "WCG-363" => (600, 0), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
@@ -139,6 +140,7 @@ public partial class GameEngine
     }
     private void Summoned(PlayerState p,MonsterInstance m)
     {
+        RootEntered(p,m);
         foreach(var x in p.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-190"&&(!LimitFactionTriggers||x.TriggersThisTurn<2)).ToArray())
             if(m.Card.HasWill("秩序")){if(LimitFactionTriggers)x.TriggersThisTurn++;Resolve(()=>Heal(p,1));}
     }
