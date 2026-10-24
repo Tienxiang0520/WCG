@@ -1,0 +1,12 @@
+@* 血誓指示物 (血誓反擊): dark red-and-black round token with a blood drop; stacked on 364 血誓祭壇, one per damage event you took. *@
+<svg class="@Class" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="29" fill="@(Ink ? "#ffffff" : "#1a0606")" stroke="@(Ink ? "#000000" : "#8f0d12")" stroke-width="3"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="@(Ink ? "#000000" : "#c8282e")" stroke-width="1.6"/>
+    @* A blood drop over a short oath bar. *@
+    <path d="M32 13 C26 23 21 29 21 36 a11 11 0 0 0 22 0 C43 29 38 23 32 13 Z" fill="@(Ink ? "none" : "#d7262c")" stroke="@(Ink ? "#000000" : "#ff8a8a")" stroke-width="2.5"/>
+    <rect x="22" y="50" width="20" height="3.5" rx="1.5" fill="@(Ink ? "#000000" : "#ff8a8a")"/>
+</svg>
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Ink { get; set; }
+}

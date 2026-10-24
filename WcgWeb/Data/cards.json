@@ -6097,5 +6097,165 @@
       "left",
       "right"
     ]
+  },
+  {
+    "id": "WCG-364",
+    "name": "血誓祭壇",
+    "type": "結界",
+    "will": "秩序",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": null,
+    "dp": null,
+    "text": "你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：疊血誓指示物的祭壇（沉默不影響血誓指示物）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-365",
+    "name": "忍辱誓衛",
+    "type": "怪物",
+    "will": "秩序",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": 1200,
+    "dp": 1,
+    "text": "你每次受到傷害，在此怪物放 1 個 DP 指示物。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：挨打越久越硬的守衛。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-366",
+    "name": "以血還血",
+    "type": "法術（反擊）",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": null,
+    "dp": null,
+    "text": "【反擊】受到傷害時：對敵方玩家造成 1 點傷害；若你的生命在 3 點以下，改為 2 點。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：便宜的回敬（反擊卡造成的傷害不能再被反擊）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-367",
+    "name": "誓言之怒",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1500,
+    "dp": 1,
+    "text": "衝鋒；你的生命在 3 點以下時，此怪物 PP +600、DP +1。【箭頭：↑】箭頭指向的怪物 PP -300。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：血越少越兇的衝鋒手。",
+    "hs_ref": "",
+    "keywords": [
+      "衝鋒"
+    ],
+    "arrows": [
+      "up"
+    ]
+  },
+  {
+    "id": "WCG-368",
+    "name": "審判之盾",
+    "type": "法術（反擊）",
+    "will": [
+      "秩序",
+      "狂怒"
+    ],
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": null,
+    "dp": null,
+    "text": "【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：秩序＋狂怒雙色反擊。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-369",
+    "name": "殉誓狂徒",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": 900,
+    "dp": 1,
+    "text": "進場：對你自己造成 1 點傷害（這是傷害，會觸發反擊與血誓），然後抽 1 張牌。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：自傷啟動血誓（刻意寫成傷害，不是生命代價）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-370",
+    "name": "血帳清算",
+    "type": "法術",
+    "will": "秩序",
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": null,
+    "dp": null,
+    "text": "移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：把血誓換成清場。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-371",
+    "name": "誓血軍旗手",
+    "type": "怪物",
+    "will": [
+      "秩序",
+      "狂怒"
+    ],
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": 1400,
+    "dp": 1,
+    "text": "【箭頭：← →】箭頭指向的怪物 PP +200；你的生命每比對手少 1 點，再 +200。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：落後越多，兩側越強。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": [
+      "left",
+      "right"
+    ]
+  },
+  {
+    "id": "WCG-372",
+    "name": "千倍奉還",
+    "type": "法術",
+    "will": [
+      "秩序",
+      "狂怒"
+    ],
+    "cost_spec": "",
+    "cost_gen": 6,
+    "total_cost": 6,
+    "pp": null,
+    "dp": null,
+    "text": "移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。",
+    "design_note": "2026-10-24 第四批新流派「血誓反擊」：升天卡，累積的血誓一次奉還（不設上限）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
   }
 ]

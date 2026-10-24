@@ -2,21 +2,21 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 363
+total_cards: 372
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 363 張）
+# WCG 卡牌總表（共 372 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 218 張、法術 119 張、法術（反擊） 9 張、結界 17 張。
+類型：怪物 222 張、法術 121 張、法術（反擊） 11 張、結界 18 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，58 張）
+## 狂怒（Fury，61 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -78,6 +78,9 @@ source: WcgWeb/Data/cards.json
 | WCG-340 | 破欄衝撞 | 法術 | 2 | — | — | — | 選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。 | **Fence-Breaking Charge** — Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead. |
 | WCG-341 | 怒蹄戰士 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；此怪物攻擊敵方玩家時，你場上每有 1 隻 DP 2 以上的其他怪物，此怪物 DP +1。 | **Raging Hoof Warrior** — Charge. When this monster attacks the enemy player, it gets +1 DP for each of your other monsters with 2 or more DP. |
 | WCG-345 | 致命頂撞 | 法術 | 3 | — | — | — | 使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。 | **Lethal Ram** — Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn. |
+| WCG-366 | 以血還血 | 法術（反擊） | 1 | — | — | — | 【反擊】受到傷害時：對敵方玩家造成 1 點傷害；若你的生命在 3 點以下，改為 2 點。 | **Blood for Blood** — [Counter] When you take damage: deal 1 damage to the enemy player; if your life is 3 or less, deal 2 instead. |
+| WCG-367 | 誓言之怒 | 怪物 | 3 | 1500 | 1 | ↑ | 衝鋒；你的生命在 3 點以下時，此怪物 PP +600、DP +1。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Wrath of the Oath** — Charge. While your life is 3 or less, this monster gets +600 PP and +1 DP. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
+| WCG-369 | 殉誓狂徒 | 怪物 | 1 | 900 | 1 | — | 進場：對你自己造成 1 點傷害（這是傷害，會觸發反擊與血誓），然後抽 1 張牌。 | **Oathbound Zealot** — On Deploy: deal 1 damage to yourself (this is damage, so it triggers Counters and Blood Oath), then draw 1 card. |
 
 ## 理智（Reason，58 張）
 
@@ -207,7 +210,7 @@ source: WcgWeb/Data/cards.json
 | WCG-362 | 擠枝新芽 | 怪物 | 0 | 300 | 0 | ←→ | 只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。 | **Squeezing Sprout** — Can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP. |
 | WCG-363 | 世界樹之心 | 怪物 | 7 | 2200 | 2 | ←→ | 進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。 | **Heart of the World Tree** — On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn). |
 
-## 秩序（Order，58 張）
+## 秩序（Order，61 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -269,6 +272,9 @@ source: WcgWeb/Data/cards.json
 | WCG-346 | 墓典抄錄員 | 怪物 | 1 | 600 | 1 | — | 進場：將你牌庫最上面 3 張牌送入墓地。 | **Grave Codex Scribe** — On deploy: put the top 3 cards of your deck into your graveyard. |
 | WCG-348 | 葬禮號令 | 法術 | 2 | — | — | — | 額外代價：犧牲 1 隻己方怪物。抽 2 張牌，將你牌庫最上面 2 張牌送入墓地。 | **Funeral Command** — Additional cost: sacrifice 1 of your monsters. Draw 2 cards, then put the top 2 cards of your deck into your graveyard. |
 | WCG-350 | 冥誓審判官 | 怪物 | 4 | 1600 | 1 | ↑ | 進場：若你的墓地有 10 張以上，消滅 1 隻敵方怪物。【箭頭：↑】你的墓地每有 5 張牌，箭頭指向的怪物 PP -200。 | **Underworld Oath Judge** — On deploy: if you have 10 or more cards in your graveyard, destroy 1 enemy monster. [Arrow: ↑] The monster the arrow points at gets -200 PP for every 5 cards in your graveyard. |
+| WCG-364 | 血誓祭壇 | 結界 | 2 | — | — | — | 你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。 | **Blood Oath Altar** — Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it. |
+| WCG-365 | 忍辱誓衛 | 怪物 | 2 | 1200 | 1 | — | 你每次受到傷害，在此怪物放 1 個 DP 指示物。 | **Enduring Oathguard** — Each time you take damage, put 1 DP counter on this monster. |
+| WCG-370 | 血帳清算 | 法術 | 4 | — | — | — | 移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。 | **Settling the Blood Debt** — Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP). |
 
 ## 深淵（Abyss，60 張）
 
@@ -388,7 +394,7 @@ source: WcgWeb/Data/cards.json
 | WCG-358 | 地脈回響 | 法術 | 2 | — | — | — | 你的怪物每有 1 個 ← → 箭頭指向你的另 1 隻怪物，選擇：回復 1 點生命或抽 1 張牌（合計最多 4 次）。 | **Leyline Echo** — For each ← → arrow of your monsters pointing at another of your monsters, choose: recover 1 life or draw 1 card (up to 4 times in total). |
 | WCG-361 | 纏繞樹人 | 怪物 | 4 | 1600 | 1 | ←→↑ | 進場：你可以將 1 隻己方怪物移回手牌。【箭頭：← → ↑】箭頭指向的怪物 PP +300（包括 ↑ 正對面的怪物）。 | **Entwining Treant** — On deploy: you may return 1 of your monsters to your hand. [Arrow: ← → ↑] The monsters the arrows point at get +300 PP (including the one directly across). |
 
-## 雙色（Dual，21 張）
+## 雙色（Dual，24 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -413,3 +419,6 @@ source: WcgWeb/Data/cards.json
 | WCG-280 | 思緒滋長 | 法術（理智／生機） | 2 | — | — | — | 抽 1 張牌；若己方場上有印刷 PP 1300 以上的怪物，再抽 1 張牌。 | **Growing Thoughts** — Draw 1 card. If you have a monster with 1300 printed PP or more, draw 1 more card. |
 | WCG-353 | 墓土巨像 | 怪物（秩序／深淵） | 6 | 2000 | 2 | — | 貫穿；你的墓地每有 1 張怪物牌，此卡費用 -1。 | **Graveearth Colossus** — Trample. This card costs 1 less for each monster card in your graveyard. |
 | WCG-354 | 萬骸歸列 | 法術（秩序／深淵） | 7 | — | — | — | 從你的墓地免費召喚印刷 PP 1800 以下的怪物，直到你的空格全滿；它們轉為直立，本回合可以攻擊。 | **Return of Ten Thousand Bones** — Summon monsters with printed PP 1800 or less from your graveyard for free until your slots are full. Ready them; they can attack this turn. |
+| WCG-368 | 審判之盾 | 法術（反擊）（秩序／狂怒） | 3 | — | — | — | 【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。 | **Shield of Judgment** — [Counter] When you take damage from a monster's attack: destroy that monster, then put 1 Blood Oath counter on 1 of your Blood Oath Altars. |
+| WCG-371 | 誓血軍旗手 | 怪物（秩序／狂怒） | 4 | 1400 | 1 | ←→ | 【箭頭：← →】箭頭指向的怪物 PP +200；你的生命每比對手少 1 點，再 +200。 | **Bloodoath Standard-Bearer** — [Arrow: ← →] The monsters the arrows point at get +200 PP, plus another +200 for each life you have less than your opponent. |
+| WCG-372 | 千倍奉還 | 法術（秩序／狂怒） | 6 | — | — | — | 移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。 | **Thousandfold Return** — Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed. |

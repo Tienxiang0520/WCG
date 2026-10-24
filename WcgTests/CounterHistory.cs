@@ -33,8 +33,15 @@ internal static class CounterHistory
     // Catalog before the 2026-10-24 silence/dispel counter rules (335's text).
     // Catalog before the 墓誓軍團 cards WCG-346–354 existed.
     // Catalog before the 根脈連營 cards WCG-355–363 existed.
+    // Catalog before the 血誓反擊 cards WCG-364–372 existed.
+    internal static CardDatabase BeforeBloodOathCards(CardDatabase current)
+    {
+        return current.GetCard("WCG-364")==null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 364 or > 372)),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeRootWebCards(CardDatabase current)
     {
+        current=BeforeBloodOathCards(current);
         return current.GetCard("WCG-355")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 355 or > 363)),JsonSerializer.Serialize(current.PresetDecks));
     }

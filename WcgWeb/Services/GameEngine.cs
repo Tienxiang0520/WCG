@@ -157,6 +157,7 @@ public partial class GameEngine
         if (IsOver || amount <= 0) return;
         var lost = Math.Min(p.Hp, amount);
         p.Hp = Math.Max(0, p.Hp - amount); Present("damage", p, amount: amount, label: "生命傷害"); Log($"【{p.Name}】受到 {amount} 點傷害，目前 {p.Hp}。", "danger");
+        BloodHurt(p);
         if (!DamageCounters) { CheckLethal(p); return; }
         var context = new DamageContext(p, lost, source);
         _reactionDepth++;
