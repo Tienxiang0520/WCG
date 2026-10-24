@@ -38,7 +38,7 @@ public partial class GameEngine
         if (p.Occupied >= 5) bonus += 300 * p.Field.Count(x => Active(x, "WCG-219"));
         bonus += BeaconPower(p, m);
         if (m.IsSilenced) return bonus;
-        bonus += LanePower(p, m);
+        bonus += LanePower(p, m) + GravePower(p, m);
         switch (m.Card.Id)
         {
             case "WCG-222": bonus += 500 * m.Attachments.Count; break;
@@ -74,7 +74,7 @@ public partial class GameEngine
     private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1);
     private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221") + HoofAttackDp(a) + LaneAttackDp(a);
     private static int NewAttachmentPower(string id) => id switch { "WCG-221" => 300, "WCG-338" => 200, _ => 0 };
-    private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : 0;
+    private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : GraveCostReduction(p, card);
 
     private List<MonsterInstance>? NewSpellTargets(PlayerState p, CardDefinition c)
     {

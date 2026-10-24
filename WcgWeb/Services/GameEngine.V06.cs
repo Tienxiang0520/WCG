@@ -65,10 +65,10 @@ public partial class GameEngine
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), _ => (0, 0) };
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
-            .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; });
+            .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
     // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
     private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
         m.IsSilenced ? [] : Player.Field.Concat(Computer.Field).Where(x => x != m && PointsAt(p, m, Owner(x), x)).ToArray();
@@ -97,7 +97,7 @@ public partial class GameEngine
     public bool SetCard(PlayerState p, CardInstance c) => Change(()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
-    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m) });
+    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>true,"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
     public bool Activate(PlayerState p, MonsterInstance m)=>Change(()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
@@ -111,6 +111,7 @@ public partial class GameEngine
             case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);DrawMany(p,1);}));break;
             case "WCG-151":PickMonster(p,$"選擇 PP {Low(800)} 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>ThresholdPP(x)<=Low(800)),x=>Pay(()=>KillBatch([x],m.Card.Name)));break;
             case "WCG-268":ActivateOath(p,m);break;
+            case "WCG-349":GraveActivate(p,m);break;
         }
         return true;
     });
