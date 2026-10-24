@@ -158,14 +158,20 @@ internal static class CardBalanceHistory
     internal static bool ArrowTextCatalog(CardDatabase cards) => cards.GetCard("WCG-005")?.Text?.Contains("箭頭指向的怪物", StringComparison.Ordinal) == true;
     private static CardDatabase ArrowTextStep(CardDatabase c) => ArrowTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeArrowText") : c;
 
+    // 2026-10-24 沉默／驅散規則: silence removes DP counters; a monster with a 奪魂指示物 returns to its owner when silenced or
+    // dispelled (335's text says so). Older catalogs keep the old rules.
+    internal static bool SilenceCountersCatalog(CardDatabase cards) => cards.GetCard("WCG-335")?.Text?.Contains("被沉默或驅散時", StringComparison.Ordinal) == true;
+    private static CardDatabase SilenceCountersStep(CardDatabase c) => SilenceCountersCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeSilenceCounters") : c;
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeArrowText(CardDatabase current) => ArrowTextStep(current);
+    internal static CardDatabase BeforeSilenceCounters(CardDatabase current) => SilenceCountersStep(current);
+    internal static CardDatabase BeforeArrowText(CardDatabase current) => ArrowTextStep(BeforeSilenceCounters(current));
     internal static CardDatabase BeforeSoulPuppetCards(CardDatabase current) => SoulPuppetCardsStep(BeforeArrowText(current));
     internal static CardDatabase BeforeLaneRaidCards(CardDatabase current) => LaneRaidCardsStep(BeforeSoulPuppetCards(current));
     internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) => HoofCrushCardsStep(BeforeLaneRaidCards(current));

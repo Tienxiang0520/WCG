@@ -60,13 +60,13 @@ public partial class GameEngine
     // Optional 112／134 dispel: worth it only when some target helps us (enemy buffs or Wards, our own silence or shackles).
     private bool DispelWorth(PlayerState p)=>DispelTargets(p).Any(x=>DispelScore(p,x)>0);
     private IEnumerable<MonsterInstance> DispelTargets(PlayerState p)
-    {var e=GetOpponent(p);return p.Field.Concat(e.Field).Where(x=>x.Attachments.Count>0||x.IsSilenced).Concat(p.Structures.Concat(e.Structures).Where(x=>!x.IsSet));}
+    {var e=GetOpponent(p);return p.Field.Concat(e.Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter).Concat(p.Structures.Concat(e.Structures).Where(x=>!x.IsSet));}
     private double DispelScore(PlayerState p,MonsterInstance x)
     {
         var mine=p.Field.Contains(x)||p.Structures.Contains(x);
         if(!x.IsUnit)return mine?-3:3+x.Card.TotalCost*.5;
         var theirs=x.Attachments.Count(a=>a.OwnerId!=p.Id);var ours=x.Attachments.Count-theirs;
-        var value=mine?theirs*2-ours*2+(x.IsSilenced?2:0):theirs*2-ours*2-(x.IsSilenced?2:0);
+        var value=mine?theirs*2-ours*2+(x.IsSilenced?2:0)-(SilenceCounterRules&&x.SoulCounter?4+x.Card.TotalCost:0):theirs*2-ours*2-(x.IsSilenced?2:0)+(SilenceCounterRules&&x.SoulCounter?4+x.Card.TotalCost:0);
         return value==0?-1:value+(x.CurrentPP/1000d);
     }
     public bool PlayEnchantment(PlayerState p,CardInstance c)=>Change(()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));

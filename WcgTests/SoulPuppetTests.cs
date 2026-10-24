@@ -133,7 +133,7 @@ public class SoulPuppetTests
         var old=CardBalanceHistory.BeforeArrowText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeArrowText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
         Assert.Contains("左右相鄰的己方怪物",old.GetCard("WCG-005")!.Text);Assert.Contains("箭頭指向的怪物",cards.GetCard("WCG-005")!.Text);
-        Assert.Equal(20,cards.AllCards.Count(c=>c.Text!=old.GetCard(c.Id)!.Text));
+        var now=CardBalanceHistory.BeforeSilenceCounters(cards);Assert.Equal(20,now.AllCards.Count(c=>c.Text!=old.GetCard(c.Id)!.Text));
     }
     [Fact] public void MasterAiStealsAndSwingsForLethal()
     {

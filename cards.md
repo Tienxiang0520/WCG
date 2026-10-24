@@ -319,7 +319,7 @@ source: WcgWeb/Data/cards.json
 | WCG-331 | 借刀之術 | 法術 | 3 | — | — | — | 取得 1 隻印刷 PP 1800 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。 | **Borrowed Blade** — Gain control of 1 enemy monster with printed PP 1800 or less until end of turn; ready it, and it can attack this turn. |
 | WCG-332 | 傀儡守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：取得印刷 PP 最低的 1 隻敵方怪物的控制權直到你的下回合結束。 | **Puppet Warden** — Taunt; On Death: gain control of the enemy monster with the lowest printed PP until the end of your next turn. |
 | WCG-334 | 血祭傀儡師 | 怪物 | 5 | 1900 | 2 | — | 你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Bloodrite Puppetmaster** — At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less. |
-| WCG-335 | 王座篡奪 | 法術 | 7 | — | — | — | 將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。 | **Usurp the Throne** — Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. |
+| WCG-335 | 王座篡奪 | 法術 | 7 | — | — | — | 將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。 | **Usurp the Throne** — Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner. |
 
 ## 中立（Neutral，46 張）
 
