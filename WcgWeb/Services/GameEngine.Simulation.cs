@@ -39,7 +39,7 @@ public partial class GameEngine
                     ExtraTaunt = m.ExtraTaunt, ExtraTrample = m.ExtraTrample, ShieldOwnerId = m.ShieldOwnerId, SilenceOwnerId = m.SilenceOwnerId,
                 };
                 copy.CurrentPP = m.BasePP;
-                copy.CurrentDP = m.CurrentDP - m.AttackDamageBonus; copy.AttackDamageBonus = m.AttackDamageBonus;
+                copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpCounters = m.DpCounters; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
                 map[m] = copy;
                 copy.Attachments = m.Attachments.Select(a => a with { Card = Card(a.Card, false) }).ToList();
                 copy.LostAttachments = m.LostAttachments.Select(c => Card(c, false)).ToList();

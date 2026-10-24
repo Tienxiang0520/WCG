@@ -52,8 +52,8 @@ public partial class GameEngine
         }
         return true;
     }
-    private List<MonsterInstance>? BeaconSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-297" ? p.Field.Where(x => x.IsUnit).ToList() : null;
-    private static bool BeaconNeedsTarget(string id) => id == "WCG-297";
+    private List<MonsterInstance>? BeaconSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-297" ? p.Field.Where(x => x.IsUnit).ToList() : HoofSpellTargets(p, c);
+    private static bool BeaconNeedsTarget(string id) => id == "WCG-297" || HoofNeedsTarget(id);
     private bool BeaconSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
@@ -68,7 +68,7 @@ public partial class GameEngine
                 var n = Math.Min(3, p.Field.Count(Upright));
                 if (n > 0) Heal(p, n);
                 break;
-            default: return VaultSpell(p, source);
+            default: return HoofSpell(p, source, t) || VaultSpell(p, source);
         }
         return true;
     }
@@ -94,10 +94,10 @@ public partial class GameEngine
         return VaultPlayValue(p, c);
     }
     private double BeaconBodyValueIfUpright(MonsterInstance m) { var t = m.IsTapped; m.IsTapped = false; var v = BeaconBodyValue(m); m.IsTapped = t; return v; }
-    private MonsterInstance? BeaconTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;
+    private MonsterInstance? BeaconTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => HoofTarget(p, pending, legal);
     private MonsterInstance? ArchSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
         "WCG-297" => own.OrderByDescending(m => (Upright(m) ? 3 : 0) + (m.Card.CannotAttack ? 2 : 0) + BodyValue(m)).FirstOrDefault(),
-        _ => null
+        _ => HoofSpellTarget(p, id, own)
     };
 }

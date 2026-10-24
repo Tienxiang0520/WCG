@@ -17,7 +17,7 @@ public partial class GameEngine
         _ => 0
     };
     // Combat-only modifiers added by later archetypes; 274's own +300 is in CombatPower.
-    private int ArchetypeCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => RotCombatPower(m, other, attacking);
+    private int ArchetypeCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => RotCombatPower(m, other, attacking) + HoofCombatPower(m, other, attacking);
     private bool GapDeploy(PlayerState p, MonsterInstance m)
     {
         switch (m.Card.Id)

@@ -160,3 +160,11 @@
     .print-sheet.paper-letter { width: 203.9mm; min-height: 0; padding: 0; }
     .print-sheet.paper-a4.bleed { padding: 0; }
 }
+
+/* DP 指示物 sheet (重蹄碾壓): 12 red hoof tokens, same cut grid as the 聖盾指示物 sheet. */
+.dp-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #6b0b0e; background: #fff; }
+.dp-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .dp-token, .white-color .dp-token { border-style: solid; }
+.print-tools { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.print-tools input[type=number] { width: 3.2em; }
+@media print { .tool-sheet .print-card-grid { align-content: start; } }

@@ -99,7 +99,7 @@ public partial class GameEngine
     {
         "WCG-311" when p.EnergyZone.Count < 2 => "能量區不足 2 張牌可以送入墓地。",
         "WCG-314" when p.Occupied >= 5 => "場上沒有空位。",
-        _ => ""
+        _ => HoofPlayProblem(p, c)
     };
     private bool EmberDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
@@ -121,7 +121,7 @@ public partial class GameEngine
             case "WCG-314": return p.Graveyard.Where(x => x.Card.IsMonster && x.Card.TotalCost <= 3).Select(x => CardValue(x.Card)).DefaultIfEmpty(-6).Max() - 2;
             case "WCG-317": return (p.Graveyard.Count > 0 ? 1.5 : 0) + (p.Deck.Count > 3 ? 2 : -8) - 1;
         }
-        return null;
+        return HoofPlayValue(p, c);
     }
     // Should the AI burn one more energy for this source? Burn tapped (already used) energy first.
     private bool BurnWorth(PlayerState p)
