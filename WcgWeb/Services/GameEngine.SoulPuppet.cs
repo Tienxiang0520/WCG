@@ -88,13 +88,13 @@ public partial class GameEngine
                 if (!e.Field.Any(x => x.IsUnit)) DrawMany(p, 1);
                 else PickMonster(p, "選擇印刷 PP 1200 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
                 break;
-            default: return false;
+            default: return GraveDeploy(p, m);
         }
         return true;
     }
     private bool SoulDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
-        if (m.Card.Id != "WCG-332") return false;
+        if (m.Card.Id != "WCG-332") return GraveDeath(p, m, grave);
         var e = GetOpponent(p);
         var small = e.Field.Where(x => x.IsUnit).ToList();
         if (small.Count == 0) return true;
@@ -112,10 +112,10 @@ public partial class GameEngine
             "WCG-330" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200).ToList(),
             "WCG-331" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1800).ToList(),
             "WCG-335" => e.Field.Where(x => x.IsUnit).ToList(),
-            _ => null
+            _ => GraveSpellTargets(p, c)
         };
     }
-    private static bool SoulNeedsTarget(string id) => id is "WCG-330" or "WCG-331" or "WCG-335";
+    private static bool SoulNeedsTarget(string id) => id is "WCG-330" or "WCG-331" or "WCG-335" || GraveNeedsTarget(id);
     private bool soulPactForeign;
     private bool SoulSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
@@ -143,7 +143,7 @@ public partial class GameEngine
                 if (foreign.Count > 0) PickMonster(p, SoulReturnTitle, foreign, x => { Bounce(x); DrawMany(p, 2); });
                 else PickMonster(p, "選擇移回手牌的己方怪物", p.Field.Where(x => x.IsUnit), x => { Bounce(x); DrawMany(p, 1); });
                 break;
-            default: return false;
+            default: return GraveSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -169,7 +169,7 @@ public partial class GameEngine
         "WCG-329" when !p.Field.Any(x => x.IsUnit) => "需要犧牲 1 隻己方怪物。",
         "WCG-335" when p.Occupied >= 5 => "你場上沒有空格。",
         "WCG-336" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
-        _ => ""
+        _ => GravePlayProblem(p, c)
     };
 
     // ── 天梯電腦 ──
@@ -197,12 +197,12 @@ public partial class GameEngine
             case "WCG-336":
                 return foreign.Count > 0 ? 3.5 + foreign.Max(x => x.Card.TotalCost) * .3 : -1;
         }
-        return null;
+        return GravePlayValue(p, c);
     }
     private MonsterInstance? SoulTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
     {
         SoulSacrificeTitle => legal.OrderByDescending(m => (m.Turned ? 10 : 0) - BodyValue(m)).FirstOrDefault(),
         SoulReturnTitle => legal.OrderByDescending(m => m.Turned ? 0 : m.Card.TotalCost).FirstOrDefault(),
-        _ => null
+        _ => GraveTarget(p, pending, legal)
     };
 }

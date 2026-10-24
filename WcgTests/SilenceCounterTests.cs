@@ -53,7 +53,7 @@ public class SilenceCounterTests
     {
         var old=CardBalanceHistory.BeforeSilenceCounters(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeSilenceCounters(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(["WCG-335"],cards.AllCards.Where(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))).Select(c=>c.Id));
+        Assert.Equal(["WCG-335"],cards.AllCards.Where(c=>old.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))).Select(c=>c.Id));
         Assert.True(CardBalanceHistory.SilenceCountersCatalog(cards));Assert.False(CardBalanceHistory.SilenceCountersCatalog(old));
     }
 }

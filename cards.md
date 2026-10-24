@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 345
+total_cards: 354
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 345 張）
+# WCG 卡牌總表（共 354 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 206 張、法術 115 張、法術（反擊） 9 張、結界 15 張。
+類型：怪物 211 張、法術 118 張、法術（反擊） 9 張、結界 16 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，58 張）
@@ -200,7 +200,7 @@ source: WcgWeb/Data/cards.json
 | WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 3 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
 | WCG-344 | 萬蹄奔騰 | 法術 | 4 | — | — | — | 在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。 | **Stampede of Hooves** — Put 1 DP counter on each of your monsters. Draw 1 card. |
 
-## 秩序（Order，55 張）
+## 秩序（Order，58 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -259,8 +259,11 @@ source: WcgWeb/Data/cards.json
 | WCG-304 | 能量哨兵 | 怪物 | 3 | 1400 | 1 | — | 嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。 | **Energy Sentinel** — Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter. |
 | WCG-306 | 沉睡巨像 | 怪物 | 6 | 2500 | 2 | — | 此卡從你的能量區被召喚時，PP +300（在場期間一直有效）。 | **Slumbering Colossus** — When this card is summoned from your energy zone, it gets +300 PP (for as long as it stays in play). |
 | WCG-309 | 伏兵號令 | 法術 | 2 | — | — | — | 本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。 | **Ambush Order** — This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn. |
+| WCG-346 | 墓典抄錄員 | 怪物 | 1 | 600 | 1 | — | 進場：將你牌庫最上面 3 張牌送入墓地。 | **Grave Codex Scribe** — On deploy: put the top 3 cards of your deck into your graveyard. |
+| WCG-348 | 葬禮號令 | 法術 | 2 | — | — | — | 額外代價：犧牲 1 隻己方怪物。抽 2 張牌，將你牌庫最上面 2 張牌送入墓地。 | **Funeral Command** — Additional cost: sacrifice 1 of your monsters. Draw 2 cards, then put the top 2 cards of your deck into your graveyard. |
+| WCG-350 | 冥誓審判官 | 怪物 | 4 | 1600 | 1 | ↑ | 進場：若你的墓地有 10 張以上，消滅 1 隻敵方怪物。【箭頭：↑】你的墓地每有 5 張牌，箭頭指向的怪物 PP -200。 | **Underworld Oath Judge** — On deploy: if you have 10 or more cards in your graveyard, destroy 1 enemy monster. [Arrow: ↑] The monster the arrow points at gets -200 PP for every 5 cards in your graveyard. |
 
-## 深淵（Abyss，56 張）
+## 深淵（Abyss，60 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -320,6 +323,10 @@ source: WcgWeb/Data/cards.json
 | WCG-332 | 傀儡守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：取得印刷 PP 最低的 1 隻敵方怪物的控制權直到你的下回合結束。 | **Puppet Warden** — Taunt; On Death: gain control of the enemy monster with the lowest printed PP until the end of your next turn. |
 | WCG-334 | 血祭傀儡師 | 怪物 | 5 | 1900 | 2 | — | 你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Bloodrite Puppetmaster** — At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less. |
 | WCG-335 | 王座篡奪 | 法術 | 7 | — | — | — | 將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。 | **Usurp the Throne** — Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner. |
+| WCG-347 | 列隊亡兵 | 怪物 | 2 | 900 | 1 | ←→ | 你的墓地每有 5 張牌，此怪物 PP +300；【箭頭：← →】箭頭指向的怪物 PP +200。 | **Ranked Dead Soldier** — This monster gets +300 PP for every 5 cards in your graveyard. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
+| WCG-349 | 骸骨軍旗 | 結界 | 3 | — | — | — | 主動：橫置此卡，把你墓地的另外 3 張牌洗回牌庫底：從你的墓地免費召喚 1 隻印刷 PP 1200 以下的怪物。 | **Bone Standard** — Active: tap this card and shuffle 3 other cards from your graveyard to the bottom of your deck: summon 1 monster with printed PP 1200 or less from your graveyard for free. |
+| WCG-351 | 不朽方陣兵 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：若你的墓地有 8 張以上，從你的墓地免費召喚此怪物到你的空格（每回合限 1 次）。 | **Undying Phalanx** — Taunt. On Death: if you have 8 or more cards in your graveyard, summon this monster from your graveyard to an empty slot of yours for free (once per turn). |
+| WCG-352 | 亡魂點名 | 法術 | 1 | — | — | — | 你的墓地每有 4 張牌，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Roll Call of the Dead** — Deal 1 damage to the enemy player for every 4 cards in your graveyard (up to 3). |
 
 ## 中立（Neutral，46 張）
 
@@ -372,7 +379,7 @@ source: WcgWeb/Data/cards.json
 | WCG-282 | 夾縫狙擊 | 法術 | 4 | — | — | — | 消滅 1 隻印刷 PP 在 1300～1700 之間的敵方怪物。 | **Gap Snipe** — Destroy 1 enemy monster with printed PP from 1300 to 1700. |
 | WCG-291 | 衰朽行者 | 怪物 | 2 | 1100 | 1 | — | 進場：使 1 隻敵方怪物本回合 PP -300。 | **Decaying Wanderer** — Deploy: An enemy monster gets -300 PP this turn. |
 
-## 雙色（Dual，19 張）
+## 雙色（Dual，21 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -395,3 +402,5 @@ source: WcgWeb/Data/cards.json
 | WCG-275 | 翠晶巨像 | 怪物（理智／生機） | 4 | 1700 | 1 | — | 己方場上每有 1 隻其他怪物，此怪物 PP +200。 | **Verdant Crystal Colossus** — This monster gets +200 PP for each other monster you have. |
 | WCG-278 | 古樹書庫長 | 怪物（理智／生機） | 4 | 1700 | 1 | — | 進場：抽 1 張牌。 | **Elder Tree Archivist** — Deploy: Draw 1 card. |
 | WCG-280 | 思緒滋長 | 法術（理智／生機） | 2 | — | — | — | 抽 1 張牌；若己方場上有印刷 PP 1300 以上的怪物，再抽 1 張牌。 | **Growing Thoughts** — Draw 1 card. If you have a monster with 1300 printed PP or more, draw 1 more card. |
+| WCG-353 | 墓土巨像 | 怪物（秩序／深淵） | 6 | 2000 | 2 | — | 貫穿；你的墓地每有 1 張怪物牌，此卡費用 -1。 | **Graveearth Colossus** — Trample. This card costs 1 less for each monster card in your graveyard. |
+| WCG-354 | 萬骸歸列 | 法術（秩序／深淵） | 7 | — | — | — | 從你的墓地免費召喚印刷 PP 1800 以下的怪物，直到你的空格全滿；它們轉為直立，本回合可以攻擊。 | **Return of Ten Thousand Bones** — Summon monsters with printed PP 1800 or less from your graveyard for free until your slots are full. Ready them; they can attack this turn. |

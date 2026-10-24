@@ -1066,5 +1066,11 @@
   "zhDescription": "搶走對手的怪物，用它打對手，用完就犧牲換抽牌、傷害或解場。",
   "name": "Abyss + Reason · Soul Puppets (Steal)",
   "description": "Steal the opponent's monsters, hit them with it, then sacrifice it for cards, damage or removal."
+ },
+ "RANKED-5-ORDER-GRAVEOATH": {
+  "zhName": "秩序＋深淵・墓誓軍團（墓誓）",
+  "zhDescription": "自己磨牌、犧牲，墓地越厚亡者越強，最後用萬骸歸列把整排從墓地叫起來衝鋒。",
+  "name": "Order + Abyss · Grave Oath Legion (Grave)",
+  "description": "Mill and sacrifice your own cards: the fuller your graveyard, the stronger the dead, until Return of Ten Thousand Bones raises a whole row to charge."
  }
 }

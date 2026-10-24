@@ -344,7 +344,7 @@ public partial class GameEngine
     }
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
     // Describe the first step before payment using the same predicates as BeginPlay.
-    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233" or "WCG-329";
+    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233" or "WCG-329" or "WCG-348";
     // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
