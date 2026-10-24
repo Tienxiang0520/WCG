@@ -299,7 +299,7 @@ public sealed class RankedTests : IDisposable
         var prior=CardBalanceHistory.BeforePrintedPpText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforePrintedPpText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
         Assert.Equal("消滅 1 隻 PP 1200 以下的敵方怪物。",prior.GetCard("WCG-082")!.Text);Assert.Contains("印刷 PP",cards.GetCard("WCG-082")!.Text);
-        var changed=cards.AllCards.Where(c=>prior.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
+        var changed=CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>prior.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
         Assert.All(changed,c=>{Assert.Contains("印刷 PP",c.Text);Assert.DoesNotContain("印刷",prior.GetCard(c.Id)!.Text);var o=JsonSerializer.Deserialize<CardDefinition>(JsonSerializer.Serialize(prior.GetCard(c.Id)))!;o.Text=c.Text;Assert.Equal(JsonSerializer.Serialize(c),JsonSerializer.Serialize(o));});
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});

@@ -37,7 +37,8 @@
   "WCG-005": {
     "zh": "突擊狼騎兵",
     "name": "Raiding Wolf Rider",
-    "text": "Charge. [Arrow: ← →] Your adjacent monsters on the left and right get +200 PP."
+    "text": "Charge. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "衝鋒；【箭頭：← →】箭頭指向的怪物 PP +200。"
   },
   "WCG-006": {
     "zh": "怒意沸騰",
@@ -145,7 +146,8 @@
   "WCG-021": {
     "zh": "秘法學徒",
     "name": "Arcane Apprentice",
-    "text": "[Arrow: ← →] Deploy: Draw 1 card. If you have adjacent monsters on both the left and the right, draw 1 more."
+    "text": "[Arrow: ← →] Deploy: Draw 1 card. If both arrows point at a monster, draw 1 more.",
+    "zh_text": "【箭頭：← →】進場：抽 1 張牌；若兩個箭頭都指向怪物，再抽 1 張。"
   },
   "WCG-022": {
     "zh": "伺機待發",
@@ -217,7 +219,8 @@
   "WCG-033": {
     "zh": "秘法竊取者",
     "name": "Arcane Thief",
-    "text": "[Arrow: ↑] Deploy: Tap the untapped enemy monster directly opposite. If there is no untapped enemy monster directly opposite, draw 1 card instead."
+    "text": "[Arrow: ↑] Deploy: Tap the upright monster ↑ points at. If ↑ doesn't point at an upright monster, draw 1 card instead.",
+    "zh_text": "【箭頭：↑】進場：將 ↑ 指向的直立怪物橫置；若 ↑ 沒有指向直立的怪物，改為抽 1 張牌。"
   },
   "WCG-034": {
     "zh": "思維超載",
@@ -306,7 +309,8 @@
   "WCG-049": {
     "zh": "鐵木樹人",
     "name": "Ironwood Treant",
-    "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right get +200 PP."
+    "text": "Taunt. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "嘲諷；【箭頭：← →】箭頭指向的怪物 PP +200。"
   },
   "WCG-050": {
     "zh": "甦生之雨",
@@ -372,8 +376,8 @@
   "WCG-061": {
     "zh": "銀色誓言衛",
     "name": "Silver Oath Guard",
-    "text": "[Arrow: →] Your adjacent monster on the right gets 1 Holy Shield counter (when the arrow starts pointing at it).",
-    "zh_text": "【箭頭：→】右側相鄰的己方怪物獲得 1 個聖盾指示物（開始指向時）。",
+    "text": "[Arrow: →] The monster → points at gets 1 Holy Shield counter (when the arrow starts pointing at it).",
+    "zh_text": "【箭頭：→】→ 指向的怪物獲得 1 個聖盾指示物（開始指向時）。",
     "prev": {
       "【箭頭：→】右側相鄰的己方怪物具有聖盾。": "[Arrow: →] Your adjacent monster on the right has Holy Shield."
     }
@@ -459,8 +463,8 @@
   "WCG-073": {
     "zh": "榮耀護衛官",
     "name": "Glory Warden",
-    "text": "Taunt. [Arrows: ← →] Your adjacent monsters on the left and right each get 1 Holy Shield counter (when the arrow starts pointing at them).",
-    "zh_text": "嘲諷；【箭頭：← →】左右相鄰的己方怪物各獲得 1 個聖盾指示物（開始指向時）。",
+    "text": "Taunt. [Arrows: ← →] The monsters the arrows point at each get 1 Holy Shield counter (when the arrow starts pointing at them).",
+    "zh_text": "嘲諷；【箭頭：← →】箭頭指向的怪物各獲得 1 個聖盾指示物（開始指向時）。",
     "prev": {
       "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield."
     }
@@ -569,7 +573,8 @@
   "WCG-085": {
     "zh": "苦痛契約者",
     "name": "Pain Pactbearer",
-    "text": "[Arrow: ↑] The enemy opposite gets -300 PP. Deploy: You lose 1 life."
+    "text": "[Arrow: ↑] The monster ↑ points at gets -300 PP. Deploy: You lose 1 life.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物 PP -300。進場：你失去 1 點生命。"
   },
   "WCG-086": {
     "zh": "衰竭詛咒",
@@ -937,8 +942,8 @@
   "WCG-147": {
     "zh": "聖堂仲裁護衛",
     "name": "Temple Arbiter Guard",
-    "text": "[Arrows: ← ↑] Your adjacent monster on the left gets 1 Holy Shield counter (when the arrow starts pointing at it); the enemy monster directly opposite loses all Holy Shield counters and can't get new ones.",
-    "zh_text": "【箭頭：← ↑】左側相鄰的己方怪物獲得 1 個聖盾指示物（開始指向時）；正對面的敵方怪物移除所有聖盾指示物，且不能獲得新的。",
+    "text": "[Arrows: ← ↑] The monster ← points at gets 1 Holy Shield counter (when the arrow starts pointing at it); the monster ↑ points at loses all Holy Shield counters and can't get new ones.",
+    "zh_text": "【箭頭：← ↑】← 指向的怪物獲得 1 個聖盾指示物（開始指向時）；↑ 指向的怪物移除所有聖盾指示物，且不能獲得新的。",
     "prev": {
       "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield."
     }
@@ -1354,12 +1359,14 @@
   "WCG-215": {
     "zh": "根鬚哨兵",
     "name": "Rootwatch Sentry",
-    "text": "[Arrow: ← →] While you have monsters on both its left and right, this monster has Taunt."
+    "text": "[Arrow: ← →] While both arrows point at a monster, this monster has Taunt.",
+    "zh_text": "【箭頭：← →】兩個箭頭都指向怪物時，此怪物具有嘲諷。"
   },
   "WCG-216": {
     "zh": "前鋒盾衛",
     "name": "Vanguard Shieldguard",
-    "text": "[Arrow: ↑] The enemy monster directly across can't attack."
+    "text": "[Arrow: ↑] The monster ↑ points at can't attack.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物不能攻擊。"
   },
   "WCG-217": {
     "zh": "列陣號令",
@@ -1369,7 +1376,8 @@
   "WCG-218": {
     "zh": "連根古木",
     "name": "Rootbound Elder",
-    "text": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Trample."
+    "text": "Taunt. [Arrow: ← →] The monsters the arrows point at have Trample.",
+    "zh_text": "嘲諷；【箭頭：← →】箭頭指向的怪物具有貫穿。"
   },
   "WCG-219": {
     "zh": "方陣隊長",
@@ -1714,7 +1722,8 @@
   "WCG-283": {
     "zh": "枯骨低語者",
     "name": "Bonewhisper",
-    "text": "[Arrow: ↑] The enemy monster directly opposite gets -300 PP."
+    "text": "[Arrow: ↑] The monster ↑ points at gets -300 PP.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物 PP -300。"
   },
   "WCG-284": {
     "zh": "凋萎觸鬚",
@@ -1734,7 +1743,8 @@
   "WCG-287": {
     "zh": "疫母巢主",
     "name": "Plague Broodmother",
-    "text": "[Arrow: ↑] The enemy monster directly opposite gets -500 PP."
+    "text": "[Arrow: ↑] The monster ↑ points at gets -500 PP.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物 PP -500。"
   },
   "WCG-288": {
     "zh": "啃噬詛咒",
@@ -1795,8 +1805,8 @@
   "WCG-298": {
     "zh": "烽火傳令官",
     "name": "Beacon Herald",
-    "text": "[Arrow: ← →] At the end of your turn, each upright monster of yours these arrows point at deals 1 damage to the enemy player.",
-    "zh_text": "【箭頭：← →】你的回合結束時，箭頭指向的每隻直立己方怪物，各對敵方玩家造成 1 點傷害。"
+    "text": "[Arrow: ← →] At the end of your turn, each upright monster the arrows point at deals 1 damage to the enemy player.",
+    "zh_text": "【箭頭：← →】你的回合結束時，箭頭指向的每隻直立怪物，各對敵方玩家造成 1 點傷害。"
   },
   "WCG-299": {
     "zh": "晨露滋養",
@@ -1921,20 +1931,20 @@
   "WCG-319": {
     "zh": "斷路斥候",
     "name": "Lane Scout",
-    "text": "[Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster.",
-    "zh_text": "【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物。"
+    "text": "[Arrow: ↑] While ↑ doesn't point at a monster, Taunt can't stop this monster.",
+    "zh_text": "【箭頭：↑】↑ 沒有指向怪物時，嘲諷擋不住此怪物。"
   },
   "WCG-320": {
     "zh": "空巷獵手",
     "name": "Empty Alley Hunter",
-    "text": "[Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster, and it gets +1 DP when attacking the enemy player.",
-    "zh_text": "【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物，且它攻擊敵方玩家時 DP +1。"
+    "text": "[Arrow: ↑] While ↑ doesn't point at a monster, Taunt can't stop this monster, and it gets +1 DP when attacking the enemy player.",
+    "zh_text": "【箭頭：↑】↑ 沒有指向怪物時，嘲諷擋不住此怪物，且它攻擊敵方玩家時 DP +1。"
   },
   "WCG-321": {
     "zh": "路障觀測者",
     "name": "Barricade Observer",
-    "text": "[Arrow: ↑] On deploy: if there is an enemy monster directly opposite, return it to its owner's hand; it must cost 2 or less. If there is no enemy monster directly opposite, draw 1 card instead.",
-    "zh_text": "【箭頭：↑】進場：若正對面有敵方怪物，將它移回手牌；它的費用必須在 2 以下。若正對面沒有敵方怪物，改為抽 1 張牌。"
+    "text": "[Arrow: ↑] On deploy: if ↑ points at a monster, return it to its owner's hand; it must cost 2 or less. If ↑ doesn't point at a monster, draw 1 card instead.",
+    "zh_text": "【箭頭：↑】進場：若 ↑ 指向怪物，將它移回其擁有者的手牌；它的費用必須在 2 以下。若 ↑ 沒有指向怪物，改為抽 1 張牌。"
   },
   "WCG-322": {
     "zh": "疾風穿巷",
@@ -1951,20 +1961,20 @@
   "WCG-324": {
     "zh": "側翼包抄者",
     "name": "Flanking Rider",
-    "text": "Charge; [Arrow: ↑] While there is no enemy monster directly opposite, this monster gets +300 PP.",
-    "zh_text": "衝鋒；【箭頭：↑】正對面沒有敵方怪物時，此怪物 PP +300。"
+    "text": "Charge; [Arrow: ↑] While ↑ doesn't point at a monster, this monster gets +300 PP.",
+    "zh_text": "衝鋒；【箭頭：↑】↑ 沒有指向怪物時，此怪物 PP +300。"
   },
   "WCG-325": {
     "zh": "斷橋術士",
     "name": "Bridgebreaker Mage",
-    "text": "[Arrow: ↑] On deploy: tap the enemy monster directly opposite; if there is none, draw 1 card instead. The enemy monster directly opposite doesn't ready at the start of its turn.",
-    "zh_text": "【箭頭：↑】進場：將正對面的敵方怪物橫置；若正對面沒有敵方怪物，改為抽 1 張牌。正對面的敵方怪物在回合開始時不會轉為直立。"
+    "text": "[Arrow: ↑] On deploy: tap the monster ↑ points at; if there is none, draw 1 card instead. The monster ↑ points at doesn't ready at the start of a turn.",
+    "zh_text": "【箭頭：↑】進場：將 ↑ 指向的怪物橫置；若 ↑ 沒有指向怪物，改為抽 1 張牌。↑ 指向的怪物在回合開始時不會轉為直立。"
   },
   "WCG-326": {
     "zh": "開路先鋒",
     "name": "Trailblazer Vanguard",
-    "text": "Charge; [Arrow: ↑] On deploy: destroy the enemy monster directly opposite with printed PP 1800 or less. While there is no enemy monster directly opposite, Taunt can't stop this monster.",
-    "zh_text": "衝鋒；【箭頭：↑】進場：消滅正對面 1 隻印刷 PP 1800 以下的敵方怪物。正對面沒有敵方怪物時，嘲諷擋不住此怪物。"
+    "text": "Charge; [Arrow: ↑] On deploy: destroy the monster ↑ points at if its printed PP is 1800 or less. While ↑ doesn't point at a monster, Taunt can't stop this monster.",
+    "zh_text": "衝鋒；【箭頭：↑】進場：消滅 ↑ 指向的印刷 PP 1800 以下的怪物。↑ 沒有指向怪物時，嘲諷擋不住此怪物。"
   },
   "WCG-327": {
     "zh": "千路齊進",

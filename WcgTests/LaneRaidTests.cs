@@ -23,7 +23,7 @@ public class LaneRaidTests
         var old=CardBalanceHistory.BeforeLaneRaidCards(cards);
         for(int n=319;n<=327;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeLaneRaidCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsLaneRaidCard(c.Id)&&!CardBalanceHistory.IsSoulPuppetCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>!CardBalanceHistory.IsLaneRaidCard(c.Id)&&!CardBalanceHistory.IsSoulPuppetCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Contains("印刷 PP",cards.GetCard("WCG-326")!.Text);
     }
     [Fact] public void ScoutPassesTauntOnlyWhileItsLaneIsOpen()

@@ -12,7 +12,7 @@ public partial class GameEngine
 
     // The enemy monster standing in the slot across from m (rows are physical: turned monsters stay in their owner's row).
     private MonsterInstance? Facing(MonsterInstance m) => m.Slot < 0 ? null
-        : RowUnits(GetOpponent(RowOf(m))).FirstOrDefault(x => x.Slot == 4 - m.Slot && !ReferenceEquals(Owner(x), Owner(m)));
+        : RowUnits(GetOpponent(RowOf(m))).FirstOrDefault(x => x.Slot == 4 - m.Slot);
     private bool LaneOpen(MonsterInstance m) => Alive(m) && m.Slot >= 0 && Facing(m) == null;
     private static bool UpArrow(MonsterInstance m) => !m.IsSilenced && m.Card.Arrows.Contains("up");
     // 319／320／326: taunt can't stop them while their lane is open.
@@ -28,7 +28,7 @@ public partial class GameEngine
         : !m.TurnUnblockable && LaneSlips(m) ? "空路：嘲諷擋不住" : BridgeLocked(m) ? "斷橋鎖住：回合開始不轉為直立" : null;
     // 325 斷橋術士: the enemy monster its ↑ arrow points at stays tapped at the start of its turn.
     private bool BridgeLocked(MonsterInstance m) =>
-        GetOpponent(Owner(m)).Field.Any(s => Active(s, "WCG-325") && UpArrow(s) && Facing(s) == m);
+        Player.Field.Concat(Computer.Field).Any(s => s != m && Active(s, "WCG-325") && UpArrow(s) && Facing(s) == m);
 
     private bool LaneDeploy(PlayerState p, MonsterInstance m)
     {
@@ -59,7 +59,7 @@ public partial class GameEngine
         _ => SoulSpellTargets(p, c)
     };
     private List<MonsterInstance> ClearableLanes(PlayerState p) =>
-        p.Field.Where(x => x.IsUnit && UpArrow(x)).Select(Facing).OfType<MonsterInstance>().Where(x => x.IsUnit).Distinct().ToList();
+        p.Field.Where(x => x.IsUnit && UpArrow(x)).Select(Facing).OfType<MonsterInstance>().Where(x => x.IsUnit && !ReferenceEquals(Owner(x), p)).Distinct().ToList();
     private static bool LaneNeedsTarget(string id) => id is "WCG-322" or "WCG-323" || SoulNeedsTarget(id);
     private bool LaneSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {

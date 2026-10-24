@@ -24,7 +24,7 @@ public class SoulPuppetTests
         var old=CardBalanceHistory.BeforeSoulPuppetCards(cards);
         for(int n=328;n<=336;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeSoulPuppetCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsSoulPuppetCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>!CardBalanceHistory.IsSoulPuppetCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
     [Fact] public void BorrowedBladeStealsUntilEndOfTurnInPlaceAndGivesItBack()
     {
@@ -125,6 +125,15 @@ public class SoulPuppetTests
         var pa=typeof(GameEngine).GetMethod("PointsAt",BindingFlags.NonPublic|BindingFlags.Instance)!;
         bool At(MonsterInstance t)=>(bool)pa.Invoke(g3,[g3.Player,oath,g3.Computer,t])!;
         Assert.True(At(l));Assert.False(At(r));
+    }
+    [Fact] public void ArrowCardsNoLongerSayOwnOrEnemyAndOlderErasKeepTheirText()
+    {
+        var arrows=cards.AllCards.Where(c=>c.Arrows.Length>0).ToList();
+        Assert.All(arrows,c=>{var arrowPart=c.Text[c.Text.IndexOf("【箭頭：",StringComparison.Ordinal)..];Assert.DoesNotContain("己方怪物",arrowPart.Replace("己方怪物時","").Split("攻擊敵方玩家")[0]);});
+        var old=CardBalanceHistory.BeforeArrowText(cards);
+        Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeArrowText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
+        Assert.Contains("左右相鄰的己方怪物",old.GetCard("WCG-005")!.Text);Assert.Contains("箭頭指向的怪物",cards.GetCard("WCG-005")!.Text);
+        Assert.Equal(20,cards.AllCards.Count(c=>c.Text!=old.GetCard(c.Id)!.Text));
     }
     [Fact] public void MasterAiStealsAndSwingsForLethal()
     {
