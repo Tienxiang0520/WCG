@@ -32,7 +32,7 @@ public partial class GameEngine
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
-                    && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Owner(source)!=p));
+                    && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Across(source,unit)));
             // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
             if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
             if (counters) ShieldCounterSources(p, unit);
@@ -47,7 +47,7 @@ public partial class GameEngine
         if (!unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id == "WCG-133" && p.Hp <= 3)) now.Add("native");
         foreach (var a in unit.Attachments.Where(a => a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")) now.Add("T:" + a.Card.InstanceId);
         foreach (var source in Player.Field.Concat(Computer.Field).Where(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length > 0 && PointsAt(Owner(source), source, p, unit)
-            && !(source.Card.Id == "WCG-147" && !LegacyCardRules && Owner(source) != p))) now.Add("A:" + source.InstanceId);
+            && !(source.Card.Id == "WCG-147" && !LegacyCardRules && Across(source, unit)))) now.Add("A:" + source.InstanceId);
         if (unit.IsSilenced && !unit.WasSilenced) unit.ShieldCounters = 0;
         unit.WasSilenced = unit.IsSilenced;
         unit.ShieldCounters += now.Count(s => !unit.ShieldSources.Contains(s));
@@ -57,7 +57,10 @@ public partial class GameEngine
     }
     private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Id == "WCG-147" && source.Card.Arrows.Contains("up")
-            && Owner(source) != owner && unit.Slot == 4 - source.Slot);
+            && Across(source, unit) && unit.Slot == 4 - source.Slot);
+    // Arrow side by physical row (2026-10-24): ← → stay in the card's own row, ↑ crosses to the other row. Unturned cards
+    // stand in their controller's row, so for them this equals the old own/enemy split.
+    private bool Across(MonsterInstance source, MonsterInstance target) => !ReferenceEquals(RowOf(source), RowOf(target));
     // Only these arrows hand out energy shield; the other arrow cards link slots for their own effects.
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
@@ -65,22 +68,21 @@ public partial class GameEngine
     { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
-            .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return sourceOwner == owner ? aura.Ally : aura.Enemy; });
+            .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; });
     // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
     private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
         m.IsSilenced ? [] : Player.Field.Concat(Computer.Field).Where(x => x != m && PointsAt(p, m, Owner(x), x)).ToArray();
-    // Arrows (2026-10-24, also for a monster turned 180° under another player's control): ↑ points at the slot directly
-    // across in the other row; ← → point at the neighbouring slots of the row the card stands in, mirrored when the card is
-    // turned (its printed ← now points at its owner's right). 「己方」/「敵方」 are judged by the controllers: ← → only reach
-    // monsters with the same controller, ↑ only monsters with a different controller.
+    // Arrows affect whatever monster stands in the slot they point at (2026-10-24 ruling): ↑ the slot directly across in the
+    // other row; ← → the neighbouring slots of the row the card physically stands in, swapped when the card is turned 180°
+    // under another player's control. Unturned cards stand in their controller's row, so this is the original behaviour.
     private bool PointsAt(PlayerState sourceOwner, MonsterInstance source, PlayerState owner, MonsterInstance target)
     {
         var sameRow = ReferenceEquals(RowOf(source), RowOf(target)); var side = source.Turned ? -1 : 1;
         return source.Card.Arrows.Any(a => a switch
         {
-            "left" => sameRow && owner == sourceOwner && target.Slot == source.Slot - side,
-            "right" => sameRow && owner == sourceOwner && target.Slot == source.Slot + side,
-            "up" => !sameRow && owner != sourceOwner && target.Slot == 4 - source.Slot,
+            "left" => sameRow && target.Slot == source.Slot - side,
+            "right" => sameRow && target.Slot == source.Slot + side,
+            "up" => !sameRow && target.Slot == 4 - source.Slot,
             _ => false
         });
     }

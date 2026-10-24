@@ -23,14 +23,14 @@ public partial class GameEngine
             case "WCG-013": Resolve(() => Damage(enemy, 1, new(p,m.Card,m,"deploy")), () => Damage(p, 1, new(p,m.Card,m,"deploy"))); break;
             case "WCG-015": if (enemy.Field.Count > p.Field.Count) DrawMany(p, 1); break;
             case "WCG-020": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(1300)).ToArray(), m.Card.Name); break;
-            case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => Owner(x) == p) == 2 ? 2 : 1); break;
+            case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => !Across(m, x)) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
             case "WCG-047": FreeHand(p, 1, 1); break;
             case "WCG-027": case "WCG-115": FreeHand(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1, 1); break;
             case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
             case "WCG-067": var maxBounce = CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2; PickMonster(p, $"選擇費用 {maxBounce} 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= maxBounce), Bounce); break;
             case "WCG-033" when m.Card.Arrows.Length > 0:
-                if (ArrowTargets(p, m).FirstOrDefault(x => Owner(x) == enemy && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
+                if (ArrowTargets(p, m).FirstOrDefault(x => Across(m, x) && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
                 else DrawMany(p, 1);
                 break;
             case "WCG-033": if (enemy.Hand.Count > p.Hand.Count) DrawMany(p, 1); break;
