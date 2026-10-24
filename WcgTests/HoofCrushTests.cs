@@ -23,7 +23,7 @@ public class HoofCrushTests
         var old=CardBalanceHistory.BeforeHoofCrushCards(cards);
         for(int n=337;n<=345;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeHoofCrushCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsHoofCrushCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsHoofCrushCard(c.Id)&&!CardBalanceHistory.IsLaneRaidCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.All(Enumerable.Range(337,9).Where(n=>n is 337 or 339 or 340 or 342 or 344),n=>Assert.Contains("DP 指示物",cards.GetCard($"WCG-{n}")!.Text));
     }
     [Fact] public void CalfGainsACounterEachCombatItSurvivesAndCountersLeaveWithIt()

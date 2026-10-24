@@ -1921,5 +1921,15 @@
  "【{0}】獲得 {1} 個 DP 指示物（DP {2}）。": "{0} gets {1} DP counter(s) (DP {2}).",
  "本回合 DP ×2（{0}）": "DP doubled this turn ({0})",
  "需要 1 隻己方怪物。": "You need 1 of your monsters.",
- "DP 指示物：卡面寫「放置 DP 指示物」時，在怪物上放指示物；每個使它 DP +1，可以疊加。沉默不會移除 DP 指示物；怪物離場時移除。卡面寫「DP」的判定看當下 DP（印刷 DP 加指示物、附著與本回合加成）。": "DP counters: when a card says to put a DP counter on a monster, place a counter on it; each gives +1 DP and they stack. Silence doesn't remove DP counters; they are removed when the monster leaves play. Card text that checks DP uses current DP (printed DP plus counters, attachments and this-turn bonuses)."
+ "DP 指示物：卡面寫「放置 DP 指示物」時，在怪物上放指示物；每個使它 DP +1，可以疊加。沉默不會移除 DP 指示物；怪物離場時移除。卡面寫「DP」的判定看當下 DP（印刷 DP 加指示物、附著與本回合加成）。": "DP counters: when a card says to put a DP counter on a monster, place a counter on it; each gives +1 DP and they stack. Silence doesn't remove DP counters; they are removed when the monster leaves play. Card text that checks DP uses current DP (printed DP plus counters, attachments and this-turn bonuses).",
+ "選擇在你 ↑ 箭頭怪物正對面的敵方怪物移回手牌": "Choose an enemy monster opposite one of your ↑-arrow monsters to return to hand",
+ "選擇 1 隻己方怪物 PP +300": "Choose 1 of your monsters to get +300 PP",
+ "空路：嘲諷擋不住": "Open lane: Taunt can't stop it",
+ "斷橋鎖住：回合開始不轉為直立": "Bridge-locked: doesn't ready at turn start",
+ "被斷橋術士鎖住，不轉為直立": "Locked by Bridgebreaker Mage; doesn't ready",
+ "選擇正對面費用 2 以下的敵方怪物移回手牌": "Choose the enemy monster opposite costing 2 or less to return to hand",
+ "選擇正對面的敵方怪物橫置": "Choose the enemy monster opposite to tap",
+ "選擇正對面印刷 PP 1800 以下的敵方怪物消滅": "Choose the enemy monster opposite with printed PP 1800 or less to destroy",
+ "需要 1 隻在你 ↑ 箭頭怪物正對面的敵方怪物。": "Needs an enemy monster opposite one of your ↑-arrow monsters.",
+ "【{0}】本回合正對面沒有敵方怪物的怪物攻擊敵方玩家時 DP +1。": "[{0}] This turn, monsters with no enemy monster opposite get +1 DP when attacking the enemy player."
 }

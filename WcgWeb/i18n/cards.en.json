@@ -1918,6 +1918,60 @@
     "text": "Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player.",
     "zh_text": "進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。"
   },
+  "WCG-319": {
+    "zh": "斷路斥候",
+    "name": "Lane Scout",
+    "text": "[Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster.",
+    "zh_text": "【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物。"
+  },
+  "WCG-320": {
+    "zh": "空巷獵手",
+    "name": "Empty Alley Hunter",
+    "text": "[Arrow: ↑] While there is no enemy monster directly opposite, Taunt can't stop this monster, and it gets +1 DP when attacking the enemy player.",
+    "zh_text": "【箭頭：↑】正對面沒有敵方怪物時，嘲諷擋不住此怪物，且它攻擊敵方玩家時 DP +1。"
+  },
+  "WCG-321": {
+    "zh": "路障觀測者",
+    "name": "Barricade Observer",
+    "text": "[Arrow: ↑] On deploy: if there is an enemy monster directly opposite, return it to its owner's hand; it must cost 2 or less. If there is no enemy monster directly opposite, draw 1 card instead.",
+    "zh_text": "【箭頭：↑】進場：若正對面有敵方怪物，將它移回手牌；它的費用必須在 2 以下。若正對面沒有敵方怪物，改為抽 1 張牌。"
+  },
+  "WCG-322": {
+    "zh": "疾風穿巷",
+    "name": "Gale Through the Lanes",
+    "text": "1 of your monsters gets +300 PP this turn; if there is no enemy monster directly opposite it, ready it.",
+    "zh_text": "使 1 隻己方怪物本回合 PP +300；若它正對面沒有敵方怪物，它轉為直立。"
+  },
+  "WCG-323": {
+    "zh": "清道令",
+    "name": "Clear-the-Road Edict",
+    "text": "Return 1 enemy monster to its owner's hand; it must be directly opposite 1 of your monsters with a ↑ arrow. If it has Taunt, draw 1 card.",
+    "zh_text": "將 1 隻敵方怪物移回手牌；它必須在你 1 隻有 ↑ 箭頭的怪物正對面。若它是嘲諷怪物，抽 1 張牌。"
+  },
+  "WCG-324": {
+    "zh": "側翼包抄者",
+    "name": "Flanking Rider",
+    "text": "Charge; [Arrow: ↑] While there is no enemy monster directly opposite, this monster gets +300 PP.",
+    "zh_text": "衝鋒；【箭頭：↑】正對面沒有敵方怪物時，此怪物 PP +300。"
+  },
+  "WCG-325": {
+    "zh": "斷橋術士",
+    "name": "Bridgebreaker Mage",
+    "text": "[Arrow: ↑] On deploy: tap the enemy monster directly opposite; if there is none, draw 1 card instead. The enemy monster directly opposite doesn't ready at the start of its turn.",
+    "zh_text": "【箭頭：↑】進場：將正對面的敵方怪物橫置；若正對面沒有敵方怪物，改為抽 1 張牌。正對面的敵方怪物在回合開始時不會轉為直立。"
+  },
+  "WCG-326": {
+    "zh": "開路先鋒",
+    "name": "Trailblazer Vanguard",
+    "text": "Charge; [Arrow: ↑] On deploy: destroy the enemy monster directly opposite with printed PP 1800 or less. While there is no enemy monster directly opposite, Taunt can't stop this monster.",
+    "zh_text": "衝鋒；【箭頭：↑】進場：消滅正對面 1 隻印刷 PP 1800 以下的敵方怪物。正對面沒有敵方怪物時，嘲諷擋不住此怪物。"
+  },
+  "WCG-327": {
+    "zh": "千路齊進",
+    "name": "Thousand Roads Charge",
+    "text": "This turn, each of your monsters with no enemy monster directly opposite gets +1 DP when attacking the enemy player.",
+    "zh_text": "本回合你的每隻正對面沒有敵方怪物的怪物，攻擊敵方玩家時 DP +1。"
+  },
   "WCG-337": {
     "zh": "角鬥幼犀",
     "name": "Gladiator Calf",

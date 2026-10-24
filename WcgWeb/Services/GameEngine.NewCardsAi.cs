@@ -69,6 +69,7 @@ public partial class GameEngine
     // Slot choice for the new arrow cards: 215/218 want both neighbours, 216 wants the most dangerous enemy ahead.
     private ChoiceOption? NewSlot(PlayerState p, PendingChoice choice)
     {
+        if (NewAi && LaneSlot(p, choice) is { } lane) return lane;
         if (!NewAi || choice.SourceCard is not { } card || card.Id is not ("WCG-215" or "WCG-216" or "WCG-218")) return null;
         var e = GetOpponent(p);
         double Score(ChoiceOption o)

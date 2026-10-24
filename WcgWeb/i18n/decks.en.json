@@ -1054,5 +1054,11 @@
   "zhDescription": "讓怪物交戰、直立待命或附著來疊 DP 指示物，再越過嘲諷一下打 3～4 點。",
   "name": "Life + Fury · Hoof Crush (Crush)",
   "description": "Grow DP counters through combat, staying upright and attachments, then get past Taunt and hit for 3–4 at once."
+ },
+ "RANKED-5-WRATH-LANERAID": {
+  "zhName": "狂怒＋理智・斷路突襲（突襲）",
+  "zhDescription": "把突襲兵放在對手的空格對面，清掉擋路的怪，從空路越過嘲諷打臉。",
+  "name": "Fury + Reason · Lane Raid (Raid)",
+  "description": "Put raiders opposite the opponent's empty slots, clear whatever blocks the lane, and hit face past Taunt through the open lanes."
  }
 }

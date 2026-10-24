@@ -54,7 +54,7 @@ public partial class GameEngine
                 var copy = new PlayerState
                 {
                     Id = s.Id, Name = s.Name, IsAi = true, Hp = s.Hp, NextCreatureDiscount = s.NextCreatureDiscount,
-                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, BurnedEnergy = new(s.BurnedEnergy),
+                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, LaneRushTurn = s.LaneRushTurn, BurnedEnergy = new(s.BurnedEnergy),
                 };
                 copy.Hand = s.Hand.Select(c => Card(c, !viewer)).ToList();
                 copy.Deck = s.Deck.Select(c => Card(c, !viewer)).ToList();

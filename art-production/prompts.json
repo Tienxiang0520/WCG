@@ -1175,6 +1175,51 @@
     "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 焚世魔焰 (World-Burning Flame). Creature portrait: a colossal fire demon wreathed in crimson flames rising from a volcano, hurling meteors down on a battlefield. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
   },
   {
+    "id": "WCG-319",
+    "name": "斷路斥候",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 斷路斥候 (Lane Scout). Creature portrait: a lean masked scout in red leather sprinting down an empty stone lane between ruined walls, arrow-shaped banner on her back. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-320",
+    "name": "空巷獵手",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 空巷獵手 (Empty Alley Hunter). Creature portrait: a feral hunter with twin hooked blades leaping out of a deserted moonlit alley, embers in the air. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-321",
+    "name": "路障觀測者",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 路障觀測者 (Barricade Observer). Creature portrait: a robed scholar with a brass spyglass atop a barricade, glowing blue runes pushing a small goblin backward through a portal. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-322",
+    "name": "疾風穿巷",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 疾風穿巷 (Gale Through the Lanes). Spell: a warrior swept forward by a roaring red gale through a narrow city lane, debris and banners whipping past. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-323",
+    "name": "清道令",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 清道令 (Clear-the-Road Edict). Spell: a glowing blue royal edict scroll unfurling, its light shoving an armored shield-bearer off a road into swirling mist. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-324",
+    "name": "側翼包抄者",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 側翼包抄者 (Flanking Rider). Creature portrait: a cavalry rider on a red-maned beast swinging around the flank of a battle line, dust trail curving behind. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-325",
+    "name": "斷橋術士",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 斷橋術士 (Bridgebreaker Mage). Creature portrait: a sorcerer in blue robes splitting a stone bridge with crackling arcane chains, a beast frozen on the far side. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-326",
+    "name": "開路先鋒",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 開路先鋒 (Trailblazer Vanguard). Creature portrait: a hulking armored vanguard smashing through a wooden palisade with a burning greataxe, splinters flying. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-327",
+    "name": "千路齊進",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 千路齊進 (Thousand Roads Charge). Spell: many warriors charging down a fan of glowing red roads toward a distant fortress at dawn, war horns blazing. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
     "id": "WCG-337",
     "name": "角鬥幼犀",
     "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 角鬥幼犀 (Gladiator Calf). Creature portrait: a young armored rhino calf in a dusty forest arena, scuffed horn, proud stance after winning a bout, dust swirling. Palette and setting: emerald, earthy brown, sunlit gold, ancient forests. Distinct scene for this card."

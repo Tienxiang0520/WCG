@@ -48,7 +48,7 @@ public partial class GameEngine
             case "WCG-310": BurnEnergy(p, m.Card.Id, 1, true, _ => true, n => { if (n > 0) Damage(e, 1, new(p, m.Card, m, "deploy")); }); break;
             case "WCG-313": BurnEnergy(p, m.Card.Id, 1, true, _ => true, n => { if (n > 0 && Alive(m)) { AddTurnBonus(m, 500, m.Card); RefreshBoard(); } }); break;
             case "WCG-318": WorldFlame(p, m, 0); break;
-            default: return false;
+            default: return LaneDeploy(p, m);
         }
         return true;
     }
