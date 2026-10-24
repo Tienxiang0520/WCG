@@ -1932,7 +1932,6 @@
  "選擇正對面印刷 PP 1800 以下的敵方怪物消滅": "Choose the enemy monster opposite with printed PP 1800 or less to destroy",
  "需要 1 隻在你 ↑ 箭頭怪物正對面的敵方怪物。": "Needs an enemy monster opposite one of your ↑-arrow monsters.",
  "【{0}】本回合正對面沒有敵方怪物的怪物攻擊敵方玩家時 DP +1。": "[{0}] This turn, monsters with no enemy monster opposite get +1 DP when attacking the enemy player.",
- "取得控制權：卡面寫「取得控制權直到回合結束」時，那隻怪物留在原本的格子，把卡轉 180 度（卡頂朝向你），由你控制；取得控制權的玩家的回合結束時轉回去（橫置的保持橫置）。卡面寫「永久控制」時，把卡移到你場上 1 個空格，放 1 個奪魂指示物。轉向或有奪魂指示物的怪物是「你控制、但不是你擁有的怪物」：它不觸發進場，附著卡和指示物跟著它；它離場時回到擁有者的墓地或手牌。": "Gaining control: when a card says to gain control of a monster until end of turn, the monster stays in its slot and you turn the card 180° (its top toward you); you control it, and it turns back at the end of that player's turn (tapped stays tapped). When a card says you control it permanently, move it to an empty slot of yours and put a soul counter on it. A turned monster or one with a soul counter is a monster you control but don't own: it doesn't trigger On Deploy, its attachments and counters go with it, and when it leaves play it goes to its owner's graveyard or hand.",
  "選擇要犧牲的不是你擁有的怪物": "Choose a monster you don't own to sacrifice",
  "選擇移回擁有者手牌的怪物": "Choose a monster to return to its owner's hand",
  "取得控制權（轉 180 度）": "Gained control (turned 180°)",
@@ -1953,5 +1952,6 @@
  "暫時控制（轉 180 度）": "Temporary control (turned 180°)",
  "奪魂指示物": "Soul counter",
  "奪魂指示物卡（12 個）": "Soul counter card (12)",
- "暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。奪魂指示物：永久控制，離場時回到擁有者那邊。": "Temporary control: the card stays in its slot turned 180° and turns back at end of turn. Soul counter: permanent control; it goes back to its owner's side when it leaves play."
+ "暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。奪魂指示物：永久控制，離場時回到擁有者那邊。": "Temporary control: the card stays in its slot turned 180° and turns back at end of turn. Soul counter: permanent control; it goes back to its owner's side when it leaves play.",
+ "取得控制權：卡面寫「取得控制權直到回合結束」時，那隻怪物留在原本的格子，把卡轉 180 度（卡頂朝向你），由你控制；取得控制權的玩家的回合結束時轉回去（橫置的保持橫置）。卡面寫「永久控制」時，把卡移到你場上 1 個空格，放 1 個奪魂指示物。轉向或有奪魂指示物的怪物是「你控制、但不是你擁有的怪物」：它不觸發進場，附著卡和指示物跟著它；它離場時回到擁有者的墓地或手牌。轉向的怪物箭頭照常有效：↑ 指正對面那格，← → 指它所在那排的相鄰格（卡轉了 180 度，左右跟著對調）；「己方」「敵方」以控制它的玩家來看。": "Gaining control: when a card says to gain control of a monster until end of turn, the monster stays in its slot and you turn the card 180° (its top toward you); you control it, and it turns back at the end of that player's turn (tapped stays tapped). When a card says you control it permanently, move it to an empty slot of yours and put a soul counter on it. A turned monster or one with a soul counter is a monster you control but don't own: it doesn't trigger On Deploy, its attachments and counters go with it, and when it leaves play it goes to its owner's graveyard or hand. A turned monster's arrows still work: ↑ points at the slot directly across, ← → at the neighbouring slots of the row it stands in (turned 180°, so left and right swap); \"your\" and \"enemy\" are judged from the player controlling it."
 }

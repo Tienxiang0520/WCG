@@ -110,6 +110,19 @@ public class SoulPuppetTests
         var plan=new DeckPrintPlan("t","深淵",[new PrintedCard("WCG-335","王座篡奪","法術","深淵",7,null,null,"")]);Assert.Equal(0,DeckPrintTools.Defaults(plan with {Cards=[]})[PrintTool.SoulTokens]);
         Assert.Equal(1,DeckPrintTools.Defaults(plan)[PrintTool.SoulTokens]);
     }
+    [Fact] public void TurnedMonstersArrowsStillWorkForTheirController()
+    {
+        // 突擊狼騎兵 ← → buffs adjacent monsters with the same controller; turned, it still does, in the row it stands in.
+        var g=Game();var wolf=Unit(g.Computer,5,2);var ally=Unit(g.Computer,101,1);var other=Unit(g.Computer,101,3);Refresh(g);
+        Assert.Equal(1200,ally.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,331),wolf));Settle(g);Refresh(g);
+        Assert.Equal(1000,ally.CurrentPP);Assert.Equal(1000,other.CurrentPP); // now the enemy's monsters: not 「己方」
+        Assert.True(g.CastSpellAt(g.Player,Hand(g,331),ally));Settle(g);Refresh(g);
+        Assert.Equal(1200,ally.CurrentPP);Assert.Equal(1000,other.CurrentPP);
+        // ↑ still points straight across: a stolen 枯骨低語者 hits nothing of yours, and the owner's ↑ never reaches its own row.
+        var g2=Game();var whisper=Unit(g2.Computer,283,2);var mine=Unit(g2.Player,101,2);Refresh(g2);Assert.Equal(700,mine.CurrentPP);
+        Assert.True(g2.CastSpellAt(g2.Player,Hand(g2,331),whisper));Settle(g2);Refresh(g2);Assert.Equal(1000,mine.CurrentPP);
+    }
     [Fact] public void MasterAiStealsAndSwingsForLethal()
     {
         var g=Game();g.AiLevel=5;g.Player.IsAi=true;g.Computer.Hp=2;Unit(g.Computer,113,2);Hand(g,331);Refresh(g);

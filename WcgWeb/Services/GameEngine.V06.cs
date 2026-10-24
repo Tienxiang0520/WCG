@@ -69,10 +69,21 @@ public partial class GameEngine
     // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
     private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
         m.IsSilenced ? [] : Player.Field.Concat(Computer.Field).Where(x => x != m && PointsAt(p, m, Owner(x), x)).ToArray();
-    // A turned (temporarily controlled) monster's arrows point at nothing that matters, and nothing points at it.
-    private bool PointsAt(PlayerState sourceOwner, MonsterInstance source, PlayerState owner, MonsterInstance target) =>
-        !source.Turned && !target.Turned && source.Card.Arrows.Any(a=>a switch { "left" => owner==sourceOwner && target.Slot==source.Slot-1,
-            "right"=>owner==sourceOwner && target.Slot==source.Slot+1, "up"=>owner!=sourceOwner && target.Slot==4-source.Slot, _=>false });
+    // Arrows (2026-10-24, also for a monster turned 180° under another player's control): ↑ points at the slot directly
+    // across in the other row; ← → point at the neighbouring slots of the row the card stands in, mirrored when the card is
+    // turned (its printed ← now points at its owner's right). 「己方」/「敵方」 are judged by the controllers: ← → only reach
+    // monsters with the same controller, ↑ only monsters with a different controller.
+    private bool PointsAt(PlayerState sourceOwner, MonsterInstance source, PlayerState owner, MonsterInstance target)
+    {
+        var sameRow = ReferenceEquals(RowOf(source), RowOf(target)); var side = source.Turned ? -1 : 1;
+        return source.Card.Arrows.Any(a => a switch
+        {
+            "left" => sameRow && owner == sourceOwner && target.Slot == source.Slot - side,
+            "right" => sameRow && owner == sourceOwner && target.Slot == source.Slot + side,
+            "up" => !sameRow && owner != sourceOwner && target.Slot == 4 - source.Slot,
+            _ => false
+        });
+    }
     public int ActualCost(PlayerState p, CardDefinition card) => Math.Max(card.IsMonster && p.NextCreatureDiscount>0 ? 1 : 0,
         card.TotalCost-(card.Id=="WCG-160" ? 7-p.Hp : 0)-NewCostReduction(p,card)-(card.IsMonster ? p.NextCreatureDiscount : 0));
     private void Attach(PlayerState p, CardInstance card, MonsterInstance target, int? expire = null)

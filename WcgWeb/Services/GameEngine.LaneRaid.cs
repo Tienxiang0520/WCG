@@ -2,8 +2,8 @@ using WcgWeb.Models;
 namespace WcgWeb.Services;
 
 // 新流派「斷路突襲」（狂怒＋理智，WCG-319–327，2026-10-24）：清空對面那一格，從空的那條路直接打臉，嘲諷擋不住。
-// 「正對面」 is the enemy slot 4 - Slot. It is empty when no enemy monster stands there: enchantments (結界) and face-down
-// cards sit in the structure list, so a slot holding only those still counts as empty.
+// 「正對面」 is the enemy slot 4 - Slot. It is empty when no enemy monster stands there; only monsters count (an
+// enchantment in that slot doesn't close the lane).
 // Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
@@ -28,7 +28,7 @@ public partial class GameEngine
         : !m.TurnUnblockable && LaneSlips(m) ? "空路：嘲諷擋不住" : BridgeLocked(m) ? "斷橋鎖住：回合開始不轉為直立" : null;
     // 325 斷橋術士: the enemy monster its ↑ arrow points at stays tapped at the start of its turn.
     private bool BridgeLocked(MonsterInstance m) =>
-        GetOpponent(Owner(m)).Field.Any(s => Active(s, "WCG-325") && UpArrow(s) && !s.Turned && Facing(s) == m);
+        GetOpponent(Owner(m)).Field.Any(s => Active(s, "WCG-325") && UpArrow(s) && Facing(s) == m);
 
     private bool LaneDeploy(PlayerState p, MonsterInstance m)
     {
