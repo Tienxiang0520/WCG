@@ -2027,8 +2027,8 @@
   "WCG-335": {
     "zh": "王座篡奪",
     "name": "Usurp the Throne",
-    "text": "Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot.",
-    "zh_text": "將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。"
+    "text": "Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner.",
+    "zh_text": "將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。"
   },
   "WCG-336": {
     "zh": "傀儡回歸",

@@ -119,16 +119,16 @@ public partial class GameEngine
     // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
     private void OptionalDispel(PlayerState p,MonsterInstance source)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced)
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter)
             .Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
         if(Targetable(p,all).Count==0)return;
         Ask(p,$"【{source.Card.Name}】進場：要驅散附著或摧毀結界嗎？",[new(){Id="DISPEL_OPT",Title="選擇驅散或摧毀目標"},new(){Id="SKIP",Title="不發動"}],o=>{if(o.Id=="DISPEL_OPT")Dispel(p);});
     }
     private void Dispel(PlayerState p,bool structures=true)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced);
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter);
         if(structures)all=all.Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
-        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{ReleaseAttachments(x);x.IsSilenced=false;RefreshBoard();}});
+        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{ReleaseAttachments(x);x.IsSilenced=false;RefreshBoard();UnSoul(x);}});
     }
     private void FreeFaction(PlayerState p,int cost,string faction, bool grave=false, Action<MonsterInstance>? after=null)
     {

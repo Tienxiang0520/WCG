@@ -2,7 +2,7 @@ using WcgWeb.Models;
 namespace WcgWeb.Services;
 
 // 新流派「重蹄碾壓」（生機＋狂怒，WCG-337–345，2026-10-24）：讓怪物的 DP 越長越大，一下打 3～4 點，兩下就贏。
-// DP 指示物 (+1 DP each) are physical counters on the card: they stack, stay when the monster is silenced, and are
+// DP 指示物 (+1 DP each) are physical counters on the card: they stack, are removed when the monster is silenced (2026-10-24 rule; older catalogs keep them) or
 // removed when it leaves play (a monster coming back is a new instance with none). Only catalogs from that day contain
 // these ids, so older eras never reach this code.
 public partial class GameEngine

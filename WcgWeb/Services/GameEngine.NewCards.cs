@@ -107,7 +107,7 @@ public partial class GameEngine
         {
             case "WCG-205": BreakShield(p); break; case "WCG-209": BreakShield(p, !ShieldCounterRules); break;
             // Before the silence-spell change (2026-10-16) 寂靜學者 was a monster; old-era matches keep its entry effect.
-            case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); }); break;
+            case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); SilenceStrip(x); }); break;
             case "WCG-212": Mill(e, 2); break;
             case "WCG-227": if (p.Hand.Count > e.Hand.Count) DrawMany(p, 1); break;
             case "WCG-236": if (OthersAre(p, m, c => c.IsNeutral)) DrawMany(p, 1); break;

@@ -30,8 +30,17 @@ internal static class CounterHistory
     // Catalog before the 斷路突襲 cards WCG-319–327 existed.
     // Catalog before the 奪魂傀儡 cards WCG-328–336 existed.
     // Catalog before the 2026-10-24 arrow wording (「箭頭指向的怪物」).
+    // Catalog before the 2026-10-24 silence/dispel counter rules (335's text).
+    internal static CardDatabase BeforeSilenceCounters(CardDatabase current)
+    {
+        if(current.GetCard("WCG-335")?.Text.Contains("被沉默或驅散時")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-silence-counters.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeArrowText(CardDatabase current)
     {
+        current=BeforeSilenceCounters(current);
         if(current.GetCard("WCG-005")?.Text.Contains("箭頭指向的怪物")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-arrow-text.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
