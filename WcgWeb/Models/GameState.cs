@@ -58,7 +58,15 @@ public class MonsterInstance
     public int CombatPowerBonus { get; set; }
     public int AttackDamageBonus { get; set; }
     private int baseDP;
-    public int CurrentDP { get => baseDP + AttackDamageBonus; set => baseDP = value; }
+    public int BaseDP => baseDP;
+    // 重蹄碾壓 (WCG-337–345): DP 指示物 on the card (+1 DP each, removed when it leaves play — a new instance starts at 0),
+    // DP from attachments (set by RefreshBoard) and 「本回合」 DP (cleared at every turn change).
+    public int DpCounters { get; set; }
+    public int DpBonus { get; set; }
+    public int TurnDpBonus { get; set; }
+    // 「本回合嘲諷擋不住它」 (340／345); cleared at every turn change.
+    public bool TurnUnblockable { get; set; }
+    public int CurrentDP { get => baseDP + DpCounters + DpBonus + TurnDpBonus + AttackDamageBonus; set => baseDP = value; }
     public bool HasAttacked { get; set; }
     // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
     public bool AttackBanned { get; set; }

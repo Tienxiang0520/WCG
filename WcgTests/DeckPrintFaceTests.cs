@@ -46,6 +46,29 @@ public class DeckPrintFaceTests
     private static string Cell(string html, string id) =>
         Regex.Match(html, $"<div class=\"print-card print-face-cell\" data-card-id=\"{id}\">.*?<svg class=\"crop-marks\"", RegexOptions.Singleline).Value;
 
+    [Fact]
+    public async Task DecksWithDpCounterCardsGetADpTokenSheetByDefault()
+    {
+        var ids = Mixed.Take(Mixed.Length - 1).Append("WCG-337").ToArray();
+        var cards = ids.Select(id => database.GetCard(id)!).Select(c => new PrintedCard(c.Id, c.Name, c.Type, c.Will, c.TotalCost, c.PP, c.DP, c.Text, c.Arrows.ToArray())).ToArray();
+        var html = await Render("zh-Hant", new("重蹄", "生機", cards));
+        Assert.Equal(12, Regex.Matches(html, "class=\"dp-token\"").Count);
+        Assert.Equal(12, Regex.Matches(html, "class=\"shield-token\"").Count);
+        Assert.Equal(4, Regex.Matches(html, "data-print-tool=").Count);
+        Assert.Empty(Regex.Matches(await Render("zh-Hant", MixedPlan()), "class=\"dp-token\""));
+    }
+    [Fact]
+    public void PrintToolsFillTheLastPageThenAddPages()
+    {
+        var counts = new Dictionary<PrintTool, int> { [PrintTool.Life] = 4, [PrintTool.Coin] = 2, [PrintTool.ShieldTokens] = 3, [PrintTool.DpTokens] = 9 };
+        var items = DeckPrintTools.Items(counts);
+        Assert.Equal(12, items.Count); // DP sheets are capped at 3
+        Assert.Equal([1, 2, 3, 4], items.Where(i => i.Tool == PrintTool.Life).Select(i => i.Number));
+        var (last, extra) = DeckPrintTools.Place(items, 4, 9);
+        Assert.Equal(4, last.Length); Assert.All(last, i => Assert.Equal(PrintTool.Life, i.Tool));
+        Assert.Equal([8], extra.Select(p => p.Length));
+        Assert.Empty(DeckPrintTools.Items(new Dictionary<PrintTool, int> { [PrintTool.Life] = 0 }));
+    }
     [Theory]
     [InlineData("zh-Hant")] [InlineData("en")]
     public async Task ColourPrintUsesTheCardFaceWithEachWillsFrameArrowsAndPrintArt(string language)

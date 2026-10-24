@@ -1048,5 +1048,11 @@
   "zhDescription": "前期快攻打臉，後期把用不到的能量送入墓地，用很低的費用打出直傷收尾。",
   "name": "Wrath · Energy Burn (Burn)",
   "description": "Rush your opponent early, then put energy you no longer need into your graveyard to finish with cheap direct damage."
+ },
+ "RANKED-5-VITAL-HOOFCRUSH": {
+  "zhName": "生機＋狂怒・重蹄碾壓（碾壓）",
+  "zhDescription": "讓怪物交戰、直立待命或附著來疊 DP 指示物，再越過嘲諷一下打 3～4 點。",
+  "name": "Life + Fury · Hoof Crush (Crush)",
+  "description": "Grow DP counters through combat, staying upright and attachments, then get past Taunt and hit for 3–4 at once."
  }
 }

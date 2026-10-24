@@ -1917,5 +1917,59 @@
     "name": "World-Burning Flame",
     "text": "Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player.",
     "zh_text": "進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-337": {
+    "zh": "角鬥幼犀",
+    "name": "Gladiator Calf",
+    "text": "Whenever this monster survives combat, put 1 DP counter on it.",
+    "zh_text": "每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。"
+  },
+  "WCG-338": {
+    "zh": "重蹄蹄鐵",
+    "name": "Heavy Horseshoe",
+    "text": "Attach to 1 of your monsters: it gets +1 DP and +200 PP.",
+    "zh_text": "附著於 1 隻己方怪物：它 DP +1、PP +200。"
+  },
+  "WCG-339": {
+    "zh": "岩甲犀王",
+    "name": "Rock-Plated Rhino King",
+    "text": "At the end of your turn, if this monster is upright, put 1 DP counter on it.",
+    "zh_text": "你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。"
+  },
+  "WCG-340": {
+    "zh": "破欄衝撞",
+    "name": "Fence-Breaking Charge",
+    "text": "Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead.",
+    "zh_text": "選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。"
+  },
+  "WCG-341": {
+    "zh": "怒蹄戰士",
+    "name": "Raging Hoof Warrior",
+    "text": "Charge. When this monster attacks the enemy player, it gets +1 DP for each of your other monsters with 2 or more DP.",
+    "zh_text": "衝鋒；此怪物攻擊敵方玩家時，你場上每有 1 隻 DP 2 以上的其他怪物，此怪物 DP +1。"
+  },
+  "WCG-342": {
+    "zh": "荒野角力場",
+    "name": "Wildland Arena",
+    "text": "Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it.",
+    "zh_text": "每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。"
+  },
+  "WCG-343": {
+    "zh": "鐵皮巨獸",
+    "name": "Ironhide Behemoth",
+    "text": "Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP.",
+    "zh_text": "嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。"
+  },
+  "WCG-344": {
+    "zh": "萬蹄奔騰",
+    "name": "Stampede of Hooves",
+    "text": "Put 1 DP counter on each of your monsters. Draw 1 card.",
+    "zh_text": "在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。"
+  },
+  "WCG-345": {
+    "zh": "致命頂撞",
+    "name": "Lethal Ram",
+    "text": "Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn.",
+    "zh_text": "使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。"
   }
 }

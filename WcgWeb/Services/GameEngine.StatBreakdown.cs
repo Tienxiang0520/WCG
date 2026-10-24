@@ -62,8 +62,12 @@ public partial class GameEngine
     {
         var list = new List<StatSource>();
         if (m.IsSet) return list;
-        var baseDp = m.CurrentDP - m.AttackDamageBonus - (m.Card.DP ?? 1);
+        var baseDp = m.BaseDP - (m.Card.DP ?? 1);
         if (baseDp != 0) list.Add(new(null, "其他", baseDp));
+        if (m.DpCounters != 0) list.Add(new(null, "DP 指示物", m.DpCounters));
+        foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-338")) list.Add(new(a.Card.Card, a.Card.Card.Name, 1));
+        if (m.DpBonus - m.Attachments.Count(a => a.Card.Card.Id == "WCG-338") is var other && other != 0) list.Add(new(null, "其他", other));
+        if (m.TurnDpBonus != 0) list.Add(new(null, "本回合加成", m.TurnDpBonus));
         if (m.AttackDamageBonus != 0) list.Add(new(null, "攻擊加成", m.AttackDamageBonus));
         return list;
     }

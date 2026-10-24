@@ -2,21 +2,21 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 318
+total_cards: 327
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 318 張）
+# WCG 卡牌總表（共 327 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 192 張、法術 103 張、法術（反擊） 9 張、結界 14 張。
+類型：怪物 196 張、法術 107 張、法術（反擊） 9 張、結界 15 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，48 張）
+## 狂怒（Fury，52 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -68,6 +68,10 @@ source: WcgWeb/Data/cards.json
 | WCG-313 | 熔核潛伏者 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；進場：你可以將你能量區 1 張牌送入墓地；若你這麼做，此怪物 PP +500 直到回合結束。 | **Molten-Core Lurker** — Charge. Deploy: You may put 1 card from your energy zone into the graveyard. If you do, this monster gets +500 PP until end of turn. |
 | WCG-315 | 燃盡之怒 | 法術 | 3 | — | — | — | 將你能量區至多 3 張橫置的牌送入墓地；每送 1 張，對敵方玩家造成 1 點傷害。 | **Burnout Fury** — Put up to 3 tapped cards from your energy zone into the graveyard. Deal 1 damage to the enemy player for each card. |
 | WCG-318 | 焚世魔焰 | 怪物 | 5 | 2000 | 2 | — | 進場：你可以將你能量區至多 3 張牌送入墓地；每送 1 張，選擇：消滅 1 隻印刷 PP 900 以下的敵方怪物，或對敵方玩家造成 1 點傷害。 | **World-Burning Flame** — Deploy: You may put up to 3 cards from your energy zone into the graveyard. For each card, choose: destroy 1 enemy monster with 900 printed PP or less, or deal 1 damage to the enemy player. |
+| WCG-338 | 重蹄蹄鐵 | 法術 | 1 | — | — | — | 附著於 1 隻己方怪物：它 DP +1、PP +200。 | **Heavy Horseshoe** — Attach to 1 of your monsters: it gets +1 DP and +200 PP. |
+| WCG-340 | 破欄衝撞 | 法術 | 2 | — | — | — | 選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。 | **Fence-Breaking Charge** — Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead. |
+| WCG-341 | 怒蹄戰士 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；此怪物攻擊敵方玩家時，你場上每有 1 隻 DP 2 以上的其他怪物，此怪物 DP +1。 | **Raging Hoof Warrior** — Charge. When this monster attacks the enemy player, it gets +1 DP for each of your other monsters with 2 or more DP. |
+| WCG-345 | 致命頂撞 | 法術 | 3 | — | — | — | 使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。 | **Lethal Ram** — Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn. |
 
 ## 理智（Reason，52 張）
 
@@ -126,7 +130,7 @@ source: WcgWeb/Data/cards.json
 | WCG-307 | 群星歸位 | 法術 | 6 | — | — | — | 從你的能量區選至多 2 張怪物牌，不付費召喚到戰場（橫置進場，不觸發進場）。 | **Stars Realign** — Choose up to 2 monster cards in your energy zone and summon them for free (they enter tapped; Deploy doesn't trigger). |
 | WCG-308 | 能量占卜師 | 怪物 | 4 | 1700 | 1 | — | 進場：你可以將你能量區 1 張牌和你的 1 張手牌交換（換進能量區的牌背面朝上，保持原本那張的直立或橫置）。 | **Energy Diviner** — Deploy: You may swap 1 card in your energy zone with 1 card in your hand (the card put in is face down and keeps the original card's upright or tapped state). |
 
-## 生機（Life，48 張）
+## 生機（Life，53 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -178,6 +182,11 @@ source: WcgWeb/Data/cards.json
 | WCG-293 | 林間守望者 | 怪物 | 3 | 1200 | 1 | — | 嘲諷；你的回合結束時，若此怪物直立，回復你 1 點生命。 | **Grove Warden** — Taunt. At the end of your turn, if this monster is upright, you recover 1 life. |
 | WCG-296 | 不動古樹 | 怪物 | 5 | 2100 | 2 | — | 嘲諷；此怪物不能攻擊。此怪物直立時，你的其他直立怪物 PP +200。 | **Unmoving Elder Tree** — Taunt. This monster can't attack. While this monster is upright, your other upright monsters get +200 PP. |
 | WCG-299 | 晨露滋養 | 法術 | 2 | — | — | — | 你場上每有 1 隻直立的怪物，回復你 1 點生命（最多 3 點）。 | **Morning Dew** — You recover 1 life for each upright monster you have (up to 3). |
+| WCG-337 | 角鬥幼犀 | 怪物 | 2 | 1100 | 1 | — | 每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。 | **Gladiator Calf** — Whenever this monster survives combat, put 1 DP counter on it. |
+| WCG-339 | 岩甲犀王 | 怪物 | 4 | 1700 | 2 | — | 你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。 | **Rock-Plated Rhino King** — At the end of your turn, if this monster is upright, put 1 DP counter on it. |
+| WCG-342 | 荒野角力場 | 結界 | 3 | — | — | — | 每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。 | **Wildland Arena** — Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it. |
+| WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 3 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
+| WCG-344 | 萬蹄奔騰 | 法術 | 4 | — | — | — | 在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。 | **Stampede of Hooves** — Put 1 DP counter on each of your monsters. Draw 1 card. |
 
 ## 秩序（Order，55 張）
 

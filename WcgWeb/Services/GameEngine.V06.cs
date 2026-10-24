@@ -24,7 +24,7 @@ public partial class GameEngine
         var counters=ShieldCounterRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
-            var unit=m;unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
+            var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338");unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
