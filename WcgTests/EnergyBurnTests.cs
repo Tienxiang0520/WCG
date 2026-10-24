@@ -27,7 +27,7 @@ public class EnergyBurnTests
         for(int n=310;n<=318;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=318)-9,old.AllCards.Count);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeEnergyBurnCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=318&&!CardBalanceHistory.IsEnergyBurnCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>int.Parse(c.Id[4..])<=318&&!CardBalanceHistory.IsEnergyBurnCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Contains("印刷 PP 900",cards.GetCard("WCG-318")!.Text);
     }
     [Fact] public void IgniterBurnsUprightEnergyForOneDamage()

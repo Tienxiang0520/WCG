@@ -9,6 +9,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-printed-pp-text.json" LogicalName="WcgWeb.Balance.BeforePrintedPpText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-arena-any-enemy.json" LogicalName="WcgWeb.Balance.BeforeArenaAnyEnemy" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-bear-roar-text.json" LogicalName="WcgWeb.Balance.BeforeBearRoarText" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-arrow-text.json" LogicalName="WcgWeb.Balance.BeforeArrowText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-card-fixes.json" LogicalName="WcgWeb.Balance.BeforeCardFixes" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-shield-any-combat.json" LogicalName="WcgWeb.Balance.BeforeShieldAnyCombat" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-burn-cost.json" LogicalName="WcgWeb.Balance.BeforeBurnCost" />

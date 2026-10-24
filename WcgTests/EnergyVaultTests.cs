@@ -26,7 +26,7 @@ public class EnergyVaultTests
         for(int n=301;n<=309;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=309)-9,old.AllCards.Count);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeEnergyVaultCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>int.Parse(c.Id[4..])<=309&&!CardBalanceHistory.IsEnergyVaultCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>int.Parse(c.Id[4..])<=309&&!CardBalanceHistory.IsEnergyVaultCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.DoesNotContain(cards.AllCards.Where(c=>CardBalanceHistory.IsEnergyVaultCard(c.Id)),c=>c.Text.Contains("檢視"));
     }
     [Fact] public void ApprenticeHidesAHandMonsterTappedWithoutUsingTheEnergyFill()
