@@ -204,7 +204,7 @@
                 }
                 else
                 {
-                    <button type="button" class="replay-slot unit @(m.Tapped ? "tapped" : "") @(m.Locked ? "locked" : "") @(m.Status.Contains("嘲諷") ? "taunt" : "")" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(m.Card))" @onclick="() => Open(m.Card)">
+                    <button type="button" class="replay-slot unit @(m.Tapped ? "tapped" : "") @(mine == m.Turned ? "facing-away" : "") @(m.Locked ? "locked" : "") @(m.Status.Contains("嘲諷") ? "taunt" : "")" data-sfx="flip" title="@L.F("查看 {0}", L.CardName(m.Card))" @onclick="() => Open(m.Card)">
                         <span class="replay-art"><CardImage CardId="@m.Card.CardId" /></span>
                         <span class="replay-name">@L.CardName(m.Card)</span>
                         @if (m.Card.PP != null) { <span class="replay-pp wcg-num @StatClass(m.PP, m.Card.PP)">@m.PP</span><span class="replay-dp wcg-num @StatClass(m.DP, m.Card.DP)">@m.DP</span> }

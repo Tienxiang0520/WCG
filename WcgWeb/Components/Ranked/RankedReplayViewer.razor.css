@@ -37,6 +37,7 @@
 .replay-slot.unit { cursor: pointer; box-shadow: inset 0 0 0 1px var(--wcg-line), 0 6px 16px rgba(0, 0, 0, .35); transition: transform .15s var(--wcg-ease), box-shadow .15s; }
 .replay-slot.unit:hover, .replay-slot.unit:focus-visible { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--wcg-gold), 0 10px 22px rgba(0, 0, 0, .45); }
 .replay-row.theirs .replay-slot.unit { box-shadow: inset 0 0 0 1px rgba(228, 104, 95, .45), 0 6px 16px rgba(0, 0, 0, .35); }
+.replay-slot.facing-away .replay-art { transform: rotate(180deg); }
 .replay-slot.tapped { filter: saturate(.55) brightness(.8); }
 .replay-slot.taunt { outline: 2px solid rgba(214, 180, 108, .7); outline-offset: -4px; }
 .replay-art { position: absolute; inset: 0; }
