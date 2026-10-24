@@ -4,23 +4,24 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     private readonly Dictionary<Guid,int> plannedSlots = [];
-    private int FirstSlot(PlayerState p) => Enumerable.Range(0,5).First(i => !p.Board.Any(m => m.Slot == i));
+    private int FirstSlot(PlayerState p) => Enumerable.Range(0,5).First(i => !RowTaken(p, i));
     private void ChooseSlot(PlayerState p, CardDefinition card, Action<int> action, bool cancel = false, Guid? source = null)
     {
         EnsureSlots(p);
-        var slots = Enumerable.Range(0,5).Where(i => !p.Board.Any(m => m.Slot == i)).ToArray();
+        var slots = Enumerable.Range(0,5).Where(i => !RowTaken(p, i)).ToArray();
         if (slots.Length == 0) return;
         Ask(p, "選擇固定進場格位", slots.Select(i => new ChoiceOption { Id=$"SLOT:{i}", Title=$"第 {i+1} 格", Subtitle=card.Arrows.Length == 0 ? "進場後不能換位" : $"箭頭：{string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))}，進場後不能換位" }), o => action(int.Parse(o.Id[5..])), cancel, source);
         if(CurrentPendingChoice != null) CurrentPendingChoice.SourceCard=card;
     }
     private void EnsureSlots(PlayerState p)
     {
-        var used = new HashSet<int>();
-        foreach (var m in p.Board) { if (m.Slot < 0 || !used.Add(m.Slot)) { m.Slot = Enumerable.Range(0,5).First(i => !used.Contains(i)); used.Add(m.Slot); } }
+        var used = new HashSet<int>(GetOpponent(p).Field.Where(x => x.Turned).Select(x => x.Slot));
+        foreach (var m in p.Board.Where(x => !x.Turned)) { if (m.Slot < 0 || !used.Add(m.Slot)) { m.Slot = Enumerable.Range(0,5).First(i => !used.Contains(i)); used.Add(m.Slot); } }
     }
     private void RefreshBoard()
     {
         EnsureSlots(Player); EnsureSlots(Computer);
+        Player.Lent = Computer.Field.Count(x => x.Turned); Computer.Lent = Player.Field.Count(x => x.Turned);
         var counters=ShieldCounterRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
@@ -68,8 +69,9 @@ public partial class GameEngine
     // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
     private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
         m.IsSilenced ? [] : Player.Field.Concat(Computer.Field).Where(x => x != m && PointsAt(p, m, Owner(x), x)).ToArray();
+    // A turned (temporarily controlled) monster's arrows point at nothing that matters, and nothing points at it.
     private bool PointsAt(PlayerState sourceOwner, MonsterInstance source, PlayerState owner, MonsterInstance target) =>
-        source.Card.Arrows.Any(a=>a switch { "left" => owner==sourceOwner && target.Slot==source.Slot-1,
+        !source.Turned && !target.Turned && source.Card.Arrows.Any(a=>a switch { "left" => owner==sourceOwner && target.Slot==source.Slot-1,
             "right"=>owner==sourceOwner && target.Slot==source.Slot+1, "up"=>owner!=sourceOwner && target.Slot==4-source.Slot, _=>false });
     public int ActualCost(PlayerState p, CardDefinition card) => Math.Max(card.IsMonster && p.NextCreatureDiscount>0 ? 1 : 0,
         card.TotalCost-(card.Id=="WCG-160" ? 7-p.Hp : 0)-NewCostReduction(p,card)-(card.IsMonster ? p.NextCreatureDiscount : 0));

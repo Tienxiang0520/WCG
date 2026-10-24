@@ -1,0 +1,12 @@
+@* 奪魂指示物 (奪魂傀儡): purple round token with a chain link; marks a monster you took for good with 王座篡奪 (it isn't yours). *@
+<svg class="@Class" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="29" fill="@(Ink ? "#ffffff" : "#5b2a86")" stroke="@(Ink ? "#000000" : "#2a0f45")" stroke-width="3"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="@(Ink ? "#000000" : "#d9b8ff")" stroke-width="1.6"/>
+    @* Two interlocked chain links. *@
+    <rect x="13" y="24" width="22" height="14" rx="7" fill="none" stroke="@(Ink ? "#000000" : "#f4e9ff")" stroke-width="4.5" transform="rotate(-25 24 31)"/>
+    <rect x="29" y="26" width="22" height="14" rx="7" fill="none" stroke="@(Ink ? "#000000" : "#f4e9ff")" stroke-width="4.5" transform="rotate(-25 40 33)"/>
+</svg>
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Ink { get; set; }
+}

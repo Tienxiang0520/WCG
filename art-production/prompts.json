@@ -1220,6 +1220,51 @@
     "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 千路齊進 (Thousand Roads Charge). Spell: many warriors charging down a fan of glowing red roads toward a distant fortress at dawn, war horns blazing. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
   },
   {
+    "id": "WCG-328",
+    "name": "魂線操偶師",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 魂線操偶師 (Soulstring Puppeteer). Creature portrait: a gaunt puppeteer with glowing violet threads trailing from his fingers to a limp marionette knight, haunted ruins behind. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-329",
+    "name": "噬主契約",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 噬主契約 (Master-Devouring Pact). Spell: a contract of black parchment burning with violet fire as a shadowy captive creature dissolves into it, teal sparks. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-330",
+    "name": "迷魂低語",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 迷魂低語 (Bewitching Whisper). Spell: a ghostly blue mouth whispering spiraling glyphs into the ear of a dazed goblin warrior whose eyes glow pale cyan. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-331",
+    "name": "借刀之術",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 借刀之術 (Borrowed Blade). Spell: a spectral violet hand gripping the sword arm of an armored knight, turning his blade back toward his own banner. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-332",
+    "name": "傀儡守衛",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 傀儡守衛 (Puppet Warden). Creature portrait: a wooden-and-iron marionette guardian with a tower shield, violet strings rising from its joints into darkness. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-333",
+    "name": "奪心術士",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 奪心術士 (Mindthief Adept). Creature portrait: a silver-masked sorceress in sapphire robes pulling a glowing cyan thread from a soldier's forehead, starry sky. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-334",
+    "name": "血祭傀儡師",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 血祭傀儡師 (Bloodrite Puppetmaster). Creature portrait: a towering hooded puppetmaster above a ritual altar, violet strings binding captive creatures, crimson moon. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-335",
+    "name": "王座篡奪",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 王座篡奪 (Usurp the Throne). Spell: a shadow king seizing a giant armored titan by violet chains and dragging it toward a dark throne, cracked crown falling. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-336",
+    "name": "傀儡回歸",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 傀儡回歸 (Puppet's Return). Spell: cut marionette strings drifting in a cyan vortex as a creature fades back into a glowing portal, silver runes. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
     "id": "WCG-337",
     "name": "角鬥幼犀",
     "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 角鬥幼犀 (Gladiator Calf). Creature portrait: a young armored rhino calf in a dusty forest arena, scuffed horn, proud stance after winning a bout, dust swirling. Palette and setting: emerald, earthy brown, sunlit gold, ancient forests. Distinct scene for this card."

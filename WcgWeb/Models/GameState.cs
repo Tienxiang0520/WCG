@@ -68,6 +68,14 @@ public class MonsterInstance
     public bool TurnUnblockable { get; set; }
     public int CurrentDP { get => baseDP + DpCounters + DpBonus + TurnDpBonus + AttackDamageBonus; set => baseDP = value; }
     public bool HasAttacked { get; set; }
+    // 奪魂傀儡 (WCG-328–336): control of an opponent's monster. OwnerId is the owning player while someone else controls it
+    // (null = its controller owns it). Turned = temporary control: the card stays in its owner's row turned 180°, at Slot,
+    // and goes back at the end of turn ControlUntil. SoulCounter = 335's permanent steal (moved into the controller's row).
+    public string? OwnerId { get; set; }
+    public bool Turned { get; set; }
+    public int ControlUntil { get; set; } = -1;
+    public bool SoulCounter { get; set; }
+    public bool Stolen => OwnerId != null;
     // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
     public bool AttackBanned { get; set; }
     // Summoned out of its owner's energy zone (伏能喚醒, WCG-301–309); 沉睡巨像 checks it.
@@ -132,7 +140,10 @@ public class PlayerState
     public List<MonsterInstance> Field { get; set; } = new();
     public List<MonsterInstance> Structures { get; set; } = new();
     public IEnumerable<MonsterInstance> Board => Field.Concat(Structures);
-    public int Occupied => Field.Count + Structures.Count;
+    // Cards physically in this row: turned monsters stay in their owner's row (Lent counts this player's monsters the
+    // opponent controls in place; set by the engine's RefreshBoard).
+    public int Lent { get; set; }
+    public int Occupied => Field.Count(m => !m.Turned) + Structures.Count + Lent;
     public int NextCreatureDiscount { get; set; }
     public List<CardInstance> Graveyard { get; set; } = new();
 

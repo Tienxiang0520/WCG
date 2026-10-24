@@ -121,6 +121,6 @@ public partial class GameEngine
     {
         HoofRamTitle => legal.OrderByDescending(m => (CanAttack(m) ? 10 : 0) + Dp(m)).FirstOrDefault(),
         HoofCounterTitle => legal.OrderByDescending(m => (CanAttack(m) ? 3 : 0) + Dp(m) + BodyValue(m) * .2).FirstOrDefault(),
-        _ => null
+        _ => SoulTarget(p, pending, legal)
     };
 }

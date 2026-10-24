@@ -95,7 +95,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
         if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
         if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
-        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");
@@ -112,14 +112,14 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         return new(visible, m.CurrentPP, m.CurrentDP,
             status.ToArray(), canAttack, problem, targets.ToArray(),
             m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray())
-            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)), Locked = !m.IsSet && m.AttackLocked };
+            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)), Locked = !m.IsSet && m.AttackLocked, Turned = m.Turned, Soul = m.SoulCounter };
     }
     private static BattleStatPart[]? Parts(IReadOnlyList<StatSource> parts) =>
         parts.Count == 0 ? null : parts.Select(x => new BattleStatPart(x.Label, x.Source?.Id, x.Amount)).ToArray();
     private BattleSide Side(PlayerState p) => new(p.Id, p.Hp, p.Deck.Count, p.Hand.Count,
         p.AvailableEnergy, p.TotalEnergy, p.EnergyZone.Select(e => new BattleEnergy(e.InstanceId, e.IsTapped) { Temporary = e.TemporaryEnergy,
             Card = p == engine.Player || e.TemporaryEnergy ? GameEngine.VisibleCard(e.Card, e.InstanceId) : null }).ToArray(),
-        p.Board.OrderBy(m=>m.Slot).Select(m => Monster(p, m)).ToArray(), p.Graveyard.Select(GameEngine.VisibleCard).ToArray());
+        p.Board.Where(m=>!m.Turned).Select(m => Monster(p, m)).Concat(engine.GetOpponent(p).Field.Where(m=>m.Turned).Select(m => Monster(engine.GetOpponent(p), m))).OrderBy(m=>m.Slot).ToArray(), p.Graveyard.Select(GameEngine.VisibleCard).ToArray());
     private BattleSnapshot BuildSnapshot()
     {
         BattlePending? pending = null;

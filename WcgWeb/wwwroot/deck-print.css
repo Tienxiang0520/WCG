@@ -168,3 +168,6 @@
 .print-tools { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .print-tools input[type=number] { width: 3.2em; }
 @media print { .tool-sheet .print-card-grid { align-content: start; } }
+.soul-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2a0f45; background: #fff; }
+.soul-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .soul-token, .white-color .soul-token { border-style: solid; }

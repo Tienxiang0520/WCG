@@ -54,7 +54,7 @@ public class DeckPrintFaceTests
         var html = await Render("zh-Hant", new("重蹄", "生機", cards));
         Assert.Equal(12, Regex.Matches(html, "class=\"dp-token\"").Count);
         Assert.Equal(12, Regex.Matches(html, "class=\"shield-token\"").Count);
-        Assert.Equal(4, Regex.Matches(html, "data-print-tool=").Count);
+        Assert.Equal(5, Regex.Matches(html, "data-print-tool=").Count);
         Assert.Empty(Regex.Matches(await Render("zh-Hant", MixedPlan()), "class=\"dp-token\""));
     }
     [Fact]

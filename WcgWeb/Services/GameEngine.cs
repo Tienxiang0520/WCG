@@ -344,7 +344,7 @@ public partial class GameEngine
     }
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
     // Describe the first step before payment using the same predicates as BeginPlay.
-    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233";
+    private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233" or "WCG-329";
     // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
@@ -415,6 +415,7 @@ public partial class GameEngine
         if (id == "WCG-169" && target != null) KillBatch([target], "消滅代價");
         if (id == "WCG-207") { PayLife(p, 1); if (IsOver) return; }
         if (id == "WCG-233") lastSacrifice = sacrifice;
+        if (id == "WCG-329") soulPactForeign = sacrifice != null && Foreign(p, sacrifice);
         if (sacrifice != null) KillBatch(new[] { sacrifice }, "犧牲代價", destroyed: !LegacyCardRules);
         if (id == "WCG-096") { PayLife(p, 1); if (IsOver) return; }
         // Cost-caused death triggers precede the original card effect.
@@ -455,7 +456,7 @@ public partial class GameEngine
         }
     }
     private void Bounce(MonsterInstance m)
-    { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); owner.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); Present("bounce", owner, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
+    { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var home = HomeOf(m, owner); home.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); RefreshBoard(); Present("bounce", home, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
     private void PickLowest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
     { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最低 PP 的怪物", list.Where(m => ThresholdPP(m) == list.Min(ThresholdPP)), action); }
     private void PickHighest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)

@@ -11,7 +11,7 @@
 <section class="v06-board @(Training?"training":"") @(Dragging!=null?"dragging":"") @(s.ActivePlayerId=="player"?"turn-player":"turn-computer") @(MotionReduced?"motion-reduced":"")" aria-label="@L["v0.6 卡牌戰場"]" @ref="BoardElement">
     <div class="board-ambience" aria-hidden="true"></div>
     <header class="match-header"><strong class="turn-chip @(s.ActivePlayerId=="player"?"mine":"theirs")" @key="s.Turn">@L.F("第 {0} 回合", s.Turn) · @L[s.ActivePlayerId=="player"?"你的回合":"電腦回合"]</strong><span>v0.6</span>@if(Training){<button class="training-toggle" aria-label="@L["測試工具"]" title="@L["測試工具"]" disabled="@(Busy||Presenting||EnergyCandidate!=null||Detail!=null||ShowHistory)" @onclick="()=>OpenTraining.InvokeAsync()"><Icon Name="tools" Size="15" /><span class="header-label">@L["測試工具"]</span></button>}<button class="motion-toggle" aria-pressed="@(MotionReduced?"true":"false")" aria-label="@L[MotionReduced?"切換為完整特效":"切換為精簡特效"]" title="@L[MotionReduced?"特效：精簡（點擊改為完整）":"特效：完整（點擊改為精簡）"]" @onclick="ToggleMotion"><Icon Name="@(MotionReduced?"motion-off":"spark")" Size="16" /><span class="motion-label"> @L[MotionReduced?"精簡":"特效"]</span></button><button class="sound-toggle" data-sound-toggle aria-label="@L[SoundEnabled?"靜音":"開啟音效"]" title="@L[SoundEnabled?"靜音":"開啟音效"]" @onclick="ToggleSound"><Icon Name="@(SoundEnabled?"sound":"mute")" Size="17" /></button><button @onclick='()=>SessionAction.InvokeAsync("surrender")' disabled="@(s.IsOver||Busy||Presenting)">@L["投降"]</button><button disabled="@(Busy||Presenting)" @onclick='()=>SessionAction.InvokeAsync("reset")'>@L["返回房間"]</button></header>
-    <div class="opponent hero @HeroClass(s,s.Computer,false) @(LegalHero(false)?"legal":"") @(FaceBlocked?"face-blocked":"")" data-drop-zone="face" data-target="@GameEngine.ComputerTargetId" role="button" tabindex="0" @onclick="() => HeroClicked(false)" @onkeydown="e => HeroKey(false, e)" aria-label="@L.F("電腦頭像 · 生命 {0} / 7", s.Computer.Hp)">@HeroFace(s.Computer,false)<div class="hero-meta"><strong>@L["電腦"]</strong><small class="enemy-energy">@L.F("能量 {0} / {1} · 手牌 {2}", s.Computer.AvailableEnergy, s.Computer.TotalEnergy, s.Computer.HandCount)</small><small class="hero-deck">@L.F("牌庫 {0}", s.Computer.DeckCount)</small></div>@if(FaceBlocked){<span class="hero-blocked">@L[s.Computer.Field.Any(m=>m.Status.Contains("嘲諷"))?"🛡 嘲諷阻擋":"無法直接攻擊"]</span>}</div>
+    <div class="opponent hero @HeroClass(s,s.Computer,false) @(LegalHero(false)?"legal":"") @(FaceBlocked?"face-blocked":"")" data-drop-zone="face" data-target="@GameEngine.ComputerTargetId" role="button" tabindex="0" @onclick="() => HeroClicked(false)" @onkeydown="e => HeroKey(false, e)" aria-label="@L.F("電腦頭像 · 生命 {0} / 7", s.Computer.Hp)">@HeroFace(s.Computer,false)<div class="hero-meta"><strong>@L["電腦"]</strong><small class="enemy-energy">@L.F("能量 {0} / {1} · 手牌 {2}", s.Computer.AvailableEnergy, s.Computer.TotalEnergy, s.Computer.HandCount)</small><small class="hero-deck">@L.F("牌庫 {0}", s.Computer.DeckCount)</small></div>@if(FaceBlocked){<span class="hero-blocked">@L[s.Computer.Field.Concat(s.Player.Field).Any(m=>m.Status.Contains("嘲諷")&&(m.Turned==s.Player.Field.Contains(m)))?"🛡 嘲諷阻擋":"無法直接攻擊"]</span>}</div>
     <p class="battle-message" role="status">@L.Text(Message) @L.Text(s.IsOver?s.Outcome:(Busy||Presenting)?"動作進行中":s.Pending?.Title ?? (TrainingToolsOpen?"訓練工具已開啟":Training&&TrainingAiPaused&&s.DecisionPlayerId=="computer"?"電腦已暫停 · 開啟測試工具選擇單步或自動行動":!CanAct?"等待電腦行動或效果選擇":""))@if(ShowActHint){<span class="hint-mouse">@L[s.DamageCounters?"拖曳出牌或攻擊 · 左鍵看牌 · 反擊牌留在手牌":"拖曳出牌或攻擊 · 左鍵看牌 · 右鍵切換蓋牌"]</span><span class="hint-touch">@L[s.DamageCounters?"拖曳出牌或攻擊 · 點牌看詳情 · 反擊牌留在手牌":"拖曳出牌或攻擊 · 點牌放大／切換蓋牌"]</span>}</p>
     <div class="battlefield @(LegalZone("center")?"legal":"")" data-drop-zone="center">
     @foreach(var side in new[]{s.Computer,s.Player})
@@ -26,11 +26,13 @@
                 @if(m==null){<div class="empty">＋</div>}
                 else
                 {
-                    <div class="field-card @(mine?"":"enemy-card") @(m.Status.Contains("嘲諷")?"has-taunt":"") @(m.Status.Any(x=>x.StartsWith("能量護盾")||x.StartsWith("聖盾"))?"has-shield":"") @(m.Status.Contains("沉默")?"is-silenced":"") @(m.Status.Contains("劇毒")?"is-poisonous":"") @(mine&&CanDrag&&(m.CanAttack||m.CanActivate)?"action-ready":"") @(mine&&m.CanAttack&&CanDrag?"attack-ready":"")" data-will="@(m.IsSet?null:WcgWeb.Components.Common.CardFaceThemes.Key(m.Card.Will))" aria-label="@L.CardName(m.Card)" data-drag-kind="@(mine&&m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
+                    var ctrl=mine!=m.Turned;
+                    <div class="field-card @(ctrl?"":"enemy-card") @(m.Turned?"turned":"") @(m.Status.Contains("嘲諷")?"has-taunt":"") @(m.Status.Any(x=>x.StartsWith("能量護盾")||x.StartsWith("聖盾"))?"has-shield":"") @(m.Status.Contains("沉默")?"is-silenced":"") @(m.Status.Contains("劇毒")?"is-poisonous":"") @(ctrl&&CanDrag&&(m.CanAttack||m.CanActivate)?"action-ready":"") @(ctrl&&m.CanAttack&&CanDrag?"attack-ready":"")" data-will="@(m.IsSet?null:WcgWeb.Components.Common.CardFaceThemes.Key(m.Card.Will))" aria-label="@L.CardName(m.Card)" data-drag-kind="@(ctrl&&m.CanAttack&&CanDrag?"attack":null)" data-drag-id="@m.Card.InstanceId">
                     @if(m.IsSet){<div class="field-card-back" aria-hidden="true">@L["魂"]<br/>@L["誓"]</div>}
                     else{<div class="card-art-layer" aria-hidden="true"><CardImage CardId="@m.Card.CardId" Loading="eager" /></div>}
                     @if(m.Status.Count(x=>x=="聖盾指示物") is var sc && sc>0){<span class="shield-counter" title="@L["聖盾指示物"] ×@sc" role="img" aria-label="@L["聖盾指示物"] ×@sc"><WcgWeb.Components.Common.ShieldIcon Class="shield-counter-icon" />@if(sc>1){<b class="shield-counter-count">@sc</b>}</span>}
                     @if(m.Status.Count(x=>x=="DP 指示物") is var dc && dc>0){<span class="dp-counter" title="@L["DP 指示物"] ×@dc" role="img" aria-label="@L["DP 指示物"] ×@dc"><WcgWeb.Components.Common.DpTokenIcon Class="dp-counter-icon" />@if(dc>1){<b class="dp-counter-count">@dc</b>}</span>}
+                    @if(m.Soul){<span class="soul-counter" title="@L["奪魂指示物"]" role="img" aria-label="@L["奪魂指示物"]"><WcgWeb.Components.Common.SoulTokenIcon Class="soul-counter-icon" /></span>}
                     @if(m.Status.Contains("劇毒")){<span class="poison-marker" title="@L["劇毒"]" role="img" aria-label="@L["劇毒"]"><WcgWeb.Components.Common.PoisonIcon Class="poison-marker-icon" /></span>}
                     @if(m.Status.Contains("嘲諷")){<img class="taunt-frame" src="battle/taunt-frame.svg" alt="" aria-hidden="true" draggable="false" />}
                     @foreach(var arrow in m.Card.Arrows ?? []){<span class="arrowmark @arrow">@(arrow=="left"?"←":arrow=="right"?"→":"↑")</span>}
@@ -114,7 +116,7 @@
     private List<HistoryEntry> History=[];
     private bool CanAct=>!Busy&&!Presenting&&!TrainingToolsOpen&&State is {IsOver:false,DecisionPlayerId:"player"};
     // Presentation hint only: glow the end-turn button when nothing playable, fillable or attack-ready remains.
-    private bool NoMovesLeft=>CanAct&&State is {Pending:null} s&&EnergyCandidate==null&&!s.Hand.Any(h=>h.CanPlay||h.CanEnergy)&&!s.Player.Field.Any(m=>m.CanAttack||m.CanActivate);
+    private bool NoMovesLeft=>CanAct&&State is {Pending:null} s&&EnergyCandidate==null&&!s.Hand.Any(h=>h.CanPlay||h.CanEnergy)&&!s.Player.Field.Concat(s.Computer.Field).Any(m=>m.CanAttack||m.CanActivate);
     private bool ShowActHint=>CanAct&&State?.Pending==null;
     // Hero portraits (presentation only): will tint from visible cards, damage stages, end-of-match states.
     private bool FaceBlocked=>Dragging!=null&&DragKind=="attack"&&!AttackTargets.Contains("face");
@@ -135,7 +137,7 @@
     private void EnergyKey(KeyboardEventArgs e){if(e.Key is "Enter" or " ")OpenEnergy();}
     private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory&&!ShowEnergy;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
-    private string[] AttackTargets=>State?.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
+    private string[] AttackTargets=>State?.Player.Field.Concat(State.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
     private bool UntargetedDrag=>DragKind=="hand"&&DragHand is {CanPlay:true,PlayTargets.Length:0} h&&!SetModes.Contains(h.Card.InstanceId)&&h.Card.Type is not ("怪物" or "結界");
     private bool LegalZone(string zone)=>Dragging!=null&&(zone switch {"energy"=>DragKind=="hand"&&DragHand?.CanEnergy==true,"face"=>DragKind=="attack"&&AttackTargets.Contains("face"),"center"=>UntargetedDrag||DragKind=="hand"&&DragHand is {CanPlay:true} h&&!SetModes.Contains(h.Card.InstanceId)&&(h.Card.CardId is "WCG-050" or "WCG-066" or "WCG-070"),_=>false});
     private static string HandDragMode(BattleHand h,bool back)=>back||!h.CanPlay||h.Card.Type is "怪物" or "結界"?"place":h.PlayTargets.Length>0?"target":"free";
@@ -178,7 +180,7 @@
         Dragging=null;DragKind="";if(!CanDrag||!Guid.TryParse(id,out var guid)){if(DragBinding!=null)await DragBinding.InvokeVoidAsync("discardDrop");return;}
         Guid? targetId=Guid.TryParse(target,out var t)?t:null;
         if(kind=="attack"){
-            var attacker=State!.Player.Field.FirstOrDefault(m=>m.Card.InstanceId==guid);
+            var attacker=State!.Player.Field.Concat(State.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==guid&&m.CanAttack);
             if(attacker?.Targets.Any(t=>t.Id==(zone=="face"?"face":targetId?.ToString()))==true)await Send("attack",guid,zone=="face"?null:targetId);
             else Message="這裡不能攻擊，卡片已回到原位。";
         }else if(State!.Hand.FirstOrDefault(h=>h.Card.InstanceId==guid) is {} h){

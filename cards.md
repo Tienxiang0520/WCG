@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 336
+total_cards: 345
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 336 張）
+# WCG 卡牌總表（共 345 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 202 張、法術 110 張、法術（反擊） 9 張、結界 15 張。
+類型：怪物 206 張、法術 115 張、法術（反擊） 9 張、結界 15 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，58 張）
@@ -79,7 +79,7 @@ source: WcgWeb/Data/cards.json
 | WCG-341 | 怒蹄戰士 | 怪物 | 3 | 1300 | 1 | — | 衝鋒；此怪物攻擊敵方玩家時，你場上每有 1 隻 DP 2 以上的其他怪物，此怪物 DP +1。 | **Raging Hoof Warrior** — Charge. When this monster attacks the enemy player, it gets +1 DP for each of your other monsters with 2 or more DP. |
 | WCG-345 | 致命頂撞 | 法術 | 3 | — | — | — | 使 1 隻己方怪物本回合 DP 變成兩倍；若它的 DP 因此在 4 以上，本回合嘲諷擋不住它。 | **Lethal Ram** — Double 1 of your monsters' DP this turn. If that makes its DP 4 or more, Taunt can't block it this turn. |
 
-## 理智（Reason，55 張）
+## 理智（Reason，58 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -138,6 +138,9 @@ source: WcgWeb/Data/cards.json
 | WCG-321 | 路障觀測者 | 怪物 | 2 | 1100 | 1 | ↑ | 【箭頭：↑】進場：若正對面有敵方怪物，將它移回手牌；它的費用必須在 2 以下。若正對面沒有敵方怪物，改為抽 1 張牌。 | **Barricade Observer** — [Arrow: ↑] On deploy: if there is an enemy monster directly opposite, return it to its owner's hand; it must cost 2 or less. If there is no enemy monster directly opposite, draw 1 card instead. |
 | WCG-323 | 清道令 | 法術 | 2 | — | — | — | 將 1 隻敵方怪物移回手牌；它必須在你 1 隻有 ↑ 箭頭的怪物正對面。若它是嘲諷怪物，抽 1 張牌。 | **Clear-the-Road Edict** — Return 1 enemy monster to its owner's hand; it must be directly opposite 1 of your monsters with a ↑ arrow. If it has Taunt, draw 1 card. |
 | WCG-325 | 斷橋術士 | 怪物 | 4 | 1600 | 1 | ↑ | 【箭頭：↑】進場：將正對面的敵方怪物橫置；若正對面沒有敵方怪物，改為抽 1 張牌。正對面的敵方怪物在回合開始時不會轉為直立。 | **Bridgebreaker Mage** — [Arrow: ↑] On deploy: tap the enemy monster directly opposite; if there is none, draw 1 card instead. The enemy monster directly opposite doesn't ready at the start of its turn. |
+| WCG-330 | 迷魂低語 | 法術 | 2 | — | — | — | 將 1 隻印刷 PP 1200 以下的敵方怪物橫置；若它已經橫置，改為取得它的控制權直到回合結束（它不能攻擊）。 | **Bewitching Whisper** — Tap 1 enemy monster with printed PP 1200 or less; if it's already tapped, gain control of it until end of turn instead (it can't attack). |
+| WCG-333 | 奪心術士 | 怪物 | 4 | 1500 | 1 | — | 進場：取得 1 隻印刷 PP 1200 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。若敵方沒有怪物，改為抽 1 張牌。 | **Mindthief Adept** — On deploy: gain control of 1 enemy monster with printed PP 1200 or less until end of turn; ready it, and it can attack this turn. If the enemy has no monsters, draw 1 card instead. |
+| WCG-336 | 傀儡回歸 | 法術 | 2 | — | — | — | 將 1 隻你控制、但不是你擁有的怪物移回其擁有者的手牌，抽 2 張牌。若你沒有這樣的怪物，改為將 1 隻己方怪物移回手牌，抽 1 張牌。 | **Puppet's Return** — Return 1 monster you control but don't own to its owner's hand and draw 2 cards. If you have none, return 1 of your monsters to your hand and draw 1 card instead. |
 
 ## 生機（Life，53 張）
 
@@ -257,7 +260,7 @@ source: WcgWeb/Data/cards.json
 | WCG-306 | 沉睡巨像 | 怪物 | 6 | 2500 | 2 | — | 此卡從你的能量區被召喚時，PP +300（在場期間一直有效）。 | **Slumbering Colossus** — When this card is summoned from your energy zone, it gets +300 PP (for as long as it stays in play). |
 | WCG-309 | 伏兵號令 | 法術 | 2 | — | — | — | 本回合你之後從能量區召喚的怪物都直立進場、可以立刻攻擊，且 PP +300 直到回合結束。 | **Ambush Order** — This turn, monsters you summon from your energy zone enter upright, can attack right away and get +300 PP until end of turn. |
 
-## 深淵（Abyss，50 張）
+## 深淵（Abyss，56 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -311,6 +314,12 @@ source: WcgWeb/Data/cards.json
 | WCG-314 | 灰燼回收 | 法術 | 2 | — | — | — | 從你的墓地選 1 張費用 3 以下的怪物牌，不付費召喚到戰場（不觸發進場）。若它是本回合從能量區送入墓地的，它直立進場。 | **Ash Reclamation** — Choose a monster card with cost 3 or less in your graveyard and summon it for free (Deploy doesn't trigger). If it was put there from your energy zone this turn, it enters upright. |
 | WCG-316 | 焦土殘兵 | 怪物 | 2 | 1100 | 1 | — | 陣亡：將你能量區 1 張牌送入墓地；若你這麼做，對敵方玩家造成 1 點傷害。 | **Scorched Remnant** — On Death: Put 1 card from your energy zone into the graveyard. If you do, deal 1 damage to the enemy player. |
 | WCG-317 | 血灰契約 | 法術 | 2 | — | — | — | 將你墓地 1 張牌背面朝上、橫置放入你的能量區。抽 1 張牌。 | **Blood-Ash Pact** — Put 1 card from your graveyard into your energy zone face down and tapped. Draw 1 card. |
+| WCG-328 | 魂線操偶師 | 怪物 | 2 | 1100 | 1 | — | 每當你犧牲 1 隻不是你擁有的怪物，抽 1 張牌。 | **Soulstring Puppeteer** — Whenever you sacrifice a monster you don't own, draw 1 card. |
+| WCG-329 | 噬主契約 | 法術 | 1 | — | — | — | 額外代價：犧牲 1 隻己方怪物。若犧牲的怪物不是你擁有的，對敵方玩家造成 2 點傷害；否則抽 1 張牌。 | **Master-Devouring Pact** — Additional cost: sacrifice 1 of your monsters. If you didn't own it, deal 2 damage to the enemy player; otherwise draw 1 card. |
+| WCG-331 | 借刀之術 | 法術 | 3 | — | — | — | 取得 1 隻印刷 PP 1800 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。 | **Borrowed Blade** — Gain control of 1 enemy monster with printed PP 1800 or less until end of turn; ready it, and it can attack this turn. |
+| WCG-332 | 傀儡守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：取得印刷 PP 最低的 1 隻敵方怪物的控制權直到你的下回合結束。 | **Puppet Warden** — Taunt; On Death: gain control of the enemy monster with the lowest printed PP until the end of your next turn. |
+| WCG-334 | 血祭傀儡師 | 怪物 | 5 | 1900 | 2 | — | 你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Bloodrite Puppetmaster** — At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less. |
+| WCG-335 | 王座篡奪 | 法術 | 7 | — | — | — | 將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。 | **Usurp the Throne** — Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. |
 
 ## 中立（Neutral，46 張）
 

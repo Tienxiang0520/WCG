@@ -185,7 +185,7 @@ public partial class GameEngine
         var deaths = new List<(PlayerState owner, MonsterInstance monster, CardInstance grave)>();
         foreach (var m in victims)
         {
-            var owner = Owner(m); m.LostAttachments = m.Attachments.Where(a => a.OwnerId == owner.Id).Select(a => a.Card).ToList(); ReleaseAttachments(m); owner.Field.Remove(m); var grave = new CardInstance(m.Card) { InstanceId = m.InstanceId }; owner.Graveyard.Add(grave);
+            var owner = Owner(m); m.LostAttachments = m.Attachments.Where(a => a.OwnerId == owner.Id).Select(a => a.Card).ToList(); ReleaseAttachments(m); owner.Field.Remove(m); var grave = new CardInstance(m.Card) { InstanceId = m.InstanceId }; HomeOf(m, owner).Graveyard.Add(grave); SoulSacrificed(owner, m, reason);
             m.CombatPowerBonus=0;m.AttackDamageBonus=0;
             deaths.Add((owner, m, grave)); Present("death", owner, m.InstanceId, card: m.Card, label: reason); Log($"【{m.Card.Name}】因 {reason} 送入墓地。", "combat");
         }

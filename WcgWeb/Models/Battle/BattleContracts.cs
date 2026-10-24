@@ -28,6 +28,12 @@ public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
     // Locked by an attachment (誓言枷鎖): can't attack and won't untap. Shown greyed on the board.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
     public bool Locked { get; init; }
+    // 奪魂傀儡: Turned = temporarily controlled by the other player, shown turned 180° in its owner's row (the side this
+    // card is listed under); Soul = permanently taken (奪魂指示物). Omitted when false.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public bool Turned { get; init; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public bool Soul { get; init; }
 }
 // One line of a PP/DP breakdown: the card that caused it (CardId null for engine effects such as 戰鬥加成) and its amount.
 public record BattleStatPart(string Label, string? CardId, int Amount);
