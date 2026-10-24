@@ -27,7 +27,7 @@ public partial class GameEngine
     private IEnumerable<CardInstance> GraveSmall(PlayerState p, int pp) => p.Graveyard.Where(c => c.Card.IsMonster && (c.Card.PP ?? 0) <= pp);
 
     // 347 列隊亡兵: +300 PP per 5 cards in your graveyard.
-    private int GravePower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-347" ? 300 * (Grave(p) / 5) : 0;
+    private int GravePower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-347" ? 300 * (Grave(p) / 5) : RootPower(p, m);
     // 350 冥誓審判官: the monster its ↑ arrow points at gets -200 PP per 5 cards in its controller's graveyard.
     // Arrow effects with a value that changes during play, one entry per source (also listed in the PP breakdown).
     private IEnumerable<(CardDefinition Source, int Amount)> ArchArrowSources(PlayerState owner, MonsterInstance unit) =>
@@ -44,22 +44,22 @@ public partial class GameEngine
             case "WCG-350":
                 if (Grave(p) >= 10) PickMonster(p, "選擇消滅的敵方怪物", e.Field.Where(x => x.IsUnit), x => KillBatch([x], m.Card.Name));
                 break;
-            default: return false;
+            default: return RootDeploy(p, m);
         }
         return true;
     }
     // 351 不朽方陣兵: on death, with 8+ cards in your graveyard, it comes back from your graveyard (once per turn).
     private bool GraveDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
-        if (m.Card.Id != "WCG-351") return false;
+        if (m.Card.Id != "WCG-351") return RootDeath(p, m, grave);
         if (Grave(p) < 8 || !p.Graveyard.Contains(grave) || p.Occupied >= 5 || graveReviveTurn.GetValueOrDefault(p.Id, -1) == TurnNumber) return true;
         graveReviveTurn[p.Id] = TurnNumber;
         Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
         GraveRaise(p, grave, false);
         return true;
     }
-    private static List<MonsterInstance>? GraveSpellTargets(PlayerState p, CardDefinition c) => null;
-    private static bool GraveNeedsTarget(string id) => false;
+    private static List<MonsterInstance>? GraveSpellTargets(PlayerState p, CardDefinition c) => RootSpellTargets(p, c);
+    private static bool GraveNeedsTarget(string id) => RootNeedsTarget(id);
     private bool GraveSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         var e = GetOpponent(p);
@@ -68,7 +68,7 @@ public partial class GameEngine
             case "WCG-348": Resolve(() => DrawMany(p, 2), () => Mill(p, 2)); break;
             case "WCG-352": SpellDamage(p, e, Math.Min(3, Grave(p) / 4), source.Card); break;
             case "WCG-354": GraveFill(p); break;
-            default: return false;
+            default: return RootSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -83,10 +83,10 @@ public partial class GameEngine
     {
         "WCG-348" when !p.Field.Any(x => x.IsUnit) => "需要犧牲 1 隻己方怪物。",
         "WCG-354" when p.Occupied >= 5 => "你場上沒有空格。",
-        _ => ""
+        _ => RootPlayProblem(p, c)
     };
     // 349 骸骨軍旗: tap, shuffle 3 other cards of your graveyard to the bottom of your deck, free summon a printed-PP-1200-or-less monster.
-    private bool GraveCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-349" && p.Occupied < 5 && Grave(p) >= 4 && GraveSmall(p, 1200).Any();
+    private bool GraveCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-349" && p.Occupied < 5 && Grave(p) >= 4 && GraveSmall(p, 1200).Any() || RootCanActivate(p, s);
     private void GraveActivate(PlayerState p, MonsterInstance s)
     {
         CardChoice(p, GraveRaiseTitle, GraveSmall(p, 1200), pick =>
@@ -124,7 +124,7 @@ public partial class GameEngine
                 var n = Math.Min(5 - p.Occupied, GraveSmall(p, 1800).Count());
                 return n <= 1 ? -3 : n * 3.5;
         }
-        return null;
+        return RootPlayValue(p, c);
     }
-    private static MonsterInstance? GraveTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;
+    private static MonsterInstance? GraveTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => RootTarget(p, pending, legal);
 }

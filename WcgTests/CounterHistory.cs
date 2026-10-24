@@ -32,8 +32,15 @@ internal static class CounterHistory
     // Catalog before the 2026-10-24 arrow wording (「箭頭指向的怪物」).
     // Catalog before the 2026-10-24 silence/dispel counter rules (335's text).
     // Catalog before the 墓誓軍團 cards WCG-346–354 existed.
+    // Catalog before the 根脈連營 cards WCG-355–363 existed.
+    internal static CardDatabase BeforeRootWebCards(CardDatabase current)
+    {
+        return current.GetCard("WCG-355")==null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 355 or > 363)),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeGraveOathCards(CardDatabase current)
     {
+        current=BeforeRootWebCards(current);
         return current.GetCard("WCG-346")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 346 or > 354)),JsonSerializer.Serialize(current.PresetDecks));
     }

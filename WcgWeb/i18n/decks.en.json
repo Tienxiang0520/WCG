@@ -1072,5 +1072,11 @@
   "zhDescription": "自己磨牌、犧牲，墓地越厚亡者越強，最後用萬骸歸列把整排從墓地叫起來衝鋒。",
   "name": "Order + Abyss · Grave Oath Legion (Grave)",
   "description": "Mill and sacrifice your own cards: the fuller your graveyard, the stronger the dead, until Return of Ten Thousand Bones raises a whole row to charge."
+ },
+ "RANKED-5-VITAL-ROOTWEB": {
+  "zhName": "生機・根脈連營（根脈）",
+  "zhDescription": "用 ← → 箭頭把五格排滿串成一條根脈，整排互相加成；斷一格兩邊都痛。",
+  "name": "Life · Rootweb Camp (Roots)",
+  "description": "Fill all five slots and link them with ← → arrows so the whole row feeds itself; break one link and both sides hurt."
  }
 }
