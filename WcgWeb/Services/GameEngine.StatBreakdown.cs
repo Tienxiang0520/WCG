@@ -37,7 +37,7 @@ public partial class GameEngine
         foreach (var source in Player.Field.Concat(Computer.Field).Where(source => source != m && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))
         {
             var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, m)) continue;
-            var aura = ArrowAura(source.Card.Id); Add(source.Card, source.Card.Name, sourceOwner == owner ? aura.Ally : aura.Enemy);
+            var aura = ArrowAura(source.Card.Id); Add(source.Card, source.Card.Name, Across(source, m) ? aura.Enemy : aura.Ally);
         }
         foreach (var bog in GetOpponent(owner).Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-289")) if (m.IsTaunt) Add(bog.Card, bog.Card.Name, -300);
         if (owner.Occupied >= 5) foreach (var x in owner.Field.Where(x => Active(x, "WCG-219"))) Add(x.Card, x.Card.Name, 300);

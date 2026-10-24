@@ -103,7 +103,7 @@ public partial class GameEngine
     };
     private bool EmberDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
-        if (m.Card.Id != "WCG-316") return false;
+        if (m.Card.Id != "WCG-316") return SoulDeath(p, m, grave);
         if (p.EnergyZone.Count > 0) { Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); BurnEnergy(p, m.Card.Id, 1, false, _ => true, n => { if (n > 0) Damage(GetOpponent(p), 1, new(p, m.Card, m, "death")); }); }
         return true;
     }

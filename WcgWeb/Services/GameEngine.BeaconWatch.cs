@@ -18,7 +18,7 @@ public partial class GameEngine
             if (Active(m, "WCG-298") && HasArrows(m)) effects.Add(() =>
             {
                 if (!Alive(m) || !Active(m, "WCG-298")) return;
-                var lit = ArrowTargets(p, m).Where(x => Owner(x) == p && Upright(x)).ToArray();
+                var lit = ArrowTargets(p, m).Where(x => !Across(m, x) && Upright(x)).ToArray();
                 if (lit.Length == 0) return;
                 Present("trigger", p, m.InstanceId, card: m.Card, label: "烽火傳令");
                 Resolve(lit.Select(x => (Action)(() => { if (Alive(x) && Upright(x)) Damage(e, 1, new(p, x.Card, x, "passive")); })).ToArray());

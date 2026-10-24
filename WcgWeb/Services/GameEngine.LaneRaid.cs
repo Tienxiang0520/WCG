@@ -10,7 +10,9 @@ public partial class GameEngine
     internal const string LaneClearTitle = "選擇在你 ↑ 箭頭怪物正對面的敵方怪物移回手牌";
     internal const string LaneGaleTitle = "選擇 1 隻己方怪物 PP +300";
 
-    private MonsterInstance? Facing(MonsterInstance m) => m.Slot < 0 ? null : GetOpponent(Owner(m)).Field.FirstOrDefault(x => x.Slot == 4 - m.Slot);
+    // The enemy monster standing in the slot across from m (rows are physical: turned monsters stay in their owner's row).
+    private MonsterInstance? Facing(MonsterInstance m) => m.Slot < 0 ? null
+        : RowUnits(GetOpponent(RowOf(m))).FirstOrDefault(x => x.Slot == 4 - m.Slot && !ReferenceEquals(Owner(x), Owner(m)));
     private bool LaneOpen(MonsterInstance m) => Alive(m) && m.Slot >= 0 && Facing(m) == null;
     private static bool UpArrow(MonsterInstance m) => !m.IsSilenced && m.Card.Arrows.Contains("up");
     // 319／320／326: taunt can't stop them while their lane is open.
@@ -26,7 +28,7 @@ public partial class GameEngine
         : !m.TurnUnblockable && LaneSlips(m) ? "空路：嘲諷擋不住" : BridgeLocked(m) ? "斷橋鎖住：回合開始不轉為直立" : null;
     // 325 斷橋術士: the enemy monster its ↑ arrow points at stays tapped at the start of its turn.
     private bool BridgeLocked(MonsterInstance m) =>
-        GetOpponent(Owner(m)).Field.Any(s => Active(s, "WCG-325") && UpArrow(s) && s.Slot >= 0 && m.Slot == 4 - s.Slot);
+        GetOpponent(Owner(m)).Field.Any(s => Active(s, "WCG-325") && UpArrow(s) && Facing(s) == m);
 
     private bool LaneDeploy(PlayerState p, MonsterInstance m)
     {
@@ -45,7 +47,7 @@ public partial class GameEngine
             case "WCG-326":
                 if (unit != null && (unit.Card.PP ?? 0) <= 1800) PickMonster(p, "選擇正對面印刷 PP 1800 以下的敵方怪物消滅", [unit], x => KillBatch([x], m.Card.Name));
                 break;
-            default: return false;
+            default: return SoulDeploy(p, m);
         }
         return true;
     }
@@ -54,11 +56,11 @@ public partial class GameEngine
     {
         "WCG-322" => p.Field.Where(x => x.IsUnit).ToList(),
         "WCG-323" => ClearableLanes(p),
-        _ => null
+        _ => SoulSpellTargets(p, c)
     };
     private List<MonsterInstance> ClearableLanes(PlayerState p) =>
         p.Field.Where(x => x.IsUnit && UpArrow(x)).Select(Facing).OfType<MonsterInstance>().Where(x => x.IsUnit).Distinct().ToList();
-    private static bool LaneNeedsTarget(string id) => id is "WCG-322" or "WCG-323";
+    private static bool LaneNeedsTarget(string id) => id is "WCG-322" or "WCG-323" || SoulNeedsTarget(id);
     private bool LaneSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
@@ -77,7 +79,7 @@ public partial class GameEngine
                 p.LaneRushTurn = TurnNumber;
                 Log($"【{p.Name}】本回合正對面沒有敵方怪物的怪物攻擊敵方玩家時 DP +1。", "action");
                 break;
-            default: return false;
+            default: return SoulSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -86,7 +88,7 @@ public partial class GameEngine
     {
         "WCG-322" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
         "WCG-323" when ClearableLanes(p).Count == 0 => "需要 1 隻在你 ↑ 箭頭怪物正對面的敵方怪物。",
-        _ => ""
+        _ => SoulPlayProblem(p, c)
     };
 
     // ── 天梯電腦 ──
@@ -106,7 +108,7 @@ public partial class GameEngine
                 var raw = p.Field.Where(x => x.IsUnit && CanAttack(x) && CanAttackPlayer(x)).Sum(x => x.CurrentDP);
                 return dmg + raw >= e.Hp && dmg > 0 ? 1000 : dmg >= 2 ? dmg * 1.6 - 1 : -4;
         }
-        return null;
+        return SoulPlayValue(p, c);
     }
     private MonsterInstance? LaneSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {

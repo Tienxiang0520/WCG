@@ -265,7 +265,7 @@ public partial class GameEngine
         var friendly = cost || pending.Title.Contains("附著能量護盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
         MonsterInstance target;
         if (NewTarget(p, pending, legal) is { } chosen) return SelectTarget(chosen);
-        if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
+        if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => (m.Turned ? -100 : 0) + BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
         else if (friendly) target = legal.OrderByDescending(m => (p.Board.Contains(m) ? 20 : 0) + BodyValue(m)).First();
         else target = legal.OrderByDescending(m => (e.Board.Contains(m) ? 20 : 0) + BodyValue(m) + (m.IsTaunt ? 3 : 0)).First();
         return SelectTarget(target);

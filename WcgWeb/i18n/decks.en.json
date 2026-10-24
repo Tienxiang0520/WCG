@@ -1060,5 +1060,11 @@
   "zhDescription": "把突襲兵放在對手的空格對面，清掉擋路的怪，從空路越過嘲諷打臉。",
   "name": "Fury + Reason · Lane Raid (Raid)",
   "description": "Put raiders opposite the opponent's empty slots, clear whatever blocks the lane, and hit face past Taunt through the open lanes."
+ },
+ "RANKED-5-ABYSS-SOULPUPPET": {
+  "zhName": "深淵＋理智・奪魂傀儡（奪魂）",
+  "zhDescription": "搶走對手的怪物，用它打對手，用完就犧牲換抽牌、傷害或解場。",
+  "name": "Abyss + Reason · Soul Puppets (Steal)",
+  "description": "Steal the opponent's monsters, hit them with it, then sacrifice it for cards, damage or removal."
  }
 }

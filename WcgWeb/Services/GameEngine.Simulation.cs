@@ -40,6 +40,7 @@ public partial class GameEngine
                 };
                 copy.CurrentPP = m.BasePP;
                 copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpCounters = m.DpCounters; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
+                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter;
                 map[m] = copy;
                 copy.Attachments = m.Attachments.Select(a => a with { Card = Card(a.Card, false) }).ToList();
                 copy.LostAttachments = m.LostAttachments.Select(c => Card(c, false)).ToList();
@@ -54,7 +55,7 @@ public partial class GameEngine
                 var copy = new PlayerState
                 {
                     Id = s.Id, Name = s.Name, IsAi = true, Hp = s.Hp, NextCreatureDiscount = s.NextCreatureDiscount,
-                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, LaneRushTurn = s.LaneRushTurn, BurnedEnergy = new(s.BurnedEnergy),
+                    HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, Lent = s.Lent, LaneRushTurn = s.LaneRushTurn, BurnedEnergy = new(s.BurnedEnergy),
                 };
                 copy.Hand = s.Hand.Select(c => Card(c, !viewer)).ToList();
                 copy.Deck = s.Deck.Select(c => Card(c, !viewer)).ToList();
@@ -72,6 +73,7 @@ public partial class GameEngine
             g.LimitFactionTriggers = LimitFactionTriggers; g.LegacyCardRules = LegacyCardRules; g.StackableShields = StackableShields;
             g.TrainingMode = TrainingMode; g.AiLevel = AiLevel; g.AiRevision = AiRevision; g._aiSeed = _aiSeed;
             foreach (var (k, v) in plannedSlots) g.plannedSlots[k] = v;
+            g.soulPactForeign = soulPactForeign;
             g.lastSacrifice = lastSacrifice != null && map.TryGetValue(lastSacrifice, out var ls) ? (MonsterInstance)ls : null;
             g.RefreshBoard();
             return g;

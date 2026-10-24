@@ -55,19 +55,19 @@ public partial class GameEngine
         if (m.IsSilenced) return false;
         return m.Card.Id switch
         {
-            "WCG-215" => p.Field.Any(x => x.Slot == m.Slot - 1) && p.Field.Any(x => x.Slot == m.Slot + 1),
+            "WCG-215" => RowUnits(RowOf(m)).Any(x => x.Slot == m.Slot - 1) && RowUnits(RowOf(m)).Any(x => x.Slot == m.Slot + 1),
             "WCG-224" => p.Hand.Count >= 5,
             _ => false
         };
     }
     private bool NewTrample(PlayerState p, MonsterInstance m) =>
         m.Attachments.Any(a => a.Card.Card.Id == "WCG-220")
-        || p.Field.Any(x => x != m && Active(x, "WCG-218") && HasArrows(x) && PointsAt(p, x, p, m));
+        || Player.Field.Concat(Computer.Field).Any(x => x != m && Active(x, "WCG-218") && HasArrows(x) && PointsAt(Owner(x), x, p, m));
     // 前鋒盾衛: the enemy monster straight ahead of its up arrow can't attack.
     private bool Pinned(MonsterInstance m)
     {
         if (!Alive(m)) return false; var owner = Owner(m);
-        return GetOpponent(owner).Field.Any(x => Active(x, "WCG-216") && HasArrows(x) && PointsAt(GetOpponent(owner), x, owner, m));
+        return Player.Field.Concat(Computer.Field).Any(x => x != m && Active(x, "WCG-216") && HasArrows(x) && PointsAt(Owner(x), x, owner, m));
     }
     // 虛空隱士: while it is your only monster, spells can't target it.
     // After the 理智 buff: enemy spells can never target it.

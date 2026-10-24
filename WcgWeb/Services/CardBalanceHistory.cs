@@ -148,14 +148,20 @@ internal static class CardBalanceHistory
     private static CardDatabase LaneRaidCardsStep(CardDatabase c) => c.GetCard("WCG-319") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsLaneRaidCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // Catalog before the 奪魂傀儡 archetype (WCG-328–336, 2026-10-24) and control changes existed; nothing else changed.
+    internal static bool IsSoulPuppetCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 328 and <= 336;
+    private static CardDatabase SoulPuppetCardsStep(CardDatabase c) => c.GetCard("WCG-328") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsSoulPuppetCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeLaneRaidCards(CardDatabase current) => LaneRaidCardsStep(current);
+    internal static CardDatabase BeforeSoulPuppetCards(CardDatabase current) => SoulPuppetCardsStep(current);
+    internal static CardDatabase BeforeLaneRaidCards(CardDatabase current) => LaneRaidCardsStep(BeforeSoulPuppetCards(current));
     internal static CardDatabase BeforeHoofCrushCards(CardDatabase current) => HoofCrushCardsStep(BeforeLaneRaidCards(current));
     internal static CardDatabase BeforeEnergyBurnCards(CardDatabase current) => EnergyBurnCardsStep(BeforeHoofCrushCards(current));
     internal static CardDatabase BeforeEnergyVaultCards(CardDatabase current) => EnergyVaultCardsStep(BeforeEnergyBurnCards(current));

@@ -707,3 +707,8 @@
 .energy-dialog .energy-row{min-width:0}.energy-dialog .log-card{display:inline-flex;align-items:center;flex:0 1 auto;width:auto;height:auto;min-width:0;max-width:100%;white-space:nowrap;writing-mode:horizontal-tb;transform:none;margin:0}
 .energy-dialog .energy-dialog-back{cursor:default;text-decoration:none;background:#1f3a52;border-color:#5e91b6;color:#dcebf7}
 .energy-dialog .energy-card small,.energy-dialog .energy-dialog-back small{font-size:inherit;font-weight:500;margin-left:.2em}
+/* 奪魂傀儡: a temporarily controlled monster stays in its owner's row turned 180°, like the physical card. */
+.field-card.turned{transform:rotate(180deg)}
+.soul-counter{position:absolute;left:3px;top:44%;z-index:3;width:24px;height:24px;pointer-events:none;filter:drop-shadow(0 0 4px #c79bffcc) drop-shadow(0 2px 2px #0009)}
+.soul-counter ::deep .soul-counter-icon,.soul-counter .soul-counter-icon{width:24px;height:24px;display:block}
+.field-card.turned.attack-ready:hover{transform:rotate(180deg) translateY(3px)}
