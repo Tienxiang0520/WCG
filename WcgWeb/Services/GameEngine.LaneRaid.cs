@@ -2,8 +2,8 @@ using WcgWeb.Models;
 namespace WcgWeb.Services;
 
 // 新流派「斷路突襲」（狂怒＋理智，WCG-319–327，2026-10-24）：清空對面那一格，從空的那條路直接打臉，嘲諷擋不住。
-// 「正對面」 is the enemy slot 4 - Slot. It is empty when no enemy card occupies it: an enchantment (結界) sits in the
-// structure row, so a slot holding only an enchantment still counts as empty. A face-down card does occupy the slot.
+// 「正對面」 is the enemy slot 4 - Slot. It is empty when no enemy monster stands there; only monsters count (an
+// enchantment in that slot doesn't close the lane).
 // Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
