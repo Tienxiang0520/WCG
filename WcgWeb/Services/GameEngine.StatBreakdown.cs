@@ -68,7 +68,8 @@ public partial class GameEngine
         if (m.DpCounters != 0) list.Add(new(null, "DP 指示物", m.DpCounters));
         foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-338")) list.Add(new(a.Card.Card, a.Card.Card.Name, 1));
         foreach (var s in Player.Field.Concat(Computer.Field).Where(s => s != m && Active(s, "WCG-357") && PointsAt(Owner(s), s, Owner(m), m))) list.Add(new(s.Card, s.Card.Name, 1));
-        if (m.DpBonus - m.Attachments.Count(a => a.Card.Card.Id == "WCG-338") - RootDp(Owner(m), m) is var other && other != 0) list.Add(new(null, "其他", other));
+        if (BloodDp(Owner(m), m) is var blood && blood != 0) list.Add(new(m.Card, m.Card.Name, blood));
+        if (m.DpBonus - m.Attachments.Count(a => a.Card.Card.Id == "WCG-338") - RootAndBloodDp(Owner(m), m) is var other && other != 0) list.Add(new(null, "其他", other));
         if (m.TurnDpBonus != 0) list.Add(new(null, "本回合加成", m.TurnDpBonus));
         if (m.AttackDamageBonus != 0) list.Add(new(null, "攻擊加成", m.AttackDamageBonus));
         return list;

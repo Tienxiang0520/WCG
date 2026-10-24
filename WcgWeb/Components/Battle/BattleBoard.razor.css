@@ -718,3 +718,7 @@
 .field-card.enemy-card:not(.upper-row) .arrowmark.up{top:-12px;bottom:auto;transform:translateX(-50%)}
 .field-card.upper-row:not(.enemy-card) .arrowmark.up{top:auto;bottom:-12px;transform:translateX(-50%) rotate(180deg)}
 @media(max-width:600px){.field-card.enemy-card:not(.upper-row) .arrowmark.up{top:-7px}.field-card.upper-row:not(.enemy-card) .arrowmark.up{bottom:-7px}}
+/* 血誓指示物 on 364 血誓祭壇 (血誓反擊). */
+.blood-counter{position:absolute;left:3px;top:44%;z-index:3;width:24px;height:24px;pointer-events:none;filter:drop-shadow(0 0 4px #ff3b3bcc) drop-shadow(0 2px 2px #0009)}
+.blood-counter ::deep .blood-counter-icon,.blood-counter .blood-counter-icon{width:24px;height:24px;display:block}
+.blood-counter-count{position:absolute;right:-5px;bottom:-4px;min-width:14px;height:14px;padding:0 2px;border-radius:7px;background:#1a0606;color:#ff6b6b;font-size:10px;font-weight:700;line-height:14px;text-align:center}

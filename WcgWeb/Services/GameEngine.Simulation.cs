@@ -40,7 +40,7 @@ public partial class GameEngine
                 };
                 copy.CurrentPP = m.BasePP;
                 copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpCounters = m.DpCounters; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
-                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter;
+                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter; copy.BloodCounters = m.BloodCounters;
                 map[m] = copy;
                 copy.Attachments = m.Attachments.Select(a => a with { Card = Card(a.Card, false) }).ToList();
                 copy.LostAttachments = m.LostAttachments.Select(c => Card(c, false)).ToList();

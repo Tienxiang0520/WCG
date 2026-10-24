@@ -171,14 +171,19 @@ internal static class CardBalanceHistory
     private static CardDatabase RootWebCardsStep(CardDatabase c) => c.GetCard("WCG-355") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsRootWebCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    internal static bool IsBloodOathCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 364 and <= 372;
+    private static CardDatabase BloodOathCardsStep(CardDatabase c) => c.GetCard("WCG-364") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsBloodOathCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeRootWebCards(CardDatabase current) => RootWebCardsStep(current);
+    internal static CardDatabase BeforeBloodOathCards(CardDatabase current) => BloodOathCardsStep(current);
+    internal static CardDatabase BeforeRootWebCards(CardDatabase current) => RootWebCardsStep(BeforeBloodOathCards(current));
     internal static CardDatabase BeforeGraveOathCards(CardDatabase current) => GraveOathCardsStep(BeforeRootWebCards(current));
     internal static CardDatabase BeforeSilenceCounters(CardDatabase current) => SilenceCountersStep(BeforeGraveOathCards(current));
     internal static CardDatabase BeforeArrowText(CardDatabase current) => ArrowTextStep(BeforeSilenceCounters(current));

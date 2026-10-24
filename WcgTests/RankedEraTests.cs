@@ -35,7 +35,7 @@ public sealed class RankedEraTests : IDisposable
     {
         Func<CardDatabase, CardDatabase>[] chains =
         [
-            CardBalanceHistory.BeforeRootWebCards, CardBalanceHistory.BeforeGraveOathCards, CardBalanceHistory.BeforeSilenceCounters, CardBalanceHistory.BeforeArrowText, CardBalanceHistory.BeforeSoulPuppetCards, CardBalanceHistory.BeforeLaneRaidCards, CardBalanceHistory.BeforeHoofCrushCards, CardBalanceHistory.BeforeEnergyBurnCards, CardBalanceHistory.BeforeEnergyVaultCards, CardBalanceHistory.BeforeBeaconWatchCards, CardBalanceHistory.BeforeArenaAnyEnemy, CardBalanceHistory.BeforeRotErosionCards, CardBalanceHistory.BeforeThresholdGapCards, CardBalanceHistory.BeforeOathDuelCards, CardBalanceHistory.BeforePrintedPpText, CardBalanceHistory.BeforeShieldAnyCombat, CardBalanceHistory.BeforeBearRoarText, CardBalanceHistory.BeforeCardFixes, CardBalanceHistory.BeforeBurnCost, CardBalanceHistory.BeforeTauntFaceCharge, CardBalanceHistory.BeforeLuckyCoin, CardBalanceHistory.BeforeMageDirect, CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
+            CardBalanceHistory.BeforeBloodOathCards, CardBalanceHistory.BeforeRootWebCards, CardBalanceHistory.BeforeGraveOathCards, CardBalanceHistory.BeforeSilenceCounters, CardBalanceHistory.BeforeArrowText, CardBalanceHistory.BeforeSoulPuppetCards, CardBalanceHistory.BeforeLaneRaidCards, CardBalanceHistory.BeforeHoofCrushCards, CardBalanceHistory.BeforeEnergyBurnCards, CardBalanceHistory.BeforeEnergyVaultCards, CardBalanceHistory.BeforeBeaconWatchCards, CardBalanceHistory.BeforeArenaAnyEnemy, CardBalanceHistory.BeforeRotErosionCards, CardBalanceHistory.BeforeThresholdGapCards, CardBalanceHistory.BeforeOathDuelCards, CardBalanceHistory.BeforePrintedPpText, CardBalanceHistory.BeforeShieldAnyCombat, CardBalanceHistory.BeforeBearRoarText, CardBalanceHistory.BeforeCardFixes, CardBalanceHistory.BeforeBurnCost, CardBalanceHistory.BeforeTauntFaceCharge, CardBalanceHistory.BeforeLuckyCoin, CardBalanceHistory.BeforeMageDirect, CardBalanceHistory.BeforeShieldPp, CardBalanceHistory.BeforeCostUp, CardBalanceHistory.BeforeShieldCounter, CardBalanceHistory.BeforeReasonBuff, CardBalanceHistory.BeforeDualWill, CardBalanceHistory.BeforeSilenceSpell,
             CardBalanceHistory.BeforeAbilityPp, CardBalanceHistory.BeforeNewCards, CardBalanceHistory.BeforeDeflation, CardBalanceHistory.BeforeRulesSimplification,
             CardBalanceHistory.BeforeEnergyKeywords, CardBalanceHistory.BeforeHeroGuard, CardBalanceHistory.BeforeStrongBuildAdjustment, CardBalanceHistory.BeforeOctoberBalance,
             CardBalanceHistory.BeforeEnergyShield, CardBalanceHistory.BeforeDamageCounters, CardBalanceHistory.BeforePlayerTargets, CardBalanceHistory.BeforeDiversity,
@@ -49,8 +49,8 @@ public sealed class RankedEraTests : IDisposable
             var expected = chains[i](cards);
             Assert.Equal(Fingerprint(expected), eras[i].Rules);
             Assert.Equal(Fingerprint(expected, true), eras[i].IdentifierRules);
-            Assert.Equal(i == 42, eras[i].LimitFactionTriggers);
-            Assert.Equal(i >= 40, eras[i].LegacyCardRules);
+            Assert.Equal(i == 43, eras[i].LimitFactionTriggers);
+            Assert.Equal(i >= 41, eras[i].LegacyCardRules);
         }
     }
 }

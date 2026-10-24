@@ -171,3 +171,6 @@
 .soul-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2a0f45; background: #fff; }
 .soul-token-icon { width: 14mm; height: 14mm; display: block; }
 .ink-saving .soul-token, .white-color .soul-token { border-style: solid; }
+.blood-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #3a0606; background: #fff; }
+.blood-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .blood-token, .white-color .blood-token { border-style: solid; }

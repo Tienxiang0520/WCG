@@ -1078,5 +1078,11 @@
   "zhDescription": "用 ← → 箭頭把五格排滿串成一條根脈，整排互相加成；斷一格兩邊都痛。",
   "name": "Life · Rootweb Camp (Roots)",
   "description": "Fill all five slots and link them with ← → arrows so the whole row feeds itself; break one link and both sides hurt."
+ },
+ "RANKED-5-ORDER-BLOODOATH": {
+  "zhName": "秩序・血誓反擊（血誓）",
+  "zhDescription": "故意讓對手打臉，每挨一下就在血誓祭壇疊血誓指示物；血越少越兇，最後一擊千倍奉還。",
+  "name": "Order · Blood Oath Riposte (Blood Oath)",
+  "description": "Let the opponent hit your face; every hit stacks a Blood Oath counter on the altar. The lower your life, the harder you hit, until you pay it all back at once."
  }
 }

@@ -2197,5 +2197,59 @@
     "name": "Heart of the World Tree",
     "text": "On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn).",
     "zh_text": "進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。"
+  },
+  "WCG-364": {
+    "zh": "血誓祭壇",
+    "name": "Blood Oath Altar",
+    "text": "Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it.",
+    "zh_text": "你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。"
+  },
+  "WCG-365": {
+    "zh": "忍辱誓衛",
+    "name": "Enduring Oathguard",
+    "text": "Each time you take damage, put 1 DP counter on this monster.",
+    "zh_text": "你每次受到傷害，在此怪物放 1 個 DP 指示物。"
+  },
+  "WCG-366": {
+    "zh": "以血還血",
+    "name": "Blood for Blood",
+    "text": "[Counter] When you take damage: deal 1 damage to the enemy player; if your life is 3 or less, deal 2 instead.",
+    "zh_text": "【反擊】受到傷害時：對敵方玩家造成 1 點傷害；若你的生命在 3 點以下，改為 2 點。"
+  },
+  "WCG-367": {
+    "zh": "誓言之怒",
+    "name": "Wrath of the Oath",
+    "text": "Charge. While your life is 3 or less, this monster gets +600 PP and +1 DP. [Arrow: ↑] The monster the arrow points at gets -300 PP.",
+    "zh_text": "衝鋒；你的生命在 3 點以下時，此怪物 PP +600、DP +1。【箭頭：↑】箭頭指向的怪物 PP -300。"
+  },
+  "WCG-368": {
+    "zh": "審判之盾",
+    "name": "Shield of Judgment",
+    "text": "[Counter] When you take damage from a monster's attack: destroy that monster, then put 1 Blood Oath counter on 1 of your Blood Oath Altars.",
+    "zh_text": "【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。"
+  },
+  "WCG-369": {
+    "zh": "殉誓狂徒",
+    "name": "Oathbound Zealot",
+    "text": "On Deploy: deal 1 damage to yourself (this is damage, so it triggers Counters and Blood Oath), then draw 1 card.",
+    "zh_text": "進場：對你自己造成 1 點傷害（這是傷害，會觸發反擊與血誓），然後抽 1 張牌。"
+  },
+  "WCG-370": {
+    "zh": "血帳清算",
+    "name": "Settling the Blood Debt",
+    "text": "Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP).",
+    "zh_text": "移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。"
+  },
+  "WCG-371": {
+    "zh": "誓血軍旗手",
+    "name": "Bloodoath Standard-Bearer",
+    "text": "[Arrow: ← →] The monsters the arrows point at get +200 PP, plus another +200 for each life you have less than your opponent.",
+    "zh_text": "【箭頭：← →】箭頭指向的怪物 PP +200；你的生命每比對手少 1 點，再 +200。"
+  },
+  "WCG-372": {
+    "zh": "千倍奉還",
+    "name": "Thousandfold Return",
+    "text": "Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed.",
+    "zh_text": "移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。"
   }
 }
