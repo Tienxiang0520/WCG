@@ -2189,8 +2189,8 @@
   "WCG-362": {
     "zh": "擠枝新芽",
     "name": "Squeezing Sprout",
-    "text": "Can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP.",
-    "zh_text": "只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。"
+    "text": "When summoned from hand, it can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP.",
+    "zh_text": "從手牌召喚時，只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。"
   },
   "WCG-363": {
     "zh": "世界樹之心",

@@ -20,7 +20,7 @@ public partial class GameEngine
         Player.Field.Concat(Computer.Field).Count(s => s != unit && Active(s, "WCG-357") && PointsAt(Owner(s), s, p, unit));
     // 356 連枝守衛: pointed at by 2 or more arrows is a 聖盾 source (1 counter each time it starts applying).
     private bool RootShield(PlayerState p, MonsterInstance unit) => Active(unit, "WCG-356") && ArrowsAt(p, unit) >= 2;
-    // 362 擠枝新芽 only goes into an empty slot between two of your monsters.
+    // 362 擠枝新芽: played from hand, it only goes into an empty slot between two of your monsters.
     private bool RootSlotAllowed(PlayerState p, CardDefinition card, int slot) => card.Id != "WCG-362" ||
         p.Field.Any(x => x.IsUnit && !x.Turned && x.Slot == slot - 1) && p.Field.Any(x => x.IsUnit && !x.Turned && x.Slot == slot + 1);
     private bool RootSqueezeSlot(PlayerState p) => Enumerable.Range(0, 5).Any(i => !RowTaken(p, i) && RootSlotAllowed(p, cards362, i));

@@ -38,4 +38,10 @@ public class RootWebTests
         Unit(g.Player,101,1);Unit(g.Player,101,3);Refresh(g);Assert.True(g.SummonMonster(g.Player,c));Settle(g);
         Assert.Equal(2,g.Player.Field.Single(m=>m.Card.Id=="WCG-362").Slot);
     }
+    [Fact] public void FreeSummonedSqueezeStillEntersAnyEmptySlot()
+    {
+        // League regression: 繁衍蜂群 free-summoned 362 with no gap and the card vanished.
+        var g=Game();Hand(g,362);Assert.True(g.SummonMonster(g.Player,Hand(g,47)));Settle(g);
+        Assert.Contains(g.Player.Field,m=>m.Card.Id=="WCG-362");
+    }
 }
