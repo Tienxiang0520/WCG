@@ -8,7 +8,7 @@ public partial class GameEngine
     private void ChooseSlot(PlayerState p, CardDefinition card, Action<int> action, bool cancel = false, Guid? source = null)
     {
         EnsureSlots(p);
-        var slots = Enumerable.Range(0,5).Where(i => !RowTaken(p, i) && RootSlotAllowed(p, card, i)).ToArray();
+        var slots = Enumerable.Range(0,5).Where(i => !RowTaken(p, i) && (source == null || RootSlotAllowed(p, card, i))).ToArray();
         if (slots.Length == 0) return;
         Ask(p, "選擇固定進場格位", slots.Select(i => new ChoiceOption { Id=$"SLOT:{i}", Title=$"第 {i+1} 格", Subtitle=card.Arrows.Length == 0 ? "進場後不能換位" : $"箭頭：{string.Join(" ",card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑"))}，進場後不能換位" }), o => action(int.Parse(o.Id[5..])), cancel, source);
         if(CurrentPendingChoice != null) CurrentPendingChoice.SourceCard=card;

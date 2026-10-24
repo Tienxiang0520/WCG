@@ -204,7 +204,7 @@ source: WcgWeb/Data/cards.json
 | WCG-357 | 根脈樞紐 | 怪物 | 3 | 1100 | 1 | ←→ | 每有 1 個箭頭指向此怪物，此怪物 PP +400；【箭頭：← →】箭頭指向的怪物 DP +1（不放指示物，箭頭停止指向就消失）。 | **Rootweb Nexus** — This monster gets +400 PP for each arrow pointing at it. [Arrow: ← →] The monsters the arrows point at get +1 DP (no counter; it ends when the arrow stops pointing at them). |
 | WCG-359 | 斷根反噬 | 怪物 | 2 | 1200 | 1 | ←→ | 【箭頭：← →】陣亡：箭頭原本指向的每隻怪物各放置 1 個 DP 指示物，並對敵方玩家造成 1 點傷害。 | **Severed-Root Backlash** — [Arrow: ← →] On Death: put 1 DP counter on each monster its arrows pointed at, and deal 1 damage to the enemy player. |
 | WCG-360 | 林冠滿營 | 結界 | 4 | — | — | — | 你的回合開始時，若你的 5 格全滿，你的所有怪物本回合 PP +300，抽 1 張牌。 | **Full Canopy Camp** — At the start of your turn, if all 5 of your slots are full, your monsters get +300 PP this turn and you draw 1 card. |
-| WCG-362 | 擠枝新芽 | 怪物 | 0 | 300 | 0 | ←→ | 只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。 | **Squeezing Sprout** — Can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP. |
+| WCG-362 | 擠枝新芽 | 怪物 | 0 | 300 | 0 | ←→ | 從手牌召喚時，只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。 | **Squeezing Sprout** — When summoned from hand, it can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP. |
 | WCG-363 | 世界樹之心 | 怪物 | 7 | 2200 | 2 | ←→ | 進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。 | **Heart of the World Tree** — On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn). |
 
 ## 秩序（Order，58 張）
