@@ -175,6 +175,10 @@ internal static class CardBalanceHistory
     private static CardDatabase BloodOathCardsStep(CardDatabase c) => c.GetCard("WCG-364") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsBloodOathCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // 2026-10-25 血祭傀儡師 wording: 「你從對手那裡奪來的怪物」 (same as a monster you don't own). Text only.
+    internal static bool BloodPuppeteerTextCatalog(CardDatabase cards) => cards.GetCard("WCG-334")?.Text?.Contains("你從對手那裡奪來的怪物", StringComparison.Ordinal) == true;
+    private static CardDatabase BloodPuppeteerTextStep(CardDatabase c) => BloodPuppeteerTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeBloodPuppeteerText") : c;
+
     // 2026-10-25 冥府復甦領主 wording: 「那隻怪本回合可以攻擊」 (the revived monster, not the lord). Text only.
     internal static bool RevivalLordTextCatalog(CardDatabase cards) => cards.GetCard("WCG-194")?.Text?.Contains("那隻怪本回合可以攻擊", StringComparison.Ordinal) == true;
     private static CardDatabase RevivalLordTextStep(CardDatabase c) => RevivalLordTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeRevivalLordText") : c;
@@ -193,12 +197,13 @@ internal static class CardBalanceHistory
 
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        SurgeStrikeCardsStep, RotMireCardsStep, TideCycleCardsStep, RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        BloodPuppeteerTextStep, SurgeStrikeCardsStep, RotMireCardsStep, TideCycleCardsStep, RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeSurgeStrikeCards(CardDatabase current) => SurgeStrikeCardsStep(current);
+    internal static CardDatabase BeforeBloodPuppeteerText(CardDatabase current) => BloodPuppeteerTextStep(current);
+    internal static CardDatabase BeforeSurgeStrikeCards(CardDatabase current) => SurgeStrikeCardsStep(BeforeBloodPuppeteerText(current));
     internal static CardDatabase BeforeRotMireCards(CardDatabase current) => RotMireCardsStep(BeforeSurgeStrikeCards(current));
     internal static CardDatabase BeforeTideCycleCards(CardDatabase current) => TideCycleCardsStep(BeforeRotMireCards(current));
     internal static CardDatabase BeforeRevivalLordText(CardDatabase current) => RevivalLordTextStep(BeforeTideCycleCards(current));

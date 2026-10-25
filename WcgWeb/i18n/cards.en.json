@@ -2021,8 +2021,8 @@
   "WCG-334": {
     "zh": "血祭傀儡師",
     "name": "Bloodrite Puppetmaster",
-    "text": "At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less.",
-    "zh_text": "你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。"
+    "text": "At the end of your turn, you may sacrifice a monster you took from your opponent; if you do, destroy 1 enemy monster with printed PP 1200 or less.",
+    "zh_text": "你的回合結束時，你可以犧牲 1 隻你從對手那裡奪來的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。"
   },
   "WCG-335": {
     "zh": "王座篡奪",
