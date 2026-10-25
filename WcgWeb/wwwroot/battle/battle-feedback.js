@@ -309,6 +309,24 @@ export function bindFeedback(root, sound = null, fx = null) {
         await animate(card, [{ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx}px,${dy}px) scale(.48)` }], shrink, 'cubic-bezier(.4,0,.2,1)');
         showcase?.remove(); showcase = card;
     }
+    // 翻開 (命運翻牌): the revealed deck card is shown large with a caption, then slides to the deck bottom.
+    async function showReveal(ev) {
+        const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 88 / 63;
+        const wrap = node('div', 'event-reveal'); wrap.dataset.wcgEffect = 'reveal';
+        const card = faceCard(ev.card); card.className += ' event-showcase';
+        const en = globalThis.document?.documentElement?.lang === 'en', who = en ? (ev.side === 'player' ? 'You' : 'Opponent') : (ev.side === 'player' ? '我方' : '敵方'), type = t(ev.card.type ?? '');
+        const caption = node('div', 'event-reveal-caption', en ? `${who} revealed ${ev.card.name} (${type}, ${ev.card.cost ?? 0} cost) → deck bottom` : `${who}翻開了【${ev.card.name}】・${type}・${ev.card.cost ?? 0} 費 → 放到牌庫底`);
+        wrap.append(card, caption);
+        place(wrap, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2 - 16, width: w, height: h + 40 });
+        void sound?.play('flip');
+        await animate(wrap, [{ opacity: 0, transform: 'rotateY(90deg) scale(.5)' }, { opacity: 1, transform: 'rotateY(0) scale(1.05)', offset: .7 }, { opacity: 1, transform: 'scale(1)' }], 360, 'cubic-bezier(.2,.8,.3,1)');
+        void fx?.ring(card, '#c9a6ff', 1); void fx?.burst(card, { color: '#e0ccff', count: 14, spread: 90, size: 5 });
+        // Always readable, even mid AI combo; animate()/pause() already follow the speed and skip settings.
+        await pause(ev.side === 'player' ? 900 : 1300);
+        const dx = r.width / 2 - w * .3, dy = (ev.side === 'player' ? 1 : -1) * r.height * .3;
+        await animate(wrap, [{ opacity: 1, transform: 'translate(0,0) scale(1)' }, { opacity: 0, transform: `translate(${dx}px,${dy}px) scale(.3)` }], 320, 'cubic-bezier(.4,0,.2,1)');
+        wrap.remove();
+    }
     // 幸運幣: no card showcase, only the gold temporary-energy diamond popping in the energy area.
     async function coinPop(side) {
         const zone = side === 'player' ? root.querySelector('.energy-zone') : (root.querySelector('.enemy-energy') ?? hero(side));
@@ -376,7 +394,8 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (from) await beam(from, ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
             if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); const dots = root.querySelector('.enemy-energy') ?? hero(ev.side); await fly(originCard(ev.side, null), dots); void fx?.burst(dots, { color: '#8ad7ff', count: 10, spread: 45, size: 5, rise: 16 }); await flash(dots, '#8ad7ff'); }
             else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
-        } else if (ev.type === 'status' || ev.type === 'reveal') {
+        } else if (ev.type === 'reveal' && ev.card && !visual(ev.instanceId)) await showReveal(ev);
+        else if (ev.type === 'status' || ev.type === 'reveal') {
             const target = visual(ev.instanceId) ?? hero(ev.side);
             if (from) await beam(from, target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1');
             void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');

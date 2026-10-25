@@ -82,4 +82,15 @@ public class FateFlipTests
         var golem=Hand(g,422);Assert.True(g.SummonMonster(g.Player,golem));Settle(g);
         var m=g.Player.Field.Single();Assert.Equal(m.Slot==0,!g.Computer.Field.Contains(foe));
     }
+    [Fact] public void EveryRevealIsPresentedWithItsCardFaceAndLogged()
+    {
+        var g=Game();var tops=new[]{Top(g,24),Top(g,101),Top(g,24),Top(g,101)};Array.Reverse(tops);
+        var logs=g.Logs.Count;
+        Assert.True(g.CastSpell(g.Player,Hand(g,426)));Settle(g);
+        var reveals=g.PresentationEvents.Where(e=>e.Type=="reveal").ToList();
+        Assert.Equal(4,reveals.Count);
+        Assert.Equal(tops.Select(x=>x.Card.Id),reveals.Select(e=>e.Card!.CardId));
+        Assert.All(reveals,e=>{Assert.Equal("player",e.Side);Assert.False(string.IsNullOrEmpty(e.Card!.Name));});
+        Assert.Equal(4,g.Logs.Take(g.Logs.Count-logs).Count(l=>l.Message.Contains("翻開牌庫頂")));
+    }
 }
