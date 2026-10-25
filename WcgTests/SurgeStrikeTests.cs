@@ -24,7 +24,14 @@ public class SurgeStrikeTests
         var old=CardBalanceHistory.BeforeSurgeStrikeCards(cards);
         for(int n=391;n<=399;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeSurgeStrikeCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsSurgeStrikeCard(c.Id)&&!CardBalanceHistory.IsHolySpringCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeBloodPuppeteerText(cards).AllCards.Where(c=>!CardBalanceHistory.IsSurgeStrikeCard(c.Id)&&!CardBalanceHistory.IsHolySpringCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+    }
+    [Fact] public void BloodPuppeteerTextEraOnlyChangesItsWording()
+    {
+        var old=CardBalanceHistory.BeforeBloodPuppeteerText(cards);
+        Assert.Contains("你從對手那裡奪來的怪物",cards.GetCard("WCG-334")!.Text);Assert.Contains("不是你擁有的怪物",old.GetCard("WCG-334")!.Text);
+        Assert.Equal(1,cards.AllCards.Where(c=>!CardBalanceHistory.IsHolySpringCard(c.Id)).Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
+        Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBloodPuppeteerText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void RecruitAttacksTwicePerTurn()
     {
