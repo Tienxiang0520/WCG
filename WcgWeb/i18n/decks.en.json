@@ -1102,5 +1102,11 @@
   "zhDescription": "攻擊完轉回直立再打；鎖鏈鬥士、血浪劍豪一回合連砍，千刃狂濤收尾。",
   "name": "Wrath · Surging Strikes (Combo)",
   "description": "Attack, ready, attack again: Chain Brawler and Blood-Tide Swordmaster strike several times a turn, and Thousand-Blade Tide finishes."
+ },
+ "RANKED-5-ORDER-HOLYSPRING": {
+  "zhName": "秩序・聖泉滿溢（聖泉）",
+  "zhDescription": "每次回血都存成聖泉指示物，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
+  "name": "Order · Holy Spring Overflow (Spring)",
+  "description": "Every heal is stored as Holy Spring counters, even at full life; Holy Spring Deluge pours it all onto the enemy's face."
  }
 }
