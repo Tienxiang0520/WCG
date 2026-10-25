@@ -74,6 +74,23 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(JsonSerializer.Serialize(StateShape(s.Engine)),JsonSerializer.Serialize(StateShape(reloaded.Engine)));
         Assert.NotEmpty(reloaded.Read().Match!.Actions);
     }
+    // The browser build must not replay a saved match inside the constructor: a long journal re-runs every computer
+    // search and froze the page at the splash screen. It replays later with RestoreAsync, ending in the same state.
+    [Fact] public async Task DeferredRestoreYieldsAndMatchesSynchronousRestore()
+    {
+        var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);var lease=s.Coordinator.Attach();s.Coordinator.Fast=true;
+        if(s.Engine.DecisionPlayerId=="player"){Assert.True(Send(s,"energy",s.Engine.Player.Hand[0].InstanceId).Success);Assert.True(Send(s,"end").Success);}
+        using(var cancel=new CancellationTokenSource())await s.Coordinator.DriveAsync(lease,r=>{cancel.Cancel();return Task.CompletedTask;},cancel.Token);
+        Assert.Contains(s.Read().Match!.Actions,a=>a.Type=="ai");
+        var expected=JsonSerializer.Serialize(StateShape(s.Engine));
+        var deferred=new RankedSession(cards,new DeckService(cards,env,decks),store,decks,NullLogger<BattleCoordinator>.Instance,clock,deferRestore:true);
+        Assert.True(deferred.Restoring);Assert.Empty(deferred.Error);Assert.NotEqual(expected,JsonSerializer.Serialize(StateShape(deferred.Engine)));
+        Assert.False(Send(deferred,"surrender").Success);Assert.False(deferred.Start(cards.PresetDecks[0]).Success);
+        var restore=deferred.RestoreAsync();Assert.False(restore.IsCompleted);Assert.Same(restore,deferred.RestoreAsync());
+        await restore;Assert.False(deferred.Restoring);Assert.Empty(deferred.Error);
+        Assert.Equal(expected,JsonSerializer.Serialize(StateShape(deferred.Engine)));
+        Assert.True(Send(deferred,"surrender").Success);Assert.True(deferred.Read().Match!.Settled);
+    }
     [Theory]
     [InlineData(0,0)] [InlineData(14,14)] [InlineData(15,14)] [InlineData(22,21)]
     [InlineData(30,29)] [InlineData(45,44)] [InlineData(60,59)] [InlineData(75,74)]

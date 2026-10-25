@@ -65,8 +65,9 @@ public sealed partial class RankedSession
     public string BalanceNotice { get; private set; } = "";
     public string ResetNotice { get; private set; } = "";
     public RankedSession(CardDatabase cards, DeckService decks, RankedStore store, RankedDecks opponents,
-        ILogger<BattleCoordinator> logger, TimeProvider? clock = null)
+        ILogger<BattleCoordinator> logger, TimeProvider? clock = null, bool deferRestore = false)
     {
+        this.logger = logger;
         this.store = store; this.opponents = opponents; deckService = decks; this.clock = clock ?? TimeProvider.System;
         var catalog = JsonSerializer.Serialize(cards.AllCards);
         rules = Fingerprint(catalog);
@@ -81,7 +82,10 @@ public sealed partial class RankedSession
                 store.Save(profile);
                 ResetNotice = "天梯電腦已改為依牌位分級。舊版進度已封存到歷季成績，本季從青銅 III 重新開始；未完成的舊對局不計勝負。";
             }
-            Restore(); BackfillRecord(); RefreshSeason();
+            // The browser build replays the saved journal later with RestoreAsync, yielding between steps: replaying a long
+            // match (every computer step re-runs its search) synchronously here would freeze the page at the splash screen.
+            if (deferRestore && profile.Match is { Actions.Count: > 0 }) restorePending = true;
+            else { Restore(); BackfillRecord(); RefreshSeason(); }
         }
         catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
         { logger.LogWarning(ex, "Ranked save could not be restored"); Error = "天梯存檔暫時無法載入，原檔已保留。"; }
@@ -89,7 +93,27 @@ public sealed partial class RankedSession
     }
     public RankedProfile Read()
     {
-        lock (gate) { if (Error == "" && !thinking) RefreshSeason(); return RankedStore.Copy(profile); }
+        lock (gate) { if (Error == "" && !thinking && !restorePending) RefreshSeason(); return RankedStore.Copy(profile); }
+    }
+    private readonly ILogger<BattleCoordinator> logger;
+    private bool restorePending;
+    private Task? restoring;
+    // True until RestoreAsync has replayed the saved match (only with deferRestore).
+    public bool Restoring { get { lock (gate) return restorePending; } }
+    public Task RestoreAsync()
+    {
+        lock (gate) return restoring ??= restorePending ? RestoreDeferredAsync() : Task.CompletedTask;
+    }
+    private async Task RestoreDeferredAsync()
+    {
+        await Task.Delay(1); // let the page paint its loading state first
+        try { await ReplayAsync(BattleCoordinator.PauseEvery(BattleCoordinator.SliceMilliseconds)); lock (gate) { BackfillRecord(); RefreshSeason(); } }
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException)
+        {
+            logger.LogWarning(ex, "Ranked save could not be restored");
+            lock (gate) { Error = "天梯存檔暫時無法載入，原檔已保留。"; Engine.ResetToNotStarted(); }
+        }
+        finally { lock (gate) restorePending = false; }
     }
     private void RefreshSeason()
     {
@@ -104,6 +128,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (thinking) return Reject("電腦仍在思考。");
+            if (restorePending) return Reject(RestoringMessage);
             if (Error != "") return Reject(Error);
             RefreshSeason();
             if (Error != "") return Reject(Error);
@@ -144,12 +169,38 @@ public sealed partial class RankedSession
         var option = a.Choice < 0 ? null : Engine.CurrentPendingChoice!.Options[a.Choice].Id;
         return new(Guid.NewGuid(), Engine.MatchId, Engine.Revision, a.Type, source, target, option);
     }
+    private const string RestoringMessage = "正在還原天梯對局，請稍候。";
     private void Restore()
+    {
+        if (BeginRestore() is not { } match) return;
+        foreach (var action in match.Actions)
+        {
+            Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
+            var response = action.Type == "ai" ? Bridge.AiStepCore() : Bridge.SubmitCore(Decode(action));
+            if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
+        }
+        EndRestore(match);
+    }
+    // Same replay as Restore, awaiting `pause` between steps and inside each computer search, so the page stays responsive.
+    private async Task ReplayAsync(Func<ValueTask> pause)
+    {
+        RankedMatch match;
+        lock (gate) { if (BeginRestore() is not { } m) return; match = m; }
+        foreach (var action in match.Actions)
+        {
+            Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
+            var response = action.Type == "ai" ? await Bridge.AiStepCoreAsync(pause) : Bridge.SubmitCore(Decode(action));
+            if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
+            await pause();
+        }
+        lock (gate) EndRestore(match);
+    }
+    private RankedMatch? BeginRestore()
     {
         Engine.ResetToNotStarted(); Engine.EqualStartingLife = false; Engine.SecondPlayerCoin = true;
         Engine.UseMatchCatalog(currentCards, false); BalanceNotice = "";
-        if (profile.Match is not { } match) return;
-        if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return; // Completed results survive card balance updates.
+        if (profile.Match is not { } match) return null;
+        if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return null; // Completed results survive card balance updates.
         if (match.Rules != rules && match.Rules != priorIdentifierRules)
         {
             var era = PriorEra(match.Rules) ?? throw new InvalidOperationException("存檔對局使用不同規則版本。");
@@ -158,12 +209,10 @@ public sealed partial class RankedSession
         }
         Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules < 1; Engine.SecondPlayerCoin = match.StartRules >= 2;
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
-        foreach (var action in match.Actions)
-        {
-            Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
-            var response = action.Type == "ai" ? Bridge.AiStepCore() : Bridge.SubmitCore(Decode(action));
-            if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
-        }
+        return match;
+    }
+    private void EndRestore(RankedMatch match)
+    {
         Engine.StackableShields = true; Engine.AiRevision = GameEngine.RankedAiVersion;
         if (match.Settled != Engine.IsOver) throw new InvalidOperationException("對局結算紀錄不一致。");
     }
@@ -174,6 +223,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (thinking) return Reject("電腦仍在思考。");
+            if (restorePending) return Reject(RestoringMessage);
             if (Error != "") return Reject(Error);
             if (command.Type is "start" or "reset") return Reject("請使用天梯大廳開始或繼續對局。");
             if (profile.Match is not { Settled: false }) return Reject("此天梯對局已結算。");
@@ -187,6 +237,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (thinking) return Reject("電腦仍在思考。");
+            if (restorePending) return Reject(RestoringMessage);
             if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
             return Apply(new("ai", RulesVersion: GameEngine.RankedAiVersion), Bridge.AiStepCore);
         }
@@ -200,6 +251,7 @@ public sealed partial class RankedSession
         lock (gate)
         {
             if (thinking) return Reject("電腦仍在思考。");
+            if (restorePending) return Reject(RestoringMessage);
             if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
             before = RankedStore.Copy(profile); revision = Engine.Revision; thinking = true;
         }
