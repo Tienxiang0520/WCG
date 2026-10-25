@@ -172,7 +172,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "箭頭連結格位", Spot = ["field"],
-                    Text = "卡圖邊緣的金色三角就是箭頭：← → 連到己方左右相鄰格，↑ 連到正對面的敵方格。每張卡用箭頭做的事不同，看效果文字就知道。" },
+                    Text = "卡圖邊緣的金色三角就是箭頭：← → 連到左右相鄰格，↑ 連到正對面那格。箭頭只看指到的格子，影響那格裡的怪物，不分敵我。每張卡用箭頭做的事不同，看效果文字就知道。" },
                 new() { Title = "左右光環", Spot = ["hand:WCG-005", "own:2"], Allow = [Play("WCG-005"), Slot(2)],
                     Done = e => Unit(e.Player, "WCG-005")?.Slot == 2,
                     Text = "「{0}」的效果：{1} 把它放在第 3 格，夾在「{2}」和「{3}」中間。", TextValues = [CardName("WCG-005"), CardEffect("WCG-005"), CardName("WCG-101"), CardName("WCG-154")],
@@ -342,6 +342,38 @@ public static class TutorialLessons
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-069")] },
                 new() { Title = "本課重點",
                     Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：交戰後送入墓地的附著 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
+            ]
+        },
+        new()
+        {
+            Id = "counters", Icon = "sigil", Title = "指示物與控制權",
+            Summary = "認識 DP、腐蝕、血誓與奪魂指示物，學會永久奪取敵方怪物，以及沉默、驅散怎麼處理它們。",
+            Topics = ["DP 指示物", "腐蝕指示物", "血誓指示物", "奪魂指示物", "暫時控制：卡轉 180 度", "沉默與驅散", "箭頭不分敵我", "對手的卡轉 180 度"],
+            Scene = new(
+                new() { Hand = ["WCG-384", "WCG-335"], Deck = Deck(), Energy = 9, Board = [new("WCG-337", 0)] },
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-101", 1), new("WCG-155", 3)] }),
+            Steps =
+            [
+                new() { Title = "對手的卡", Spot = ["field"],
+                    Text = "對手的卡會轉 180 度，卡頂朝向對手，就像坐在桌子兩邊；PP 和 DP 數字照常朝向你。實體對戰時，持續的變化都用指示物記在牌上。" },
+                new() { Title = "DP 指示物", Spot = ["own-card:WCG-337", "enemy-card:WCG-101"], Allow = [Attack("WCG-337", "WCG-101")],
+                    Done = e => Unit(e.Player, "WCG-337") is { DpCounters: > 0 } && Settled(e),
+                    Text = "「{0}」的效果：{1} 用它攻擊「{2}」。DP 指示物是紅色的，每個使 DP +1，可以疊加；被沉默或離場時移除。", TextValues = [CardName("WCG-337"), CardEffect("WCG-337"), CardName("WCG-101")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-337"), CardName("WCG-101")] },
+                new() { Title = "腐蝕指示物", Spot = ["hand:WCG-384", "enemy-card:WCG-155"], Allow = [Play("WCG-384")],
+                    Done = e => Unit(e.Computer, "WCG-155") is { CorrosionCounters: > 0 } && Settled(e),
+                    Text = "「{0}」的效果：{1} 每個腐蝕指示物使 PP -300，可以疊加；PP 最低為 0，降到 0 也不會陣亡。被沉默、被驅散或離場時移除；「印刷 PP」的判定不受影響。", TextValues = [CardName("WCG-384"), CardEffect("WCG-384")],
+                    Hint = "請打出「{0}」。", HintValues = [CardName("WCG-384")] },
+                new() { Title = "奪魂指示物", Spot = ["hand:WCG-335", "enemy-card:WCG-155"], Allow = [Play("WCG-335", "WCG-155"), Pick("WCG-155"), Slot()],
+                    Done = e => OnField(e.Player, "WCG-155") && Settled(e),
+                    Text = "「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-335"), CardEffect("WCG-335"), CardName("WCG-155")],
+                    Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-335"), CardName("WCG-155")] },
+                new() { Title = "你控制、但不是你擁有", Spot = ["own-card:WCG-155"],
+                    Text = "被奪來的怪物不觸發進場，附著卡和指示物跟著它，剛移過來的這回合不能攻擊；它陣亡時由現在控制它的你處理陣亡，離場時回到擁有者的墓地或手牌。被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。" },
+                new() { Title = "暫時控制", Spot = ["field"],
+                    Text = "卡面寫「取得控制權直到回合結束」時，那隻怪物留在原本的格子，把卡轉 180 度表示由你控制，回合結束時轉回去。轉向的怪物箭頭照常有效：↑ 指正對面那格，← → 指它所在那排的相鄰格，左右跟著對調。" },
+                new() { Title = "本課重點",
+                    Text = "血誓指示物放在血誓祭壇（結界）上，你每受到 1 次傷害放 1 個；沉默碰不到它，祭壇被驅散摧毀或離場時一起移除。沉默移除怪物的聖盾、DP、腐蝕與奪魂指示物；驅散移除附著、沉默、腐蝕與奪魂指示物，或依卡文摧毀結界。" }
             ]
         },
         new()
