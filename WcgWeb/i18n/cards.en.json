@@ -2251,5 +2251,59 @@
     "name": "Thousandfold Return",
     "text": "Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed.",
     "zh_text": "移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-373": {
+    "zh": "潮間採集者",
+    "name": "Tidepool Gatherer",
+    "text": "On deploy: recover 1 life and draw 1 card.",
+    "zh_text": "進場：回復 1 點生命，抽 1 張牌。"
+  },
+  "WCG-374": {
+    "zh": "回潮術士",
+    "name": "Ebbcall Sorcerer",
+    "text": "On deploy: you may return another of your monsters to your hand. If you do, the next monster you summon by paying this turn costs 1 less.",
+    "zh_text": "進場：你可以將另 1 隻己方怪物移回手牌；若你這麼做，本回合你下一張付費召喚的怪物費用 -1。"
+  },
+  "WCG-375": {
+    "zh": "退浪",
+    "name": "Receding Wave",
+    "text": "Return 1 of your monsters to your hand. If its printed cost is 3 or more, draw 1 card.",
+    "zh_text": "將 1 隻己方怪物移回手牌。若它的印刷費用 3 以上，抽 1 張牌。"
+  },
+  "WCG-376": {
+    "zh": "孢潮使者",
+    "name": "Sporetide Envoy",
+    "text": "On deploy: put 1 DP counter on each monster the arrows point at. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。"
+  },
+  "WCG-377": {
+    "zh": "鏡湖賢者",
+    "name": "Mirror Lake Sage",
+    "text": "On deploy: look at the top 3 cards of your deck, put 1 into your hand and the rest on the bottom in any order.",
+    "zh_text": "進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。"
+  },
+  "WCG-378": {
+    "zh": "輪迴之環",
+    "name": "Ring of Recurrence",
+    "text": "Whenever you return one of your monsters to your hand, draw 1 card (at most twice per turn).",
+    "zh_text": "每當你將己方怪物移回手牌，抽 1 張牌（每回合最多 2 次）。"
+  },
+  "WCG-379": {
+    "zh": "漲潮巨龜",
+    "name": "Floodtide Tortoise",
+    "text": "Taunt. On deploy: recover 2 life and draw 1 card. The first time each turn you return one of your monsters to your hand, this card costs 2 less in your hand until end of turn.",
+    "zh_text": "嘲諷；進場：回復 2 點生命，抽 1 張牌。你每回合第一次將己方怪物移回手牌時，此卡在你手牌中的費用 -2 直到回合結束。"
+  },
+  "WCG-380": {
+    "zh": "思潮捕手",
+    "name": "Thoughtcurrent Catcher",
+    "text": "On deploy: return 1 enemy monster to its hand. [Arrow: ↑] The monster the arrow points at gets -300 PP.",
+    "zh_text": "進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。"
+  },
+  "WCG-381": {
+    "zh": "萬潮回歸",
+    "name": "Return of All Tides",
+    "text": "Return all your monsters to your hand and draw 1 card for each one returned. This turn, monsters you summon by paying cost 2 less (to a minimum of 0).",
+    "zh_text": "將你場上所有怪物移回手牌，每收回 1 隻抽 1 張牌。本回合你付費召喚的怪物費用 -2（最低 0）。"
   }
 }

@@ -33,7 +33,7 @@ public class BloodOathTests
     {
         var old=CardBalanceHistory.BeforeRevivalLordText(cards);
         Assert.Contains("那隻怪本回合可以攻擊",cards.GetCard("WCG-194")!.Text);Assert.Contains("它本回合可以攻擊",old.GetCard("WCG-194")!.Text);
-        Assert.Equal(1,cards.AllCards.Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
+        Assert.Equal(1,CardBalanceHistory.BeforeTideCycleCards(cards).AllCards.Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeRevivalLordText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void EveryDamageStacksTheAltarAndTheOathguardAndSilenceLeavesTheAltarAlone()

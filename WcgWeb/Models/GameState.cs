@@ -147,6 +147,11 @@ public class PlayerState
     public int Lent { get; set; }
     public int Occupied => Field.Count(m => !m.Turned) + Structures.Count + Lent;
     public int NextCreatureDiscount { get; set; }
+    // 潮汐輪迴 (WCG-373–381), all for the turn number stored: 374's next-paid-monster -1, 381's every-paid-monster -2,
+    // and the turn you last returned one of your monsters to your hand (379 costs 2 less that turn).
+    public int TideDiscountTurn { get; set; } = -1;
+    public int TideSurgeTurn { get; set; } = -1;
+    public int TideBounceTurn { get; set; } = -1;
     public List<CardInstance> Graveyard { get; set; } = new();
 
     public bool HasLost { get; set; }

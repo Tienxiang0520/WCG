@@ -1975,5 +1975,7 @@
  "血帳清算：選擇消滅的敵方怪物（移除 2 個血誓指示物）": "Settling the Blood Debt: choose an enemy monster to destroy (remove 2 Blood Oath counters)",
  "你場上的血誓指示物不足 2 個。": "You have fewer than 2 Blood Oath counters on your side of the field.",
  "敵方場上沒有怪物。": "The enemy has no monsters on the field.",
- "【{0}】移除 {1} 個血誓指示物。": "[{0}] removes {1} Blood Oath counters."
+ "【{0}】移除 {1} 個血誓指示物。": "[{0}] removes {1} Blood Oath counters.",
+ "可選擇另 1 隻己方怪物移回手牌（本回合下一張付費召喚的怪物費用 -1）": "You may return another of your monsters to your hand (the next monster you summon by paying this turn costs 1 less)",
+ "選擇移回手牌的敵方怪物": "Choose an enemy monster to return to its hand"
 }

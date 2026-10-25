@@ -35,8 +35,15 @@ internal static class CounterHistory
     // Catalog before the 根脈連營 cards WCG-355–363 existed.
     // Catalog before the 血誓反擊 cards WCG-364–372 existed.
     // Catalog before the 2026-10-25 冥府復甦領主 wording (「那隻怪本回合可以攻擊」).
+    // Catalog before the 潮汐輪迴 cards WCG-373–381 existed.
+    internal static CardDatabase BeforeTideCycleCards(CardDatabase current)
+    {
+        return current.GetCard("WCG-373")==null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 373 or > 381)),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeRevivalLordText(CardDatabase current)
     {
+        current=BeforeTideCycleCards(current);
         if(current.GetCard("WCG-194")?.Text.Contains("那隻怪本回合可以攻擊")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-revival-lord-text.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);

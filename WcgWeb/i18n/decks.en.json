@@ -1084,5 +1084,11 @@
   "zhDescription": "故意讓對手打臉，每挨一下就在血誓祭壇疊血誓指示物；血越少越兇，最後一擊千倍奉還。",
   "name": "Order · Blood Oath Riposte (Blood Oath)",
   "description": "Let the opponent hit your face; every hit stacks a Blood Oath counter on the altar. The lower your life, the harder you hit, until you pay it all back at once."
+ },
+ "RANKED-5-REASON-TIDECYCLE": {
+  "zhName": "理智・潮汐輪迴（潮汐）",
+  "zhDescription": "把自己的怪收回手牌再打，進場效果一場用好幾次；最後萬潮回歸整排重踩。",
+  "name": "Reason · Tidal Recurrence (Tide)",
+  "description": "Return your own monsters to hand and play them again to reuse their deploy effects; finish by sweeping the whole row back with Return of All Tides."
  }
 }

@@ -6257,5 +6257,162 @@
     "hs_ref": "",
     "keywords": [],
     "arrows": []
+  },
+  {
+    "id": "WCG-373",
+    "name": "潮間採集者",
+    "type": "怪物",
+    "will": "生機",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": 600,
+    "dp": 0,
+    "text": "進場：回復 1 點生命，抽 1 張牌。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：便宜的進場，收回再打就再賺一次。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-374",
+    "name": "回潮術士",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": 900,
+    "dp": 1,
+    "text": "進場：你可以將另 1 隻己方怪物移回手牌；若你這麼做，本回合你下一張付費召喚的怪物費用 -1。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：收回己方怪物重打的引擎。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-375",
+    "name": "退浪",
+    "type": "法術",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 0,
+    "total_cost": 0,
+    "pp": null,
+    "dp": null,
+    "text": "將 1 隻己方怪物移回手牌。若它的印刷費用 3 以上，抽 1 張牌。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：0 費收回。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-376",
+    "name": "孢潮使者",
+    "type": "怪物",
+    "will": "生機",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": 1000,
+    "dp": 1,
+    "text": "進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：每次重打都多放 DP 指示物。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": [
+      "left",
+      "right"
+    ]
+  },
+  {
+    "id": "WCG-377",
+    "name": "鏡湖賢者",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1200,
+    "dp": 1,
+    "text": "進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：可重複的挑牌。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-378",
+    "name": "輪迴之環",
+    "type": "結界",
+    "will": [
+      "理智",
+      "生機"
+    ],
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": null,
+    "dp": null,
+    "text": "每當你將己方怪物移回手牌，抽 1 張牌（每回合最多 2 次）。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：收回就抽牌。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-379",
+    "name": "漲潮巨龜",
+    "type": "怪物",
+    "will": "生機",
+    "cost_spec": "",
+    "cost_gen": 5,
+    "total_cost": 5,
+    "pp": 1800,
+    "dp": 2,
+    "text": "嘲諷；進場：回復 2 點生命，抽 1 張牌。你每回合第一次將己方怪物移回手牌時，此卡在你手牌中的費用 -2 直到回合結束。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：收回後變便宜的大嘲諷。",
+    "hs_ref": "",
+    "keywords": [
+      "嘲諷"
+    ],
+    "arrows": []
+  },
+  {
+    "id": "WCG-380",
+    "name": "思潮捕手",
+    "type": "怪物",
+    "will": "理智",
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": 1500,
+    "dp": 1,
+    "text": "進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：重打就再彈一隻敵怪。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": [
+      "up"
+    ]
+  },
+  {
+    "id": "WCG-381",
+    "name": "萬潮回歸",
+    "type": "法術",
+    "will": [
+      "理智",
+      "生機"
+    ],
+    "cost_spec": "",
+    "cost_gen": 6,
+    "total_cost": 6,
+    "pp": null,
+    "dp": null,
+    "text": "將你場上所有怪物移回手牌，每收回 1 隻抽 1 張牌。本回合你付費召喚的怪物費用 -2（最低 0）。",
+    "design_note": "2026-10-25 第五批新流派「潮汐輪迴」：升天卡，整排收回、降費重鋪。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
   }
 ]

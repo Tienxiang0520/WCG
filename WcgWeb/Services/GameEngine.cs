@@ -410,6 +410,7 @@ public partial class GameEngine
         if (id is "WCG-084" or "WCG-095") RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
         p.Hand.Remove(c);
         if (c.Card.IsMonster && p.NextCreatureDiscount > 0) p.NextCreatureDiscount = 0;
+        if (c.Card.IsMonster) TidePaidSummon(p);
         if (c.Card.IsSpell) p.Graveyard.Add(c);
         if (id == "WCG-164" && target != null) target.IsTapped = true;
         if (id == "WCG-165") { PayLife(p, 1); if (IsOver) return; }
@@ -457,7 +458,7 @@ public partial class GameEngine
         }
     }
     private void Bounce(MonsterInstance m)
-    { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var home = HomeOf(m, owner); home.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); RefreshBoard(); Present("bounce", home, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
+    { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var home = HomeOf(m, owner); home.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); RefreshBoard(); TideBounced(home, m); Present("bounce", home, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
     private void PickLowest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
     { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最低 PP 的怪物", list.Where(m => ThresholdPP(m) == list.Min(ThresholdPP)), action); }
     private void PickHighest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
