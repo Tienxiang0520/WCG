@@ -751,3 +751,6 @@
 .mini-card ::deep .mini-face{width:78px;height:auto;aspect-ratio:63/88;pointer-events:none}
 .energy-card.mini-card.spent ::deep .mini-face{filter:grayscale(.7) brightness(.7)}
 @media(max-width:700px){.choice-cards{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}.choice-card-title{font-size:10.5px}.mini-card,.mini-card ::deep .mini-face{width:62px}}
+
+.turn-tool-row{display:flex;gap:6px}.turn-tool-row>button{flex:1;white-space:nowrap}
+@media(max-width:600px){.turn-tool-row{gap:4px}}

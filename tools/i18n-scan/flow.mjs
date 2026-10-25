@@ -59,7 +59,7 @@ if (process.env.FLOW !== 'pages') {
     const choice = page.locator('.v06-board .modal-shade .v06-dialog .choice-list button'); if (await choice.count()) { await scan('battle-choice'); await tap(choice.first()); await page.waitForTimeout(2000); }
   }
   await scan('battle-later'); await shot('battle-later');
-  await tap(page.locator('.turn-controls button').nth(1)); await page.waitForTimeout(600); await shot('battle-log'); await scan('battle-log'); await tap(page.locator('.history-dialog .close-dialog'));
+  await tap(page.locator('.turn-controls .open-log')); await page.waitForTimeout(600); await shot('battle-log'); await scan('battle-log'); await tap(page.locator('.log-dialog .close-dialog'));
   // Ranked replay
   await nav('/ranked'); const rp = page.locator('.record-replay').first();
   if (await rp.count()) { await tap(rp); await page.waitForSelector('.replay-step-card', { timeout: 60000 }); await page.waitForTimeout(800); for (let i = 0; i < 6; i++) { const nb = page.locator('.replay-buttons button').nth(3); if (!(await nb.isEnabled())) { console.log('replay next disabled; error=', await page.locator('.replay-error').allInnerTexts()); break; } await nb.click({ timeout: 3000, force: true }).catch(() => {}); } await page.waitForTimeout(500); await shot('ranked-replay'); await scan('ranked-replay'); await overflow('ranked-replay'); await tap(page.locator('.replay-close')); }
