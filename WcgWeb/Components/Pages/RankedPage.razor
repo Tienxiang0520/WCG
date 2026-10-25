@@ -44,6 +44,7 @@ else
             <div class="ranked-identity"><AvatarBadge Class="large" Caption="@L.F("{0} · 點擊換頭像", RankedRules.Label(Profile.Stars))" /></div>
         </header>
         @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@L.Text(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
+        @if (Ranked.Restoring) { <p class="alert alert-info" role="status">@L["正在還原進行中的天梯對局…"]</p> }
         @if (Ranked.ResetNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@L.Text(Ranked.ResetNotice)</p> }
         <div class="ranked-grid">
             <section class="ranked-card tier-@RankedRules.Tier(Profile.Stars)" aria-label="@L["目前牌位"]">
@@ -255,6 +256,7 @@ else
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
+        if (Ranked.Restoring) { await Ranked.RestoreAsync(); if (Disposed) return; Profile = Ranked.Read(); }
         Interactive = true;
         if (Profile.Match is { Settled: false } && Ranked.Error == "" && Tour != "ranked") await Resume();
         RefreshLoop = Refresh(); StateHasChanged();

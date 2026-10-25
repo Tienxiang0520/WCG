@@ -21,5 +21,5 @@ builder.Services.AddSingleton<BattleBridge>();
 builder.Services.AddSingleton<BattleCoordinator>();
 builder.Services.AddSingleton(sp => new RankedStore(sp.GetRequiredService<IPlayerStorage>()));
 builder.Services.AddSingleton(sp => new RankedSession(database, sp.GetRequiredService<DeckService>(),
-    sp.GetRequiredService<RankedStore>(), rankedDecks, sp.GetRequiredService<ILogger<BattleCoordinator>>()));
+    sp.GetRequiredService<RankedStore>(), rankedDecks, sp.GetRequiredService<ILogger<BattleCoordinator>>(), deferRestore: true));
 await builder.Build().RunAsync();
