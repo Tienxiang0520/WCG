@@ -36,6 +36,10 @@ public partial class GameEngine
     // Monsters a spell may pick (禁魔石像 152 and other spell-immune monsters are skipped).
     private List<MonsterInstance> SpellPickable(PlayerState p, IEnumerable<MonsterInstance> source) =>
         Targetable(p, source).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(p, m)).ToList();
+    // Monsters a spell may choose while it resolves (禁魔石像 152; 封時守衛 413 while it has Countdown counters).
+    // Area effects that don't choose still hit them.
+    private List<MonsterInstance> SpellResolvePickable(PlayerState p, IEnumerable<MonsterInstance> source) =>
+        Targetable(p, source).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !StarWarded(m)).ToList();
     // 406／420: -X PP until end of turn; destroyed if that brings it to 0.
     private void ShrinkUntilEndOfTurn(MonsterInstance x, int amount, CardDefinition source)
     {

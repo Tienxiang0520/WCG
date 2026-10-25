@@ -64,9 +64,9 @@ public partial class GameEngine
         {
             case "WCG-338": if (t != null && Alive(t) && p.Field.Contains(t)) Attach(p, source, t); break;
             case "WCG-340":
-                var big = p.Field.Where(x => x.IsUnit && x.CurrentDP >= 3).ToList();
+                var big = SpellResolvePickable(p, p.Field.Where(x => x.IsUnit && x.CurrentDP >= 3));
                 if (big.Count > 0) PickMonster(p, HoofRamTitle, big, x => MakeUnblockable(p, x));
-                else PickMonster(p, HoofCounterTitle, p.Field.Where(x => x.IsUnit), x => AddDpCounter(x, source.Card));
+                else PickMonster(p, HoofCounterTitle, SpellResolvePickable(p, p.Field.Where(x => x.IsUnit)), x => AddDpCounter(x, source.Card));
                 break;
             case "WCG-344":
                 Resolve(() => { foreach (var m in p.Field.Where(x => x.IsUnit).ToArray()) AddDpCounter(m, source.Card); }, () => DrawMany(p, 1));

@@ -82,7 +82,7 @@ public partial class GameEngine
                 if (t == null || !Alive(t) || t.IsTapped) break;
                 GainShieldCounter(t, source.Card);
                 t.IsTapped = true; Present("status", p, t.InstanceId, card: t.Card, label: "橫置");
-                PickMonster(p, DuelTitle, e.Field, d => Duel(p, t, d));
+                PickMonster(p, DuelTitle, SpellResolvePickable(p, e.Field), d => Duel(p, t, d));
                 break;
             case "WCG-271": if (t != null && Alive(t)) Attach(p, source, t); break;
             default: return GapSpell(p, source, t);

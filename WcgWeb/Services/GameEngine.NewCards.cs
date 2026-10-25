@@ -133,7 +133,7 @@ public partial class GameEngine
             case "WCG-230":
                 if (t == null || !Alive(t) || t.IsTapped) break;
                 t.IsTapped = true; Present("status", p, t.InstanceId, card: t.Card, label: "橫置");
-                PickMonster(p, "選擇與它交戰的敵方怪物", e.Field, d => { if (Alive(t) && Alive(d)) EffectCombat(p, t, d); });
+                PickMonster(p, "選擇與它交戰的敵方怪物", SpellResolvePickable(p, e.Field), d => { if (Alive(t) && Alive(d)) EffectCombat(p, t, d); });
                 break;
             case "WCG-233":
                 var nature = lastSacrifice?.Card.HasWill("生機") == true; lastSacrifice = null;
@@ -142,7 +142,7 @@ public partial class GameEngine
             case "WCG-242": Resolve(() => DrawMany(p, 2), () => PayLife(p, 1)); break;
             case "WCG-248":
                 if (t == null || !Alive(t)) break;
-                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t)), x => KillBatch([x], c.Name));
+                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
             default: return OathSpell(p, source, t);

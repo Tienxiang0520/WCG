@@ -89,7 +89,7 @@ public partial class GameEngine
         switch (source.Card.Id)
         {
             case "WCG-412":
-                var ticking = p.Board.Where(x => x.Countdown > 0).ToList();
+                var ticking = SpellResolvePickable(p, p.Board.Where(x => x.Countdown > 0));
                 if (ticking.Count == 0) DrawMany(p, 1);
                 else PickMonster(p, StarCatalystTitle, ticking, x => RemoveCountdown(x, 2));
                 break;

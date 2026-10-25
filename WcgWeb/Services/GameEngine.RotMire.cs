@@ -23,6 +23,7 @@ public partial class GameEngine
     private void Corrode(PlayerState p, CardDefinition source, int n = 1, Action? after = null)
     {
         var foes = GetOpponent(p).Field.Where(x => x.IsUnit).ToList();
+        if (source.IsSpell) foes = SpellResolvePickable(p, foes);
         if (foes.Count == 0 || IsOver) { after?.Invoke(); return; }
         PickMonster(p, MireCorrodeTitle, foes, x => { AddCorrosion(x, source, n); after?.Invoke(); });
     }
@@ -92,7 +93,7 @@ public partial class GameEngine
         {
             case "WCG-384": foreach (var x in e.Field.Where(x => x.IsUnit).ToArray()) AddCorrosion(x, source.Card); break;
             case "WCG-388":
-                var ripe = e.Field.Where(x => x.IsUnit && x.CorrosionCounters >= 2).ToList();
+                var ripe = SpellResolvePickable(p, e.Field.Where(x => x.IsUnit && x.CorrosionCounters >= 2));
                 if (ripe.Count > 0) PickMonster(p, MireHarvestTitle, ripe, x => KillBatch([x], source.Card.Name));
                 else Corrode(p, source.Card, 2);
                 break;
