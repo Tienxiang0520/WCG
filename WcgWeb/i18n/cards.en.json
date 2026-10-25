@@ -2413,5 +2413,59 @@
     "name": "Thousand-Blade Surge",
     "text": "Charge. Trample. After each attack, if this monster is still on the field, ready it (at most 3 times per turn).",
     "zh_text": "衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。"
+  },
+  "WCG-400": {
+    "zh": "汲泉修女",
+    "name": "Wellspring Nun",
+    "text": "On deploy: you heal 1 life.",
+    "zh_text": "進場：回復你 1 點生命。"
+  },
+  "WCG-401": {
+    "zh": "泉光侍祭",
+    "name": "Springlight Acolyte",
+    "text": "[Arrows: ← →] Whenever you heal, the monsters the arrows point at get +300 PP this turn.",
+    "zh_text": "【箭頭：← →】每當你回復生命，箭頭指向的怪物本回合 PP +300。"
+  },
+  "WCG-402": {
+    "zh": "滿溢之禱",
+    "name": "Overflowing Prayer",
+    "text": "You heal 2 life. If your life was already 7 before healing, also draw 1 card.",
+    "zh_text": "回復你 2 點生命；若回復前你的生命已是 7，再抽 1 張牌。"
+  },
+  "WCG-403": {
+    "zh": "聖泉之井",
+    "name": "Holy Spring Well",
+    "text": "Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it.",
+    "zh_text": "每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。"
+  },
+  "WCG-404": {
+    "zh": "流浪治療師",
+    "name": "Wandering Healer",
+    "text": "At the end of your turn, you heal 1 life.",
+    "zh_text": "你的回合結束時，回復你 1 點生命。"
+  },
+  "WCG-405": {
+    "zh": "泉誓騎士",
+    "name": "Spring-Sworn Knight",
+    "text": "Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn).",
+    "zh_text": "嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。"
+  },
+  "WCG-406": {
+    "zh": "洗禮之潮",
+    "name": "Tide of Baptism",
+    "text": "You heal 2 life. Then 1 enemy monster gets -300 PP for each life you healed this turn until end of turn; if this makes its PP 0, destroy it.",
+    "zh_text": "回復你 2 點生命。然後 1 隻敵方怪物 PP -（本回合你回復的生命總量 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。"
+  },
+  "WCG-407": {
+    "zh": "銀泉守護巨像",
+    "name": "Silverspring Colossus",
+    "text": "Taunt. On deploy: you heal 3 life. At the start of your turn, if your life is 7, deal 1 damage to the enemy player.",
+    "zh_text": "嘲諷；進場：回復你 3 點生命。你的回合開始時，若你的生命是 7，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-408": {
+    "zh": "聖泉傾瀉",
+    "name": "Holy Spring Deluge",
+    "text": "You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed.",
+    "zh_text": "回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。"
   }
 }

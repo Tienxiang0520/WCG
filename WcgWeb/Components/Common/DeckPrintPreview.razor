@@ -131,6 +131,7 @@
                 <p class="print-reference-note">@L["DP 指示物：每個使怪物 DP +1，可以疊加；被沉默或怪物離場時移除。"]</p>
                 <p class="print-reference-note">@L["血誓指示物：放在血誓祭壇上，沉默不影響；祭壇離場時一起移除。"]</p>
                 <p class="print-reference-note">@L["腐蝕指示物：每個使怪物 PP -300，可以疊加；PP 降到 0 不會自己陣亡。被沉默、被驅散或怪物離場時移除。"]</p>
+                <p class="print-reference-note">@L["聖泉指示物：放在聖泉之井上，每回復 1 點生命放 1 個（超過上限也算）；沉默不影響，聖泉之井離場時一起移除。"]</p>
                 <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。奪魂指示物：永久控制，離場時回到擁有者那邊；被沉默或驅散時移除，怪物歸還擁有者。"]</p>
             </section>
         }
@@ -171,7 +172,7 @@
     }
     private static string ToolName(PrintTool t) => t switch
     {
-        PrintTool.Life => "生命計數卡", PrintTool.Coin => "幸運幣（後攻用）", PrintTool.ShieldTokens => "聖盾指示物卡（12 個）", PrintTool.DpTokens => "DP 指示物卡（12 個）", PrintTool.BloodTokens => "血誓指示物卡（12 個）", PrintTool.CorrosionTokens => "腐蝕指示物卡（12 個）", _ => "奪魂指示物卡（12 個）"
+        PrintTool.Life => "生命計數卡", PrintTool.Coin => "幸運幣（後攻用）", PrintTool.ShieldTokens => "聖盾指示物卡（12 個）", PrintTool.DpTokens => "DP 指示物卡（12 個）", PrintTool.BloodTokens => "血誓指示物卡（12 個）", PrintTool.CorrosionTokens => "腐蝕指示物卡（12 個）", PrintTool.SpringTokens => "聖泉指示物卡（12 個）", _ => "奪魂指示物卡（12 個）"
     };
     private string ToolSummary => string.Concat(DeckPrintTools.Order.Where(t => Count(t) > 0).Select(t => L.F("＋{0} 張{1}", Count(t), L[ToolName(t)])));
     private RenderFragment ToolCard(PrintToolItem item) => __builder =>
@@ -217,6 +218,13 @@
                 @* 腐蝕指示物 (腐沼蔓生): -300 PP each on the monster it sits on. *@
                 <article class="print-card shield-token-card corrosion-token-card" aria-label="@L["腐蝕指示物"]">
                     <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="corrosion-token"><CorrosionTokenIcon Class="corrosion-token-icon" Ink="@(!Color)" /></span> }</div>
+                    @CropMarks
+                </article>
+                break;
+            case PrintTool.SpringTokens:
+                @* 聖泉指示物 (聖泉滿溢). *@
+                <article class="print-card shield-token-card spring-token-card" aria-label="@L["聖泉指示物"]">
+                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="spring-token"><SpringTokenIcon Class="spring-token-icon" Ink="@(!Color)" /></span> }</div>
                     @CropMarks
                 </article>
                 break;

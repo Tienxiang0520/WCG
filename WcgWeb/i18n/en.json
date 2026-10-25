@@ -1991,5 +1991,14 @@
  "選擇轉為直立的己方怪物": "Choose one of your monsters to ready",
  "不歇鍛爐：選擇轉為直立的己方已橫置怪物": "Restless Forge: choose one of your tapped monsters to ready",
  "你沒有已橫置的怪物。": "You have no tapped monsters.",
- "【{0}】轉為直立（{1}）。": "{0} is readied ({1})."
+ "【{0}】轉為直立（{1}）。": "{0} is readied ({1}).",
+ "聖泉指示物": "Holy Spring counter",
+ "聖泉指示物卡（12 個）": "Holy Spring counter sheet (12)",
+ "聖泉指示物：放在聖泉之井上，每回復 1 點生命放 1 個（超過上限也算）；沉默不影響，聖泉之井離場時一起移除。": "Holy Spring counters: put on the Holy Spring Well, 1 for each life you heal (healing beyond the maximum counts too). Silence doesn't affect them; they are removed when the well leaves play.",
+ "聖泉指示物：放在聖泉之井（結界）上。你每回復 1 點生命放 1 個，超過生命上限、沒有回到的部分也算；卡面寫「移除聖泉指示物」時從你場上的聖泉之井移除。沉默不影響聖泉指示物；聖泉之井離場（例如被驅散摧毀）時，上面的聖泉指示物一起移除。": "Holy Spring counters: they sit on the Holy Spring Well (a structure). Put 1 for each life you heal, including healing beyond your maximum life that doesn't raise it; when a card says to remove Holy Spring counters, remove them from your wells. Silence doesn't affect them; when the well leaves play (for example destroyed by a dispel), its counters go with it.",
+ "洗禮之潮：選擇敵方怪物（本回合 PP 降低）": "Tide of Baptism: choose an enemy monster (its PP drops this turn)",
+ "放置 {0} 個聖泉指示物": "{0} Holy Spring counters placed",
+ "【{0}】獲得 {1} 個聖泉指示物（共 {2} 個）。": "{0} gets {1} Holy Spring counter(s) ({2} in total).",
+ "【{0}】本回合 PP -{1}（PP {2}）。": "{0} gets -{1} PP this turn (PP {2}).",
+ "【{0}】移除 {1} 個聖泉指示物。": "{0} removes {1} Holy Spring counters."
 }

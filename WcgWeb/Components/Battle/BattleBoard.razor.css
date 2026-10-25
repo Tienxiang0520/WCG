@@ -726,3 +726,7 @@
 .corrosion-counter{position:absolute;left:3px;top:20%;z-index:3;width:24px;height:24px;pointer-events:none;filter:drop-shadow(0 0 4px #9be36acc) drop-shadow(0 2px 2px #0009)}
 .corrosion-counter ::deep .corrosion-counter-icon,.corrosion-counter .corrosion-counter-icon{width:24px;height:24px;display:block}
 .corrosion-counter-count{position:absolute;right:-5px;bottom:-4px;min-width:14px;height:14px;padding:0 2px;border-radius:7px;background:#2b1640;color:#c6ff9e;font-size:10px;font-weight:700;line-height:14px;text-align:center}
+/* 聖泉指示物 (聖泉滿溢). */
+.spring-counter{position:absolute;left:3px;top:44%;z-index:3;width:24px;height:24px;pointer-events:none;filter:drop-shadow(0 0 4px #ffe9a8cc) drop-shadow(0 2px 2px #0009)}
+.spring-counter ::deep .spring-counter-icon,.spring-counter .spring-counter-icon{width:24px;height:24px;display:block}
+.spring-counter-count{position:absolute;right:-5px;bottom:-4px;min-width:14px;height:14px;padding:0 2px;border-radius:7px;background:#2a2410;color:#ffe9a8;font-size:10px;font-weight:700;line-height:14px;text-align:center}

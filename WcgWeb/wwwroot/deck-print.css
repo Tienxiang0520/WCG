@@ -177,3 +177,6 @@
 .corrosion-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2b1640; background: #fff; }
 .corrosion-token-icon { width: 14mm; height: 14mm; display: block; }
 .ink-saving .corrosion-token, .white-color .corrosion-token { border-style: solid; }
+.spring-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2a2410; background: #fff; }
+.spring-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .spring-token, .white-color .spring-token { border-style: solid; }

@@ -95,7 +95,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
         if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
         if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
-        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");for(int i=0;i<m.BloodCounters;i++)status.Add("血誓指示物");for(int i=0;i<m.CorrosionCounters;i++)status.Add("腐蝕指示物");status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");for(int i=0;i<m.BloodCounters;i++)status.Add("血誓指示物");for(int i=0;i<m.CorrosionCounters;i++)status.Add("腐蝕指示物");for(int i=0;i<m.SpringCounters;i++)status.Add("聖泉指示物");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");

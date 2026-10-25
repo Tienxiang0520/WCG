@@ -661,7 +661,7 @@ public sealed class RankedTests : IDisposable
         // Rebuilt draw, sacrifice and swarm themes remain available at high tiers; strong control stays gated above.
         foreach(var key in new[]{"REASON-ARCANE","ABYSS-SOULFEAST","REASON-ORACLE","WRATH-WARBAND"}) Assert.Contains(key,keys[5]);
         Assert.True(keys[5].IsSupersetOf(keys[0]));
-        Assert.Equal(new[]{12,22,29,30,34,52}, keys.Select(k=>k.Count));
+        Assert.Equal(new[]{12,22,29,30,34,53}, keys.Select(k=>k.Count));
         // PR E 新流派：機制越複雜越晚出現。
         Assert.Equal([0,1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-MERCENARY")));
         Assert.Equal([1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-LONEWOLF")));
@@ -686,7 +686,8 @@ public sealed class RankedTests : IDisposable
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-BLOODOATH")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-TIDECYCLE")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("VITAL-ROTMIRE")));
-        Assert.Equal(52,keys.SelectMany(k=>k).Distinct().Count());
+        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-HOLYSPRING")));
+        Assert.Equal(53,keys.SelectMany(k=>k).Distinct().Count());
         // 大師使用完整牌表；同一流派在較低牌位的牌表是簡化版。
         var thorn=decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="VITAL-THORN").Deck;
         Assert.Contains(thorn.CardIds,id=>id=="WCG-082");
