@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 399
+total_cards: 408
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 399 張）
+# WCG 卡牌總表（共 408 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 240 張、法術 127 張、法術（反擊） 11 張、結界 21 張。
+類型：怪物 245 張、法術 130 張、法術（反擊） 11 張、結界 22 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，66 張）
@@ -225,7 +225,7 @@ source: WcgWeb/Data/cards.json
 | WCG-384 | 蔓延孢雲 | 法術 | 2 | — | — | — | 在每隻敵方怪物上各放置 1 個腐蝕指示物。 | **Spreading Spore Cloud** — Put 1 Corrosion counter on each enemy monster. |
 | WCG-387 | 屍菇傳播者 | 怪物 | 3 | 1100 | 1 | ←→ | 進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。 | **Corpsecap Spreader** — On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 
-## 秩序（Order，61 張）
+## 秩序（Order，68 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -290,6 +290,13 @@ source: WcgWeb/Data/cards.json
 | WCG-364 | 血誓祭壇 | 結界 | 2 | — | — | — | 你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。 | **Blood Oath Altar** — Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it. |
 | WCG-365 | 忍辱誓衛 | 怪物 | 2 | 1200 | 1 | — | 你每次受到傷害，在此怪物放 1 個 DP 指示物。 | **Enduring Oathguard** — Each time you take damage, put 1 DP counter on this monster. |
 | WCG-370 | 血帳清算 | 法術 | 4 | — | — | — | 移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。 | **Settling the Blood Debt** — Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP). |
+| WCG-400 | 汲泉修女 | 怪物 | 1 | 600 | 0 | — | 進場：回復你 1 點生命。 | **Wellspring Nun** — On deploy: you heal 1 life. |
+| WCG-401 | 泉光侍祭 | 怪物 | 2 | 900 | 1 | ←→ | 【箭頭：← →】每當你回復生命，箭頭指向的怪物本回合 PP +300。 | **Springlight Acolyte** — [Arrows: ← →] Whenever you heal, the monsters the arrows point at get +300 PP this turn. |
+| WCG-402 | 滿溢之禱 | 法術 | 1 | — | — | — | 回復你 2 點生命；若回復前你的生命已是 7，再抽 1 張牌。 | **Overflowing Prayer** — You heal 2 life. If your life was already 7 before healing, also draw 1 card. |
+| WCG-403 | 聖泉之井 | 結界 | 2 | — | — | — | 每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。 | **Holy Spring Well** — Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it. |
+| WCG-405 | 泉誓騎士 | 怪物 | 4 | 1600 | 1 | — | 嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。 | **Spring-Sworn Knight** — Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn). |
+| WCG-406 | 洗禮之潮 | 法術 | 3 | — | — | — | 回復你 2 點生命。然後 1 隻敵方怪物 PP -（本回合你回復的生命總量 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。 | **Tide of Baptism** — You heal 2 life. Then 1 enemy monster gets -300 PP for each life you healed this turn until end of turn; if this makes its PP 0, destroy it. |
+| WCG-408 | 聖泉傾瀉 | 法術 | 5 | — | — | — | 回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。 | **Holy Spring Deluge** — You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed. |
 
 ## 深淵（Abyss，64 張）
 
@@ -360,7 +367,7 @@ source: WcgWeb/Data/cards.json
 | WCG-388 | 腐朽收割 | 法術 | 3 | — | — | — | 消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。 | **Rotting Harvest** — Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead. |
 | WCG-389 | 瘴氣巨口 | 怪物 | 5 | 2000 | 2 | — | 貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Miasma Maw** — Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3). |
 
-## 中立（Neutral，51 張）
+## 中立（Neutral，53 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -415,6 +422,8 @@ source: WcgWeb/Data/cards.json
 | WCG-393 | 戰鼓傳令 | 怪物 | 2 | 1000 | 1 | ←→ | 【箭頭：← →】箭頭指向的怪物攻擊後，若它還在場，PP +200 直到回合結束。 | **War Drum Herald** — [Arrow: ← →] After a monster the arrows point at attacks, if it is still on the field, it gets +200 PP until end of turn. |
 | WCG-395 | 不歇鍛爐 | 結界 | 3 | — | — | — | 主動：橫置此卡：將 1 隻己方已橫置的怪物轉為直立。 | **Restless Forge** — Active: tap this card: ready 1 of your tapped monsters. |
 | WCG-398 | 戰場號角 | 怪物 | 4 | 1500 | 1 | ↑ | 嘲諷；你的回合中，第一隻攻擊後仍在場的己方怪物轉為直立（每回合 1 次）。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Battlefield Horn** — Taunt. During your turn, the first of your monsters that attacks and is still on the field afterwards is readied (once per turn). [Arrow: ↑] The monster the arrow points at gets -300 PP. |
+| WCG-404 | 流浪治療師 | 怪物 | 3 | 1200 | 1 | — | 你的回合結束時，回復你 1 點生命。 | **Wandering Healer** — At the end of your turn, you heal 1 life. |
+| WCG-407 | 銀泉守護巨像 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；進場：回復你 3 點生命。你的回合開始時，若你的生命是 7，對敵方玩家造成 1 點傷害。 | **Silverspring Colossus** — Taunt. On deploy: you heal 3 life. At the start of your turn, if your life is 7, deal 1 damage to the enemy player. |
 
 ## 雙色（Dual，29 張）
 

@@ -24,7 +24,7 @@ public class RotMireTests
         var old=CardBalanceHistory.BeforeRotMireCards(cards);
         for(int n=382;n<=390;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeRotMireCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsRotMireCard(c.Id)&&!CardBalanceHistory.IsSurgeStrikeCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsRotMireCard(c.Id)&&!CardBalanceHistory.IsSurgeStrikeCard(c.Id)&&!CardBalanceHistory.IsHolySpringCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
     [Fact] public void EachCounterIsMinusThreeHundredAndZeroPpDoesNotKill()
     {

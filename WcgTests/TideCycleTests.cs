@@ -23,7 +23,7 @@ public class TideCycleTests
         var old=CardBalanceHistory.BeforeTideCycleCards(cards);
         for(int n=373;n<=381;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeTideCycleCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsTideCycleCard(c.Id)&&!CardBalanceHistory.IsRotMireCard(c.Id)&&!CardBalanceHistory.IsSurgeStrikeCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsTideCycleCard(c.Id)&&!CardBalanceHistory.IsRotMireCard(c.Id)&&!CardBalanceHistory.IsSurgeStrikeCard(c.Id)&&!CardBalanceHistory.IsHolySpringCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Equal(["理智","生機"],cards.GetCard("WCG-381")!.Wills.Order(StringComparer.Ordinal));
     }
     [Fact] public void GathererHealsAndDrawsAgainEveryTimeItIsPaidFor()

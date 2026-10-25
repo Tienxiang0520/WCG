@@ -52,7 +52,7 @@ public partial class GameEngine
             case "WCG-396":
                 foreach (var x in p.Field.Where(x => x.IsUnit && x.IsTapped).ToArray()) { SurgeReady(p, x, source.Card); x.SurgeNoFace = true; }
                 break;
-            default: return false;
+            default: return SpringSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -64,10 +64,10 @@ public partial class GameEngine
         _ => ""
     };
     // 395 不歇鍛爐: tap it to ready 1 of your tapped monsters.
-    private static bool SurgeCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-395" && p.Field.Any(x => x.IsUnit && x.IsTapped);
+    private static bool SurgeCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-395" && p.Field.Any(x => x.IsUnit && x.IsTapped) || SpringCanActivate(p, s);
     private void SurgeActivate(PlayerState p, MonsterInstance s)
     {
-        if (s.Card.Id != "WCG-395") return;
+        if (s.Card.Id != "WCG-395") { SpringActivate(p, s); return; }
         PickMonster(p, SurgeForgeTitle, p.Field.Where(x => x.IsUnit && x.IsTapped), x => { s.IsTapped = true; SurgeReady(p, x, s.Card); });
     }
 
@@ -86,7 +86,7 @@ public partial class GameEngine
                 var foes = e.Field.Count(x => x.IsUnit);
                 return spent.Count == 0 || foes == 0 ? -5 : Math.Min(spent.Count, foes) * 1.8 - 1;
         }
-        return null;
+        return SpringPlayValue(p, c);
     }
     private MonsterInstance? SurgeSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
@@ -96,6 +96,6 @@ public partial class GameEngine
     private static MonsterInstance? SurgeTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
     {
         SurgeForgeTitle => legal.Where(x => !x.AttackLocked).OrderByDescending(x => x.CurrentDP * 1000 + x.CurrentPP).FirstOrDefault() ?? legal.FirstOrDefault(),
-        _ => null
+        _ => SpringTarget(p, pending, legal)
     };
 }

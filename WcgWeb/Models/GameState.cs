@@ -79,6 +79,11 @@ public class MonsterInstance
     public int BloodCounters { get; set; }
     // 腐蝕指示物 (腐沼蔓生, WCG-382–390): -300 PP each, stacking; removed by silence, dispel, or leaving play.
     public int CorrosionCounters { get; set; }
+    // 聖泉指示物 on 403 聖泉之井 (聖泉滿溢). They sit on the structure and leave play with it; silence never touches them.
+    public int SpringCounters { get; set; }
+    // 405 泉誓騎士: DP counters gained this turn (at most 2).
+    public int SpringDpTurn { get; set; } = -1;
+    public int SpringDpCount { get; set; }
     // 怒濤連擊 (WCG-391–399), all reset at every turn change: attacks made this turn (397), times readied by its own text
     // (394／399 limits), 396's "can't attack the enemy player this turn", and whether this 398 has readied a monster this turn.
     public int SurgeAttacks { get; set; }
@@ -158,6 +163,9 @@ public class PlayerState
     // 潮汐輪迴 (WCG-373–381), all for the turn number stored: 374's next-paid-monster -1, 381's every-paid-monster -2,
     // and the turn you last returned one of your monsters to your hand (379 costs 2 less that turn).
     public int TideDiscountTurn { get; set; } = -1;
+    // 聖泉滿溢: life healed this turn (overflow included), for 406 洗禮之潮.
+    public int SpringHealTurn { get; set; } = -1;
+    public int SpringHealed { get; set; }
     public int TideSurgeTurn { get; set; } = -1;
     public int TideBounceTurn { get; set; } = -1;
     public List<CardInstance> Graveyard { get; set; } = new();

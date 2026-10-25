@@ -119,7 +119,7 @@ public partial class GameEngine
     private bool Alive(MonsterInstance m) => Player.Board.Contains(m) || Computer.Board.Contains(m);
     private PlayerState Owner(MonsterInstance m) => Player.Board.Contains(m) ? Player : Computer;
     public PlayerState GetOpponent(PlayerState p) => ReferenceEquals(p, Player) ? Computer : Player;
-    private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); }
+    private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); SpringHealed(p, amount); }
     private void Damage(PlayerState p, int amount, DamageSource? source = null)
     {
         if (IsOver || amount <= 0) return;

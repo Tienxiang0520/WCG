@@ -46,7 +46,7 @@ public partial class GameEngine
                 RefreshBoard();
                 KillBatch(e.Field.Where(x => x.IsUnit && x.CurrentPP <= 0).ToArray(), m.Card.Name);
                 break;
-            default: return false;
+            default: return SpringDeploy(p, m);
         }
         return true;
     }
