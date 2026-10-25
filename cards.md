@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 372
+total_cards: 381
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 372 張）
+# WCG 卡牌總表（共 381 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 222 張、法術 121 張、法術（反擊） 11 張、結界 18 張。
+類型：怪物 228 張、法術 123 張、法術（反擊） 11 張、結界 19 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，61 張）
@@ -82,7 +82,7 @@ source: WcgWeb/Data/cards.json
 | WCG-367 | 誓言之怒 | 怪物 | 3 | 1500 | 1 | ↑ | 衝鋒；你的生命在 3 點以下時，此怪物 PP +600、DP +1。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Wrath of the Oath** — Charge. While your life is 3 or less, this monster gets +600 PP and +1 DP. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
 | WCG-369 | 殉誓狂徒 | 怪物 | 1 | 900 | 1 | — | 進場：對你自己造成 1 點傷害（這是傷害，會觸發反擊與血誓），然後抽 1 張牌。 | **Oathbound Zealot** — On Deploy: deal 1 damage to yourself (this is damage, so it triggers Counters and Blood Oath), then draw 1 card. |
 
-## 理智（Reason，58 張）
+## 理智（Reason，62 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -144,8 +144,12 @@ source: WcgWeb/Data/cards.json
 | WCG-330 | 迷魂低語 | 法術 | 2 | — | — | — | 將 1 隻印刷 PP 1200 以下的敵方怪物橫置；若它已經橫置，改為取得它的控制權直到回合結束（它不能攻擊）。 | **Bewitching Whisper** — Tap 1 enemy monster with printed PP 1200 or less; if it's already tapped, gain control of it until end of turn instead (it can't attack). |
 | WCG-333 | 奪心術士 | 怪物 | 4 | 1500 | 1 | — | 進場：取得 1 隻印刷 PP 1200 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。若敵方沒有怪物，改為抽 1 張牌。 | **Mindthief Adept** — On deploy: gain control of 1 enemy monster with printed PP 1200 or less until end of turn; ready it, and it can attack this turn. If the enemy has no monsters, draw 1 card instead. |
 | WCG-336 | 傀儡回歸 | 法術 | 2 | — | — | — | 將 1 隻你控制、但不是你擁有的怪物移回其擁有者的手牌，抽 2 張牌。若你沒有這樣的怪物，改為將 1 隻己方怪物移回手牌，抽 1 張牌。 | **Puppet's Return** — Return 1 monster you control but don't own to its owner's hand and draw 2 cards. If you have none, return 1 of your monsters to your hand and draw 1 card instead. |
+| WCG-374 | 回潮術士 | 怪物 | 2 | 900 | 1 | — | 進場：你可以將另 1 隻己方怪物移回手牌；若你這麼做，本回合你下一張付費召喚的怪物費用 -1。 | **Ebbcall Sorcerer** — On deploy: you may return another of your monsters to your hand. If you do, the next monster you summon by paying this turn costs 1 less. |
+| WCG-375 | 退浪 | 法術 | 0 | — | — | — | 將 1 隻己方怪物移回手牌。若它的印刷費用 3 以上，抽 1 張牌。 | **Receding Wave** — Return 1 of your monsters to your hand. If its printed cost is 3 or more, draw 1 card. |
+| WCG-377 | 鏡湖賢者 | 怪物 | 3 | 1200 | 1 | — | 進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。 | **Mirror Lake Sage** — On deploy: look at the top 3 cards of your deck, put 1 into your hand and the rest on the bottom in any order. |
+| WCG-380 | 思潮捕手 | 怪物 | 4 | 1500 | 1 | ↑ | 進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Thoughtcurrent Catcher** — On deploy: return 1 enemy monster to its hand. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
 
-## 生機（Life，60 張）
+## 生機（Life，63 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -209,6 +213,9 @@ source: WcgWeb/Data/cards.json
 | WCG-360 | 林冠滿營 | 結界 | 4 | — | — | — | 你的回合開始時，若你的 5 格全滿，你的所有怪物本回合 PP +300，抽 1 張牌。 | **Full Canopy Camp** — At the start of your turn, if all 5 of your slots are full, your monsters get +300 PP this turn and you draw 1 card. |
 | WCG-362 | 擠枝新芽 | 怪物 | 0 | 300 | 0 | ←→ | 從手牌召喚時，只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。 | **Squeezing Sprout** — When summoned from hand, it can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP. |
 | WCG-363 | 世界樹之心 | 怪物 | 7 | 2200 | 2 | ←→ | 進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。 | **Heart of the World Tree** — On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn). |
+| WCG-373 | 潮間採集者 | 怪物 | 1 | 600 | 0 | — | 進場：回復 1 點生命，抽 1 張牌。 | **Tidepool Gatherer** — On deploy: recover 1 life and draw 1 card. |
+| WCG-376 | 孢潮使者 | 怪物 | 2 | 1000 | 1 | ←→ | 進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。 | **Sporetide Envoy** — On deploy: put 1 DP counter on each monster the arrows point at. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
+| WCG-379 | 漲潮巨龜 | 怪物 | 5 | 1800 | 2 | — | 嘲諷；進場：回復 2 點生命，抽 1 張牌。你每回合第一次將己方怪物移回手牌時，此卡在你手牌中的費用 -2 直到回合結束。 | **Floodtide Tortoise** — Taunt. On deploy: recover 2 life and draw 1 card. The first time each turn you return one of your monsters to your hand, this card costs 2 less in your hand until end of turn. |
 
 ## 秩序（Order，61 張）
 
@@ -394,7 +401,7 @@ source: WcgWeb/Data/cards.json
 | WCG-358 | 地脈回響 | 法術 | 2 | — | — | — | 你的怪物每有 1 個 ← → 箭頭指向你的另 1 隻怪物，選擇：回復 1 點生命或抽 1 張牌（合計最多 4 次）。 | **Leyline Echo** — For each ← → arrow of your monsters pointing at another of your monsters, choose: recover 1 life or draw 1 card (up to 4 times in total). |
 | WCG-361 | 纏繞樹人 | 怪物 | 4 | 1600 | 1 | ←→↑ | 進場：你可以將 1 隻己方怪物移回手牌。【箭頭：← → ↑】箭頭指向的怪物 PP +300（包括 ↑ 正對面的怪物）。 | **Entwining Treant** — On deploy: you may return 1 of your monsters to your hand. [Arrow: ← → ↑] The monsters the arrows point at get +300 PP (including the one directly across). |
 
-## 雙色（Dual，24 張）
+## 雙色（Dual，26 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -422,3 +429,5 @@ source: WcgWeb/Data/cards.json
 | WCG-368 | 審判之盾 | 法術（反擊）（秩序／狂怒） | 3 | — | — | — | 【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。 | **Shield of Judgment** — [Counter] When you take damage from a monster's attack: destroy that monster, then put 1 Blood Oath counter on 1 of your Blood Oath Altars. |
 | WCG-371 | 誓血軍旗手 | 怪物（秩序／狂怒） | 4 | 1400 | 1 | ←→ | 【箭頭：← →】箭頭指向的怪物 PP +200；你的生命每比對手少 1 點，再 +200。 | **Bloodoath Standard-Bearer** — [Arrow: ← →] The monsters the arrows point at get +200 PP, plus another +200 for each life you have less than your opponent. |
 | WCG-372 | 千倍奉還 | 法術（秩序／狂怒） | 6 | — | — | — | 移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。 | **Thousandfold Return** — Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed. |
+| WCG-378 | 輪迴之環 | 結界（理智／生機） | 3 | — | — | — | 每當你將己方怪物移回手牌，抽 1 張牌（每回合最多 2 次）。 | **Ring of Recurrence** — Whenever you return one of your monsters to your hand, draw 1 card (at most twice per turn). |
+| WCG-381 | 萬潮回歸 | 法術（理智／生機） | 6 | — | — | — | 將你場上所有怪物移回手牌，每收回 1 隻抽 1 張牌。本回合你付費召喚的怪物費用 -2（最低 0）。 | **Return of All Tides** — Return all your monsters to your hand and draw 1 card for each one returned. This turn, monsters you summon by paying cost 2 less (to a minimum of 0). |

@@ -58,7 +58,7 @@ public partial class GameEngine
         GraveRaise(p, grave, false);
         return true;
     }
-    private static List<MonsterInstance>? GraveSpellTargets(PlayerState p, CardDefinition c) => RootSpellTargets(p, c);
+    private List<MonsterInstance>? GraveSpellTargets(PlayerState p, CardDefinition c) => RootSpellTargets(p, c);
     private static bool GraveNeedsTarget(string id) => RootNeedsTarget(id);
     private bool GraveSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {

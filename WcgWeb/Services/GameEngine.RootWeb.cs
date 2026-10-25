@@ -66,7 +66,7 @@ public partial class GameEngine
                 DrawMany(p, 1);
             });
     }
-    private static List<MonsterInstance>? RootSpellTargets(PlayerState p, CardDefinition c) => BloodSpellTargets(p, c);
+    private List<MonsterInstance>? RootSpellTargets(PlayerState p, CardDefinition c) => BloodSpellTargets(p, c);
     private static bool RootNeedsTarget(string id) => BloodNeedsTarget(id);
     // 358 地脈回響: links = your monsters' ← → arrows pointing at another monster of yours (at most 4).
     private int RootLinks(PlayerState p) => Math.Min(4, p.Field.Where(s => s.IsUnit && !s.IsSilenced && (s.Card.Arrows.Contains("left") || s.Card.Arrows.Contains("right")))

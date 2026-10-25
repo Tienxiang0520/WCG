@@ -179,14 +179,19 @@ internal static class CardBalanceHistory
     internal static bool RevivalLordTextCatalog(CardDatabase cards) => cards.GetCard("WCG-194")?.Text?.Contains("那隻怪本回合可以攻擊", StringComparison.Ordinal) == true;
     private static CardDatabase RevivalLordTextStep(CardDatabase c) => RevivalLordTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeRevivalLordText") : c;
 
+    internal static bool IsTideCycleCard(string id) => id.Length == 7 && id.StartsWith("WCG-", StringComparison.Ordinal) && int.TryParse(id.AsSpan(4), out var n) && n is >= 373 and <= 381;
+    private static CardDatabase TideCycleCardsStep(CardDatabase c) => c.GetCard("WCG-373") == null ? c
+        : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsTideCycleCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        TideCycleCardsStep, RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeRevivalLordText(CardDatabase current) => RevivalLordTextStep(current);
+    internal static CardDatabase BeforeTideCycleCards(CardDatabase current) => TideCycleCardsStep(current);
+    internal static CardDatabase BeforeRevivalLordText(CardDatabase current) => RevivalLordTextStep(BeforeTideCycleCards(current));
     internal static CardDatabase BeforeBloodOathCards(CardDatabase current) => BloodOathCardsStep(BeforeRevivalLordText(current));
     internal static CardDatabase BeforeRootWebCards(CardDatabase current) => RootWebCardsStep(BeforeBloodOathCards(current));
     internal static CardDatabase BeforeGraveOathCards(CardDatabase current) => GraveOathCardsStep(BeforeRootWebCards(current));

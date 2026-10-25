@@ -113,7 +113,7 @@ public partial class GameEngine
     private MonsterInstance? LaneSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
         "WCG-322" => own.OrderByDescending(m => (LaneOpen(m) && (m.IsTapped || m.HasAttacked) ? 10 : 0) + (CanAttack(m) ? 2 : 0) + m.CurrentDP).FirstOrDefault(),
-        _ => null
+        _ => TideSpellTarget(p, id, own)
     };
     // Slot choice: raiders want an open lane; 321／325／326 want the enemy their deploy hits.
     private ChoiceOption? LaneSlot(PlayerState p, PendingChoice choice)

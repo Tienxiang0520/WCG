@@ -42,13 +42,13 @@ public partial class GameEngine
 
     private bool BloodDeploy(PlayerState p, MonsterInstance m)
     {
-        if (m.Card.Id != "WCG-369") return false;
+        if (m.Card.Id != "WCG-369") return TideDeploy(p, m);
         // Written as damage on purpose: it opens a counter window and feeds 364／365.
         Resolve(() => Damage(p, 1, new(p, m.Card, m, "deploy")), () => DrawMany(p, 1));
         return true;
     }
-    private static List<MonsterInstance>? BloodSpellTargets(PlayerState p, CardDefinition c) => null;
-    private static bool BloodNeedsTarget(string id) => false;
+    private List<MonsterInstance>? BloodSpellTargets(PlayerState p, CardDefinition c) => TideSpellTargets(p, c);
+    private static bool BloodNeedsTarget(string id) => TideNeedsTarget(id);
     private bool BloodSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         var e = GetOpponent(p);
@@ -60,7 +60,7 @@ public partial class GameEngine
                 Log($"【{p.Name}】移除 {n} 個血誓指示物。", "action");
                 if (n > 0) SpellDamage(p, e, n, source.Card);
                 break;
-            default: return false;
+            default: return TideSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -80,7 +80,7 @@ public partial class GameEngine
     {
         "WCG-370" when BloodTotal(p) < 2 => "你場上的血誓指示物不足 2 個。",
         "WCG-370" when !GetOpponent(p).Field.Any(x => x.IsUnit) => "敵方場上沒有怪物。",
-        _ => ""
+        _ => TidePlayProblem(p, c)
     };
     // Counter cards (反擊) of this archetype; called from CanReact / ResolveDamageCounter.
     private static bool BloodCounterCard(string id) => id is "WCG-366" or "WCG-368";
@@ -113,13 +113,13 @@ public partial class GameEngine
                 var dmg = BloodTotal(p);
                 return dmg >= e.Hp ? 1000 : dmg < 3 ? -5 : dmg * 1.5;
         }
-        return null;
+        return TidePlayValue(p, c);
     }
     private static MonsterInstance? BloodTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;
     // 370: kill the strongest enemy monsters first.
     private ChoiceOption? BloodChoice(PlayerState p, PendingChoice choice)
     {
-        if (choice.Title != BloodSettleTitle) return null;
+        if (choice.Title != BloodSettleTitle) return TideChoice(p, choice);
         var best = GetOpponent(p).Field.Where(x => x.IsUnit).OrderByDescending(x => x.CurrentPP).FirstOrDefault();
         return choice.Options.FirstOrDefault(o => best != null && o.Id == best.InstanceId.ToString()) ?? choice.Options.First(o => o.Id == "SKIP");
     }
