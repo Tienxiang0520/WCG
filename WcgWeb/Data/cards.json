@@ -6577,5 +6577,166 @@
       "劇毒"
     ],
     "arrows": []
+  },
+  {
+    "id": "WCG-391",
+    "name": "連斬見習兵",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": 800,
+    "dp": 0,
+    "text": "此怪物每回合第一次攻擊後，若它還在場，轉為直立。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：一回合砍兩刀的小兵。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-392",
+    "name": "再起戰吼",
+    "type": "法術",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 1,
+    "total_cost": 1,
+    "pp": null,
+    "dp": null,
+    "text": "將 1 隻己方怪物轉為直立，它 PP +300 直到回合結束。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：便宜的再攻擊。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-393",
+    "name": "戰鼓傳令",
+    "type": "怪物",
+    "will": "中立",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": 1000,
+    "dp": 1,
+    "text": "【箭頭：← →】箭頭指向的怪物攻擊後，若它還在場，PP +200 直到回合結束。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：越打越兇的鼓手。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": [
+      "left",
+      "right"
+    ]
+  },
+  {
+    "id": "WCG-394",
+    "name": "鎖鏈鬥士",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": 1400,
+    "dp": 1,
+    "text": "衝鋒；此怪物攻擊並消滅敵方怪物後，轉為直立（每回合最多 2 次）。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：殺一隻就再打。",
+    "hs_ref": "",
+    "keywords": [
+      "衝鋒"
+    ],
+    "arrows": []
+  },
+  {
+    "id": "WCG-395",
+    "name": "不歇鍛爐",
+    "type": "結界",
+    "will": "中立",
+    "cost_spec": "",
+    "cost_gen": 3,
+    "total_cost": 3,
+    "pp": null,
+    "dp": null,
+    "text": "主動：橫置此卡：將 1 隻己方已橫置的怪物轉為直立。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：每回合多一次攻擊。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-396",
+    "name": "狂潮步伐",
+    "type": "法術",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 2,
+    "total_cost": 2,
+    "pp": null,
+    "dp": null,
+    "text": "將所有己方已橫置的怪物轉為直立；它們本回合不能攻擊敵方玩家。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：全隊再打一輪怪（不能打臉）。",
+    "hs_ref": "",
+    "keywords": [],
+    "arrows": []
+  },
+  {
+    "id": "WCG-397",
+    "name": "血浪劍豪",
+    "type": "怪物",
+    "will": "狂怒",
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": 1700,
+    "dp": 1,
+    "text": "貫穿；本回合此怪物每攻擊過 1 次，PP +400（直到回合結束）。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：越砍越強的主力（不用指示物，回合結束歸零）。",
+    "hs_ref": "",
+    "keywords": [
+      "貫穿"
+    ],
+    "arrows": []
+  },
+  {
+    "id": "WCG-398",
+    "name": "戰場號角",
+    "type": "怪物",
+    "will": "中立",
+    "cost_spec": "",
+    "cost_gen": 4,
+    "total_cost": 4,
+    "pp": 1500,
+    "dp": 1,
+    "text": "嘲諷；你的回合中，第一隻攻擊後仍在場的己方怪物轉為直立（每回合 1 次）。【箭頭：↑】箭頭指向的怪物 PP -300。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：嘲諷＋每回合一次再攻擊。",
+    "hs_ref": "",
+    "keywords": [
+      "嘲諷"
+    ],
+    "arrows": [
+      "up"
+    ]
+  },
+  {
+    "id": "WCG-399",
+    "name": "千刃狂濤",
+    "type": "怪物",
+    "will": [
+      "狂怒",
+      "中立"
+    ],
+    "cost_spec": "",
+    "cost_gen": 7,
+    "total_cost": 7,
+    "pp": 2200,
+    "dp": 1,
+    "text": "衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。",
+    "design_note": "2026-10-25 第五批新流派「怒濤連擊」：升天卡，一回合最多 4 次貫穿攻擊。",
+    "hs_ref": "",
+    "keywords": [
+      "衝鋒",
+      "貫穿"
+    ],
+    "arrows": []
   }
 ]

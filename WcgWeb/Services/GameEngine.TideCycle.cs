@@ -50,8 +50,8 @@ public partial class GameEngine
         }
         return true;
     }
-    private List<MonsterInstance>? TideSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-375" ? p.Field.Where(x => x.IsUnit).ToList() : null;
-    private static bool TideNeedsTarget(string id) => id == "WCG-375";
+    private List<MonsterInstance>? TideSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-375" ? p.Field.Where(x => x.IsUnit).ToList() : SurgeSpellTargets(p, c);
+    private static bool TideNeedsTarget(string id) => id == "WCG-375" || SurgeNeedsTarget(id);
     private bool TideSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
@@ -97,7 +97,7 @@ public partial class GameEngine
     private MonsterInstance? TideSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
         "WCG-375" => own.Where(Reusable).OrderByDescending(m => (m.IsTapped ? 5 : 0) + m.Card.TotalCost).FirstOrDefault() ?? own.OrderBy(BodyValue).FirstOrDefault(),
-        _ => null
+        _ => SurgeSpellTarget(p, id, own)
     };
     // 374: pick up a tapped monster whose 進場 can be used again; otherwise keep the board.
     private ChoiceOption? TideChoice(PlayerState p, PendingChoice choice)

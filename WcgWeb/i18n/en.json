@@ -1987,5 +1987,9 @@
  "選擇消滅的敵方怪物（有 2 個以上腐蝕指示物）": "Choose an enemy monster with 2 or more Corrosion counters to destroy",
  "放置 1 個腐蝕指示物": "1 Corrosion counter placed",
  "放置 {0} 個腐蝕指示物": "{0} Corrosion counters placed",
- "【{0}】獲得 {1} 個腐蝕指示物（PP {2}）。": "{0} gets {1} Corrosion counter(s) (PP {2})."
+ "【{0}】獲得 {1} 個腐蝕指示物（PP {2}）。": "{0} gets {1} Corrosion counter(s) (PP {2}).",
+ "選擇轉為直立的己方怪物": "Choose one of your monsters to ready",
+ "不歇鍛爐：選擇轉為直立的己方已橫置怪物": "Restless Forge: choose one of your tapped monsters to ready",
+ "你沒有已橫置的怪物。": "You have no tapped monsters.",
+ "【{0}】轉為直立（{1}）。": "{0} is readied ({1})."
 }

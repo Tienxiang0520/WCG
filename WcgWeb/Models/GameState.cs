@@ -79,6 +79,12 @@ public class MonsterInstance
     public int BloodCounters { get; set; }
     // 腐蝕指示物 (腐沼蔓生, WCG-382–390): -300 PP each, stacking; removed by silence, dispel, or leaving play.
     public int CorrosionCounters { get; set; }
+    // 怒濤連擊 (WCG-391–399), all reset at every turn change: attacks made this turn (397), times readied by its own text
+    // (394／399 limits), 396's "can't attack the enemy player this turn", and whether this 398 has readied a monster this turn.
+    public int SurgeAttacks { get; set; }
+    public int SurgeReadies { get; set; }
+    public bool SurgeNoFace { get; set; }
+    public bool SurgeHornUsed { get; set; }
     public bool Stolen => OwnerId != null;
     // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
     public bool AttackBanned { get; set; }
