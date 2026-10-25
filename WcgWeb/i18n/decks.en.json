@@ -1096,5 +1096,11 @@
   "zhDescription": "在敵方怪物上疊腐蝕指示物，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
   "name": "Life · Rotting Mire (Mire)",
   "description": "Stack Corrosion counters on enemy monsters while poisonous creatures hold the line; Mother of All Rot finishes the whole row at once."
+ },
+ "RANKED-5-WRATH-SURGE": {
+  "zhName": "狂怒・怒濤連擊（連擊）",
+  "zhDescription": "攻擊完轉回直立再打；鎖鏈鬥士、血浪劍豪一回合連砍，千刃狂濤收尾。",
+  "name": "Wrath · Surging Strikes (Combo)",
+  "description": "Attack, ready, attack again: Chain Brawler and Blood-Tide Swordmaster strike several times a turn, and Thousand-Blade Tide finishes."
  }
 }

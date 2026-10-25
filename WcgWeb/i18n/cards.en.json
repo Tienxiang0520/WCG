@@ -2359,5 +2359,59 @@
     "name": "Mother of All Rot",
     "text": "Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less.",
     "zh_text": "劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。"
+  },
+  "WCG-391": {
+    "zh": "連斬見習兵",
+    "name": "Twinstrike Recruit",
+    "text": "After this monster's first attack each turn, if it is still on the field, ready it.",
+    "zh_text": "此怪物每回合第一次攻擊後，若它還在場，轉為直立。"
+  },
+  "WCG-392": {
+    "zh": "再起戰吼",
+    "name": "Rallying Warcry",
+    "text": "Ready 1 of your monsters. It gets +300 PP until end of turn.",
+    "zh_text": "將 1 隻己方怪物轉為直立，它 PP +300 直到回合結束。"
+  },
+  "WCG-393": {
+    "zh": "戰鼓傳令",
+    "name": "War Drum Herald",
+    "text": "[Arrow: ← →] After a monster the arrows point at attacks, if it is still on the field, it gets +200 PP until end of turn.",
+    "zh_text": "【箭頭：← →】箭頭指向的怪物攻擊後，若它還在場，PP +200 直到回合結束。"
+  },
+  "WCG-394": {
+    "zh": "鎖鏈鬥士",
+    "name": "Chain Brawler",
+    "text": "Charge. After this monster attacks and destroys an enemy monster, ready it (at most twice per turn).",
+    "zh_text": "衝鋒；此怪物攻擊並消滅敵方怪物後，轉為直立（每回合最多 2 次）。"
+  },
+  "WCG-395": {
+    "zh": "不歇鍛爐",
+    "name": "Restless Forge",
+    "text": "Active: tap this card: ready 1 of your tapped monsters.",
+    "zh_text": "主動：橫置此卡：將 1 隻己方已橫置的怪物轉為直立。"
+  },
+  "WCG-396": {
+    "zh": "狂潮步伐",
+    "name": "Frenzied Stride",
+    "text": "Ready all your tapped monsters. They can't attack the enemy player this turn.",
+    "zh_text": "將所有己方已橫置的怪物轉為直立；它們本回合不能攻擊敵方玩家。"
+  },
+  "WCG-397": {
+    "zh": "血浪劍豪",
+    "name": "Bloodwave Swordmaster",
+    "text": "Trample. This monster gets +400 PP for each time it has attacked this turn (until end of turn).",
+    "zh_text": "貫穿；本回合此怪物每攻擊過 1 次，PP +400（直到回合結束）。"
+  },
+  "WCG-398": {
+    "zh": "戰場號角",
+    "name": "Battlefield Horn",
+    "text": "Taunt. During your turn, the first of your monsters that attacks and is still on the field afterwards is readied (once per turn). [Arrow: ↑] The monster the arrow points at gets -300 PP.",
+    "zh_text": "嘲諷；你的回合中，第一隻攻擊後仍在場的己方怪物轉為直立（每回合 1 次）。【箭頭：↑】箭頭指向的怪物 PP -300。"
+  },
+  "WCG-399": {
+    "zh": "千刃狂濤",
+    "name": "Thousand-Blade Surge",
+    "text": "Charge. Trample. After each attack, if this monster is still on the field, ready it (at most 3 times per turn).",
+    "zh_text": "衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。"
   }
 }

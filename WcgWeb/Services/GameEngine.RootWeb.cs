@@ -95,7 +95,7 @@ public partial class GameEngine
         "WCG-362" when !RootSqueezeSlot(p) => "只能放在兩隻己方怪物之間的空格。",
         _ => BloodPlayProblem(p, c)
     };
-    private static bool RootCanActivate(PlayerState p, MonsterInstance s) => false;
+    private static bool RootCanActivate(PlayerState p, MonsterInstance s) => SurgeCanActivate(p, s);
     private int RootAndBloodDp(PlayerState p, MonsterInstance unit) => RootDp(p, unit) + BloodDp(p, unit);
 
     // ── 天梯電腦 ──

@@ -96,7 +96,7 @@ public partial class GameEngine
                 if (ripe.Count > 0) PickMonster(p, MireHarvestTitle, ripe, x => KillBatch([x], source.Card.Name));
                 else Corrode(p, source.Card, 2);
                 break;
-            default: return false;
+            default: return SurgeSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -104,7 +104,7 @@ public partial class GameEngine
     private string MirePlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
         "WCG-384" or "WCG-388" when !GetOpponent(p).Field.Any(x => x.IsUnit) => "敵方場上沒有怪物。",
-        _ => ""
+        _ => SurgePlayProblem(p, c)
     };
 
     // ── 天梯電腦 ──
@@ -118,7 +118,7 @@ public partial class GameEngine
                 var ripe = foes.Where(x => x.CorrosionCounters >= 2).ToList();
                 return ripe.Count > 0 ? ripe.Max(BodyValue) + 1.5 : foes.Count == 0 ? -5 : 1;
         }
-        return null;
+        return SurgePlayValue(p, c);
     }
     // Corrode the monster closest to dying (fewest PP left); the brood destroys one with 3 or more first.
     private static MonsterInstance? MireTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
@@ -126,6 +126,6 @@ public partial class GameEngine
         MireBroodTitle => legal.Where(x => x.CorrosionCounters >= 3).OrderByDescending(x => x.CurrentPP).FirstOrDefault() ?? legal.OrderByDescending(x => x.CurrentPP).FirstOrDefault(),
         MireCorrodeTitle => legal.Where(x => x.CurrentPP > 0).OrderBy(x => x.CurrentPP).FirstOrDefault() ?? legal.FirstOrDefault(),
         MireHarvestTitle => legal.OrderByDescending(x => x.CurrentPP).FirstOrDefault(),
-        _ => null
+        _ => SurgeTarget(p, pending, legal)
     };
 }

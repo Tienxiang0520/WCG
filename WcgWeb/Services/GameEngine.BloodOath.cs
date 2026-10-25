@@ -33,7 +33,7 @@ public partial class GameEngine
         foreach (var guard in p.Field.Where(x => Active(x, "WCG-365")).ToArray()) AddDpCounter(guard, guard.Card);
     }
     // 367 誓言之怒: +600 PP and +1 DP while your life is 3 or less.
-    private int BloodPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-367" && LowLife(p) ? 600 : 0;
+    private int BloodPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-367" ? (LowLife(p) ? 600 : 0) : SurgePower(p, m);
     private int BloodDp(PlayerState p, MonsterInstance m) => Active(m, "WCG-367") && LowLife(p) ? 1 : 0;
     // 371 誓血軍旗手: its ← → arrows give another +200 for each life its controller has less than the opponent.
     private IEnumerable<(CardDefinition Source, int Amount)> BloodArrowSources(PlayerState owner, MonsterInstance unit) =>
