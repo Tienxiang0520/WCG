@@ -37,6 +37,15 @@ internal static class CounterHistory
     // Catalog before the 2026-10-25 冥府復甦領主 wording (「那隻怪本回合可以攻擊」).
     // Catalog before the 潮汐輪迴 cards WCG-373–381 existed.
     // Catalog before the 腐沼蔓生 cards WCG-382–390 existed.
+    // Catalog before the 2026-10-25 血祭傀儡師 wording (「你從對手那裡奪來的怪物」).
+    internal static CardDatabase BeforeBloodPuppeteerText(CardDatabase current)
+    {
+        current=BeforeHolySpringCards(current);
+        if(current.GetCard("WCG-334")?.Text.Contains("你從對手那裡奪來的怪物")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-blood-puppeteer-text.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     // Catalog before the 怒濤連擊 cards WCG-391–399 existed.
     // Catalog before the 聖泉滿溢 cards WCG-400–408 existed.
     // Catalog before the 星律倒數 cards WCG-409–417 existed.
@@ -60,7 +69,7 @@ internal static class CounterHistory
     }
     internal static CardDatabase BeforeSurgeStrikeCards(CardDatabase current)
     {
-        current=BeforeHolySpringCards(current);
+        current=BeforeBloodPuppeteerText(current);
         return current.GetCard("WCG-391")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 391 or > 399)),JsonSerializer.Serialize(current.PresetDecks));
     }
