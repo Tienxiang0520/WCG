@@ -179,6 +179,7 @@ public partial class GameEngine
         MireStartTurn(p);
         SpringStartTurn(p);
         StarStartTurn(p);
+        FateStartTurn(p);
         foreach (var s in p.Structures.Where(x => !x.IsSet).ToArray())
         {
             if (s.Card.Id == "WCG-231" && AltarReady(p)) _effects.AddLast(() => { if (p.Structures.Contains(s) && AltarReady(p)) DrawMany(p, 1); });

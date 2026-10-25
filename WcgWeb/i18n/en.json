@@ -2011,5 +2011,13 @@
  "放置 {0} 個倒數指示物": "{0} Countdown counters placed",
  "倒數歸零": "Countdown ends",
  "【{0}】放置 {1} 個倒數指示物（共 {2} 個）。": "{0} gets {1} Countdown counter(s) ({2} in total).",
- "【{0}】移除最後 1 個倒數指示物，觸發效果。": "{0} loses its last Countdown counter and triggers."
+ "【{0}】移除最後 1 個倒數指示物，觸發效果。": "{0} loses its last Countdown counter and triggers.",
+ "翻開：卡面寫「翻開你牌庫頂 1 張」時，把你牌庫最上面 1 張公開給雙方看，依卡面處理效果（看它的類型：怪物、法術或結界，或它的印刷費用），然後放到你的牌庫底。翻開不是抽牌，翻開的牌不進墓地。牌庫沒有牌時不翻開，效果略過，也不會因此敗北。卡面寫「從牌庫免費召喚它」時，把那張翻開的怪物直接放到你場上的空格（不觸發進場）。": "Reveal: when a card says to reveal the top card of your deck, show that card to both players, resolve the effect (by its type — monster, spell or structure — or its printed cost), then put it on the bottom of your deck. Revealing is not drawing, and the revealed card never goes to the graveyard. If your deck is empty, nothing is revealed and the effect is skipped; you don't lose for it. When a card says to summon it from your deck for free, put that revealed monster into an empty slot on your side (its deploy doesn't trigger).",
+ "深淵賭約：選擇敵方怪物（本回合 PP 降低）": "Abyssal Wager: choose an enemy monster (its PP drops this turn)",
+ "開眼之井：要失去 1 點生命，把翻開的牌加入手牌嗎？": "Well of Open Eyes: lose 1 life to put the revealed card into your hand?",
+ "失去 1 點生命，加入手牌": "Lose 1 life and take it",
+ "放回牌庫底": "Put it on the bottom",
+ "翻開牌庫頂": "Top card revealed",
+ "【{0}】牌庫沒有牌，【{1}】不翻開。": "{0} has no cards in their deck, so {1} reveals nothing.",
+ "【{0}】翻開牌庫頂【{1}】（{2}），放到牌庫底。": "{0} reveals the top card, {1} ({2}), and puts it on the bottom."
 }
