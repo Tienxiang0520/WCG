@@ -174,3 +174,6 @@
 .blood-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #3a0606; background: #fff; }
 .blood-token-icon { width: 14mm; height: 14mm; display: block; }
 .ink-saving .blood-token, .white-color .blood-token { border-style: solid; }
+.corrosion-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2b1640; background: #fff; }
+.corrosion-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .corrosion-token, .white-color .corrosion-token { border-style: solid; }

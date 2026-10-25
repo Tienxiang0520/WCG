@@ -123,6 +123,7 @@ public partial class GameEngine
         BeaconEndTurn(p, effects);
         HoofEndTurn(p, effects);
         SoulEndTurn(p, effects);
+        MireEndTurn(p, effects);
         foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
             effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
         effects.Add(SoulReturnControl);

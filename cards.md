@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 381
+total_cards: 390
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 381 張）
+# WCG 卡牌總表（共 390 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 228 張、法術 123 張、法術（反擊） 11 張、結界 19 張。
+類型：怪物 234 張、法術 125 張、法術（反擊） 11 張、結界 20 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，61 張）
@@ -149,7 +149,7 @@ source: WcgWeb/Data/cards.json
 | WCG-377 | 鏡湖賢者 | 怪物 | 3 | 1200 | 1 | — | 進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。 | **Mirror Lake Sage** — On deploy: look at the top 3 cards of your deck, put 1 into your hand and the rest on the bottom in any order. |
 | WCG-380 | 思潮捕手 | 怪物 | 4 | 1500 | 1 | ↑ | 進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Thoughtcurrent Catcher** — On deploy: return 1 enemy monster to its hand. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
 
-## 生機（Life，63 張）
+## 生機（Life，66 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -216,6 +216,9 @@ source: WcgWeb/Data/cards.json
 | WCG-373 | 潮間採集者 | 怪物 | 1 | 600 | 0 | — | 進場：回復 1 點生命，抽 1 張牌。 | **Tidepool Gatherer** — On deploy: recover 1 life and draw 1 card. |
 | WCG-376 | 孢潮使者 | 怪物 | 2 | 1000 | 1 | ←→ | 進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。 | **Sporetide Envoy** — On deploy: put 1 DP counter on each monster the arrows point at. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 | WCG-379 | 漲潮巨龜 | 怪物 | 5 | 1800 | 2 | — | 嘲諷；進場：回復 2 點生命，抽 1 張牌。你每回合第一次將己方怪物移回手牌時，此卡在你手牌中的費用 -2 直到回合結束。 | **Floodtide Tortoise** — Taunt. On deploy: recover 2 life and draw 1 card. The first time each turn you return one of your monsters to your hand, this card costs 2 less in your hand until end of turn. |
+| WCG-382 | 孢沼爬蟲 | 怪物 | 1 | 500 | 0 | — | 劇毒；陣亡：在 1 隻敵方怪物上放置 1 個腐蝕指示物。 | **Sporebog Crawler** — Poison. On death: put 1 Corrosion counter on 1 enemy monster. |
+| WCG-384 | 蔓延孢雲 | 法術 | 2 | — | — | — | 在每隻敵方怪物上各放置 1 個腐蝕指示物。 | **Spreading Spore Cloud** — Put 1 Corrosion counter on each enemy monster. |
+| WCG-387 | 屍菇傳播者 | 怪物 | 3 | 1100 | 1 | ←→ | 進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。 | **Corpsecap Spreader** — On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 
 ## 秩序（Order，61 張）
 
@@ -283,7 +286,7 @@ source: WcgWeb/Data/cards.json
 | WCG-365 | 忍辱誓衛 | 怪物 | 2 | 1200 | 1 | — | 你每次受到傷害，在此怪物放 1 個 DP 指示物。 | **Enduring Oathguard** — Each time you take damage, put 1 DP counter on this monster. |
 | WCG-370 | 血帳清算 | 法術 | 4 | — | — | — | 移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。 | **Settling the Blood Debt** — Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP). |
 
-## 深淵（Abyss，60 張）
+## 深淵（Abyss，64 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -347,6 +350,10 @@ source: WcgWeb/Data/cards.json
 | WCG-349 | 骸骨軍旗 | 結界 | 3 | — | — | — | 主動：橫置此卡，把你墓地的另外 3 張牌洗回牌庫底：從你的墓地免費召喚 1 隻印刷 PP 1200 以下的怪物。 | **Bone Standard** — Active: tap this card and shuffle 3 other cards from your graveyard to the bottom of your deck: summon 1 monster with printed PP 1200 or less from your graveyard for free. |
 | WCG-351 | 不朽方陣兵 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：若你的墓地有 8 張以上，從你的墓地免費召喚此怪物到你的空格（每回合限 1 次）。 | **Undying Phalanx** — Taunt. On Death: if you have 8 or more cards in your graveyard, summon this monster from your graveyard to an empty slot of yours for free (once per turn). |
 | WCG-352 | 亡魂點名 | 法術 | 1 | — | — | — | 你的墓地每有 4 張牌，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Roll Call of the Dead** — Deal 1 damage to the enemy player for every 4 cards in your graveyard (up to 3). |
+| WCG-383 | 腐霧散布者 | 怪物 | 2 | 900 | 1 | ↑ | 進場：在 1 隻敵方怪物上放置 1 個腐蝕指示物。【箭頭：↑】你的回合結束時，在箭頭指向的怪物上放置 1 個腐蝕指示物。 | **Rotmist Spreader** — On deploy: put 1 Corrosion counter on 1 enemy monster. [Arrow: ↑] At the end of your turn, put 1 Corrosion counter on the monster the arrow points at. |
+| WCG-385 | 腐根獵手 | 怪物 | 3 | 1300 | 1 | — | 劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。 | **Rotroot Stalker** — Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn. |
+| WCG-388 | 腐朽收割 | 法術 | 3 | — | — | — | 消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。 | **Rotting Harvest** — Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead. |
+| WCG-389 | 瘴氣巨口 | 怪物 | 5 | 2000 | 2 | — | 貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Miasma Maw** — Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3). |
 
 ## 中立（Neutral，48 張）
 
@@ -401,7 +408,7 @@ source: WcgWeb/Data/cards.json
 | WCG-358 | 地脈回響 | 法術 | 2 | — | — | — | 你的怪物每有 1 個 ← → 箭頭指向你的另 1 隻怪物，選擇：回復 1 點生命或抽 1 張牌（合計最多 4 次）。 | **Leyline Echo** — For each ← → arrow of your monsters pointing at another of your monsters, choose: recover 1 life or draw 1 card (up to 4 times in total). |
 | WCG-361 | 纏繞樹人 | 怪物 | 4 | 1600 | 1 | ←→↑ | 進場：你可以將 1 隻己方怪物移回手牌。【箭頭：← → ↑】箭頭指向的怪物 PP +300（包括 ↑ 正對面的怪物）。 | **Entwining Treant** — On deploy: you may return 1 of your monsters to your hand. [Arrow: ← → ↑] The monsters the arrows point at get +300 PP (including the one directly across). |
 
-## 雙色（Dual，26 張）
+## 雙色（Dual，28 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -431,3 +438,5 @@ source: WcgWeb/Data/cards.json
 | WCG-372 | 千倍奉還 | 法術（秩序／狂怒） | 6 | — | — | — | 移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。 | **Thousandfold Return** — Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed. |
 | WCG-378 | 輪迴之環 | 結界（理智／生機） | 3 | — | — | — | 每當你將己方怪物移回手牌，抽 1 張牌（每回合最多 2 次）。 | **Ring of Recurrence** — Whenever you return one of your monsters to your hand, draw 1 card (at most twice per turn). |
 | WCG-381 | 萬潮回歸 | 法術（理智／生機） | 6 | — | — | — | 將你場上所有怪物移回手牌，每收回 1 隻抽 1 張牌。本回合你付費召喚的怪物費用 -2（最低 0）。 | **Return of All Tides** — Return all your monsters to your hand and draw 1 card for each one returned. This turn, monsters you summon by paying cost 2 less (to a minimum of 0). |
+| WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | — | 你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。 | **Bogmother's Brood** — At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead. |
+| WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 2300 | 2 | — | 劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。 | **Mother of All Rot** — Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less. |

@@ -47,7 +47,7 @@ public partial class GameEngine
     // 359 斷根反噬: the monsters its arrows pointed at each get 1 DP 指示物, and the enemy player takes 1 damage.
     private bool RootDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
-        if (m.Card.Id != "WCG-359" || m.IsSilenced) return false;
+        if (m.Card.Id != "WCG-359" || m.IsSilenced) return MireDeath(p, m, grave);
         var row = m.Turned ? GetOpponent(p) : p;
         Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
         foreach (var x in RowUnits(row).Where(x => x.IsUnit && (x.Slot == m.Slot - 1 || x.Slot == m.Slot + 1)).ToArray()) AddDpCounter(x, m.Card);

@@ -25,6 +25,8 @@ public partial class GameEngine
     {
         if(!SilenceCounterRules||!Alive(m))return;
         if(m.DpCounters>0){m.DpCounters=0;RefreshBoard();}
+        // 腐蝕指示物 (腐沼蔓生, 2026-10-25): silence removes them too.
+        if(m.CorrosionCounters>0){m.CorrosionCounters=0;RefreshBoard();}
         UnSoul(m);
     }
     // Remove the 奪魂指示物: the monster moves to the empty slot of its owner's row nearest its slot (owner's hand if none).

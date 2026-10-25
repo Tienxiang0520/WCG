@@ -115,7 +115,7 @@ public partial class GameEngine
         }
         return TidePlayValue(p, c);
     }
-    private static MonsterInstance? BloodTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => null;
+    private static MonsterInstance? BloodTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => MireTarget(p, pending, legal);
     // 370: kill the strongest enemy monsters first.
     private ChoiceOption? BloodChoice(PlayerState p, PendingChoice choice)
     {

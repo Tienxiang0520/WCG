@@ -46,7 +46,7 @@ public partial class GameEngine
             case "WCG-377": Search(p, 3, _ => true); break;
             case "WCG-379": Resolve(() => Heal(p, 2), () => DrawMany(p, 1)); break;
             case "WCG-380": PickMonster(p, "選擇移回手牌的敵方怪物", e.Field.Where(x => x.IsUnit), Bounce); break;
-            default: return false;
+            default: return MireDeploy(p, m);
         }
         return true;
     }
@@ -66,7 +66,7 @@ public partial class GameEngine
                 var mine = p.Field.Where(x => x.IsUnit).ToArray();
                 Resolve(() => { foreach (var x in mine) Bounce(x); }, () => DrawMany(p, mine.Length));
                 break;
-            default: return false;
+            default: return MireSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -74,7 +74,7 @@ public partial class GameEngine
     private string TidePlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
         "WCG-375" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
-        _ => ""
+        _ => MirePlayProblem(p, c)
     };
 
     // ── 天梯電腦 ──
@@ -92,7 +92,7 @@ public partial class GameEngine
                 var n = units.Count;
                 return n < 3 || units.Count(x => CanAttack(x)) >= 3 ? -5 : n * 1.8 - 2;
         }
-        return null;
+        return MirePlayValue(p, c);
     }
     private MonsterInstance? TideSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {

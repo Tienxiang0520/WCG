@@ -28,7 +28,7 @@ public partial class GameEngine
             var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338")+RootAndBloodDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
-                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
+                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit)-300*unit.CorrosionCounters);
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
@@ -66,7 +66,7 @@ public partial class GameEngine
     public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), "WCG-355" => (200, 0), "WCG-361" => (300, 300), "WCG-362" => (300, 0), "WCG-363" => (600, 0), "WCG-367" => (0, -300), "WCG-371" => (200, 0), "WCG-376" => (200, 0), "WCG-380" => (0, -300), _ => (0, 0) };
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), "WCG-355" => (200, 0), "WCG-361" => (300, 300), "WCG-362" => (300, 0), "WCG-363" => (600, 0), "WCG-367" => (0, -300), "WCG-371" => (200, 0), "WCG-376" => (200, 0), "WCG-380" => (0, -300), "WCG-387" => (200, 0), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
@@ -121,16 +121,16 @@ public partial class GameEngine
     // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
     private void OptionalDispel(PlayerState p,MonsterInstance source)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter)
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter||x.CorrosionCounters>0)
             .Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
         if(Targetable(p,all).Count==0)return;
         Ask(p,$"【{source.Card.Name}】進場：要驅散附著或摧毀結界嗎？",[new(){Id="DISPEL_OPT",Title="選擇驅散或摧毀目標"},new(){Id="SKIP",Title="不發動"}],o=>{if(o.Id=="DISPEL_OPT")Dispel(p);});
     }
     private void Dispel(PlayerState p,bool structures=true)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter);
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter||x.CorrosionCounters>0);
         if(structures)all=all.Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
-        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{ReleaseAttachments(x);x.IsSilenced=false;RefreshBoard();UnSoul(x);}});
+        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{ReleaseAttachments(x);x.IsSilenced=false;x.CorrosionCounters=0;RefreshBoard();UnSoul(x);}});
     }
     private void FreeFaction(PlayerState p,int cost,string faction, bool grave=false, Action<MonsterInstance>? after=null)
     {
