@@ -40,7 +40,7 @@ public partial class GameEngine
                 };
                 copy.CurrentPP = m.BasePP;
                 copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpCounters = m.DpCounters; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
-                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter; copy.BloodCounters = m.BloodCounters; copy.CorrosionCounters = m.CorrosionCounters; copy.SpringCounters = m.SpringCounters; copy.SpringDpTurn = m.SpringDpTurn; copy.SpringDpCount = m.SpringDpCount; copy.SurgeAttacks = m.SurgeAttacks; copy.SurgeReadies = m.SurgeReadies; copy.SurgeNoFace = m.SurgeNoFace; copy.SurgeHornUsed = m.SurgeHornUsed;
+                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter; copy.BloodCounters = m.BloodCounters; copy.CorrosionCounters = m.CorrosionCounters; copy.SpringCounters = m.SpringCounters; copy.SpringDpTurn = m.SpringDpTurn; copy.SpringDpCount = m.SpringDpCount; copy.Countdown = m.Countdown; copy.SurgeAttacks = m.SurgeAttacks; copy.SurgeReadies = m.SurgeReadies; copy.SurgeNoFace = m.SurgeNoFace; copy.SurgeHornUsed = m.SurgeHornUsed;
                 map[m] = copy;
                 copy.Attachments = m.Attachments.Select(a => a with { Card = Card(a.Card, false) }).ToList();
                 copy.LostAttachments = m.LostAttachments.Select(c => Card(c, false)).ToList();

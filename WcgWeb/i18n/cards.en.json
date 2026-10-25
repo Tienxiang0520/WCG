@@ -2467,5 +2467,59 @@
     "name": "Holy Spring Deluge",
     "text": "You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed.",
     "zh_text": "回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-409": {
+    "zh": "星沙學徒",
+    "name": "Starsand Apprentice",
+    "text": "On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards.",
+    "zh_text": "進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。"
+  },
+  "WCG-410": {
+    "zh": "倒懸時鐘",
+    "name": "Inverted Clock",
+    "text": "On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again.",
+    "zh_text": "進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。"
+  },
+  "WCG-411": {
+    "zh": "觀星術士",
+    "name": "Stargazer Adept",
+    "text": "[Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter.",
+    "zh_text": "【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。"
+  },
+  "WCG-412": {
+    "zh": "時隙催化",
+    "name": "Time-Gap Catalyst",
+    "text": "Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead.",
+    "zh_text": "從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。"
+  },
+  "WCG-413": {
+    "zh": "封時守衛",
+    "name": "Timeseal Warden",
+    "text": "Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster.",
+    "zh_text": "嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。"
+  },
+  "WCG-414": {
+    "zh": "隕星預言者",
+    "name": "Meteor Seer",
+    "text": "On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less.",
+    "zh_text": "進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。"
+  },
+  "WCG-415": {
+    "zh": "星軌重排",
+    "name": "Star-Orbit Realignment",
+    "text": "Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says \"When its last Countdown counter is removed\" (it can trigger again). If there is no such card, draw 1 card instead.",
+    "zh_text": "在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。"
+  },
+  "WCG-416": {
+    "zh": "永恆鐘塔",
+    "name": "Eternal Clocktower",
+    "text": "Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life.",
+    "zh_text": "每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。"
+  },
+  "WCG-417": {
+    "zh": "星律終焉",
+    "name": "End of the Star Law",
+    "text": "Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead.",
+    "zh_text": "移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。"
   }
 }

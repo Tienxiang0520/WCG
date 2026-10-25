@@ -180,3 +180,6 @@
 .spring-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #2a2410; background: #fff; }
 .spring-token-icon { width: 14mm; height: 14mm; display: block; }
 .ink-saving .spring-token, .white-color .spring-token { border-style: solid; }
+.countdown-token { display: grid; place-items: center; border-radius: 50%; border: .35mm dashed #0d1a33; background: #fff; }
+.countdown-token-icon { width: 14mm; height: 14mm; display: block; }
+.ink-saving .countdown-token, .white-color .countdown-token { border-style: solid; }

@@ -94,7 +94,7 @@ public partial class GameEngine
       Present("attach",p,card.InstanceId,target.InstanceId,card:card.Card,label:"附著"); }
     private void ReadyMonster(MonsterInstance m) { if(!Alive(m))return; m.IsTapped=false;m.HasAttacked=false;m.HasSummoningSickness=false; }
     private void SummonStructure(PlayerState p, CardInstance c)
-    { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場"); }
+    { var slot=plannedSlots.Remove(c.InstanceId,out var s)?s:FirstSlot(p);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsTapped=false,HasSummoningSickness=false});Present("summon",p,c.InstanceId,card:c.Card,label:"結界進場");StarStructureEnter(p,p.Structures[^1]); }
     public bool SetCard(PlayerState p, CardInstance c) => Change(()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch

@@ -1,0 +1,12 @@
+@* 倒數指示物 (星律倒數): sapphire round token with a silver hourglass; remove 1 at the start of your turn, the last one triggers the card. *@
+<svg class="@Class" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="29" fill="@(Ink ? "#ffffff" : "#0d1a33")" stroke="@(Ink ? "#000000" : "#3d7fd9")" stroke-width="3"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="@(Ink ? "#000000" : "#bfe3ff")" stroke-width="1.6"/>
+    @* A silver hourglass. *@
+    <path d="M21 13 h22 M21 51 h22 M23 13 c0 10 18 12 18 19 c0 7 -18 9 -18 19 M41 13 c0 10 -18 12 -18 19 c0 7 18 9 18 19" fill="none" stroke="@(Ink ? "#000000" : "#bfe3ff")" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M27 46 h10 l-5 -6 Z" fill="@(Ink ? "#000000" : "#7fd6ff")"/>
+</svg>
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Ink { get; set; }
+}

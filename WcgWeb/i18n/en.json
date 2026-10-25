@@ -2000,5 +2000,16 @@
  "放置 {0} 個聖泉指示物": "{0} Holy Spring counters placed",
  "【{0}】獲得 {1} 個聖泉指示物（共 {2} 個）。": "{0} gets {1} Holy Spring counter(s) ({2} in total).",
  "【{0}】本回合 PP -{1}（PP {2}）。": "{0} gets -{1} PP this turn (PP {2}).",
- "【{0}】移除 {1} 個聖泉指示物。": "{0} removes {1} Holy Spring counters."
+ "【{0}】移除 {1} 個聖泉指示物。": "{0} removes {1} Holy Spring counters.",
+ "倒數指示物": "Countdown counter",
+ "倒數指示物卡（12 個）": "Countdown counter sheet (12)",
+ "倒數指示物：你的回合開始時從你的每張卡各移除 1 個，移除最後 1 個時觸發卡上的效果；被沉默時全部移除、不觸發，卡離場時移除。": "Countdown counters: at the start of your turn remove 1 from each of your cards; removing the last one triggers the card's effect. Silencing removes them all without triggering; they are removed when the card leaves play.",
+ "倒數指示物：卡面寫「放置倒數指示物」時，在那張卡（怪物或結界）上放指示物。你的回合開始時，從你場上每張有倒數指示物的卡各移除 1 個；卡面寫「移除最後 1 個倒數指示物時」的效果，在移除最後 1 個（不論因為回合開始或其他卡的效果）時觸發一次，之後不再觸發，除非卡面寫明再放置。被沉默時移除所有倒數指示物，而且不觸發；卡離場時移除。倒數指示物不會放到敵方的卡上。": "Countdown counters: when a card says to put Countdown counters, put them on that card (monster or structure). At the start of your turn, remove 1 from each card you control that has any. A \"when its last Countdown counter is removed\" effect triggers once when the last one is removed (at turn start or by another card's effect), and not again unless a card puts more on it. Silencing removes all Countdown counters without triggering; they are removed when the card leaves play. Countdown counters are never put on enemy cards.",
+ "倒懸時鐘：選擇消滅的敵方怪物": "Inverted Clock: choose an enemy monster to destroy",
+ "時隙催化：選擇移除 2 個倒數指示物的己方卡": "Time-Gap Catalyst: choose one of your cards to remove 2 Countdown counters from",
+ "星軌重排：選擇放置 2 個倒數指示物的己方卡": "Star-Orbit Realignment: choose one of your cards to put 2 Countdown counters on",
+ "放置 {0} 個倒數指示物": "{0} Countdown counters placed",
+ "倒數歸零": "Countdown ends",
+ "【{0}】放置 {1} 個倒數指示物（共 {2} 個）。": "{0} gets {1} Countdown counter(s) ({2} in total).",
+ "【{0}】移除最後 1 個倒數指示物，觸發效果。": "{0} loses its last Countdown counter and triggers."
 }

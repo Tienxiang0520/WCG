@@ -1108,5 +1108,11 @@
   "zhDescription": "每次回血都存成聖泉指示物，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
   "name": "Order · Holy Spring Overflow (Spring)",
   "description": "Every heal is stored as Holy Spring counters, even at full life; Holy Spring Deluge pours it all onto the enemy's face."
+ },
+ "RANKED-5-REASON-STARCLOCK": {
+  "zhName": "理智・星律倒數（星律）",
+  "zhDescription": "把大效果預約在幾回合後，牌上放倒數指示物撐到歸零；最後星律終焉讓全場倒數同時爆開。",
+  "name": "Reason · Star Law Countdown (Star)",
+  "description": "Schedule big effects a few turns ahead with Countdown counters and hold on until they fire; End of the Star Law sets them all off at once."
  }
 }

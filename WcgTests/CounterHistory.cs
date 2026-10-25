@@ -39,8 +39,15 @@ internal static class CounterHistory
     // Catalog before the 腐沼蔓生 cards WCG-382–390 existed.
     // Catalog before the 怒濤連擊 cards WCG-391–399 existed.
     // Catalog before the 聖泉滿溢 cards WCG-400–408 existed.
+    // Catalog before the 星律倒數 cards WCG-409–417 existed.
+    internal static CardDatabase BeforeStarCountdownCards(CardDatabase current)
+    {
+        return current.GetCard("WCG-409")==null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 409 or > 417)),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeHolySpringCards(CardDatabase current)
     {
+        current=BeforeStarCountdownCards(current);
         return current.GetCard("WCG-400")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 400 or > 408)),JsonSerializer.Serialize(current.PresetDecks));
     }

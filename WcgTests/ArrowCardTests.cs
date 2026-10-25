@@ -23,7 +23,7 @@ public class ArrowCardTests
     [Fact] public void CatalogArrowCardsAndOnlyThreeShieldArrows()
     {
         var arrows=cards.AllCards.Where(c=>c.Arrows.Length>0).Select(c=>c.Id).ToArray();
-        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-061","WCG-073","WCG-085","WCG-147","WCG-215","WCG-216","WCG-218","WCG-283","WCG-287","WCG-298","WCG-319","WCG-320","WCG-321","WCG-324","WCG-325","WCG-326","WCG-347","WCG-350","WCG-355","WCG-356","WCG-357","WCG-359","WCG-361","WCG-362","WCG-363","WCG-367","WCG-371","WCG-376","WCG-380","WCG-383","WCG-387","WCG-393","WCG-398","WCG-401"],arrows);
+        Assert.Equal(["WCG-005","WCG-021","WCG-033","WCG-049","WCG-061","WCG-073","WCG-085","WCG-147","WCG-215","WCG-216","WCG-218","WCG-283","WCG-287","WCG-298","WCG-319","WCG-320","WCG-321","WCG-324","WCG-325","WCG-326","WCG-347","WCG-350","WCG-355","WCG-356","WCG-357","WCG-359","WCG-361","WCG-362","WCG-363","WCG-367","WCG-371","WCG-376","WCG-380","WCG-383","WCG-387","WCG-393","WCG-398","WCG-401","WCG-411"],arrows);
         Assert.Equal(["WCG-061","WCG-073","WCG-147"],arrows.Where(GameEngine.ShieldArrows));
         Assert.All(arrows,id=>Assert.Contains("【箭頭：",cards.GetCard(id)!.Text));
         // Every will has positional arrows (Neutral since 根脈連營).
