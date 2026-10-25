@@ -204,7 +204,7 @@ public partial class GameEngine
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>ThresholdPP(x)>=High(1500)).ToArray(),c.Card.Name),()=>Heal(p,2));break;
             case "WCG-180":SearchTwoKinds(p);break;
             case "WCG-186":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("生機")),()=>{if(p.Structures.Any(x=>!x.IsSet&&x.Card.HasWill("生機")))DrawMany(p,1);});break;
-            case "WCG-189":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("秩序")),()=>{if(p.Field.Any(x=>x.Card.HasWill("秩序")))PickMonster(p,SimplifiedRules?"選擇附著聖盾怪物":"選擇附著能量護盾怪物",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x));});break;
+            case "WCG-189":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("秩序")),()=>{if(p.Field.Any(x=>x.Card.HasWill("秩序")))PickMonster(p,SimplifiedRules?"選擇附著聖盾怪物":"選擇附著能量護盾怪物",SpellResolvePickable(p,p.Field),x=>Attach(p,c,x));});break;
             case "WCG-192":MillSearch(p);break;
             default:if(NewSpell(p,c,t))break;throw new InvalidOperationException($"未實作卡牌 {c.Card.Id}");
         }
