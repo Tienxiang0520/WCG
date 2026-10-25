@@ -1114,5 +1114,11 @@
   "zhDescription": "把大效果預約在幾回合後，牌上放倒數指示物撐到歸零；最後星律終焉讓全場倒數同時爆開。",
   "name": "Reason · Star Law Countdown (Star)",
   "description": "Schedule big effects a few turns ahead with Countdown counters and hold on until they fire; End of the Star Law sets them all off at once."
+ },
+ "RANKED-5-ABYSS-FATEFLIP": {
+  "zhName": "深淵・命運翻牌（命運）",
+  "zhDescription": "翻開牌庫頂，依怪物、法術、結界與印刷費用給不同獎勵；牌組多放高費大牌，最後千面輪盤連翻 4 張。",
+  "name": "Abyss · Wheel of Fate (Fate)",
+  "description": "Reveal the top card of your deck for rewards by type and printed cost; pack big cards, then Thousand-Faced Roulette reveals four at once."
  }
 }

@@ -97,10 +97,11 @@ public partial class GameEngine
         return true;
     }
     // 403 聖泉之井: tap and remove 2 counters to draw 1.
-    private static bool SpringCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-403" && s.SpringCounters >= 2 && p.Deck.Count > 0;
+    private static bool SpringCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-403" && s.SpringCounters >= 2 && p.Deck.Count > 0 || FateCanActivate(p, s);
     private void SpringActivate(PlayerState p, MonsterInstance s)
     {
-        if (s.Card.Id != "WCG-403" || s.SpringCounters < 2) return;
+        if (s.Card.Id != "WCG-403") { FateActivate(p, s); return; }
+        if (s.SpringCounters < 2) return;
         s.IsTapped = true; s.SpringCounters -= 2; DrawMany(p, 1);
     }
 

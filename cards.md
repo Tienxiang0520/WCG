@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 417
+total_cards: 426
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 417 張）
+# WCG 卡牌總表（共 426 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 249 張、法術 133 張、法術（反擊） 11 張、結界 24 張。
+類型：怪物 254 張、法術 135 張、法術（反擊） 11 張、結界 26 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，66 張）
@@ -304,7 +304,7 @@ source: WcgWeb/Data/cards.json
 | WCG-406 | 洗禮之潮 | 法術 | 3 | — | — | — | 回復你 2 點生命。然後 1 隻敵方怪物 PP -（本回合你回復的生命總量 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。 | **Tide of Baptism** — You heal 2 life. Then 1 enemy monster gets -300 PP for each life you healed this turn until end of turn; if this makes its PP 0, destroy it. |
 | WCG-408 | 聖泉傾瀉 | 法術 | 5 | — | — | — | 回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。 | **Holy Spring Deluge** — You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed. |
 
-## 深淵（Abyss，64 張）
+## 深淵（Abyss，69 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -372,8 +372,13 @@ source: WcgWeb/Data/cards.json
 | WCG-385 | 腐根獵手 | 怪物 | 3 | 1300 | 1 | — | 劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。 | **Rotroot Stalker** — Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn. |
 | WCG-388 | 腐朽收割 | 法術 | 3 | — | — | — | 消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。 | **Rotting Harvest** — Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead. |
 | WCG-389 | 瘴氣巨口 | 怪物 | 5 | 2000 | 2 | — | 貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Miasma Maw** — Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3). |
+| WCG-418 | 擲骨巫童 | 怪物 | 1 | 600 | 0 | — | 進場：翻開你牌庫頂 1 張；若是怪物，抽 1 張牌。 | **Bone-Casting Child** — On deploy: reveal the top card of your deck. If it's a monster, draw 1 card. |
+| WCG-420 | 深淵賭約 | 法術 | 1 | — | — | — | 翻開你牌庫頂 1 張，1 隻敵方怪物 PP -（翻開那張的印刷費用 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。 | **Abyssal Wager** — Reveal the top card of your deck. 1 enemy monster gets -300 PP times that card's printed cost until end of turn; if this makes its PP 0, destroy it. |
+| WCG-422 | 骰魂魔像 | 怪物 | 3 | 1300 | 1 | ↑ | 進場：翻開你牌庫頂 1 張；若它的印刷費用 4 以上，消滅箭頭指向的怪物。【箭頭：↑】箭頭指向的怪物 PP -200。 | **Soul-Dice Golem** — On deploy: reveal the top card of your deck. If its printed cost is 4 or more, destroy the monster the arrow points at. [Arrow: ↑] The monster the arrow points at gets -200 PP. |
+| WCG-424 | 黑籤召喚師 | 怪物 | 5 | 1800 | 1 | — | 進場：翻開你牌庫頂 1 張；若是怪物且你有空格，從牌庫免費召喚它（不觸發進場）；否則抽 1 張牌。 | **Black-Lot Summoner** — On deploy: reveal the top card of your deck. If it's a monster and you have an empty slot, summon it from your deck for free (its deploy doesn't trigger). Otherwise, draw 1 card. |
+| WCG-425 | 命運祭壇 | 結界 | 4 | — | — | — | 每當你翻開印刷費用 5 以上的牌，對敵方玩家造成 1 點傷害。 | **Altar of Fate** — Whenever you reveal a card with printed cost 5 or more, deal 1 damage to the enemy player. |
 
-## 中立（Neutral，56 張）
+## 中立（Neutral，59 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -433,8 +438,11 @@ source: WcgWeb/Data/cards.json
 | WCG-410 | 倒懸時鐘 | 結界 | 2 | — | — | — | 進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。 | **Inverted Clock** — On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again. |
 | WCG-413 | 封時守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。 | **Timeseal Warden** — Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster. |
 | WCG-416 | 永恆鐘塔 | 結界 | 5 | — | — | — | 每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。 | **Eternal Clocktower** — Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life. |
+| WCG-419 | 命輪占者 | 怪物 | 2 | 900 | 1 | — | 你的回合開始時，翻開你牌庫頂 1 張：怪物——此怪物本回合 PP +500；法術——對敵方玩家造成 1 點傷害；結界——回復你 1 點生命。 | **Wheel-of-Fate Diviner** — At the start of your turn, reveal the top card of your deck: monster — this monster gets +500 PP this turn; spell — deal 1 damage to the enemy player; structure — you heal 1 life. |
+| WCG-421 | 開眼之井 | 結界 | 2 | — | — | — | 主動：橫置此卡，翻開你牌庫頂 1 張；你可以失去 1 點生命（生命代價），把它加入手牌。 | **Well of Open Eyes** — Active: tap this card and reveal the top card of your deck. You may lose 1 life (a life cost) to put it into your hand. |
+| WCG-423 | 宿命拾荒者 | 怪物 | 3 | 1200 | 1 | — | 每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。 | **Fate Scavenger** — Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn. |
 
-## 雙色（Dual，29 張）
+## 雙色（Dual，30 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -467,3 +475,4 @@ source: WcgWeb/Data/cards.json
 | WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | — | 你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。 | **Bogmother's Brood** — At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead. |
 | WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 2300 | 2 | — | 劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。 | **Mother of All Rot** — Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less. |
 | WCG-399 | 千刃狂濤 | 怪物（狂怒／中立） | 7 | 2200 | 1 | — | 衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。 | **Thousand-Blade Surge** — Charge. Trample. After each attack, if this monster is still on the field, ready it (at most 3 times per turn). |
+| WCG-426 | 千面輪盤 | 法術（深淵／中立） | 7 | — | — | — | 翻開你牌庫頂 4 張（一次 1 張），全部依類型結算：怪物——從牌庫免費召喚它（不觸發進場；沒有空格就加入手牌）；法術——對敵方玩家造成 1 點傷害；結界——抽 1 張牌。 | **Thousand-Faced Roulette** — Reveal the top 4 cards of your deck one at a time and resolve every one by type: monster — summon it from your deck for free (its deploy doesn't trigger; if you have no empty slot, put it into your hand); spell — deal 1 damage to the enemy player; structure — draw 1 card. |

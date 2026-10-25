@@ -2521,5 +2521,59 @@
     "name": "End of the Star Law",
     "text": "Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead.",
     "zh_text": "移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。"
+  },
+  "WCG-418": {
+    "zh": "擲骨巫童",
+    "name": "Bone-Casting Child",
+    "text": "On deploy: reveal the top card of your deck. If it's a monster, draw 1 card.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若是怪物，抽 1 張牌。"
+  },
+  "WCG-419": {
+    "zh": "命輪占者",
+    "name": "Wheel-of-Fate Diviner",
+    "text": "At the start of your turn, reveal the top card of your deck: monster — this monster gets +500 PP this turn; spell — deal 1 damage to the enemy player; structure — you heal 1 life.",
+    "zh_text": "你的回合開始時，翻開你牌庫頂 1 張：怪物——此怪物本回合 PP +500；法術——對敵方玩家造成 1 點傷害；結界——回復你 1 點生命。"
+  },
+  "WCG-420": {
+    "zh": "深淵賭約",
+    "name": "Abyssal Wager",
+    "text": "Reveal the top card of your deck. 1 enemy monster gets -300 PP times that card's printed cost until end of turn; if this makes its PP 0, destroy it.",
+    "zh_text": "翻開你牌庫頂 1 張，1 隻敵方怪物 PP -（翻開那張的印刷費用 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。"
+  },
+  "WCG-421": {
+    "zh": "開眼之井",
+    "name": "Well of Open Eyes",
+    "text": "Active: tap this card and reveal the top card of your deck. You may lose 1 life (a life cost) to put it into your hand.",
+    "zh_text": "主動：橫置此卡，翻開你牌庫頂 1 張；你可以失去 1 點生命（生命代價），把它加入手牌。"
+  },
+  "WCG-422": {
+    "zh": "骰魂魔像",
+    "name": "Soul-Dice Golem",
+    "text": "On deploy: reveal the top card of your deck. If its printed cost is 4 or more, destroy the monster the arrow points at. [Arrow: ↑] The monster the arrow points at gets -200 PP.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若它的印刷費用 4 以上，消滅箭頭指向的怪物。【箭頭：↑】箭頭指向的怪物 PP -200。"
+  },
+  "WCG-423": {
+    "zh": "宿命拾荒者",
+    "name": "Fate Scavenger",
+    "text": "Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn.",
+    "zh_text": "每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。"
+  },
+  "WCG-424": {
+    "zh": "黑籤召喚師",
+    "name": "Black-Lot Summoner",
+    "text": "On deploy: reveal the top card of your deck. If it's a monster and you have an empty slot, summon it from your deck for free (its deploy doesn't trigger). Otherwise, draw 1 card.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若是怪物且你有空格，從牌庫免費召喚它（不觸發進場）；否則抽 1 張牌。"
+  },
+  "WCG-425": {
+    "zh": "命運祭壇",
+    "name": "Altar of Fate",
+    "text": "Whenever you reveal a card with printed cost 5 or more, deal 1 damage to the enemy player.",
+    "zh_text": "每當你翻開印刷費用 5 以上的牌，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-426": {
+    "zh": "千面輪盤",
+    "name": "Thousand-Faced Roulette",
+    "text": "Reveal the top 4 cards of your deck one at a time and resolve every one by type: monster — summon it from your deck for free (its deploy doesn't trigger; if you have no empty slot, put it into your hand); spell — deal 1 damage to the enemy player; structure — draw 1 card.",
+    "zh_text": "翻開你牌庫頂 4 張（一次 1 張），全部依類型結算：怪物——從牌庫免費召喚它（不觸發進場；沒有空格就加入手牌）；法術——對敵方玩家造成 1 點傷害；結界——抽 1 張牌。"
   }
 }

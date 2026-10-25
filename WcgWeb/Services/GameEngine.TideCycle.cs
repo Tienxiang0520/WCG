@@ -102,7 +102,7 @@ public partial class GameEngine
     // 374: pick up a tapped monster whose 進場 can be used again; otherwise keep the board.
     private ChoiceOption? TideChoice(PlayerState p, PendingChoice choice)
     {
-        if (choice.Title != TideReturnTitle) return null;
+        if (choice.Title != TideReturnTitle) return FateChoice(p, choice);
         var reuse = p.Field.Where(x => Reusable(x) && x.IsTapped && x.Card.TotalCost <= 3 && x.Card.Id != "WCG-374")
             .OrderByDescending(x => x.Card.TotalCost).FirstOrDefault();
         return choice.Options.FirstOrDefault(o => reuse != null && o.Id == reuse.InstanceId.ToString()) ?? choice.Options.First(o => o.Id == "SKIP");

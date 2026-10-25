@@ -61,7 +61,7 @@ public partial class GameEngine
         {
             case "WCG-409": PlaceCountdown(m, 1, m.Card); break;
             case "WCG-413": case "WCG-414": PlaceCountdown(m, 2, m.Card); break;
-            default: return false;
+            default: return FateDeploy(p, m);
         }
         return true;
     }
@@ -105,7 +105,7 @@ public partial class GameEngine
                 steps.Add(() => { if (fired > 0) Damage(e, fired, new(p, source.Card, null, "spell")); else DrawMany(p, 3); });
                 Resolve(steps.ToArray());
                 break;
-            default: return false;
+            default: return FateSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -134,7 +134,7 @@ public partial class GameEngine
                 if (all.Count == 0) return 2;
                 return all.Count + (all.Any(x => x.Card.Id == "WCG-414") ? 2 : 0) >= e.Hp ? 1000 : all.Sum(x => StarFireValue(p, x)) + all.Count - 2;
         }
-        return null;
+        return FatePlayValue(p, c);
     }
     private static int StarRank(string id) => id switch { "WCG-414" => 4, "WCG-410" => 3, "WCG-409" => 2, "WCG-413" => 1, _ => 0 };
     private static MonsterInstance? StarTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
@@ -142,6 +142,6 @@ public partial class GameEngine
         StarClockTitle => legal.OrderByDescending(x => x.CurrentPP).FirstOrDefault(),
         StarCatalystTitle => legal.OrderBy(x => x.Countdown).ThenByDescending(x => StarRank(x.Card.Id)).FirstOrDefault(),
         StarRealignTitle => legal.OrderByDescending(x => StarRank(x.Card.Id)).FirstOrDefault(),
-        _ => null
+        _ => FateTarget(p, pending, legal)
     };
 }

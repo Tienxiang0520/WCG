@@ -61,7 +61,7 @@ public partial class GameEngine
     {
         "WCG-392" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
         "WCG-396" when !p.Field.Any(x => x.IsUnit && x.IsTapped) => "你沒有已橫置的怪物。",
-        _ => ""
+        _ => FatePlayProblem(p, c)
     };
     // 395 不歇鍛爐: tap it to ready 1 of your tapped monsters.
     private static bool SurgeCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-395" && p.Field.Any(x => x.IsUnit && x.IsTapped) || SpringCanActivate(p, s);
