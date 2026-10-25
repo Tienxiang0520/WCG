@@ -98,7 +98,7 @@ public static class TutorialLessons
                     Text = "「{0}」目前是 {1} PP，「{2}」目前是 {3} PP。讓它們交戰，看看平手時會發生什麼。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-154"), EnemyPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-154")] },
                 new() { Title = "墓地與對戰紀錄", Spot = ["history"],
-                    Text = "被消滅的卡會進入墓地。按「紀錄／墓地」可以查看雙方墓地與完整對戰紀錄；看完記得關閉視窗。" },
+                    Text = "被消滅的卡會進入墓地。按「墓地」可以查看雙方墓地，按「紀錄」可以查看完整對戰紀錄；看完記得關閉視窗。" },
                 new() { Title = "略過怪物，直接打玩家", Spot = ["own-card:WCG-155", "face"], Allow = [Attack("WCG-155")],
                     Done = e => e.Computer.Hp == 6,
                     Text = "對手沒有嘲諷怪物時，可以直接攻擊玩家。敵方「{0}」目前有 {1} PP，我方「{2}」目前有 {3} PP，所以改打電腦頭像。", TextValues = [CardName("WCG-157"), EnemyPP("WCG-157"), CardName("WCG-155"), OwnPP("WCG-155")],
