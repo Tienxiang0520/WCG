@@ -26,8 +26,15 @@ public class BloodOathTests
         var old=CardBalanceHistory.BeforeBloodOathCards(cards);
         for(int n=364;n<=372;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBloodOathCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsBloodOathCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeRevivalLordText(cards).AllCards.Where(c=>!CardBalanceHistory.IsBloodOathCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.Equal(["狂怒","秩序"],cards.GetCard("WCG-368")!.Wills.Order(StringComparer.Ordinal));
+    }
+    [Fact] public void RevivalLordTextEraOnlyChangesItsWording()
+    {
+        var old=CardBalanceHistory.BeforeRevivalLordText(cards);
+        Assert.Contains("那隻怪本回合可以攻擊",cards.GetCard("WCG-194")!.Text);Assert.Contains("它本回合可以攻擊",old.GetCard("WCG-194")!.Text);
+        Assert.Equal(1,cards.AllCards.Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
+        Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeRevivalLordText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void EveryDamageStacksTheAltarAndTheOathguardAndSilenceLeavesTheAltarAlone()
     {

@@ -175,14 +175,19 @@ internal static class CardBalanceHistory
     private static CardDatabase BloodOathCardsStep(CardDatabase c) => c.GetCard("WCG-364") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsBloodOathCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // 2026-10-25 冥府復甦領主 wording: 「那隻怪本回合可以攻擊」 (the revived monster, not the lord). Text only.
+    internal static bool RevivalLordTextCatalog(CardDatabase cards) => cards.GetCard("WCG-194")?.Text?.Contains("那隻怪本回合可以攻擊", StringComparison.Ordinal) == true;
+    private static CardDatabase RevivalLordTextStep(CardDatabase c) => RevivalLordTextCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeRevivalLordText") : c;
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeBloodOathCards(CardDatabase current) => BloodOathCardsStep(current);
+    internal static CardDatabase BeforeRevivalLordText(CardDatabase current) => RevivalLordTextStep(current);
+    internal static CardDatabase BeforeBloodOathCards(CardDatabase current) => BloodOathCardsStep(BeforeRevivalLordText(current));
     internal static CardDatabase BeforeRootWebCards(CardDatabase current) => RootWebCardsStep(BeforeBloodOathCards(current));
     internal static CardDatabase BeforeGraveOathCards(CardDatabase current) => GraveOathCardsStep(BeforeRootWebCards(current));
     internal static CardDatabase BeforeSilenceCounters(CardDatabase current) => SilenceCountersStep(BeforeGraveOathCards(current));
