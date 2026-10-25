@@ -24,7 +24,7 @@ public class GraveOathTests
         var old=CardBalanceHistory.BeforeGraveOathCards(cards);
         for(int n=346;n<=354;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeGraveOathCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsGraveOathCard(c.Id)&&int.Parse(c.Id[4..])<355).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeRevivalLordText(cards).AllCards.Where(c=>!CardBalanceHistory.IsGraveOathCard(c.Id)&&int.Parse(c.Id[4..])<355).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
         Assert.All(cards.AllCards,c=>{Assert.DoesNotContain("放逐",c.Text);Assert.DoesNotContain("移出遊戲",c.Text);});
     }
     [Fact] public void ScribeMillsThreeAndRankedDeadGrowsWithTheGraveyard()
