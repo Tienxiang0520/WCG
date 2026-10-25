@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 408
+total_cards: 417
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 408 張）
+# WCG 卡牌總表（共 417 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 245 張、法術 130 張、法術（反擊） 11 張、結界 22 張。
+類型：怪物 249 張、法術 133 張、法術（反擊） 11 張、結界 24 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，66 張）
@@ -87,7 +87,7 @@ source: WcgWeb/Data/cards.json
 | WCG-396 | 狂潮步伐 | 法術 | 2 | — | — | — | 將所有己方已橫置的怪物轉為直立；它們本回合不能攻擊敵方玩家。 | **Frenzied Stride** — Ready all your tapped monsters. They can't attack the enemy player this turn. |
 | WCG-397 | 血浪劍豪 | 怪物 | 4 | 1700 | 1 | — | 貫穿；本回合此怪物每攻擊過 1 次，PP +400（直到回合結束）。 | **Bloodwave Swordmaster** — Trample. This monster gets +400 PP for each time it has attacked this turn (until end of turn). |
 
-## 理智（Reason，62 張）
+## 理智（Reason，68 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -153,6 +153,12 @@ source: WcgWeb/Data/cards.json
 | WCG-375 | 退浪 | 法術 | 0 | — | — | — | 將 1 隻己方怪物移回手牌。若它的印刷費用 3 以上，抽 1 張牌。 | **Receding Wave** — Return 1 of your monsters to your hand. If its printed cost is 3 or more, draw 1 card. |
 | WCG-377 | 鏡湖賢者 | 怪物 | 3 | 1200 | 1 | — | 進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。 | **Mirror Lake Sage** — On deploy: look at the top 3 cards of your deck, put 1 into your hand and the rest on the bottom in any order. |
 | WCG-380 | 思潮捕手 | 怪物 | 4 | 1500 | 1 | ↑ | 進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Thoughtcurrent Catcher** — On deploy: return 1 enemy monster to its hand. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
+| WCG-409 | 星沙學徒 | 怪物 | 1 | 500 | 0 | — | 進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。 | **Starsand Apprentice** — On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards. |
+| WCG-411 | 觀星術士 | 怪物 | 2 | 900 | 1 | ←→ | 【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。 | **Stargazer Adept** — [Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter. |
+| WCG-412 | 時隙催化 | 法術 | 1 | — | — | — | 從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。 | **Time-Gap Catalyst** — Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead. |
+| WCG-414 | 隕星預言者 | 怪物 | 4 | 1400 | 1 | — | 進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。 | **Meteor Seer** — On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less. |
+| WCG-415 | 星軌重排 | 法術 | 2 | — | — | — | 在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。 | **Star-Orbit Realignment** — Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says "When its last Countdown counter is removed" (it can trigger again). If there is no such card, draw 1 card instead. |
+| WCG-417 | 星律終焉 | 法術 | 6 | — | — | — | 移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。 | **End of the Star Law** — Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead. |
 
 ## 生機（Life，66 張）
 
@@ -367,7 +373,7 @@ source: WcgWeb/Data/cards.json
 | WCG-388 | 腐朽收割 | 法術 | 3 | — | — | — | 消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。 | **Rotting Harvest** — Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead. |
 | WCG-389 | 瘴氣巨口 | 怪物 | 5 | 2000 | 2 | — | 貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Miasma Maw** — Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3). |
 
-## 中立（Neutral，53 張）
+## 中立（Neutral，56 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -424,6 +430,9 @@ source: WcgWeb/Data/cards.json
 | WCG-398 | 戰場號角 | 怪物 | 4 | 1500 | 1 | ↑ | 嘲諷；你的回合中，第一隻攻擊後仍在場的己方怪物轉為直立（每回合 1 次）。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Battlefield Horn** — Taunt. During your turn, the first of your monsters that attacks and is still on the field afterwards is readied (once per turn). [Arrow: ↑] The monster the arrow points at gets -300 PP. |
 | WCG-404 | 流浪治療師 | 怪物 | 3 | 1200 | 1 | — | 你的回合結束時，回復你 1 點生命。 | **Wandering Healer** — At the end of your turn, you heal 1 life. |
 | WCG-407 | 銀泉守護巨像 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；進場：回復你 3 點生命。你的回合開始時，若你的生命是 7，對敵方玩家造成 1 點傷害。 | **Silverspring Colossus** — Taunt. On deploy: you heal 3 life. At the start of your turn, if your life is 7, deal 1 damage to the enemy player. |
+| WCG-410 | 倒懸時鐘 | 結界 | 2 | — | — | — | 進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。 | **Inverted Clock** — On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again. |
+| WCG-413 | 封時守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。 | **Timeseal Warden** — Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster. |
+| WCG-416 | 永恆鐘塔 | 結界 | 5 | — | — | — | 每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。 | **Eternal Clocktower** — Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life. |
 
 ## 雙色（Dual，29 張）
 

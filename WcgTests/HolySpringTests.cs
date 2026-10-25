@@ -25,7 +25,7 @@ public class HolySpringTests
         var old=CardBalanceHistory.BeforeHolySpringCards(cards);
         for(int n=400;n<=408;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeHolySpringCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsHolySpringCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsHolySpringCard(c.Id)&&!CardBalanceHistory.IsStarCountdownCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
     [Fact] public void WellStoresEveryPointHealedIncludingOverflow()
     {

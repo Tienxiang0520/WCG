@@ -51,7 +51,7 @@ public partial class GameEngine
         {
             case "WCG-400": Heal(p, 1); break;
             case "WCG-407": Heal(p, 3); break;
-            default: return false;
+            default: return StarDeploy(p, m);
         }
         return true;
     }
@@ -91,7 +91,7 @@ public partial class GameEngine
                 Log($"【{p.Name}】移除 {n} 個聖泉指示物。", "action");
                 if (n / 2 > 0) Damage(e, n / 2, new(p, source.Card, null, "spell"));
                 break;
-            default: return false;
+            default: return StarSpell(p, source, t);
         }
         RefreshBoard();
         return true;
@@ -119,11 +119,11 @@ public partial class GameEngine
                 var dmg = (SpringCounters(p) + 2) / 2;
                 return dmg >= e.Hp ? 1000 : dmg * 1.2 - 1;
         }
-        return null;
+        return StarPlayValue(p, c);
     }
     private static MonsterInstance? SpringTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => pending.Title switch
     {
         SpringBaptismTitle => legal.OrderByDescending(x => x.CurrentPP).FirstOrDefault(),
-        _ => null
+        _ => StarTarget(p, pending, legal)
     };
 }

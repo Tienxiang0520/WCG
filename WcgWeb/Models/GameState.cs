@@ -84,6 +84,8 @@ public class MonsterInstance
     // 405 泉誓騎士: DP counters gained this turn (at most 2).
     public int SpringDpTurn { get; set; } = -1;
     public int SpringDpCount { get; set; }
+    // 倒數指示物 (星律倒數) on a monster or structure; removing the last one triggers the card. Silence removes them without triggering.
+    public int Countdown { get; set; }
     // 怒濤連擊 (WCG-391–399), all reset at every turn change: attacks made this turn (397), times readied by its own text
     // (394／399 limits), 396's "can't attack the enemy player this turn", and whether this 398 has readied a monster this turn.
     public int SurgeAttacks { get; set; }
