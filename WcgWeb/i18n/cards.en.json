@@ -2305,5 +2305,59 @@
     "name": "Return of All Tides",
     "text": "Return all your monsters to your hand and draw 1 card for each one returned. This turn, monsters you summon by paying cost 2 less (to a minimum of 0).",
     "zh_text": "將你場上所有怪物移回手牌，每收回 1 隻抽 1 張牌。本回合你付費召喚的怪物費用 -2（最低 0）。"
+  },
+  "WCG-382": {
+    "zh": "孢沼爬蟲",
+    "name": "Sporebog Crawler",
+    "text": "Poison. On death: put 1 Corrosion counter on 1 enemy monster.",
+    "zh_text": "劇毒；陣亡：在 1 隻敵方怪物上放置 1 個腐蝕指示物。"
+  },
+  "WCG-383": {
+    "zh": "腐霧散布者",
+    "name": "Rotmist Spreader",
+    "text": "On deploy: put 1 Corrosion counter on 1 enemy monster. [Arrow: ↑] At the end of your turn, put 1 Corrosion counter on the monster the arrow points at.",
+    "zh_text": "進場：在 1 隻敵方怪物上放置 1 個腐蝕指示物。【箭頭：↑】你的回合結束時，在箭頭指向的怪物上放置 1 個腐蝕指示物。"
+  },
+  "WCG-384": {
+    "zh": "蔓延孢雲",
+    "name": "Spreading Spore Cloud",
+    "text": "Put 1 Corrosion counter on each enemy monster.",
+    "zh_text": "在每隻敵方怪物上各放置 1 個腐蝕指示物。"
+  },
+  "WCG-385": {
+    "zh": "腐根獵手",
+    "name": "Rotroot Stalker",
+    "text": "Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn.",
+    "zh_text": "劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。"
+  },
+  "WCG-386": {
+    "zh": "沼母孵巢",
+    "name": "Bogmother's Brood",
+    "text": "At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead.",
+    "zh_text": "你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。"
+  },
+  "WCG-387": {
+    "zh": "屍菇傳播者",
+    "name": "Corpsecap Spreader",
+    "text": "On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。"
+  },
+  "WCG-388": {
+    "zh": "腐朽收割",
+    "name": "Rotting Harvest",
+    "text": "Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead.",
+    "zh_text": "消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。"
+  },
+  "WCG-389": {
+    "zh": "瘴氣巨口",
+    "name": "Miasma Maw",
+    "text": "Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3).",
+    "zh_text": "貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。"
+  },
+  "WCG-390": {
+    "zh": "萬腐之母",
+    "name": "Mother of All Rot",
+    "text": "Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less.",
+    "zh_text": "劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。"
   }
 }

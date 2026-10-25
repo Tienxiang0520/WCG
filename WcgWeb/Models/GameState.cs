@@ -77,6 +77,8 @@ public class MonsterInstance
     public bool SoulCounter { get; set; }
     // 血誓指示物 on 364 血誓祭壇 (血誓反擊). They sit on the structure and leave play with it; silence never touches them.
     public int BloodCounters { get; set; }
+    // 腐蝕指示物 (腐沼蔓生, WCG-382–390): -300 PP each, stacking; removed by silence, dispel, or leaving play.
+    public int CorrosionCounters { get; set; }
     public bool Stolen => OwnerId != null;
     // 堅守號角 (WCG-294): untapped by it but can't attack this turn; cleared when its owner's next turn starts.
     public bool AttackBanned { get; set; }

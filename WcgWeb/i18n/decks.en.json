@@ -1090,5 +1090,11 @@
   "zhDescription": "把自己的怪收回手牌再打，進場效果一場用好幾次；最後萬潮回歸整排重踩。",
   "name": "Reason · Tidal Recurrence (Tide)",
   "description": "Return your own monsters to hand and play them again to reuse their deploy effects; finish by sweeping the whole row back with Return of All Tides."
+ },
+ "RANKED-5-VITAL-ROTMIRE": {
+  "zhName": "生機・腐沼蔓生（腐沼）",
+  "zhDescription": "在敵方怪物上疊腐蝕指示物，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
+  "name": "Life · Rotting Mire (Mire)",
+  "description": "Stack Corrosion counters on enemy monsters while poisonous creatures hold the line; Mother of All Rot finishes the whole row at once."
  }
 }

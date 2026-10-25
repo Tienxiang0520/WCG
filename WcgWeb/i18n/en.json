@@ -1977,5 +1977,15 @@
  "敵方場上沒有怪物。": "The enemy has no monsters on the field.",
  "【{0}】移除 {1} 個血誓指示物。": "[{0}] removes {1} Blood Oath counters.",
  "可選擇另 1 隻己方怪物移回手牌（本回合下一張付費召喚的怪物費用 -1）": "You may return another of your monsters to your hand (the next monster you summon by paying this turn costs 1 less)",
- "選擇移回手牌的敵方怪物": "Choose an enemy monster to return to its hand"
+ "選擇移回手牌的敵方怪物": "Choose an enemy monster to return to its hand",
+ "腐蝕指示物": "Corrosion counter",
+ "腐蝕指示物卡（12 個）": "Corrosion counter sheet (12)",
+ "腐蝕指示物：每個使怪物 PP -300，可以疊加；PP 降到 0 不會自己陣亡。被沉默、被驅散或怪物離場時移除。": "Corrosion counters: each gives a monster -300 PP and they stack; reaching 0 PP doesn't destroy it by itself. Removed when the monster is silenced, dispelled, or leaves play.",
+ "腐蝕指示物：卡面寫「放置腐蝕指示物」時，在怪物上放指示物；每個使它 PP -300，可以疊加。當下 PP 最低為 0；PP 降到 0 不會讓怪物陣亡，只有卡面寫明時才消滅。卡面寫「印刷 PP」的判定不受影響。被沉默或被驅散時移除所有腐蝕指示物；怪物離場時移除。": "Corrosion counters: when a card says to put a Corrosion counter, place it on the monster; each one gives it -300 PP and they stack. Current PP can't go below 0, and reaching 0 PP doesn't destroy the monster; only a card that says so destroys it. Checks of printed PP are not affected. Silencing or dispelling a monster removes all its Corrosion counters; they are removed when the monster leaves play.",
+ "選擇放置腐蝕指示物的敵方怪物": "Choose an enemy monster to put a Corrosion counter on",
+ "沼母孵巢：選擇敵方怪物（已有 3 個以上腐蝕指示物就消滅它）": "Bogmother's Brood: choose an enemy monster (destroy it if it already has 3 or more Corrosion counters)",
+ "選擇消滅的敵方怪物（有 2 個以上腐蝕指示物）": "Choose an enemy monster with 2 or more Corrosion counters to destroy",
+ "放置 1 個腐蝕指示物": "1 Corrosion counter placed",
+ "放置 {0} 個腐蝕指示物": "{0} Corrosion counters placed",
+ "【{0}】獲得 {1} 個腐蝕指示物（PP {2}）。": "{0} gets {1} Corrosion counter(s) (PP {2})."
 }

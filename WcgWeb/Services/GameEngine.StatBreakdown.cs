@@ -32,6 +32,7 @@ public partial class GameEngine
         Tracked(m.NextCombatSources, m.NextCombatBonus, "下次戰鬥加成");
         Tracked(m.TurnBonusSources, m.TurnBonus, "本回合加成");
         Add(null, "戰鬥加成", m.CombatPowerBonus);
+        Add(null, "腐蝕指示物", -300 * m.CorrosionCounters);
         if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, GetOpponent(owner).Field.Count * 200);
         if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * 300);
         foreach (var source in Player.Field.Concat(Computer.Field).Where(source => source != m && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))

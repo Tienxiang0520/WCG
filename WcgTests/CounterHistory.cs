@@ -36,8 +36,15 @@ internal static class CounterHistory
     // Catalog before the 血誓反擊 cards WCG-364–372 existed.
     // Catalog before the 2026-10-25 冥府復甦領主 wording (「那隻怪本回合可以攻擊」).
     // Catalog before the 潮汐輪迴 cards WCG-373–381 existed.
+    // Catalog before the 腐沼蔓生 cards WCG-382–390 existed.
+    internal static CardDatabase BeforeRotMireCards(CardDatabase current)
+    {
+        return current.GetCard("WCG-382")==null ? current
+            : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 382 or > 390)),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeTideCycleCards(CardDatabase current)
     {
+        current=BeforeRotMireCards(current);
         return current.GetCard("WCG-373")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 373 or > 381)),JsonSerializer.Serialize(current.PresetDecks));
     }
