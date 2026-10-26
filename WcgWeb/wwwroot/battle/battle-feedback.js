@@ -491,7 +491,10 @@ export function bindFeedback(root, sound = null, fx = null) {
         const r = root.getBoundingClientRect();
         void r;
         const b = boardRect(), w = b.width < 600 ? 92 : 120, h = b.width < 600 ? 26 : 32;
-        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + b.width - w - 8, y: b.y + 6, width: w, height: h });
+        // Below the header on the left, so it never covers 投降／返回房間 or the open 訓練工具 panel's 收起工具.
+        const header = root.querySelector('.match-header')?.getBoundingClientRect();
+        const top = header ? header.bottom + 6 : b.y + 48;
+        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + 8, y: top, width: w, height: h });
         ff.style.pointerEvents = 'auto';
         ff.type = 'button';
         // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.

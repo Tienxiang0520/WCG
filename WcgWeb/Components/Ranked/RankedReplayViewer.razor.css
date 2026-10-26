@@ -116,3 +116,16 @@
 
 .replay-slot.locked .replay-art { filter: grayscale(1) brightness(.62); }
 .replay-slot.locked { border-color: #7d7f84; }
+/* Touch-sized hand chips everywhere; phone landscape gets a one-line header so the board has room. */
+.replay-chip { min-height: 36px; }
+@media (max-height: 520px) {
+    .replay-shade { padding: 6px; }
+    .replay-viewer { padding: 8px 12px 0; gap: 6px; max-height: 100%; }
+    .replay-head { align-items: center; }
+    .replay-kicker { display: none; }
+    .replay-head h2 { font-size: .95rem; margin: 0; flex-wrap: nowrap; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .replay-head h2 em { font-size: .7rem; }
+    .replay-sub { font-size: .72rem; }
+    .replay-close { min-height: 36px; }
+    .replay-close span { display: none; }
+}

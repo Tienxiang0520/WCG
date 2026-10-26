@@ -654,7 +654,8 @@ main > article.content > * { animation:wcg-page-enter .34s cubic-bezier(.2,.8,.3
 .ranked-entry .btn-primary:not(:disabled) { position:relative; overflow:hidden; }
 .ranked-entry .btn-primary:not(:disabled)::after { content:""; position:absolute; top:0; bottom:0; left:0; width:30%; background:linear-gradient(90deg,transparent,#ffffff40,transparent);
     transform:translateX(-120%) skewX(-18deg); animation:wcg-sheen 2.8s ease-in-out 1s infinite; pointer-events:none; }
-.ranked-result { animation:wcg-rise-in .4s cubic-bezier(.2,.8,.3,1.3) both; }
+/* Wait for the 1.8 s 勝利/敗北 banner (battle-fx.js) to finish so it does not ghost over the 牌位保護 badge. */
+.ranked-result { animation:wcg-rise-in .4s cubic-bezier(.2,.8,.3,1.3) 1.7s both; }
 
 html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) *, html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) *::before, html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) *::after {
     animation-duration:.01ms!important; animation-delay:0s!important; animation-iteration-count:1!important; transition-duration:.01ms!important; }
@@ -1100,4 +1101,46 @@ html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) .coach-notice, html
     .phone-gate p { margin: .4rem 0; max-width: 24rem; color: #b9b3a6; }
     .phone-gate .phone-gate-title { font-size: 2rem; letter-spacing: .3em; text-indent: .3em; color: #f3dca3; }
     .page, .tutorial-prompt-shade { display: none !important; }
+}
+
+/* Phone ☰ menu: the sticky header is a stacking context (z 50, backdrop-filter), so while the menu is open lift the
+   whole header above the deck builder's 編輯牌組 panel and the floating 「牌組 50/50」 button (z 1100). */
+@media (max-width:640px) {
+    .sidebar:has(.nav-scrollable.mobile-open) { z-index:1150; }
+}
+
+/* Deck builder (UI audit 6): unsaved badge, official-deck filter chips, phone card grid that fits. */
+.unsaved-badge { background:#5a3d0c; color:#ffd98a; border:1px solid #d6a84f; font-size:.7rem; vertical-align:middle; }
+.source-chip { border:1px solid #556; color:#cfd6e2; background:rgba(255,255,255,.04); border-radius:999px; min-height:34px; }
+.source-chip.active { background:var(--wcg-gold-grad, #d6b46c); color:#1a1408; border-color:transparent; font-weight:700; }
+@media (max-width:600px) {
+    /* One page scrollbar instead of a nested catalog scroller; leave room for the floating 「牌組 50/50」 button. */
+    .catalog-scroll { max-height:none; overflow:visible; padding-bottom:72px !important; }
+    .card-grid > .deck-catalog-entry { width:100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; }
+}
+/* Phone catalog cards must fit their half-width column (the card is ~187px wide unzoomed). */
+@media (max-width:419.98px) { .deck-catalog-entry .wcg-card { zoom:.84; } }
+@media (max-width:379.98px) { .deck-catalog-entry .wcg-card { zoom:.78; } }
+
+/* Tutorial in phone landscape: the step panel becomes a narrow side column so the board keeps the full height. */
+@media (min-width:601px) and (max-height:520px) {
+    .phaser-page.in-game.tutorial-game { flex-direction:row; gap:6px; }
+    .tutorial-game .tutorial-coach { flex:0 0 210px; max-height:none; height:auto; align-self:stretch; overflow:auto; padding:8px 10px; }
+    .tutorial-game .coach-eyebrow { display:none; }
+    .tutorial-game .coach-body h2 { font-size:.9rem; }
+    .tutorial-game .coach-text { font-size:.76rem; line-height:1.5; -webkit-line-clamp:7; }
+    .tutorial-game .coach-actions { flex-wrap:wrap; gap:4px; margin-top:6px; }
+    .tutorial-game .coach-actions .btn { padding:3px 8px; font-size:.76rem; }
+}
+.filter-chip.will-dual:disabled { opacity:.55; cursor:not-allowed; }
+.filter-chip .chip-hint { margin-left:6px; font-size:.7rem; color:#c9b98f; font-weight:400; }
+/* Phones: filter chips wrap onto extra lines instead of running off the right edge. */
+@media (max-width:600px) {
+    .filter-row { flex-wrap:wrap !important; overflow:visible; -webkit-mask-image:none; mask-image:none; row-gap:6px; }
+    .filter-row .vr { display:none; }
+}
+@media (max-width:379.98px) { .gallery-entry .wcg-card { zoom:.86; } }
+/* Landscape phones: the floating 「牌組 50/50」 sits in the bottom-right corner instead of over the filter chips. */
+@media (max-width:991.98px) and (max-height:520px) {
+    .deck-jump { position:fixed; right:calc(12px + env(safe-area-inset-right)); bottom:calc(10px + env(safe-area-inset-bottom)); margin:0; }
 }

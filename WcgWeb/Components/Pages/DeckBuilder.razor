@@ -47,7 +47,7 @@
                         <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@L[WillChipTitle("秩序")]" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>@L["秩序"]</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@L[WillChipTitle("深淵")]" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>@L["深淵"]</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>@L["中立"]</button>
-                        <button class="filter-chip will-chip will-dual @(SelectedWill == DualFilter ? "on" : "")" aria-pressed="@(SelectedWill == DualFilter ? "true" : "false")" title="@L["只看雙色卡"]" @onclick='() => SetWillFilter(DualFilter)'><i class="will-dot"></i>@L["雙色卡"]</button>
+                        <button class="filter-chip will-chip will-dual @(SelectedWill == DualFilter ? "on" : "")" aria-pressed="@(SelectedWill == DualFilter ? "true" : "false")" title="@L[DualChipLocked ? "切換雙色牌組後可用" : "只看雙色卡"]" disabled="@DualChipLocked" @onclick='() => SetWillFilter(DualFilter)'><i class="will-dot"></i>@L["雙色卡"]@if (DualChipLocked) { <small class="chip-hint">@L["切換雙色牌組後可用"]</small> }</button>
                     </div>
 
                     <p class="deck-lock-note @(AllowedWills == null ? "" : "locked")" aria-live="polite">
@@ -124,7 +124,7 @@
             <div class="card bg-dark text-white border-secondary shadow sticky-top deck-panel-card" style="top: 15px;">
                 <div class="card-header bg-dark border-secondary">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h5 class="mb-0 panel-title">@L["編輯牌組"]</h5>
+                        <h5 class="mb-0 panel-title">@L["編輯牌組"]@if (CurrentDeckUnsaved) { <span class="badge unsaved-badge ms-2" title="@L["這副牌組還沒儲存，按「儲存牌組」才會加入我的牌組。"]">@L["未儲存"]</span> }</h5>
                         <button class="btn btn-sm btn-info" type="button" @onclick="() => ShowDeckSelectModal = true">
                             <WcgWeb.Components.Common.Icon Name="folder" Size="15" />@MyDecksLabel
                         </button>
@@ -274,7 +274,7 @@
                 <div class="modal-content bg-dark text-white border-secondary shadow-lg">
                     <div class="modal-header border-secondary">
                         <h5 class="modal-title">@MyDecksLabel</h5>
-                        <button type="button" class="btn-close btn-close-white" @onclick="CloseDeckModal"></button>
+                        <button type="button" class="btn-close btn-close-white" data-esc-close aria-label="@L["關閉"]" @onclick="CloseDeckModal"></button>
                     </div>
                     <div class="modal-body p-4">
                         @if (NewDeckSource == null)
@@ -354,8 +354,25 @@
                             <h5 class="fw-bold mb-0">@L["從官方預組複製"]</h5>
                         </div>
                         <p class="text-white-50 small">@L["複製後可修改與列印；來源牌組不會被修改。儲存後就會加入我的牌組。"]</p>
+                        <div class="copy-source-filters mb-3" role="group" aria-label="@L["篩選官方預組"]">
+                            <input type="search" class="form-control form-control-sm bg-dark text-white border-secondary mb-2" placeholder="@L["搜尋牌組名稱或說明"]" aria-label="@L["搜尋牌組名稱或說明"]" @bind="SourceSearch" @bind:event="oninput" />
+                            <div class="d-flex flex-wrap gap-1 mb-1">
+                                @foreach (var w in new[] { "" }.Concat(Deck.Wills))
+                                {
+                                    <button type="button" class="btn btn-sm source-chip @(SourceWill == w ? "active" : "")" aria-pressed="@(SourceWill == w ? "true" : "false")" @onclick="() => SourceWill = w">@L[w == "" ? "全部意志" : w]</button>
+                                }
+                            </div>
+                            <div class="d-flex flex-wrap gap-1">
+                                @foreach (var (key, label) in new[] { ("", "單雙色皆可"), ("single", "單色"), ("dual", "雙色") })
+                                {
+                                    <button type="button" class="btn btn-sm source-chip @(SourceColor == key ? "active" : "")" aria-pressed="@(SourceColor == key ? "true" : "false")" @onclick="() => SourceColor = key">@L[label]</button>
+                                }
+                            </div>
+                        </div>
+                        var shown = sources.Where(SourceMatches).ToList();
+                        <p class="small text-white-50 mb-2" role="status">@L.F("顯示 {0} / {1} 套", shown.Count, sources.Count)</p>
                         <div class="row g-3 copy-source-list">
-                            @foreach (var p in sources)
+                            @foreach (var p in shown)
                             {
                                 <div class="col-md-6">
                                     <div class="card bg-secondary bg-opacity-25 border-secondary h-100 p-3 d-flex flex-column justify-content-between shadow-sm">
@@ -389,7 +406,7 @@
         <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
             <h2 class="visually-hidden">@L.CardName(inspected)</h2>
             <WcgWeb.Components.Common.CardFace Card="inspected" Class="face-preview" Loading="eager" />
-            <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
+            <button class="btn btn-primary" data-esc-close @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>
 }

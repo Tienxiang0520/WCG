@@ -11,7 +11,7 @@
 {
     <div class="avatar-modal-shade" @onclick="() => Open = false">
         <section class="avatar-modal" role="dialog" aria-label="@L["選擇頭像"]" @onclick:stopPropagation="true">
-            <header><h2>@L["選擇頭像"]</h2><button type="button" class="btn btn-sm btn-outline-light" @onclick="() => Open = false">@L["完成"]</button></header>
+            <header><h2>@L["選擇頭像"]</h2><button type="button" class="btn btn-sm btn-outline-light" data-esc-close @onclick="() => Open = false">@L["完成"]</button></header>
             <AvatarPicker />
         </section>
     </div>
