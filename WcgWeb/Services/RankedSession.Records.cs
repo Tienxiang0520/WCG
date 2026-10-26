@@ -57,7 +57,30 @@ public sealed partial class RankedSession
     internal GameEngine? ReplayEngine(RankedRecord record, int actionCount) { var r = BuildReplay(record, null, actionCount, out var engine); return r.Error == "" ? engine : null; }
     private RankedReplay BuildReplay(RankedRecord record, Action<int, string>? trace, int actionCount, out GameEngine? replayed)
     {
-        replayed = null;
+        // Without a pause nothing awaits, so this completes synchronously.
+        var holder = new GameEngine?[1];
+        var replay = BuildReplayCore(record, trace, actionCount, null, holder).GetAwaiter().GetResult();
+        replayed = holder[0]; return replay;
+    }
+    // Tests and tools: the journal with each legacy "ai" step replaced by the computer move it replays to.
+    internal string? JournaledActions(RankedRecord record)
+    {
+        var upgraded = new List<RankedAction>();
+        var replay = BuildReplayCore(record, null, int.MaxValue, null, new GameEngine?[1], upgraded).GetAwaiter().GetResult();
+        return replay.Error == "" ? RankedRecord.Encode(upgraded) : null;
+    }
+    // Browser: the same re-simulation, awaiting `pause` between steps and inside legacy computer searches so the
+    // page keeps rendering. Journaled computer moves ("aic:<kind>") are applied directly, with no search.
+    public Task<RankedReplay> BuildReplayAsync(Guid id, Func<ValueTask> pause)
+    {
+        RankedRecord? record;
+        lock (gate) record = profile.Records?.LastOrDefault(r => r.Id == id) is { } found ? RankedStore.Copy(new RankedProfile { Records = [found] }).Records![0] : null;
+        if (record == null) return Task.FromResult(new RankedReplay(null, [], "找不到這場對局。"));
+        return BuildReplayAsync(record, pause);
+    }
+    public Task<RankedReplay> BuildReplayAsync(RankedRecord record, Func<ValueTask> pause) => BuildReplayCore(record, null, int.MaxValue, pause, new GameEngine?[1]);
+    private async Task<RankedReplay> BuildReplayCore(RankedRecord record, Action<int, string>? trace, int actionCount, Func<ValueTask>? pause, GameEngine?[] replayed, List<RankedAction>? upgraded = null)
+    {
         var steps = new List<RankedReplayStep>();
         try
         {
@@ -72,13 +95,19 @@ public sealed partial class RankedSession
             engine.StartGame(record.PlayerDeck, record.ComputerDeck, record.PlayerFirst);
             if (trace != null) engine.AiTrace = text => trace(steps.Count - 1, text);
             steps.Add(new(0, "start", "start", engine.TurnNumber, bridge.Snapshot(), engine.PresentationEvents));
-            replayed = engine;
+            replayed[0] = engine;
             foreach (var action in actions.Take(actionCount))
             {
                 engine.StackableShields = action.RulesVersion >= 2; engine.AiRevision = action.RulesVersion;
-                var response = action.Type == "ai" ? bridge.AiStepCore() : bridge.SubmitCore(Decode(engine, action));
+                var computer = action.Type == "ai" || IsAiCall(action);
+                if (upgraded != null && action.Type == "ai") engine.BeginAiCapture();
+                var response = action.Type == "ai" ? (pause == null ? bridge.AiStepCore() : await bridge.AiStepCoreAsync(pause))
+                    : IsAiCall(action) ? bridge.AiCallCore(action) : bridge.SubmitCore(Decode(engine, action));
+                upgraded?.Add(action.Type == "ai" ? engine.EndAiCapture() ?? action : action);
                 if (!response.Success) return new(record, steps, $"回顧在第 {steps.Count} 步無法還原，只顯示到這裡。");
-                steps.Add(new(steps.Count, action.Type == "ai" ? "computer" : "player", action.Type, response.State.Turn, response.State, response.Events));
+                // The viewer labels every computer step 「行動」, however it was journaled.
+                steps.Add(new(steps.Count, computer ? "computer" : "player", computer ? "ai" : action.Type, response.State.Turn, response.State, response.Events));
+                if (pause != null) await pause();
             }
             return new(record, steps, "");
         }

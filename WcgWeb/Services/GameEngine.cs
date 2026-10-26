@@ -225,7 +225,7 @@ public partial class GameEngine
         return "";
     }
     public bool CanPlayEnergy(PlayerState p, CardInstance c) => GetEnergyProblem(p, c) == "";
-    public bool PlayEnergy(PlayerState p, CardInstance c) => Change(() =>
+    public bool PlayEnergy(PlayerState p, CardInstance c) => AiTracked(AiNote("energy", p, c), () =>
     {
         if (!CanPlayEnergy(p, c)) return Fail("填能量限自己行動階段每回合一次，且不能有待結算選擇。");
         p.Hand.Remove(c); c.IsTapped = false; c.TemporaryEnergy = false; p.EnergyZone.Add(c); p.HasFilledEnergyThisTurn = true;
@@ -253,27 +253,27 @@ public partial class GameEngine
         if (optional) options.Add(new() { Id = "SKIP", Title = "放棄此可選效果" });
         Ask(p, title, options, option => { if (option.Id != "SKIP") { var selected = list.First(c => c.InstanceId.ToString() == option.Id); callback(selected); } });
     }
-    public bool SelectChoice(ChoiceOption option) => Change(() =>
+    public bool SelectChoice(ChoiceOption option) => AiTracked(AiNote("choice", option: option), () =>
     {
         var pending = CurrentPendingChoice;
         var canonical = pending?.Options.FirstOrDefault(o => o.Id == option.Id);
         if (pending == null || canonical == null || IsOver) return Fail("此選項已失效。");
         CurrentPendingChoice = null; pending.OnChoiceSelected?.Invoke(canonical); return true;
     });
-    public bool SelectTarget(MonsterInstance target) => Change(() =>
+    public bool SelectTarget(MonsterInstance target) => AiTracked(AiNote("target", target: target), () =>
     {
         var pending = CurrentPendingTarget;
         if (pending == null || pending.OnTargetSelected == null || !Alive(target) || pending.Validator?.Invoke(target) == false || IsOver) return Fail("此目標不合法或已離場。");
         CurrentPendingTarget = null; pending.OnTargetSelected(target); return true;
     });
-    public bool SelectPlayerTarget(PlayerState target) => Change(() =>
+    public bool SelectPlayerTarget(PlayerState target) => AiTracked(AiNote("ptarget", playerTarget: target), () =>
     {
         var pending = CurrentPendingTarget;
         if (pending?.OnPlayerTargetSelected == null || pending.PlayerValidator?.Invoke(target) != true || IsOver)
             return Fail("此目標不合法或已離場。");
         CurrentPendingTarget = null; pending.OnPlayerTargetSelected(target); return true;
     });
-    public bool CancelTargetOrChoice() => Change(() =>
+    public bool CancelTargetOrChoice() => AiTracked(AiNote("cancel"), () =>
     {
         if (CurrentPendingChoice?.CanCancel != true && CurrentPendingTarget?.CanCancel != true) return Fail("這是已支付卡牌的必要結算，請完成選擇。");
         CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); return true;
@@ -351,15 +351,15 @@ public partial class GameEngine
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
         : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
-    public bool SummonMonster(PlayerState p, CardInstance c) => Change(() => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
-    public bool CastSpell(PlayerState p, CardInstance c) => Change(() => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
+    public bool SummonMonster(PlayerState p, CardInstance c) => AiTracked(AiNote("summon", p, c), () => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
+    public bool CastSpell(PlayerState p, CardInstance c) => AiTracked(AiNote("spell", p, c), () => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
         c.Card.IsSpell && NeedsSpellTarget(c.Card) && CanPlayCard(p, c) ? SpellTargets(p, c.Card) : [];
-    public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => Change(() =>
+    public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => AiTracked(AiNote("spellat", p, c, target: target), () =>
         GetDirectPlayTargets(p, c).Contains(target) ? BeginPlay(p, c, initialTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
     public IReadOnlyList<PlayerState> GetDirectPlayerTargets(PlayerState p, CardInstance c) =>
         c.Card.IsSpell && NeedsPlayerSpellTarget(c.Card) && CanPlayCard(p, c) ? [Player, Computer] : [];
-    public bool CastSpellAtPlayer(PlayerState p, CardInstance c, PlayerState target) => Change(() =>
+    public bool CastSpellAtPlayer(PlayerState p, CardInstance c, PlayerState target) => AiTracked(AiNote("spellatp", p, c, playerTarget: target), () =>
         GetDirectPlayerTargets(p, c).Contains(target) ? BeginPlay(p, c, initialPlayerTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
     private bool BeginPlay(PlayerState p, CardInstance c, string mode = "", MonsterInstance? initialTarget = null, PlayerState? initialPlayerTarget = null)
     {

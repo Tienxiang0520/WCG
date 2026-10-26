@@ -30,7 +30,7 @@ public partial class GameEngine
     private int GuardReduction(PlayerState p,int damage)=>SimplifiedRules?Math.Min(damage,OathGuards(p).Length):p.Field.Any(m=>m.HasHeroGuard)?Math.Min(damage,p.AvailableEnergy):0;
     public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
     private class AttackContext{public bool Cancelled;}
-    public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>Change(()=>
+    public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>AiTracked(AiNote("attack",p,unit:a,target:d),()=>
     {
         if(!Main(p)||!CanAttack(a)||(d==null?!CanAttackPlayer(a):!GetAttackTargets(a).Contains(d)))return Fail("攻擊目標或直立狀態不合法。");
         LastAttack=new(a.InstanceId,d?.InstanceId,Revision+1);Present("attack",p,a.InstanceId,d?.InstanceId,card:a.Card,label:"攻擊");
@@ -105,7 +105,7 @@ public partial class GameEngine
             UsedSpell(p,c.Card);
         });
     }
-    public bool EndTurn() => Change(() =>
+    public bool EndTurn() => AiTracked(AiNote("end"), () =>
     {
         if (!Main(ActivePlayer)) return Fail("請先完成效果選擇，再結束回合。");
         var p = ActivePlayer; CurrentPhase = TurnPhase.EndingTurn; var effects = new List<Action>();

@@ -12,6 +12,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
     public BattleSnapshot Snapshot() => engine.ReadConsistent(BuildSnapshot);
     internal BattleResponse AiStep() => RankedAi?.Invoke() ?? AiStepCore();
     internal BattleResponse AiStepCore() => engine.ReadConsistent<BattleResponse>(() => AiResponse(engine.ExecuteAiStep()));
+    // A journaled computer move ("aic:<kind>") applied without any AI search (GameEngine.AiCapture.cs).
+    internal BattleResponse AiCallCore(WcgWeb.Models.Ranked.RankedAction call) => engine.ReadConsistent<BattleResponse>(() => AiResponse(engine.ApplyAiCall(call)));
     private BattleResponse AiResponse(bool changed) => new(changed, changed ? "ok" : "idle", "", Guid.NewGuid(), BuildSnapshot(),
         changed ? engine.PresentationEvents : []);
     // Same step as AiStep, but awaits `pause` between search slices so the page keeps rendering while the

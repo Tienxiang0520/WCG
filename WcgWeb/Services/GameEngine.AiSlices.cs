@@ -9,8 +9,11 @@ public partial class GameEngine
     internal sealed class Out<T> { public T Value = default!; }
     private static void RunSlices(IEnumerable<int> slices) { foreach (var _ in slices) { } }
 
+    // Tests: AI steps started on this thread (journaled computer moves must replay without any).
+    [ThreadStatic] internal static int AiStepsStarted;
     private IEnumerable<int> AiStepSlices(Out<bool> result)
     {
+        AiStepsStarted++;
         if (AiLevel >= 0 && AiRevision >= 7) { foreach (var slice in ExecuteV7AiSlices(result)) yield return slice; yield break; }
         result.Value = AiLevel < 0 ? ExecuteV06Ai() : ExecuteTieredAi();
     }
