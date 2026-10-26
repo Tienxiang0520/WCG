@@ -47,7 +47,7 @@
                         <button class="filter-chip will-chip will-order @(SelectedWill == "秩序" ? "on" : "") @WillChipState("秩序")" aria-pressed="@(SelectedWill == "秩序" ? "true" : "false")" disabled="@LockedOut("秩序")" title="@L[WillChipTitle("秩序")]" @onclick='() => SetWillFilter("秩序")'><i class="will-dot"></i><span>@L["秩序"]</span>@if (LockedOut("秩序")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-abyss @(SelectedWill == "深淵" ? "on" : "") @WillChipState("深淵")" aria-pressed="@(SelectedWill == "深淵" ? "true" : "false")" disabled="@LockedOut("深淵")" title="@L[WillChipTitle("深淵")]" @onclick='() => SetWillFilter("深淵")'><i class="will-dot"></i><span>@L["深淵"]</span>@if (LockedOut("深淵")) {<WcgWeb.Components.Common.Icon Name="lock" Size="12" Class="chip-lock" />}</button>
                         <button class="filter-chip will-chip will-neutral @WillChipState("中立") @(SelectedWill == "中立" ? "on" : "")" aria-pressed="@(SelectedWill == "中立" ? "true" : "false")" @onclick='() => SetWillFilter("中立")'><i class="will-dot"></i>@L["中立"]</button>
-                        <button class="filter-chip will-chip will-dual @(SelectedWill == DualFilter ? "on" : "")" aria-pressed="@(SelectedWill == DualFilter ? "true" : "false")" title="@L["只看雙色卡"]" @onclick='() => SetWillFilter(DualFilter)'><i class="will-dot"></i>@L["雙色卡"]</button>
+                        <button class="filter-chip will-chip will-dual @(SelectedWill == DualFilter ? "on" : "")" aria-pressed="@(SelectedWill == DualFilter ? "true" : "false")" title="@L[DualChipLocked ? "切換雙色牌組後可用" : "只看雙色卡"]" disabled="@DualChipLocked" @onclick='() => SetWillFilter(DualFilter)'><i class="will-dot"></i>@L["雙色卡"]@if (DualChipLocked) { <small class="chip-hint">@L["切換雙色牌組後可用"]</small> }</button>
                     </div>
 
                     <p class="deck-lock-note @(AllowedWills == null ? "" : "locked")" aria-live="polite">
@@ -274,7 +274,7 @@
                 <div class="modal-content bg-dark text-white border-secondary shadow-lg">
                     <div class="modal-header border-secondary">
                         <h5 class="modal-title">@MyDecksLabel</h5>
-                        <button type="button" class="btn-close btn-close-white" aria-label="@L["關閉"]" @onclick="CloseDeckModal"></button>
+                        <button type="button" class="btn-close btn-close-white" data-esc-close aria-label="@L["關閉"]" @onclick="CloseDeckModal"></button>
                     </div>
                     <div class="modal-body p-4">
                         @if (NewDeckSource == null)
@@ -406,7 +406,7 @@
         <section class="card-detail" role="dialog" aria-modal="true" aria-label="@L["卡片詳情"]" @onclick:stopPropagation="true">
             <h2 class="visually-hidden">@L.CardName(inspected)</h2>
             <WcgWeb.Components.Common.CardFace Card="inspected" Class="face-preview" Loading="eager" />
-            <button class="btn btn-primary" @onclick="() => Inspect = null">@L["關閉詳情"]</button>
+            <button class="btn btn-primary" data-esc-close @onclick="() => Inspect = null">@L["關閉詳情"]</button>
         </section>
     </div>
 }

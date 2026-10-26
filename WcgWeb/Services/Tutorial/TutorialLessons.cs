@@ -67,9 +67,9 @@ public static class TutorialLessons
                     Done = e => e.Computer.Hp == 1,
                     Text = "立刻用「{0}」攻擊電腦頭像。", TextValues = [CardName("WCG-005")],
                     Hint = "請把「{0}」拖到電腦頭像。", HintValues = [CardName("WCG-005")] },
-                new() { Title = "用法術收尾", Spot = ["hand:WCG-014", "face"], Allow = [Play("WCG-014")],
+                new() { Title = "用法術收尾", Spot = ["hand:WCG-014", "field"], Allow = [Play("WCG-014")],
                     Done = e => e.Computer.HasLost,
-                    Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到電腦頭像，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
+                    Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到戰場中央打出，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-014")] },
                 new() { Title = "勝利！",
                     Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、聖盾與各種關鍵字。" }

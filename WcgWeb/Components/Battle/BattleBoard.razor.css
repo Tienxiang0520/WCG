@@ -794,3 +794,33 @@
   .v06-board .field-card .card-art-layer ::deep img{object-position:50% 28%}
   .v06-board .turn-controls .turn-tool-row>button{min-height:40px}
 }
+/* Hand shows the full printed card face (same CardFace as 詳情), sized to the real 63:88 ratio at every breakpoint;
+   the fan, lift, drag and tap behaviour stay on the .v06-hand-card wrapper. */
+.v06-hand-card:not(.card-back){padding:0!important;gap:0!important;background:none!important;border:0!important;box-shadow:0 6px 16px rgba(0,0,0,.55);border-radius:6px;height:calc(var(--card-width) * 88 / 63)!important}
+.v06-hand-card .hand-face{width:100%;height:auto;pointer-events:none}
+.v06-hand-card:not(.card-back) .hand-availability{position:absolute;left:8%;right:8%;bottom:-4px;z-index:3;margin:0;pointer-events:none}
+/* Card-choice dialogs (棄牌、抉擇、翻開、填能量): the card grid spans the dialog width and the dialog is the only scroller. */
+.v06-dialog:has(>.choice-cards){max-width:min(780px,96vw);width:100%}
+.v06-dialog>.choice-cards{flex:1 1 100%;width:100%;max-height:none;overflow:visible;grid-template-columns:repeat(auto-fill,minmax(128px,1fr))}
+.v06-dialog>.choice-cards.single{grid-template-columns:minmax(120px,180px)}
+.v06-dialog>.choice-list,.v06-dialog>.dialog-actions{flex:1 1 100%}
+.dialog-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.dialog-actions>button{flex:0 1 auto;min-width:120px;height:auto;align-self:center}
+.energy-confirm{max-width:min(420px,96vw)!important;justify-content:center}
+.energy-confirm>h3,.energy-confirm>p{flex:1 1 100%}
+.choice-card-title{display:block;max-width:100%;text-align:center;line-height:1.2;word-break:break-word}
+@media(max-width:600px){.v06-dialog>.choice-cards{grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px}.v06-dialog>.choice-cards.single{grid-template-columns:minmax(110px,150px)}}
+@media(max-width:380px){.v06-dialog>.choice-cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}}
+/* Short (landscape phone) screens: smaller faces so a whole row plus the buttons fit. */
+@media(max-height:520px){
+  .v06-dialog{max-height:94%!important;padding:12px!important}
+  .v06-dialog>.choice-cards{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+  .energy-confirm{flex-wrap:nowrap!important;flex-direction:row;align-items:center;max-width:min(560px,96vw)!important;display:grid!important;grid-template-columns:110px 1fr;gap:8px 14px}
+  .energy-confirm>h3,.energy-confirm>p{grid-column:2;margin:0}
+  .energy-confirm>.choice-cards.single{grid-column:1;grid-row:1 / span 3;grid-template-columns:110px;margin:0}
+  .energy-confirm>.dialog-actions{grid-column:2;justify-content:flex-start}
+}
+.surrender-confirm{max-width:min(380px,94vw)!important}.surrender-confirm>h3,.surrender-confirm>p{flex:1 1 100%;margin:0}
+.surrender-confirm .danger{background:#7a2323!important;border-color:#e07a6a!important;color:#fff!important}
+/* Finished match: the hand and its hint leave the screen so nothing shows behind the result panel. */
+.v06-board.is-over .v06-hand,.v06-board.is-over .hand-hint{visibility:hidden;pointer-events:none}

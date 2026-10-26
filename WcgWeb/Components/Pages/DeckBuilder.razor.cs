@@ -181,7 +181,9 @@ public partial class DeckBuilder
     private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
     private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
     private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !c.Wills.All(a.Contains)) : 0;
-    private void DropLockedFilter() { if (SelectedWill != "" && SelectedWill != DualFilter && LockedOut(SelectedWill)) SelectedWill = ""; }
+    private void DropLockedFilter() { if (SelectedWill != "" && (SelectedWill == DualFilter ? DualChipLocked : LockedOut(SelectedWill))) SelectedWill = ""; }
+    // A single-colour deck can't hold dual-will cards, so the 雙色卡 chip would always show 0: disable it with a hint.
+    private bool DualChipLocked => !ShowDeckCards && AllowedWills != null && !DualColor;
     private void SetDual(bool dual)
     {
         DualColor = dual;

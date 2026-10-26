@@ -550,7 +550,7 @@
  "操作已失效，請重新選擇卡牌或目標。": "That action is no longer valid. Choose the card or target again.",
  "操作設定": "Control settings",
  "支付能量": "Pay energy",
- "支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。": "PNG, JPEG, WebP or GIF (first frame), up to 8 MB. The image is cropped and stored only in this browser, never uploaded.",
+ "支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片在這個瀏覽器裡裁切成頭像，存在這台裝置的玩家資料中；登入雲端存檔時才會跟著存檔同步。": "PNG, JPEG, WebP or GIF (first frame), up to 8 MB. The picture is cropped in this browser and kept in this device's player data; it only syncs if you sign in to cloud saves.",
  "收合": "Collapse",
  "收合側邊欄": "Collapse sidebar",
  "收合選單": "Close menu",
@@ -1190,7 +1190,7 @@
  "離開導覽，回到教學列表": "Leave the tour and return to lessons",
  "離開課程": "Leave lesson",
  "離開課程，回到教學列表": "Leave the lesson and return to lessons",
- "離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。": "Leaving the page keeps your progress. To abandon this match, surrender from the battle controls.",
+ "離開頁面會保留進度。要放棄此局，請按對戰畫面上方的「投降」。": "Leaving the page keeps your progress. To abandon this match, press Surrender at the top of the battle screen.",
  "電腦": "Computer",
  "電腦使用能量護盾": "The computer uses Energy Shield",
  "電腦先攻": "Computer first",
@@ -1422,7 +1422,7 @@
  "每回合都能填 1 次能量。把「{0}」拖到能量區，讓你有 6 點能量。": "You can add energy once every turn. Drag {0} to the energy zone to reach 6 energy.",
  "「{0}」具有衝鋒：進場時直立，這回合就能攻擊。把它拖到任一空格。": "{0} has Charge: it enters untapped and can attack this turn. Drag it to any empty slot.",
  "立刻用「{0}」攻擊電腦頭像。": "Attack the computer's portrait with {0} right away.",
- "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到電腦頭像，完成致命一擊。": "Spells resolve immediately and then go to the graveyard. {0} has this effect: {1} Drag it to the computer portrait for the finishing blow.",
+ "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到戰場中央打出，完成致命一擊。": "Spells resolve immediately and then go to the graveyard. {0} has this effect: {1} Drag it onto the middle of the battlefield to play it and land the finishing blow.",
  "請打出「{0}」。": "Play {0}.",
  "把「{0}」（{1} PP）拖到敵方「{2}」（{3} PP）上。拖曳途中會顯示勝負預覽。": "Drag {0} ({1} PP) onto the enemy {2} ({3} PP). A combat preview appears while aiming.",
  "請用「{0}」攻擊「{1}」。": "Attack {1} with {0}.",
@@ -2050,5 +2050,10 @@
  "搜尋牌組名稱或說明": "Search deck name or description",
  "全部意志": "All wills",
  "單雙色皆可": "Mono or dual",
- "顯示 {0} / {1} 套": "Showing {0} / {1} decks"
+ "顯示 {0} / {1} 套": "Showing {0} / {1} decks",
+ "確認投降": "Confirm surrender",
+ "投降後這局立即判定為敗北，無法復原。": "Surrendering ends this match as a loss right away. This can't be undone.",
+ "繼續對戰": "Keep playing",
+ "切換雙色牌組後可用": "Available after switching to a dual-colour deck",
+ "對局結束": "Match over"
 }
