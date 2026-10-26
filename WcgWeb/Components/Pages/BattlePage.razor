@@ -43,8 +43,16 @@
                     </div>
                     <div class="lobby-actions">
                         <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(Sending || !Interactive || !PlayerDecks.Any(d => d.Id == PlayerDeck && d.IsValid(CardDb.GetCard, out _)))" @onclick="Start"><WcgWeb.Components.Common.Icon Name="play" Size="18" />@L["開始訓練"]</button>
-                        @if(SavedScene!=null){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="RestoreScene">@L["載入保存場面"]</button>}
                     </div>
+                    <div class="training-quick" role="group" aria-label="@L["快速情境"]"><span class="field-label">@L["快速情境"]</span>
+                        <div class="training-buttons">@foreach(var (id,label) in Presets){<button class="btn btn-outline-info" disabled="@(Sending || !Interactive)" @onclick="()=>LoadPreset(id)">@L[label]</button>}</div>
+                    </div>
+                    @if(Scenes.Length>0)
+                    {
+                        <div class="wcg-field"><label for="lobby-scene">@L["已保存場面"]</label>
+                            <div class="training-buttons"><select id="lobby-scene" aria-label="@L["已保存場面"]" @bind="SceneId">@foreach(var sc in Scenes){<option value="@sc.Id">@sc.Name</option>}</select><button class="btn btn-outline-info" disabled="@(Sending || !Interactive || SceneId=="")" @onclick="RestoreScene">@L["載入保存場面"]</button></div>
+                        </div>
+                    }
                     @if(ToolNotice!=""){<p class="field-note" role="status">@L.Text(ToolNotice)</p>}
                 </section>
                 <aside class="wcg-panel lobby-facts" aria-label="@L["對局規則速覽"]">
@@ -75,13 +83,23 @@
                 <p>@L["測試調整只作用於這一局。"]</p>
                 <div class="training-buttons"><button disabled="@Sending" @onclick="ToggleAi">@L[Coordinator.AiPaused?"恢復電腦自動行動":"暫停電腦"]</button><button disabled="@(Sending || Coordinator.IsBusy || !Coordinator.AiPaused || State.DecisionPlayerId!="computer" || State.IsOver)" @onclick="AiStep">@L["電腦執行一步"]</button></div>
                 <p role="status">@L[Coordinator.AiPaused?"電腦已暫停":"電腦自動行動中"] · @L.Text(ToolNotice)</p>
+                @if(State.Pending!=null || Engine.IsWaiting)
+                {
+                    <div class="training-pending" role="alert"><p>@L["目前有待選擇的效果：請在戰場完成選擇，或取消回到效果發動前的場面。"]</p>
+                    <button disabled="@(Sending || LastStable==null)" @onclick="CancelPending">@L["取消待選效果（回到效果前）"]</button></div>
+                }
+                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || State.IsOver || State.Pending!=null || Engine.IsWaiting)" @onclick='()=>Command("training-endturn",new TrainingEdit())'>@L["結束目前回合"]</button><button disabled="@(Sending || Coordinator.IsBusy || State.IsOver || State.Pending!=null || Engine.IsWaiting)" @onclick="SwapSides">@L["互換雙方（操控對手）"]</button></div>
+                <small>@L["互換雙方會把對手的卡移到你這一側，用一般操作替對手出牌與攻擊；再按一次換回。電腦會暫停。"]</small>
+                <label>@L["快速情境"]<select aria-label="@L["快速情境"]" @bind="PresetId">@foreach(var (id,label) in Presets){<option value="@id">@L[label]</option>}</select></label>
+                <button disabled="@(Sending || Coordinator.IsBusy)" @onclick="()=>LoadPreset(PresetId)">@L["載入情境"]</button>
+                <p class="field-note">@L.Text(PresetHint(PresetId))</p>
                 <fieldset disabled="@(Sending || Coordinator.IsBusy || State.IsOver || State.Pending!=null || Engine.IsWaiting)">
                     <legend>@L["指定卡片與布置"]</legend>
                     <label>@L["調整陣營"]<select aria-label="@L["調整陣營"]" @bind="Side" @bind:after="LoadResources"><option value="player">@L["己方"]</option><option value="computer">@L["電腦"]</option></select></label>
                     <label>@L["搜尋卡片"]<input aria-label="@L["搜尋卡片"]" placeholder="@L["卡名或編號，例如125"]" @bind="Search" @bind:event="oninput" @bind:after="FilterCard" /></label>
                     <label>@L["指定卡片"]<select aria-label="@L["指定卡片"]" @bind="SelectedCard">@foreach(var c in FilteredCards){<option value="@c.Id">@c.Id · @L.CardName(c)（@L.F("{0} 費", c.TotalCost)）</option>}</select></label>
                     @if(CardDb.GetCard(SelectedCard) is {} card){<p class="training-card-text">@L.FaceText(card)</p>}
-                    <button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>@L["加入手牌"]</button>
+                    <div class="training-buttons"><button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-hand")'>@L["加入手牌"]</button><button disabled="@(FilteredCards.Length==0)" @onclick='()=>Edit("training-top")'>@L["放到牌庫頂"]</button><button @onclick='()=>Edit("training-draw")'>@L["抽 1 張"]</button></div>
                     <label>@L["布置格位"]<select aria-label="@L["布置格位"]" @bind="Slot">@for(var i=0;i<5;i++){<option value="@i">@L.F("第 {0} 格", i+1) @(SelectedSide.Field.Any(m=>m.Slot==i)?L["（已有卡片）"]:"")</option>}</select></label>
                     <div class="training-buttons"><button @onclick='()=>Edit("training-place")'>@L["直接擺放"]</button><button @onclick='()=>Edit("training-enter")'>@L["進場並觸發效果"]</button>@if(!Engine.DamageCounters){<button @onclick='()=>Edit("training-set")'>@L["背面蓋牌"]</button>}</div>
                     <small>@L["直接擺放不觸發進場或召喚效果；進場測試不扣費。已有卡片的格位不會被覆蓋。"]</small>
@@ -90,14 +108,22 @@
                     <label>@L["總能量（0–30）"]<input aria-label="@L["總能量"]" type="number" min="0" max="30" @bind="TotalEnergy" @bind:event="oninput" /></label>
                     <label>@L["可用能量"]<input aria-label="@L["可用能量"]" type="number" min="0" max="30" @bind="AvailableEnergy" @bind:event="oninput" /></label>
                     <button @onclick='()=>Edit("training-resources")'>@L["套用生命與能量"]</button>
+                    <label>@L["回合數"]<input aria-label="@L["回合數"]" type="number" min="1" max="999" @bind="TurnNo" @bind:event="oninput" /></label>
+                    <button @onclick='()=>Edit("training-turn")'>@L["套用回合數"]</button>
                     <legend>@L["場上卡片"]</legend>
-                    <select aria-label="@L["調整場上卡片"]" @bind="SelectedUnit"><option value="">@L["選擇場上卡片"]</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">@L.F("第 {0} 格", m.Slot+1) · @L.CardName(m.Card)</option>}</select>
+                    <select aria-label="@L["調整場上卡片"]" @bind="SelectedUnit" @bind:after="LoadCounters"><option value="">@L["選擇場上卡片"]</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">@L.F("第 {0} 格", m.Slot+1) · @L.CardName(m.Card)</option>}</select>
                     <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>@L["轉直立"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>@L["橫置"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>@L["移至墓地"]</button></div>
                     <small>@L["移至墓地是調整場面，不觸發死亡效果。"]</small>
+                    <div class="training-counters">@foreach(var (k,label) in CounterLabels){<label>@L[label]<input aria-label="@L[label]" type="number" min="0" max="20" value="@Counters[k]" @onchange="e=>SetCounter(k,e.Value)" /></label>}</div>
+                    <button disabled="@(SelectedUnit=="")" @onclick="ApplyCounters">@L["套用指示物"]</button>
+                    <small>@L["直接設定數量，不觸發放置效果；倒數設為 0 不會觸發歸零效果，要測歸零請設 1 再結束回合。"]</small>
                 </fieldset>
                 <h3>@L["重複測試"]</h3>
-                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting)" @onclick="SaveScene">@L["保存目前場面"]</button><button disabled="@(SavedScene==null || Sending || Coordinator.IsBusy)" @onclick="RestoreScene">@L["還原保存場面"]</button></div>
-                <small>@L["另存於此瀏覽器，可重新整理後載入。保存會取代上一份測試場面。"]</small>
+                <label>@L["場面名稱"]<input aria-label="@L["場面名稱"]" maxlength="40" @bind="SceneName" @bind:event="oninput" /></label>
+                <div class="training-buttons"><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting)" @onclick="()=>SaveScene(false)">@L["另存新場面"]</button><button disabled="@(Sending || Coordinator.IsBusy || Engine.IsWaiting || SceneId=="")" @onclick="()=>SaveScene(true)">@L["覆蓋選取場面"]</button></div>
+                <label>@L["已保存場面"]<select aria-label="@L["已保存場面"]" @bind="SceneId" @bind:after="PickScene"><option value="">@L["選擇場面"]</option>@foreach(var sc in Scenes){<option value="@sc.Id">@sc.Name</option>}</select></label>
+                <div class="training-buttons"><button disabled="@(SceneId=="" || Sending || Coordinator.IsBusy)" @onclick="RestoreScene">@L["還原保存場面"]</button><button disabled="@(SceneId=="" || Sending)" @onclick="RenameScene">@L["改名為上方名稱"]</button><button disabled="@(SceneId=="" || Sending)" @onclick="DeleteScene">@L["刪除場面"]</button></div>
+                <small>@L["另存於此瀏覽器，可保存多個場面，重新整理後仍可載入；不影響天梯、玩家存檔與重播。"]</small>
             </aside>
         }
     }
@@ -109,23 +135,58 @@
     private IJSObjectReference? TrainingModule;
     private bool ToolsOpen;
     private string Side="player",Search="",SelectedCard="WCG-001",SelectedUnit="",ToolNotice="";
-    private string? SavedScene;
-    private int Slot,Hp=7,TotalEnergy,AvailableEnergy;
+    private string? LastStable;
+    private string SceneId="",SceneName="",PresetId="taunt";
+    private SceneInfo[] Scenes=[];
+    private int Slot,Hp=7,TotalEnergy,AvailableEnergy,TurnNo=1;
+    public record SceneInfo(string Id,string Name,double SavedAt);
+    private static readonly (string Id,string Label)[] Presets=[("taunt","嘲諷阻擋"),("combat","怪物對打"),("countdown","倒數計數"),("reveal","翻開牌庫頂"),("untap","橫置與回合開始轉直立"),("defeat","敗北"),("victory","勝利")];
+    private static string PresetHint(string id)=>id switch{
+        "taunt"=>"白銀巡邏衛有嘲諷：拖曳攻擊對方頭像或巡邏輕步兵會被擋下，先擊破嘲諷怪物後才能攻擊。",
+        "combat"=>"沼澤巨鱷 1900 攻擊巡邏輕步兵 1000，防守方被擊破；淡水狂鱷 1300 對 1300，兩邊都被擊破。",
+        "countdown"=>"目前是電腦回合。按「結束目前回合」：你的回合開始時星沙學徒歸零抽 2 張、封時守衛 2→1、倒懸時鐘歸零並選擇消滅敵方怪物。",
+        "reveal"=>"手上有擲骨巫童與黑籤召喚師，牌庫頂是雪人巨獸。召喚擲骨巫童即可看到翻開。",
+        "untap"=>"你的怪物橫置中、目前是電腦回合。按「結束目前回合」後你的怪物轉為直立；新召喚的怪物會橫置進場。",
+        "defeat"=>"你只剩 1 點生命且沒有怪物。按「電腦執行一步」或恢復電腦自動行動，電腦會攻擊造成敗北。",
+        "victory"=>"電腦只剩 1 點生命且沒有怪物。用沼澤巨鱷攻擊電腦頭像即可勝利。",
+        _=>""};
+    private static readonly (string Key,string Label)[] CounterLabels=[("countdown","倒數指示物"),("dp","DP 指示物"),("shield","聖盾指示物"),("corrosion","腐蝕指示物"),("blood","血誓指示物"),("spring","聖泉指示物")];
+    private readonly Dictionary<string,int> Counters=new(){["countdown"]=0,["dp"]=0,["shield"]=0,["corrosion"]=0,["blood"]=0,["spring"]=0};
+    private void SetCounter(string k,object? v){if(int.TryParse(v?.ToString(),out var n))Counters[k]=n;}
+    private void LoadCounters()
+    {
+        var m=State?.Player.Field.Concat(State.Computer.Field).FirstOrDefault(x=>x.Card.InstanceId.ToString()==SelectedUnit);
+        foreach(var (k,label) in CounterLabels)Counters[k]=m?.Status.Count(x=>x==label)??0;
+    }
+    private Task ApplyCounters()=>Command("training-counters",new TrainingEdit(Side,Countdown:Counters["countdown"],Dp:Counters["dp"],Shield:Counters["shield"],Corrosion:Counters["corrosion"],Blood:Counters["blood"],Spring:Counters["spring"]));
+    private async Task LoadPreset(string id){Coordinator.AiPaused=true;await Command("training-preset",new TrainingEdit(Preset:id));PresetId=id;if(State?.Phase!="NotStarted"){LoadResources();ToolNotice="已載入訓練情境。";}}
+    private async Task SwapSides(){Coordinator.AiPaused=true;await Command("training-swap",new TrainingEdit());LoadResources();}
+    private async Task CancelPending(){if(LastStable==null)return;Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:LastStable));LoadResources();ToolNotice="已取消待選效果，回到效果發動前的場面。";}
+    private async Task RefreshScenes(){if(TrainingModule==null)return;Scenes=await TrainingModule.InvokeAsync<SceneInfo[]>("listScenes");if(!Scenes.Any(x=>x.Id==SceneId))SceneId=Scenes.FirstOrDefault()?.Id??"";PickScene();}
+    private void PickScene(){if(Scenes.FirstOrDefault(x=>x.Id==SceneId) is {} sc)SceneName=sc.Name;}
+    private async Task RenameScene(){if(TrainingModule==null||SceneId=="")return;try{await TrainingModule.InvokeVoidAsync("renameScene",SceneId,SceneName);ToolNotice="已重新命名場面。";await RefreshScenes();}catch(JSException ex){ToolNotice=ex.Message;}}
+    private async Task DeleteScene(){if(TrainingModule==null||SceneId=="")return;try{await TrainingModule.InvokeVoidAsync("deleteScene",SceneId);SceneId="";ToolNotice="已刪除場面。";await RefreshScenes();}catch(JSException ex){ToolNotice=ex.Message;}}
     private CardDefinition[] FilteredCards=>CardDb.AllCards.Where(c=>c.Name.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||L.CardName(c).Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)||c.Id.Contains(Search.Trim(),StringComparison.OrdinalIgnoreCase)).ToArray();
     private BattleSide SelectedSide=>Side=="player"?State!.Player:State!.Computer;
     private void FilterCard(){if(!FilteredCards.Any(c=>c.Id==SelectedCard))SelectedCard=FilteredCards.FirstOrDefault()?.Id??"";}
-    private void LoadResources(){Hp=SelectedSide.Hp;TotalEnergy=SelectedSide.TotalEnergy;AvailableEnergy=SelectedSide.AvailableEnergy;SelectedUnit="";}
+    private void LoadResources(){if(State==null||State.Phase=="NotStarted")return;TurnNo=State.Turn;Hp=SelectedSide.Hp;TotalEnergy=SelectedSide.TotalEnergy;AvailableEnergy=SelectedSide.AvailableEnergy;SelectedUnit="";}
     private void ToggleTools(){ToolsOpen=!ToolsOpen;if(ToolsOpen){Coordinator.AiPaused=true;LoadResources();}}
     private void ToggleAi(){Coordinator.AiPaused=!Coordinator.AiPaused;}
     private async Task AiStep(){if(Board==null||Sending)return;Sending=true;try{await Board.Publish(Coordinator.StepAi(Presenter));}finally{Sending=false;}}
-    private Task Edit(string type)=>Command(type,new TrainingEdit(Side,SelectedCard,Slot,Hp,TotalEnergy,AvailableEnergy));
-    private async Task SaveScene()
+    private Task Edit(string type)=>Command(type,new TrainingEdit(Side,SelectedCard,Slot,Hp,TotalEnergy,AvailableEnergy,Turn:TurnNo));
+    private async Task SaveScene(bool overwrite)
     {
         if(Sending||Coordinator.IsBusy||TrainingModule==null)return;
-        try{var json=Engine.ExportTrainingScene();await TrainingModule.InvokeVoidAsync("saveScene",json,SavedScene);SavedScene=json;ToolNotice="已保存測試場面。";}
+        try{var json=Engine.ExportTrainingScene();var name=SceneName.Trim()==""?L.F("場面 {0}",Scenes.Length+1):SceneName;SceneId=await TrainingModule.InvokeAsync<string>("saveScene",name,json,overwrite?SceneId:null);ToolNotice="已保存測試場面。";await RefreshScenes();}
         catch(Exception ex) when(ex is JSException or InvalidOperationException){ToolNotice=ex.Message;}
     }
-    private async Task RestoreScene(){if(SavedScene==null)return;Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:SavedScene));LoadResources();}
+    private async Task RestoreScene()
+    {
+        if(TrainingModule==null||SceneId=="")return;string? scene;
+        try{scene=await TrainingModule.InvokeAsync<string?>("readScene",SceneId);}catch(JSException ex){ToolNotice=ex.Message;return;}
+        if(scene==null){ToolNotice="找不到這個場面。";return;}
+        Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:scene));if(State?.Phase!="NotStarted")LoadResources();
+    }
     private List<Deck> Decks = [], PlayerDecks = [];
     private string PlayerDeck = "", ComputerDeck = "", First = "player", Notice = "";
     private Guid Presenter;
@@ -147,9 +208,15 @@
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) { TrainingModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/training.js");try{SavedScene=await TrainingModule.InvokeAsync<string?>("readScene");}catch(JSException){Notice="無法讀取測試場面，仍可開始訓練。";}Interactive = true; StateHasChanged(); }
+        if (firstRender) { TrainingModule=await JS.InvokeAsync<IJSObjectReference>("import","./battle/training.js");try{await RefreshScenes();}catch(JSException){Notice="無法讀取測試場面，仍可開始訓練。";}Interactive = true; StateHasChanged(); }
     }
-    private Task StateChanged(BattleSnapshot state) { State = state; StateHasChanged(); return Task.CompletedTask; }
+    private Task StateChanged(BattleSnapshot state)
+    {
+        State = state;
+        // Checkpoint for 「取消待選效果」: the last board with nothing waiting to resolve.
+        if(state.Pending==null && state.Phase=="MainPhase" && !state.IsOver && !Engine.IsWaiting){try{LastStable=Engine.ExportTrainingScene();}catch(InvalidOperationException){}}
+        StateHasChanged(); return Task.CompletedTask;
+    }
     private Task OnReady()
     {
         if (Disposed || State?.Phase == "NotStarted") return Task.CompletedTask;
@@ -168,7 +235,7 @@
     };
     private async Task Command(string type,TrainingEdit? edit=null)
     {
-        if (Sending || State == null || type is not ("start" or "reset" or "training-restore") && !BattleReady) return;
+        if (Sending || State == null || type is not ("start" or "reset" or "training-restore" or "training-preset") && !BattleReady) return;
         Sending = true;
         try
         {
@@ -185,7 +252,7 @@
                 State = response.State; InitialResponse = null; Board = null; BattleReady = false;
                 Coordinator.Acknowledge(Presenter, response.State.MatchId, response.State.Revision, response.BatchId);
             }
-            else if (response.Success && type is "start" or "training-restore" && State.Phase == "NotStarted")
+            else if (response.Success && type is "start" or "training-restore" or "training-preset" && State.Phase == "NotStarted")
             {
                 // Mount only after the start command succeeds. The child presents and acknowledges this batch.
                 InitialResponse = response; State = response.State; BattleReady = false;
