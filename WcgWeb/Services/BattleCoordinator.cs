@@ -65,7 +65,8 @@ public sealed class BattleCoordinator(BattleBridge bridge, GameEngine engine, IL
         {
             while (!cancellation.IsCancellationRequested)
             {
-                await Task.Delay(Fast ? 100 : 450, cancellation);
+                // The computer's pacing follows 動畫速度 / 關閉動畫 (AnimationTiming); 30 ms keeps the page responsive when off.
+                await Task.Delay(AnimationTiming.Scale(Fast ? 100 : 450, floorWhenOff: 30), cancellation);
                 BattleResponse? response = null; bool think = false;
                 lock (gate)
                 {

@@ -67,6 +67,8 @@
         {
             await using var motion = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/battle-fx.js");
             await motion.InvokeVoidAsync("applyMotionAttribute");
+            var anim = await motion.InvokeAsync<WcgWeb.Services.AnimationSettingsState>("readAnimationSettings");
+            WcgWeb.Services.AnimationTiming.Update(anim.Speed, anim.Off);
         }
         catch (JSException) { }
         // Page-wide interface sounds (clicks, navigation, toggles, toasts, dialogs) share one audio manager with battles.
