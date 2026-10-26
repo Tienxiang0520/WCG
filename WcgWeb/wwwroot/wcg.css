@@ -1107,3 +1107,16 @@ html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) .coach-notice, html
 @media (max-width:640px) {
     .sidebar:has(.nav-scrollable.mobile-open) { z-index:1150; }
 }
+
+/* Deck builder (UI audit 6): unsaved badge, official-deck filter chips, phone card grid that fits. */
+.unsaved-badge { background:#5a3d0c; color:#ffd98a; border:1px solid #d6a84f; font-size:.7rem; vertical-align:middle; }
+.source-chip { border:1px solid #556; color:#cfd6e2; background:rgba(255,255,255,.04); border-radius:999px; min-height:34px; }
+.source-chip.active { background:var(--wcg-gold-grad, #d6b46c); color:#1a1408; border-color:transparent; font-weight:700; }
+@media (max-width:600px) {
+    /* One page scrollbar instead of a nested catalog scroller; leave room for the floating 「牌組 50/50」 button. */
+    .catalog-scroll { max-height:none; overflow:visible; padding-bottom:72px !important; }
+    .card-grid > .deck-catalog-entry { width:100%; display:flex; flex-direction:column; align-items:center; overflow:hidden; }
+}
+/* Phone catalog cards must fit their half-width column (the card is ~187px wide unzoomed). */
+@media (max-width:419.98px) { .deck-catalog-entry .wcg-card { zoom:.84; } }
+@media (max-width:379.98px) { .deck-catalog-entry .wcg-card { zoom:.78; } }

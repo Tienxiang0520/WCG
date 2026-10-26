@@ -24,7 +24,6 @@
  "PP 比較": "PP comparison",
  "v0.6 卡牌戰場": "v0.6 battlefield",
  "v0.6 本地試玩規則": "v0.6 local trial rules",
- "{0} (副本)": "{0} (copy)",
  "{0} - 教學 - 魂誓": "{0} - Tutorial - Soul Oath",
  "{0} / 5 星": "{0} / 5 stars",
  "{0} / 50 張": "{0} / 50 cards",
@@ -2043,5 +2042,13 @@
  "官方預組 {0} 套，複製後變成你的牌組。": "{0} Official Decks; a copy becomes your own deck.",
  "按「＋ 新增牌組」建立空白牌組，或從官方預組複製，儲存後即可出戰。": "Press \"+ New deck\" to start an empty deck or copy an Official Deck. Save it to use it in battle.",
  "點選左側卡牌，或按右上角「我的牌組」→「＋ 新增牌組」複製官方預組！": "Pick cards on the left, or press \"My decks\" → \"+ New deck\" at the top right to copy an Official Deck!",
- "「我的牌組」只放你自己的牌組；按「＋ 新增牌組」可選空白牌組，或複製官方預組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。": "\"My decks\" lists only your own decks; \"+ New deck\" starts an empty deck or copies an Official Deck to modify. \"Save deck\" checks the rules before saving. You can also print a physical deck."
+ "「我的牌組」只放你自己的牌組；按「＋ 新增牌組」可選空白牌組，或複製官方預組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。": "\"My decks\" lists only your own decks; \"+ New deck\" starts an empty deck or copies an Official Deck to modify. \"Save deck\" checks the rules before saving. You can also print a physical deck.",
+ "{0}（副本）": "{0} (copy)",
+ "未儲存": "Unsaved",
+ "這副牌組還沒儲存，按「儲存牌組」才會加入我的牌組。": "This deck isn't saved yet. Press Save deck to add it to My decks.",
+ "篩選官方預組": "Filter official decks",
+ "搜尋牌組名稱或說明": "Search deck name or description",
+ "全部意志": "All wills",
+ "單雙色皆可": "Mono or dual",
+ "顯示 {0} / {1} 套": "Showing {0} / {1} decks"
 }
