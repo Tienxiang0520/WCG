@@ -759,7 +759,38 @@
    rotated because its arrows (箭頭指向的怪物) would then point the wrong way. Transitions follow the 動畫 setting. */
 .v06-slot.tapped .field-card{filter:grayscale(.7) brightness(.55);transition:filter calc(.25s * var(--wcg-motion-scale, 1)) ease}
 .v06-slot.tapped{box-shadow:inset 0 0 0 2px rgba(255,190,90,.55),inset 0 2px 10px rgba(0,0,0,.45)}
-.tapped-badge{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:999px;
+.tapped-badge{position:absolute;z-index:6;left:50%;top:28%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:999px;
     background:rgba(20,14,6,.88);border:1px solid #ffbe5a;color:#ffd98a;font-weight:800;font-size:.9rem;letter-spacing:.12em;white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px #000a}
 .tapped-badge b{font-size:.85em;letter-spacing:0}
 @media(max-width:640px){.tapped-badge{font-size:.62rem;padding:1px 5px;letter-spacing:.04em;gap:1px}}
+
+/* ===== UI audit 4–6 (2026-10-26) ===== */
+/* 5: the board never scrolls inside itself (focus used to scroll it 80–144px and hide the top bar), and dialog shades
+   cover the whole viewport above the hand fan. */
+.v06-board{overflow:clip}
+.modal-shade{position:fixed;inset:0;z-index:1050}
+/* 6: the 對戰紀錄/墓地/能量區 close button stays at the top while the list scrolls. */
+.history-dialog>.close-dialog{position:sticky;top:0;z-index:3;order:-1;box-shadow:0 4px 12px rgba(0,0,0,.6)}
+/* 6: energy pips wrap evenly (column count set from the pip total). */
+.energy-dots{display:grid!important;grid-template-columns:repeat(var(--pip-cols,7),max-content);justify-content:start;max-width:none!important}
+/* 6: energy dialog thumbnails: no pill background peeking out under the card. */
+.energy-dialog .energy-card.mini-card{background:none!important;border:0!important;box-shadow:none!important;padding:0!important;border-radius:6px;flex-direction:column;align-items:flex-start;white-space:normal}
+@media(max-width:600px){
+  .energy-dialog .energy-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .energy-dialog .mini-card,.energy-dialog .mini-card ::deep .mini-face{width:100%!important}
+  /* 6: touch targets: top icons and 紀錄/墓地 at least 40px, gap before 投降. */
+  .match-header .training-toggle,.match-header .motion-toggle,.match-header .sound-toggle{min-width:40px;min-height:40px!important}
+  .match-header .sound-toggle{margin-right:8px}
+  .match-header button{min-height:40px!important}
+  .turn-controls .turn-tool-row>button{min-height:40px;min-width:44px;font-size:12px!important}
+}
+/* 4: phone landscape / short windows: shrink the hand fan so it stays between the energy panel and the turn buttons,
+   and show the whole card art in the wide, short slots instead of a thin crop. */
+@media(min-width:601px) and (max-height:520px){
+  .v06-board .v06-hand{transform:translateY(-14px) scale(.78);transform-origin:50% 100%}
+  .v06-board .tapped-badge{top:30%;font-size:.7rem;padding:1px 7px;letter-spacing:.06em}
+  /* Narrower slots keep the art closer to its printed shape (less side-to-side crop); faces sit in the upper third. */
+  .v06-board .v06-row{grid-template-columns:repeat(5,minmax(0,104px));justify-content:center;gap:14px}
+  .v06-board .field-card .card-art-layer ::deep img{object-position:50% 28%}
+  .v06-board .turn-controls .turn-tool-row>button{min-height:40px}
+}

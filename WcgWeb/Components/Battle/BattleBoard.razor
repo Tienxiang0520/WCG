@@ -50,7 +50,7 @@
     }
     </div>
     <div class="player hero @HeroClass(s,s.Player,true) @(LegalHero(true)?"legal":"")" data-drop-zone="own-face" data-target="@GameEngine.PlayerTargetId" role="button" tabindex="0" title="@L[LegalHero(true)?"選擇此玩家作為目標":"點擊更換頭像"]" aria-label="@L.F("你的頭像 · 生命 {0} / 7", s.Player.Hp)" @onclick="() => HeroClicked(true)" @onkeydown="e => HeroKey(true, e)">@HeroFace(s.Player,true)<div class="hero-meta"><strong>@L["你"]</strong><small>@L.F("牌庫 {0}", s.Player.DeckCount)</small></div></div>
-    <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy" role="button" tabindex="0" title="@L["點擊查看能量牌"]" aria-label="@L["查看能量區"]" @onclick="OpenEnergy" @onkeydown="EnergyKey"><strong>@L["能量"] <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>@L["拖手牌到這裡填能量"]</span><div class="energy-dots">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"") @(energy.Temporary?"temporary":"")" title="@(energy.Temporary?L["臨時能量（本回合結束時消失）"]:null)"></i>}</div></aside>
+    <aside class="energy-zone @(LegalZone("energy")?"legal":"")" data-drop-zone="energy" role="button" tabindex="0" title="@L["點擊查看能量牌"]" aria-label="@L["查看能量區"]" @onclick="OpenEnergy" @onkeydown="EnergyKey"><strong>@L["能量"] <span class="energy-count" @key="s.Player.AvailableEnergy">@s.Player.AvailableEnergy</span> / @s.Player.TotalEnergy</strong><span>@L["拖手牌到這裡填能量"]</span><div class="energy-dots" style="--pip-cols:@PipColumns(s.Player.Energy.Length)">@foreach(var energy in s.Player.Energy){<i @key="energy.InstanceId" class="@(energy.Tapped?"spent":"") @(energy.Temporary?"temporary":"")" title="@(energy.Temporary?L["臨時能量（本回合結束時消失）"]:null)"></i>}</div></aside>
     <aside class="turn-controls"><button class="end-turn @(NoMovesLeft?"no-moves":"")" title="@(NoMovesLeft?L["沒有可用的行動了"]:"")" disabled="@(!CanAct || s.Pending!=null || EnergyCandidate!=null)" @onclick='()=>Send("end")'>@L["結束回合"]</button><div class="turn-tool-row"><button class="open-log" @onclick="()=>ShowHistory=true">@L["紀錄"]</button><button class="open-grave" @onclick="()=>ShowGrave=true">@L["墓地"]</button></div></aside>
     <div class="v06-hand" aria-label="@L["扇形手牌"]">
     @for(var i=0;i<s.Hand.Length;i++)
@@ -94,6 +94,8 @@
     [Parameter] public bool TrainingToolsOpen {get;set;}
     [Parameter] public bool TrainingAiPaused {get;set;}
     [Parameter] public EventCallback OpenTraining {get;set;}
+    // Energy pips wrap into even rows (9 → 5+4, not 7+2).
+    private static int PipColumns(int n){if(n<=0)return 1;var rows=(n+6)/7;return (n+rows-1)/rows;}
     private BattleSnapshot? State;
     private bool Busy,Presenting,Disposed,ShowHistory,ShowGrave,AvatarOpen,ShowEnergy;
     private Guid? EnergyCandidate,Dragging;
@@ -208,6 +210,8 @@
         await InvokeAsync(StateHasChanged);
     }
     private async Task CancelEnergy(){EnergyCandidate=null;if(DragBinding!=null)await DragBinding.InvokeVoidAsync("discardDrop");}
+    // Esc closes the topmost closable dialog; effect choices (s.Pending) must still be answered.
+    [JSInvokable]public async Task CloseDialog(){if(Detail!=null)Detail=null;else if(AvatarOpen)AvatarOpen=false;else if(ShowEnergy)ShowEnergy=false;else if(ShowHistory)ShowHistory=false;else if(ShowGrave)ShowGrave=false;else if(EnergyCandidate!=null)await CancelEnergy();else return;await InvokeAsync(StateHasChanged);}
     [JSInvokable]public Task EndDrag(){Dragging=null;DragKind="";return InvokeAsync(StateHasChanged);}
     private async Task Place(string type,Guid id,int slot){await Send(type,id);if(State?.Pending?.Options.Any(o=>o.Id==$"SLOT:{slot}")==true)await Send("choice",option:$"SLOT:{slot}");}
     private async Task Send(string type,Guid? id=null,Guid? target=null,string? option=null,bool force=false)

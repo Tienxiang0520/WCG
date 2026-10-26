@@ -181,7 +181,13 @@ export function bind(root, dotnet) {
     }
     function cancel() { if (gesture?.started) { void sound.play('cancel'); call('EndDrag'); } cleanup(); }
     function click(e) { if (suppressClick) { e.preventDefault(); e.stopImmediatePropagation(); suppressClick = false; } }
-    function key(e) { if (e.key === 'Escape') cancel(); }
+    // Esc cancels a drag; otherwise it closes the top battle dialog (詳情, 紀錄, 墓地, 能量區, 頭像, 填能量確認).
+    function key(e) {
+        if (e.key !== 'Escape') return;
+        const wasDragging = !!document.querySelector('.drag-ghost') || root.classList.contains('dragging');
+        cancel();
+        if (!wasDragging && root.querySelector('.modal-shade')) { e.preventDefault(); call('CloseDialog'); }
+    }
     function leave() { untilt(); }
     // Touch: pressing a tucked hand card raises it fully until the finger lifts (tap still opens the zoom).
     let lifted = null;
