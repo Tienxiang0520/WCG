@@ -4,7 +4,8 @@ public record BattleCommand(Guid CommandId, Guid MatchId, long ExpectedRevision,
     Guid? InstanceId = null, Guid? TargetId = null, string? OptionId = null,
     string? PlayerDeckId = null, string? ComputerDeckId = null, bool PlayerFirst = true, TrainingEdit? Training = null);
 public record TrainingEdit(string Side = "player", string? CardId = null, int Slot = 0,
-    int Hp = 7, int TotalEnergy = 0, int AvailableEnergy = 0, string? Scene = null);
+    int Hp = 7, int TotalEnergy = 0, int AvailableEnergy = 0, string? Scene = null,
+    string? Preset = null, int Countdown = -1, int Dp = -1, int Shield = -1, int Corrosion = -1, int Blood = -1, int Spring = -1, int Turn = 0);
 public record BattleCard(Guid InstanceId, string CardId, string Name, string Type, string Will,
     int Cost, int? PP, int? DP, string Text, string Art, string[]? Arrows = null)
 {
