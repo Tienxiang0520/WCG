@@ -26,6 +26,11 @@ public partial class DeckBuilder
     private void ResetFilters() { SearchText = ""; SelectedWill = ""; SelectedType = ""; SelectedCost = -1; }
     private Deck CurrentDeck { get; set; } = new Deck { Name = "我的自訂牌組" };
     private bool ShowDeckSelectModal { get; set; } = false;
+    // null = own deck list; "" = new-deck chooser; "official" = 官方預組 copy list (presets + reference decks).
+    private string? NewDeckSource { get; set; }
+    // 「我的牌組」 is also a player-typed deck name that must never be translated, so the title is chosen here.
+    private string MyDecksLabel => L.IsEnglish ? "My decks" : "我的牌組";
+    private void CloseDeckModal() { ShowDeckSelectModal = false; NewDeckSource = null; }
     private string SearchText { get; set; } = "";
     private string SelectedWill { get; set; } = "";
     private string SelectedType { get; set; } = "";
@@ -252,6 +257,21 @@ public partial class DeckBuilder
             Description = L.DeckDescription(preset),
             MainWill = preset.MainWill,
             CardIds = new List<string>(preset.CardIds)
+        };
+        SyncColorMode(); ValidateDeck();
+    }
+
+    // Copy of one of the player's own decks: new Id, unsaved until 儲存牌組; the original is untouched.
+    private void CloneOwnDeck(Deck own)
+    {
+        SavedMessage = null;
+        CurrentDeck = new Deck
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = L.F("{0} (副本)", own.Name),
+            Description = own.Description,
+            MainWill = own.MainWill,
+            CardIds = new List<string>(own.CardIds)
         };
         SyncColorMode(); ValidateDeck();
     }
