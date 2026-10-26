@@ -23,7 +23,7 @@
         <label class="btn btn-outline-info avatar-upload @(Busy || !Ready ? "disabled" : "")"><Icon Name="upload" Size="16" />@L["上傳圖片"]<input type="file" data-avatar-file accept="image/png,image/jpeg,image/webp,image/gif" disabled="@(Busy || !Ready)" /></label>
         <button type="button" class="btn btn-outline-secondary" disabled="@(Busy || Profile.IsDefault)" @onclick="Reset">@L["恢復預設"]</button>
     </div>
-    <p class="avatar-help" hidden="@Cropping">@L["支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片只在這個瀏覽器裁切並儲存，不會上傳。"]</p>
+    <p class="avatar-help" hidden="@Cropping">@L["支援 PNG、JPEG、WebP、GIF（取第一格），8 MB 以內。圖片在這個瀏覽器裡裁切成頭像，存在這台裝置的玩家資料中；登入雲端存檔時才會跟著存檔同步。"]</p>
     <div class="avatar-crop" hidden="@(!Cropping)" aria-label="@L["裁切頭像"]">
         <div class="avatar-crop-stage" data-crop-stage tabindex="0" aria-label="@L["拖曳調整位置，方向鍵微調，加減號縮放"]"><canvas></canvas><span class="avatar-crop-mask" aria-hidden="true"></span></div>
         <label class="avatar-zoom">@L["縮放"]<input type="range" min="1" max="4" step="0.01" value="1" data-crop-zoom aria-label="@L["縮放"]" /></label>

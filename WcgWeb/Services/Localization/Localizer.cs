@@ -57,6 +57,8 @@ public sealed class Localizer : IDisposable
     // ---- lookups --------------------------------------------------------------------------------
     // Fixed interface text: L["中文"].
     public string this[string zh] => IsEnglish ? LocalizationCatalog.Translate(zh) : zh;
+    // On/off switch state: 「關閉」 means "Off" here, not the "Close" button label.
+    public string SwitchState(bool on) => on ? this["開啟"] : IsEnglish ? "Off" : "關閉";
     // Formatted interface text: L.F("第 {0} 回合", turn). Arguments that are canonical strings are translated too.
     public string F(string zhFormat, params object?[] args)
     {

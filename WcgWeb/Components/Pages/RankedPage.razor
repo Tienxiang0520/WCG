@@ -69,7 +69,7 @@ else
                     <h3 class="panel-title">@L["有一場尚未完成的對局"]</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
                     @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@L.Text(ongoing.ComputerDeck.Description)</p> }
                     <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />@L["繼續對局"]</button>
-                    <p class="ranked-help">@L["離開頁面會保留進度。要放棄此局，請進入對戰設定選擇投降。"]</p>
+                    <p class="ranked-help">@L["離開頁面會保留進度。要放棄此局，請按對戰畫面上方的「投降」。"]</p>
                 }
                 else
                 {
@@ -207,9 +207,11 @@ else
     private async Task OpenReplay(RankedRecord r)
     {
         ReplayRecord = r; Replay = null; StateHasChanged();
-        await Task.Delay(30); // let the loading state paint before the synchronous re-simulation
+        await Task.Delay(30); // let the loading state paint first
         if (ReplayRecord?.Id != r.Id) return;
-        Replay = Ranked.BuildReplay(r.Id); StateHasChanged();
+        var replay = await Ranked.BuildReplayAsync(r.Id, BattleCoordinator.PauseEvery(BattleCoordinator.SliceMilliseconds));
+        if (ReplayRecord?.Id != r.Id || Disposed) return;
+        Replay = replay; StateHasChanged();
     }
     private void CloseReplay() { ReplayRecord = null; Replay = null; }
     // 對局代碼: copy a shareable code, or decode a pasted one and replay it (works offline; nothing is saved).
@@ -228,7 +230,9 @@ else
         ReplayRecord = record; Replay = null; StateHasChanged();
         await Task.Delay(30);
         if (ReplayRecord != record) return;
-        Replay = Ranked.BuildReplay(record); StateHasChanged();
+        var replay = await Ranked.BuildReplayAsync(record, BattleCoordinator.PauseEvery(BattleCoordinator.SliceMilliseconds));
+        if (ReplayRecord != record || Disposed) return;
+        Replay = replay; StateHasChanged();
     }
     private async Task ReviewFinished(Guid id)
     {

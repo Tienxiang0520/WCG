@@ -24,7 +24,7 @@
                     aria-labelledby="energy-confirmation-label" aria-describedby="energy-confirmation-help"
                     disabled="@(!Loaded || Saving)" @onclick="ToggleEnergyConfirmation">
                 <span class="switch-track" aria-hidden="true"><span></span></span>
-                <span>@L[ConfirmEnergy ? "開啟" : "關閉"]</span>
+                <span>@L.SwitchState(ConfirmEnergy)</span>
             </button>
         </div>
         <div class="setting-row">
@@ -36,7 +36,7 @@
                     aria-labelledby="stat-breakdown-label" aria-describedby="stat-breakdown-help"
                     disabled="@(!Loaded || Saving)" @onclick="ToggleStatBreakdown">
                 <span class="switch-track" aria-hidden="true"><span></span></span>
-                <span>@L[ShowBreakdown ? "開啟" : "關閉"]</span>
+                <span>@L.SwitchState(ShowBreakdown)</span>
             </button>
         </div>
     </section>

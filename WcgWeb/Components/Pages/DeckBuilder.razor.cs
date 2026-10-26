@@ -30,7 +30,22 @@ public partial class DeckBuilder
     private string? NewDeckSource { get; set; }
     // 「我的牌組」 is also a player-typed deck name that must never be translated, so the title is chosen here.
     private string MyDecksLabel => L.IsEnglish ? "My decks" : "我的牌組";
-    private void CloseDeckModal() { ShowDeckSelectModal = false; NewDeckSource = null; }
+    private void CloseDeckModal() { ShowDeckSelectModal = false; NewDeckSource = null; SourceWill = ""; SourceColor = ""; SourceSearch = ""; }
+    // 「從官方預組複製」 filters: will chip, single/dual chip and a name search over the 60 official decks.
+    private string SourceWill = "", SourceColor = "", SourceSearch = "";
+    private string[] DeckWillsOf(Deck d) => d.CardIds.Select(CardDb.GetCard).Where(c => c != null && !c.IsNeutral)
+        .SelectMany(c => c!.Wills).Where(Deck.Wills.Contains).Distinct().ToArray();
+    private bool SourceMatches(Deck d)
+    {
+        var wills = DeckWillsOf(d);
+        if (SourceWill != "" && !wills.Contains(SourceWill) && d.MainWill != SourceWill) return false;
+        if (SourceColor == "single" && wills.Length > 1) return false;
+        if (SourceColor == "dual" && wills.Length < 2) return false;
+        var q = SourceSearch.Trim();
+        return q == "" || L.DeckName(d).Contains(q, StringComparison.OrdinalIgnoreCase) || L.DeckDescription(d).Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+    // A deck being edited that is not in 我的牌組 yet (new, or a copy) shows 「未儲存」.
+    private bool CurrentDeckUnsaved => !DeckSvc.GetCustomDecks().Any(d => d.Id == CurrentDeck.Id);
     private string SearchText { get; set; } = "";
     private string SelectedWill { get; set; } = "";
     private string SelectedType { get; set; } = "";
@@ -166,7 +181,9 @@ public partial class DeckBuilder
     private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
     private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
     private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !c.Wills.All(a.Contains)) : 0;
-    private void DropLockedFilter() { if (SelectedWill != "" && SelectedWill != DualFilter && LockedOut(SelectedWill)) SelectedWill = ""; }
+    private void DropLockedFilter() { if (SelectedWill != "" && (SelectedWill == DualFilter ? DualChipLocked : LockedOut(SelectedWill))) SelectedWill = ""; }
+    // A single-colour deck can't hold dual-will cards, so the 雙色卡 chip would always show 0: disable it with a hint.
+    private bool DualChipLocked => !ShowDeckCards && AllowedWills != null && !DualColor;
     private void SetDual(bool dual)
     {
         DualColor = dual;
@@ -253,7 +270,7 @@ public partial class DeckBuilder
         CurrentDeck = new Deck
         {
             Id = Guid.NewGuid().ToString(),
-            Name = L.F("{0} (副本)", L.DeckName(preset)),
+            Name = L.F("{0}（副本）", L.DeckName(preset)),
             Description = L.DeckDescription(preset),
             MainWill = preset.MainWill,
             CardIds = new List<string>(preset.CardIds)
@@ -268,7 +285,7 @@ public partial class DeckBuilder
         CurrentDeck = new Deck
         {
             Id = Guid.NewGuid().ToString(),
-            Name = L.F("{0} (副本)", own.Name),
+            Name = L.F("{0}（副本）", own.Name),
             Description = own.Description,
             MainWill = own.MainWill,
             CardIds = new List<string>(own.CardIds)

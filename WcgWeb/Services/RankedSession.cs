@@ -176,7 +176,7 @@ public sealed partial class RankedSession
         foreach (var action in match.Actions)
         {
             Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
-            var response = action.Type == "ai" ? Bridge.AiStepCore() : Bridge.SubmitCore(Decode(action));
+            var response = action.Type == "ai" ? Bridge.AiStepCore() : IsAiCall(action) ? Bridge.AiCallCore(action) : Bridge.SubmitCore(Decode(action));
             if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
         }
         EndRestore(match);
@@ -189,7 +189,7 @@ public sealed partial class RankedSession
         foreach (var action in match.Actions)
         {
             Engine.StackableShields = action.RulesVersion >= 2; Engine.AiRevision = action.RulesVersion;
-            var response = action.Type == "ai" ? await Bridge.AiStepCoreAsync(pause) : Bridge.SubmitCore(Decode(action));
+            var response = action.Type == "ai" ? await Bridge.AiStepCoreAsync(pause) : IsAiCall(action) ? Bridge.AiCallCore(action) : Bridge.SubmitCore(Decode(action));
             if (!response.Success) throw new InvalidOperationException("對局紀錄無法完整還原。");
             await pause();
         }
@@ -232,6 +232,10 @@ public sealed partial class RankedSession
             return Apply(action, () => Bridge.SubmitCore(command));
         }
     }
+    // The computer's step is journaled as its concrete move ("aic:<kind>", replayed without search) when the
+    // engine captured exactly one; otherwise as the legacy "ai" entry, which re-runs the search on replay.
+    private static RankedAction LegacyAi => new("ai", RulesVersion: GameEngine.RankedAiVersion);
+    internal static bool IsAiCall(RankedAction a) => a.Type.StartsWith(GameEngine.AiCallPrefix, StringComparison.Ordinal);
     private BattleResponse Ai()
     {
         lock (gate)
@@ -239,7 +243,10 @@ public sealed partial class RankedSession
             if (thinking) return Reject("電腦仍在思考。");
             if (restorePending) return Reject(RestoringMessage);
             if (Error != "" || profile.Match is not { Settled: false }) return Reject(Error == "" ? "此局已結算。" : Error);
-            return Apply(new("ai", RulesVersion: GameEngine.RankedAiVersion), Bridge.AiStepCore);
+            var before = RankedStore.Copy(profile); var revision = Engine.Revision;
+            Engine.BeginAiCapture(); BattleResponse response; RankedAction? move;
+            try { response = Bridge.AiStepCore(); } finally { move = Engine.EndAiCapture(); }
+            return Record(move ?? LegacyAi, before, revision, response);
         }
     }
     // The computer's step with pauses between search slices (BattleBridge.AiStepAsync). The profile stays untouched
@@ -257,8 +264,9 @@ public sealed partial class RankedSession
         }
         try
         {
-            var response = await Bridge.AiStepCoreAsync(pause);
-            lock (gate) return Record(new("ai", RulesVersion: GameEngine.RankedAiVersion), before, revision, response);
+            Engine.BeginAiCapture(); BattleResponse response; RankedAction? move;
+            try { response = await Bridge.AiStepCoreAsync(pause); } finally { move = Engine.EndAiCapture(); }
+            lock (gate) return Record(move ?? LegacyAi, before, revision, response);
         }
         finally { lock (gate) thinking = false; }
     }
