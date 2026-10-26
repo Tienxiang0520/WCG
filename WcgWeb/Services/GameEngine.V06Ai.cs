@@ -69,7 +69,7 @@ public partial class GameEngine
         var value=mine?theirs*2-ours*2+(x.IsSilenced?2:0)-(SilenceCounterRules&&x.SoulCounter?4+x.Card.TotalCost:0):theirs*2-ours*2-(x.IsSilenced?2:0)+(SilenceCounterRules&&x.SoulCounter?4+x.Card.TotalCost:0);
         return value==0?-1:value+(x.CurrentPP/1000d);
     }
-    public bool PlayEnchantment(PlayerState p,CardInstance c)=>Change(()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));
+    public bool PlayEnchantment(PlayerState p,CardInstance c)=>AiTracked(AiNote("enchant",p,c),()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));
     private void SpellDamage(PlayerState source,PlayerState target,int amount, CardDefinition card)
     {if(source!=target&&target.Field.Any(x=>!x.IsTapped))amount-=target.Structures.Count(x=>!x.IsSet&&x.Card.Id=="WCG-127");Damage(target,Math.Max(0,amount),new(source,card,null,card.IsCounter?"counter":"spell"));}
 }

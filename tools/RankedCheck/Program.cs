@@ -34,7 +34,7 @@ if(args.Contains("--explain"))
  for(int i=0;i<actions.Count&&i+1<replay.Steps.Count;i++)
  {
   var a=actions[i];var st=replay.Steps[i+1].State;
-  Console.WriteLine($"#{i} turn {st.Turn} {(a.Type=="ai"?"AI":"player")} {a.Type} src {a.Source} tgt {a.TargetSide}/{a.Target} choice {a.Choice} v{a.RulesVersion}  hp {st.Player.Hp}-{st.Computer.Hp}");
+  Console.WriteLine($"#{i} turn {st.Turn} {(a.Type=="ai"||a.Type.StartsWith("aic:")?"AI":"player")} {a.Type} src {a.Source} tgt {a.TargetSide}/{a.Target} choice {a.Choice} v{a.RulesVersion}  hp {st.Player.Hp}-{st.Computer.Hp}");
   if(traces.TryGetValue(i,out var lines))foreach(var l in lines)Console.WriteLine("    "+l);
   if(args.Contains("--boards"))
   {

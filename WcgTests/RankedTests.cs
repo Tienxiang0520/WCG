@@ -17,8 +17,10 @@ public sealed class RankedTests : IDisposable
     readonly RankedDecks decks;
     readonly TestClock clock = new();
     readonly RankedStore store;
-    public RankedTests()
+    readonly Xunit.Abstractions.ITestOutputHelper output;
+    public RankedTests(Xunit.Abstractions.ITestOutputHelper output)
     {
+        this.output = output;
         var mock = new Mock<IWebHostEnvironment>(); mock.Setup(x => x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb")));
         env = mock.Object; cards = new(env); decks = new(cards, env);
         store = new(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?> { ["Ranked:SavePath"] = Path.Combine(dir, "ranked.json") }).Build());
@@ -81,7 +83,7 @@ public sealed class RankedTests : IDisposable
         var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);var lease=s.Coordinator.Attach();s.Coordinator.Fast=true;
         if(s.Engine.DecisionPlayerId=="player"){Assert.True(Send(s,"energy",s.Engine.Player.Hand[0].InstanceId).Success);Assert.True(Send(s,"end").Success);}
         using(var cancel=new CancellationTokenSource())await s.Coordinator.DriveAsync(lease,r=>{cancel.Cancel();return Task.CompletedTask;},cancel.Token);
-        Assert.Contains(s.Read().Match!.Actions,a=>a.Type=="ai");
+        Assert.Contains(s.Read().Match!.Actions,a=>a.Type.StartsWith(GameEngine.AiCallPrefix));
         var expected=JsonSerializer.Serialize(StateShape(s.Engine));
         var deferred=new RankedSession(cards,new DeckService(cards,env,decks),store,decks,NullLogger<BattleCoordinator>.Instance,clock,deferRestore:true);
         Assert.True(deferred.Restoring);Assert.Empty(deferred.Error);Assert.NotEqual(expected,JsonSerializer.Serialize(StateShape(deferred.Engine)));
@@ -925,7 +927,7 @@ public sealed class RankedTests : IDisposable
     }
 
     // ---- 對局代碼 (match code) ----
-    async Task<RankedSession> PlayFullMatch(int tier,int seed)
+    async Task<RankedSession> PlayFullMatch(int tier,int seed,bool passive=false) // passive: never attacks, for a long game
     {
         var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);
         var profile=s.Read();profile.Match!.Seed=seed;profile.Match.PlayerFirst=true;profile.Match.Tier=tier;
@@ -942,7 +944,7 @@ public sealed class RankedTests : IDisposable
             if(state.Pending is {} pending) response=pending.Kind=="choice"?Send(s,"choice",option:pending.Options[0].Id):Send(s,"target",target:Guid.Parse(pending.Targets[0]));
             else if(state.Hand.Where(h=>h.CanEnergy&&state.Player.TotalEnergy<5).OrderByDescending(h=>h.Card.Cost).FirstOrDefault() is {} energy) response=Send(s,"energy",energy.Card.InstanceId);
             else if(state.Hand.FirstOrDefault(h=>h.CanPlay) is {} card) response=Send(s,"play",card.Card.InstanceId);
-            else if(state.Player.Field.FirstOrDefault(m=>m.CanAttack&&m.Targets.Length>0) is {} monster)
+            else if(!passive&&state.Player.Field.FirstOrDefault(m=>m.CanAttack&&m.Targets.Length>0) is {} monster)
             { var target=monster.Targets.FirstOrDefault(t=>t.Id=="face")??monster.Targets[0]; response=Send(s,"attack",monster.Card.InstanceId,target.Id=="face"?null:Guid.Parse(target.Id)); }
             else response=Send(s,"end");
             Assert.True(response.Success,response.Message);
@@ -953,7 +955,7 @@ public sealed class RankedTests : IDisposable
     [Fact, Trait("Category", "Slow")] public async Task MatchCodeRoundTripsAndReplaysToTheSameFinalState()
     {
         var s=await PlayFullMatch(4,9123);var record=s.Read().Records!.Last();
-        var actions=RankedRecord.Decode(record.Actions);Assert.Contains(actions,a=>a.Type=="ai"&&a.RulesVersion==GameEngine.RankedAiVersion);
+        var actions=RankedRecord.Decode(record.Actions);Assert.Contains(actions,a=>a.Type.StartsWith(GameEngine.AiCallPrefix)&&a.RulesVersion==GameEngine.RankedAiVersion);
         var code=s.MatchCodeFor(record.Id)!;Assert.StartsWith(MatchCode.Prefix,code);Assert.True(code.Length<record.Actions.Length+4000,code.Length.ToString());
         var decoded=MatchCode.Decode(code,out var error,out var live)!;Assert.Equal("",error);Assert.False(live);
         Assert.Equal(record.Seed,decoded.Seed);Assert.Equal(record.Tier,decoded.Tier);Assert.Equal(record.PlayerFirst,decoded.PlayerFirst);Assert.Equal(record.Rules,decoded.Rules);
@@ -1047,5 +1049,74 @@ public sealed class RankedTests : IDisposable
         Assert.True(MatchCode.Encode(Record(0)).Length<MatchCode.Encode(Record(1)).Length);
         Assert.Null(MatchCode.Decode(MatchCode.Encode(Record(RankedRules.CurrentStartRules+1)),out var error,out _));
         Assert.Equal("這個對局代碼來自較新的版本，請更新遊戲後再試。",error);
+    }
+
+    // ---- Journaled computer moves ("aic:<kind>") ----
+    // The same journal with every computer move turned back into a legacy "ai" entry (what older versions saved).
+    static RankedRecord AsLegacy(RankedRecord r) => new() { Id = r.Id, Season = r.Season, Tier = r.Tier, Seed = r.Seed, PlayerFirst = r.PlayerFirst, Rules = r.Rules, StartRules = r.StartRules,
+        PlayerDeck = r.PlayerDeck, ComputerDeck = r.ComputerDeck, Turns = r.Turns,
+        Actions = RankedRecord.Encode(RankedRecord.Decode(r.Actions).Select(a => a.Type.StartsWith(GameEngine.AiCallPrefix) ? new RankedAction("ai", RulesVersion: a.RulesVersion) : a)) };
+    static string Shapes(RankedReplay r) => string.Join("\n", r.Steps.Select(x => x.Actor + "|" + x.Action + "|" + JsonSerializer.Serialize(PublicShape(x.State))));
+    [Theory, Trait("Category", "Slow")] [InlineData(5, 9123)] [InlineData(3, 4242)] [InlineData(0, 77)]
+    public async Task JournaledComputerMovesReplayWithoutSearchToTheSameStates(int tier, int seed)
+    {
+        var s = await PlayFullMatch(tier, seed); var record = s.Read().Records!.Last();
+        var actions = RankedRecord.Decode(record.Actions);
+        var computer = actions.Count(a => a.Type == "ai" || a.Type.StartsWith(GameEngine.AiCallPrefix));
+        Assert.True(computer > 0); Assert.Equal(computer, actions.Count(a => a.Type.StartsWith(GameEngine.AiCallPrefix))); // every computer step captured
+        GameEngine.AiStepsStarted = 0; var watch = System.Diagnostics.Stopwatch.StartNew();
+        var fast = s.BuildReplay(record); var fastMs = watch.Elapsed.TotalMilliseconds;
+        Assert.Empty(fast.Error); Assert.Equal(0, GameEngine.AiStepsStarted);
+        watch.Restart(); var legacy = s.BuildReplay(AsLegacy(record)); var legacyMs = watch.Elapsed.TotalMilliseconds;
+        Assert.Empty(legacy.Error); Assert.True(GameEngine.AiStepsStarted >= computer); // plus the searches' own simulated steps
+        Assert.Equal(Shapes(legacy), Shapes(fast)); Assert.True(fast.Steps[^1].State.IsOver);
+        // A new-format match code from another device replays the same way.
+        Directory.Delete(dir, true); var other = Session(); var code = MatchCode.Decode(MatchCode.Encode(record), out var error, out _)!; Assert.Equal("", error);
+        Assert.Equal(Shapes(fast), Shapes(other.BuildReplay(code)));
+        output.WriteLine($"tier {tier} seed {seed}: {actions.Count} actions ({computer} computer); replay new {fastMs:F0} ms, legacy {legacyMs:F0} ms");
+        Assert.True(fastMs < 3000, $"replay took {fastMs:F0} ms"); Assert.True(fastMs * 3 < legacyMs || legacyMs < 300, $"new {fastMs:F0} ms vs legacy {legacyMs:F0} ms");
+    }
+    // A real 鑽石 match code (AiV8Tests.DiamondMatch, legacy "ai" journal): upgraded to journaled computer moves, the
+    // first ~70 actions restore to the same in-progress state in the browser way, without any search and much faster.
+    [Fact, Trait("Category", "Slow")] public async Task LegacyAndJournaledRestoresOfAnInProgressMatchAgree()
+    {
+        var legacyRecord = MatchCode.Decode(AiV8Tests.DiamondMatch, out var error, out _)!; Assert.Equal("", error);
+        var s = Session(); var journaled = s.JournaledActions(legacyRecord)!; Assert.NotNull(journaled);
+        var legacy = RankedRecord.Decode(legacyRecord.Actions); var fast = RankedRecord.Decode(journaled);
+        Assert.Equal(legacy.Count, fast.Count); Assert.DoesNotContain(fast, a => a.Type == "ai");
+        Assert.Equal(Shapes(s.BuildReplay(legacyRecord)), Shapes(s.BuildReplay(new RankedRecord { Rules = legacyRecord.Rules, Tier = legacyRecord.Tier, Seed = legacyRecord.Seed,
+            PlayerFirst = legacyRecord.PlayerFirst, StartRules = legacyRecord.StartRules, PlayerDeck = legacyRecord.PlayerDeck, ComputerDeck = legacyRecord.ComputerDeck, Actions = journaled })));
+        var cut = Math.Min(70, legacy.Count - 1);
+        async Task<(string State, double Ms)> Restore(List<RankedAction> journal)
+        {
+            var p = s.Read(); p.Match = new() { Season = p.Season, Seed = legacyRecord.Seed, Tier = legacyRecord.Tier, PlayerFirst = legacyRecord.PlayerFirst, Rules = legacyRecord.Rules,
+                StartRules = legacyRecord.StartRules, PlayerDeck = legacyRecord.PlayerDeck, ComputerDeck = legacyRecord.ComputerDeck, Actions = journal.Take(cut).ToList() };
+            store.Save(p);
+            var d = new RankedSession(cards, new DeckService(cards, env, decks), store, decks, NullLogger<BattleCoordinator>.Instance, clock, deferRestore: true);
+            var watch = System.Diagnostics.Stopwatch.StartNew(); await d.RestoreAsync(); var ms = watch.Elapsed.TotalMilliseconds;
+            Assert.Empty(d.Error); Assert.False(d.Restoring); return (JsonSerializer.Serialize(StateShape(d.Engine)), ms);
+        }
+        var oldRun = await Restore(legacy); var newRun = await Restore(fast);
+        Assert.Equal(oldRun.State, newRun.State);
+        var watch = System.Diagnostics.Stopwatch.StartNew(); s.BuildReplay(legacyRecord); var replayOld = watch.Elapsed.TotalMilliseconds;
+        watch.Restart(); var replay = s.BuildReplay(new RankedRecord { Rules = legacyRecord.Rules, Tier = legacyRecord.Tier, Seed = legacyRecord.Seed, PlayerFirst = legacyRecord.PlayerFirst,
+            StartRules = legacyRecord.StartRules, PlayerDeck = legacyRecord.PlayerDeck, ComputerDeck = legacyRecord.ComputerDeck, Actions = journaled }); var replayNew = watch.Elapsed.TotalMilliseconds;
+        output.WriteLine($"DiamondMatch: {legacy.Count} actions; in-progress restore of first {cut}: legacy {oldRun.Ms:F0} ms, new {newRun.Ms:F0} ms; full replay: legacy {replayOld:F0} ms, new {replayNew:F0} ms");
+        Assert.True(newRun.Ms < 3000, $"restore took {newRun.Ms:F0} ms"); Assert.True(replayNew < 3000, $"replay took {replayNew:F0} ms");
+    }
+    [Fact] public void OldAndNewJournalStringsDecodeAndValidate()
+    {
+        // Old format: computer steps as "ai" only; unchanged and still accepted.
+        var old = RankedRecord.Decode("energy,0,-1,-1,-1,9;end,-1,-1,-1,-1,9;ai,-1,-1,-1,-1,9;attack,0,3,-1,-1,10");
+        Assert.Equal(["energy", "end", "ai", "attack"], old.Select(a => a.Type));
+        var mixed = RankedRecord.Decode("ai,-1,-1,-1,-1,9;aic:attack,6,0,1,-1,10;aic:spellatp,2,2,-1,-1,10;aic:choice,-1,-1,-1,3,10;aic:end,-1,-1,-1,-1,10");
+        Assert.Equal(new RankedAction("aic:attack", 6, 0, 1, -1, 10), mixed[1]); Assert.Equal(3, mixed[3].Choice);
+        Assert.Equal("ai,-1,-1,-1,-1,9;aic:attack,6,0,1,-1,10;aic:spellatp,2,2,-1,-1,10;aic:choice,-1,-1,-1,3,10;aic:end,-1,-1,-1,-1,10", RankedRecord.Encode(mixed));
+        Assert.All(GameEngine.AiCallKinds, k => Assert.True(RankedStore.KnownAction(GameEngine.AiCallPrefix + k)));
+        Assert.False(RankedStore.KnownAction("aic:teleport")); Assert.False(RankedStore.KnownAction("ai"));
+        // An in-progress match saved with either format loads; an unknown computer move is rejected like any bad action.
+        var s = Session(); Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        var p = s.Read(); p.Match!.Actions = [new("aic:teleport", RulesVersion: GameEngine.RankedAiVersion)]; store.Save(p);
+        Assert.NotEmpty(Session().Error);
     }
 }
