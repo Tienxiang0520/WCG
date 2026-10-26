@@ -754,3 +754,12 @@
 
 .turn-tool-row{display:flex;gap:6px}.turn-tool-row>button{flex:1;white-space:nowrap}
 @media(max-width:600px){.turn-tool-row{gap:4px}}
+
+/* 橫置 (tapped) must read at a glance on both sides: dimmed, desaturated card plus a 「橫置」 badge. The card is not
+   rotated because its arrows (箭頭指向的怪物) would then point the wrong way. Transitions follow the 動畫 setting. */
+.v06-slot.tapped .field-card{filter:grayscale(.7) brightness(.55);transition:filter calc(.25s * var(--wcg-motion-scale, 1)) ease}
+.v06-slot.tapped{box-shadow:inset 0 0 0 2px rgba(255,190,90,.55),inset 0 2px 10px rgba(0,0,0,.45)}
+.tapped-badge{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:3px;padding:3px 10px;border-radius:999px;
+    background:rgba(20,14,6,.88);border:1px solid #ffbe5a;color:#ffd98a;font-weight:800;font-size:.9rem;letter-spacing:.12em;white-space:nowrap;pointer-events:none;box-shadow:0 2px 10px #000a}
+.tapped-badge b{font-size:.85em;letter-spacing:0}
+@media(max-width:640px){.tapped-badge{font-size:.62rem;padding:1px 5px;letter-spacing:.04em;gap:1px}}

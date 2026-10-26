@@ -22,6 +22,7 @@
         {
             var slot=mine?screen:4-screen;var m=side.Field.FirstOrDefault(x=>x.Slot==slot);
             <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m?.Locked==true?"locked":"") @(m==null?"vacant":"") @(LegalSlot(mine,slot,m)?"legal":"")" data-drop-zone="@(mine?"own":"enemy")" data-slot="@slot" data-target="@m?.Card.InstanceId" @onclick="()=>OpenSlot(m)">
+                @if(m?.Tapped==true){<span class="tapped-badge" role="img" aria-label="@L["橫置"]" title="@L["橫置：不能攻擊或橫置發動，控制者的下個回合開始時轉為直立"]"><b aria-hidden="true">⤵</b>@L["橫置"]</span>}
                 @if(m==null){<small class="slot-number">@L[mine?"己方":"敵方"] @(slot+1)</small>}
                 @if(m==null){<div class="empty">＋</div>}
                 else

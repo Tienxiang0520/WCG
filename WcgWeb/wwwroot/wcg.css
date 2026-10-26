@@ -1101,3 +1101,9 @@ html:is([data-wcg-motion="reduced"],[data-wcg-motion="off"]) .coach-notice, html
     .phone-gate .phone-gate-title { font-size: 2rem; letter-spacing: .3em; text-indent: .3em; color: #f3dca3; }
     .page, .tutorial-prompt-shade { display: none !important; }
 }
+
+/* Phone ☰ menu: the sticky header is a stacking context (z 50, backdrop-filter), so while the menu is open lift the
+   whole header above the deck builder's 編輯牌組 panel and the floating 「牌組 50/50」 button (z 1100). */
+@media (max-width:640px) {
+    .sidebar:has(.nav-scrollable.mobile-open) { z-index:1150; }
+}

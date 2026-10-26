@@ -658,6 +658,7 @@
  "棘手的守衛": "A tough guard",
  "樹": "Tree",
  "橫置": "Tap",
+ "橫置：不能攻擊或橫置發動，控制者的下個回合開始時轉為直立": "Tapped: can't attack or use tap abilities; untaps at the start of its controller's next turn",
  "橫置1點能量使用能量護盾": "Tap 1 energy to use Energy Shield",
  "橫置能量保命": "Tap energy to survive",
  "橫置，不能攻擊": "Tapped, can't attack",
