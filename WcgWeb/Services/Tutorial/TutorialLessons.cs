@@ -78,7 +78,7 @@ public static class TutorialLessons
         new()
         {
             Id = "combat", Icon = "swords", Title = "怪物交戰：PP 比大小",
-            Summary = "攻擊敵方怪物時比較 PP，高者存活、平手同歸於盡；學會預覽勝負與查看墓地。",
+            Summary = "攻擊敵方怪物時比較 PP，高者存活、平手同歸於盡；學會出手前比較 PP 與查看墓地。",
             Topics = ["怪物攻擊怪物", "PP 比較", "平手同歸於盡", "無累積傷害", "攻擊後橫置", "墓地與紀錄", "略過怪物直接攻擊玩家"],
             Scene = new(
                 new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-154", 2), new("WCG-155", 3)] },
@@ -89,7 +89,7 @@ public static class TutorialLessons
                     Text = "怪物攻擊怪物時比較目前 PP：較高者存活、較低者被消滅；PP 相同則同歸於盡。傷害不會累積，存活的怪物不會留下傷痕。DP 只在攻擊玩家時使用。" },
                 new() { Title = "以強擊弱", Spot = ["own-card:WCG-114", "enemy-card:WCG-101"], Allow = [Attack("WCG-114", "WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101"),
-                    Text = "把「{0}」（{1} PP）拖到敵方「{2}」（{3} PP）上。拖曳途中會顯示勝負預覽。", TextValues = [CardName("WCG-114"), OwnPP("WCG-114"), CardName("WCG-101"), EnemyPP("WCG-101")],
+                    Text = "把「{0}」（{1} PP）拖到敵方「{2}」（{3} PP）上。瞄準合法目標時箭頭會變綠，放開就出擊。", TextValues = [CardName("WCG-114"), OwnPP("WCG-114"), CardName("WCG-101"), EnemyPP("WCG-101")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-114"), CardName("WCG-101")] },
                 new() { Title = "攻擊後橫置", Spot = ["own-card:WCG-114"],
                     Text = "攻擊過的怪物會橫置，這回合不能再攻擊；少數卡牌效果可以讓怪物重新直立、再攻擊一次。" },
