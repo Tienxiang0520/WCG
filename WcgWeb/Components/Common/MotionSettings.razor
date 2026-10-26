@@ -1,0 +1,73 @@
+@using WcgWeb.Services
+@inject IJSRuntime JS
+@implements IAsyncDisposable
+
+@* 動畫速度 slider and 關閉動畫 switch; values live in battle-fx.js (localStorage wcg.animSpeed / wcg.motion). *@
+<section class="motion-settings" aria-labelledby="motion-settings-title">
+    <h2 id="motion-settings-title">@L["動畫"]</h2>
+    <div class="motion-row motion-master">
+        <div>
+            <h3 id="motion-off-label">@L["關閉動畫"]</h3>
+            <p id="motion-off-help">@L["開啟後，攻擊、傷害數字、法術與觸發效果等對戰動畫都會直接跳過，結果立即顯示。不影響規則與重播內容。"]</p>
+        </div>
+        <button type="button" class="motion-switch" role="switch" aria-checked="@(Off ? "true" : "false")"
+                aria-labelledby="motion-off-label" aria-describedby="motion-off-help" disabled="@(!Loaded)" @onclick="ToggleOff">
+            <span class="motion-track" aria-hidden="true"><span></span></span>
+            <span>@L[Off ? "開啟" : "關閉"]</span>
+        </button>
+    </div>
+    <div class="motion-row motion-slider @(Off ? "disabled" : "")">
+        <label for="animation-speed">
+            <span class="motion-label">@L["動畫速度"]</span>
+            <small>@L["拖動調整對戰與重播動畫的快慢，1× 為預設，數字越大越快。"]</small>
+        </label>
+        <div class="motion-control">
+            <input id="animation-speed" type="range" min="@Min" max="@Max" step="0.05" value="@SpeedText" style="--fill:@FillText%"
+                   disabled="@(!Loaded || Off)" aria-valuetext="@($"{SpeedLabel}×")" @oninput="e => SetSpeed(e.Value)" />
+            <output for="animation-speed">@(SpeedLabel)×</output>
+        </div>
+    </div>
+</section>
+
+@code {
+    private const double Min = AnimationTiming.MinSpeed, Max = AnimationTiming.MaxSpeed;
+    private IJSObjectReference? Module;
+    private bool Loaded, Off;
+    private double Speed = AnimationTiming.DefaultSpeed;
+    private string SpeedText => Speed.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+    private string SpeedLabel => Speed.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+    private string FillText => ((Speed - Min) / (Max - Min) * 100).ToString("0.#", System.Globalization.CultureInfo.InvariantCulture);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/battle-fx.js");
+            Apply(await Module.InvokeAsync<AnimationSettingsState>("readAnimationSettings"));
+            Loaded = true;
+        }
+        catch (JSException) { }
+        StateHasChanged();
+    }
+    private void Apply(AnimationSettingsState s) { Off = s.Off; Speed = s.Speed; AnimationTiming.Update(s.Speed, s.Off); }
+    private async Task ToggleOff()
+    {
+        if (Module == null) return;
+        try { Apply(await Module.InvokeAsync<AnimationSettingsState>("saveAnimationOff", !Off)); }
+        catch (JSException) { }
+    }
+    private async Task SetSpeed(object? raw)
+    {
+        if (Module == null || !double.TryParse(raw?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var value)) return;
+        Speed = Math.Clamp(value, Min, Max);
+        try { await Module.InvokeAsync<double>("saveAnimationSpeed", Speed); Apply(await Module.InvokeAsync<AnimationSettingsState>("readAnimationSettings")); }
+        catch (JSException) { }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (Module == null) return;
+        try { await Module.DisposeAsync(); }
+        catch (JSDisconnectedException) { }
+    }
+}

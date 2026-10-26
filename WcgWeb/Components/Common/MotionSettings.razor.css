@@ -1,0 +1,30 @@
+.motion-settings { position: relative; margin-top: 20px; padding: 24px; border-radius: var(--wcg-radius-xl); background: linear-gradient(180deg, var(--wcg-surface-2), var(--wcg-surface-1) 140px); box-shadow: inset 0 0 0 1px var(--wcg-line), inset 0 1px 0 rgba(255, 255, 255, .05), var(--wcg-shadow-2); display: grid; gap: 12px; }
+.motion-settings h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; font-size: 1.1rem; letter-spacing: .12em; }
+.motion-settings h2::before { content: ""; width: 7px; height: 7px; transform: rotate(45deg); background: var(--wcg-gold); box-shadow: 0 0 10px rgba(214, 180, 108, .7); }
+.motion-row { display: flex; align-items: center; gap: 20px; padding: 14px 18px; border-radius: var(--wcg-radius-lg); background: rgba(9, 11, 17, .45); box-shadow: inset 0 0 0 1px var(--wcg-line-soft); }
+.motion-row > div:first-child, .motion-row > label { flex: 1; min-width: 0; margin: 0; }
+.motion-row h3, .motion-label { display: block; font-family: var(--wcg-font-sans); font-size: 1rem; font-weight: 600; letter-spacing: .04em; margin: 0 0 4px; color: var(--wcg-text); }
+.motion-row p, .motion-row small { display: block; font-size: .85rem; margin: 0; color: var(--wcg-text-3); line-height: 1.6; }
+.motion-slider.muted { opacity: .55; }
+.motion-control { display: flex; align-items: center; gap: 12px; flex: 0 0 auto; }
+.motion-control input[type=range] { width: 200px; height: 6px; appearance: none; -webkit-appearance: none; border-radius: 6px; background: linear-gradient(90deg, #b38a40, #f3dca3 var(--fill, 50%), rgba(9, 11, 17, .9) var(--fill, 50%)); box-shadow: inset 0 0 0 1px rgba(214, 180, 108, .35); cursor: pointer; }
+.motion-control input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fffaf0, #d6b46c 70%); box-shadow: 0 0 0 2px #2a2112, 0 2px 6px rgba(0, 0, 0, .6); }
+.motion-control input[type=range]::-moz-range-thumb { width: 20px; height: 20px; border: 0; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fffaf0, #d6b46c 70%); box-shadow: 0 0 0 2px #2a2112, 0 2px 6px rgba(0, 0, 0, .6); }
+.motion-control input[type=range]:focus-visible { outline: none; box-shadow: var(--wcg-focus); }
+.motion-control output { min-width: 3.2em; text-align: right; font-family: var(--wcg-font-num, inherit); font-variant-numeric: tabular-nums; color: var(--wcg-gold-bright); font-weight: 700; }
+.motion-switch { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 72px; padding: 8px; color: var(--wcg-text-2); background: transparent; border: 0; border-radius: var(--wcg-radius-md); font-size: .8rem; font-weight: 600; }
+.motion-switch:focus-visible { outline: none; box-shadow: var(--wcg-focus); }
+.motion-track { display: block; width: 52px; height: 30px; padding: 3px; background: rgba(9, 11, 17, .8); border-radius: 20px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), inset 0 2px 4px rgba(0, 0, 0, .5); transition: background-color .2s; }
+.motion-track > span { display: block; width: 24px; height: 24px; background: linear-gradient(180deg, #f4efe4, #b9b3a6); border-radius: 50%; box-shadow: 0 2px 5px rgba(0, 0, 0, .5); transition: transform .22s var(--wcg-ease-spring), background .2s; }
+.motion-switch[aria-checked="true"] { color: var(--wcg-gold-bright); }
+.motion-switch[aria-checked="true"] .motion-track { background: linear-gradient(180deg, #b38a40, #d4ad5e); box-shadow: inset 0 0 0 1px rgba(243, 220, 163, .6), 0 0 14px rgba(214, 180, 108, .3); }
+.motion-switch[aria-checked="true"] .motion-track > span { transform: translateX(22px); background: linear-gradient(180deg, #fffaf0, #f3dca3); }
+.motion-note { margin: 4px 2px 0; font-size: .8rem; color: var(--wcg-text-3); line-height: 1.6; }
+@media (max-width: 600px) {
+    .motion-settings { padding: 18px 16px; border-radius: var(--wcg-radius-lg); }
+    .motion-row { gap: 12px; padding: 12px 14px; }
+    .motion-slider { flex-direction: column; align-items: stretch; }
+    .motion-control input[type=range] { flex: 1; width: auto; }
+}
+.motion-settings { display: grid; gap: 10px; }
+.motion-slider.disabled { opacity: .55; }

@@ -1,6 +1,6 @@
 import { createBattleAudio } from "./battle-audio.js";
 import { bindFeedback } from "./battle-feedback.js";
-import { applyMotionAttribute, createFx, motionReduced, readMotionSetting, saveMotionSetting } from "./battle-fx.js";
+import { applyMotionAttribute, createFx, motionReduced, motionScale, readAnimationSettings, readMotionSetting, saveMotionSetting } from "./battle-fx.js";
 import { dragVisual, freeCastReady, releaseZone } from "./drag-intent.js";
 
 // All gestures share the same aiming, destination feedback and cancellation lifecycle.
@@ -245,7 +245,7 @@ export function bind(root, dotnet) {
             { transform: `translate(${dx}px, ${dy}px) scale(${attack ? 1.05 : landing * (zone === 'own' ? 1.08 : 1)}) rotate(${zone === 'energy' ? spin : 0}deg)`, opacity: zone === 'own' ? 1 : .35, offset: .85 },
             { transform: arrive, opacity: zone === 'own' ? 1 : 0, offset: 1 }
         ];
-        const duration = reduced ? 120 : attack ? 420 : 340;
+        const duration = (reduced ? 120 : attack ? 420 : 340) * motionScale();
         const animation = clone.animate(frames, { duration, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' });
         const spell = !source.classList.contains('card-back') && source.dataset.cardType?.startsWith('法術');
         const fieldCard = !source.classList.contains('card-back') && source.dataset.cardType?.includes('結界');
@@ -257,13 +257,14 @@ export function bind(root, dotnet) {
             if (attack) fx.impact(to, from, .55);
             else if (zone === 'energy') { fx.burst(to, { color: '#8ad7ff', count: 12, spread: 50, size: 6, rise: 20 }); fx.glow(to, '#8ad7ff'); }
             else if (zone !== 'own') { fx.ring(to, '#b9e6ff', .6); fx.burst(to, { color: '#bfe9ff', count: 14, spread: 70, size: 6 }); }
-        }, reduced ? 0 : duration * (attack ? .48 : .85));
+        }, reduced || duration === 0 ? 0 : duration * (attack ? .48 : .85));
         flight = { animation, clone, restore() { clearTimeout(contact); source.style.visibility = visibility; root.inert = inert; clone.remove(); } };
         try { await animation.finished; } catch { /* Disposal cancels presentation without committing another action. */ }
         finally { flight?.restore(); flight = null; }
     }
     return { readSound: () => sound.enabled, toggleSound: () => sound.toggle(),
         readMotion: () => motionReduced(),
+        animationSettings: () => readAnimationSettings(),
         // Cycles to the opposite of the current effective state and remembers it on this device.
         toggleMotion: () => { saveMotionSetting(motionReduced() ? 'full' : 'reduced'); if (motionReduced()) fx.clear(); return motionReduced(); },
         motionSetting: () => readMotionSetting(), playError: () => { void sound.play("error"); }, playDrop, discardDrop, presentEvents: feedback.present, clearEvents: feedback.clear, dispose() { disposed = true; endTurnWatch.disconnect(); feedback.dispose(); fx.dispose(); untilt(); root.removeEventListener('pointermove', hoverTilt); root.removeEventListener('pointerleave', leave); sound.dispose(); pendingDrop = null; flight?.animation.cancel(); flight?.restore(); flight = null; cleanup(); root.removeEventListener('pointerdown', down); root.removeEventListener('pointerdown', liftDown); document.removeEventListener('pointerup', liftUp); document.removeEventListener('pointercancel', liftUp); liftUp(); viewport?.removeEventListener('resize', fitViewport); removeEventListener('resize', fitViewport); html.style.removeProperty('--wcg-vh'); delete html.dataset.wcgVh; root.removeEventListener('click', click, true); document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('pointercancel', cancel); document.removeEventListener('keydown', key); window.removeEventListener('blur', cancel); } };

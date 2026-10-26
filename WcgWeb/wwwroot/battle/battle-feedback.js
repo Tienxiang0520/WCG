@@ -1,4 +1,4 @@
-import { motionReduced } from './battle-fx.js';
+import { motionReduced, motionOff, motionScale } from './battle-fx.js';
 import { planSteps, batchSpeed, isSpellCard, keywordOf, isCoin, stepGap } from './effect-plan.js';
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
@@ -63,7 +63,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     async function animate(el, frames, duration, easing = 'ease-out') {
         if (disposed || !el) return;
         const reduced = motionReduced();
-        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration / (speed * fastForward), easing, fill: 'forwards' });
+        // motionScale() is the central 動畫速度 multiplier (0 when 關閉動畫); the batch speed and tap-to-fast-forward stack on top.
+        const animation = el.animate(frames, { duration: motionOff() ? 0 : reduced ? Math.min(duration, 100) * motionScale() : duration * motionScale() / (speed * fastForward), easing, fill: 'forwards' });
         animations.add(animation);
         try { await animation.finished; } catch { /* Leaving the board cancels the visual batch. */ }
         finally { animations.delete(animation); }
@@ -233,7 +234,7 @@ export function bindFeedback(root, sound = null, fx = null) {
     // ---- sequenced effect presentation -------------------------------------------------------------
     function center(el) { const r = el.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2, r }; }
     async function pause(ms) {
-        if (disposed || motionReduced() || speed * fastForward >= 8 || !layer) return;
+        if (disposed || motionReduced() || speed * fastForward / motionScale() >= 8 || !layer) return;
         if (!pauser) { pauser = node('i', 'event-pause'); layer.append(pauser); }
         await animate(pauser, [{ opacity: 0 }, { opacity: 0 }], ms);
     }

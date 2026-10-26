@@ -9,24 +9,62 @@ function systemReduced(env) {
     try { return !!(env.matchMedia ?? globalThis.window?.matchMedia)?.call(globalThis.window, '(prefers-reduced-motion: reduce)')?.matches; }
     catch { return false; }
 }
-/** 'full' | 'reduced' | 'system' (follow the operating system preference). */
+/** 'full' | 'reduced' | 'off' | 'system' (follow the operating system preference). 'off' = 關閉動畫: everything resolves instantly. */
+const MOTION_VALUES = ['full', 'reduced', 'off'];
 export function readMotionSetting(env = {}) {
-    try { const value = storageOf(env)?.getItem(MOTION_KEY); return value === 'full' || value === 'reduced' ? value : 'system'; }
+    try { const value = storageOf(env)?.getItem(MOTION_KEY); return MOTION_VALUES.includes(value) ? value : 'system'; }
     catch { return 'system'; }
 }
 export function saveMotionSetting(value, env = {}) {
-    const next = value === 'full' || value === 'reduced' ? value : 'system';
+    const next = MOTION_VALUES.includes(value) ? value : 'system';
     try { const storage = storageOf(env); if (next === 'system') storage?.removeItem(MOTION_KEY); else storage?.setItem(MOTION_KEY, next); } catch { /* Session-only preference. */ }
     applyMotionAttribute(env);
     return next;
 }
 export function motionReduced(env = {}) {
     const setting = readMotionSetting(env);
-    return setting === 'reduced' || (setting === 'system' && systemReduced(env));
+    return setting === 'reduced' || setting === 'off' || (setting === 'system' && systemReduced(env));
 }
-/** Mirrors the effective preference on <html data-wcg-motion> so plain CSS can drop ambience. */
+/** 關閉動畫: explicitly off, or no explicit choice and the OS asks for reduced motion. */
+export function motionOff(env = {}) {
+    const setting = readMotionSetting(env);
+    return setting === 'off' || (setting === 'system' && systemReduced(env));
+}
+
+// ---- 動畫速度: the one central multiplier for every battle/replay animation and timed delay. -------------
+export const SPEED_KEY = 'wcg.animSpeed';
+export const SPEED_MIN = 0.25, SPEED_MAX = 3, SPEED_DEFAULT = 1;
+export function clampSpeed(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return SPEED_DEFAULT;
+    return Math.round(Math.min(SPEED_MAX, Math.max(SPEED_MIN, n)) * 100) / 100;
+}
+export function readAnimationSpeed(env = {}) {
+    try { const raw = storageOf(env)?.getItem(SPEED_KEY); return raw == null ? SPEED_DEFAULT : clampSpeed(raw); }
+    catch { return SPEED_DEFAULT; }
+}
+export function saveAnimationSpeed(value, env = {}) {
+    const next = clampSpeed(value);
+    try { const storage = storageOf(env); if (next === SPEED_DEFAULT) storage?.removeItem(SPEED_KEY); else storage?.setItem(SPEED_KEY, String(next)); } catch { }
+    applyMotionAttribute(env);
+    return next;
+}
+/** Duration multiplier: 0 when animations are off, otherwise 1 / speed. */
+export function motionScale(env = {}) { return motionOff(env) ? 0 : 1 / readAnimationSpeed(env); }
+/** Scales a hard-coded duration or delay (ms) by the central multiplier. */
+export function scaleMs(ms, env = {}) { return Math.max(0, ms * motionScale(env)); }
+/** For the settings page and Blazor: { off, speed, setting }. */
+export function readAnimationSettings(env = {}) { return { off: motionOff(env), speed: readAnimationSpeed(env), setting: readMotionSetting(env) }; }
+export function saveAnimationOff(off, env = {}) { saveMotionSetting(off ? 'off' : 'full', env); return readAnimationSettings(env); }
+
+/** Mirrors the effective preference on <html data-wcg-motion> and --wcg-motion-scale so plain CSS follows it. */
 export function applyMotionAttribute(env = {}) {
-    try { const html = (env.document ?? globalThis.document)?.documentElement; if (html?.setAttribute) html.setAttribute('data-wcg-motion', motionReduced(env) ? 'reduced' : 'full'); } catch { }
+    try {
+        const html = (env.document ?? globalThis.document)?.documentElement;
+        if (html?.setAttribute) html.setAttribute('data-wcg-motion', motionOff(env) ? 'off' : motionReduced(env) ? 'reduced' : 'full');
+        html?.style?.setProperty?.('--wcg-motion-scale', String(motionOff(env) ? 0.001 : 1 / readAnimationSpeed(env)));
+    } catch { }
+    try { globalThis.dispatchEvent?.(new CustomEvent('wcg-motion-changed')); } catch { }
 }
 
 export function createFx(root, env = {}) {
@@ -53,7 +91,7 @@ export function createFx(root, env = {}) {
     }
     async function run(el, frames, options, removeAfter = true) {
         if (disposed || !el?.animate) { if (removeAfter && el) { el.remove(); nodes.delete(el); } dropLayerIfIdle(); return; }
-        const animation = el.animate(frames, { fill: 'forwards', ...options });
+        const animation = el.animate(frames, { fill: 'forwards', ...options, duration: scaleMs(options?.duration ?? 0, env) });
         animations.add(animation);
         try { await animation.finished; } catch { /* Disposal or a newer effect cancelled this one. */ }
         finally { animations.delete(animation); if (removeAfter) { el.remove(); nodes.delete(el); } dropLayerIfIdle(); }
@@ -72,7 +110,7 @@ export function createFx(root, env = {}) {
         }
         frames.unshift({ transform: 'translate(0,0)' }); frames.push({ transform: 'translate(0,0)' });
         shaking?.cancel();
-        const animation = root.animate(frames, { duration: 180 + s * 200, easing: 'linear' });
+        const animation = root.animate(frames, { duration: scaleMs(180 + s * 200, env), easing: 'linear' });
         shaking = animation; animations.add(animation);
         return animation.finished.catch(() => {}).finally(() => { animations.delete(animation); if (shaking === animation) shaking = null; });
     }
@@ -126,7 +164,7 @@ export function createFx(root, env = {}) {
             { transform: 'translate(0,0)', filter: 'brightness(1)' },
             { transform: `translate(${(dx * px).toFixed(1)}px,${(dy * px).toFixed(1)}px) rotate(${((random() - .5) * 6 * strength).toFixed(1)}deg)`, filter: 'brightness(1.8) saturate(1.3)', offset: .25 },
             { transform: 'translate(0,0)', filter: 'brightness(1)' }
-        ], { duration: 320, easing: 'cubic-bezier(.2,.7,.3,1)', composite: 'add' });
+        ], { duration: scaleMs(320, env), easing: 'cubic-bezier(.2,.7,.3,1)', composite: 'add' });
         animations.add(animation);
         return animation.finished.catch(() => {}).finally(() => animations.delete(animation));
     }
@@ -160,6 +198,7 @@ export function createFx(root, env = {}) {
         const board = root?.getBoundingClientRect?.() ?? { x: 0, y: 0, width: 800, height: 600 };
         const el = spawn(`wcg-fx-banner ${tone}`, board.x + board.width / 2, board.y + board.height * .46, Math.min(560, board.width * .8), 92);
         const inner = doc.createElement('span'); inner.textContent = text; el.append(inner);
+        if (motionOff(env)) { el.remove(); nodes.delete(el); dropLayerIfIdle(); return Promise.resolve(); }
         if (reduced()) return run(el, [{ opacity: 0 }, { opacity: 1, offset: .15 }, { opacity: 1, offset: .8 }, { opacity: 0 }], { duration: Math.min(duration, 700) });
         return run(el, [
             { transform: 'scale(1.6)', opacity: 0, letterSpacing: '.6em' },

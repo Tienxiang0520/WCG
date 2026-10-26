@@ -2021,5 +2021,11 @@
  "放回牌庫底": "Put it on the bottom",
  "翻開牌庫頂": "Top card revealed",
  "【{0}】牌庫沒有牌，【{1}】不翻開。": "{0} has no cards in their deck, so {1} reveals nothing.",
- "【{0}】翻開牌庫頂【{1}】（{2}），放到牌庫底。": "{0} reveals the top card, {1} ({2}), and puts it on the bottom."
+ "【{0}】翻開牌庫頂【{1}】（{2}），放到牌庫底。": "{0} reveals the top card, {1} ({2}), and puts it on the bottom.",
+ "動畫": "Animations",
+ "關閉動畫": "Disable animations",
+ "開啟後，攻擊、傷害數字、法術與觸發效果等對戰動畫都會直接跳過，結果立即顯示。不影響規則與重播內容。": "When on, battle animations such as attacks, damage numbers, and spell and trigger effects are skipped and results show instantly. Rules and replays are not affected.",
+ "動畫速度": "Animation speed",
+ "拖動調整對戰與重播動畫的快慢，1× 為預設，數字越大越快。": "Drag to set how fast battle and replay animations play. 1× is the default; higher is faster.",
+ "用滑桿調整對戰與重播動畫的速度，或打開「關閉動畫」讓結果立即顯示。": "Use the slider to set the speed of battle and replay animations, or turn on Disable animations to show results instantly."
 }

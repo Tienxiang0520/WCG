@@ -117,3 +117,26 @@ test('phones get lighter effects: half the particles, fewer shards and a gentler
     assert.equal(phone.compact(), true); assert.equal(full.compact(), false);
     full.dispose(); phone.dispose(); await d.finishAll();
 });
+
+test('animation speed is one clamped multiplier and 關閉動畫 makes every duration zero', async t => {
+    const { readAnimationSpeed, saveAnimationSpeed, motionScale, scaleMs, motionOff, saveAnimationOff, readAnimationSettings, SPEED_KEY } = await import('../../WcgWeb/wwwroot/battle/battle-fx.js');
+    const { html, store } = dom(t);
+    assert.equal(readAnimationSpeed(), 1);
+    assert.equal(scaleMs(400), 400);
+    assert.equal(saveAnimationSpeed(2), 2); assert.equal(store.m.get(SPEED_KEY), '2');
+    assert.equal(scaleMs(400), 200);
+    assert.equal(html.style['--wcg-motion-scale'] ?? null, null, 'mock html has no setProperty; must not throw');
+    assert.equal(saveAnimationSpeed(9), 3); assert.equal(saveAnimationSpeed(0.01), 0.25); assert.equal(saveAnimationSpeed('x'), 1);
+    assert.equal(store.m.has(SPEED_KEY), false, 'default speed is not stored');
+    saveAnimationSpeed(0.5); assert.equal(motionScale(), 2);
+    assert.deepEqual(saveAnimationOff(true), { off: true, speed: 0.5, setting: 'off' });
+    assert.equal(motionOff(), true); assert.equal(motionReduced(), true); assert.equal(scaleMs(400), 0);
+    assert.equal(html.attributes['data-wcg-motion'], 'off');
+    assert.equal(saveAnimationOff(false).off, false); assert.equal(readAnimationSettings().setting, 'full');
+});
+
+test('關閉動畫 defaults to the system reduced-motion preference', async t => {
+    const { motionOff } = await import('../../WcgWeb/wwwroot/battle/battle-fx.js');
+    dom(t, { reduce: true });
+    assert.equal(motionOff(), true);
+});

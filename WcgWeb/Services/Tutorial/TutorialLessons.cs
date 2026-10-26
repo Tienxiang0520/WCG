@@ -468,12 +468,13 @@ public static class TutorialLessons
         {
             Id = "settings", Icon = "gear", Title = "設定、圖鑑與規則",
             Summary = "調整操作、音效與頭像，並認識完整卡牌圖鑑與官方規則頁。",
-            Topics = ["填能量確認", "音效與音量", "特效精簡", "頭像", "存檔備份", "卡牌圖鑑", "官方規則"],
+            Topics = ["填能量確認", "音效與音量", "特效精簡", "動畫速度", "頭像", "存檔備份", "卡牌圖鑑", "官方規則"],
             Route = "settings",
             Tour =
             [
                 new("操作設定", "「填能量前再次確認」可以避免誤把重要的牌拖進能量區；熟練後可以關閉。", ".settings-page .settings-panel"),
                 new("音效", "可以調整音效與音量。對戰畫面右上角也有靜音與「特效／精簡」切換。", ".settings-page .audio-settings"),
+                new("動畫", "用滑桿調整對戰與重播動畫的速度，或打開「關閉動畫」讓結果立即顯示。", ".settings-page .motion-settings"),
                 new("頭像", "選擇內建頭像或上傳自己的圖片，會顯示在對戰與天梯中。", ".settings-page .avatar-picker"),
                 new("存檔與備份", "牌組、天梯、頭像與教學進度都存在這台裝置。網頁版可以在設定頁最下方匯出或匯入存檔備份，換瀏覽器前記得先備份。", ".settings-page [aria-labelledby='local-data-title']"),
                 new("卡牌圖鑑", "「完整卡牌圖鑑」列出全部卡牌，可以依意志、類型與費用篩選。", ".nav-link[href='cards']"),
