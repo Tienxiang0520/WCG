@@ -2021,5 +2021,20 @@
  "放回牌庫底": "Put it on the bottom",
  "翻開牌庫頂": "Top card revealed",
  "【{0}】牌庫沒有牌，【{1}】不翻開。": "{0} has no cards in their deck, so {1} reveals nothing.",
- "【{0}】翻開牌庫頂【{1}】（{2}），放到牌庫底。": "{0} reveals the top card, {1} ({2}), and puts it on the bottom."
+ "【{0}】翻開牌庫頂【{1}】（{2}），放到牌庫底。": "{0} reveals the top card, {1} ({2}), and puts it on the bottom.",
+ "＋ 新增牌組": "+ New deck",
+ "複製成新牌組": "Copy as a new deck",
+ "複製": "Copy",
+ "編輯": "Edit",
+ "← 返回我的牌組": "← Back to my decks",
+ "新增牌組": "New deck",
+ "空白牌組": "Empty deck",
+ "從零開始自己組 50 張。": "Build 50 cards from scratch.",
+ "← 返回": "← Back",
+ "複製後可修改與列印；來源牌組不會被修改。儲存後就會加入我的牌組。": "Edit and print the copy; the source deck is never changed. Save it to add it to My decks.",
+ "從官方預組複製": "Copy an Official Deck",
+ "官方預組 {0} 套，複製後變成你的牌組。": "{0} Official Decks; a copy becomes your own deck.",
+ "按「＋ 新增牌組」建立空白牌組，或從官方預組複製，儲存後即可出戰。": "Press \"+ New deck\" to start an empty deck or copy an Official Deck. Save it to use it in battle.",
+ "點選左側卡牌，或按右上角「我的牌組」→「＋ 新增牌組」複製官方預組！": "Pick cards on the left, or press \"My decks\" → \"+ New deck\" at the top right to copy an Official Deck!",
+ "「我的牌組」只放你自己的牌組；按「＋ 新增牌組」可選空白牌組，或複製官方預組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。": "\"My decks\" lists only your own decks; \"+ New deck\" starts an empty deck or copies an Official Deck to modify. \"Save deck\" checks the rules before saving. You can also print a physical deck."
 }
