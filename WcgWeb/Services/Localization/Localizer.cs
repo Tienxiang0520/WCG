@@ -80,6 +80,8 @@ public sealed class Localizer : IDisposable
     public string FaceText(string id, string zhText) => CardDefinition.IsVanillaText(zhText) ? "" : Blank(CardText(id, zhText));
     public string FaceText(WcgWeb.Models.Battle.BattleCard? card) => card == null ? "" : FaceText(card.CardId, card.Text);
     private static string Blank(string text) => CardDefinition.IsVanillaText(text) ? "" : text;
+    // Battle-log wording for a "death" event, shown after the card chip: the label is the reason (a card name, a cost or a combat reason).
+    public string DeathText(string? reason) => reason is "摧毀結界" or "摧毀結界／蓋牌" ? this["被摧毀，送入墓地"] : string.IsNullOrEmpty(reason) ? this["送入墓地"] : F("因「{0}」送入墓地", reason);
     public string Will(string? will) => Text(will);
     public string CardType(string? type) => Text(type);
     // Official and ranked decks are translated by id while they keep their original name; player-named decks stay as typed.

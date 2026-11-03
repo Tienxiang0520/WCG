@@ -152,7 +152,7 @@
     {
         if (Replay == null) yield break;
         for (var i = Math.Min(Index, Replay.Steps.Count - 1); i >= 0; i--)
-            foreach (var ev in Replay.Steps[i].Events.Reverse()) yield return (i, ev);
+            foreach (var ev in Replay.Steps[i].Events) yield return (i, ev);
     }
     // Same green/red badge as the battlefield, against the printed value.
     private static string StatClass(int? current, int? printed) => current > printed ? "stat-up" : current < printed ? "stat-down" : "";
@@ -166,8 +166,16 @@
     private RenderFragment Line(BattleEvent ev) => __builder =>
     {
         <span class="replay-line-side @(ev.Side == "player" ? "mine" : "theirs")">@(ev.Side == "player" ? L["我方"] : ev.Side == "computer" ? L["敵方"] : "")</span>
-        <span>@L.Text(ev.Label)</span>
-        if (ev.Card is { } c && c.CardId != "SET" && c.Name != "") { @Chip(c, "log") }
+        if (ev.Type == "death")
+        {
+            if (ev.Card is { } dc) { @Chip(dc, "log") }
+            <span>@L.DeathText(ev.Label)</span>
+        }
+        else
+        {
+            <span>@L.Text(ev.Label)</span>
+            if (ev.Card is { } c && c.CardId != "SET" && c.Name != "") { @Chip(c, "log") }
+        }
     };
     private RenderFragment Chip(BattleCard c, string kind) => __builder =>
     {
