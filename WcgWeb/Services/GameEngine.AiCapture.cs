@@ -12,11 +12,17 @@ public partial class GameEngine
     public const string AiCallPrefix = "aic:";
     public static readonly string[] AiCallKinds = ["energy", "set", "summon", "enchant", "spell", "spellat", "spellatp", "activate", "attack", "target", "ptarget", "choice", "cancel", "end"];
     private List<RankedAction?>? _aiCalls;
-    internal void BeginAiCapture() => _aiCalls = [];
+    // The seat whose move is being captured: the computer for ranked journals, either seat for PvP lockstep (Pvp/).
+    private PlayerState? _captureSeat;
+    // The mutation depth a captured top-level call is noted at: 1 inside an AI step or ApplySeatCall, 0 when the
+    // primitive itself is the command (a PvP player's own move).
+    private int _captureDepth = 1;
+    internal void BeginAiCapture() { _aiCalls = []; _captureSeat = null; _captureDepth = 1; }
+    internal void BeginSeatCapture(PlayerState seat, int depth) { _aiCalls = []; _captureSeat = seat; _captureDepth = depth; }
     // The captured move, or null when the step must be journaled as legacy "ai".
     internal RankedAction? EndAiCapture()
     {
-        var calls = _aiCalls; _aiCalls = null;
+        var calls = _aiCalls; _aiCalls = null; _captureSeat = null; _captureDepth = 1;
         return calls is [{ } only] ? only : null;
     }
     private List<MonsterInstance> AiUnits() => Player.Board.Concat(Computer.Board).ToList();
@@ -24,10 +30,11 @@ public partial class GameEngine
     private (bool On, RankedAction? Call) AiNote(string kind, PlayerState? p = null, CardInstance? card = null, MonsterInstance? unit = null,
         MonsterInstance? target = null, PlayerState? playerTarget = null, ChoiceOption? option = null)
     {
-        if (_aiCalls == null || _mutationDepth != 1) return (false, null);
-        if (p != null && p != Computer) return (true, null);
+        if (_aiCalls == null || _mutationDepth != _captureDepth) return (false, null);
+        var seat = _captureSeat ?? Computer;
+        if (p != null && p != seat) return (true, null);
         int source = -1, side = -1, index = -1, choice = -1;
-        if (card != null && (source = Computer.Hand.IndexOf(card)) < 0) return (true, null);
+        if (card != null && (source = seat.Hand.IndexOf(card)) < 0) return (true, null);
         var units = unit != null || target != null ? AiUnits() : null;
         if (unit != null && (source = units!.IndexOf(unit)) < 0) return (true, null);
         if (target != null) { side = 0; if ((index = units!.IndexOf(target)) < 0) return (true, null); }
@@ -43,25 +50,29 @@ public partial class GameEngine
         return result;
     }
     // Applies one recorded computer move as a single published change, exactly like the AI step that made it.
-    public bool ApplyAiCall(RankedAction a) => Change(() =>
+    public bool ApplyAiCall(RankedAction a) => ApplySeatCall(Computer, a);
+    // The same move format for either seat (PvP lockstep): hand positions are the acting seat's hand; unit
+    // positions and hero sides (2 = Player, 3 = Computer) are absolute, so both clients decode it identically.
+    internal bool ApplySeatCall(PlayerState seat, RankedAction a) => Change(() =>
     {
+        if (seat != Player && seat != Computer) throw new InvalidDataException("電腦操作格式不正確。");
         if (!a.Type.StartsWith(AiCallPrefix, StringComparison.Ordinal)) throw new InvalidDataException("電腦操作格式不正確。");
-        var units = AiUnits(); var hand = Computer.Hand;
+        var units = AiUnits(); var hand = seat.Hand;
         CardInstance Card() => a.Source >= 0 && a.Source < hand.Count ? hand[a.Source] : throw new InvalidDataException("電腦操作位置無效。");
         MonsterInstance Unit(int i) => i >= 0 && i < units.Count ? units[i] : throw new InvalidDataException("電腦操作位置無效。");
         MonsterInstance? Target() => a.TargetSide == 0 ? Unit(a.Target) : a.TargetSide == -1 ? null : throw new InvalidDataException("電腦操作位置無效。");
         PlayerState Hero() => a.TargetSide == 2 ? Player : a.TargetSide == 3 ? Computer : throw new InvalidDataException("電腦操作位置無效。");
         return a.Type[AiCallPrefix.Length..] switch
         {
-            "energy" => PlayEnergy(Computer, Card()),
-            "set" => SetCard(Computer, Card()),
-            "summon" => SummonMonster(Computer, Card()),
-            "enchant" => PlayEnchantment(Computer, Card()),
-            "spell" => CastSpell(Computer, Card()),
-            "spellat" => CastSpellAt(Computer, Card(), Target() ?? throw new InvalidDataException("電腦操作位置無效。")),
-            "spellatp" => CastSpellAtPlayer(Computer, Card(), Hero()),
-            "activate" => Activate(Computer, Unit(a.Source)),
-            "attack" => Attack(Computer, Unit(a.Source), Target()),
+            "energy" => PlayEnergy(seat, Card()),
+            "set" => SetCard(seat, Card()),
+            "summon" => SummonMonster(seat, Card()),
+            "enchant" => PlayEnchantment(seat, Card()),
+            "spell" => CastSpell(seat, Card()),
+            "spellat" => CastSpellAt(seat, Card(), Target() ?? throw new InvalidDataException("電腦操作位置無效。")),
+            "spellatp" => CastSpellAtPlayer(seat, Card(), Hero()),
+            "activate" => Activate(seat, Unit(a.Source)),
+            "attack" => Attack(seat, Unit(a.Source), Target()),
             "target" => SelectTarget(Target() ?? throw new InvalidDataException("電腦操作位置無效。")),
             "ptarget" => SelectPlayerTarget(Hero()),
             "choice" => CurrentPendingChoice is { } c && a.Choice >= 0 && a.Choice < c.Options.Count ? SelectChoice(c.Options[a.Choice]) : throw new InvalidDataException("電腦操作位置無效。"),
