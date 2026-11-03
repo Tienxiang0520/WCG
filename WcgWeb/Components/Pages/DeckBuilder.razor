@@ -185,6 +185,18 @@
 
                     <p class="small text-muted mt-2 mb-0">@L["50 張牌組，每張最多 4 張。任意手牌可背面填能量。最多兩個派系，中立不計。原主色欄位保留作為分類。費用維持通用。"]</p>
                     <button class="btn btn-outline-info w-100 mt-3" @onclick="OpenPrintPreview"><WcgWeb.Components.Common.Icon Name="printer" Size="16" />@L["列印實體牌組"]</button>
+                    <button class="btn btn-outline-light w-100 mt-2 deck-export-btn" @onclick="ExportDeckCode" disabled="@(CurrentDeck.CardIds.Count == 0)">@L["匯出代碼"]</button>
+                    @if (ExportedCode != null)
+                    {
+                        <div class="mt-2 deck-export-panel">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="small text-info" role="status">@L[ExportMessage ?? ""]</span>
+                                <button type="button" class="btn-close btn-close-white btn-sm" aria-label="@L["關閉"]" @onclick="() => ExportedCode = null"></button>
+                            </div>
+                            <textarea class="form-control form-control-sm bg-dark text-white border-secondary font-monospace deck-code-output" rows="3" readonly aria-label="@L["牌組代碼"]" onfocus="this.select()">@ExportedCode</textarea>
+                            <div class="small text-white-50 mt-1">@L["代碼只記錄卡號、張數、主色與名稱，貼到「＋ 新增牌組 → 從代碼匯入」即可。"]</div>
+                        </div>
+                    }
                     @if (UnknownCardIds.Count > 0)
                     {
                         <div class="alert alert-warning small mt-2">
@@ -344,7 +356,54 @@
                                 <div class="fw-bold">@L["從官方預組複製"]</div>
                                 <div class="small text-white-50">@L.F("官方預組 {0} 套，複製後變成你的牌組。", CardDb.PresetDecks.Count + DeckSvc.GetReferenceDecks().Count)</div>
                             </button>
+                            <button class="btn btn-outline-info text-start p-3 import-code-btn" @onclick="OpenImport">
+                                <div class="fw-bold">@L["從代碼匯入"]</div>
+                                <div class="small text-white-50">@L["貼上別人分享的牌組代碼，另存成新牌組。"]</div>
+                            </button>
                         </div>
+                        }
+                        else if (NewDeckSource == "code")
+                        {
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <button class="btn btn-sm btn-outline-light" @onclick='() => NewDeckSource = ""'>@L["← 返回"]</button>
+                            <h5 class="fw-bold mb-0">@L["從代碼匯入"]</h5>
+                        </div>
+                        <textarea class="form-control bg-dark text-white border-secondary font-monospace mb-2 deck-code-input" rows="3" placeholder="WCGD1-…" aria-label="@L["牌組代碼"]" @bind="ImportText" @bind:event="oninput"></textarea>
+                        <button class="btn btn-sm btn-info mb-3 preview-code-btn" @onclick="PreviewImport" disabled="@string.IsNullOrWhiteSpace(ImportText)">@L["預覽"]</button>
+                        @if (ImportError != null) { <div class="alert alert-danger py-2 small import-error" role="alert">@L[ImportError]</div> }
+                        @if (ImportResult is { } r)
+                        {
+                            var unknown = ImportUnknownIds;
+                            var errors = ImportErrors;
+                            <div class="import-preview">
+                                <div class="fw-bold mb-1">@(string.IsNullOrWhiteSpace(r.Name) ? L["匯入的牌組"] : L.Text(r.Name))
+                                    <span class="badge bg-secondary ms-1">@(r.MainWill == "" ? L["未選主色"] : L[r.MainWill])</span>
+                                    <span class="badge bg-info text-dark ms-1">@L.F("{0} 張", r.CardIds.Count)</span></div>
+                                @if (unknown.Count > 0)
+                                {
+                                    <div class="alert alert-danger py-2 small import-unknown" role="alert">@L["找不到這些卡號，無法匯入："] @string.Join("、", unknown)</div>
+                                }
+                                else if (errors.Count > 0)
+                                {
+                                    <div class="alert alert-warning py-2 small import-warn" role="alert">
+                                        <div>@L["這副牌組還不能出戰，匯入後會載入編輯，修正後才能儲存："]</div>
+                                        <ul class="mb-0">@foreach (var e in errors) { <li>@L.Text(e)</li> }</ul>
+                                    </div>
+                                }
+                                <ul class="list-unstyled small import-card-list mb-3" style="max-height: 240px; overflow-y: auto;">
+                                    @foreach (var g in r.CardIds.GroupBy(id => id))
+                                    {
+                                        var card = CardDb.GetCard(g.Key);
+                                        <li class="d-flex justify-content-between border-bottom border-secondary py-1 @(card == null ? "text-danger" : "")">
+                                            <span>@(card == null ? g.Key : L.CardName(card))</span><span>×@g.Count()</span>
+                                        </li>
+                                    }
+                                </ul>
+                                <button class="btn btn-success fw-bold confirm-import-btn" disabled="@(unknown.Count > 0)" @onclick="ConfirmImport">
+                                    @L[errors.Count == 0 ? "匯入並儲存為新牌組" : "匯入並載入編輯（未儲存）"]
+                                </button>
+                            </div>
+                        }
                         }
                         else
                         {
