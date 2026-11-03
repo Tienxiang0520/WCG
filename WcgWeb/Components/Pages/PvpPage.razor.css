@@ -1,0 +1,25 @@
+.pvp-page { display: grid; gap: 1rem; padding-bottom: 2rem; }
+.pvp-panel { display: grid; gap: .75rem; }
+.pvp-choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+.pvp-choices > div { display: grid; gap: .5rem; align-content: start; }
+.pvp-code { font-family: ui-monospace, monospace; font-size: .8rem; word-break: break-all; }
+.pvp-status { opacity: .85; margin: 0; }
+.pvp-board { display: grid; gap: .75rem; }
+.pvp-bar { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+.pvp-turn { font-weight: 700; font-size: 1.1rem; }
+.pvp-conn.warn { color: #f0b04a; }
+.pvp-side { border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: .6rem; display: grid; gap: .5rem; }
+.pvp-side.them { background: rgba(160,60,60,.12); }
+.pvp-side.me { background: rgba(60,110,160,.12); }
+.pvp-side h3 { font-size: 1rem; margin: 0; }
+.pvp-row { display: flex; flex-wrap: wrap; gap: .5rem; min-height: 3rem; }
+.pvp-unit { display: grid; gap: .2rem; min-width: 8.5rem; padding: .4rem .5rem; border-radius: 8px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.2); }
+.pvp-unit.tapped { opacity: .65; transform: rotate(-4deg); }
+.pvp-unit.selected { outline: 2px solid #e05555; }
+.pvp-pending { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; padding: .5rem; border-radius: 8px; background: rgba(240,176,74,.15); }
+.pvp-hand { display: flex; gap: .6rem; overflow-x: auto; padding-bottom: .4rem; }
+.pvp-hand-card { flex: 0 0 auto; width: 170px; display: grid; gap: .3rem; }
+.pvp-hand-actions { display: flex; flex-wrap: wrap; gap: .25rem; }
+.pvp-log { font-size: .85rem; opacity: .85; max-height: 12rem; overflow: auto; margin: 0; }
+.pvp-confirm { display: flex; gap: .5rem; align-items: center; }
+.pvp-hand ::deep .pvp-face { width: 100%; max-width: none; }
