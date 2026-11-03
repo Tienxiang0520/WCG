@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using WcgWeb.Models;
 using WcgWeb.Services;
@@ -310,6 +311,8 @@ public partial class DeckBuilder
 
     private bool ValidateDeck()
     {
+        ExportedCode = null; ExportMessage = null; // the shown code would be stale after any deck change
+
         var valid = CurrentDeck.IsValid(CardDb.GetCard, out var error);
         ValidationErrorMessage = error;
         return valid;
@@ -334,6 +337,50 @@ public partial class DeckBuilder
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         { SavedMessage = null; ValidationErrorMessage = $"儲存失敗：{ex.Message}"; }
+    }
+
+    // 牌組代碼: export the deck being edited; import a pasted code as a NEW deck (never overwrites an existing one).
+    [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
+    private string? ExportedCode;
+    private string? ExportMessage;
+    private async Task ExportDeckCode()
+    {
+        ExportedCode = DeckCode.Encode(CurrentDeck);
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", ExportedCode); ExportMessage = "已複製牌組代碼。"; }
+        catch (Exception e) when (e is Microsoft.JSInterop.JSException or InvalidOperationException or TaskCanceledException) { ExportMessage = "無法存取剪貼簿，請手動複製下方代碼。"; }
+    }
+    private string ImportText = "";
+    private DeckCode.Result? ImportResult;
+    private string? ImportError;
+    private void OpenImport() { NewDeckSource = "code"; ImportText = ""; ImportResult = null; ImportError = null; }
+    private void PreviewImport()
+    {
+        ImportResult = DeckCode.Decode(ImportText, out var error);
+        ImportError = ImportResult == null ? error : null;
+    }
+    private Deck ImportedDeck => new()
+    {
+        Id = Guid.NewGuid().ToString(),
+        Name = string.IsNullOrWhiteSpace(ImportResult?.Name) ? L["匯入的牌組"] : ImportResult!.Name,
+        MainWill = ImportResult?.MainWill ?? "",
+        CardIds = new List<string>(ImportResult?.CardIds ?? new())
+    };
+    private List<string> ImportUnknownIds => ImportResult?.CardIds.Where(id => CardDb.GetCard(id) == null).Distinct().ToList() ?? new();
+    private List<string> ImportErrors => ImportResult == null ? new() : ImportedDeck.Validate(CardDb.GetCard).Errors;
+    private void ConfirmImport()
+    {
+        if (ImportResult == null || ImportUnknownIds.Count > 0) return;
+        var deck = ImportedDeck;
+        bool valid = deck.Validate(CardDb.GetCard).IsValid;
+        if (valid)
+        {
+            try { DeckSvc.SaveDeck(deck); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+            { ImportError = $"儲存失敗：{ex.Message}"; return; }
+        }
+        LoadCustomDeck(deck);
+        CloseDeckModal();
+        if (valid) ShowSaved($"已匯入並儲存牌組【{deck.Name}】。");
     }
 
     private void DeleteCurrentDeck() => DeleteCustomDeck(CurrentDeck.Id, CurrentDeck.Version);
