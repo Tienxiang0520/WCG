@@ -241,6 +241,14 @@ public class PendingChoice
     public string Description { get; set; } = "";
     public List<ChoiceOption> Options { get; set; } = new();
     public Action<ChoiceOption>? OnChoiceSelected { get; set; }
+    // Multi-pick metadata (UI only). Consecutive single-pick prompts sharing MultiKey belong to one
+    // selection; the client picks up to MultiMax (at least MultiMin) options then sends StopId if offered.
+    // The engine still resolves one option per step, so logs, replays and the AI are unchanged.
+    public string? MultiKey { get; set; }
+    public int MultiMin { get; set; }
+    public int MultiMax { get; set; }
+    public bool MultiOrdered { get; set; }
+    public string? MultiStopId { get; set; }
 }
 
 public class PendingTarget

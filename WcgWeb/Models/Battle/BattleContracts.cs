@@ -51,7 +51,10 @@ public record BattleSide(string Id, int Hp, int DeckCount, int HandCount, int Av
     int TotalEnergy, BattleEnergy[] Energy, BattleMonster[] Field, BattleCard[] Graveyard);
 public record BattleOption(string Id, string Title, string Subtitle, BattleCard? Card);
 public record BattlePending(string Kind, string Title, string Description, bool CanCancel,
-    BattleOption[] Options, string[] Targets, Guid? SourceInstanceId = null);
+    BattleOption[] Options, string[] Targets, Guid? SourceInstanceId = null, BattleMulti? Multi = null);
+// One step of a multi-pick selection: the board lets the player pick Min..Max options at once, then submits them
+// as ordinary single "choice" commands in pick order (and StopId to finish early), so logs and replays are unchanged.
+public record BattleMulti(string Key, int Min, int Max, bool Ordered, string? StopId);
 public record BattleEvent(Guid Id, long Revision, int Order, string Type, string Side,
     Guid? InstanceId, Guid? TargetId, int Amount, BattleCard? Card, string Label);
 public record BattleSnapshot(Guid MatchId, long Revision, int Turn, string Phase, string DecisionPlayerId,

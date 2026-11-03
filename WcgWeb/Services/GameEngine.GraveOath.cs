@@ -92,11 +92,13 @@ public partial class GameEngine
         CardChoice(p, GraveRaiseTitle, GraveSmall(p, 1200), pick =>
         {
             s.IsTapped = true;
-            var chosen = new List<CardInstance>();
+            var chosen = new List<CardInstance>(); var key = NewMultiKey("grave");
             void Next()
             {
                 if (chosen.Count == 3) { GraveBottom(p, chosen); GraveRaise(p, pick, false); return; }
+                var before = CurrentPendingChoice;
                 CardChoice(p, GraveBottomTitle + $"（{chosen.Count + 1}/3）", p.Graveyard.Where(c => c != pick && !chosen.Contains(c)), c => { chosen.Add(c); Next(); });
+                MarkMulti(before, key, 3 - chosen.Count, 3 - chosen.Count);
             }
             Next();
         });

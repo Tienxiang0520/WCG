@@ -128,7 +128,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if (engine.CurrentPendingChoice is { OwnerId: "player" } c)
             pending = new("choice", c.Title, c.Description, c.CanCancel,
                 c.Options.Select(o => new BattleOption(o.Id, o.Title, o.Subtitle,
-                    o.PreviewCard == null ? null : GameEngine.VisibleCard(o.PreviewCard, Guid.Empty))).ToArray(), [], c.SourceInstanceId);
+                    o.PreviewCard == null ? null : GameEngine.VisibleCard(o.PreviewCard, Guid.Empty))).ToArray(), [], c.SourceInstanceId,
+                c.MultiKey == null ? null : new(c.MultiKey, c.MultiMin, c.MultiMax, c.MultiOrdered, c.MultiStopId));
         else if (engine.CurrentPendingTarget is { OwnerId: "player" } t)
             pending = new("target", t.Title, t.Description, t.CanCancel, [],
                 engine.Player.Board.Concat(engine.Computer.Board).Where(m => t.Validator != null && t.Validator(m))
