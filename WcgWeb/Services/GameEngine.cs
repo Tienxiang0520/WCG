@@ -246,6 +246,14 @@ public partial class GameEngine
         CurrentPendingChoice = new() { OwnerId = p.Id, Title = title, Options = options, OnChoiceSelected = callback, CanCancel = cancel, SourceInstanceId = sourceInstanceId };
         Present("choice", p, label: p == Player ? title : "電腦選擇效果");
     }
+    private int _multiSeq;
+    private string NewMultiKey(string kind) => $"{kind}:{++_multiSeq}";
+    // Tag the prompt Ask just opened (if any) as one step of a multi-pick selection.
+    private void MarkMulti(PendingChoice? before, string key, int min, int max, bool ordered = false, string? stop = null)
+    {
+        if (CurrentPendingChoice is not { } c || ReferenceEquals(c, before)) return;
+        c.MultiKey = key; c.MultiMin = Math.Max(0, min); c.MultiMax = Math.Max(0, max); c.MultiOrdered = ordered; c.MultiStopId = stop;
+    }
     private void CardChoice(PlayerState p, string title, IEnumerable<CardInstance> candidates, Action<CardInstance> callback, bool optional = false)
     {
         var list = candidates.ToList(); if (list.Count == 0) return;

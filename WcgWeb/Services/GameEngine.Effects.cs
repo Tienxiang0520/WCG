@@ -93,30 +93,36 @@ public partial class GameEngine
         if (p == Player) { RevealedCards = top.Select(VisibleCard).ToArray(); RevealTitle = "本次檢視的牌庫卡片"; }
         var candidates = top.Where(qualifies).ToList();
         if (candidates.Count == 0) { OrderBottom(p, top); return; }
+        var key = NewMultiKey("search");
         void Choose(int left)
         {
             var available = top.Where(qualifies).ToList();
             if (left == 0 || available.Count == 0) { OrderBottom(p, top); return; }
             var options = available.Select(c => new ChoiceOption { Id = c.InstanceId.ToString(), Title = c.Card.Name, PreviewCard = c.Card }).ToList();
             if (take > 1 || optional) options.Add(new() { Id = "SKIP", Title = "不再取得卡片" });
+            var before = CurrentPendingChoice;
             Ask(p, "選擇檢視的卡片加入手牌", options, o =>
             {
                 if (o.Id == "SKIP") { OrderBottom(p, top); return; }
                 var c = available.First(c => c.InstanceId.ToString() == o.Id); top.Remove(c); p.Hand.Add(c); Present("take", p, instance: p == Player ? c.InstanceId : null, card: p == Player ? c.Card : null, label: "檢視取得卡牌"); Choose(left - 1);
             });
+            var most = Math.Min(left, available.Count);
+            MarkMulti(before, key, take > 1 || optional ? 0 : most, most, stop: take > 1 || optional ? "SKIP" : null);
         }
         Choose(take);
     }
-    private void OrderBottom(PlayerState p, List<CardInstance> remaining)
+    private void OrderBottom(PlayerState p, List<CardInstance> remaining, string? key = null)
     {
         if (remaining.Count <= 1) { p.Deck.AddRange(remaining); return; }
         var options = remaining.Select(c => new ChoiceOption { Id = c.InstanceId.ToString(), Title = $"先放到牌庫底：{c.Card.Name}", PreviewCard = c.Card }).ToList();
         options.Insert(0, new() { Id = "KEEP", Title = "剩餘卡依目前順序放到牌庫底" });
+        key ??= NewMultiKey("bottom"); var before = CurrentPendingChoice;
         Ask(p, "排列牌庫底順序", options, o =>
         {
             if (o.Id == "KEEP") { p.Deck.AddRange(remaining); return; }
-            var c = remaining.First(c => c.InstanceId.ToString() == o.Id); remaining.Remove(c); p.Deck.Add(c); OrderBottom(p, remaining);
+            var c = remaining.First(c => c.InstanceId.ToString() == o.Id); remaining.Remove(c); p.Deck.Add(c); OrderBottom(p, remaining, key);
         });
+        MarkMulti(before, key, 0, remaining.Count, ordered: true, stop: "KEEP");
     }
     private void Spell(PlayerState p, CardInstance source, MonsterInstance? target, string mode, PlayerState? playerTarget = null)
     {

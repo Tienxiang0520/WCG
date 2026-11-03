@@ -23,20 +23,22 @@ public partial class GameEngine
         RefreshBoard();
     }
     // Burn up to max cards one at a time (each optional when optional), then after(count).
-    private void BurnEnergy(PlayerState p, string sourceId, int max, bool optional, Func<CardInstance, bool> which, Action<int> after, int done = 0)
+    private void BurnEnergy(PlayerState p, string sourceId, int max, bool optional, Func<CardInstance, bool> which, Action<int> after, int done = 0, string? key = null)
     {
         var list = p.EnergyZone.Where(which).ToList();
         if (done >= max || list.Count == 0) { burnSourceId = null; after(done); return; }
         var options = list.Select(c => new ChoiceOption { Id = c.InstanceId.ToString(), Title = c.Card.Name, PreviewCard = c.Card, Subtitle = c.IsTapped ? "橫置（已使用）" : "直立（未使用）" }).ToList();
         if (optional) options.Add(new() { Id = "SKIP", Title = done == 0 ? "不送入墓地" : "停止" });
-        burnSourceId = sourceId;
+        burnSourceId = sourceId; key ??= NewMultiKey("burn"); var before = CurrentPendingChoice;
         Ask(p, optional ? BurnOptionalTitle : BurnTitle, options, o =>
         {
             var c = list.FirstOrDefault(x => x.InstanceId.ToString() == o.Id);
             if (c == null) { burnSourceId = null; after(done); return; }
             BurnOne(p, c);
-            BurnEnergy(p, sourceId, max, optional, which, after, done + 1);
+            BurnEnergy(p, sourceId, max, optional, which, after, done + 1, key);
         });
+        var most = Math.Min(max - done, list.Count);
+        MarkMulti(before, key, optional ? 0 : most, most, stop: optional ? "SKIP" : null);
     }
     private bool BurnedThisTurn(PlayerState p, CardInstance c) => p.BurnedEnergy.TryGetValue(c.InstanceId, out var turn) && turn == TurnNumber;
 

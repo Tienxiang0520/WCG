@@ -824,3 +824,15 @@
 .surrender-confirm .danger{background:#7a2323!important;border-color:#e07a6a!important;color:#fff!important}
 /* Finished match: the hand and its hint leave the screen so nothing shows behind the result panel. */
 .v06-board.is-over .v06-hand,.v06-board.is-over .hand-hint{visibility:hidden;pointer-events:none}
+
+/* Multi-pick choice dialog: toggle cards, order badges, x/N counter. */
+.multi-pick .choice-card{position:relative}
+.multi-pick .choice-card{overflow:visible}
+.multi-pick .choice-card:hover,.multi-pick .choice-card:focus-visible{outline:2px solid #8fb8ff}
+.multi-pick .choice-card.picked{outline:3px solid #ffd77a;background:rgba(255,215,122,.16)}
+.multi-pick.full .choice-card:not(.picked){opacity:.5}
+.pick-badge{position:absolute;top:-6px;left:-6px;min-width:26px;height:26px;padding:0 6px;border-radius:13px;background:#ffd77a;color:#2a1a00;font-weight:800;font-size:15px;line-height:26px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.6);z-index:2}
+.multi-hint{font-size:13px;opacity:.85;margin:0 0 6px}
+.multi-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;position:sticky;bottom:0;padding-top:8px}
+.multi-count{font-weight:700;margin-right:auto}
+.multi-confirm:disabled{opacity:.45;cursor:not-allowed}

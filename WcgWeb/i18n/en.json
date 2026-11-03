@@ -2107,5 +2107,12 @@
  "投降後這局立即判定為敗北，無法復原。": "Surrendering ends this match as a loss right away. This can't be undone.",
  "繼續對戰": "Keep playing",
  "切換雙色牌組後可用": "Available after switching to a dual-colour deck",
- "對局結束": "Match over"
+ "對局結束": "Match over",
+ "依點選順序放到牌庫底；沒選的依目前順序放在最後。": "Cards go to the bottom in the order you click them; unpicked cards follow in their current order.",
+ "請選 {0} 張。": "Choose {0} cards.",
+ "最多選 {0} 張，也可以少選。": "Choose up to {0} cards (fewer is fine).",
+ "已選 {0}/{1}": "Selected {0}/{1}",
+ "清除選擇": "Clear selection",
+ "確認": "Confirm",
+ "選擇洗回牌庫底的墓地牌": "Choose graveyard cards to shuffle to the bottom of your deck"
 }

@@ -64,7 +64,15 @@
     }
     </div>
     @if(!s.DamageCounters){<small class="hand-hint"><span class="hint-mouse">@L["右鍵手牌切換蓋牌"]</span><span class="hint-touch">@L["點手牌放大可切換蓋牌"]</span> @L["· 背面牌拖入己方空格才進場"]</small>}
-    @if(!Busy&&!Presenting&&s.Pending is {} pending && pending.Kind!="target")
+    @if(!Busy&&!Presenting&&!Batching&&s.Pending is {Multi:{Max:>1} multi} multiPending && multiPending.Kind=="choice")
+    {
+        var picks=PicksFor(multi);var okCount=picks.Count>=Math.Min(multi.Min,multi.Max)&&picks.Count<=multi.Max;
+        <div class="modal-shade"><section class="v06-dialog multi-pick @(picks.Count>=multi.Max?"full":"")" role="dialog" aria-label="@L["效果選擇"]"><h3>@L.Text(MultiTitle(multiPending.Title))</h3><p>@L.Text(multiPending.Description)</p>
+        <p class="multi-hint">@(multi.Ordered?L["依點選順序放到牌庫底；沒選的依目前順序放在最後。"]:multi.Min==multi.Max?L.F("請選 {0} 張。",multi.Max):L.F("最多選 {0} 張，也可以少選。",multi.Max))</p>
+        <div class="choice-cards">@foreach(var o in multiPending.Options.Where(o=>o.Card!=null)){var idx=picks.IndexOf(o.Id);<button type="button" class="choice-card @(idx>=0?"picked":"")" aria-pressed="@(idx>=0?"true":"false")" title="@L.CardName(o.Card)" @onclick='()=>TogglePick(multi,o.Id)'><CardFace Battle="o.Card" Class="face-preview choice-face" />@if(idx>=0){<span class="pick-badge">@(multi.Ordered?(idx+1).ToString():"✓")</span>}<span class="choice-card-title">@L.CardName(o.Card)</span>@if(!string.IsNullOrEmpty(o.Subtitle)){<small>@L.Text(o.Subtitle)</small>}</button>}</div>
+        <div class="dialog-actions multi-actions"><span class="multi-count">@L.F("已選 {0}/{1}",picks.Count,multi.Max)</span><button class="multi-confirm" disabled="@(!okCount)" @onclick='()=>SendPicks(multi)'>@(picks.Count==0&&multi.StopId!=null?L.Text(multiPending.Options.FirstOrDefault(o=>o.Id==multi.StopId)?.Title??"確認"):L["確認"])</button>@if(picks.Count>0){<button @onclick='()=>{Picks.Clear();}'>@L["清除選擇"]</button>}@if(multiPending.CanCancel){<button @onclick='()=>Send("cancel")'>@L["取消（尚未付款）"]</button>}</div></section></div>
+    }
+    else if(!Busy&&!Presenting&&!Batching&&s.Pending is {} pending && pending.Kind!="target")
     {
         <div class="modal-shade"><section class="v06-dialog" role="dialog" aria-label="@L["效果選擇"]"><h3>@L.Text(pending.Title)</h3><p>@L.Text(pending.Description)</p>@if(pending.Options.Any(o=>o.Card!=null)){<div class="choice-cards">@foreach(var o in pending.Options.Where(o=>o.Card!=null)){<button type="button" class="choice-card" title="@L.CardName(o.Card)" @onclick='()=>Send("choice",option:o.Id)'><CardFace Battle="o.Card" Class="face-preview choice-face" /><span class="choice-card-title">@(o.Title==o.Card!.Name?L.CardName(o.Card):L.Text(o.Title))</span>@if(!string.IsNullOrEmpty(o.Subtitle)){<small>@L.Text(o.Subtitle)</small>}</button>}</div>}<div class="choice-list">@foreach(var o in pending.Options.Where(o=>o.Card==null)){<button @onclick='()=>Send("choice",option:o.Id)'>@(o.Card!=null&&o.Title==o.Card.Name?L.CardName(o.Card):L.Text(o.Title)) <small>@L.Text(o.Subtitle)</small>@if(pending.Title=="受到傷害，可從手牌發動反擊"&&o.Card!=null){<small class="counter-card-text">@L.FaceText(o.Card)</small>}</button>}</div>@if(pending.CanCancel){<button @onclick='()=>Send("cancel")'>@L["取消（尚未付款）"]</button>}</section></div>
     }
@@ -217,6 +225,25 @@
     // Esc closes the topmost closable dialog; effect choices (s.Pending) must still be answered.
     [JSInvokable]public async Task CloseDialog(){if(ConfirmSurrender)ConfirmSurrender=false;else if(Detail!=null)Detail=null;else if(AvatarOpen)AvatarOpen=false;else if(ShowEnergy)ShowEnergy=false;else if(ShowHistory)ShowHistory=false;else if(ShowGrave)ShowGrave=false;else if(EnergyCandidate!=null)await CancelEnergy();else return;await InvokeAsync(StateHasChanged);}
     [JSInvokable]public Task EndDrag(){Dragging=null;DragKind="";return InvokeAsync(StateHasChanged);}
+    // Multi-pick: the player selects several options, then they are sent as the usual single "choice" commands in
+    // pick order (plus the stop option when finishing early), so the engine, AI, logs and replays see the same steps.
+    private readonly List<string> Picks=new();private string? PicksKey;private bool Batching;
+    private List<string> PicksFor(BattleMulti m){if(PicksKey!=m.Key){PicksKey=m.Key;Picks.Clear();}return Picks;}
+    private void TogglePick(BattleMulti m,string id){var picks=PicksFor(m);if(!picks.Remove(id)&&picks.Count<m.Max)picks.Add(id);}
+    private async Task SendPicks(BattleMulti m)
+    {
+        if(Busy||Presenting||Batching||State==null)return;
+        var ids=PicksFor(m).ToList();if(ids.Count>m.Max||ids.Count<Math.Min(m.Min,m.Max)&&!(ids.Count==0&&m.Min==0))return;
+        Batching=true;
+        try{
+            foreach(var id in ids){if(!SameMulti(m.Key,id))break;var rev=State!.Revision;await Send("choice",option:id);if(State.Revision==rev)break;}
+            if(m.StopId is {} stop&&SameMulti(m.Key,stop))await Send("choice",option:stop);
+        }
+        finally{Batching=false;Picks.Clear();PicksKey=null;if(!Disposed)StateHasChanged();}
+    }
+    // "…（1/3）" step counters are dropped: the dialog shows the whole selection at once.
+    private static string MultiTitle(string t){var i=t.LastIndexOf('\uFF08');return i>0&&t[^1]=='\uFF09'&&t[(i+1)..^1].Contains('/')?t[..i]:t;}
+    private bool SameMulti(string key,string id)=>State?.Pending is {Multi:{} mm} p&&mm.Key==key&&p.Options.Any(o=>o.Id==id);
     private async Task Place(string type,Guid id,int slot){await Send(type,id);if(State?.Pending?.Options.Any(o=>o.Id==$"SLOT:{slot}")==true)await Send("choice",option:$"SLOT:{slot}");}
     private async Task Send(string type,Guid? id=null,Guid? target=null,string? option=null,bool force=false)
     {
