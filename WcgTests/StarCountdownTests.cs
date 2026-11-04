@@ -30,6 +30,13 @@ public class StarCountdownTests
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeStarCountdownCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
         Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
+    // 畫面回饋：回合開始移除倒數指示物時要有 status 事件，畫面才會在那張卡上顯示剩幾個。
+    [Fact] public void RemovingACountdownCounterIsPresentedOnTheCard()
+    {
+        var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,413)));Settle(g);var m=g.Player.Field.Single();var before=m.Countdown;Assert.True(before>=2);
+        StartTurn(g,g.Player);
+        Assert.Contains(g.PresentationEvents,e=>e.Type=="status"&&e.InstanceId==m.InstanceId&&e.Label==$"移除 1 個倒數指示物（剩 {before-1}）");
+    }
     [Fact] public void ApprenticeDrawsTwoWhenItsLastCounterGoes()
     {
         var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,409)));Settle(g);var m=g.Player.Field.Single();Assert.Equal(1,m.Countdown);

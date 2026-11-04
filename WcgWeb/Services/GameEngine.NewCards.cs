@@ -157,7 +157,7 @@ public partial class GameEngine
         {
             case "WCG-223":
                 var mine = m.LostAttachments.Where(p.Graveyard.Contains).ToArray();
-                if (mine.Length > 0) { Badge(); CardChoice(p, "選擇附著過的卡加入手牌", mine, c => { if (p.Graveyard.Remove(c)) p.Hand.Add(c); }); }
+                if (mine.Length > 0) { Badge(); CardChoice(p, "選擇附著過的卡加入手牌", mine, c => { if (p.Graveyard.Remove(c)) { p.Hand.Add(c); Present("recover", p, c.InstanceId, card: c.Card, label: "墓地回收"); } }); }
                 break;
             case "WCG-232": Badge(); TopEnergy(p); break;
             case "WCG-235": Badge(); FreeFaction(p, 1, "生機", true); break;

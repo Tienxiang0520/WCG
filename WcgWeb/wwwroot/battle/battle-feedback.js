@@ -240,8 +240,9 @@ export function bindFeedback(root, sound = null, fx = null) {
     }
     async function badge(el, text, tone = 'gold') {
         if (!el || !text) return;
-        const c = center(el), b = boardRect(), x = Math.max(b.x + 4, Math.min(c.x - 80, b.x + b.width - 164));
-        const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: 160, height: 28 });
+        // Longer result labels (e.g. counters removed with the count left) get a wider pill instead of an ellipsis.
+        const w = Math.min(280, Math.max(160, String(text).length * 14 + 28)), c = center(el), b = boardRect(), x = Math.max(b.x + 4, Math.min(c.x - w / 2, b.x + b.width - w - 4));
+        const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: w, height: 28 });
         pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
         await animate(pill, [
             { opacity: 0, transform: 'translateY(10px) scale(.6)' },
@@ -403,7 +404,8 @@ export function bindFeedback(root, sound = null, fx = null) {
             void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
             const k = keywordOf(ev.label);
             if (iconOf(k) === 'shield' && shieldBroke(ev.instanceId) && !shattered.has(ev.instanceId)) { shattered.add(ev.instanceId); shieldShatter(target); }
-            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null]);
+            // The label (counters placed or removed, tapped, control taken …) floats over the card, not only in the message bar.
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null, ev.type === 'status' && ev.label ? badge(target, ev.label) : null]);
         } else if (ev.type === 'attach') {
             const target = visual(ev.targetId);
             void sound?.play('glass');
