@@ -240,8 +240,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     }
     async function badge(el, text, tone = 'gold') {
         if (!el || !text) return;
-        // Longer result labels (e.g. counters removed with the count left) get a wider pill instead of an ellipsis.
-        const w = Math.min(280, Math.max(160, String(text).length * 14 + 28)), c = center(el), b = boardRect(), x = Math.max(b.x + 4, Math.min(c.x - w / 2, b.x + b.width - w - 4));
+        // Longer result labels (e.g. counters removed with the count left) get a wider pill instead of an ellipsis; on a phone-width board the minimum shrinks so short labels stay over their card.
+        const b = boardRect(), w = Math.min(280, Math.max(Math.min(160, b.width * .3), String(text).length * 14 + 28)), c = center(el), x = Math.max(b.x + 4, Math.min(c.x - w / 2, b.x + b.width - w - 4));
         const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: w, height: 28 });
         pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
         await animate(pill, [
@@ -422,6 +422,15 @@ export function bindFeedback(root, sound = null, fx = null) {
             // Let the turn banner be read before the new turn's first action plays underneath it.
             await flash(hero(ev.side), '#9edcff'); await pause(480);
         }
+        else if (ev.type === 'recover' && ev.card && hero(ev.side)) {
+            // A card back from the graveyard: shown greyed beside the portrait, regains colour, then flies to hand.
+            if (from) void fx?.glow(from, '#c9a2ff', 260);
+            void sound?.play('draw');
+            const c = center(hero(ev.side)), shown = place(publicCard(ev.card), { x: c.x + 70, y: c.y - 60, width: 90, height: 120 });
+            shown.dataset.wcgEffect = 'recover';
+            await animate(shown, [{ opacity: 0, transform: 'translateY(30px) scale(.8)', filter: 'grayscale(1) brightness(.6)' }, { opacity: 1, transform: 'translateY(0) scale(1.05)', filter: 'grayscale(1) brightness(.7)', offset: .35 }, { opacity: 1, transform: 'scale(1)', filter: 'none' }], 620);
+            await fly(shown, handZone(ev.side));
+        }
         else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') {
             if (from) void fx?.glow(from, '#9edcff', 260);
             void sound?.play('draw');
@@ -488,6 +497,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (step.kind === 'tap') {
             const el = visual(step.target); if (!el) return;
             void sound?.play('flip');
+            // Untapping has no lasting marker (tapped units keep a 橫置 tag), so name it briefly.
+            if (!step.tapped && !step.named) void badge(el, t('直立'), 'gold');
             await animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420);
             return;
         }

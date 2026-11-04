@@ -90,7 +90,7 @@ export function planSteps(previous, next, events) {
         const dpDelta = (Number(unit.dp) || 0) - (Number(old.dp) || 0);
         if (dpDelta && Number.isFinite(dpDelta)) steps.push({ kind: 'stat', target: id, delta: dpDelta, stat: 'DP' });
         // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
-        if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
+        if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped, named: ordered.some(ev => ev.instanceId === id && ev.type === 'status') });
     }
     return steps;
 }

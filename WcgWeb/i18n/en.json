@@ -2012,6 +2012,7 @@
  "星軌重排：選擇放置 2 個倒數指示物的己方卡": "Star-Orbit Realignment: choose one of your cards to put 2 Countdown counters on",
  "放置 {0} 個倒數指示物": "{0} Countdown counters placed",
  "移除 {0} 個倒數指示物（剩 {1}）": "{0} Countdown counter(s) removed ({1} left)",
+ "移除 {0} 個血誓指示物（剩 {1}）": "{0} Blood Oath counter(s) removed ({1} left)",
  "能量全部轉為直立": "All energy readied",
  "從能量區取出": "Taken from energy zone",
  "牌庫頂放入能量區": "Top of deck into energy zone",
