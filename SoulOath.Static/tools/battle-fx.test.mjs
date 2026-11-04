@@ -96,7 +96,7 @@ test('feedback with effects still releases the playback lock on commit and keeps
     await done;
     assert.equal(d.root.dataset.wcgPlayback, '1', 'actions stay blocked until the snapshot is committed');
     const texts = d.created.map(el => el.textContent).join(' ');
-    assert.match(texts, /你的回合/); assert.doesNotMatch(texts, /secret/);
+    assert.doesNotMatch(texts, /你的回合/, 'the turn sweep carries no text'); assert.doesNotMatch(texts, /secret/);
     feedback.clear(); assert.equal(d.root.dataset.wcgPlayback, undefined);
     feedback.dispose(); assert.equal(d.body.children.length, 0);
 });

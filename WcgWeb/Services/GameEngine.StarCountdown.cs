@@ -26,7 +26,8 @@ public partial class GameEngine
     private void RemoveCountdown(MonsterInstance m, int n, Action? fired = null)
     {
         if (!Alive(m) || m.Countdown <= 0 || n <= 0) return;
-        m.Countdown = Math.Max(0, m.Countdown - n); RefreshBoard();
+        var removed = Math.Min(n, m.Countdown); m.Countdown = Math.Max(0, m.Countdown - n); RefreshBoard();
+        Present("status", Owner(m), m.InstanceId, card: m.Card, label: $"移除 {removed} 個倒數指示物（剩 {m.Countdown}）");
         if (m.Countdown > 0) return;
         fired?.Invoke();
         StarFire(Owner(m), m);
