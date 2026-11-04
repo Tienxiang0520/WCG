@@ -212,7 +212,6 @@ public partial class GameEngine
     private void Death(PlayerState p, MonsterInstance m, CardInstance grave)
     {
         if (m.IsSilenced) return;
-        if (m.HasSoulReturn) SoulReturn(p,m,grave);
         if (m.Card.Id is "WCG-003" or "WCG-016" or "WCG-025" or "WCG-103" or "WCG-043" or "WCG-108" or "WCG-080" or "WCG-083" or "WCG-093" or "WCG-097")
             Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
         var enemy = GetOpponent(p);

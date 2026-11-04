@@ -87,7 +87,7 @@ public sealed partial class RankedSession
             var actions = RankedRecord.Decode(record.Actions);
             CardDatabase catalog; bool limit, legacy;
             if (record.Rules == rules || record.Rules == priorIdentifierRules) { catalog = currentCards; limit = false; legacy = false; }
-            else if (PriorEra(record.Rules) is { } era) { catalog = era.Cards; limit = era.LimitFactionTriggers; legacy = era.LegacyCardRules; }
+            else if (PriorEra(record.Rules) is { Retired: false } era) { catalog = era.Cards; limit = era.LimitFactionTriggers; legacy = era.LegacyCardRules; }
             else return new(record, [], "這場對局使用的卡牌版本已更新，無法重新模擬回顧。");
             var engine = new GameEngine(currentCards); var bridge = new BattleBridge(engine, deckService);
             engine.ResetToNotStarted(); engine.UseMatchCatalog(catalog, limit, legacy);

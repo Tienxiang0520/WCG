@@ -18,7 +18,13 @@ public sealed partial class RankedSession
     private readonly string priorIdentifierRules;
     private readonly CardDatabase currentCards;
     // Earlier card catalogs, newest first. A saved match resumes and replays with the catalog and engine rules it started on.
-    private sealed record CatalogEra(string Rules, string IdentifierRules, CardDatabase Cards, bool LimitFactionTriggers, bool LegacyCardRules);
+    private sealed record CatalogEra(string Rules, string IdentifierRules, CardDatabase Cards, bool LimitFactionTriggers, bool LegacyCardRules, bool Retired = false);
+    // EraSteps entries whose catalogs still carried the removed 怒擊/野性/觀測/回魂/護主 keywords (WCG-200–204 before the rules
+    // simplification). The engine no longer implements those keywords, so these eras are still built (to recognise their
+    // fingerprints and to chain the older eras) but can neither resume nor replay: an unfinished match is voided without a
+    // result and its replay reports that the version is no longer supported.
+    internal static readonly int[] RetiredEraIndexes = [40, 41];
+    internal const string RetiredMatchNotice = "未完成的天梯對局使用已移除的舊版關鍵字規則，無法繼續，已作廢且不計勝負。";
     // Engine flags per CardBalanceHistory.EraSteps entry (same order, newest first). Matches started before the card-text
     // clarity update keep the old wording and engine behaviour (LegacyCardRules); matches started before the arrow-card
     // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
@@ -48,13 +54,13 @@ public sealed partial class RankedSession
         var db = CardBalanceHistory.EraSteps[index](index == 0 ? currentCards : priorEras[index - 1].Cards);
         var json = JsonSerializer.Serialize(db.AllCards);
         var (limit, legacy) = EraFlags[index];
-        return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, legacy);
+        return new(Fingerprint(json), Fingerprint(json.Replace(CardIdentifier.CurrentPrefix, CardIdentifier.LegacyPrefix, StringComparison.Ordinal)), db, limit, legacy, RetiredEraIndexes.Contains(index));
     }
     // Tests: every era fingerprint, building all of them.
-    internal IReadOnlyList<(string Rules, string IdentifierRules, bool LimitFactionTriggers, bool LegacyCardRules)> AllPriorEras()
+    internal IReadOnlyList<(string Rules, string IdentifierRules, bool LimitFactionTriggers, bool LegacyCardRules, bool Retired)> AllPriorEras()
     {
         PriorEra("");
-        lock (eraGate) return priorEras.Select(e => (e.Rules, e.IdentifierRules, e.LimitFactionTriggers, e.LegacyCardRules)).ToList();
+        lock (eraGate) return priorEras.Select(e => (e.Rules, e.IdentifierRules, e.LimitFactionTriggers, e.LegacyCardRules, e.Retired)).ToList();
     }
     private RankedProfile profile = new();
     private readonly DeckService deckService;
@@ -204,6 +210,12 @@ public sealed partial class RankedSession
         if (match.Rules != rules && match.Rules != priorIdentifierRules)
         {
             var era = PriorEra(match.Rules) ?? throw new InvalidOperationException("存檔對局使用不同規則版本。");
+            if (era.Retired)
+            {
+                if (match.Settled) return null;
+                profile.Match = null; store.Save(profile); BalanceNotice = RetiredMatchNotice;
+                return null;
+            }
             Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }

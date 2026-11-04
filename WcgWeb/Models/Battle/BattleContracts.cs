@@ -22,7 +22,7 @@ public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string P
 }
 public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);
 public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks,
-    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0)
+    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0)
 {
     // Combat-adjusted PP of both sides for a monster target (combat-only bonuses included). 0 when attacking the player.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]

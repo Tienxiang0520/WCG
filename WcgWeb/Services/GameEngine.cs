@@ -124,30 +124,9 @@ public partial class GameEngine
     {
         if (IsOver || amount <= 0) return;
         if (SimplifiedRules) { OathGuardDamage(p, amount, source); return; }
-        var guard = p.Field.FirstOrDefault(m => m.HasHeroGuard);
-        var maximum = Math.Min(amount, p.AvailableEnergy);
-        if (guard == null || maximum == 0) { ApplyPlayerDamage(p, amount, source); return; }
-        var options = Enumerable.Range(1, maximum).Select(n => new ChoiceOption
-        {
-            Id = "GUARD:" + n, Title = $"橫置 {n} 點能量，抵銷 {n} 點傷害"
-        }).Append(new() { Id = "GUARD:0", Title = "不抵銷，接受傷害" });
-        Ask(p, "護主：選擇抵銷傷害", options, option =>
-        {
-            var prevent = int.Parse(option.Id.AsSpan(6));
-            prevent = p.Field.Any(m => m.HasHeroGuard) ? Math.Min(prevent, Math.Min(amount, p.AvailableEnergy)) : 0;
-            foreach (var energy in p.EnergyZone.Where(c => !c.IsTapped).Take(prevent)) energy.IsTapped = true;
-            if (prevent > 0)
-            {
-                Present("pay", p, amount: prevent, label: "支付能量");
-                Present("status", p, guard.InstanceId, amount: prevent, card: guard.Card, label: "護主抵銷傷害");
-                Log($"【{p.Name}】橫置 {prevent} 點能量，護主抵銷 {prevent} 點傷害。", "action");
-            }
-            ApplyPlayerDamage(p, amount - prevent, source);
-        }, sourceInstanceId: guard.InstanceId);
-        CurrentPendingChoice!.SourceCard = guard.Card;
-        CurrentPendingChoice.Description = $"將受到 {amount} 點傷害；最多可橫置 {maximum} 點能量。抵銷後剩餘傷害才會扣血並檢查反擊。";
+        ApplyPlayerDamage(p, amount, source);
     }
-    private bool ChooseHeroGuard(PendingChoice choice)
+    private bool ChooseOathGuard(PendingChoice choice)
     {
         var guard = choice.Options.Where(o => o.Id.StartsWith("GUARD:", StringComparison.Ordinal)).ToArray();
         return guard.Length > 0 && SelectChoice(guard.OrderByDescending(o => int.Parse(o.Id.AsSpan(6))).First());

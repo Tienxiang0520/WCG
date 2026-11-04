@@ -113,11 +113,6 @@ public class MonsterInstance
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
     public bool HasShield => ShieldQualified;
-    public bool HasRage => IsUnit && !IsSilenced && Card.HasRage;
-    public bool HasObservation => IsUnit && !IsSilenced && Card.HasObservation;
-    public bool HasWild => IsUnit && !IsSilenced && Card.HasWild;
-    public bool HasSoulReturn => IsUnit && !IsSilenced && Card.HasSoulReturn;
-    public bool HasHeroGuard => IsUnit && !IsSilenced && Card.HasHeroGuard;
     public CardInstance? SilenceSpell { get; set; }
     public string? SilenceOwnerId { get; set; }
 
