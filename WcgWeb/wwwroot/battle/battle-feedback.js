@@ -434,7 +434,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, handZone(ev.side)); }
         } else if (ev.type === 'turn') {
             if (ev.side === 'player') { void sound?.play('turn'); fastForward = 1; }
-            void fx?.banner('', ev.side);
+            void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
             // Let the turn banner be read before the new turn's first action plays underneath it.
             await flash(hero(ev.side), '#9edcff'); await pause(480);
         }
