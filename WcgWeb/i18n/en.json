@@ -2013,6 +2013,7 @@
  "放置 {0} 個倒數指示物": "{0} Countdown counters placed",
  "移除 {0} 個倒數指示物（剩 {1}）": "{0} Countdown counter(s) removed ({1} left)",
  "能量全部轉為直立": "All energy readied",
+ "從能量區取出": "Taken from energy zone",
  "牌庫頂放入能量區": "Top of deck into energy zone",
  "倒數歸零": "Countdown ends",
  "【{0}】放置 {1} 個倒數指示物（共 {2} 個）。": "{0} gets {1} Countdown counter(s) ({2} in total).",

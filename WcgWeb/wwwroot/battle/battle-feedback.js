@@ -2,7 +2,7 @@ import { motionReduced, motionOff, motionScale } from './battle-fx.js';
 import { planSteps, batchSpeed, isSpellCard, keywordOf, isCoin, stepGap } from './effect-plan.js';
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
-const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
+const EN = { '失去': 'Lost ', '斷橋鎖住': 'Bridge lock', '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
     '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
     '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
     '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
@@ -451,6 +451,12 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (winnerFace) { void fx?.ring(winnerFace, '#ffd65a', 1.4); void fx?.burst(winnerFace, { color: '#ffe08a', count: 22, spread: 90, size: 6, rise: 50, duration: 900 }); }
             await flash(hero(ev.side), '#ffe5a1');
         }
+        else if (ev.type === 'energy-out') {
+            // A card leaves the energy zone (summoned from energy): the zone flashes and names it before the summon lands.
+            const zone = ev.side === 'player' ? root.querySelector('.energy-zone') : (root.querySelector('.enemy-energy') ?? hero(ev.side));
+            void sound?.play('draw');
+            await Promise.all([flash(zone, '#8ad7ff'), badge(zone, `${eventWord(ev)}${ev.card ? ` · ${ev.card.name}` : ''}`)]);
+        }
         else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
     }
     async function runStep(step, state) {
@@ -464,6 +470,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         }
         if (step.kind === 'badge') {
             const el = visual(step.target); if (!el) return;
+            if (step.lost) { void sound?.play('trigger'); void fx?.ring(el, '#9aa3ad', .6); await Promise.all([flash(el, '#9aa3ad'), badge(el, `${t('失去')}${t(step.keyword)}`, 'lost')]); return; }
             if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
             if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
             await keywordPulse(el, step.keyword);

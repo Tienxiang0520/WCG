@@ -592,6 +592,7 @@
 .battle-feedback-layer[data-fast] .event-ff{color:#8fe9d0;border-color:rgba(95,211,189,.7)}
 .event-badge{z-index:7;display:flex;align-items:center;justify-content:center;border-radius:999px;font:700 13px/1 var(--wcg-font-display,serif);letter-spacing:.06em;color:#2a1c05;background:linear-gradient(180deg,#fff1c4,#e3b65b);box-shadow:0 0 0 1px #8a6a2f,0 6px 18px rgba(0,0,0,.5),0 0 22px rgba(255,214,122,.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 10px}
 .event-badge[data-tone="沉默"]{color:#f3e9ff;background:linear-gradient(180deg,#9f78e6,#5b3aa3);box-shadow:0 0 0 1px #3c2470,0 6px 18px rgba(0,0,0,.5),0 0 22px rgba(176,132,255,.55)}
+.event-badge[data-tone="lost"]{color:#eef1f5;background:linear-gradient(180deg,#8b939e,#4b525c);box-shadow:0 0 0 1px #2e333a,0 6px 18px rgba(0,0,0,.5)}
 .event-badge[data-tone="劇毒"]{color:#eaffd9;background:linear-gradient(180deg,#7fcf4f,#2f7d2a);box-shadow:0 0 0 1px #1d4a17,0 6px 18px rgba(0,0,0,.5),0 0 22px rgba(130,230,90,.5)}
 .event-badge[data-tone="嘲諷"],.event-badge[data-tone="tap"]{color:#eef3ff;background:linear-gradient(180deg,#8da3c4,#4b5d7c);box-shadow:0 0 0 1px #2c3a52,0 6px 18px rgba(0,0,0,.5)}
 .event-badge[data-tone="衝鋒"],.event-badge[data-tone="貫穿"]{color:#fff2e6;background:linear-gradient(180deg,#ff9b6a,#c2462a);box-shadow:0 0 0 1px #6d2414,0 6px 18px rgba(0,0,0,.5),0 0 22px rgba(255,130,90,.5)}
