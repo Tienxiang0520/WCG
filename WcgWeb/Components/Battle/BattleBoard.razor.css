@@ -839,3 +839,12 @@
 .multi-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;position:sticky;bottom:0;padding-top:8px}
 .multi-count{font-weight:700;margin-right:auto}
 .multi-confirm:disabled{opacity:.45;cursor:not-allowed}
+/* Combat-only PP (年輪守望者 +300, 203 +500, archetype combat bonuses): while aiming at a target and during the attack the PP
+   bubble shows the combat value — green up / red down with a pulse, no text label. Set by fan-drag.js / battle-feedback.js. */
+.field-stats b[data-combat-pp]{position:relative;color:transparent!important;text-shadow:none;animation:combat-pp-pulse calc(.7s * var(--wcg-motion-scale, 1)) cubic-bezier(.2,.8,.3,1.4) 1}
+.field-stats b[data-combat-pp] *{visibility:hidden}
+.field-stats b[data-combat-pp]::after{content:attr(data-combat-pp);position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:900;visibility:visible}
+.field-stats b[data-combat-dir=up]{background:#14612c!important;box-shadow:0 0 0 2px #7dffa0,0 0 14px #7dffa0b0!important}
+.field-stats b[data-combat-dir=down]{background:#a3161a!important;box-shadow:0 0 0 2px #ffb3ad,0 0 14px #ff8a7ab0!important}
+@keyframes combat-pp-pulse{0%{transform:scale(1)}35%{transform:scale(1.45)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.field-stats b[data-combat-pp]{animation:none}}

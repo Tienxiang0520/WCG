@@ -152,7 +152,7 @@
     {
         if (Replay == null) yield break;
         for (var i = Math.Min(Index, Replay.Steps.Count - 1); i >= 0; i--)
-            foreach (var ev in Replay.Steps[i].Events) yield return (i, ev);
+            foreach (var ev in Replay.Steps[i].Events.Where(e => e.Type != "power")) yield return (i, ev);  // "power" is display-only combat PP
     }
     // Same green/red badge as the battlefield, against the printed value.
     private static string StatClass(int? current, int? printed) => current > printed ? "stat-up" : current < printed ? "stat-down" : "";
