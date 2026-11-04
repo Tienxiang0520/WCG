@@ -35,6 +35,7 @@ public partial class GameEngine
         {
             if (!p.EnergyZone.Remove(c) || p.Occupied >= 5) { after?.Invoke(); return; }
             c.IsTapped = false; c.TemporaryEnergy = false;
+            Present("energy-out", p, c.InstanceId, card: c.Card, label: "從能量區取出");
             plannedSlots[c.InstanceId] = slot; Summon(p, c, false);
             var m = p.Field.FirstOrDefault(x => x.InstanceId == c.InstanceId);
             if (m != null)

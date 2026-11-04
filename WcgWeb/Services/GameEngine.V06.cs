@@ -152,7 +152,7 @@ public partial class GameEngine
             if(spell.HasWill("理智")){if(LimitFactionTriggers)x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x))PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>ThresholdPP(m)<=(SimplifiedRules?Low(600):1000)),m=>KillBatch([m],x.Card.Name));});}
         NewSpellCast(p);
         foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-153").ToArray())
-            if(spell.TotalCost>=2){_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);}});}
+            if(spell.TotalCost>=2){_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);Present("recover",p,c.InstanceId,card:c.Card,label:"墓地回收");}});}
     }
     private void ExtraDeploy(PlayerState p,MonsterInstance m)
     {
@@ -164,7 +164,7 @@ public partial class GameEngine
             case "WCG-145":Ask(p,"逆流法師抉擇",[new(){Id="DISPEL",Title="驅散附著"},new(){Id="READY",Title="轉直立己方怪物"}],o=>{if(o.Id=="DISPEL")Dispel(p,false);else PickMonster(p,"選擇橫置己方怪物",p.Field.Where(x=>x.IsTapped),ReadyMonster);});break;
             case "WCG-161": Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>x!=m).ToArray(),m.Card.Name),()=>{foreach(var x in p.Structures.Concat(e.Structures).Where(x=>!x.IsSet).ToArray())DestroyStructure(x);foreach(var c in p.Hand.ToArray()){p.Hand.Remove(c);p.Graveyard.Add(c);}});break;
             case "WCG-162":Resolve(()=>Heal(p,3),()=>DrawMany(p,2));break;
-            case "WCG-163":p.EnergyZone.ForEach(c=>c.IsTapped=false);PickMonster(p,"選擇敵怪回手",e.Field,Bounce);break;
+            case "WCG-163":p.EnergyZone.ForEach(c=>c.IsTapped=false);Present("status",p,label:"能量全部轉為直立");PickMonster(p,"選擇敵怪回手",e.Field,Bounce);break;
             case "WCG-171":Heal(p,2);break;
             case "WCG-175":FreeFaction(p,5,"",true);break;
             case "WCG-179":Heal(p,7);break;
@@ -182,7 +182,7 @@ public partial class GameEngine
     {var list=candidates.Where(Alive).ToArray();if(list.Length==0)return;
         Ask(p,title,list.Select(m=>new ChoiceOption{Id=m.InstanceId.ToString(),Title=m.Card.Name,PreviewCard=m.Card}).Append(new(){Id="SKIP",Title="不使用此可選效果"}),o=>{if(o.Id!="SKIP")action(list.First(m=>m.InstanceId.ToString()==o.Id));});}
     private void TapEnemyEnergy(PlayerState e){var c=e.EnergyZone.FirstOrDefault(c=>!c.IsTapped);if(c!=null)c.IsTapped=true;}
-    private void TopEnergy(PlayerState p){if(p.Deck.Count==0)return;var c=p.Deck[0];p.Deck.RemoveAt(0);c.IsTapped=false;c.TemporaryEnergy=false;p.EnergyZone.Add(c);}
+    private void TopEnergy(PlayerState p){if(p.Deck.Count==0)return;var c=p.Deck[0];p.Deck.RemoveAt(0);c.IsTapped=false;c.TemporaryEnergy=false;p.EnergyZone.Add(c);Present("energy",p,c.InstanceId,label:"牌庫頂放入能量區");}
     private void ExtraSpell(PlayerState p,CardInstance c,MonsterInstance? t)
     {
         var e=GetOpponent(p);switch(c.Card.Id)
@@ -210,7 +210,7 @@ public partial class GameEngine
         }
     }
     private void SearchTwoKinds(PlayerState p)
-    {var top=p.Deck.Take(3).ToList();p.Deck.RemoveRange(0,top.Count);Resolve(()=>CardChoice(p,"選擇狂怒怪物",top.Where(c=>c.Card.IsMonster&&c.Card.HasWill("狂怒")),c=>{top.Remove(c);p.Hand.Add(c);}),()=>CardChoice(p,"選擇狂怒法術",top.Where(c=>c.Card.IsSpell&&c.Card.HasWill("狂怒")),c=>{top.Remove(c);p.Hand.Add(c);}),()=>OrderBottom(p,top));}
+    {var top=p.Deck.Take(3).ToList();p.Deck.RemoveRange(0,top.Count);Resolve(()=>CardChoice(p,"選擇狂怒怪物",top.Where(c=>c.Card.IsMonster&&c.Card.HasWill("狂怒")),c=>{top.Remove(c);p.Hand.Add(c);Present("take",p,c.InstanceId,card:p==Player?c.Card:null,label:"加入手牌");}),()=>CardChoice(p,"選擇狂怒法術",top.Where(c=>c.Card.IsSpell&&c.Card.HasWill("狂怒")),c=>{top.Remove(c);p.Hand.Add(c);Present("take",p,c.InstanceId,card:p==Player?c.Card:null,label:"加入手牌");}),()=>OrderBottom(p,top));}
     private void MillSearch(PlayerState p)
-    {var top=p.Deck.Take(3).ToList();p.Deck.RemoveRange(0,top.Count);Resolve(()=>CardChoice(p,"選擇深淵怪物加入手牌",top.Where(c=>c.Card.IsMonster&&c.Card.HasWill("深淵")),c=>{top.Remove(c);p.Hand.Add(c);}),()=>p.Graveyard.AddRange(top));}
+    {var top=p.Deck.Take(3).ToList();p.Deck.RemoveRange(0,top.Count);Resolve(()=>CardChoice(p,"選擇深淵怪物加入手牌",top.Where(c=>c.Card.IsMonster&&c.Card.HasWill("深淵")),c=>{top.Remove(c);p.Hand.Add(c);Present("take",p,c.InstanceId,card:p==Player?c.Card:null,label:"加入手牌");}),()=>{p.Graveyard.AddRange(top);foreach(var c in top)Present("discard",p,c.InstanceId,card:c.Card,label:"牌庫頂送入墓地");});}
 }
