@@ -1605,8 +1605,6 @@
  "野性（每能量本次PP＋500）": "Wild (+500 PP per energy for this battle)",
  "觀測（對手回合結束，每2能量選1張）": "Observation (opponent turn end: 2 energy to select 1 card)",
  "回魂（陣亡時2能量回手）": "Soul Return (2 energy to return to hand on death)",
- "攻擊預覽：基本 {0} 點傷害，可投入最多 {1} 點能量增加 DP；護主與反擊另行結算。": "Attack preview: {0} base damage; spend up to {1} energy to boost DP. Guardian and counters resolve separately.",
- "交戰預覽：野性可改變 PP；先由攻擊方投入，再由防守方投入，之後才判定存活與消滅。": "Battle preview: Wild may change PP. The attacker spends first, then the defender; survival is decided afterwards.",
  "怒擊、野性、觀測與回魂如何使用？": "How do Rage, Wild, Observation and Soul Return work?",
  "怒擊僅攻擊玩家時可投入能量，每點使本次 DP＋1，再由對手選護主與反擊。野性僅怪物交戰，每點使本次 PP＋500，攻擊方先選、防守方後選，各一次；加成結束即消失，劇毒與能量護盾照常判定。": "Rage can spend energy only when attacking a player: +1 DP each for this attack, before Guardian and counters. Wild can spend energy only in monster battles: +500 PP each for this battle. The attacker chooses once, then the defender once. Bonuses expire after the attack or battle; Poison and Energy Shield still apply.",
  "觀測在對手其他回合結束效果之後、自己重置能量與抽牌之前使用。一次投入偶數能量，每2點依序檢視牌庫頂最多2張，選1張入手、其餘置底，再做下一次；多隻只提供一個窗口。取得不是抽牌，下回合需要抽牌而牌庫為空仍敗北。": "Observation occurs after other opponent end-turn effects and before your energy reset and draw. Spend an even amount once; for each 2 energy, inspect up to 2 top cards, take 1 and put the rest on the bottom before repeating. Multiple sources share one window. Taking is not drawing, but a mandatory draw from an empty deck still loses.",

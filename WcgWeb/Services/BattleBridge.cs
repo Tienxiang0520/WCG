@@ -87,7 +87,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         }
     }
     private static GameEnginePreview? Preview(GameEngine.AttackPreview? p) => p == null ? null
-        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable,p.RageEnergy,p.WildEnergy);
+        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable);
     private BattleMonster Monster(PlayerState owner, MonsterInstance m)
     {
         if(m.IsSet)return new(new(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被宣告攻擊時可翻開。",""),0,0,["蓋牌"],false,"蓋牌不能攻擊",[],null,m.Slot,false,true,false,[]);
