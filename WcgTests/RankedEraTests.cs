@@ -51,6 +51,9 @@ public sealed class RankedEraTests : IDisposable
             Assert.Equal(Fingerprint(expected, true), eras[i].IdentifierRules);
             Assert.Equal(i == 51, eras[i].LimitFactionTriggers);
             Assert.Equal(i >= 49, eras[i].LegacyCardRules);
+            // Only the two catalogs that still carried the removed 怒擊/野性/觀測/回魂/護主 keywords are retired.
+            Assert.Equal(i is 40 or 41, eras[i].Retired);
+            Assert.Equal(i is 40 or 41, expected.AllCards.Any(c => c.Keywords.Intersect(["怒擊", "野性", "觀測", "回魂", "護主"]).Any()));
         }
     }
 }
