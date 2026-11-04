@@ -14,7 +14,12 @@ public record BattleCard(Guid InstanceId, string CardId, string Name, string Typ
     public string[]? Wills { get; init; }
 }
 public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string Problem,
-    string Preparation, string EnergyProblem, string[] PlayTargets, string Warning = "", bool CanSet = false);
+    string Preparation, string EnergyProblem, string[] PlayTargets, string Warning = "", bool CanSet = false)
+{
+    // Current cost minus printed cost (126, 160, 234, 353, 374, 379, 381 reduce it); the board tints the cost gem. 0 is omitted.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public int CostDelta { get; init; }
+}
 public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);
 public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks,
     bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0)
