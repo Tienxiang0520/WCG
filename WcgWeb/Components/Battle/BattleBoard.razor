@@ -21,7 +21,7 @@
         @for(int screen=0;screen<5;screen++)
         {
             var slot=mine?screen:4-screen;var m=side.Field.FirstOrDefault(x=>x.Slot==slot);
-            <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m?.Locked==true?"locked":"") @(m==null?"vacant":"") @(LegalSlot(mine,slot,m)?"legal":"")" data-drop-zone="@(mine?"own":"enemy")" data-slot="@slot" data-target="@m?.Card.InstanceId" aria-label="@(m==null?$"{L[mine?"己方":"敵方"]} {slot+1}":null)" @onclick="()=>OpenSlot(m)">
+            <article class="v06-slot @(m?.Tapped==true?"tapped":"") @(m?.Locked==true?"locked":"") @(m==null?"vacant":"") @(LegalSlot(mine,slot,m)?"legal":"")" data-drop-zone="@(mine?"own":"enemy")" data-slot="@slot" data-target="@m?.Card.InstanceId" data-combat-atk="@CombatPreview(m)?.AttackerPP" data-combat-pp="@CombatPreview(m)?.DefenderPP" aria-label="@(m==null?$"{L[mine?"己方":"敵方"]} {slot+1}":null)" @onclick="()=>OpenSlot(m)">
                 @if(m?.Tapped==true){<span class="tapped-badge" role="img" aria-label="@TappedLabel" title="@L["橫置：不能攻擊或橫置發動，控制者的下個回合開始時轉為直立"]"><b aria-hidden="true">⤵</b></span>}
                 @if(m==null){<div class="empty">＋</div>}
                 else
@@ -156,6 +156,10 @@
     private void EnergyKey(KeyboardEventArgs e){if(e.Key is "Enter" or " ")OpenEnergy();}
     private bool CanDrag=>CanAct&&State?.Pending==null&&EnergyCandidate==null&&Detail==null&&!ShowHistory&&!ShowGrave&&!ShowEnergy;
     private BattleHand? DragHand=>State?.Hand.FirstOrDefault(h=>h.Card.InstanceId==Dragging);
+    // While an attacker is dragged: the combat PP of both sides against this target, only when a combat-only bonus changes one
+    // of them (fan-drag.js shows it on both cards' PP numbers while hovering; no text on the board).
+    private GameEnginePreview? CombatPreview(BattleMonster? m){if(m==null||DragKind!="attack"||Dragging==null)return null;var a=State?.Player.Field.Concat(State.Computer.Field).FirstOrDefault(x=>x.Card.InstanceId==Dragging);
+        var p=a?.Targets.FirstOrDefault(t=>t.Id==m.Card.InstanceId.ToString())?.Preview;return p is {AttackerPP:>0} && (p.AttackerPP!=a!.PP||p.DefenderPP!=m.PP)?p:null;}
     private string[] AttackTargets=>State?.Player.Field.Concat(State.Computer.Field).FirstOrDefault(m=>m.Card.InstanceId==Dragging)?.Targets.Select(t=>t.Id).ToArray()??[];
     private bool UntargetedDrag=>DragKind=="hand"&&DragHand is {CanPlay:true,PlayTargets.Length:0} h&&!SetModes.Contains(h.Card.InstanceId)&&h.Card.Type is not ("怪物" or "結界");
     private bool LegalZone(string zone)=>Dragging!=null&&(zone switch {"energy"=>DragKind=="hand"&&DragHand?.CanEnergy==true,"face"=>DragKind=="attack"&&AttackTargets.Contains("face"),"center"=>UntargetedDrag||DragKind=="hand"&&DragHand is {CanPlay:true} h&&!SetModes.Contains(h.Card.InstanceId)&&(h.Card.CardId is "WCG-050" or "WCG-066" or "WCG-070"),_=>false});
@@ -274,7 +278,7 @@
             State=response.State;Message=response.Success?"":response.Message;Dragging=null;Detail=Refresh(Detail,State);
             if(!response.Success&&DragBinding!=null)await DragBinding.InvokeVoidAsync("playError");
             SetModes.IntersectWith(State.Hand.Select(h=>h.Card.InstanceId));
-            History.InsertRange(0,response.Events.Select(ev=>new HistoryEntry(ev.Side=="player"?"我方":"敵方",ev.Label,ev.Card,ev.Type)));
+            History.InsertRange(0,response.Events.Where(ev=>ev.Type!="power").Select(ev=>new HistoryEntry(ev.Side=="player"?"我方":"敵方",ev.Label,ev.Card,ev.Type)));
             if(History.Count>150)History.RemoveRange(150,History.Count-150);
             if(Presenting){StateHasChanged();if(!Disposed)await DragBinding!.InvokeVoidAsync("clearEvents");}
             if(!Disposed){EffectiveCoordinator.Acknowledge(Presenter,response.State.MatchId,response.State.Revision,response.BatchId);await Changed.InvokeAsync(State);}

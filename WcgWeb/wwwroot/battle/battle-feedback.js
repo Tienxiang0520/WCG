@@ -17,6 +17,12 @@ export const eventWord = ev => ev?.label || t(TYPE_WORDS[ev?.type] ?? '');
 const ICONS = {
     shield: '<path d="M32 3 L59 12 V34 C59 52 46 63 32 69 C18 63 5 52 5 34 V12 Z" fill="#b8862a" stroke="#5a3b00" stroke-width="3" stroke-linejoin="round"/><path d="M32 9 L53 16 V34 C53 49 43 58 32 63 C21 58 11 49 11 34 V16 Z" fill="#f6dc7a" stroke="#7a5200" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 9 V63 M11 30 H53" stroke="#7a5200" stroke-width="2.4" fill="none"/>',
     poison: '<path d="M32 3 C40 18 57 32 57 47 C57 61 46 69 32 69 C18 69 7 61 7 47 C7 32 24 18 32 3 Z" fill="#2f7d2a" stroke="#143a10" stroke-width="3" stroke-linejoin="round"/><path d="M32 11 C39 24 51 35 51 47 C51 57 43 63 32 63 C21 63 13 57 13 47 C13 35 25 24 32 11 Z" fill="#7fcf4f" stroke="#1d4a17" stroke-width="1.6" stroke-linejoin="round"/><circle cx="32" cy="47" r="7" fill="#1d4a17"/>' };
+// Combat-only PP on a board card's PP bubble (attribute only, so Blazor's own text is never overwritten; CSS draws the value).
+export function showCombatPP(card, value, current) {
+    const b = card?.querySelector?.('.field-stats b'); if (!b || !value || value === current) return false;
+    b.dataset.combatPp = String(value); b.dataset.combatDir = value > current ? 'up' : 'down'; return true;
+}
+export function clearCombatPP(scope) { for (const b of scope?.querySelectorAll?.('.field-stats b[data-combat-pp]') ?? []) { delete b.dataset.combatPp; delete b.dataset.combatDir; } }
 export const iconOf = keyword => keyword === '能量護盾' || keyword === '聖盾' ? 'shield' : keyword === '劇毒' ? 'poison' : null;
 const KEYWORD_COLORS = { '沉默': '#c49bff', '劇毒': '#8dff6a', '嘲諷': '#cfd8ea', '衝鋒': '#ffb27a', '貫穿': '#ffb27a', '反擊': '#9fd8ff' };
 const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
@@ -32,6 +38,7 @@ const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) 
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, locked = false, skipClick = null, speed = 1, pauser = null, banner = null, showcase = null;
+    let combatPower = [];
     const animations = new Set(), hidden = new Map(), ghosts = new Map(), lunged = new Set();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
     const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
@@ -196,6 +203,13 @@ export function bindFeedback(root, sound = null, fx = null) {
     async function attack(ev) {
         const source = visual(ev.instanceId), destination = ev.targetId ? visual(ev.targetId) : hero(ev.side === 'player' ? 'computer' : 'player');
         if (!source || !destination) return;
+        // Combat-only PP bonuses of this fight light up on both cards before the clash and stay until the batch ends.
+        let boosted = false;
+        for (const p of combatPower) if (p.instanceId === ev.instanceId || p.instanceId === ev.targetId) {
+            const card = visual(p.instanceId), was = Number(publicUnits.get(p.instanceId)?.pp ?? 0);
+            if (showCombatPP(card, p.amount, was)) { boosted = true; void fx?.glow(card, p.amount > was ? '#9dffc9' : '#ff8a7a', 360); }
+        }
+        if (boosted) { void sound?.play('statUp', 0); await pause(520); }
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
         const broken = [ev.targetId, ev.instanceId].filter(shieldBroke);
         const shatterAll = () => { for (const id of broken) if (!shattered.has(id)) { shattered.add(id); shieldShatter(visual(id)); } };
@@ -554,6 +568,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         // Next public field provides fixed destinations; old public field preserves departing sources.
         const locations = new Map([...previous.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...previous.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]]), ...next.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...next.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]])]);
         const destination = id => { const location = locations.get(id); return location ? slot(...location) : null; };
+        combatPower = events.filter(ev => ev.type === 'power'); events = events.filter(ev => ev.type !== 'power');
         const steps = planSteps(previous, next, events);
         speed = batchSpeed(steps.length);
         if (steps.length > 1 || steps.some(s => s.kind !== 'event')) skipControls();
@@ -566,7 +581,9 @@ export function bindFeedback(root, sound = null, fx = null) {
                 if (index < steps.length - 1) await pause(stepGap(step));
             }
             dropShowcase(); lunged.clear();
-        } catch (error) { lunged.clear(); clear(); throw error; }
+        } catch (error) { lunged.clear(); clearCombatPP(root); clear(); throw error; }
+        // Back to the snapshot's own numbers before C# renders the next one.
+        clearCombatPP(root); combatPower = [];
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
     return { present, clear, markLunge(id) { if (id) lunged.add(String(id)); }, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };

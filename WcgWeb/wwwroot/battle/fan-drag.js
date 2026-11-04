@@ -1,5 +1,5 @@
 import { createBattleAudio } from "./battle-audio.js";
-import { bindFeedback } from "./battle-feedback.js";
+import { bindFeedback, clearCombatPP, showCombatPP } from "./battle-feedback.js";
 import { applyMotionAttribute, createFx, motionReduced, motionScale, readAnimationSettings, readMotionSetting, saveMotionSetting } from "./battle-fx.js";
 import { dragVisual, freeCastReady, releaseZone } from "./drag-intent.js";
 
@@ -24,7 +24,15 @@ export function bind(root, dotnet) {
         return { x: (Math.max(0, board.left, rect.left) + Math.min(innerWidth, board.right, rect.right)) / 2,
             y: (Math.max(0, board.top, rect.top) + Math.min(innerHeight, board.bottom, rect.bottom)) / 2 };
     }
-    function clearHover() { hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered?.removeAttribute('data-drop-preview'); hovered = null; }
+    function clearHover() { if (hovered) clearCombatPP(root); hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered?.removeAttribute('data-drop-preview'); hovered = null; }
+    // Aiming an attack at a monster: combat-only PP bonuses show on both cards' PP bubbles (values come from BattleBoard).
+    function combatPreview(target) {
+        if (gesture?.kind !== 'attack' || !target?.dataset.combatAtk) return;
+        const num = el => Number(el?.querySelector('.field-stats')?.title?.match(/(\d+) PP/)?.[1] ?? 0);
+        const card = target.querySelector('.field-card'), attacker = gesture.source;
+        showCombatPP(attacker, Number(target.dataset.combatAtk), num(attacker));
+        showCombatPP(card, Number(target.dataset.combatPp), num(card));
+    }
     // Cursor-following tilt and sheen for the hovered hand card (mouse only; touch keeps the plain lift).
     let tilted = null;
     function untilt() { if (!tilted) return; for (const name of ['--tilt-x', '--tilt-y', '--shine-x', '--shine-y']) tilted.style.removeProperty(name); tilted = null; }
@@ -78,7 +86,7 @@ export function bind(root, dotnet) {
         const free = gesture.mode === 'free' && destination?.dataset.dropZone !== 'energy';
         const hoverDestination = free ? null : destination;
         const valid = hoverDestination?.classList.contains('legal') ?? false;
-        if (hovered !== hoverDestination) { clearHover(); hovered = hoverDestination; }
+        if (hovered !== hoverDestination) { clearHover(); hovered = hoverDestination; if (hovered?.classList.contains('legal')) combatPreview(hovered); }
         hovered?.classList.toggle('drop-hover', valid);
         hovered?.classList.toggle('drop-rejected', !valid);
         if (hovered && valid && hovered.dataset.dropZone === 'own' && !hovered.dataset.target)
