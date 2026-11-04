@@ -848,3 +848,9 @@
 .field-stats b[data-combat-dir=down]{background:#a3161a!important;box-shadow:0 0 0 2px #ffb3ad,0 0 14px #ff8a7ab0!important}
 @keyframes combat-pp-pulse{0%{transform:scale(1)}35%{transform:scale(1.45)}100%{transform:scale(1)}}
 @media (prefers-reduced-motion:reduce){.field-stats b[data-combat-pp]{animation:none}}
+/* A hand card whose cost an effect changed (遠古母樹根鬚 126, 血肉熔爐巨怪 160, 墓土巨像 353, 萬潮回歸 381 …): the cost gem turns
+   green (cheaper) or red, with one pulse when it changes. Number only, no label. */
+.v06-hand-card.cost-down ::deep .face-cost{background:#14612c!important;box-shadow:0 0 0 2px #7dffa0,0 0 12px #7dffa0b0!important;color:#fff!important;animation:combat-pp-pulse calc(.7s * var(--wcg-motion-scale, 1)) cubic-bezier(.2,.8,.3,1.4) 1}
+.v06-hand-card.cost-up ::deep .face-cost{background:#a3161a!important;box-shadow:0 0 0 2px #ffb3ad,0 0 12px #ff8a7ab0!important;color:#fff!important;animation:combat-pp-pulse calc(.7s * var(--wcg-motion-scale, 1)) cubic-bezier(.2,.8,.3,1.4) 1}
+.v06-hand-card.cost-down ::deep .face-cost *,.v06-hand-card.cost-up ::deep .face-cost *{color:#fff!important}
+@media (prefers-reduced-motion:reduce){.v06-hand-card.cost-down ::deep .face-cost,.v06-hand-card.cost-up ::deep .face-cost{animation:none}}

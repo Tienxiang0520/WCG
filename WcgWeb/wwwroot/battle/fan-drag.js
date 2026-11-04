@@ -27,8 +27,10 @@ export function bind(root, dotnet) {
     function clearHover() { if (hovered) clearCombatPP(root); hovered?.classList.remove('drop-hover', 'drop-rejected'); hovered?.removeAttribute('data-drop-preview'); hovered = null; }
     // Aiming an attack at a monster: combat-only PP bonuses show on both cards' PP bubbles (values come from BattleBoard).
     function combatPreview(target) {
-        if (gesture?.kind !== 'attack' || !target?.dataset.combatAtk) return;
-        const num = el => Number(el?.querySelector('.field-stats')?.title?.match(/(\d+) PP/)?.[1] ?? 0);
+        if (gesture?.kind !== 'attack') return;
+        const num = (el, stat = 'PP') => Number(el?.querySelector('.field-stats')?.title?.match(new RegExp(`(\\d+) ${stat}`))?.[1] ?? 0);
+        if (target?.dataset.combatDp) { showCombatPP(gesture.source, Number(target.dataset.combatDp), num(gesture.source, 'DP'), 'DP'); return; }
+        if (!target?.dataset.combatAtk) return;
         const card = target.querySelector('.field-card'), attacker = gesture.source;
         showCombatPP(attacker, Number(target.dataset.combatAtk), num(attacker));
         showCombatPP(card, Number(target.dataset.combatPp), num(card));

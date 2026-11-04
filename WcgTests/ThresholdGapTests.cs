@@ -91,4 +91,13 @@ public class ThresholdGapTests
         var hunter=Unit(g.Player,286,1);var t=Unit(g.Computer,110,1);Refresh(g);
         var q=g.PreviewAttack(hunter,t)!;Assert.Equal(1300,q.AttackerPP);Assert.Equal(900,q.DefenderPP);
     }
+    // Attack-on-player DP bonuses (烈焰戰紋 221, 空巷獵手 320 …) also last one hit only: a display-only "power" event labelled DP.
+    [Fact] public void AttackOnPlayerDpIsPresented()
+    {
+        var g=Game();var a=Unit(g.Player,320,0);Refresh(g);var hp=g.Computer.Hp;
+        Assert.Equal(a.CurrentDP+1,g.PreviewAttack(a)!.PlayerDamage);
+        Assert.True(g.Attack(g.Player,a));Settle(g);
+        Assert.Contains(g.PresentationEvents,e=>e.Type=="power"&&e.Label=="DP"&&e.InstanceId==a.InstanceId&&e.TargetId==null&&e.Amount==a.CurrentDP+1);
+        Assert.Equal(hp-a.CurrentDP-1,g.Computer.Hp);Assert.Equal(0,a.AttackDamageBonus);
+    }
 }
