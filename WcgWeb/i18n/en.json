@@ -2139,6 +2139,8 @@
  "牌組代碼過長。": "The deck code is too long.",
  "這個牌組代碼來自較新的版本，請更新遊戲後再試。": "This deck code is from a newer version. Update the game and try again.",
  "已匯入並儲存牌組【{0}】。": "Imported and saved deck “{0}”.",
+ "被摧毀，送入墓地": "was destroyed and sent to the graveyard",
+ "因「{0}」送入墓地": "was sent to the graveyard by “{0}”",
  "1. 把房間代碼傳給朋友": "1. Send the room code to your friend",
  "2. 貼上朋友回傳的回覆代碼": "2. Paste the reply code your friend sends back",
  "以對手為目標": "Target opponent",
