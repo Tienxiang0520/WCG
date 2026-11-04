@@ -17,7 +17,14 @@ public record BattleHand(BattleCard Card, bool CanPlay, bool CanEnergy, string P
     string Preparation, string EnergyProblem, string[] PlayTargets, string Warning = "", bool CanSet = false);
 public record BattleTarget(string Id, string Label, GameEnginePreview? Preview);
 public record GameEnginePreview(bool AttackerDies, bool DefenderDies, bool AttackerShieldBreaks,
-    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0);
+    bool DefenderShieldBreaks, int PlayerDamage, int PlayerDamagePreventable = 0, int RageEnergy = 0, int WildEnergy = 0)
+{
+    // Combat-adjusted PP of both sides for a monster target (combat-only bonuses included). 0 when attacking the player.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public int AttackerPP { get; init; }
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
+    public int DefenderPP { get; init; }
+}
 public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
     bool CanAttack, string Problem, BattleTarget[] Targets, BattleCard? Attachment, int Slot = -1, bool Tapped = false, bool IsSet = false, bool CanActivate = false, BattleCard[]? Attachments = null)
 {
