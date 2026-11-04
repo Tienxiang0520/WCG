@@ -18,8 +18,9 @@ const ICONS = {
     shield: '<path d="M32 3 L59 12 V34 C59 52 46 63 32 69 C18 63 5 52 5 34 V12 Z" fill="#b8862a" stroke="#5a3b00" stroke-width="3" stroke-linejoin="round"/><path d="M32 9 L53 16 V34 C53 49 43 58 32 63 C21 58 11 49 11 34 V16 Z" fill="#f6dc7a" stroke="#7a5200" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 9 V63 M11 30 H53" stroke="#7a5200" stroke-width="2.4" fill="none"/>',
     poison: '<path d="M32 3 C40 18 57 32 57 47 C57 61 46 69 32 69 C18 69 7 61 7 47 C7 32 24 18 32 3 Z" fill="#2f7d2a" stroke="#143a10" stroke-width="3" stroke-linejoin="round"/><path d="M32 11 C39 24 51 35 51 47 C51 57 43 63 32 63 C21 63 13 57 13 47 C13 35 25 24 32 11 Z" fill="#7fcf4f" stroke="#1d4a17" stroke-width="1.6" stroke-linejoin="round"/><circle cx="32" cy="47" r="7" fill="#1d4a17"/>' };
 // Combat-only PP on a board card's PP bubble (attribute only, so Blazor's own text is never overwritten; CSS draws the value).
-export function showCombatPP(card, value, current) {
-    const b = card?.querySelector?.('.field-stats b'); if (!b || !value || value === current) return false;
+// stat 'DP' targets the DP bubble (attack-on-player DP bonuses such as 烈焰戰紋).
+export function showCombatPP(card, value, current, stat = 'PP') {
+    const b = card?.querySelectorAll?.('.field-stats b')?.[stat === 'DP' ? 1 : 0]; if (!b || !value || value === current) return false;
     b.dataset.combatPp = String(value); b.dataset.combatDir = value > current ? 'up' : 'down'; return true;
 }
 export function clearCombatPP(scope) { for (const b of scope?.querySelectorAll?.('.field-stats b[data-combat-pp]') ?? []) { delete b.dataset.combatPp; delete b.dataset.combatDir; } }
@@ -206,8 +207,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         // Combat-only PP bonuses of this fight light up on both cards before the clash and stay until the batch ends.
         let boosted = false;
         for (const p of combatPower) if (p.instanceId === ev.instanceId || p.instanceId === ev.targetId) {
-            const card = visual(p.instanceId), was = Number(publicUnits.get(p.instanceId)?.pp ?? 0);
-            if (showCombatPP(card, p.amount, was)) { boosted = true; void fx?.glow(card, p.amount > was ? '#9dffc9' : '#ff8a7a', 360); }
+            const dp = p.label === 'DP', card = visual(p.instanceId), was = Number(publicUnits.get(p.instanceId)?.[dp ? 'dp' : 'pp'] ?? 0);
+            if (showCombatPP(card, p.amount, was, dp ? 'DP' : 'PP')) { boosted = true; void fx?.glow(card, p.amount > was ? '#9dffc9' : '#ff8a7a', 360); }
         }
         if (boosted) { void sound?.play('statUp', 0); await pause(520); }
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));

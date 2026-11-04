@@ -91,6 +91,9 @@ export function planSteps(previous, next, events) {
         if (dpDelta && Number.isFinite(dpDelta)) steps.push({ kind: 'stat', target: id, delta: dpDelta, stat: 'DP' });
         // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
         if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
+        // Attacking always taps; a unit that attacked and is still upright was readied afterwards (連斬見習兵 391, 戰場號角 398,
+        // 千刃狂濤 399), which no snapshot difference would otherwise show.
+        else if (attacked.has(id) && !unit.tapped) steps.push({ kind: 'tap', target: id, tapped: false });
     }
     return steps;
 }
