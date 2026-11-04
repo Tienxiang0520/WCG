@@ -141,9 +141,11 @@
             <ol class="pvp-log" id="pvp-log">@foreach (var l in g.Logs.Take(10)) { <li>@L.Text(l.Message)</li> }</ol>
         </section>
     }
+    @if (Tour == "pvp" && (Session == null || Session.Stage is PvpStage.Idle)) { <WcgWeb.Components.Tutorial.GuidedTour LessonId="pvp" /> }
 </div>
 
 @code {
+    [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
     private PvpSession? Session;
     private List<Deck> MyDecks = [];
     private string DeckId = "", RoomInput = "", ReplyInput = "", CopyMessage = "", ActionError = "";
