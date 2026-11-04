@@ -436,7 +436,7 @@ class BattleScene extends Phaser.Scene {
             return;
         }
         // Selection instructions belong beside the controls, not in a floating centre card.
-        if(event.type==='target'||event.type==='choice')return;
+        if(event.type==='target'||event.type==='choice'||event.type==='power')return;
         if(this.owner.reduced||document.hidden)return;
         if(event.type==='summon'){await this.animateSummon(event);return;}
         if(this.owner.animationPrototype)return;

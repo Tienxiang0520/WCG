@@ -11,7 +11,7 @@ public partial class GameEngine
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1800 or less (1100/1300 in older eras), 178/201/210/261 past every taunt.
     private int GaiaTauntLimit()=>CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
     private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||ThresholdPP(m)>GaiaTauntLimit())&&(a.Card.Id!="WCG-178"||LegacyCardRules));
-    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0);
+    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int AttackerPP=0,int DefenderPP=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
     {
@@ -25,7 +25,7 @@ public partial class GameEngine
         var ash=(ah||SimplifiedRules&&ShieldAnyCombatRules)&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
         var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):0;
-        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable);}
+        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable,a.CurrentPP,d.CurrentPP);}
     private int GuardReduction(PlayerState p,int damage)=>SimplifiedRules?Math.Min(damage,OathGuards(p).Length):0;
     public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
     private class AttackContext{public bool Cancelled;}
@@ -37,9 +37,17 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else if(Alive(d)){ApplyCombatPower(a,d);}}},
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a,d);});return true;
     });
+    // Display only: a combat-only PP bonus lasts for one resolution step, so the board never renders it; this event lets the
+    // board show the combat PP on the card during the attack. Not part of the text log or StateHash.
+    private void PresentCombatPower(MonsterInstance m,MonsterInstance other)
+    {if(m.CombatPowerBonus!=0)Present("power",Owner(m),m.InstanceId,other.InstanceId,m.CurrentPP,label:m.CombatPowerBonus.ToString());}
+    // Display only, same idea for an attack on the player: 烈焰戰紋 (221), 空巷獵手 (320), 千路齊進 (327), 怒蹄戰士 (341) add DP
+    // for this one hit only. Label "DP" marks the DP bubble; Amount is the DP that hits.
+    private void PresentAttackDp(MonsterInstance a)
+    {if(a.AttackDamageBonus!=0)Present("power",Owner(a),a.InstanceId,null,a.CurrentDP,label:"DP");}
     private void FinishAttack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;SurgeAfterAttack(p,a,d);
         // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.

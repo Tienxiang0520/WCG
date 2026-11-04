@@ -87,7 +87,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         }
     }
     private static GameEnginePreview? Preview(GameEngine.AttackPreview? p) => p == null ? null
-        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable);
+        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable){AttackerPP=p.AttackerPP,DefenderPP=p.DefenderPP};
     private BattleMonster Monster(PlayerState owner, MonsterInstance m)
     {
         if(m.IsSet)return new(new(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被宣告攻擊時可翻開。",""),0,0,["蓋牌"],false,"蓋牌不能攻擊",[],null,m.Slot,false,true,false,[]);
@@ -139,7 +139,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                 engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString())
                     .Concat(engine.GetDirectPlayerTargets(engine.Player, c).Select(p => engine.TargetId(p).ToString())).ToArray(),
                 !engine.SimplifiedRules&&c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有能量護盾資格仍需留能量保命。" : "",
-                !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
+                !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5) { CostDelta=engine.ActualCost(engine.Player,c.Card)-c.Card.TotalCost }).ToArray(), pending,
             // Old logs can contain an AI-only hand inspection. The new board uses public structured events.
             [], engine.RevealedCards.ToArray(), engine.RevealTitle, engine.CurrentTurnPlayerId, engine.DamageCounters);
     }

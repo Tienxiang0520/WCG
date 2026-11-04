@@ -26,7 +26,7 @@ test('deploy abilities and triggers badge their source, then beam to what they a
     assert.equal(steps[1].entry, true); assert.equal(steps[3].entry, undefined);
 });
 test('attacks and new turns end the previous source so combat results are not attributed to a spell', () => {
-    const steps = planSteps(snap([unit('a', 0)], [unit('b', 0)]), snap([unit('a', 0)]), [
+    const steps = planSteps(snap([unit('a', 0)], [unit('b', 0)]), snap([unit('a', 0, { tapped: true })]), [
         { type: 'trigger', side: 'player', instanceId: 'a', order: 0 }, { type: 'attack', side: 'player', instanceId: 'a', targetId: 'b', order: 1 },
         { type: 'death', side: 'computer', instanceId: 'b', label: '交戰', order: 2 }]);
     assert.deepEqual(kinds(steps), ['source:trigger', 'attack', 'death']);
@@ -79,4 +79,10 @@ test('an effect duel (決鬥 badge, then the engine attack event) plays as an at
         { type: 'attack', side: 'player', instanceId: 'knight', targetId: 'foe', label: '交戰', order: 2 },
         { type: 'death', side: 'computer', instanceId: 'foe', label: '交戰', order: 3 }]);
     assert.deepEqual(kinds(steps), ['summon', 'source:effect', 'attack', 'death']);
+});
+test('a unit that attacked and is upright again was readied by an effect (391 / 398 / 399)', () => {
+    const steps = planSteps(snap([unit('a', 0)]), snap([unit('a', 0)]), [{ type: 'attack', side: 'player', instanceId: 'a', order: 0 }]);
+    assert.deepEqual(kinds(steps), ['attack', 'tap:false']);
+    const tapped = planSteps(snap([unit('b', 0)]), snap([unit('b', 0, { tapped: true })]), [{ type: 'attack', side: 'player', instanceId: 'b', order: 0 }]);
+    assert.deepEqual(kinds(tapped), ['attack']);
 });
