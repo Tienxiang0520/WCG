@@ -81,7 +81,7 @@ export function planSteps(previous, next, events) {
             if (was.has(k) || badged.has(`${id}:${k}`)) continue;
             steps.push({ kind: 'badge', target: id, keyword: k, from: (k === '能量護盾' || k === '聖盾') ? auraSource(unit, after, k) : null });
         }
-        // A keyword lost without its own event (an aura source left play, a lock ended) is named on the card.
+        // A keyword lost without its own event (an aura source left play, a lock ended) shows its icon struck through on the card.
         for (const k of was) if (!keywords(unit).has(k) && !ordered.some(ev => ev.instanceId === id && ev.type === 'status')) steps.push({ kind: 'badge', target: id, keyword: k, lost: true });
         const lostLocks = (old.status ?? []).filter(s => /鎖住/.test(String(s)) && !(unit.status ?? []).includes(s));
         for (const s of lostLocks) steps.push({ kind: 'badge', target: id, keyword: String(s).split('：')[0], lost: true });
@@ -90,7 +90,7 @@ export function planSteps(previous, next, events) {
         const dpDelta = (Number(unit.dp) || 0) - (Number(old.dp) || 0);
         if (dpDelta && Number.isFinite(dpDelta)) steps.push({ kind: 'stat', target: id, delta: dpDelta, stat: 'DP' });
         // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
-        if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped, named: ordered.some(ev => ev.instanceId === id && ev.type === 'status') });
+        if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
     }
     return steps;
 }

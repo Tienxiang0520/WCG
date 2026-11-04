@@ -2,7 +2,7 @@ import { motionReduced, motionOff, motionScale } from './battle-fx.js';
 import { planSteps, batchSpeed, isSpellCard, keywordOf, isCoin, stepGap } from './effect-plan.js';
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
-const EN = { '失去': 'Lost ', '斷橋鎖住': 'Bridge lock', '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
+const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
     '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
     '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
     '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
@@ -238,24 +238,42 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (!pauser) { pauser = node('i', 'event-pause'); layer.append(pauser); }
         await animate(pauser, [{ opacity: 0 }, { opacity: 0 }], ms);
     }
-    async function badge(el, text, tone = 'gold') {
-        if (!el || !text) return;
-        // Longer result labels (e.g. counters removed with the count left) get a wider pill instead of an ellipsis; on a phone-width board the minimum shrinks so short labels stay over their card.
-        const b = boardRect(), w = Math.min(280, Math.max(Math.min(160, b.width * .3), String(text).length * 14 + 28)), c = center(el), x = Math.max(b.x + 4, Math.min(c.x - w / 2, b.x + b.width - w - 4));
-        const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: w, height: 28 });
-        pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
-        await animate(pill, [
-            { opacity: 0, transform: 'translateY(10px) scale(.6)' },
-            { opacity: 1, transform: 'translateY(-4px) scale(1.12)', offset: .2 },
-            { opacity: 1, transform: 'translateY(-6px) scale(1)', offset: .75 },
-            { opacity: 0, transform: 'translateY(-16px) scale(.96)' }], 900, 'cubic-bezier(.2,.8,.3,1)');
-        pill.remove();
+    // The battlefield carries no text: a former caption is now a short coloured ring and flash on its card.
+    // The words stay in the log and in the card zoom.
+    const TONES = { source: '#ffd77a', 沉默: '#c49bff', 劇毒: '#8dff6a', lost: '#9aa3ad' };
+    async function badge(el, _text, tone = 'gold') {
+        if (!el) return;
+        void fx?.ring(el, TONES[tone] ?? '#ffe08a', .55);
+        await flash(el, TONES[tone] ?? '#ffe5a1');
     }
     // A keyword gained mid-game: its board icon pops in where it will sit (shield above poison); keywords without an icon just ring.
     function iconMark(el, kind) {
         const r = el.getBoundingClientRect(), mark = place(node('div', `event-icon ${kind}`), { x: r.x + r.width - 27, y: r.y + r.height * .2 + (kind === 'poison' ? 31 : 0), width: 24, height: 27 });
         mark.innerHTML = `<svg viewBox="0 0 64 72" width="24" height="27" aria-hidden="true">${ICONS[kind]}</svg>`;
         return mark;
+    }
+    // A counter removed: the card's own counter icon shrinks and dims before the new count is drawn.
+    async function counterPulse(el, label) {
+        const kind = /倒數/.test(label ?? '') ? 'countdown' : /血誓/.test(label ?? '') ? 'blood' : null;
+        const icon = kind && el?.querySelector?.(`.${kind}-counter`);
+        if (!icon) return;
+        const r = icon.getBoundingClientRect(), ghost = place(icon.cloneNode(true), { x: r.x, y: r.y, width: r.width, height: r.height });
+        ghost.dataset.wcgEffect = 'counter-out';
+        void fx?.burst(ghost, { color: kind === 'blood' ? '#ff5a5a' : '#9edcff', count: 8, spread: 30, size: 4 });
+        await animate(ghost, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 1, transform: 'scale(1.5)', offset: .3 }, { opacity: 0, transform: 'translateY(-14px) scale(.4)' }], 560);
+        ghost.remove();
+    }
+    // A keyword the unit no longer has: its icon (or a ring when it has none) appears, gets struck through and fades.
+    async function keywordLost(el, keyword) {
+        if (!el || !keyword) return;
+        const kind = iconOf(keyword);
+        void fx?.ring(el, '#9aa3ad', .6);
+        if (!kind) { await flash(el, '#9aa3ad'); return; }
+        const mark = iconMark(el, kind); mark.dataset.wcgEffect = 'icon-lost'; mark.dataset.keyword = keyword;
+        const strike = node('i', 'event-strike'); mark.append(strike);
+        void animate(strike, [{ transform: 'rotate(-35deg) scaleX(0)' }, { transform: 'rotate(-35deg) scaleX(1)' }], 260);
+        await animate(mark, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.3)', offset: .25 }, { opacity: 1, transform: 'scale(1)', filter: 'grayscale(0)', offset: .55 }, { opacity: 0, transform: 'scale(.8)', filter: 'grayscale(1)' }], 900);
+        mark.remove();
     }
     async function keywordPulse(el, keyword) {
         if (!el || !keyword) return;
@@ -316,9 +334,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 88 / 63;
         const wrap = node('div', 'event-reveal'); wrap.dataset.wcgEffect = 'reveal';
         const card = faceCard(ev.card); card.className += ' event-showcase';
-        const en = globalThis.document?.documentElement?.lang === 'en', who = en ? (ev.side === 'player' ? 'You' : 'Opponent') : (ev.side === 'player' ? '我方' : '敵方'), type = t(ev.card.type ?? '');
-        const caption = node('div', 'event-reveal-caption', en ? `${who} revealed ${ev.card.name} (${type}, ${ev.card.cost ?? 0} cost) → deck bottom` : `${who}翻開了【${ev.card.name}】・${type}・${ev.card.cost ?? 0} 費 → 放到牌庫底`);
-        wrap.append(card, caption);
+        wrap.append(card);
         place(wrap, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2 - 16, width: w, height: h + 40 });
         void sound?.play('flip');
         await animate(wrap, [{ opacity: 0, transform: 'rotateY(90deg) scale(.5)' }, { opacity: 1, transform: 'rotateY(0) scale(1.05)', offset: .7 }, { opacity: 1, transform: 'scale(1)' }], 360, 'cubic-bezier(.2,.8,.3,1)');
@@ -404,8 +420,8 @@ export function bindFeedback(root, sound = null, fx = null) {
             void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
             const k = keywordOf(ev.label);
             if (iconOf(k) === 'shield' && shieldBroke(ev.instanceId) && !shattered.has(ev.instanceId)) { shattered.add(ev.instanceId); shieldShatter(target); }
-            // The label (counters placed or removed, tapped, control taken …) floats over the card, not only in the message bar.
-            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null, ev.type === 'status' && ev.label ? badge(target, ev.label) : null]);
+            // No floating text on the board: a counter change pulses that counter's own icon (details live in the card zoom).
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null, ev.type === 'status' ? counterPulse(target, ev.label) : null]);
         } else if (ev.type === 'attach') {
             const target = visual(ev.targetId);
             void sound?.play('glass');
@@ -418,7 +434,7 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (source) { const moving = place(source.cloneNode(true), source.getBoundingClientRect()); hide(source); void sound?.play('draw'); await fly(moving, handZone(ev.side)); }
         } else if (ev.type === 'turn') {
             if (ev.side === 'player') { void sound?.play('turn'); fastForward = 1; }
-            void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
+            void fx?.banner('', ev.side);
             // Let the turn banner be read before the new turn's first action plays underneath it.
             await flash(hero(ev.side), '#9edcff'); await pause(480);
         }
@@ -464,7 +480,8 @@ export function bindFeedback(root, sound = null, fx = null) {
             // A card leaves the energy zone (summoned from energy): the zone flashes and names it before the summon lands.
             const zone = ev.side === 'player' ? root.querySelector('.energy-zone') : (root.querySelector('.enemy-energy') ?? hero(ev.side));
             void sound?.play('draw');
-            await Promise.all([flash(zone, '#8ad7ff'), badge(zone, `${eventWord(ev)}${ev.card ? ` · ${ev.card.name}` : ''}`)]);
+            void fx?.burst(zone, { color: '#8ad7ff', count: 10, spread: 45, size: 5, rise: 16 });
+            await flash(zone, '#8ad7ff');
         }
         else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
     }
@@ -479,7 +496,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         }
         if (step.kind === 'badge') {
             const el = visual(step.target); if (!el) return;
-            if (step.lost) { void sound?.play('trigger'); void fx?.ring(el, '#9aa3ad', .6); await Promise.all([flash(el, '#9aa3ad'), badge(el, `${t('失去')}${t(step.keyword)}`, 'lost')]); return; }
+            if (step.lost) { if (iconOf(step.keyword) === 'shield' && shattered.has(step.target)) return; void sound?.play('trigger'); await Promise.all([flash(el, '#9aa3ad'), keywordLost(el, step.keyword)]); return; }
             if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
             if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
             await keywordPulse(el, step.keyword);
@@ -497,8 +514,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (step.kind === 'tap') {
             const el = visual(step.target); if (!el) return;
             void sound?.play('flip');
-            // Untapping has no lasting marker (tapped units keep a 橫置 tag), so name it briefly.
-            if (!step.tapped && !step.named) void badge(el, t('直立'), 'gold');
+            if (!step.tapped) void fx?.ring(el, '#ffe08a', .6);
             await animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420);
             return;
         }
@@ -510,13 +526,13 @@ export function bindFeedback(root, sound = null, fx = null) {
     function skipControls() {
         const r = root.getBoundingClientRect();
         void r;
-        const b = boardRect(), w = b.width < 600 ? 92 : 120, h = b.width < 600 ? 26 : 32;
+        const b = boardRect(), h = b.width < 600 ? 26 : 32, w = h * 1.6;
         // Below the header on the left, so it never covers 投降／返回房間 or the open 訓練工具 panel's 收起工具.
         const header = root.querySelector('.match-header')?.getBoundingClientRect();
         const top = header ? header.bottom + 6 : b.y + 48;
-        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + 8, y: top, width: w, height: h });
+        const ff = place(node('button', 'event-ff', '⏩'), { x: b.x + 8, y: top, width: w, height: h });
         ff.style.pointerEvents = 'auto';
-        ff.type = 'button';
+        ff.type = 'button'; ff.title = t('快轉'); ff.setAttribute('aria-label', t('快轉'));
         // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
         const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };
         ff.addEventListener('click', faster);
