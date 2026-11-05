@@ -49,9 +49,19 @@ internal static class CounterHistory
     // Catalog before the 怒濤連擊 cards WCG-391–399 existed.
     // Catalog before the 聖泉滿溢 cards WCG-400–408 existed.
     // Catalog before the 星律倒數 cards WCG-409–417 existed.
+    // Catalog before 鐵皮巨獸 (WCG-343) DP 3→2.
     // Catalog before the 命運翻牌 cards WCG-418–426 existed.
+    // Catalog before 鐵皮巨獸 (WCG-343) DP 3→2 (2026-11-05); only its DP and design note changed.
+    internal static CardDatabase BeforeIronhideDp(CardDatabase current)
+    {
+        if(current.GetCard("WCG-343")?.DP!=2)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-ironhide-dp.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeFateFlipCards(CardDatabase current)
     {
+        current=BeforeIronhideDp(current);
         return current.GetCard("WCG-418")==null ? current
             : new(JsonSerializer.Serialize(current.AllCards.Where(c=>int.Parse(c.Id[4..]) is < 418 or > 426)),JsonSerializer.Serialize(current.PresetDecks));
     }

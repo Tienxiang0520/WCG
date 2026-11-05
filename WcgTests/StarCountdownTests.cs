@@ -28,7 +28,7 @@ public class StarCountdownTests
         var old=CardBalanceHistory.BeforeStarCountdownCards(cards);
         for(int n=409;n<=417;n++){Assert.NotNull(cards.GetCard($"WCG-{n}"));Assert.Null(old.GetCard($"WCG-{n}"));}
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeStarCountdownCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
-        Assert.Equal(cards.AllCards.Where(c=>!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeIronhideDp(cards).AllCards.Where(c=>!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
     // 畫面回饋：回合開始移除倒數指示物時要有 status 事件，畫面才會在那張卡上顯示剩幾個。
     [Fact] public void RemovingACountdownCounterIsPresentedOnTheCard()
