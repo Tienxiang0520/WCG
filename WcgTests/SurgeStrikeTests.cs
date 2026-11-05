@@ -30,7 +30,7 @@ public class SurgeStrikeTests
     {
         var old=CardBalanceHistory.BeforeBloodPuppeteerText(cards);
         Assert.Contains("你從對手那裡奪來的怪物",cards.GetCard("WCG-334")!.Text);Assert.Contains("不是你擁有的怪物",old.GetCard("WCG-334")!.Text);
-        Assert.Equal(1,cards.AllCards.Where(c=>!CardBalanceHistory.IsHolySpringCard(c.Id)&&!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
+        Assert.Equal(1,CardBalanceHistory.BeforeIronhideDp(cards).AllCards.Where(c=>!CardBalanceHistory.IsHolySpringCard(c.Id)&&!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Count(c=>JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(old.GetCard(c.Id))));
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBloodPuppeteerText(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
     }
     [Fact] public void RecruitAttacksTwicePerTurn()

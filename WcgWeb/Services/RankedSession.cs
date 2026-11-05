@@ -23,14 +23,14 @@ public sealed partial class RankedSession
     // simplification). The engine no longer implements those keywords, so these eras are still built (to recognise their
     // fingerprints and to chain the older eras) but can neither resume nor replay: an unfinished match is voided without a
     // result and its replay reports that the version is no longer supported.
-    internal static readonly int[] RetiredEraIndexes = [40, 41];
+    internal static readonly int[] RetiredEraIndexes = [41, 42];
     internal const string RetiredMatchNotice = "未完成的天梯對局使用已移除的舊版關鍵字規則，無法繼續，已作廢且不計勝負。";
     // Engine flags per CardBalanceHistory.EraSteps entry (same order, newest first). Matches started before the card-text
     // clarity update keep the old wording and engine behaviour (LegacyCardRules); matches started before the arrow-card
     // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
     // oldest catalog also limits faction triggers.
     private static readonly (bool LimitFactionTriggers, bool LegacyCardRules)[] EraFlags =
-        [.. Enumerable.Repeat((false, false), 49), (false, true), (false, true), (true, true)];
+        [.. Enumerable.Repeat((false, false), 50), (false, true), (false, true), (true, true)];
     // Built on demand: most visits only touch the current catalog, and a lookup stops at the first matching era,
     // building each older catalog from the previous one in a single step (no repeated history chains).
     private readonly object eraGate = new();

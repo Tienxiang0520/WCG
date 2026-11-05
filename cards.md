@@ -215,7 +215,7 @@ source: WcgWeb/Data/cards.json
 | WCG-337 | 角鬥幼犀 | 怪物 | 2 | 1100 | 1 | — | 每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。 | **Gladiator Calf** — Whenever this monster survives combat, put 1 DP counter on it. |
 | WCG-339 | 岩甲犀王 | 怪物 | 4 | 1700 | 2 | — | 你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。 | **Rock-Plated Rhino King** — At the end of your turn, if this monster is upright, put 1 DP counter on it. |
 | WCG-342 | 荒野角力場 | 結界 | 3 | — | — | — | 每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。 | **Wildland Arena** — Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it. |
-| WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 3 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
+| WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 2 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
 | WCG-344 | 萬蹄奔騰 | 法術 | 4 | — | — | — | 在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。 | **Stampede of Hooves** — Put 1 DP counter on each of your monsters. Draw 1 card. |
 | WCG-355 | 嫩根幼苗 | 怪物 | 1 | 500 | 0 | ←→ | 【箭頭：← →】箭頭指向的怪物 PP +200。 | **Tender Rootling** — [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 | WCG-356 | 連枝守衛 | 怪物 | 2 | 1000 | 1 | ←→ | 嘲諷；被至少 2 個箭頭指向時，獲得 1 個聖盾指示物（每次開始成立時放 1 個）。【箭頭：← →】只用來連結根脈，沒有其他效果。 | **Linked-Branch Warden** — Taunt. While 2 or more arrows point at it, it gets 1 Holy Shield counter (1 each time this starts applying). [Arrow: ← →] Only links the rootweb; no other effect. |

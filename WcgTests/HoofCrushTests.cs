@@ -70,10 +70,25 @@ public class HoofCrushTests
     }
     [Fact] public void IronhideShrinksWhatItAttacksOnlyWithThreeDp()
     {
-        var g=Game();var hide=Unit(g.Player,343,0);var foe=Unit(g.Computer,119,0);Refresh(g); // 2400 vs 2600 − 500
-        Assert.True(g.PreviewAttack(hide,foe)!.DefenderDies);Assert.True(g.Attack(g.Player,hide,foe));Settle(g);Assert.DoesNotContain(foe,g.Computer.Field);
-        var g2=Game();var h2=Unit(g2.Player,343,0);h2.CurrentDP=2;var f2=Unit(g2.Computer,119,0);Refresh(g2);
-        Assert.False(g2.PreviewAttack(h2,f2)!.DefenderDies);
+        // Printed DP is 2; the −500 needs another card (or a DP counter) to push it to 3+.
+        var g=Game();var hide=Unit(g.Player,343,0);Assert.Equal(2,hide.CurrentDP);var foe=Unit(g.Computer,119,0);Refresh(g);
+        Assert.False(g.PreviewAttack(hide,foe)!.DefenderDies);
+        hide.DpCounters=1;Refresh(g); // 2400 vs 2600 − 500
+        Assert.Equal(3,hide.CurrentDP);Assert.True(g.PreviewAttack(hide,foe)!.DefenderDies);
+        Assert.True(g.Attack(g.Player,hide,foe));Settle(g);Assert.DoesNotContain(foe,g.Computer.Field);
+        // Horseshoe (338) also reaches the threshold without a counter.
+        var g2=Game();var h2=Unit(g2.Player,343,0);var f2=Unit(g2.Computer,119,0);Refresh(g2);
+        Assert.True(g2.CastSpellAt(g2.Player,Hand(g2,338),h2));Settle(g2);
+        Assert.Equal(3,h2.CurrentDP);Assert.True(g2.PreviewAttack(h2,f2)!.DefenderDies);
+    }
+    [Fact] public void IronhideDpEraKeepsOldDpAndLeavesEverythingElse()
+    {
+        Assert.Equal(2,cards.GetCard("WCG-343")!.DP);Assert.Contains("DP 在 3 以上",cards.GetCard("WCG-343")!.Text);
+        var old=CardBalanceHistory.BeforeIronhideDp(cards);
+        Assert.Equal(3,old.GetCard("WCG-343")!.DP);Assert.Equal(cards.GetCard("WCG-343")!.Text,old.GetCard("WCG-343")!.Text);
+        Assert.True(CardBalanceHistory.IronhideDpCatalog(cards));Assert.False(CardBalanceHistory.IronhideDpCatalog(old));
+        Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeIronhideDp(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
+        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)));
     }
     [Fact] public void StampedeCountersEveryMonsterAndDraws()
     {
