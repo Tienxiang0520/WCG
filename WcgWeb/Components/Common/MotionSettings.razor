@@ -23,7 +23,7 @@
         </label>
         <div class="motion-control">
             <input id="animation-speed" type="range" min="@Min" max="@Max" step="0.05" value="@SpeedText" style="--fill:@FillText%"
-                   disabled="@(!Loaded || Off)" aria-valuetext="@($"{SpeedLabel}×")" @oninput="e => SetSpeed(e.Value)" />
+                   autocomplete="off" disabled="@(!Loaded || Off || !Ready)" aria-valuetext="@($"{SpeedLabel}×")" @oninput="e => SetSpeed(e.Value)" />
             <output for="animation-speed">@(SpeedLabel)×</output>
         </div>
     </div>
@@ -32,7 +32,7 @@
 @code {
     private const double Min = AnimationTiming.MinSpeed, Max = AnimationTiming.MaxSpeed;
     private IJSObjectReference? Module;
-    private bool Loaded, Off;
+    private bool Loaded, Ready, Off;
     private double Speed = AnimationTiming.DefaultSpeed;
     private string SpeedText => Speed.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
     private string SpeedLabel => Speed.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
@@ -46,8 +46,13 @@
             Module = await JS.InvokeAsync<IJSObjectReference>("import", "./battle/battle-fx.js");
             Apply(await Module.InvokeAsync<AnimationSettingsState>("readAnimationSettings"));
             Loaded = true;
+            StateHasChanged();
+            // Wait one frame so browser form restoration cannot fire @oninput with a stale max
+            // value and overwrite the real 1× default (or the user's saved speed) into localStorage.
+            await Task.Yield();
+            Ready = true;
         }
-        catch (JSException) { }
+        catch (JSException) { Loaded = true; Ready = true; }
         StateHasChanged();
     }
     private void Apply(AnimationSettingsState s) { Off = s.Off; Speed = s.Speed; AnimationTiming.Update(s.Speed, s.Off); }
@@ -59,8 +64,10 @@
     }
     private async Task SetSpeed(object? raw)
     {
-        if (Module == null || !double.TryParse(raw?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var value)) return;
-        Speed = Math.Clamp(value, Min, Max);
+        if (!Ready || Module == null || !double.TryParse(raw?.ToString(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var value)) return;
+        var next = Math.Clamp(value, Min, Max);
+        if (Math.Abs(next - Speed) < 0.001) return;
+        Speed = next;
         try { await Module.InvokeAsync<double>("saveAnimationSpeed", Speed); Apply(await Module.InvokeAsync<AnimationSettingsState>("readAnimationSettings")); }
         catch (JSException) { }
     }

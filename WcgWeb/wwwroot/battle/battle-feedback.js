@@ -38,6 +38,9 @@ const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) 
 // Present only public engine events. Keep the old board until this batch completes.
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
+    // Each board binding starts at 1× fast-forward. The module-level value used to survive
+    // across matches, so a prior tap-to-12× leaked into the next game while settings still said 1×.
+    fastForward = 1;
     let layer = null, disposed = false, locked = false, skipClick = null, speed = 1, pauser = null, banner = null, showcase = null;
     let combatPower = [];
     const animations = new Set(), hidden = new Map(), ghosts = new Map(), lunged = new Set();
@@ -328,8 +331,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     function boardRect() { const r = root.querySelector('.battlefield')?.getBoundingClientRect?.() ?? root.getBoundingClientRect(); return r; }
     // Spells: the card is shown large in the centre, then shrinks to a corner and stays as the source of its effects.
     async function showSpell(ev) {
-        // Your own spells are already known: a short ~0.6 s look. The computer's stay readable (~1.5 s).
-        const own = ev.side === 'player', grow = own ? 220 : 460, hold = own ? 120 : 720, shrink = own ? 260 : 300;
+        // 1× durations: same readable showcase for both sides (pre-test-acceleration timings).
+        const grow = 460, hold = 720, shrink = 300;
         const r = boardRect(), w = Math.min(250, r.width * .56), h = w * 88 / 63;
         const card = ev.card ? faceCard(ev.card) : publicCard(null); card.className += ' event-showcase'; card.dataset.wcgEffect = 'showcase';
         if (ev.side === 'computer') card.className += ' enemy-card';
@@ -539,8 +542,6 @@ export function bindFeedback(root, sound = null, fx = null) {
         await runEvent(step, state);
     }
     function skipControls() {
-        const r = root.getBoundingClientRect();
-        void r;
         const b = boardRect(), h = b.width < 600 ? 26 : 32, w = h * 1.6;
         // Below the header on the left, so it never covers 投降／返回房間 or the open 訓練工具 panel's 收起工具.
         const header = root.querySelector('.match-header')?.getBoundingClientRect();
@@ -548,12 +549,11 @@ export function bindFeedback(root, sound = null, fx = null) {
         const ff = place(node('button', 'event-ff', '⏩'), { x: b.x + 8, y: top, width: w, height: h });
         ff.style.pointerEvents = 'auto';
         ff.type = 'button'; ff.title = t('快轉'); ff.setAttribute('aria-label', t('快轉'));
-        // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
+        // Only this button changes playback speed. Empty-board clicks used to jump to 3× then 12× and
+        // the module-level fastForward leaked into later matches while the settings slider still said 1×.
         const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };
         ff.addEventListener('click', faster);
-        // Cards, hand and portraits stay clickable for zooming while the batch plays; a click anywhere else fast-forwards.
-        skipClick = event => { if (!event?.target?.closest?.('[data-target],.v06-hand-card,.hero,.modal,dialog')) faster(event); };
-        root.addEventListener('click', skipClick, true);
+        skipClick = null;
     }
     async function present(previous, next, events) {
         clear(); if (disposed || !events.length) return;
@@ -587,5 +587,5 @@ export function bindFeedback(root, sound = null, fx = null) {
         clearCombatPP(root); combatPower = [];
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
-    return { present, clear, markLunge(id) { if (id) lunged.add(String(id)); }, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };
+    return { present, clear, markLunge(id) { if (id) lunged.add(String(id)); }, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; fastForward = 1; clear(); fx?.clear(); } };
 }
