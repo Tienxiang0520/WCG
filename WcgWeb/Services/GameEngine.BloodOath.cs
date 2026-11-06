@@ -21,6 +21,7 @@ public partial class GameEngine
         foreach (var s in p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364" && s.BloodCounters > 0).OrderByDescending(s => s.BloodCounters))
         {
             var take = Math.Min(n - removed, s.BloodCounters); s.BloodCounters -= take; removed += take;
+            Present("status", p, s.InstanceId, card: s.Card, label: $"移除 {take} 個血誓指示物（剩 {s.BloodCounters}）");
             if (removed >= n) break;
         }
         return removed;

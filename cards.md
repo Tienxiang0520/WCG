@@ -2,18 +2,18 @@
 tags:
   - WCG
   - 卡牌資料庫
-total_cards: 399
+total_cards: 426
 source: WcgWeb/Data/cards.json
 ---
 
-# WCG 卡牌總表（共 399 張）
+# WCG 卡牌總表（共 426 張）
 
 > [!NOTE] 自動產生，請勿手改
 > 本檔由 `tools/CardDocs/build_cards_md.py` 從 `WcgWeb/Data/cards.json` 與 `WcgWeb/i18n/cards.en.json` 產生。
 > 改卡後執行 `python3 tools/CardDocs/build_cards_md.py`；`--check` 可檢查是否同步。
 > 規則與名詞（進場、陣亡、犧牲、聖盾、箭頭等）以 `規則.md` 為準。
 
-類型：怪物 240 張、法術 127 張、法術（反擊） 11 張、結界 21 張。
+類型：怪物 254 張、法術 135 張、法術（反擊） 11 張、結界 26 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
 ## 狂怒（Fury，66 張）
@@ -87,7 +87,7 @@ source: WcgWeb/Data/cards.json
 | WCG-396 | 狂潮步伐 | 法術 | 2 | — | — | — | 將所有己方已橫置的怪物轉為直立；它們本回合不能攻擊敵方玩家。 | **Frenzied Stride** — Ready all your tapped monsters. They can't attack the enemy player this turn. |
 | WCG-397 | 血浪劍豪 | 怪物 | 4 | 1700 | 1 | — | 貫穿；本回合此怪物每攻擊過 1 次，PP +400（直到回合結束）。 | **Bloodwave Swordmaster** — Trample. This monster gets +400 PP for each time it has attacked this turn (until end of turn). |
 
-## 理智（Reason，62 張）
+## 理智（Reason，68 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -153,6 +153,12 @@ source: WcgWeb/Data/cards.json
 | WCG-375 | 退浪 | 法術 | 0 | — | — | — | 將 1 隻己方怪物移回手牌。若它的印刷費用 3 以上，抽 1 張牌。 | **Receding Wave** — Return 1 of your monsters to your hand. If its printed cost is 3 or more, draw 1 card. |
 | WCG-377 | 鏡湖賢者 | 怪物 | 3 | 1200 | 1 | — | 進場：從你的牌庫檢視最上面 3 張，取 1 張加入手牌，其餘依任意順序放回牌庫底。 | **Mirror Lake Sage** — On deploy: look at the top 3 cards of your deck, put 1 into your hand and the rest on the bottom in any order. |
 | WCG-380 | 思潮捕手 | 怪物 | 4 | 1500 | 1 | ↑ | 進場：將 1 隻敵方怪物移回手牌。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Thoughtcurrent Catcher** — On deploy: return 1 enemy monster to its hand. [Arrow: ↑] The monster the arrow points at gets -300 PP. |
+| WCG-409 | 星沙學徒 | 怪物 | 1 | 500 | 0 | — | 進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。 | **Starsand Apprentice** — On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards. |
+| WCG-411 | 觀星術士 | 怪物 | 2 | 900 | 1 | ←→ | 【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。 | **Stargazer Adept** — [Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter. |
+| WCG-412 | 時隙催化 | 法術 | 1 | — | — | — | 從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。 | **Time-Gap Catalyst** — Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead. |
+| WCG-414 | 隕星預言者 | 怪物 | 4 | 1400 | 1 | — | 進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。 | **Meteor Seer** — On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less. |
+| WCG-415 | 星軌重排 | 法術 | 2 | — | — | — | 在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。 | **Star-Orbit Realignment** — Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says "When its last Countdown counter is removed" (it can trigger again). If there is no such card, draw 1 card instead. |
+| WCG-417 | 星律終焉 | 法術 | 6 | — | — | — | 移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。 | **End of the Star Law** — Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead. |
 
 ## 生機（Life，66 張）
 
@@ -209,7 +215,7 @@ source: WcgWeb/Data/cards.json
 | WCG-337 | 角鬥幼犀 | 怪物 | 2 | 1100 | 1 | — | 每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。 | **Gladiator Calf** — Whenever this monster survives combat, put 1 DP counter on it. |
 | WCG-339 | 岩甲犀王 | 怪物 | 4 | 1700 | 2 | — | 你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。 | **Rock-Plated Rhino King** — At the end of your turn, if this monster is upright, put 1 DP counter on it. |
 | WCG-342 | 荒野角力場 | 結界 | 3 | — | — | — | 每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。 | **Wildland Arena** — Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it. |
-| WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 3 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
+| WCG-343 | 鐵皮巨獸 | 怪物 | 6 | 2400 | 2 | — | 嘲諷；此怪物攻擊時，若它的 DP 在 3 以上，與它交戰的怪物 PP -500。 | **Ironhide Behemoth** — Taunt. When this monster attacks, if it has 3 or more DP, the monster it fights gets -500 PP. |
 | WCG-344 | 萬蹄奔騰 | 法術 | 4 | — | — | — | 在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。 | **Stampede of Hooves** — Put 1 DP counter on each of your monsters. Draw 1 card. |
 | WCG-355 | 嫩根幼苗 | 怪物 | 1 | 500 | 0 | ←→ | 【箭頭：← →】箭頭指向的怪物 PP +200。 | **Tender Rootling** — [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 | WCG-356 | 連枝守衛 | 怪物 | 2 | 1000 | 1 | ←→ | 嘲諷；被至少 2 個箭頭指向時，獲得 1 個聖盾指示物（每次開始成立時放 1 個）。【箭頭：← →】只用來連結根脈，沒有其他效果。 | **Linked-Branch Warden** — Taunt. While 2 or more arrows point at it, it gets 1 Holy Shield counter (1 each time this starts applying). [Arrow: ← →] Only links the rootweb; no other effect. |
@@ -225,7 +231,7 @@ source: WcgWeb/Data/cards.json
 | WCG-384 | 蔓延孢雲 | 法術 | 2 | — | — | — | 在每隻敵方怪物上各放置 1 個腐蝕指示物。 | **Spreading Spore Cloud** — Put 1 Corrosion counter on each enemy monster. |
 | WCG-387 | 屍菇傳播者 | 怪物 | 3 | 1100 | 1 | ←→ | 進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。 | **Corpsecap Spreader** — On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 
-## 秩序（Order，61 張）
+## 秩序（Order，68 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -290,8 +296,15 @@ source: WcgWeb/Data/cards.json
 | WCG-364 | 血誓祭壇 | 結界 | 2 | — | — | — | 你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。 | **Blood Oath Altar** — Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it. |
 | WCG-365 | 忍辱誓衛 | 怪物 | 2 | 1200 | 1 | — | 你每次受到傷害，在此怪物放 1 個 DP 指示物。 | **Enduring Oathguard** — Each time you take damage, put 1 DP counter on this monster. |
 | WCG-370 | 血帳清算 | 法術 | 4 | — | — | — | 移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。 | **Settling the Blood Debt** — Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP). |
+| WCG-400 | 汲泉修女 | 怪物 | 1 | 600 | 0 | — | 進場：回復你 1 點生命。 | **Wellspring Nun** — On deploy: you heal 1 life. |
+| WCG-401 | 泉光侍祭 | 怪物 | 2 | 900 | 1 | ←→ | 【箭頭：← →】每當你回復生命，箭頭指向的怪物本回合 PP +300。 | **Springlight Acolyte** — [Arrows: ← →] Whenever you heal, the monsters the arrows point at get +300 PP this turn. |
+| WCG-402 | 滿溢之禱 | 法術 | 1 | — | — | — | 回復你 2 點生命；若回復前你的生命已是 7，再抽 1 張牌。 | **Overflowing Prayer** — You heal 2 life. If your life was already 7 before healing, also draw 1 card. |
+| WCG-403 | 聖泉之井 | 結界 | 2 | — | — | — | 每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。 | **Holy Spring Well** — Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it. |
+| WCG-405 | 泉誓騎士 | 怪物 | 4 | 1600 | 1 | — | 嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。 | **Spring-Sworn Knight** — Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn). |
+| WCG-406 | 洗禮之潮 | 法術 | 3 | — | — | — | 回復你 2 點生命。然後 1 隻敵方怪物 PP -（本回合你回復的生命總量 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。 | **Tide of Baptism** — You heal 2 life. Then 1 enemy monster gets -300 PP for each life you healed this turn until end of turn; if this makes its PP 0, destroy it. |
+| WCG-408 | 聖泉傾瀉 | 法術 | 5 | — | — | — | 回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。 | **Holy Spring Deluge** — You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed. |
 
-## 深淵（Abyss，64 張）
+## 深淵（Abyss，69 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -349,7 +362,7 @@ source: WcgWeb/Data/cards.json
 | WCG-329 | 噬主契約 | 法術 | 1 | — | — | — | 額外代價：犧牲 1 隻己方怪物。若犧牲的怪物不是你擁有的，對敵方玩家造成 2 點傷害；否則抽 1 張牌。 | **Master-Devouring Pact** — Additional cost: sacrifice 1 of your monsters. If you didn't own it, deal 2 damage to the enemy player; otherwise draw 1 card. |
 | WCG-331 | 借刀之術 | 法術 | 3 | — | — | — | 取得 1 隻印刷 PP 1800 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。 | **Borrowed Blade** — Gain control of 1 enemy monster with printed PP 1800 or less until end of turn; ready it, and it can attack this turn. |
 | WCG-332 | 傀儡守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；陣亡：取得印刷 PP 最低的 1 隻敵方怪物的控制權直到你的下回合結束。 | **Puppet Warden** — Taunt; On Death: gain control of the enemy monster with the lowest printed PP until the end of your next turn. |
-| WCG-334 | 血祭傀儡師 | 怪物 | 5 | 1900 | 2 | — | 你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Bloodrite Puppetmaster** — At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less. |
+| WCG-334 | 血祭傀儡師 | 怪物 | 5 | 1900 | 2 | — | 你的回合結束時，你可以犧牲 1 隻你從對手那裡奪來的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。 | **Bloodrite Puppetmaster** — At the end of your turn, you may sacrifice a monster you took from your opponent; if you do, destroy 1 enemy monster with printed PP 1200 or less. |
 | WCG-335 | 王座篡奪 | 法術 | 7 | — | — | — | 將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。 | **Usurp the Throne** — Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner. |
 | WCG-347 | 列隊亡兵 | 怪物 | 2 | 900 | 1 | ←→ | 你的墓地每有 5 張牌，此怪物 PP +300；【箭頭：← →】箭頭指向的怪物 PP +200。 | **Ranked Dead Soldier** — This monster gets +300 PP for every 5 cards in your graveyard. [Arrow: ← →] The monsters the arrows point at get +200 PP. |
 | WCG-349 | 骸骨軍旗 | 結界 | 3 | — | — | — | 主動：橫置此卡，把你墓地的另外 3 張牌洗回牌庫底：從你的墓地免費召喚 1 隻印刷 PP 1200 以下的怪物。 | **Bone Standard** — Active: tap this card and shuffle 3 other cards from your graveyard to the bottom of your deck: summon 1 monster with printed PP 1200 or less from your graveyard for free. |
@@ -359,8 +372,13 @@ source: WcgWeb/Data/cards.json
 | WCG-385 | 腐根獵手 | 怪物 | 3 | 1300 | 1 | — | 劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。 | **Rotroot Stalker** — Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn. |
 | WCG-388 | 腐朽收割 | 法術 | 3 | — | — | — | 消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。 | **Rotting Harvest** — Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead. |
 | WCG-389 | 瘴氣巨口 | 怪物 | 5 | 2000 | 2 | — | 貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。 | **Miasma Maw** — Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3). |
+| WCG-418 | 擲骨巫童 | 怪物 | 1 | 600 | 0 | — | 進場：翻開你牌庫頂 1 張；若是怪物，抽 1 張牌。 | **Bone-Casting Child** — On deploy: reveal the top card of your deck. If it's a monster, draw 1 card. |
+| WCG-420 | 深淵賭約 | 法術 | 1 | — | — | — | 翻開你牌庫頂 1 張，1 隻敵方怪物 PP -（翻開那張的印刷費用 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。 | **Abyssal Wager** — Reveal the top card of your deck. 1 enemy monster gets -300 PP times that card's printed cost until end of turn; if this makes its PP 0, destroy it. |
+| WCG-422 | 骰魂魔像 | 怪物 | 3 | 1300 | 1 | ↑ | 進場：翻開你牌庫頂 1 張；若它的印刷費用 4 以上，消滅箭頭指向的怪物。【箭頭：↑】箭頭指向的怪物 PP -200。 | **Soul-Dice Golem** — On deploy: reveal the top card of your deck. If its printed cost is 4 or more, destroy the monster the arrow points at. [Arrow: ↑] The monster the arrow points at gets -200 PP. |
+| WCG-424 | 黑籤召喚師 | 怪物 | 5 | 1800 | 1 | — | 進場：翻開你牌庫頂 1 張；若是怪物且你有空格，從牌庫免費召喚它（不觸發進場）；否則抽 1 張牌。 | **Black-Lot Summoner** — On deploy: reveal the top card of your deck. If it's a monster and you have an empty slot, summon it from your deck for free (its deploy doesn't trigger). Otherwise, draw 1 card. |
+| WCG-425 | 命運祭壇 | 結界 | 4 | — | — | — | 每當你翻開印刷費用 5 以上的牌，對敵方玩家造成 1 點傷害。 | **Altar of Fate** — Whenever you reveal a card with printed cost 5 or more, deal 1 damage to the enemy player. |
 
-## 中立（Neutral，51 張）
+## 中立（Neutral，59 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -415,8 +433,16 @@ source: WcgWeb/Data/cards.json
 | WCG-393 | 戰鼓傳令 | 怪物 | 2 | 1000 | 1 | ←→ | 【箭頭：← →】箭頭指向的怪物攻擊後，若它還在場，PP +200 直到回合結束。 | **War Drum Herald** — [Arrow: ← →] After a monster the arrows point at attacks, if it is still on the field, it gets +200 PP until end of turn. |
 | WCG-395 | 不歇鍛爐 | 結界 | 3 | — | — | — | 主動：橫置此卡：將 1 隻己方已橫置的怪物轉為直立。 | **Restless Forge** — Active: tap this card: ready 1 of your tapped monsters. |
 | WCG-398 | 戰場號角 | 怪物 | 4 | 1500 | 1 | ↑ | 嘲諷；你的回合中，第一隻攻擊後仍在場的己方怪物轉為直立（每回合 1 次）。【箭頭：↑】箭頭指向的怪物 PP -300。 | **Battlefield Horn** — Taunt. During your turn, the first of your monsters that attacks and is still on the field afterwards is readied (once per turn). [Arrow: ↑] The monster the arrow points at gets -300 PP. |
+| WCG-404 | 流浪治療師 | 怪物 | 3 | 1200 | 1 | — | 你的回合結束時，回復你 1 點生命。 | **Wandering Healer** — At the end of your turn, you heal 1 life. |
+| WCG-407 | 銀泉守護巨像 | 怪物 | 6 | 2200 | 2 | — | 嘲諷；進場：回復你 3 點生命。你的回合開始時，若你的生命是 7，對敵方玩家造成 1 點傷害。 | **Silverspring Colossus** — Taunt. On deploy: you heal 3 life. At the start of your turn, if your life is 7, deal 1 damage to the enemy player. |
+| WCG-410 | 倒懸時鐘 | 結界 | 2 | — | — | — | 進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。 | **Inverted Clock** — On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again. |
+| WCG-413 | 封時守衛 | 怪物 | 3 | 1300 | 1 | — | 嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。 | **Timeseal Warden** — Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster. |
+| WCG-416 | 永恆鐘塔 | 結界 | 5 | — | — | — | 每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。 | **Eternal Clocktower** — Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life. |
+| WCG-419 | 命輪占者 | 怪物 | 2 | 900 | 1 | — | 你的回合開始時，翻開你牌庫頂 1 張：怪物——此怪物本回合 PP +500；法術——對敵方玩家造成 1 點傷害；結界——回復你 1 點生命。 | **Wheel-of-Fate Diviner** — At the start of your turn, reveal the top card of your deck: monster — this monster gets +500 PP this turn; spell — deal 1 damage to the enemy player; structure — you heal 1 life. |
+| WCG-421 | 開眼之井 | 結界 | 2 | — | — | — | 主動：橫置此卡，翻開你牌庫頂 1 張；你可以失去 1 點生命（生命代價），把它加入手牌。 | **Well of Open Eyes** — Active: tap this card and reveal the top card of your deck. You may lose 1 life (a life cost) to put it into your hand. |
+| WCG-423 | 宿命拾荒者 | 怪物 | 3 | 1200 | 1 | — | 每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。 | **Fate Scavenger** — Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn. |
 
-## 雙色（Dual，29 張）
+## 雙色（Dual，30 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -449,3 +475,4 @@ source: WcgWeb/Data/cards.json
 | WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | — | 你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。 | **Bogmother's Brood** — At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead. |
 | WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 2300 | 2 | — | 劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。 | **Mother of All Rot** — Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less. |
 | WCG-399 | 千刃狂濤 | 怪物（狂怒／中立） | 7 | 2200 | 1 | — | 衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。 | **Thousand-Blade Surge** — Charge. Trample. After each attack, if this monster is still on the field, ready it (at most 3 times per turn). |
+| WCG-426 | 千面輪盤 | 法術（深淵／中立） | 7 | — | — | — | 翻開你牌庫頂 4 張（一次 1 張），全部依類型結算：怪物——從牌庫免費召喚它（不觸發進場；沒有空格就加入手牌）；法術——對敵方玩家造成 1 點傷害；結界——抽 1 張牌。 | **Thousand-Faced Roulette** — Reveal the top 4 cards of your deck one at a time and resolve every one by type: monster — summon it from your deck for free (its deploy doesn't trigger; if you have no empty slot, put it into your hand); spell — deal 1 damage to the enemy player; structure — draw 1 card. |

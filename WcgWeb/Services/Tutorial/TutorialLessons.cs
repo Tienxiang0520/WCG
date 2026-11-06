@@ -67,9 +67,9 @@ public static class TutorialLessons
                     Done = e => e.Computer.Hp == 1,
                     Text = "立刻用「{0}」攻擊電腦頭像。", TextValues = [CardName("WCG-005")],
                     Hint = "請把「{0}」拖到電腦頭像。", HintValues = [CardName("WCG-005")] },
-                new() { Title = "用法術收尾", Spot = ["hand:WCG-014", "face"], Allow = [Play("WCG-014")],
+                new() { Title = "用法術收尾", Spot = ["hand:WCG-014", "field"], Allow = [Play("WCG-014")],
                     Done = e => e.Computer.HasLost,
-                    Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到電腦頭像，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
+                    Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到戰場中央打出，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-014")] },
                 new() { Title = "勝利！",
                     Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、聖盾與各種關鍵字。" }
@@ -78,7 +78,7 @@ public static class TutorialLessons
         new()
         {
             Id = "combat", Icon = "swords", Title = "怪物交戰：PP 比大小",
-            Summary = "攻擊敵方怪物時比較 PP，高者存活、平手同歸於盡；學會預覽勝負與查看墓地。",
+            Summary = "攻擊敵方怪物時比較 PP，高者存活、平手同歸於盡；學會出手前比較 PP 與查看墓地。",
             Topics = ["怪物攻擊怪物", "PP 比較", "平手同歸於盡", "無累積傷害", "攻擊後橫置", "墓地與紀錄", "略過怪物直接攻擊玩家"],
             Scene = new(
                 new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-154", 2), new("WCG-155", 3)] },
@@ -89,7 +89,7 @@ public static class TutorialLessons
                     Text = "怪物攻擊怪物時比較目前 PP：較高者存活、較低者被消滅；PP 相同則同歸於盡。傷害不會累積，存活的怪物不會留下傷痕。DP 只在攻擊玩家時使用。" },
                 new() { Title = "以強擊弱", Spot = ["own-card:WCG-114", "enemy-card:WCG-101"], Allow = [Attack("WCG-114", "WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101"),
-                    Text = "把「{0}」（{1} PP）拖到敵方「{2}」（{3} PP）上。拖曳途中會顯示勝負預覽。", TextValues = [CardName("WCG-114"), OwnPP("WCG-114"), CardName("WCG-101"), EnemyPP("WCG-101")],
+                    Text = "把「{0}」（{1} PP）拖到敵方「{2}」（{3} PP）上。瞄準合法目標時箭頭會變綠，放開就出擊。", TextValues = [CardName("WCG-114"), OwnPP("WCG-114"), CardName("WCG-101"), EnemyPP("WCG-101")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-114"), CardName("WCG-101")] },
                 new() { Title = "攻擊後橫置", Spot = ["own-card:WCG-114"],
                     Text = "攻擊過的怪物會橫置，這回合不能再攻擊；少數卡牌效果可以讓怪物重新直立、再攻擊一次。" },
@@ -98,7 +98,7 @@ public static class TutorialLessons
                     Text = "「{0}」目前是 {1} PP，「{2}」目前是 {3} PP。讓它們交戰，看看平手時會發生什麼。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-154"), EnemyPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-154")] },
                 new() { Title = "墓地與對戰紀錄", Spot = ["history"],
-                    Text = "被消滅的卡會進入墓地。按「紀錄／墓地」可以查看雙方墓地與完整對戰紀錄；看完記得關閉視窗。" },
+                    Text = "被消滅的卡會進入墓地。按「墓地」可以查看雙方墓地，按「紀錄」可以查看完整對戰紀錄；看完記得關閉視窗。" },
                 new() { Title = "略過怪物，直接打玩家", Spot = ["own-card:WCG-155", "face"], Allow = [Attack("WCG-155")],
                     Done = e => e.Computer.Hp == 6,
                     Text = "對手沒有嘲諷怪物時，可以直接攻擊玩家。敵方「{0}」目前有 {1} PP，我方「{2}」目前有 {3} PP，所以改打電腦頭像。", TextValues = [CardName("WCG-157"), EnemyPP("WCG-157"), CardName("WCG-155"), OwnPP("WCG-155")],
@@ -211,6 +211,8 @@ public static class TutorialLessons
                     Done = e => e.Player.Hp == 6,
                     Text = "「{0}」的效果：{1} 這一步請拖向自己的頭像。生命上限是 7，超過的部分不會累積。", TextValues = [CardName("WCG-050"), CardEffect("WCG-050")],
                     Hint = "請將「{0}」拖向自己的頭像，或施放後點選自己的頭像。", HintValues = [CardName("WCG-050")] },
+                new() { Title = "一次選多張",
+                    Text = "有些效果要一次選好幾張卡，例如從牌庫頂檢視取牌、把卡依序放到牌庫底，或選擇送入墓地的能量牌。這時會跳出選擇視窗：點卡片選取，再點一次取消，視窗會顯示已選張數，選好後按「確認」；放到牌庫底時，卡上的數字就是放入的順序。" },
                 new() { Title = "本課重點",
                     Text = "常見法術效果：直接傷害、消滅、抽牌、回復、返回手牌、橫置或直立怪物、附著在怪物上。所有費用都是通用能量，任何意志的卡都能用同一池能量支付。" }
             ]
@@ -466,7 +468,7 @@ public static class TutorialLessons
         {
             Id = "deckbuilding", Icon = "cards", Title = "牌組構築與五大意志",
             Summary = "在牌組構築室認識 50 張規則、單色／雙色、五大意志與儲存方式。",
-            Topics = ["50 張牌組", "每張最多 4 張", "最多兩個派系（中立不計）", "主色", "單色／雙色", "五大意志", "篩選與搜尋", "預設牌組", "列印"],
+            Topics = ["50 張牌組", "每張最多 4 張", "最多兩個派系（中立不計）", "主色", "單色／雙色", "五大意志", "篩選與搜尋", "預設牌組", "列印", "牌組代碼"],
             Route = "deckbuilder",
             Tour =
             [
@@ -477,7 +479,8 @@ public static class TutorialLessons
                 new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、聖盾與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
                 new("加入卡片", "按任一張卡下方的「＋ 加入」，把它放進牌組。點卡面可以查看完整效果。", ".add-card-btn", "deck-add"),
                 new("張數與統計", "牌組面板會即時顯示張數進度、派系數與怪物／法術比例。湊滿 50 張才能儲存與出戰。", ".deck-panel-card .card-header"),
-                new("載入、儲存與列印", "「選擇 / 載入牌組」可以複製官方五套預設牌組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。", ".deck-panel-card .card-footer")
+                new("載入、儲存與列印", "「我的牌組」只放你自己的牌組；按「＋ 新增牌組」可選空白牌組，或複製官方預組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。", ".deck-panel-card .card-footer"),
+                new("牌組代碼", "按「匯出代碼」產生這副牌的代碼，可以複製分享。代碼只記錄卡號、張數、主色與名稱；收到別人的代碼時，到「＋ 新增牌組 → 從代碼匯入」貼上，就會另存成新牌組。", ".deck-export-btn")
             ]
         },
         new()
@@ -500,16 +503,52 @@ public static class TutorialLessons
         {
             Id = "settings", Icon = "gear", Title = "設定、圖鑑與規則",
             Summary = "調整操作、音效與頭像，並認識完整卡牌圖鑑與官方規則頁。",
-            Topics = ["填能量確認", "音效與音量", "特效精簡", "頭像", "存檔備份", "卡牌圖鑑", "官方規則"],
+            Topics = ["填能量確認", "音效與音量", "特效精簡", "動畫速度", "頭像", "存檔備份", "卡牌圖鑑", "官方規則"],
             Route = "settings",
             Tour =
             [
                 new("操作設定", "「填能量前再次確認」可以避免誤把重要的牌拖進能量區；熟練後可以關閉。", ".settings-page .settings-panel"),
                 new("音效", "可以調整音效與音量。對戰畫面右上角也有靜音與「特效／精簡」切換。", ".settings-page .audio-settings"),
+                new("動畫", "用滑桿調整對戰與重播動畫的速度，或打開「關閉動畫」讓結果立即顯示。", ".settings-page .motion-settings"),
                 new("頭像", "選擇內建頭像或上傳自己的圖片，會顯示在對戰與天梯中。", ".settings-page .avatar-picker"),
                 new("存檔與備份", "牌組、天梯、頭像與教學進度都存在這台裝置。網頁版可以在設定頁最下方匯出或匯入存檔備份，換瀏覽器前記得先備份。", ".settings-page [aria-labelledby='local-data-title']"),
                 new("卡牌圖鑑", "「完整卡牌圖鑑」列出全部卡牌，可以依意志、類型與費用篩選。", ".nav-link[href='cards']"),
                 new("官方遊戲規則", "完整規則整理在「官方遊戲規則」。忘記細節時隨時回來查，也可以在「教學」重玩任何一課。", ".nav-link[href='rules']")
+            ]
+        },
+        new()
+        {
+            Id = "training", Icon = "swords", Title = "訓練場：布置與重複測試",
+            Summary = "在訓練場載入情境、指定卡片、布置戰場、調整生命能量與指示物，並保存場面反覆測試。",
+            Topics = ["快速情境", "測試工具", "加入手牌與牌庫頂", "直接擺放／進場", "生命與能量", "指示物", "保存場面"],
+            Route = "battle",
+            Tour =
+            [
+                new("訓練場", "訓練場可以指定卡片、布置戰場，反覆測試效果。訓練對局不影響天梯、玩家存檔與重播。", ".lobby .page-hero"),
+                new("準備對局", "選好雙方牌組與先攻，按「開始訓練」就能開局。", ".setup-panel"),
+                new("快速情境", "也可以按任一個快速情境，直接載入預設場面。請按一個情境開始。", ".training-quick", "training-started"),
+                new("測試工具", "按右上角的「測試工具」打開工具。工具開著時電腦會暫停。", ".training-toggle", "training-tools"),
+                new("指定卡片", "選擇己方或電腦，搜尋卡名或編號，可以把卡加入手牌、放到牌庫頂，或讓該方抽 1 張。", ".tt-cards"),
+                new("布置戰場", "選一個空格，按「直接擺放」不會觸發進場或召喚效果；按「進場並觸發效果」會正常結算，但不扣費。", ".tt-place"),
+                new("生命與能量", "修改生命（0–7）、總能量與可用能量（0–30），再按「套用生命與能量」。回合數也能修改。", ".tt-resources"),
+                new("指示物", "選好場上卡片後，直接設定倒數、DP、聖盾等指示物數量，按「套用指示物」。這是直接設定，不觸發放置效果；要測倒數歸零，請設成 1 再結束回合。", ".training-counters"),
+                new("保存場面", "輸入名稱按「另存新場面」，之後可以從「已保存場面」還原、改名或刪除。場面存在這個瀏覽器，入口頁也能直接載入。", ".tt-scenes")
+            ]
+        },
+        new()
+        {
+            Id = "pvp", Icon = "user", Title = "好友對戰：複製貼上連線",
+            Summary = "兩個瀏覽器直接連線對戰：房主建立房間，朋友加入，互相複製貼上代碼。",
+            Topics = ["點對點連線", "房間代碼", "回覆代碼", "房主與加入者", "休閒對局"],
+            Route = "pvp",
+            Tour =
+            [
+                new("好友對戰", "兩個瀏覽器透過點對點（WebRTC）直接連線，不經過遊戲伺服器。只算休閒對局，不影響天梯。", ".pvp-page .page-hero"),
+                new("注意事項", "點對點對戰無法保護隱藏資訊，請只和信任的朋友對戰。", ".pvp-warning"),
+                new("選擇牌組", "雙方都要先選一副合法的 50 張牌組。", ".pvp-panel .wcg-field"),
+                new("房主：建立房間", "房主按「建立房間」產生房間代碼，按「複製代碼」傳給朋友；收到朋友的回覆代碼後貼上，按「連線」。", ".pvp-choices > div:first-child"),
+                new("朋友：加入房間", "朋友把房間代碼貼到這裡按「加入」，會產生回覆代碼，複製後傳回給房主。", ".pvp-choices > div:last-child"),
+                new("開始對戰", "連線後會自動核對雙方的遊戲版本與牌組，然後開始對戰。輪到你時才能操作，隨時可以投降。")
             ]
         }
     ];

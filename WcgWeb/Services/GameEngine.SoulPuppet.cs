@@ -139,9 +139,9 @@ public partial class GameEngine
                 ChooseSlot(p, t.Card, slot => Usurp(p, t, slot, source.Card));
                 break;
             case "WCG-336":
-                var foreign = p.Field.Where(x => x.IsUnit && Foreign(p, x)).ToList();
+                var foreign = SpellResolvePickable(p, p.Field.Where(x => x.IsUnit && Foreign(p, x)));
                 if (foreign.Count > 0) PickMonster(p, SoulReturnTitle, foreign, x => { Bounce(x); DrawMany(p, 2); });
-                else PickMonster(p, "選擇移回手牌的己方怪物", p.Field.Where(x => x.IsUnit), x => { Bounce(x); DrawMany(p, 1); });
+                else PickMonster(p, "選擇移回手牌的己方怪物", SpellResolvePickable(p, p.Field.Where(x => x.IsUnit)), x => { Bounce(x); DrawMany(p, 1); });
                 break;
             default: return GraveSpell(p, source, t);
         }

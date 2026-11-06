@@ -11,7 +11,7 @@ public partial class GameEngine
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1800 or less (1100/1300 in older eras), 178/201/210/261 past every taunt.
     private int GaiaTauntLimit()=>CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
     private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||ThresholdPP(m)>GaiaTauntLimit())&&(a.Card.Id!="WCG-178"||LegacyCardRules));
-    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int RageEnergy=0,int WildEnergy=0);
+    public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int AttackerPP=0,int DefenderPP=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
     {
@@ -21,16 +21,15 @@ public partial class GameEngine
         finally{a.AttackDamageBonus=ad;a.CombatPowerBonus=ac;if(d!=null)d.CombatPowerBonus=dc;}
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
-    {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP),a.HasRage?Owner(a).AvailableEnergy:0);var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
+    {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP));var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
         var ash=(ah||SimplifiedRules&&ShieldAnyCombatRules)&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
-        var guardSurvives=GetOpponent(Owner(a)).Field.Any(m=>m.HasHeroGuard&&(m!=d||!dh||dsh));
-        var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):guardSurvives?Math.Min(damage,GetOpponent(Owner(a)).AvailableEnergy):0;
-        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable,0,(a.HasWild?Owner(a).AvailableEnergy:0)+(d.HasWild?Owner(d).AvailableEnergy:0));}
-    private int GuardReduction(PlayerState p,int damage)=>SimplifiedRules?Math.Min(damage,OathGuards(p).Length):p.Field.Any(m=>m.HasHeroGuard)?Math.Min(damage,p.AvailableEnergy):0;
+        var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):0;
+        return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable,a.CurrentPP,d.CurrentPP);}
+    private int GuardReduction(PlayerState p,int damage)=>SimplifiedRules?Math.Min(damage,OathGuards(p).Length):0;
     public AttackPreview? PreviewAttack(MonsterInstance a,MonsterInstance? d=null)=>(d==null?CanAttackPlayer(a):GetAttackTargets(a).Contains(d))?CompareAttack(a,d):null;
     private class AttackContext{public bool Cancelled;}
-    public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>Change(()=>
+    public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>AiTracked(AiNote("attack",p,unit:a,target:d),()=>
     {
         if(!Main(p)||!CanAttack(a)||(d==null?!CanAttackPlayer(a):!GetAttackTargets(a).Contains(d)))return Fail("攻擊目標或直立狀態不合法。");
         LastAttack=new(a.InstanceId,d?.InstanceId,Revision+1);Present("attack",p,a.InstanceId,d?.InstanceId,card:a.Card,label:"攻擊");
@@ -38,11 +37,17 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);}else if(Alive(d)){ApplyCombatPower(a,d);}}
-                    else if(d==null) RageDecision(p,a); else if(Alive(d)) WildDecision(p,a,d);},
-                ()=>{if(!SimplifiedRules && d!=null && Alive(a)&&Alive(d)) WildDecision(e,d,a);},
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a,d);});return true;
     });
+    // Display only: a combat-only PP bonus lasts for one resolution step, so the board never renders it; this event lets the
+    // board show the combat PP on the card during the attack. Not part of the text log or StateHash.
+    private void PresentCombatPower(MonsterInstance m,MonsterInstance other)
+    {if(m.CombatPowerBonus!=0)Present("power",Owner(m),m.InstanceId,other.InstanceId,m.CurrentPP,label:m.CombatPowerBonus.ToString());}
+    // Display only, same idea for an attack on the player: 烈焰戰紋 (221), 空巷獵手 (320), 千路齊進 (327), 怒蹄戰士 (341) add DP
+    // for this one hit only. Label "DP" marks the DP bubble; Amount is the DP that hits.
+    private void PresentAttackDp(MonsterInstance a)
+    {if(a.AttackDamageBonus!=0)Present("power",Owner(a),a.InstanceId,null,a.CurrentDP,label:"DP");}
     private void FinishAttack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;SurgeAfterAttack(p,a,d);
         // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.
@@ -99,13 +104,13 @@ public partial class GameEngine
                 case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1,c.Card);});break;
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
-                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",p.Field.Where(x=>x.IsSilenced||x.Card.Id!="WCG-152"),x=>Attach(p,c,x)));break;
+                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",SpellResolvePickable(p,p.Field),x=>Attach(p,c,x)));break;
                 case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.HasWill("深淵")))Recover(p,2,1);});break;
             }
             UsedSpell(p,c.Card);
         });
     }
-    public bool EndTurn() => Change(() =>
+    public bool EndTurn() => AiTracked(AiNote("end"), () =>
     {
         if (!Main(ActivePlayer)) return Fail("請先完成效果選擇，再結束回合。");
         var p = ActivePlayer; CurrentPhase = TurnPhase.EndingTurn; var effects = new List<Action>();
@@ -124,10 +129,10 @@ public partial class GameEngine
         HoofEndTurn(p, effects);
         SoulEndTurn(p, effects);
         MireEndTurn(p, effects);
+        SpringEndTurn(p, effects);
         foreach(var unit in p.Field.ToArray()) foreach(var attachment in unit.Attachments.Where(a=>a.ExpireTurn==TurnNumber).ToArray())
             effects.Add(()=>{if(Alive(unit)&&unit.Attachments.Contains(attachment))KillBatch([unit],"狂亂血宴到期");});
         effects.Add(SoulReturnControl);
-        effects.Add(() => Observe(GetOpponent(p)));
         effects.Add(() =>
         {
             foreach(var coin in p.EnergyZone.Where(x=>x.TemporaryEnergy).ToArray()){p.EnergyZone.Remove(coin);coin.TemporaryEnergy=false;coin.IsTapped=false;p.Graveyard.Add(coin);Present("discard",p,coin.InstanceId,card:coin.Card,label:"臨時能量消失");}

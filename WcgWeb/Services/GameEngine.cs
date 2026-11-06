@@ -119,35 +119,14 @@ public partial class GameEngine
     private bool Alive(MonsterInstance m) => Player.Board.Contains(m) || Computer.Board.Contains(m);
     private PlayerState Owner(MonsterInstance m) => Player.Board.Contains(m) ? Player : Computer;
     public PlayerState GetOpponent(PlayerState p) => ReferenceEquals(p, Player) ? Computer : Player;
-    private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); }
+    private void Heal(PlayerState p, int amount) { var before = p.Hp; p.Hp = Math.Min(PlayerState.MaxHp, p.Hp + amount); Present("heal", p, amount: p.Hp - before, label: "回復生命"); Log($"【{p.Name}】回復 {amount} 點生命，目前 {p.Hp}。", "action"); SpringHealed(p, amount); }
     private void Damage(PlayerState p, int amount, DamageSource? source = null)
     {
         if (IsOver || amount <= 0) return;
         if (SimplifiedRules) { OathGuardDamage(p, amount, source); return; }
-        var guard = p.Field.FirstOrDefault(m => m.HasHeroGuard);
-        var maximum = Math.Min(amount, p.AvailableEnergy);
-        if (guard == null || maximum == 0) { ApplyPlayerDamage(p, amount, source); return; }
-        var options = Enumerable.Range(1, maximum).Select(n => new ChoiceOption
-        {
-            Id = "GUARD:" + n, Title = $"橫置 {n} 點能量，抵銷 {n} 點傷害"
-        }).Append(new() { Id = "GUARD:0", Title = "不抵銷，接受傷害" });
-        Ask(p, "護主：選擇抵銷傷害", options, option =>
-        {
-            var prevent = int.Parse(option.Id.AsSpan(6));
-            prevent = p.Field.Any(m => m.HasHeroGuard) ? Math.Min(prevent, Math.Min(amount, p.AvailableEnergy)) : 0;
-            foreach (var energy in p.EnergyZone.Where(c => !c.IsTapped).Take(prevent)) energy.IsTapped = true;
-            if (prevent > 0)
-            {
-                Present("pay", p, amount: prevent, label: "支付能量");
-                Present("status", p, guard.InstanceId, amount: prevent, card: guard.Card, label: "護主抵銷傷害");
-                Log($"【{p.Name}】橫置 {prevent} 點能量，護主抵銷 {prevent} 點傷害。", "action");
-            }
-            ApplyPlayerDamage(p, amount - prevent, source);
-        }, sourceInstanceId: guard.InstanceId);
-        CurrentPendingChoice!.SourceCard = guard.Card;
-        CurrentPendingChoice.Description = $"將受到 {amount} 點傷害；最多可橫置 {maximum} 點能量。抵銷後剩餘傷害才會扣血並檢查反擊。";
+        ApplyPlayerDamage(p, amount, source);
     }
-    private bool ChooseHeroGuard(PendingChoice choice)
+    private bool ChooseOathGuard(PendingChoice choice)
     {
         var guard = choice.Options.Where(o => o.Id.StartsWith("GUARD:", StringComparison.Ordinal)).ToArray();
         return guard.Length > 0 && SelectChoice(guard.OrderByDescending(o => int.Parse(o.Id.AsSpan(6))).First());
@@ -225,7 +204,7 @@ public partial class GameEngine
         return "";
     }
     public bool CanPlayEnergy(PlayerState p, CardInstance c) => GetEnergyProblem(p, c) == "";
-    public bool PlayEnergy(PlayerState p, CardInstance c) => Change(() =>
+    public bool PlayEnergy(PlayerState p, CardInstance c) => AiTracked(AiNote("energy", p, c), () =>
     {
         if (!CanPlayEnergy(p, c)) return Fail("填能量限自己行動階段每回合一次，且不能有待結算選擇。");
         p.Hand.Remove(c); c.IsTapped = false; c.TemporaryEnergy = false; p.EnergyZone.Add(c); p.HasFilledEnergyThisTurn = true;
@@ -246,6 +225,14 @@ public partial class GameEngine
         CurrentPendingChoice = new() { OwnerId = p.Id, Title = title, Options = options, OnChoiceSelected = callback, CanCancel = cancel, SourceInstanceId = sourceInstanceId };
         Present("choice", p, label: p == Player ? title : "電腦選擇效果");
     }
+    private int _multiSeq;
+    private string NewMultiKey(string kind) => $"{kind}:{++_multiSeq}";
+    // Tag the prompt Ask just opened (if any) as one step of a multi-pick selection.
+    private void MarkMulti(PendingChoice? before, string key, int min, int max, bool ordered = false, string? stop = null)
+    {
+        if (CurrentPendingChoice is not { } c || ReferenceEquals(c, before)) return;
+        c.MultiKey = key; c.MultiMin = Math.Max(0, min); c.MultiMax = Math.Max(0, max); c.MultiOrdered = ordered; c.MultiStopId = stop;
+    }
     private void CardChoice(PlayerState p, string title, IEnumerable<CardInstance> candidates, Action<CardInstance> callback, bool optional = false)
     {
         var list = candidates.ToList(); if (list.Count == 0) return;
@@ -253,27 +240,27 @@ public partial class GameEngine
         if (optional) options.Add(new() { Id = "SKIP", Title = "放棄此可選效果" });
         Ask(p, title, options, option => { if (option.Id != "SKIP") { var selected = list.First(c => c.InstanceId.ToString() == option.Id); callback(selected); } });
     }
-    public bool SelectChoice(ChoiceOption option) => Change(() =>
+    public bool SelectChoice(ChoiceOption option) => AiTracked(AiNote("choice", option: option), () =>
     {
         var pending = CurrentPendingChoice;
         var canonical = pending?.Options.FirstOrDefault(o => o.Id == option.Id);
         if (pending == null || canonical == null || IsOver) return Fail("此選項已失效。");
         CurrentPendingChoice = null; pending.OnChoiceSelected?.Invoke(canonical); return true;
     });
-    public bool SelectTarget(MonsterInstance target) => Change(() =>
+    public bool SelectTarget(MonsterInstance target) => AiTracked(AiNote("target", target: target), () =>
     {
         var pending = CurrentPendingTarget;
         if (pending == null || pending.OnTargetSelected == null || !Alive(target) || pending.Validator?.Invoke(target) == false || IsOver) return Fail("此目標不合法或已離場。");
         CurrentPendingTarget = null; pending.OnTargetSelected(target); return true;
     });
-    public bool SelectPlayerTarget(PlayerState target) => Change(() =>
+    public bool SelectPlayerTarget(PlayerState target) => AiTracked(AiNote("ptarget", playerTarget: target), () =>
     {
         var pending = CurrentPendingTarget;
         if (pending?.OnPlayerTargetSelected == null || pending.PlayerValidator?.Invoke(target) != true || IsOver)
             return Fail("此目標不合法或已離場。");
         CurrentPendingTarget = null; pending.OnPlayerTargetSelected(target); return true;
     });
-    public bool CancelTargetOrChoice() => Change(() =>
+    public bool CancelTargetOrChoice() => AiTracked(AiNote("cancel"), () =>
     {
         if (CurrentPendingChoice?.CanCancel != true && CurrentPendingTarget?.CanCancel != true) return Fail("這是已支付卡牌的必要結算，請完成選擇。");
         CurrentPendingChoice = null; CurrentPendingTarget = null; _effects.Clear(); return true;
@@ -351,15 +338,15 @@ public partial class GameEngine
         card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
         : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
-    public bool SummonMonster(PlayerState p, CardInstance c) => Change(() => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
-    public bool CastSpell(PlayerState p, CardInstance c) => Change(() => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
+    public bool SummonMonster(PlayerState p, CardInstance c) => AiTracked(AiNote("summon", p, c), () => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
+    public bool CastSpell(PlayerState p, CardInstance c) => AiTracked(AiNote("spell", p, c), () => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
         c.Card.IsSpell && NeedsSpellTarget(c.Card) && CanPlayCard(p, c) ? SpellTargets(p, c.Card) : [];
-    public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => Change(() =>
+    public bool CastSpellAt(PlayerState p, CardInstance c, MonsterInstance target) => AiTracked(AiNote("spellat", p, c, target: target), () =>
         GetDirectPlayTargets(p, c).Contains(target) ? BeginPlay(p, c, initialTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
     public IReadOnlyList<PlayerState> GetDirectPlayerTargets(PlayerState p, CardInstance c) =>
         c.Card.IsSpell && NeedsPlayerSpellTarget(c.Card) && CanPlayCard(p, c) ? [Player, Computer] : [];
-    public bool CastSpellAtPlayer(PlayerState p, CardInstance c, PlayerState target) => Change(() =>
+    public bool CastSpellAtPlayer(PlayerState p, CardInstance c, PlayerState target) => AiTracked(AiNote("spellatp", p, c, playerTarget: target), () =>
         GetDirectPlayerTargets(p, c).Contains(target) ? BeginPlay(p, c, initialPlayerTarget: target) : Fail("此目標不合法，未出牌或扣費。"));
     private bool BeginPlay(PlayerState p, CardInstance c, string mode = "", MonsterInstance? initialTarget = null, PlayerState? initialPlayerTarget = null)
     {

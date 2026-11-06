@@ -11,7 +11,7 @@
 
 export const BADGE_KEYWORDS = ['能量護盾', '聖盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
 const SOURCE_TYPES = new Set(['effect', 'trigger']);
-const TARGETED = new Set(['death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
+const TARGETED = new Set(['energy-out', 'death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
 export const isSpellCard = card => !!card && /^法術/.test(String(card.type ?? ''));
 // 幸運幣 (WCG-263) skips the spell showcase; it only pops its temporary energy.
@@ -81,12 +81,19 @@ export function planSteps(previous, next, events) {
             if (was.has(k) || badged.has(`${id}:${k}`)) continue;
             steps.push({ kind: 'badge', target: id, keyword: k, from: (k === '能量護盾' || k === '聖盾') ? auraSource(unit, after, k) : null });
         }
+        // A keyword lost without its own event (an aura source left play, a lock ended) shows its icon struck through on the card.
+        for (const k of was) if (!keywords(unit).has(k) && !ordered.some(ev => ev.instanceId === id && ev.type === 'status')) steps.push({ kind: 'badge', target: id, keyword: k, lost: true });
+        const lostLocks = (old.status ?? []).filter(s => /鎖住/.test(String(s)) && !(unit.status ?? []).includes(s));
+        for (const s of lostLocks) steps.push({ kind: 'badge', target: id, keyword: String(s).split('：')[0], lost: true });
         const delta = (Number(unit.pp) || 0) - (Number(old.pp) || 0);
         if (delta && Number.isFinite(delta)) steps.push({ kind: 'stat', target: id, delta });
         const dpDelta = (Number(unit.dp) || 0) - (Number(old.dp) || 0);
         if (dpDelta && Number.isFinite(dpDelta)) steps.push({ kind: 'stat', target: id, delta: dpDelta, stat: 'DP' });
         // Units ready themselves at the start of a turn; only taps or readies caused mid-turn are effects.
         if (!turnStart && !!unit.tapped !== !!old.tapped && !attacked.has(id)) steps.push({ kind: 'tap', target: id, tapped: !!unit.tapped });
+        // Attacking always taps; a unit that attacked and is still upright was readied afterwards (連斬見習兵 391, 戰場號角 398,
+        // 千刃狂濤 399), which no snapshot difference would otherwise show.
+        else if (attacked.has(id) && !unit.tapped) steps.push({ kind: 'tap', target: id, tapped: false });
     }
     return steps;
 }

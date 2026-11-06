@@ -76,4 +76,28 @@ public class ThresholdGapTests
         Assert.Contains(big,targets);Assert.DoesNotContain(small,targets);Assert.DoesNotContain(wall,targets);
         Assert.True(g.CastSpellAt(g.Player,spell,big));Settle(g);Assert.DoesNotContain(big,g.Computer.Field);
     }
+    // Combat-only PP bonuses vanish within the attack's resolution, so the board shows them from the preview and a
+    // display-only "power" event; neither touches the engine log or StateHash.
+    [Fact] public void CombatOnlyPowerIsExposedInPreviewAndPresentation()
+    {
+        var g=Game();var a=Unit(g.Player,203,0);var d=Unit(g.Computer,274,0);Refresh(g);
+        var p=g.PreviewAttack(a,d)!;Assert.Equal(2100,p.AttackerPP);Assert.Equal(1600,p.DefenderPP);
+        Assert.Equal(1600,a.CurrentPP);Assert.Equal(1300,d.CurrentPP);
+        Assert.True(g.Attack(g.Player,a,d));Settle(g);
+        var power=g.PresentationEvents.Where(e=>e.Type=="power").ToList();
+        Assert.Contains(power,e=>e.InstanceId==a.InstanceId&&e.TargetId==d.InstanceId&&e.Amount==2100&&e.Label=="500");
+        Assert.Contains(power,e=>e.InstanceId==d.InstanceId&&e.Amount==1600&&e.Label=="300");
+        Assert.DoesNotContain(g.Player.Field.Concat(g.Computer.Field),m=>m.CombatPowerBonus!=0);
+        var hunter=Unit(g.Player,286,1);var t=Unit(g.Computer,110,1);Refresh(g);
+        var q=g.PreviewAttack(hunter,t)!;Assert.Equal(1300,q.AttackerPP);Assert.Equal(900,q.DefenderPP);
+    }
+    // Attack-on-player DP bonuses (烈焰戰紋 221, 空巷獵手 320 …) also last one hit only: a display-only "power" event labelled DP.
+    [Fact] public void AttackOnPlayerDpIsPresented()
+    {
+        var g=Game();var a=Unit(g.Player,320,0);Refresh(g);var hp=g.Computer.Hp;
+        Assert.Equal(a.CurrentDP+1,g.PreviewAttack(a)!.PlayerDamage);
+        Assert.True(g.Attack(g.Player,a));Settle(g);
+        Assert.Contains(g.PresentationEvents,e=>e.Type=="power"&&e.Label=="DP"&&e.InstanceId==a.InstanceId&&e.TargetId==null&&e.Amount==a.CurrentDP+1);
+        Assert.Equal(hp-a.CurrentDP-1,g.Computer.Hp);Assert.Equal(0,a.AttackDamageBonus);
+    }
 }

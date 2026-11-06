@@ -2021,8 +2021,8 @@
   "WCG-334": {
     "zh": "血祭傀儡師",
     "name": "Bloodrite Puppetmaster",
-    "text": "At the end of your turn, you may sacrifice a monster you don't own; if you do, destroy 1 enemy monster with printed PP 1200 or less.",
-    "zh_text": "你的回合結束時，你可以犧牲 1 隻不是你擁有的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。"
+    "text": "At the end of your turn, you may sacrifice a monster you took from your opponent; if you do, destroy 1 enemy monster with printed PP 1200 or less.",
+    "zh_text": "你的回合結束時，你可以犧牲 1 隻你從對手那裡奪來的怪物；若你這麼做，消滅 1 隻印刷 PP 1200 以下的敵方怪物。"
   },
   "WCG-335": {
     "zh": "王座篡奪",
@@ -2413,5 +2413,167 @@
     "name": "Thousand-Blade Surge",
     "text": "Charge. Trample. After each attack, if this monster is still on the field, ready it (at most 3 times per turn).",
     "zh_text": "衝鋒；貫穿；此怪物每次攻擊後，若它還在場，轉為直立（每回合最多 3 次）。"
+  },
+  "WCG-400": {
+    "zh": "汲泉修女",
+    "name": "Wellspring Nun",
+    "text": "On deploy: you heal 1 life.",
+    "zh_text": "進場：回復你 1 點生命。"
+  },
+  "WCG-401": {
+    "zh": "泉光侍祭",
+    "name": "Springlight Acolyte",
+    "text": "[Arrows: ← →] Whenever you heal, the monsters the arrows point at get +300 PP this turn.",
+    "zh_text": "【箭頭：← →】每當你回復生命，箭頭指向的怪物本回合 PP +300。"
+  },
+  "WCG-402": {
+    "zh": "滿溢之禱",
+    "name": "Overflowing Prayer",
+    "text": "You heal 2 life. If your life was already 7 before healing, also draw 1 card.",
+    "zh_text": "回復你 2 點生命；若回復前你的生命已是 7，再抽 1 張牌。"
+  },
+  "WCG-403": {
+    "zh": "聖泉之井",
+    "name": "Holy Spring Well",
+    "text": "Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it.",
+    "zh_text": "每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。"
+  },
+  "WCG-404": {
+    "zh": "流浪治療師",
+    "name": "Wandering Healer",
+    "text": "At the end of your turn, you heal 1 life.",
+    "zh_text": "你的回合結束時，回復你 1 點生命。"
+  },
+  "WCG-405": {
+    "zh": "泉誓騎士",
+    "name": "Spring-Sworn Knight",
+    "text": "Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn).",
+    "zh_text": "嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。"
+  },
+  "WCG-406": {
+    "zh": "洗禮之潮",
+    "name": "Tide of Baptism",
+    "text": "You heal 2 life. Then 1 enemy monster gets -300 PP for each life you healed this turn until end of turn; if this makes its PP 0, destroy it.",
+    "zh_text": "回復你 2 點生命。然後 1 隻敵方怪物 PP -（本回合你回復的生命總量 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。"
+  },
+  "WCG-407": {
+    "zh": "銀泉守護巨像",
+    "name": "Silverspring Colossus",
+    "text": "Taunt. On deploy: you heal 3 life. At the start of your turn, if your life is 7, deal 1 damage to the enemy player.",
+    "zh_text": "嘲諷；進場：回復你 3 點生命。你的回合開始時，若你的生命是 7，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-408": {
+    "zh": "聖泉傾瀉",
+    "name": "Holy Spring Deluge",
+    "text": "You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed.",
+    "zh_text": "回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-409": {
+    "zh": "星沙學徒",
+    "name": "Starsand Apprentice",
+    "text": "On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards.",
+    "zh_text": "進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。"
+  },
+  "WCG-410": {
+    "zh": "倒懸時鐘",
+    "name": "Inverted Clock",
+    "text": "On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again.",
+    "zh_text": "進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。"
+  },
+  "WCG-411": {
+    "zh": "觀星術士",
+    "name": "Stargazer Adept",
+    "text": "[Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter.",
+    "zh_text": "【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。"
+  },
+  "WCG-412": {
+    "zh": "時隙催化",
+    "name": "Time-Gap Catalyst",
+    "text": "Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead.",
+    "zh_text": "從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。"
+  },
+  "WCG-413": {
+    "zh": "封時守衛",
+    "name": "Timeseal Warden",
+    "text": "Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster.",
+    "zh_text": "嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。"
+  },
+  "WCG-414": {
+    "zh": "隕星預言者",
+    "name": "Meteor Seer",
+    "text": "On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less.",
+    "zh_text": "進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。"
+  },
+  "WCG-415": {
+    "zh": "星軌重排",
+    "name": "Star-Orbit Realignment",
+    "text": "Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says \"When its last Countdown counter is removed\" (it can trigger again). If there is no such card, draw 1 card instead.",
+    "zh_text": "在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。"
+  },
+  "WCG-416": {
+    "zh": "永恆鐘塔",
+    "name": "Eternal Clocktower",
+    "text": "Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life.",
+    "zh_text": "每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。"
+  },
+  "WCG-417": {
+    "zh": "星律終焉",
+    "name": "End of the Star Law",
+    "text": "Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead.",
+    "zh_text": "移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。"
+  },
+  "WCG-418": {
+    "zh": "擲骨巫童",
+    "name": "Bone-Casting Child",
+    "text": "On deploy: reveal the top card of your deck. If it's a monster, draw 1 card.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若是怪物，抽 1 張牌。"
+  },
+  "WCG-419": {
+    "zh": "命輪占者",
+    "name": "Wheel-of-Fate Diviner",
+    "text": "At the start of your turn, reveal the top card of your deck: monster — this monster gets +500 PP this turn; spell — deal 1 damage to the enemy player; structure — you heal 1 life.",
+    "zh_text": "你的回合開始時，翻開你牌庫頂 1 張：怪物——此怪物本回合 PP +500；法術——對敵方玩家造成 1 點傷害；結界——回復你 1 點生命。"
+  },
+  "WCG-420": {
+    "zh": "深淵賭約",
+    "name": "Abyssal Wager",
+    "text": "Reveal the top card of your deck. 1 enemy monster gets -300 PP times that card's printed cost until end of turn; if this makes its PP 0, destroy it.",
+    "zh_text": "翻開你牌庫頂 1 張，1 隻敵方怪物 PP -（翻開那張的印刷費用 ×300）直到回合結束；若它的 PP 因此變為 0，消滅它。"
+  },
+  "WCG-421": {
+    "zh": "開眼之井",
+    "name": "Well of Open Eyes",
+    "text": "Active: tap this card and reveal the top card of your deck. You may lose 1 life (a life cost) to put it into your hand.",
+    "zh_text": "主動：橫置此卡，翻開你牌庫頂 1 張；你可以失去 1 點生命（生命代價），把它加入手牌。"
+  },
+  "WCG-422": {
+    "zh": "骰魂魔像",
+    "name": "Soul-Dice Golem",
+    "text": "On deploy: reveal the top card of your deck. If its printed cost is 4 or more, destroy the monster the arrow points at. [Arrow: ↑] The monster the arrow points at gets -200 PP.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若它的印刷費用 4 以上，消滅箭頭指向的怪物。【箭頭：↑】箭頭指向的怪物 PP -200。"
+  },
+  "WCG-423": {
+    "zh": "宿命拾荒者",
+    "name": "Fate Scavenger",
+    "text": "Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn.",
+    "zh_text": "每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。"
+  },
+  "WCG-424": {
+    "zh": "黑籤召喚師",
+    "name": "Black-Lot Summoner",
+    "text": "On deploy: reveal the top card of your deck. If it's a monster and you have an empty slot, summon it from your deck for free (its deploy doesn't trigger). Otherwise, draw 1 card.",
+    "zh_text": "進場：翻開你牌庫頂 1 張；若是怪物且你有空格，從牌庫免費召喚它（不觸發進場）；否則抽 1 張牌。"
+  },
+  "WCG-425": {
+    "zh": "命運祭壇",
+    "name": "Altar of Fate",
+    "text": "Whenever you reveal a card with printed cost 5 or more, deal 1 damage to the enemy player.",
+    "zh_text": "每當你翻開印刷費用 5 以上的牌，對敵方玩家造成 1 點傷害。"
+  },
+  "WCG-426": {
+    "zh": "千面輪盤",
+    "name": "Thousand-Faced Roulette",
+    "text": "Reveal the top 4 cards of your deck one at a time and resolve every one by type: monster — summon it from your deck for free (its deploy doesn't trigger; if you have no empty slot, put it into your hand); spell — deal 1 damage to the enemy player; structure — draw 1 card.",
+    "zh_text": "翻開你牌庫頂 4 張（一次 1 張），全部依類型結算：怪物——從牌庫免費召喚它（不觸發進場；沒有空格就加入手牌）；法術——對敵方玩家造成 1 點傷害；結界——抽 1 張牌。"
   }
 }

@@ -1,3 +1,14 @@
+// Shared Esc-to-close for page dialogs (deck builder card detail / 我的牌組, avatar picker, …): the last visible
+// [data-esc-close] button is clicked. Battle dialogs have their own handler (battle/fan-drag.js), so skip those.
+if (!window.__wcgEscClose) {
+    window.__wcgEscClose = true;
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape' || e.defaultPrevented || document.querySelector('.v06-board .modal-shade')) return;
+        const open = [...document.querySelectorAll('[data-esc-close]')].filter(b => b.getClientRects().length > 0);
+        const last = open[open.length - 1];
+        if (last) { e.preventDefault(); last.click(); }
+    });
+}
 const bindings = new WeakMap();
 export function attach(sidebar, handle) {
     detach(handle);

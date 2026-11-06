@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using WcgWeb.Models;
 using WcgWeb.Services;
@@ -26,6 +27,26 @@ public partial class DeckBuilder
     private void ResetFilters() { SearchText = ""; SelectedWill = ""; SelectedType = ""; SelectedCost = -1; }
     private Deck CurrentDeck { get; set; } = new Deck { Name = "我的自訂牌組" };
     private bool ShowDeckSelectModal { get; set; } = false;
+    // null = own deck list; "" = new-deck chooser; "official" = 官方預組 copy list (presets + reference decks).
+    private string? NewDeckSource { get; set; }
+    // 「我的牌組」 is also a player-typed deck name that must never be translated, so the title is chosen here.
+    private string MyDecksLabel => L.IsEnglish ? "My decks" : "我的牌組";
+    private void CloseDeckModal() { ShowDeckSelectModal = false; NewDeckSource = null; SourceWill = ""; SourceColor = ""; SourceSearch = ""; }
+    // 「從官方預組複製」 filters: will chip, single/dual chip and a name search over the 60 official decks.
+    private string SourceWill = "", SourceColor = "", SourceSearch = "";
+    private string[] DeckWillsOf(Deck d) => d.CardIds.Select(CardDb.GetCard).Where(c => c != null && !c.IsNeutral)
+        .SelectMany(c => c!.Wills).Where(Deck.Wills.Contains).Distinct().ToArray();
+    private bool SourceMatches(Deck d)
+    {
+        var wills = DeckWillsOf(d);
+        if (SourceWill != "" && !wills.Contains(SourceWill) && d.MainWill != SourceWill) return false;
+        if (SourceColor == "single" && wills.Length > 1) return false;
+        if (SourceColor == "dual" && wills.Length < 2) return false;
+        var q = SourceSearch.Trim();
+        return q == "" || L.DeckName(d).Contains(q, StringComparison.OrdinalIgnoreCase) || L.DeckDescription(d).Contains(q, StringComparison.OrdinalIgnoreCase);
+    }
+    // A deck being edited that is not in 我的牌組 yet (new, or a copy) shows 「未儲存」.
+    private bool CurrentDeckUnsaved => !DeckSvc.GetCustomDecks().Any(d => d.Id == CurrentDeck.Id);
     private string SearchText { get; set; } = "";
     private string SelectedWill { get; set; } = "";
     private string SelectedType { get; set; } = "";
@@ -161,7 +182,9 @@ public partial class DeckBuilder
     private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
     private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
     private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !c.Wills.All(a.Contains)) : 0;
-    private void DropLockedFilter() { if (SelectedWill != "" && SelectedWill != DualFilter && LockedOut(SelectedWill)) SelectedWill = ""; }
+    private void DropLockedFilter() { if (SelectedWill != "" && (SelectedWill == DualFilter ? DualChipLocked : LockedOut(SelectedWill))) SelectedWill = ""; }
+    // A single-colour deck can't hold dual-will cards, so the 雙色卡 chip would always show 0: disable it with a hint.
+    private bool DualChipLocked => !ShowDeckCards && AllowedWills != null && !DualColor;
     private void SetDual(bool dual)
     {
         DualColor = dual;
@@ -248,10 +271,25 @@ public partial class DeckBuilder
         CurrentDeck = new Deck
         {
             Id = Guid.NewGuid().ToString(),
-            Name = L.F("{0} (副本)", L.DeckName(preset)),
+            Name = L.F("{0}（副本）", L.DeckName(preset)),
             Description = L.DeckDescription(preset),
             MainWill = preset.MainWill,
             CardIds = new List<string>(preset.CardIds)
+        };
+        SyncColorMode(); ValidateDeck();
+    }
+
+    // Copy of one of the player's own decks: new Id, unsaved until 儲存牌組; the original is untouched.
+    private void CloneOwnDeck(Deck own)
+    {
+        SavedMessage = null;
+        CurrentDeck = new Deck
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = L.F("{0}（副本）", own.Name),
+            Description = own.Description,
+            MainWill = own.MainWill,
+            CardIds = new List<string>(own.CardIds)
         };
         SyncColorMode(); ValidateDeck();
     }
@@ -273,6 +311,8 @@ public partial class DeckBuilder
 
     private bool ValidateDeck()
     {
+        ExportedCode = null; ExportMessage = null; // the shown code would be stale after any deck change
+
         var valid = CurrentDeck.IsValid(CardDb.GetCard, out var error);
         ValidationErrorMessage = error;
         return valid;
@@ -297,6 +337,50 @@ public partial class DeckBuilder
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
         { SavedMessage = null; ValidationErrorMessage = $"儲存失敗：{ex.Message}"; }
+    }
+
+    // 牌組代碼: export the deck being edited; import a pasted code as a NEW deck (never overwrites an existing one).
+    [Inject] private Microsoft.JSInterop.IJSRuntime JS { get; set; } = default!;
+    private string? ExportedCode;
+    private string? ExportMessage;
+    private async Task ExportDeckCode()
+    {
+        ExportedCode = DeckCode.Encode(CurrentDeck);
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", ExportedCode); ExportMessage = "已複製牌組代碼。"; }
+        catch (Exception e) when (e is Microsoft.JSInterop.JSException or InvalidOperationException or TaskCanceledException) { ExportMessage = "無法存取剪貼簿，請手動複製下方代碼。"; }
+    }
+    private string ImportText = "";
+    private DeckCode.Result? ImportResult;
+    private string? ImportError;
+    private void OpenImport() { NewDeckSource = "code"; ImportText = ""; ImportResult = null; ImportError = null; }
+    private void PreviewImport()
+    {
+        ImportResult = DeckCode.Decode(ImportText, out var error);
+        ImportError = ImportResult == null ? error : null;
+    }
+    private Deck ImportedDeck => new()
+    {
+        Id = Guid.NewGuid().ToString(),
+        Name = string.IsNullOrWhiteSpace(ImportResult?.Name) ? L["匯入的牌組"] : ImportResult!.Name,
+        MainWill = ImportResult?.MainWill ?? "",
+        CardIds = new List<string>(ImportResult?.CardIds ?? new())
+    };
+    private List<string> ImportUnknownIds => ImportResult?.CardIds.Where(id => CardDb.GetCard(id) == null).Distinct().ToList() ?? new();
+    private List<string> ImportErrors => ImportResult == null ? new() : ImportedDeck.Validate(CardDb.GetCard).Errors;
+    private void ConfirmImport()
+    {
+        if (ImportResult == null || ImportUnknownIds.Count > 0) return;
+        var deck = ImportedDeck;
+        bool valid = deck.Validate(CardDb.GetCard).IsValid;
+        if (valid)
+        {
+            try { DeckSvc.SaveDeck(deck); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException or ArgumentException)
+            { ImportError = $"儲存失敗：{ex.Message}"; return; }
+        }
+        LoadCustomDeck(deck);
+        CloseDeckModal();
+        if (valid) ShowSaved($"已匯入並儲存牌組【{deck.Name}】。");
     }
 
     private void DeleteCurrentDeck() => DeleteCustomDeck(CurrentDeck.Id, CurrentDeck.Version);

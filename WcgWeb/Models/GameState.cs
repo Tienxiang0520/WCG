@@ -79,6 +79,13 @@ public class MonsterInstance
     public int BloodCounters { get; set; }
     // 腐蝕指示物 (腐沼蔓生, WCG-382–390): -300 PP each, stacking; removed by silence, dispel, or leaving play.
     public int CorrosionCounters { get; set; }
+    // 聖泉指示物 on 403 聖泉之井 (聖泉滿溢). They sit on the structure and leave play with it; silence never touches them.
+    public int SpringCounters { get; set; }
+    // 405 泉誓騎士: DP counters gained this turn (at most 2).
+    public int SpringDpTurn { get; set; } = -1;
+    public int SpringDpCount { get; set; }
+    // 倒數指示物 (星律倒數) on a monster or structure; removing the last one triggers the card. Silence removes them without triggering.
+    public int Countdown { get; set; }
     // 怒濤連擊 (WCG-391–399), all reset at every turn change: attacks made this turn (397), times readied by its own text
     // (394／399 limits), 396's "can't attack the enemy player this turn", and whether this 398 has readied a monster this turn.
     public int SurgeAttacks { get; set; }
@@ -106,11 +113,6 @@ public class MonsterInstance
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
     public bool HasShield => ShieldQualified;
-    public bool HasRage => IsUnit && !IsSilenced && Card.HasRage;
-    public bool HasObservation => IsUnit && !IsSilenced && Card.HasObservation;
-    public bool HasWild => IsUnit && !IsSilenced && Card.HasWild;
-    public bool HasSoulReturn => IsUnit && !IsSilenced && Card.HasSoulReturn;
-    public bool HasHeroGuard => IsUnit && !IsSilenced && Card.HasHeroGuard;
     public CardInstance? SilenceSpell { get; set; }
     public string? SilenceOwnerId { get; set; }
 
@@ -158,6 +160,9 @@ public class PlayerState
     // 潮汐輪迴 (WCG-373–381), all for the turn number stored: 374's next-paid-monster -1, 381's every-paid-monster -2,
     // and the turn you last returned one of your monsters to your hand (379 costs 2 less that turn).
     public int TideDiscountTurn { get; set; } = -1;
+    // 聖泉滿溢: life healed this turn (overflow included), for 406 洗禮之潮.
+    public int SpringHealTurn { get; set; } = -1;
+    public int SpringHealed { get; set; }
     public int TideSurgeTurn { get; set; } = -1;
     public int TideBounceTurn { get; set; } = -1;
     public List<CardInstance> Graveyard { get; set; } = new();
@@ -231,6 +236,14 @@ public class PendingChoice
     public string Description { get; set; } = "";
     public List<ChoiceOption> Options { get; set; } = new();
     public Action<ChoiceOption>? OnChoiceSelected { get; set; }
+    // Multi-pick metadata (UI only). Consecutive single-pick prompts sharing MultiKey belong to one
+    // selection; the client picks up to MultiMax (at least MultiMin) options then sends StopId if offered.
+    // The engine still resolves one option per step, so logs, replays and the AI are unchanged.
+    public string? MultiKey { get; set; }
+    public int MultiMin { get; set; }
+    public int MultiMax { get; set; }
+    public bool MultiOrdered { get; set; }
+    public string? MultiStopId { get; set; }
 }
 
 public class PendingTarget

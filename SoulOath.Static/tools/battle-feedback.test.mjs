@@ -168,16 +168,15 @@ test('a freshly summoned unit\'s deploy ability glows without a text badge', asy
     assert.deepEqual(h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent),[]);
     h.feedback.clear();
 });
-test('a deploy ability badges its source before its result; a keyword gained mid-game pops its icon, not text', async t=>{
+test('a deploy ability flashes its source without text; a keyword gained mid-game pops its icon, not text', async t=>{
     resetFastForward();
     const h=harness(t);
     const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['直立'],pp:1000}]},computer:{field:[]}};
     const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['能量護盾','直立'],pp:1500}]},computer:{field:[]}};
     await h.settle(h.feedback.present(before,after,[{type:'effect',side:'player',instanceId:'dead',label:'進場能力',order:0},{type:'heal',side:'player',amount:1,order:1}]));
-    const effects=h.record.map(r=>r.el.dataset.wcgEffect).filter(Boolean);
-    assert.ok(effects.indexOf('badge')<effects.indexOf('heal'),effects.join());
-    const badges=h.record.filter(r=>r.el.dataset.wcgEffect==='badge').map(r=>r.el.textContent);
-    assert.deepEqual(badges,['進場能力']);
+    // The battlefield shows no caption text; the ability name stays in the log.
+    assert.ok(!h.record.some(r=>r.el.textContent==='進場能力'));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='badge').length,0);
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='icon'&&r.el.dataset.keyword==='能量護盾'));
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='stat'&&r.el.textContent==='+500 PP'));
     h.feedback.clear();

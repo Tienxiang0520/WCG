@@ -1,6 +1,7 @@
 <Project>
   <!-- Both hosts must embed the same historical catalogs and translations with stable names. -->
   <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-ironhide-dp.json" LogicalName="WcgWeb.Balance.BeforeIronhideDp" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-rules-simplification.json" LogicalName="WcgWeb.Balance.BeforeRulesSimplification" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-ability-pp.json" LogicalName="WcgWeb.Balance.BeforeAbilityPp" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-dual-will.json" LogicalName="WcgWeb.Balance.BeforeDualWill" />
@@ -11,6 +12,7 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-bear-roar-text.json" LogicalName="WcgWeb.Balance.BeforeBearRoarText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-arrow-text.json" LogicalName="WcgWeb.Balance.BeforeArrowText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-silence-counters.json" LogicalName="WcgWeb.Balance.BeforeSilenceCounters" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-blood-puppeteer-text.json" LogicalName="WcgWeb.Balance.BeforeBloodPuppeteerText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-revival-lord-text.json" LogicalName="WcgWeb.Balance.BeforeRevivalLordText" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-card-fixes.json" LogicalName="WcgWeb.Balance.BeforeCardFixes" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)../WcgWeb/Data/balance-before-shield-any-combat.json" LogicalName="WcgWeb.Balance.BeforeShieldAnyCombat" />

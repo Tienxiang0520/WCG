@@ -335,7 +335,7 @@ public partial class GameEngine
     internal int DamageBound(PlayerState p, PlayerState e)
     {
         int energy = p.AvailableEnergy + (p.HasFilledEnergyThisTurn ? 0 : 1);
-        int bound = p.Field.Where(m => !m.IsTapped && !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack)).Sum(m => m.CurrentDP + (m.HasRage ? energy : 0));
+        int bound = p.Field.Where(m => !m.IsTapped && !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack)).Sum(m => m.CurrentDP);
         bound += p.Structures.Where(s => !s.IsSet).Sum(s => CardReach(s.Card));
         bound += p.Hand.Where(c => ActualCost(p, c.Card) <= energy).Sum(c => CardReach(c.Card));
         return bound;

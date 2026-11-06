@@ -19,7 +19,7 @@
     </header>
     @if (Replay == null)
     {
-        <div class="replay-loading" role="status"><span class="replay-spinner"></span>@L["正在依照種子重新模擬對局…"]</div>
+        <div class="replay-loading" role="status"><span class="replay-spinner"></span>@L["正在載入重播…"]</div>
     }
     else
     {
@@ -127,7 +127,7 @@
         {
             while (!token.IsCancellationRequested && Replay != null && Index < Replay.Steps.Count - 1)
             {
-                await Task.Delay(TimeSpan.FromMilliseconds(Math.Max(150, 1200 / Speed)), token);
+                await Task.Delay(TimeSpan.FromMilliseconds(Math.Max(150, 1200 / (Speed * WcgWeb.Services.AnimationTiming.Speed))), token);
                 await InvokeAsync(() =>
                 {
                     if (token.IsCancellationRequested || Replay == null || Detail != null) return;
@@ -152,7 +152,7 @@
     {
         if (Replay == null) yield break;
         for (var i = Math.Min(Index, Replay.Steps.Count - 1); i >= 0; i--)
-            foreach (var ev in Replay.Steps[i].Events.Reverse()) yield return (i, ev);
+            foreach (var ev in Replay.Steps[i].Events.Where(e => e.Type != "power")) yield return (i, ev);  // "power" is display-only combat PP
     }
     // Same green/red badge as the battlefield, against the printed value.
     private static string StatClass(int? current, int? printed) => current > printed ? "stat-up" : current < printed ? "stat-down" : "";
@@ -166,8 +166,16 @@
     private RenderFragment Line(BattleEvent ev) => __builder =>
     {
         <span class="replay-line-side @(ev.Side == "player" ? "mine" : "theirs")">@(ev.Side == "player" ? L["我方"] : ev.Side == "computer" ? L["敵方"] : "")</span>
-        <span>@L.Text(ev.Label)</span>
-        if (ev.Card is { } c && c.CardId != "SET" && c.Name != "") { @Chip(c, "log") }
+        if (ev.Type == "death")
+        {
+            if (ev.Card is { } dc) { @Chip(dc, "log") }
+            <span>@L.DeathText(ev.Label)</span>
+        }
+        else
+        {
+            <span>@L.Text(ev.Label)</span>
+            if (ev.Card is { } c && c.CardId != "SET" && c.Name != "") { @Chip(c, "log") }
+        }
     };
     private RenderFragment Chip(BattleCard c, string kind) => __builder =>
     {

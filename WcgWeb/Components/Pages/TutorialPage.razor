@@ -233,7 +233,7 @@ else
                 "hero" => ".v06-board .player.hero",
                 "energy" => ".v06-board .energy-zone",
                 "end" => ".v06-board .turn-controls .end-turn",
-                "history" => ".v06-board .turn-controls button:nth-of-type(2)",
+                "history" => ".v06-board .turn-controls .open-grave, .v06-board .turn-controls .open-log",
                 "hand" when arg == "" => ".v06-board .v06-hand",
                 "hand" => e.Player.Hand.FirstOrDefault(c => c.Card.Id == arg) is { } c ? $".v06-hand-card[data-drag-id=\"{c.InstanceId}\"]" : "",
                 "own" => Slot("own", int.Parse(arg)),

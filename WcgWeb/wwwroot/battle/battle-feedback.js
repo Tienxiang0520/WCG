@@ -1,4 +1,4 @@
-import { motionReduced } from './battle-fx.js';
+import { motionReduced, motionOff, motionScale } from './battle-fx.js';
 import { planSteps, batchSpeed, isSpellCard, keywordOf, isCoin, stepGap } from './effect-plan.js';
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
@@ -17,6 +17,13 @@ export const eventWord = ev => ev?.label || t(TYPE_WORDS[ev?.type] ?? '');
 const ICONS = {
     shield: '<path d="M32 3 L59 12 V34 C59 52 46 63 32 69 C18 63 5 52 5 34 V12 Z" fill="#b8862a" stroke="#5a3b00" stroke-width="3" stroke-linejoin="round"/><path d="M32 9 L53 16 V34 C53 49 43 58 32 63 C21 58 11 49 11 34 V16 Z" fill="#f6dc7a" stroke="#7a5200" stroke-width="1.6" stroke-linejoin="round"/><path d="M32 9 V63 M11 30 H53" stroke="#7a5200" stroke-width="2.4" fill="none"/>',
     poison: '<path d="M32 3 C40 18 57 32 57 47 C57 61 46 69 32 69 C18 69 7 61 7 47 C7 32 24 18 32 3 Z" fill="#2f7d2a" stroke="#143a10" stroke-width="3" stroke-linejoin="round"/><path d="M32 11 C39 24 51 35 51 47 C51 57 43 63 32 63 C21 63 13 57 13 47 C13 35 25 24 32 11 Z" fill="#7fcf4f" stroke="#1d4a17" stroke-width="1.6" stroke-linejoin="round"/><circle cx="32" cy="47" r="7" fill="#1d4a17"/>' };
+// Combat-only PP on a board card's PP bubble (attribute only, so Blazor's own text is never overwritten; CSS draws the value).
+// stat 'DP' targets the DP bubble (attack-on-player DP bonuses such as 烈焰戰紋).
+export function showCombatPP(card, value, current, stat = 'PP') {
+    const b = card?.querySelectorAll?.('.field-stats b')?.[stat === 'DP' ? 1 : 0]; if (!b || !value || value === current) return false;
+    b.dataset.combatPp = String(value); b.dataset.combatDir = value > current ? 'up' : 'down'; return true;
+}
+export function clearCombatPP(scope) { for (const b of scope?.querySelectorAll?.('.field-stats b[data-combat-pp]') ?? []) { delete b.dataset.combatPp; delete b.dataset.combatDir; } }
 export const iconOf = keyword => keyword === '能量護盾' || keyword === '聖盾' ? 'shield' : keyword === '劇毒' ? 'poison' : null;
 const KEYWORD_COLORS = { '沉默': '#c49bff', '劇毒': '#8dff6a', '嘲諷': '#cfd8ea', '衝鋒': '#ffb27a', '貫穿': '#ffb27a', '反擊': '#9fd8ff' };
 const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
@@ -32,6 +39,7 @@ const t = zh => (globalThis.document?.documentElement?.lang === 'en' && EN[zh]) 
 // `fx` adds optional decorative effects (particles, shake, banners) that are never awaited for long.
 export function bindFeedback(root, sound = null, fx = null) {
     let layer = null, disposed = false, locked = false, skipClick = null, speed = 1, pauser = null, banner = null, showcase = null;
+    let combatPower = [];
     const animations = new Set(), hidden = new Map(), ghosts = new Map(), lunged = new Set();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
     const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
@@ -63,7 +71,8 @@ export function bindFeedback(root, sound = null, fx = null) {
     async function animate(el, frames, duration, easing = 'ease-out') {
         if (disposed || !el) return;
         const reduced = motionReduced();
-        const animation = el.animate(frames, { duration: reduced ? Math.min(duration, 100) : duration / (speed * fastForward), easing, fill: 'forwards' });
+        // motionScale() is the central 動畫速度 multiplier (0 when 關閉動畫); the batch speed and tap-to-fast-forward stack on top.
+        const animation = el.animate(frames, { duration: motionOff() ? 0 : reduced ? Math.min(duration, 100) * motionScale() : duration * motionScale() / (speed * fastForward), easing, fill: 'forwards' });
         animations.add(animation);
         try { await animation.finished; } catch { /* Leaving the board cancels the visual batch. */ }
         finally { animations.delete(animation); }
@@ -195,6 +204,13 @@ export function bindFeedback(root, sound = null, fx = null) {
     async function attack(ev) {
         const source = visual(ev.instanceId), destination = ev.targetId ? visual(ev.targetId) : hero(ev.side === 'player' ? 'computer' : 'player');
         if (!source || !destination) return;
+        // Combat-only PP bonuses of this fight light up on both cards before the clash and stay until the batch ends.
+        let boosted = false;
+        for (const p of combatPower) if (p.instanceId === ev.instanceId || p.instanceId === ev.targetId) {
+            const dp = p.label === 'DP', card = visual(p.instanceId), was = Number(publicUnits.get(p.instanceId)?.[dp ? 'dp' : 'pp'] ?? 0);
+            if (showCombatPP(card, p.amount, was, dp ? 'DP' : 'PP')) { boosted = true; void fx?.glow(card, p.amount > was ? '#9dffc9' : '#ff8a7a', 360); }
+        }
+        if (boosted) { void sound?.play('statUp', 0); await pause(520); }
         const power = Math.min(1, Math.max(.25, (Number(publicUnits.get(ev.instanceId)?.pp ?? ev.card?.pp) || 1000) / 3000));
         const broken = [ev.targetId, ev.instanceId].filter(shieldBroke);
         const shatterAll = () => { for (const id of broken) if (!shattered.has(id)) { shattered.add(id); shieldShatter(visual(id)); } };
@@ -233,27 +249,46 @@ export function bindFeedback(root, sound = null, fx = null) {
     // ---- sequenced effect presentation -------------------------------------------------------------
     function center(el) { const r = el.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2, r }; }
     async function pause(ms) {
-        if (disposed || motionReduced() || speed * fastForward >= 8 || !layer) return;
+        if (disposed || motionReduced() || speed * fastForward / motionScale() >= 8 || !layer) return;
         if (!pauser) { pauser = node('i', 'event-pause'); layer.append(pauser); }
         await animate(pauser, [{ opacity: 0 }, { opacity: 0 }], ms);
     }
-    async function badge(el, text, tone = 'gold') {
-        if (!el || !text) return;
-        const c = center(el), b = boardRect(), x = Math.max(b.x + 4, Math.min(c.x - 80, b.x + b.width - 164));
-        const pill = place(node('div', 'event-badge', text), { x, y: c.r.y - 30, width: 160, height: 28 });
-        pill.dataset.tone = tone; pill.dataset.wcgEffect = 'badge';
-        await animate(pill, [
-            { opacity: 0, transform: 'translateY(10px) scale(.6)' },
-            { opacity: 1, transform: 'translateY(-4px) scale(1.12)', offset: .2 },
-            { opacity: 1, transform: 'translateY(-6px) scale(1)', offset: .75 },
-            { opacity: 0, transform: 'translateY(-16px) scale(.96)' }], 900, 'cubic-bezier(.2,.8,.3,1)');
-        pill.remove();
+    // The battlefield carries no text: a former caption is now a short coloured ring and flash on its card.
+    // The words stay in the log and in the card zoom.
+    const TONES = { source: '#ffd77a', 沉默: '#c49bff', 劇毒: '#8dff6a', lost: '#9aa3ad' };
+    async function badge(el, _text, tone = 'gold') {
+        if (!el) return;
+        void fx?.ring(el, TONES[tone] ?? '#ffe08a', .55);
+        await flash(el, TONES[tone] ?? '#ffe5a1');
     }
     // A keyword gained mid-game: its board icon pops in where it will sit (shield above poison); keywords without an icon just ring.
     function iconMark(el, kind) {
         const r = el.getBoundingClientRect(), mark = place(node('div', `event-icon ${kind}`), { x: r.x + r.width - 27, y: r.y + r.height * .2 + (kind === 'poison' ? 31 : 0), width: 24, height: 27 });
         mark.innerHTML = `<svg viewBox="0 0 64 72" width="24" height="27" aria-hidden="true">${ICONS[kind]}</svg>`;
         return mark;
+    }
+    // A counter removed: the card's own counter icon shrinks and dims before the new count is drawn.
+    async function counterPulse(el, label) {
+        const kind = /倒數/.test(label ?? '') ? 'countdown' : /血誓/.test(label ?? '') ? 'blood' : null;
+        const icon = kind && el?.querySelector?.(`.${kind}-counter`);
+        if (!icon) return;
+        const r = icon.getBoundingClientRect(), ghost = place(icon.cloneNode(true), { x: r.x, y: r.y, width: r.width, height: r.height });
+        ghost.dataset.wcgEffect = 'counter-out';
+        void fx?.burst(ghost, { color: kind === 'blood' ? '#ff5a5a' : '#9edcff', count: 8, spread: 30, size: 4 });
+        await animate(ghost, [{ opacity: 1, transform: 'scale(1)' }, { opacity: 1, transform: 'scale(1.5)', offset: .3 }, { opacity: 0, transform: 'translateY(-14px) scale(.4)' }], 560);
+        ghost.remove();
+    }
+    // A keyword the unit no longer has: its icon (or a ring when it has none) appears, gets struck through and fades.
+    async function keywordLost(el, keyword) {
+        if (!el || !keyword) return;
+        const kind = iconOf(keyword);
+        void fx?.ring(el, '#9aa3ad', .6);
+        if (!kind) { await flash(el, '#9aa3ad'); return; }
+        const mark = iconMark(el, kind); mark.dataset.wcgEffect = 'icon-lost'; mark.dataset.keyword = keyword;
+        const strike = node('i', 'event-strike'); mark.append(strike);
+        void animate(strike, [{ transform: 'rotate(-35deg) scaleX(0)' }, { transform: 'rotate(-35deg) scaleX(1)' }], 260);
+        await animate(mark, [{ opacity: 0, transform: 'scale(.6)' }, { opacity: 1, transform: 'scale(1.3)', offset: .25 }, { opacity: 1, transform: 'scale(1)', filter: 'grayscale(0)', offset: .55 }, { opacity: 0, transform: 'scale(.8)', filter: 'grayscale(1)' }], 900);
+        mark.remove();
     }
     async function keywordPulse(el, keyword) {
         if (!el || !keyword) return;
@@ -308,6 +343,22 @@ export function bindFeedback(root, sound = null, fx = null) {
         const dx = (ev.side === 'player' ? 1 : -1) * (r.width / 2 - w * .35), dy = (ev.side === 'player' ? 1 : -1) * r.height * .18;
         await animate(card, [{ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx}px,${dy}px) scale(.48)` }], shrink, 'cubic-bezier(.4,0,.2,1)');
         showcase?.remove(); showcase = card;
+    }
+    // 翻開 (命運翻牌): the revealed deck card is shown large with a caption, then slides to the deck bottom.
+    async function showReveal(ev) {
+        const r = boardRect(), w = Math.min(230, r.width * .5), h = w * 88 / 63;
+        const wrap = node('div', 'event-reveal'); wrap.dataset.wcgEffect = 'reveal';
+        const card = faceCard(ev.card); card.className += ' event-showcase';
+        wrap.append(card);
+        place(wrap, { x: r.x + r.width / 2 - w / 2, y: r.y + r.height / 2 - h / 2 - 16, width: w, height: h + 40 });
+        void sound?.play('flip');
+        await animate(wrap, [{ opacity: 0, transform: 'rotateY(90deg) scale(.5)' }, { opacity: 1, transform: 'rotateY(0) scale(1.05)', offset: .7 }, { opacity: 1, transform: 'scale(1)' }], 360, 'cubic-bezier(.2,.8,.3,1)');
+        void fx?.ring(card, '#c9a6ff', 1); void fx?.burst(card, { color: '#e0ccff', count: 14, spread: 90, size: 5 });
+        // Always readable, even mid AI combo; animate()/pause() already follow the speed and skip settings.
+        await pause(ev.side === 'player' ? 900 : 1300);
+        const dx = r.width / 2 - w * .3, dy = (ev.side === 'player' ? 1 : -1) * r.height * .3;
+        await animate(wrap, [{ opacity: 1, transform: 'translate(0,0) scale(1)' }, { opacity: 0, transform: `translate(${dx}px,${dy}px) scale(.3)` }], 320, 'cubic-bezier(.4,0,.2,1)');
+        wrap.remove();
     }
     // 幸運幣: no card showcase, only the gold temporary-energy diamond popping in the energy area.
     async function coinPop(side) {
@@ -376,14 +427,16 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (from) await beam(from, ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
             if (ev.side === 'computer') { void sound?.play('energy', .35); void sound?.play('energyFill', .6); const dots = root.querySelector('.enemy-energy') ?? hero(ev.side); await fly(originCard(ev.side, null), dots); void fx?.burst(dots, { color: '#8ad7ff', count: 10, spread: 45, size: 5, rise: 16 }); await flash(dots, '#8ad7ff'); }
             else { const zone = root.querySelector('.energy-zone'); void sound?.play('energyFill'); void fx?.burst(zone, { color: '#8ad7ff', count: 12, spread: 55, size: 6, rise: 20 }); await flash(zone, '#8ad7ff'); }
-        } else if (ev.type === 'status' || ev.type === 'reveal') {
+        } else if (ev.type === 'reveal' && ev.card && !visual(ev.instanceId)) await showReveal(ev);
+        else if (ev.type === 'status' || ev.type === 'reveal') {
             const target = visual(ev.instanceId) ?? hero(ev.side);
             if (from) await beam(from, target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1');
             void sound?.play(ev.type === 'reveal' ? 'flip' : 'trigger');
             void fx?.ring(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1', .7);
             const k = keywordOf(ev.label);
             if (iconOf(k) === 'shield' && shieldBroke(ev.instanceId) && !shattered.has(ev.instanceId)) { shattered.add(ev.instanceId); shieldShatter(target); }
-            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null]);
+            // No floating text on the board: a counter change pulses that counter's own icon (details live in the card zoom).
+            await Promise.all([flash(target, ev.label === '沉默' ? '#c49bff' : '#ffe5a1'), iconOf(k) && gained(ev.instanceId, k) ? keywordPulse(target, k) : null, ev.type === 'status' ? counterPulse(target, ev.label) : null]);
         } else if (ev.type === 'attach') {
             const target = visual(ev.targetId);
             void sound?.play('glass');
@@ -399,6 +452,15 @@ export function bindFeedback(root, sound = null, fx = null) {
             void fx?.banner(t(ev.side === 'player' ? '你的回合' : '電腦回合'), ev.side);
             // Let the turn banner be read before the new turn's first action plays underneath it.
             await flash(hero(ev.side), '#9edcff'); await pause(480);
+        }
+        else if (ev.type === 'recover' && ev.card && hero(ev.side)) {
+            // A card back from the graveyard: shown greyed beside the portrait, regains colour, then flies to hand.
+            if (from) void fx?.glow(from, '#c9a2ff', 260);
+            void sound?.play('draw');
+            const c = center(hero(ev.side)), shown = place(publicCard(ev.card), { x: c.x + 70, y: c.y - 60, width: 90, height: 120 });
+            shown.dataset.wcgEffect = 'recover';
+            await animate(shown, [{ opacity: 0, transform: 'translateY(30px) scale(.8)', filter: 'grayscale(1) brightness(.6)' }, { opacity: 1, transform: 'translateY(0) scale(1.05)', filter: 'grayscale(1) brightness(.7)', offset: .35 }, { opacity: 1, transform: 'scale(1)', filter: 'none' }], 620);
+            await fly(shown, handZone(ev.side));
         }
         else if (ev.type === 'draw' || ev.type === 'take' || ev.type === 'recover') {
             if (from) void fx?.glow(from, '#9edcff', 260);
@@ -429,6 +491,13 @@ export function bindFeedback(root, sound = null, fx = null) {
             if (winnerFace) { void fx?.ring(winnerFace, '#ffd65a', 1.4); void fx?.burst(winnerFace, { color: '#ffe08a', count: 22, spread: 90, size: 6, rise: 50, duration: 900 }); }
             await flash(hero(ev.side), '#ffe5a1');
         }
+        else if (ev.type === 'energy-out') {
+            // A card leaves the energy zone (summoned from energy): the zone flashes and names it before the summon lands.
+            const zone = ev.side === 'player' ? root.querySelector('.energy-zone') : (root.querySelector('.enemy-energy') ?? hero(ev.side));
+            void sound?.play('draw');
+            void fx?.burst(zone, { color: '#8ad7ff', count: 10, spread: 45, size: 5, rise: 16 });
+            await flash(zone, '#8ad7ff');
+        }
         else if (ev.type === 'pay') await flash(ev.side === 'player' ? root.querySelector('.energy-zone') : hero(ev.side), '#8ad7ff');
     }
     async function runStep(step, state) {
@@ -442,6 +511,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         }
         if (step.kind === 'badge') {
             const el = visual(step.target); if (!el) return;
+            if (step.lost) { if (iconOf(step.keyword) === 'shield' && shattered.has(step.target)) return; void sound?.play('trigger'); await Promise.all([flash(el, '#9aa3ad'), keywordLost(el, step.keyword)]); return; }
             if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
             if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
             await keywordPulse(el, step.keyword);
@@ -459,6 +529,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (step.kind === 'tap') {
             const el = visual(step.target); if (!el) return;
             void sound?.play('flip');
+            if (!step.tapped) void fx?.ring(el, '#ffe08a', .6);
             await animate(el, [{ transform: 'rotate(0)' }, { transform: `rotate(${step.tapped ? 16 : -10}deg)`, offset: .5 }, { transform: 'rotate(0)' }], 420);
             return;
         }
@@ -470,10 +541,13 @@ export function bindFeedback(root, sound = null, fx = null) {
     function skipControls() {
         const r = root.getBoundingClientRect();
         void r;
-        const b = boardRect(), w = b.width < 600 ? 92 : 120, h = b.width < 600 ? 26 : 32;
-        const ff = place(node('button', 'event-ff', `⏩ ${t('快轉')}`), { x: b.x + b.width - w - 8, y: b.y + 6, width: w, height: h });
+        const b = boardRect(), h = b.width < 600 ? 26 : 32, w = h * 1.6;
+        // Below the header on the left, so it never covers 投降／返回房間 or the open 訓練工具 panel's 收起工具.
+        const header = root.querySelector('.match-header')?.getBoundingClientRect();
+        const top = header ? header.bottom + 6 : b.y + 48;
+        const ff = place(node('button', 'event-ff', '⏩'), { x: b.x + 8, y: top, width: w, height: h });
         ff.style.pointerEvents = 'auto';
-        ff.type = 'button';
+        ff.type = 'button'; ff.title = t('快轉'); ff.setAttribute('aria-label', t('快轉'));
         // Each tap speeds the rest of this batch (and the computer's turn) up further; animations never change state.
         const faster = event => { event?.stopPropagation?.(); fastForward = fastForward < 3 ? 3 : 12; layer?.setAttribute?.('data-fast', String(fastForward)); };
         ff.addEventListener('click', faster);
@@ -495,6 +569,7 @@ export function bindFeedback(root, sound = null, fx = null) {
         // Next public field provides fixed destinations; old public field preserves departing sources.
         const locations = new Map([...previous.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...previous.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]]), ...next.player.field.map(m => [m.card.instanceId, ['player', m.slot]]), ...next.computer.field.map(m => [m.card.instanceId, ['computer', m.slot]])]);
         const destination = id => { const location = locations.get(id); return location ? slot(...location) : null; };
+        combatPower = events.filter(ev => ev.type === 'power'); events = events.filter(ev => ev.type !== 'power');
         const steps = planSteps(previous, next, events);
         speed = batchSpeed(steps.length);
         if (steps.length > 1 || steps.some(s => s.kind !== 'event')) skipControls();
@@ -507,7 +582,9 @@ export function bindFeedback(root, sound = null, fx = null) {
                 if (index < steps.length - 1) await pause(stepGap(step));
             }
             dropShowcase(); lunged.clear();
-        } catch (error) { lunged.clear(); clear(); throw error; }
+        } catch (error) { lunged.clear(); clearCombatPP(root); clear(); throw error; }
+        // Back to the snapshot's own numbers before C# renders the next one.
+        clearCombatPP(root); combatPower = [];
         // C# commits the new snapshot and renders it before clearing these transient cards.
     }
     return { present, clear, markLunge(id) { if (id) lunged.add(String(id)); }, fastForward() { fastForward = fastForward < 3 ? 3 : 12; }, dispose() { disposed = true; clear(); fx?.clear(); } };

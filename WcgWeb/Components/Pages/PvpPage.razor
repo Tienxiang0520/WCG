@@ -1,0 +1,255 @@
+@page "/pvp"
+@using WcgWeb.Services.Pvp
+@using WcgWeb.Components.Common
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+@inject CardDatabase Cards
+@inject DeckService Decks
+@inject NavigationManager Nav
+
+<PageTitle>@L["好友對戰 - 魂誓"]</PageTitle>
+<div class="pvp-page" data-stage="@Session?.Stage">
+    <header class="page-hero">
+        <div class="page-hero-text">
+            <p class="eyebrow"><Icon Name="user" Size="14" />@L["好友對戰"]</p>
+            <h1>@L["和朋友直接連線對戰"]</h1>
+            <p class="lead">@L["兩個瀏覽器直接連線，不經過遊戲伺服器。互相複製貼上代碼就能開始，只算休閒對局，不影響天梯。"]</p>
+        </div>
+    </header>
+    <p class="alert alert-warning pvp-warning" role="note">@L["注意：點對點對戰無法保護隱藏資訊。對手若修改自己的遊戲程式，可以看到你的手牌和牌庫順序，請只和信任的朋友對戰。"]</p>
+
+    @if (Session == null || Session.Stage is PvpStage.Idle)
+    {
+        <section class="wcg-panel pvp-panel">
+            <div class="wcg-field"><label for="pvp-deck">@L["你的牌組"]</label>
+                <DeckPicker Id="pvp-deck" Label="@L["你的牌組"]" Decks="MyDecks" @bind-Value="DeckId" />
+            </div>
+            @if (SelectedDeck == null) { <p class="pvp-hint">@L["請先選擇一副合法的 50 張牌組。"]</p> }
+            <div class="pvp-choices">
+                <div>
+                    <h2 class="panel-title">@L["建立房間"]</h2>
+                    <p>@L["產生房間代碼傳給朋友，再貼上朋友回傳的回覆代碼。"]</p>
+                    <button class="btn btn-primary" id="pvp-create" disabled="@(SelectedDeck == null || Busy)" @onclick="Create">@L["建立房間"]</button>
+                </div>
+                <div>
+                    <h2 class="panel-title">@L["加入房間"]</h2>
+                    <label for="pvp-room-input">@L["貼上朋友的房間代碼"]</label>
+                    <textarea id="pvp-room-input" class="form-control pvp-code" rows="3" @bind="RoomInput" @bind:event="oninput" spellcheck="false"></textarea>
+                    <button class="btn btn-primary" id="pvp-join" disabled="@(SelectedDeck == null || Busy || string.IsNullOrWhiteSpace(RoomInput))" @onclick="Join">@L["加入"]</button>
+                </div>
+            </div>
+            @if (Session?.Error is { Length: > 0 } e) { <p class="alert alert-danger pvp-error" role="alert">@L.Text(e)</p> }
+        </section>
+    }
+    else if (Session.Stage is PvpStage.Preparing)
+    {
+        <section class="wcg-panel pvp-panel"><p role="status">@L["正在準備連線代碼（最多約 6 秒）…"]</p></section>
+    }
+    else if (Session.Stage is PvpStage.HostWaitingReply or PvpStage.GuestShowingReply or PvpStage.Connecting)
+    {
+        <section class="wcg-panel pvp-panel">
+            @if (Session.Stage != PvpStage.Connecting)
+            {
+                <h2 class="panel-title">@L[Session.Seat == PvpSeat.Host ? "1. 把房間代碼傳給朋友" : "把回覆代碼傳回給房主"]</h2>
+                <textarea id="pvp-my-code" class="form-control pvp-code" rows="3" readonly>@Session.Code</textarea>
+                <button class="btn btn-outline-primary" id="pvp-copy" @onclick="Copy">@L["複製代碼"]</button>
+                @if (CopyMessage != "") { <span class="pvp-copy-msg" role="status">@L[CopyMessage]</span> }
+            }
+            @if (Session.Seat == PvpSeat.Host && Session.Stage == PvpStage.HostWaitingReply)
+            {
+                <h2 class="panel-title">@L["2. 貼上朋友回傳的回覆代碼"]</h2>
+                <textarea id="pvp-reply-input" class="form-control pvp-code" rows="3" @bind="ReplyInput" @bind:event="oninput" spellcheck="false"></textarea>
+                <button class="btn btn-primary" id="pvp-connect" disabled="@string.IsNullOrWhiteSpace(ReplyInput)" @onclick="Accept">@L["連線"]</button>
+            }
+            <p class="pvp-status" role="status">@L[StatusText]</p>
+            @if (Session.Error is { Length: > 0 } e2) { <p class="alert alert-danger pvp-error" role="alert">@L.Text(e2)</p> }
+            <button class="btn btn-link" @onclick="Leave">@L["取消"]</button>
+        </section>
+    }
+    else if (Session.Stage is PvpStage.Handshaking)
+    {
+        <section class="wcg-panel pvp-panel"><p class="pvp-status" role="status">@L["已連線，正在核對雙方的遊戲版本與牌組…"]</p></section>
+    }
+    else if (Session.Stage is PvpStage.Failed)
+    {
+        <section class="wcg-panel pvp-panel">
+            <p class="alert alert-danger pvp-error" role="alert">@L.Text(Session.Error)</p>
+            <button class="btn btn-primary" id="pvp-back" @onclick="Leave">@L["返回"]</button>
+        </section>
+    }
+    else if (Session.Match is { } match)
+    {
+        var g = match.Engine; var view = match.View; var me = view.Me; var them = view.Them; var mine = view.IsMyDecision && Session.Stage == PvpStage.Playing;
+        <section class="pvp-board" aria-label="@L["對戰"]">
+            <div class="pvp-bar">
+                <span class="pvp-turn" id="pvp-turn">@(Session.Stage == PvpStage.Ended ? L.Text(Session.Result) : mine ? L["輪到你"] : L["等待對手…"])</span>
+                <span>@L.F("第 {0} 回合", g.TurnNumber)</span>
+                @if (Session.Stage == PvpStage.Playing) { <span class="pvp-conn @(Session.PeerSilent ? "warn" : "")">@L[Session.PeerSilent ? "對手沒有回應…" : "連線正常"]</span> }
+                @if (Session.Stage == PvpStage.Playing) { <button class="btn btn-sm btn-outline-danger" id="pvp-surrender" @onclick="AskSurrender">@L["投降"]</button> }
+                else { <button class="btn btn-sm btn-primary" id="pvp-back" @onclick="Leave">@L["返回"]</button> }
+            </div>
+            @if (confirmSurrender)
+            {
+                <div class="pvp-confirm" role="alertdialog"><span>@L["確定要投降嗎？本局會算你輸。"]</span>
+                    <button class="btn btn-sm btn-danger" id="pvp-surrender-yes" @onclick="DoSurrender">@L["投降"]</button>
+                    <button class="btn btn-sm btn-outline-secondary" @onclick="() => confirmSurrender = false">@L["取消"]</button></div>
+            }
+            @if (Session.Stage == PvpStage.Ended) { <p class="alert alert-info pvp-result" id="pvp-result" role="status">@L.Text(Session.Result)</p> }
+
+            <div class="pvp-side them" id="pvp-them">
+                <h3>@L["對手"] · <Icon Name="heart" Size="14" /> <b class="pvp-hp">@them.Hp</b> · @L.F("手牌 {0}", them.Hand.Count) · @L.F("牌庫 {0}", them.Deck.Count) · @L.F("能量 {0}/{1}", them.EnergyZone.Count(c => !c.IsTapped), them.EnergyZone.Count) · @L.F("墓地 {0}", them.Graveyard.Count)</h3>
+                @if (PendingSpell != null && mine) { <button class="btn btn-sm btn-warning" @onclick="() => SpellAtPlayer(them)">@L["以對手為目標"]</button> }
+                <div class="pvp-row">@foreach (var m in them.Board) { @Unit(m, false, g, me, mine) }</div>
+            </div>
+            <div class="pvp-side me" id="pvp-me">
+                <div class="pvp-row">@foreach (var m in me.Board) { @Unit(m, true, g, me, mine) }</div>
+                <h3>@L["你"] · <Icon Name="heart" Size="14" /> <b class="pvp-hp">@me.Hp</b> · @L.F("牌庫 {0}", me.Deck.Count) · @L.F("能量 {0}/{1}", me.EnergyZone.Count(c => !c.IsTapped), me.EnergyZone.Count) · @L.F("墓地 {0}", me.Graveyard.Count)</h3>
+                @if (PendingSpell != null && mine) { <button class="btn btn-sm btn-warning" @onclick="() => SpellAtPlayer(me)">@L["以自己為目標"]</button> <button class="btn btn-sm btn-link" @onclick="() => PendingSpell = null">@L["取消"]</button> }
+            </div>
+
+            @if (mine && g.CurrentPendingChoice is { } choice && choice.OwnerId == me.Id)
+            {
+                <div class="pvp-pending" id="pvp-choice"><b>@L.Text(choice.Title)</b>
+                    @foreach (var o in choice.Options) { <button class="btn btn-sm btn-outline-light" @onclick="() => Do(e => e.SelectChoice(o))">@L.Text(o.Title)</button> }
+                    @if (choice.CanCancel) { <button class="btn btn-sm btn-link" @onclick="() => Do(e => e.CancelTargetOrChoice())">@L["取消"]</button> }</div>
+            }
+            @if (mine && g.CurrentPendingTarget is { } pt && pt.OwnerId == me.Id)
+            {
+                <div class="pvp-pending" id="pvp-target"><b>@L.Text(pt.Title)</b> <span>@L["點選場上的怪物作為目標。"]</span>
+                    @if (pt.OnPlayerTargetSelected != null) { <button class="btn btn-sm btn-outline-light" @onclick="() => Do(e => e.SelectPlayerTarget(them))">@L["對手"]</button> <button class="btn btn-sm btn-outline-light" @onclick="() => Do(e => e.SelectPlayerTarget(me))">@L["你"]</button> }
+                    @if (pt.CanCancel) { <button class="btn btn-sm btn-link" @onclick="() => Do(e => e.CancelTargetOrChoice())">@L["取消"]</button> }</div>
+            }
+
+            <div class="pvp-hand" id="pvp-hand">
+                @foreach (var c in me.Hand)
+                {
+                    var card = c;
+                    <div class="pvp-hand-card">
+                        <CardFace Card="card.Card" Class="pvp-face" />
+                        <div class="pvp-hand-actions">
+                            <button class="btn btn-sm btn-outline-info" disabled="@(!mine || !g.CanPlayEnergy(me, card))" @onclick="() => Do(e => e.PlayEnergy(me, card))">@L["放入能量"]</button>
+                            <button class="btn btn-sm btn-primary" disabled="@(!mine || !g.CanPlayCard(me, card))" @onclick="() => Play(card)">@L["打出"]</button>
+                            @if (card.Card.IsSpell) { <button class="btn btn-sm btn-outline-primary" disabled="@(!mine || !g.CanPlayCard(me, card))" @onclick="() => PendingSpell = card">@L["指定目標"]</button> }
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="pvp-bar">
+                <button class="btn btn-warning" id="pvp-end-turn" disabled="@(!mine || g.CurrentPendingChoice != null || g.CurrentPendingTarget != null)" @onclick="() => Do(e => e.EndTurn())">@L["結束回合"]</button>
+                @if (ActionError != "") { <span class="text-danger pvp-action-error" role="alert">@L.Text(ActionError)</span> }
+            </div>
+            <ol class="pvp-log" id="pvp-log">@foreach (var l in g.Logs.Take(10)) { <li>@L.Text(l.Message)</li> }</ol>
+        </section>
+    }
+    @if (Tour == "pvp" && (Session == null || Session.Stage is PvpStage.Idle)) { <WcgWeb.Components.Tutorial.GuidedTour LessonId="pvp" /> }
+</div>
+
+@code {
+    [SupplyParameterFromQuery(Name = "tour")] public string? Tour { get; set; }
+    private PvpSession? Session;
+    private List<Deck> MyDecks = [];
+    private string DeckId = "", RoomInput = "", ReplyInput = "", CopyMessage = "", ActionError = "";
+    private bool Busy, confirmSurrender;
+    private CardInstance? PendingSpell;
+    private Deck? SelectedDeck => MyDecks.FirstOrDefault(d => d.Id == DeckId && d.IsValid(Cards.GetCard, out _));
+    private MonsterInstance? attacker;
+
+    protected override void OnInitialized()
+    {
+        MyDecks = Decks.GetPlayerDecks();
+        DeckId = MyDecks.FirstOrDefault(d => d.IsValid(Cards.GetCard, out _))?.Id ?? "";
+    }
+
+    private PvpSession NewSession()
+    {
+        // Test hook: ?pvpbuild=x makes this tab report a different build, to check the version-mismatch message.
+        var q = new Uri(Nav.Uri).Query;
+        var over = System.Web.HttpUtility.ParseQueryString(q)["pvpbuild"];
+        var s = new PvpSession(JS, Cards, f => InvokeAsync(f), over);
+        s.Changed += () => _ = InvokeAsync(StateHasChanged);
+        return s;
+    }
+
+    private async Task Create()
+    {
+        if (SelectedDeck is not { } deck) return;
+        Busy = true;
+        if (Session != null) await Session.DisposeAsync();
+        Session = NewSession(); StateHasChanged();
+        await Session.CreateRoom(deck); Busy = false;
+    }
+
+    private async Task Join()
+    {
+        if (SelectedDeck is not { } deck) return;
+        Busy = true;
+        if (Session != null) await Session.DisposeAsync();
+        Session = NewSession();
+        await Session.Join(RoomInput, deck);
+        if (Session.Stage == PvpStage.Idle) { } // decode error stays on the lobby
+        Busy = false;
+    }
+
+    private Task Accept() => Session?.AcceptReply(ReplyInput) ?? Task.CompletedTask;
+
+    private async Task Copy()
+    {
+        try { await JS.InvokeVoidAsync("navigator.clipboard.writeText", Session!.Code); CopyMessage = "已複製代碼。"; }
+        catch (JSException) { CopyMessage = "無法自動複製，請手動全選代碼後複製。"; }
+    }
+
+    private string StatusText => Session!.Stage switch
+    {
+        PvpStage.HostWaitingReply => "等待朋友的回覆代碼…",
+        PvpStage.GuestShowingReply => "等待房主貼上回覆代碼並連線…",
+        PvpStage.Connecting => "正在連線…（最多約 15 秒）",
+        _ => ""
+    };
+
+    private void Do(Func<GameEngine, bool> command)
+    {
+        ActionError = "";
+        if (Session == null) return;
+        if (!Session.Act(command)) ActionError = Session.Match?.Engine.LastError is { Length: > 0 } e ? e : "現在不能這樣做。";
+        attacker = null; PendingSpell = null;
+    }
+
+    private void Play(CardInstance c)
+    {
+        var me = Session!.Match!.View.Me;
+        Do(e => c.Card.IsMonster ? e.SummonMonster(me, c) : c.Card.IsEnchantment ? e.PlayEnchantment(me, c) : e.CastSpell(me, c));
+    }
+    private void SpellAtPlayer(PlayerState target) { var c = PendingSpell!; var me = Session!.Match!.View.Me; Do(e => e.CastSpellAtPlayer(me, c, target)); }
+
+    private RenderFragment Unit(MonsterInstance m, bool mineSide, GameEngine g, PlayerState me, bool myTurn) => __builder =>
+    {
+        var unit = m;
+        var targeting = myTurn && g.CurrentPendingTarget is { } pt && pt.OwnerId == me.Id && pt.OnTargetSelected != null;
+        <div class="pvp-unit @(unit.IsTapped ? "tapped" : "") @(attacker == unit ? "selected" : "")" title="@L.Text(unit.Card.Text)">
+            <b>@L.CardName(unit.Card)</b>
+            <span>@(unit.IsSet ? L["蓋放"] : $"{unit.CurrentPP} / {unit.CurrentDP}")</span>
+            @if (unit.IsTapped) { <small>@L["橫置"]</small> }
+            @if (unit.Countdown > 0) { <small>@L.F("倒數 {0}", unit.Countdown)</small> }
+            @if (targeting) { <button class="btn btn-sm btn-warning" @onclick="() => Do(e => e.SelectTarget(unit))">@L["選擇"]</button> }
+            else if (PendingSpell is { } spell && myTurn) { <button class="btn btn-sm btn-warning" @onclick="() => Do(e => e.CastSpellAt(me, spell, unit))">@L["目標"]</button> }
+            else if (myTurn && mineSide && g.CanAttack(unit))
+            {
+                <button class="btn btn-sm btn-outline-danger" @onclick="() => attacker = attacker == unit ? null : unit">@L[attacker == unit ? "取消攻擊" : "攻擊"]</button>
+                @if (attacker == unit) { <button class="btn btn-sm btn-danger pvp-attack-face" disabled="@(!g.CanAttackPlayer(unit))" @onclick="() => Do(e => e.Attack(me, unit))">@L["攻擊頭像"]</button> }
+            }
+            else if (myTurn && mineSide && g.CanActivate(me, unit)) { <button class="btn btn-sm btn-outline-info" @onclick="() => Do(e => e.Activate(me, unit))">@L["啟動"]</button> }
+            else if (myTurn && !mineSide && attacker is { } a) { <button class="btn btn-sm btn-danger" @onclick="() => Do(e => e.Attack(me, a, unit))">@L["攻擊這隻"]</button> }
+        </div>
+    };
+
+    private void AskSurrender() => confirmSurrender = true;
+    private async Task DoSurrender() { confirmSurrender = false; if (Session != null) await Session.Surrender(); }
+
+    private async Task Leave()
+    {
+        if (Session != null) await Session.DisposeAsync();
+        Session = null; RoomInput = ReplyInput = CopyMessage = ActionError = ""; confirmSurrender = false;
+    }
+
+    public async ValueTask DisposeAsync() { if (Session != null) await Session.DisposeAsync(); }
+}

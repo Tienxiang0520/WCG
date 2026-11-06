@@ -71,7 +71,7 @@ public partial class GameEngine
     }
     // 虛空隱士: while it is your only monster, spells can't target it.
     // After the 理智 buff: enemy spells can never target it.
-    private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1);
+    private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && (Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1) || StarWarded(m));
     private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221") + HoofAttackDp(a) + LaneAttackDp(a);
     private static int NewAttachmentPower(string id) => id switch { "WCG-221" => 300, "WCG-338" => 200, _ => 0 };
     private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : GraveCostReduction(p, card);
@@ -133,7 +133,7 @@ public partial class GameEngine
             case "WCG-230":
                 if (t == null || !Alive(t) || t.IsTapped) break;
                 t.IsTapped = true; Present("status", p, t.InstanceId, card: t.Card, label: "橫置");
-                PickMonster(p, "選擇與它交戰的敵方怪物", e.Field, d => { if (Alive(t) && Alive(d)) EffectCombat(p, t, d); });
+                PickMonster(p, "選擇與它交戰的敵方怪物", SpellResolvePickable(p, e.Field), d => { if (Alive(t) && Alive(d)) EffectCombat(p, t, d); });
                 break;
             case "WCG-233":
                 var nature = lastSacrifice?.Card.HasWill("生機") == true; lastSacrifice = null;
@@ -142,7 +142,7 @@ public partial class GameEngine
             case "WCG-242": Resolve(() => DrawMany(p, 2), () => PayLife(p, 1)); break;
             case "WCG-248":
                 if (t == null || !Alive(t)) break;
-                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t)), x => KillBatch([x], c.Name));
+                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
             default: return OathSpell(p, source, t);
@@ -157,7 +157,7 @@ public partial class GameEngine
         {
             case "WCG-223":
                 var mine = m.LostAttachments.Where(p.Graveyard.Contains).ToArray();
-                if (mine.Length > 0) { Badge(); CardChoice(p, "選擇附著過的卡加入手牌", mine, c => { if (p.Graveyard.Remove(c)) p.Hand.Add(c); }); }
+                if (mine.Length > 0) { Badge(); CardChoice(p, "選擇附著過的卡加入手牌", mine, c => { if (p.Graveyard.Remove(c)) { p.Hand.Add(c); Present("recover", p, c.InstanceId, card: c.Card, label: "墓地回收"); } }); }
                 break;
             case "WCG-232": Badge(); TopEnergy(p); break;
             case "WCG-235": Badge(); FreeFaction(p, 1, "生機", true); break;
@@ -177,6 +177,9 @@ public partial class GameEngine
     {
         RootStartTurn(p);
         MireStartTurn(p);
+        SpringStartTurn(p);
+        StarStartTurn(p);
+        FateStartTurn(p);
         foreach (var s in p.Structures.Where(x => !x.IsSet).ToArray())
         {
             if (s.Card.Id == "WCG-231" && AltarReady(p)) _effects.AddLast(() => { if (p.Structures.Contains(s) && AltarReady(p)) DrawMany(p, 1); });

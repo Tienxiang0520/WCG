@@ -45,4 +45,40 @@ public class EnergyZoneViewerTests
         Assert.DoesNotMatch("class=\"[^\"]*\\benergy-back\\b", panel);
         Assert.Contains("energy-dialog-back", panel);
     }
+
+    private static string Panel(string src, string open)
+    {
+        var panel = src[src.IndexOf(open)..];
+        return panel[..panel.IndexOf("</section></div>}")];
+    }
+
+    [Fact]
+    public void ClickingCardInDialogsKeepsDialogOpen()
+    {
+        // Tapping an energy card used to run ShowEnergy=false before opening the detail, so the whole panel closed.
+        var src = Board();
+        foreach (var open in new[] { "@if(ShowEnergy)", "@if(ShowGrave)", "@if(ShowHistory)" })
+        {
+            var panel = Panel(src, open);
+            Assert.Contains("@onclick=\"()=>Detail=", panel);
+            Assert.DoesNotMatch(@"\{Show(Energy|Grave|History)=false;Detail=", panel);
+        }
+        // The detail dialog is rendered after the list dialogs so it stacks on top of them.
+        Assert.True(src.IndexOf("@if(Detail is {} card)") > src.IndexOf("@if(ShowEnergy)"));
+    }
+
+    [Fact]
+    public void LogAndGraveyardAreSeparateButtonsAndPanels()
+    {
+        var src = Board();
+        Assert.DoesNotContain("紀錄／墓地", src);
+        Assert.Contains("class=\"open-log\" @onclick=\"()=>ShowHistory=true\">@L[\"紀錄\"]", src);
+        Assert.Contains("class=\"open-grave\" @onclick=\"()=>ShowGrave=true\">@L[\"墓地\"]", src);
+        var grave = Panel(src, "@if(ShowGrave)");
+        Assert.Contains("side.Graveyard", grave);
+        Assert.DoesNotContain("History.Take", grave);
+        var log = Panel(src, "@if(ShowHistory)");
+        Assert.Contains("History.Take", log);
+        Assert.DoesNotContain("side.Graveyard", log);
+    }
 }

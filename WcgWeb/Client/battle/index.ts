@@ -436,7 +436,7 @@ class BattleScene extends Phaser.Scene {
             return;
         }
         // Selection instructions belong beside the controls, not in a floating centre card.
-        if(event.type==='target'||event.type==='choice')return;
+        if(event.type==='target'||event.type==='choice'||event.type==='power')return;
         if(this.owner.reduced||document.hidden)return;
         if(event.type==='summon'){await this.animateSummon(event);return;}
         if(this.owner.animationPrototype)return;
@@ -646,8 +646,6 @@ class Board {
     showPreview(attacker:string,target:string){
         const entry=this.state?.player.field.find(m=>m.card.instanceId===attacker)?.targets.find(t=>t.id===target);
         if(!entry?.preview)return;const p=entry.preview;
-        if(target==='face'&&p.rageEnergy){this.status.textContent=`攻擊預覽：基本 ${p.playerDamage} 點傷害，可投入最多 ${p.rageEnergy} 點能量增加 DP；護主與反擊另行結算。`;return;}
-        if(target!=='face'&&p.wildEnergy){this.status.textContent='交戰預覽：野性可改變 PP；先由攻擊方投入，再由防守方投入，之後才判定存活與消滅。';return;}
         if(target==='face'){const prevent=p.playerDamagePreventable||0;this.status.textContent=prevent?`攻擊預覽：${p.playerDamage} 點傷害，護誓守衛最多可減少 ${prevent} 點；對手選擇後才扣血。`:`攻擊預覽：電腦生命 ${this.state!.computer.hp} → ${Math.max(0,this.state!.computer.hp-p.playerDamage)}。宣告觸發與陣亡能力另行結算。`;return;}
         this.status.textContent=`交戰預覽 → ${entry.label}：己方${p.attackerDies?'消滅':p.attackerShieldBreaks?'護盾擋下':'存活'}、敵方${p.defenderDies?'消滅':p.defenderShieldBreaks?'護盾擋下':'存活'}${p.playerDamage?'，玩家傷害 '+p.playerDamage+(p.playerDamagePreventable?'（護誓守衛最多減少 '+p.playerDamagePreventable+'）':''):''}。陣亡能力另行結算。`;
     }

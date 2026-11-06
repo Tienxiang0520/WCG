@@ -1578,5 +1578,140 @@
     "id": "WCG-399",
     "name": "千刃狂濤",
     "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 千刃狂濤 (Thousand-Blade Surge). Character portrait: a towering blademaster surrounded by a storm of a thousand flying swords, crashing forward like a crimson tidal wave. Palette and setting: crimson, ember orange, charcoal, volcanic war camps. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-400",
+    "name": "汲泉修女",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 汲泉修女 (Wellspring Nun). Character portrait: a young nun drawing glowing holy water from a stone well with a silver pail. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-401",
+    "name": "泉光侍祭",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 泉光侍祭 (Springlight Acolyte). Character portrait: an acolyte raising both hands as streams of luminous water arc out to his left and right. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-402",
+    "name": "滿溢之禱",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 滿溢之禱 (Overflowing Prayer). Scene: praying hands cupped beneath a chalice that overflows with golden light, spilling onto cathedral steps. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-403",
+    "name": "聖泉之井",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 聖泉之井 (Holy Spring Well). Scene: an ancient marble well in a sunlit cloister, its water glowing and rising above the rim like a fountain of light. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-404",
+    "name": "流浪治療師",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 流浪治療師 (Wandering Healer). Character portrait: a hooded traveling healer with a herb satchel and a lantern, walking a dusty crossroads at dusk. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-405",
+    "name": "泉誓騎士",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 泉誓騎士 (Spring-Sworn Knight). Character portrait: a knight in white-gold armor kneeling in a sacred pool, water glowing around a raised tower shield. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-406",
+    "name": "洗禮之潮",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 洗禮之潮 (Tide of Baptism). Scene: a towering wave of radiant holy water crashing down on a shadowy beast in a flooded cathedral nave. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-407",
+    "name": "銀泉守護巨像",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 銀泉守護巨像 (Silverspring Colossus). Character portrait: a colossal silver stone guardian with a fountain flowing from its chest, standing over a crossroads shrine. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-408",
+    "name": "聖泉傾瀉",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 聖泉傾瀉 (Holy Spring Deluge). Scene: a colossal torrent of golden holy water pouring from the sky onto a battlefield, drowning an enemy army in light. Palette and setting: radiant gold, ivory, holy light, cathedrals and banners. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-409",
+    "name": "星沙學徒",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 星沙學徒 (Starsand Apprentice). Character portrait: a young apprentice watching glittering star-sand fall through a tiny hourglass in an arcane library. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-410",
+    "name": "倒懸時鐘",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 倒懸時鐘 (Inverted Clock). Scene: a huge brass clock hanging upside down from a ruined tower, its hands spinning backwards over a crossroads. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-411",
+    "name": "觀星術士",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 觀星術士 (Stargazer Adept). Character portrait: a robed astronomer with a brass telescope, constellations swirling to either side of her. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-412",
+    "name": "時隙催化",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 時隙催化 (Time-Gap Catalyst). Scene: a sapphire crystal cracking open a seam in time, gears and starlight pouring out of the gap. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-413",
+    "name": "封時守衛",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 封時守衛 (Timeseal Warden). Character portrait: an armored warden encased in a slowly ticking shell of frozen hourglass sand, holding a great shield. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-414",
+    "name": "隕星預言者",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 隕星預言者 (Meteor Seer). Character portrait: a blindfolded prophet pointing at the night sky as burning meteors streak toward the horizon. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-415",
+    "name": "星軌重排",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 星軌重排 (Star-Orbit Realignment). Scene: glowing orbital rings of stars being rewound around a celestial orrery by an unseen hand. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-416",
+    "name": "永恆鐘塔",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 永恆鐘塔 (Eternal Clocktower). Scene: an immense clocktower rising above the clouds at a crossroads, its great bell glowing as the hour strikes. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-417",
+    "name": "星律終焉",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 星律終焉 (End of the Star Law). Scene: every star in the sky collapsing at once into a blinding sapphire supernova above a cosmic library. Palette and setting: sapphire, icy cyan, silver, arcane libraries and cosmic skies. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-418",
+    "name": "擲骨巫童",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 擲骨巫童 (Bone-Casting Child). Character portrait: a pale child witch casting small carved bones across a haunted ruin floor, violet glyphs glowing. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-419",
+    "name": "命輪占者",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 命輪占者 (Wheel-of-Fate Diviner). Character portrait: a fortune teller spinning a great wooden wheel of fate at a misty crossroads. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-420",
+    "name": "深淵賭約",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 深淵賭約 (Abyssal Wager). Scene: a skeletal hand sliding a single glowing card across a table of black stone toward a terrified beast. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-421",
+    "name": "開眼之井",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 開眼之井 (Well of Open Eyes). Scene: a stone well at a crossroads whose dark water reflects a single giant open eye staring upward. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-422",
+    "name": "骰魂魔像",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 骰魂魔像 (Soul-Dice Golem). Character portrait: a hulking golem of black stone with glowing violet dice embedded in its chest, rolling them from a giant fist. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-423",
+    "name": "宿命拾荒者",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 宿命拾荒者 (Fate Scavenger). Character portrait: a ragged scavenger collecting fallen tarot cards from a muddy crossroads, eyes gleaming. Palette and setting: neutral steel grey, parchment, crossroads. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-424",
+    "name": "黑籤召喚師",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 黑籤召喚師 (Black-Lot Summoner). Character portrait: a sorcerer drawing a black lot from an urn as a monstrous shape rises from the violet smoke. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-425",
+    "name": "命運祭壇",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 命運祭壇 (Altar of Fate). Scene: a black obsidian altar in a haunted ruin, a giant glowing card hovering above it, lightning striking outward. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
+  },
+  {
+    "id": "WCG-426",
+    "name": "千面輪盤",
+    "prompt": "Original polished painterly semi-realistic fantasy illustration, landscape 16:9. Artwork ONLY, edge to edge, no text, letters, numbers, border, card layout, logo or watermark. Strong central silhouette readable at small size, rich brushwork, dramatic lighting. Consistent premium fantasy aesthetic. Invent original designs, do not copy existing game artwork. No gore. Illustrate: 千面輪盤 (Thousand-Faced Roulette). Scene: a colossal spinning roulette wheel of a thousand masks floating in a violet void, cards flying from it in every direction. Palette and setting: violet, spectral teal, midnight black, haunted ruins. Distinct scene for this card."
   }
 ]

@@ -121,7 +121,7 @@ public partial class GameEngine
                 break;
             case "WCG-198":
                 Resolve(() => ReverseDamage(damage), () => Heal(p, 2),
-                    () => OptionalTarget(p, SimplifiedRules ? "可附著聖盾" : "可附著能量護盾", p.Field.Where(x => x.IsSilenced || x.Card.Id != "WCG-152"), x => Attach(p, card, x)));
+                    () => OptionalTarget(p, SimplifiedRules ? "可附著聖盾" : "可附著能量護盾", SpellResolvePickable(p, p.Field), x => Attach(p, card, x)));
                 break;
             case "WCG-199":
                 Resolve(() =>

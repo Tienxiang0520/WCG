@@ -1,6 +1,7 @@
 import { createAssetManifest } from './asset-manifest.mjs';
 import { spawnSync } from 'node:child_process';
-import { cp, mkdir, readdir, unlink, rm, readFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, unlink, rm, readFile, writeFile } from 'node:fs/promises';
+import { addAnalytics } from './analytics-tag.mjs';
 import { existsSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -23,7 +24,7 @@ if(!existsSync(resolve(client,'node_modules/phaser/package.json'))
     run('npm',['ci'],client);
 run('npm',['run','build'],client);
 run('node',['tools/prepare-assets.mjs']);
-run('node',['--test','tools/cloud-integration.test.mjs','tools/cloud-sync.test.mjs','tools/cloud-version.test.mjs','tools/storage.test.mjs','tools/deck-print.test.mjs','tools/battle-feedback.test.mjs','tools/drag-intent.test.mjs','tools/effect-plan.test.mjs','tools/battle-audio.test.mjs','tools/battle-fx.test.mjs','tools/avatar-crop.test.mjs','tools/training.test.mjs','tools/startup.test.mjs','tools/phone-gate.test.mjs','tools/asset-preload.test.mjs','tools/asset-worker.test.mjs']);
+run('node',['--test','tools/cloud-integration.test.mjs','tools/cloud-sync.test.mjs','tools/cloud-version.test.mjs','tools/storage.test.mjs','tools/deck-print.test.mjs','tools/battle-feedback.test.mjs','tools/drag-intent.test.mjs','tools/effect-plan.test.mjs','tools/battle-audio.test.mjs','tools/battle-fx.test.mjs','tools/avatar-crop.test.mjs','tools/training.test.mjs','tools/startup.test.mjs','tools/phone-gate.test.mjs','tools/asset-preload.test.mjs','tools/asset-worker.test.mjs','tools/analytics.test.mjs']);
 await rm(resolve(project,'bin/site-publish'),{recursive:true,force:true});
 run('dotnet',['publish','SoulOath.Static.csproj','--nologo','-c','Release','-o',resolve(project,'bin/site-publish')]);
 await mkdir(site,{recursive:true});
@@ -51,7 +52,12 @@ async function strip(directory){
     }
 }
 await strip(resolve(site,'dist'));
-if(azure)await cp(resolve(root,'deployment/azure/staticwebapp.config.json'),resolve(site,'dist/staticwebapp.config.json'));
+if(azure){
+    await cp(resolve(root,'deployment/azure/staticwebapp.config.json'),resolve(site,'dist/staticwebapp.config.json'));
+    // Visitor analytics only in the Azure production build (analytics.js also checks the host).
+    const index=resolve(site,'dist/index.html');
+    await writeFile(index,addAnalytics(await readFile(index,'utf8')));
+}else await unlink(resolve(site,'dist/analytics.js')).catch(()=>{});
 await createAssetManifest(resolve(site,'dist'));
 // Real index files keep every public route refreshable on a plain static host.
 for (const route of ['battle','cards','deckbuilder','ranked','rules','settings','tutorial','legacy','not-found']) {

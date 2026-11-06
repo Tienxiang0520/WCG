@@ -40,29 +40,9 @@ public partial class GameEngine
     internal bool EditTraining(string type, TrainingEdit? edit, Guid? id) => Change(() =>
     {
         if(!TrainingMode) return Fail("此功能僅限訓練場。");
-        if(type=="training-restore")
-        {
-            if(edit?.Scene==null || edit.Scene.Length>2_000_000)return Fail("測試場面資料不合法。");
-            TrainingScene? scene;
-            try { scene=JsonSerializer.Deserialize<TrainingScene>(edit?.Scene ?? "",TrainingJson()); }
-            catch(Exception ex) when(ex is JsonException or NotSupportedException or ArgumentException) { return Fail("測試場面無法讀取，現有對局保持原狀。"); }
-            if(scene==null || scene.Version!=1 || scene.Active is not ("player" or "computer") || scene.Turn<1 || scene.Phase is not (TurnPhase.MainPhase or TurnPhase.GameOver)
-                || !ValidTrainingSide(scene.Player,"player") || !ValidTrainingSide(scene.Computer,"computer")
-                || scene.Phase==TurnPhase.MainPhase && (scene.Player.HasLost || scene.Computer.HasLost || scene.Player.Hp==0 || scene.Computer.Hp==0)
-                || scene.Phase==TurnPhase.GameOver && !scene.Player.HasLost && !scene.Computer.HasLost) return Fail("測試場面資料不合法。");
-            if(DamageCounters)
-            {
-                if(new[]{scene.Player,scene.Computer}.Any(p=>p.Hand.Count+p.Structures.Count(m=>m.IsSet)>200))return Fail("舊測試場面的蓋牌轉回手牌後超出可保存範圍。");
-                // Scene saves describe test fixtures, not historical ranked matches. Apply current rules
-                // without losing the cards that occupied face-down slots in an older fixture.
-                foreach(var restoredSide in new[]{scene.Player,scene.Computer})
-                    foreach(var set in restoredSide.Structures.Where(m=>m.IsSet).ToArray())
-                    { restoredSide.Structures.Remove(set);restoredSide.Hand.Add(new(set.Card){InstanceId=set.InstanceId}); }
-            }
-            ClearMatch(); Player=scene.Player; Computer=scene.Computer; Computer.IsAi=true; Player.IsAi=false;
-            CurrentTurnPlayerId=scene.Active; TurnNumber=scene.Turn; CurrentPhase=scene.Phase; _random=new Random(scene.Seed);
-            Log("已還原測試場面。","action"); return true;
-        }
+        if(type=="training-preset") return TrainingPreset(edit?.Preset);
+        if(type=="training-restore") return RestoreTrainingScene(edit?.Scene);
+        if(TrainingTool(type, edit, id) is {} handled) return handled;
         if(CurrentPhase==TurnPhase.NotStarted || IsOver || IsWaiting || _effects.Count>0) return Fail("請等待對局與效果結算完成；結束的對局可還原測試場面。");
         if(edit?.Side is not ("player" or "computer")) return Fail("請選擇合法陣營。");
         var side=edit.Side=="player"?Player:Computer;
@@ -106,4 +86,27 @@ public partial class GameEngine
         && p.Board.Select(m=>m.Slot).Distinct().Count()==p.Board.Count()
         && p.Field.All(m=>m.IsUnit) && p.Structures.All(m=>!m.IsUnit)
         && p.Deck.Concat(p.Hand).Concat(p.EnergyZone).Concat(p.Graveyard).All(c=>c!=null && c.Card!=null);
+    private bool RestoreTrainingScene(string? json)
+    {
+            if(json==null || json.Length>2_000_000)return Fail("測試場面資料不合法。");
+            TrainingScene? scene;
+            try { scene=JsonSerializer.Deserialize<TrainingScene>(json,TrainingJson()); }
+            catch(Exception ex) when(ex is JsonException or NotSupportedException or ArgumentException) { return Fail("測試場面無法讀取，現有對局保持原狀。"); }
+            if(scene==null || scene.Version!=1 || scene.Active is not ("player" or "computer") || scene.Turn<1 || scene.Phase is not (TurnPhase.MainPhase or TurnPhase.GameOver)
+                || !ValidTrainingSide(scene.Player,"player") || !ValidTrainingSide(scene.Computer,"computer")
+                || scene.Phase==TurnPhase.MainPhase && (scene.Player.HasLost || scene.Computer.HasLost || scene.Player.Hp==0 || scene.Computer.Hp==0)
+                || scene.Phase==TurnPhase.GameOver && !scene.Player.HasLost && !scene.Computer.HasLost) return Fail("測試場面資料不合法。");
+            if(DamageCounters)
+            {
+                if(new[]{scene.Player,scene.Computer}.Any(p=>p.Hand.Count+p.Structures.Count(m=>m.IsSet)>200))return Fail("舊測試場面的蓋牌轉回手牌後超出可保存範圍。");
+                // Scene saves describe test fixtures, not historical ranked matches. Apply current rules
+                // without losing the cards that occupied face-down slots in an older fixture.
+                foreach(var restoredSide in new[]{scene.Player,scene.Computer})
+                    foreach(var set in restoredSide.Structures.Where(m=>m.IsSet).ToArray())
+                    { restoredSide.Structures.Remove(set);restoredSide.Hand.Add(new(set.Card){InstanceId=set.InstanceId}); }
+            }
+            ClearMatch(); Player=scene.Player; Computer=scene.Computer; Computer.IsAi=true; Player.IsAi=false;
+            CurrentTurnPlayerId=scene.Active; TurnNumber=scene.Turn; CurrentPhase=scene.Phase; _random=new Random(scene.Seed);
+            Log("已還原測試場面。","action"); return true;
+    }
 }

@@ -1,0 +1,12 @@
+@* 聖泉指示物 (聖泉滿溢): ivory-and-gold round token with a rising water drop; stacked on 403 聖泉之井, one per point of life you healed. *@
+<svg class="@Class" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="32" cy="32" r="29" fill="@(Ink ? "#ffffff" : "#2a2410")" stroke="@(Ink ? "#000000" : "#c9a227")" stroke-width="3"/>
+    <circle cx="32" cy="32" r="24" fill="none" stroke="@(Ink ? "#000000" : "#ffe9a8")" stroke-width="1.6"/>
+    @* A rising spring drop over three ripples. *@
+    <path d="M32 11 C27 20 22 26 22 33 a10 10 0 0 0 20 0 C42 26 37 20 32 11 Z" fill="@(Ink ? "none" : "#7fd6ff")" stroke="@(Ink ? "#000000" : "#ffe9a8")" stroke-width="2.5"/>
+    <path d="M18 49 q7 -4 14 0 q7 4 14 0" fill="none" stroke="@(Ink ? "#000000" : "#ffe9a8")" stroke-width="2.2"/>
+</svg>
+@code {
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Ink { get; set; }
+}

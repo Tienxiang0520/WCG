@@ -12,6 +12,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
     public BattleSnapshot Snapshot() => engine.ReadConsistent(BuildSnapshot);
     internal BattleResponse AiStep() => RankedAi?.Invoke() ?? AiStepCore();
     internal BattleResponse AiStepCore() => engine.ReadConsistent<BattleResponse>(() => AiResponse(engine.ExecuteAiStep()));
+    // A journaled computer move ("aic:<kind>") applied without any AI search (GameEngine.AiCapture.cs).
+    internal BattleResponse AiCallCore(WcgWeb.Models.Ranked.RankedAction call) => engine.ReadConsistent<BattleResponse>(() => AiResponse(engine.ApplyAiCall(call)));
     private BattleResponse AiResponse(bool changed) => new(changed, changed ? "ok" : "idle", "", Guid.NewGuid(), BuildSnapshot(),
         changed ? engine.PresentationEvents : []);
     // Same step as AiStep, but awaits `pause` between search slices so the page keeps rendering while the
@@ -85,17 +87,12 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         }
     }
     private static GameEnginePreview? Preview(GameEngine.AttackPreview? p) => p == null ? null
-        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable,p.RageEnergy,p.WildEnergy);
+        : new(p.AttackerDies, p.DefenderDies, p.AttackerShieldBreaks, p.DefenderShieldBreaks, p.PlayerDamage,p.PlayerDamagePreventable){AttackerPP=p.AttackerPP,DefenderPP=p.DefenderPP};
     private BattleMonster Monster(PlayerState owner, MonsterInstance m)
     {
         if(m.IsSet)return new(new(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被宣告攻擊時可翻開。",""),0,0,["蓋牌"],false,"蓋牌不能攻擊",[],null,m.Slot,false,true,false,[]);
         var status = new List<string>();
-        if(m.HasRage)status.Add("怒擊（每能量本次DP＋1）");
-        if(m.HasWild)status.Add("野性（每能量本次PP＋500）");
-        if(m.HasObservation)status.Add("觀測（對手回合結束，每2能量選1張）");
-        if(m.HasSoulReturn)status.Add("回魂（陣亡時2能量回手）");
-        if(m.HasHeroGuard)status.Add("護主（每能量抵銷1傷害）");
-        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");for(int i=0;i<m.BloodCounters;i++)status.Add("血誓指示物");for(int i=0;i<m.CorrosionCounters;i++)status.Add("腐蝕指示物");status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");for(int i=0;i<m.BloodCounters;i++)status.Add("血誓指示物");for(int i=0;i<m.CorrosionCounters;i++)status.Add("腐蝕指示物");for(int i=0;i<m.Countdown;i++)status.Add("倒數指示物");for(int i=0;i<m.SpringCounters;i++)status.Add("聖泉指示物");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");
@@ -126,7 +123,8 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         if (engine.CurrentPendingChoice is { OwnerId: "player" } c)
             pending = new("choice", c.Title, c.Description, c.CanCancel,
                 c.Options.Select(o => new BattleOption(o.Id, o.Title, o.Subtitle,
-                    o.PreviewCard == null ? null : GameEngine.VisibleCard(o.PreviewCard, Guid.Empty))).ToArray(), [], c.SourceInstanceId);
+                    o.PreviewCard == null ? null : GameEngine.VisibleCard(o.PreviewCard, Guid.Empty))).ToArray(), [], c.SourceInstanceId,
+                c.MultiKey == null ? null : new(c.MultiKey, c.MultiMin, c.MultiMax, c.MultiOrdered, c.MultiStopId));
         else if (engine.CurrentPendingTarget is { OwnerId: "player" } t)
             pending = new("target", t.Title, t.Description, t.CanCancel, [],
                 engine.Player.Board.Concat(engine.Computer.Board).Where(m => t.Validator != null && t.Validator(m))
@@ -141,7 +139,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
                 engine.GetEnergyProblem(engine.Player, c), engine.GetDirectPlayTargets(engine.Player, c).Select(m => m.InstanceId.ToString())
                     .Concat(engine.GetDirectPlayerTargets(engine.Player, c).Select(p => engine.TargetId(p).ToString())).ToArray(),
                 !engine.SimplifiedRules&&c.Card.IsMonster&&engine.Player.AvailableEnergy<=engine.ActualCost(engine.Player,c.Card) ? "付款後沒有可用能量；有能量護盾資格仍需留能量保命。" : "",
-                !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5)).ToArray(), pending,
+                !engine.DamageCounters&&engine.CurrentPhase==TurnPhase.MainPhase&&engine.CurrentTurnPlayerId==engine.Player.Id&&!engine.IsWaiting&&!engine.IsOver&&engine.Player.Occupied<5) { CostDelta=engine.ActualCost(engine.Player,c.Card)-c.Card.TotalCost }).ToArray(), pending,
             // Old logs can contain an AI-only hand inspection. The new board uses public structured events.
             [], engine.RevealedCards.ToArray(), engine.RevealTitle, engine.CurrentTurnPlayerId, engine.DamageCounters);
     }
