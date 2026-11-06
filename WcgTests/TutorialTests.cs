@@ -152,6 +152,17 @@ public class TutorialTests
     }
 
     [Fact]
+    public async Task CounterLessonLeavesRealDpCorrosionAndSoulCountersOnTheBoard()
+    {
+        using var s = New(); s.Load(TutorialLessons.Find("counters")!);
+        await Play(s, "counters");
+        var e = s.Engine;
+        Assert.True(e.Player.Field.Single(m => m.Card.Id == "WCG-337").DpCounters > 0);
+        var stolen = e.Player.Field.Single(m => m.Card.Id == "WCG-155");
+        Assert.True(stolen.SoulCounter); Assert.Equal("computer", stolen.OwnerId); Assert.True(stolen.CorrosionCounters > 0);
+    }
+
+    [Fact]
     public void TutorialCardDescriptionsReadCurrentCatalogueDataInBothLanguages()
     {
         using var s = New(); var lesson = TutorialLessons.Find("traps")!; s.Load(lesson);
