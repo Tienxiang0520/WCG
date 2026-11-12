@@ -41,9 +41,9 @@ public class MageDirectTests
 
     [Fact] public void FrostMagusNoLongerActsAfterCombatButTheOldEraDoes()
     {
-        var g=Game(cards);var magus=Unit(cards,g.Player,29,0);var foe=Unit(cards,g.Computer,101,0);foe.ShieldCounters=1;Refresh(g);
+        var g=Game(cards);var magus=Unit(cards,g.Player,29,0);var foe=Unit(cards,g.Computer,101,0);foe.ShieldCards.Add(new(new(cards.GetCard("WCG-101")!),g.Computer.Id));Refresh(g);
         Assert.True(g.Attack(g.Player,magus,foe));Assert.Contains(foe,g.Computer.Field);Assert.Contains(magus,g.Player.Field);Assert.False(foe.IsTapped);
-        var old=CardBalanceHistory.BeforeMageDirect(cards);g=Game(old);magus=Unit(old,g.Player,29,0);foe=Unit(old,g.Computer,101,0);foe.ShieldCounters=1;Refresh(g);
+        var old=CardBalanceHistory.BeforeMageDirect(cards);g=Game(old);magus=Unit(old,g.Player,29,0);foe=Unit(old,g.Computer,101,0);foe.ShieldCards.Add(new(new(old.GetCard("WCG-101")!),g.Computer.Id));Refresh(g);
         Assert.True(g.Attack(g.Player,magus,foe));Assert.Contains(foe,g.Computer.Field);Assert.True(foe.IsTapped);
     }
 

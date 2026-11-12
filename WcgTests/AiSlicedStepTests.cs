@@ -33,7 +33,7 @@ public sealed class AiSlicedStepTests : IDisposable
             p.Hp, p.HasLost, p.HasFilledEnergyThisTurn, p.AvailableEnergy, p.TotalEnergy,
             hand = p.Hand.Select(c => c.Card.Id), deck = p.Deck.Select(c => c.Card.Id), grave = p.Graveyard.Select(c => c.Card.Id),
             energy = p.EnergyZone.Select(c => new { c.Card.Id, c.IsTapped }),
-            field = p.Field.Select(m => new { m.Card.Id, m.Slot, m.CurrentPP, m.CurrentDP, m.IsTapped, m.HasAttacked, m.IsSilenced, m.ShieldCounters, m.ShieldCount, a = m.Attachments.Select(x => x.Card.Card.Id) }),
+            field = p.Field.Select(m => new { m.Card.Id, m.Slot, m.CurrentPP, m.CurrentDP, m.IsTapped, m.HasAttacked, m.IsSilenced, sc = m.ShieldCards.Count, under = m.Under.Count, m.ShieldCount, a = m.Attachments.Select(x => x.Card.Card.Id) }),
             structures = p.Structures.Select(m => new { m.Card.Id, m.IsSet, m.IsTapped }),
         }),
         logs = e.Logs.Select(l => l.Message),

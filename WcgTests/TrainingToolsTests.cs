@@ -19,21 +19,23 @@ public class TrainingToolsTests
         foreach(var name in GameEngine.TrainingPresets){var(g,_)=Preset(name);Assert.Equal(TurnPhase.MainPhase,g.CurrentPhase);Assert.All(g.Player.Board.Concat(g.Computer.Board),m=>Assert.Same(cards.GetCard(m.Card.Id),m.Card));Assert.NotEmpty(g.ExportTrainingScene());}
         var normal=new GameEngine(cards);Assert.False(Edit(new BattleBridge(normal,decks),"training-preset",new(Preset:"taunt")).Success);
     }
-    [Fact]public void CountersAreSetOnEitherSideAndCountdownTicksAtTurnStart()
+    [Fact]public void CardsUnderAreSetOnEitherSideFromTheDeckBottomAndCountdownTicksAtTurnStart()
     {
         var(g,b)=Game();Assert.True(Edit(b,"training-place",new(Side:"computer",CardId:"WCG-413",Slot:0)).Success);
-        var guard=g.Computer.Field.Single();
-        Assert.True(Edit(b,"training-counters",new(Side:"computer",Countdown:2,Dp:1,Corrosion:1),guard.InstanceId).Success);
-        Assert.Equal(2,guard.Countdown);Assert.Equal(1,guard.DpCounters);Assert.Equal(1,guard.CorrosionCounters);
+        var guard=g.Computer.Field.Single();var deck=g.Computer.Deck.Count;var bottom=g.Computer.Deck[^1];
+        Assert.True(Edit(b,"training-counters",new(Side:"computer",Countdown:2,Dp:1),guard.InstanceId).Success);
+        Assert.Equal(2,guard.CountdownCards);Assert.Equal(1,guard.DpCards);Assert.Equal(deck-3,g.Computer.Deck.Count);Assert.Contains(guard.Under,u=>u.Card==bottom);
         Assert.False(Edit(b,"training-counters",new(Side:"computer",Countdown:21),guard.InstanceId).Success);
-        Assert.Contains("倒數指示物",b.Snapshot().Computer.Field.Single().Status);
-        Assert.True(Edit(b,"training-endturn").Success);Assert.Equal("computer",g.CurrentTurnPlayerId);Assert.Equal(1,guard.Countdown);
+        Assert.False(Edit(b,"training-counters",new(Side:"computer",Blood:1),guard.InstanceId).Success);
+        var shot=b.Snapshot().Computer.Field.Single();Assert.Contains("倒數牌",shot.Status);Assert.Contains(shot.Under!,u=>u.Kind=="countdown"&&u.Count==2);
+        Assert.True(Edit(b,"training-counters",new(Side:"computer",Dp:0),guard.InstanceId).Success);Assert.Equal(0,guard.DpCards);Assert.Equal(deck-2,g.Computer.Deck.Count);
+        Assert.True(Edit(b,"training-endturn").Success);Assert.Equal("computer",g.CurrentTurnPlayerId);Assert.Equal(1,guard.CountdownCards);
     }
     [Fact]public void CountdownPresetFiresAtTheStartOfYourTurn()
     {
         var(g,b)=Preset("countdown");var hand=g.Player.Hand.Count;var guard=g.Player.Field.Single(m=>m.Card.Id=="WCG-413");
         Assert.True(Edit(b,"training-endturn").Success);
-        Assert.Equal("player",g.CurrentTurnPlayerId);Assert.Equal(hand+3,g.Player.Hand.Count);// turn draw + 星沙學徒 draws 2Assert.Equal(1,guard.Countdown);
+        Assert.Equal("player",g.CurrentTurnPlayerId);Assert.Equal(hand+3,g.Player.Hand.Count);// turn draw + 星沙學徒 draws 2Assert.Equal(1,guard.CountdownCards);
         Assert.True(g.IsWaiting);// 倒懸時鐘 asks which enemy monster to destroy
     }
     [Fact]public void UntapPresetUntapsAtTurnStartAndTauntPresetBlocksFace()

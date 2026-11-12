@@ -46,27 +46,26 @@ public class DeckPrintFaceTests
     private static string Cell(string html, string id) =>
         Regex.Match(html, $"<div class=\"print-card print-face-cell\" data-card-id=\"{id}\">.*?<svg class=\"crop-marks\"", RegexOptions.Singleline).Value;
 
+    // 2026-11-12 指示物改用牌組裡的卡: lasting state uses cards from the decks, so no deck gets a counter sheet any more.
     [Fact]
-    public async Task DecksWithDpCounterCardsGetADpTokenSheetByDefault()
+    public async Task DecksGetNoCounterSheetsEvenWithCounterCards()
     {
         var ids = Mixed.Take(Mixed.Length - 1).Append("WCG-337").ToArray();
         var cards = ids.Select(id => database.GetCard(id)!).Select(c => new PrintedCard(c.Id, c.Name, c.Type, c.Will, c.TotalCost, c.PP, c.DP, c.Text, c.Arrows.ToArray())).ToArray();
         var html = await Render("zh-Hant", new("重蹄", "生機", cards));
-        Assert.Equal(12, Regex.Matches(html, "class=\"dp-token\"").Count);
-        Assert.Equal(12, Regex.Matches(html, "class=\"shield-token\"").Count);
-        Assert.Equal(9, Regex.Matches(html, "data-print-tool=").Count);
-        Assert.Empty(Regex.Matches(await Render("zh-Hant", MixedPlan()), "class=\"dp-token\""));
+        Assert.DoesNotContain("-token", html);
+        Assert.Equal(2, Regex.Matches(html, "data-print-tool=").Count);
     }
     [Fact]
     public void PrintToolsFillTheLastPageThenAddPages()
     {
-        var counts = new Dictionary<PrintTool, int> { [PrintTool.Life] = 4, [PrintTool.Coin] = 2, [PrintTool.ShieldTokens] = 3, [PrintTool.DpTokens] = 9 };
+        var counts = new Dictionary<PrintTool, int> { [PrintTool.Life] = 9, [PrintTool.Coin] = 9 };
         var items = DeckPrintTools.Items(counts);
-        Assert.Equal(12, items.Count); // DP sheets are capped at 3
+        Assert.Equal(7, items.Count); // life cards are capped at 4, coins at 3
         Assert.Equal([1, 2, 3, 4], items.Where(i => i.Tool == PrintTool.Life).Select(i => i.Number));
-        var (last, extra) = DeckPrintTools.Place(items, 4, 9);
+        var (last, extra) = DeckPrintTools.Place(items, 4, 2);
         Assert.Equal(4, last.Length); Assert.All(last, i => Assert.Equal(PrintTool.Life, i.Tool));
-        Assert.Equal([8], extra.Select(p => p.Length));
+        Assert.Equal([2, 1], extra.Select(p => p.Length));
         Assert.Empty(DeckPrintTools.Items(new Dictionary<PrintTool, int> { [PrintTool.Life] = 0 }));
     }
     [Theory]
@@ -76,9 +75,9 @@ public class DeckPrintFaceTests
         var html = await Render(language, MixedPlan());
         Assert.DoesNotContain("print-card-art", html); // the old print layout is gone
         Assert.Equal(Mixed.Length, Regex.Matches(html, "class=\"print-card print-face-cell\"").Count);
-        Assert.Equal(Mixed.Length + 4, Regex.Matches(html, "class=\"crop-marks\"").Count); // + 2 life counter cards + 1 聖盾指示物 card + 1 幸運幣
+        Assert.Equal(Mixed.Length + 3, Regex.Matches(html, "class=\"crop-marks\"").Count); // + 2 life counter cards + 1 幸運幣
         Assert.Single(Regex.Matches(html, "class=\"print-card life-card coin-card\""));
-        Assert.Equal(12, Regex.Matches(html, "class=\"shield-token\"").Count);
+        Assert.DoesNotContain("-token", html);
         foreach (var id in Mixed)
         {
             var card = database.GetCard(id)!;

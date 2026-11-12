@@ -18,7 +18,7 @@ public class DeckPrintLayoutTests
         Assert.True(layout.Fits, $"{paper} bleed={bleed}: grid {layout.GridWidth}×{layout.UsedHeight} mm in {layout.PrintableWidth}×{layout.PrintableHeight} mm");
         Assert.Equal(perPage, layout.CardsPerPage);
         Assert.Equal(pages, layout.PageCount(50));
-        // 2 life cards + 1 聖盾指示物 card share the last card page.
+        // 2 life cards + 1 幸運幣 share the last card page.
         Assert.True(50 - (pages - 1) * perPage + 3 <= perPage);
     }
 

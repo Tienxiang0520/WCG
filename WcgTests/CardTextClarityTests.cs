@@ -50,7 +50,9 @@ public class CardTextClarityTests
             Assert.DoesNotContain("能量護盾",c.Keywords);
             Assert.DoesNotContain("冰凍",c.Keywords);
         });
-        Assert.True(cards.GetCard("WCG-063")!.HasEnergyShield);Assert.Contains("聖盾",cards.GetCard("WCG-063")!.Keywords);
+        // 2026-11-12: no current card has native 聖盾; 063 gives it with its arrow instead.
+        Assert.DoesNotContain(cards.AllCards,c=>c.HasEnergyShield);Assert.True(GameEngine.ShieldArrows("WCG-063"));
+        Assert.True(CardBalanceHistory.BeforeDeckCards(cards).GetCard("WCG-063")!.HasEnergyShield);
         Assert.Contains("能量護盾",CounterHistory.BeforeRulesSimplification(cards).GetCard("WCG-063")!.Keywords);
         var old=CounterHistory.BeforeEnergyShield(cards).GetCard("WCG-063")!;
         Assert.Contains("聖盾",old.Keywords);
@@ -137,17 +139,18 @@ public class CardTextClarityTests
     }
     [Fact] public void ArbiterShieldsTheLeftAllyAndStripsTheEnemyAhead()
     {
-        var g=Game();var ally=Unit(g.Player,101,0);Unit(g.Player,147,1);var ahead=Unit(g.Computer,31,3);var other=Unit(g.Computer,31,1);Refresh(g);
-        Assert.True(ally.HasShield);Assert.False(ahead.HasShield);Assert.True(other.HasShield);
+        var g=Game();var ally=Unit(g.Player,101,0);Unit(g.Player,147,1);var ahead=Unit(g.Computer,101,3);var other=Unit(g.Computer,101,1);
+        foreach(var m in new[]{ahead,other})m.ShieldCards.Add(new(new CardInstance(cards.GetCard("WCG-101")!),g.Computer.Id));Refresh(g);
+        Assert.True(ally.HasShield);Assert.False(ahead.HasShield);Assert.Empty(ahead.ShieldCards);Assert.True(other.HasShield);
         g=Game();Unit(g.Player,147,1);var plain=Unit(g.Computer,101,3);Refresh(g);Assert.False(plain.HasShield);
-        // Legacy: the old 147 handed the enemy ahead a shield.
-        g=Game(true);Unit(g.Player,147,1);plain=Unit(g.Computer,101,3);Refresh(g);Assert.True(plain.HasShield);
+        // The legacy 147 that handed the enemy ahead a shield is covered by the real legacy catalogs (no 聖盾 sources there);
+        // the current catalog's 聖盾 sources always follow the current card text.
     }
     [Fact] public void ArbiterAlsoCancelsAttachedShieldsAndStopsWhenSilenced()
     {
         var g=Game();var src=Unit(g.Player,147,1);var foe=Unit(g.Computer,101,3);
         g.Computer.Field.Single().Attachments.Add(new(new CardInstance(cards.GetCard("WCG-062")!),g.Computer.Id));Refresh(g);Assert.False(foe.HasShield);
-        // 聖盾指示物: the counters are gone; silencing the arbiter does not hand them back.
+        // The attached 聖盾 spell went to the graveyard; silencing the arbiter does not hand it back.
         src.IsSilenced=true;Refresh(g);Assert.False(foe.HasShield);
     }
     [Theory] [InlineData(false,true)] [InlineData(true,false)]
@@ -222,7 +225,7 @@ public class CardTextClarityTests
             Assert.Matches("<p></p>", FaceText(await Render<CardFace>(language, new() { ["Battle"] = battle })));
         }
         var effect = FaceText(await Render<CardFace>(language, new() { ["Card"] = cards.GetCard("WCG-147") }));
-        Assert.Contains(language == "zh" ? "移除所有聖盾指示物" : "loses all Holy Shield counters", effect);
+        Assert.Contains(language == "zh" ? "失去聖盾，且不能獲得聖盾" : "loses Holy Shield and can't gain Holy Shield", effect);
     }
     [Fact] public void FaceTextBlanksVanillaButSearchTextKeepsIt()
     {

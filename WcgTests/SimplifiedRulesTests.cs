@@ -30,12 +30,12 @@ public class SimplifiedRulesTests
     // Catalogs before 聖盾指示物 (2026-10-17) keep the per-turn refresh.
     [Fact] public void HolyShieldSavesOncePerTurnWithoutEnergyAndRefreshesEachTurn()
     {
-        var g=Game(CounterHistory.BeforeShieldCounter(cards));Assert.False(g.ShieldCounterRules);var knight=Unit(g.Player,69,1);var wall=Unit(g.Computer,155,3);var energy=g.Player.AvailableEnergy;Refresh(g);
+        var db=CounterHistory.BeforeShieldCounter(cards);var g=Game(db);Assert.False(g.ShieldSourceRules);var knight=Unit(g.Player,69,1,db:db);var wall=Unit(g.Computer,155,3,db:db);var energy=g.Player.AvailableEnergy;Refresh(g);
         Assert.True(g.PreviewAttack(knight,wall)!.AttackerShieldBreaks);
         Assert.True(g.Attack(g.Player,knight,wall));Assert.False(g.IsWaiting);
         Assert.Contains(knight,g.Player.Field);Assert.True(knight.ShieldSpent);Assert.Equal(energy,g.Player.AvailableEnergy);
         knight.IsTapped=false;Assert.True(g.PreviewAttack(knight,wall)!.AttackerDies);
-        var second=Unit(g.Player,63,2);Assert.True(g.Attack(g.Player,second,wall));Assert.Contains(second,g.Player.Field);
+        var second=Unit(g.Player,63,2,db:db);Assert.True(g.Attack(g.Player,second,wall));Assert.Contains(second,g.Player.Field);
         ComputerTurn(g);Assert.False(knight.ShieldSpent);Assert.False(second.ShieldSpent);
         Assert.True(g.Attack(g.Computer,wall,knight));Assert.Contains(knight,g.Player.Field);Assert.True(knight.ShieldSpent);
     }

@@ -69,7 +69,7 @@ public class FateFlipTests
         typeof(GameEngine).GetMethod("FateStartTurn",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Player]);Drain(g);Settle(g);
         Assert.Equal(hp-1,g.Computer.Hp);Refresh(g);Assert.Equal(d.Card.PP+500,d.CurrentPP);Assert.Equal(sc.Card.PP+300,sc.CurrentPP);
         Top(g,24);typeof(GameEngine).GetMethod("FateStartTurn",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Player]);Drain(g);Settle(g);
-        Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(1,sc.DpCounters);
+        Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(1,sc.DpCards);
     }
     [Fact] public void WellOfOpenEyesTakesTheCardForOneLife()
     {

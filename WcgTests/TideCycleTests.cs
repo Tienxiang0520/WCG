@@ -69,6 +69,6 @@ public class TideCycleTests
         Assert.True(g.SummonMonster(g.Player,Hand(g,380)));Settle(g);Assert.DoesNotContain(foe,g.Computer.Field);Assert.Contains(g.Computer.Hand,c=>c.InstanceId==foe.InstanceId);
         var g2=Game();var l=Unit(g2.Player,101,0);var r=Unit(g2.Player,101,2);Refresh(g2);
         Assert.True(g2.SummonMonster(g2.Player,Hand(g2,376)));Settle(g2,"SLOT:1");
-        Assert.Equal(1,l.DpCounters);Assert.Equal(1,r.DpCounters);Assert.Equal((l.Card.PP??0)+200,l.CurrentPP);
+        Assert.Equal(1,l.DpCards);Assert.Equal(1,r.DpCards);Assert.Equal((l.Card.PP??0)+200,l.CurrentPP);
     }
 }

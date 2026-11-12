@@ -16298,7 +16298,7 @@
     "Deck": {
       "Id": "RANKED-5-VITAL-HOOFCRUSH",
       "Name": "生機＋狂怒・重蹄碾壓（碾壓）",
-      "Description": "讓怪物交戰、直立待命或附著來疊 DP 指示物，再越過嘲諷一下打 3～4 點。",
+      "Description": "讓怪物交戰、直立待命或附著，從牌庫底橫放 DP 牌疊高 DP，再越過嘲諷一下打 3～4 點。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-004",
@@ -16613,7 +16613,7 @@
     "Deck": {
       "Id": "RANKED-5-ORDER-BLOODOATH",
       "Name": "秩序＋狂怒・血誓反擊（血誓）",
-      "Description": "故意讓對手打臉，每挨一下就在血誓祭壇疊血誓指示物；血越少越兇，最後一擊千倍奉還。",
+      "Description": "故意讓對手打臉，每挨一下就從牌庫底在血誓祭壇底下墊 1 張；血越少越兇，最後一擊千倍奉還。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-002",
@@ -16739,7 +16739,7 @@
     "Deck": {
       "Id": "RANKED-5-VITAL-ROTMIRE",
       "Name": "生機＋深淵・腐沼蔓生（腐沼）",
-      "Description": "在敵方怪物上疊腐蝕指示物，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
+      "Description": "用 ↑ 箭頭和附著在敵方怪物底下的腐沼卡壓低 PP，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-041",
@@ -16865,7 +16865,7 @@
     "Deck": {
       "Id": "RANKED-5-ORDER-HOLYSPRING",
       "Name": "秩序・聖泉滿溢（聖泉）",
-      "Description": "每次回血都存成聖泉指示物，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
+      "Description": "每次回血都從牌庫底在聖泉之井底下墊牌，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
       "MainWill": "秩序",
       "CardIds": [
         "WCG-062",
@@ -16928,7 +16928,7 @@
     "Deck": {
       "Id": "RANKED-5-REASON-STARCLOCK",
       "Name": "理智＋秩序・星律倒數（星律）",
-      "Description": "把大效果預約在幾回合後，牌上放倒數指示物撐到歸零；最後星律終焉讓全場倒數同時爆開。",
+      "Description": "把大效果預約在幾回合後，從牌庫底在卡底下墊倒數牌，撐到倒數結束；最後星律終焉讓全場倒數同時爆開。",
       "MainWill": "理智",
       "CardIds": [
         "WCG-029",

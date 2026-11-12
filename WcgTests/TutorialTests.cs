@@ -152,14 +152,15 @@ public class TutorialTests
     }
 
     [Fact]
-    public async Task CounterLessonLeavesRealDpCorrosionAndSoulCountersOnTheBoard()
+    public async Task CounterLessonLeavesRealDpCardsAndTheUsurpSpellUnderTheMonsters()
     {
         using var s = New(); s.Load(TutorialLessons.Find("counters")!);
         await Play(s, "counters");
         var e = s.Engine;
-        Assert.True(e.Player.Field.Single(m => m.Card.Id == "WCG-337").DpCounters > 0);
+        var calf = e.Player.Field.Single(m => m.Card.Id == "WCG-337");
+        Assert.True(calf.DpCards > 0); Assert.All(calf.Under, u => Assert.Equal(e.Player.Id, u.OwnerId));
         var stolen = e.Player.Field.Single(m => m.Card.Id == "WCG-155");
-        Assert.True(stolen.SoulCounter); Assert.Equal("computer", stolen.OwnerId); Assert.True(stolen.CorrosionCounters > 0);
+        Assert.True(stolen.SoulSpell); Assert.Equal("computer", stolen.OwnerId); Assert.Contains(stolen.Attachments, a => a.Card.Card.Id == "WCG-335");
     }
 
     [Fact]

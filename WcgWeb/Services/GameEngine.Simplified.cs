@@ -17,12 +17,14 @@ public partial class GameEngine
     private int ThresholdPP(MonsterInstance m) => PrintedPpThresholds ? m.Card.PP ?? 0 : m.CurrentPP;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
-    // 聖盾指示物 (2026-10-17): a monster that gains 聖盾 (on entry or later) gets one counter; the first combat destruction
-    // removes it instead. No refresh. Losing 聖盾 (silence, 147's arrow, condition ends) removes the counter. Older catalogs refresh each turn.
-    public bool ShieldCounterRules => CardBalanceHistory.ShieldCounterCatalog(_cardDb);
-    // 聖盾交戰必扣 (2026-10-23): every combat, attacking or defending, removes 1 counter; older catalogs spend an attacker's only when it would be destroyed.
-    public bool ShieldAnyCombatRules => ShieldCounterRules && CardBalanceHistory.ShieldAnyCombatCatalog(_cardDb);
-    private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldCounterRules ? m.ShieldCounters > 0 : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
+    // 聖盾來源 (2026-11-12, see GameEngine.DeckCards.cs): a monster has 聖盾 while it has a source (attached 聖盾 spell, hand card
+    // put face up under it, or a creature giving it with an arrow); when it is attacked one source goes to the graveyard and it
+    // isn't destroyed that combat. Counter-era catalogs (2026-10-17 to 2026-11-12) are retired, so their engines use the same
+    // code. Older catalogs refresh 聖盾 each turn (ShieldSpent).
+    public bool ShieldSourceRules => SimplifiedRules && (DeckCardRules || CardBalanceHistory.ShieldCounterCatalog(_cardDb));
+    private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldSourceRules ? m.HasShield : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
+    // 304 能量哨兵 can keep itself alive with its energy when it has no 聖盾.
+    private bool EnergyGuard(MonsterInstance m) => ShieldSourceRules && !m.HasShield && Active(m, "WCG-304") && Owner(m).EnergyZone.Count >= 5;
     private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     // Fixed bonuses that only exist during an attack's combat (203 +500; from 2026-10-23 also 274 +300 for itself).
     private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking);
@@ -42,12 +44,11 @@ public partial class GameEngine
     }
     private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish, bool lethal = true)
     {
+        if (ShieldSourceRules) { if (!hit || !Alive(m)) finish(false); else SpendShield(m, lethal, finish); return; }
         if (!hit || !Alive(m) || !m.HasShield || m.ShieldSpent) { finish(false); return; }
-        if (ShieldCounterRules) { m.ShieldCounters = Math.Max(0, m.ShieldCounters - 1); m.ShieldQualified = m.ShieldCounters > 0; m.ShieldSpent = m.ShieldCounters == 0; }
-        else m.ShieldSpent = true;
-        Present("status", Owner(m), m.InstanceId, card: m.Card, label: lethal ? "聖盾抵擋消滅" : ShieldAnyCombatRules ? "聖盾交戰消耗" : "受到攻擊，消耗聖盾");
-        if (ShieldCounterRules) Log(lethal ? $"【{m.Card.Name}】移除 1 個聖盾指示物，抵擋了這次消滅。" : ShieldAnyCombatRules ? $"【{m.Card.Name}】交戰，移除 1 個聖盾指示物。" : $"【{m.Card.Name}】受到攻擊，移除 1 個聖盾指示物。", "combat");
-        else Log($"【{m.Card.Name}】的聖盾抵擋了這次消滅（本回合已用）。", "combat");
+        m.ShieldSpent = true;
+        Present("status", Owner(m), m.InstanceId, card: m.Card, label: "聖盾抵擋消滅");
+        Log($"【{m.Card.Name}】的聖盾抵擋了這次消滅（本回合已用）。", "combat");
         finish(true);
     }
     private MonsterInstance[] OathGuards(PlayerState p) => p.Field.Where(m => m.IsUnit && !m.IsSilenced && !m.IsTapped && m.Card.Id == "WCG-200").ToArray();

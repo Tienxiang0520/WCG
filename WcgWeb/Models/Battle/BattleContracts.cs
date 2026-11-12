@@ -5,7 +5,7 @@ public record BattleCommand(Guid CommandId, Guid MatchId, long ExpectedRevision,
     string? PlayerDeckId = null, string? ComputerDeckId = null, bool PlayerFirst = true, TrainingEdit? Training = null);
 public record TrainingEdit(string Side = "player", string? CardId = null, int Slot = 0,
     int Hp = 7, int TotalEnergy = 0, int AvailableEnergy = 0, string? Scene = null,
-    string? Preset = null, int Countdown = -1, int Dp = -1, int Shield = -1, int Corrosion = -1, int Blood = -1, int Spring = -1, int Turn = 0);
+    string? Preset = null, int Countdown = -1, int Dp = -1, int Shield = -1, int Blood = -1, int Spring = -1, int Turn = 0);
 public record BattleCard(Guid InstanceId, string CardId, string Name, string Type, string Will,
     int Cost, int? PP, int? DP, string Text, string Art, string[]? Arrows = null)
 {
@@ -42,12 +42,19 @@ public record BattleMonster(BattleCard Card, int PP, int DP, string[] Status,
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
     public bool Locked { get; init; }
     // 奪魂傀儡: Turned = temporarily controlled by the other player, shown turned 180° in its owner's row (the side this
-    // card is listed under); Soul = permanently taken (奪魂指示物). Omitted when false.
+    // card is listed under). Permanent control (王座篡奪) is the attached card itself, listed in Attachments. Omitted when false.
     [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
     public bool Turned { get; init; }
-    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]
-    public bool Soul { get; init; }
+    // Face-down cards from a deck bottom under this card (2026-11-12): countdown／blood／spring lie straight, dp lies sideways.
+    // Only the kind and how many are public (nobody looked at them). Omitted when there are none.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public BattleUnder[]? Under { get; init; }
+    // Hand cards put face up under this monster as 聖盾 sources. Omitted when there are none.
+    [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+    public BattleCard[]? ShieldCards { get; init; }
 }
+// A pile of face-down cards under a card: Kind is countdown, dp, blood or spring.
+public record BattleUnder(string Kind, int Count);
 // One line of a PP/DP breakdown: the card that caused it (CardId null for engine effects such as 戰鬥加成) and its amount.
 public record BattleStatPart(string Label, string? CardId, int Amount);
 public record BattleEnergy(Guid InstanceId, bool Tapped)

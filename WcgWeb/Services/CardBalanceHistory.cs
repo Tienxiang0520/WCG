@@ -212,14 +212,20 @@ internal static class CardBalanceHistory
     private static CardDatabase FateFlipCardsStep(CardDatabase c) => c.GetCard("WCG-418") == null ? c
         : new(JsonSerializer.Serialize(c.AllCards.Where(x => !IsFateFlipCard(x.Id))), JsonSerializer.Serialize(c.PresetDecks));
 
+    // 2026-11-12 指示物改為牌組裡的卡: 聖盾 sources are cards under the monster or arrows; 倒數／DP／血誓／聖泉 are face-down cards
+    // from the deck bottom; 腐蝕 is arrows or attachments; 王座篡奪 sits under the stolen monster. 倒懸時鐘's new wording marks the catalog.
+    internal static bool DeckCardsCatalog(CardDatabase cards) => cards.GetCard("WCG-410")?.Text?.Contains("牌庫底", StringComparison.Ordinal) == true;
+    private static CardDatabase DeckCardsStep(CardDatabase c) => DeckCardsCatalog(c) ? Override(c, "WcgWeb.Balance.BeforeDeckCards") : c;
+
     internal static readonly Func<CardDatabase, CardDatabase>[] EraSteps =
     [
-        IronhideDpStep, FateFlipCardsStep, StarCountdownCardsStep, HolySpringCardsStep, BloodPuppeteerTextStep, SurgeStrikeCardsStep, RotMireCardsStep, TideCycleCardsStep, RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
+        DeckCardsStep, IronhideDpStep, FateFlipCardsStep, StarCountdownCardsStep, HolySpringCardsStep, BloodPuppeteerTextStep, SurgeStrikeCardsStep, RotMireCardsStep, TideCycleCardsStep, RevivalLordTextStep, BloodOathCardsStep, RootWebCardsStep, GraveOathCardsStep, SilenceCountersStep, ArrowTextStep, SoulPuppetCardsStep, LaneRaidCardsStep, HoofCrushCardsStep, EnergyBurnCardsStep, EnergyVaultCardsStep, BeaconWatchCardsStep, ArenaAnyEnemyStep, RotErosionCardsStep, ThresholdGapCardsStep, OathDuelCardsStep, PrintedPpTextStep, ShieldAnyCombatStep, BearRoarTextStep, CardFixesStep, BurnCostStep, TauntFaceChargeStep, LuckyCoinStep, MageDirectStep, ShieldPpStep, CostUpStep, ShieldCounterStep, ReasonBuffStep, DualWillStep, SilenceSpellStep, AbilityPpStep, NewCardsStep, DeflationStep, RulesSimplificationStep,
         EnergyKeywordsStep, HeroGuardStep, StrongBuildAdjustmentStep, OctoberBalanceStep, EnergyShieldStep, DamageCountersStep, PlayerTargetsStep,
         DiversityStep, CardTextStep, ArrowCardsStep, UnlimitedFactionTriggersStep
     ];
 
-    internal static CardDatabase BeforeIronhideDp(CardDatabase current) => IronhideDpStep(current);
+    internal static CardDatabase BeforeDeckCards(CardDatabase current) => DeckCardsStep(current);
+    internal static CardDatabase BeforeIronhideDp(CardDatabase current) => IronhideDpStep(BeforeDeckCards(current));
     internal static CardDatabase BeforeFateFlipCards(CardDatabase current) => FateFlipCardsStep(BeforeIronhideDp(current));
     internal static CardDatabase BeforeStarCountdownCards(CardDatabase current) => StarCountdownCardsStep(BeforeFateFlipCards(current));
     internal static CardDatabase BeforeHolySpringCards(CardDatabase current) => HolySpringCardsStep(BeforeStarCountdownCards(current));

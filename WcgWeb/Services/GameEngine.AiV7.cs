@@ -39,10 +39,10 @@ public partial class GameEngine
             string.Join(",", s.Field.Where(m => m.InstanceId != exclude).Select(m => $"{m.InstanceId}:{m.CurrentPP}:{m.CurrentDP}:{(m.IsTapped ? 1 : 0)}:{ShieldMark(g, m)}:{m.Attachments.Count}:{(m.IsSilenced ? 1 : 0)}"));
         return Side(p) + "|" + Side(e);
     }
-    // v10 (RankedAiVersion 10): with 聖盾指示物 a used counter never comes back, so a spent counter is a real change
+    // v10 (RankedAiVersion 10): with 聖盾來源 a spent source never comes back, so a spent source is a real change
     // in the keys and the body value; earlier steps replay with the older keys.
     private bool V10 => AiRevision >= 10;
-    private static int ShieldMark(GameEngine g, MonsterInstance m) => g.V10 && g.ShieldCounterRules ? 10 + m.ShieldCounters : m.HasShield ? 1 : 0;
+    private static int ShieldMark(GameEngine g, MonsterInstance m) => g.V10 && g.ShieldSourceRules ? 10 + g.ShieldSourceCount(m) : m.HasShield ? 1 : 0;
     internal static bool PointlessAttack(GameEngine before, GameEngine after, string pid, SimMove m) =>
         m.Kind == "attack" && !after.IsOver && EffectKey(before, pid, m.Source) == EffectKey(after, pid, m.Source);
     // A pointless attack that also loses the attacker. Shield bumps that cost nothing stay in the turn search:

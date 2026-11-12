@@ -4,7 +4,7 @@ using WcgWeb.Models.Battle;
 
 namespace WcgWeb.Services;
 
-// 訓練場 extra tools: counters, deck top / draw, turn controls, swapping sides (to play the opponent's turn with the
+// 訓練場 extra tools: cards under a card (deck-bottom padding, 聖盾 cards), deck top / draw, turn controls, swapping sides (to play the opponent's turn with the
 // normal controls) and one-click preset scenes. Only TrainingMode engines reach this; ranked and normal play reject it.
 public partial class GameEngine
 {
@@ -45,17 +45,29 @@ public partial class GameEngine
             Log($"訓練調整：{side.Name}牌庫頂放置【{card.Name}】。", "action"); return true;
         }
         var unit = side.Board.FirstOrDefault(m => m.InstanceId == id); if (unit == null) return Fail("指定卡片已離場。");
-        int[] values = [edit.Countdown, edit.Dp, edit.Shield, edit.Corrosion, edit.Blood, edit.Spring];
-        if (values.Any(v => v < -1 || v > TrainingCounterMax)) return Fail($"指示物數量範圍 0–{TrainingCounterMax}。");
-        if (edit.Countdown >= 0) unit.Countdown = edit.Countdown;
-        if (edit.Dp >= 0) unit.DpCounters = edit.Dp;
-        if (edit.Shield >= 0) unit.ShieldCounters = edit.Shield;
-        if (edit.Corrosion >= 0) unit.CorrosionCounters = edit.Corrosion;
-        if (edit.Blood >= 0) unit.BloodCounters = edit.Blood;
-        if (edit.Spring >= 0) unit.SpringCounters = edit.Spring;
+        // 2026-11-12: the tool moves real cards. Padding comes from (and goes back to) the deck bottom; 聖盾 cards come from the
+        // hand and go to the graveyard. Setting a number never triggers countdowns or placement effects.
+        int[] values = [edit.Countdown, edit.Dp, edit.Shield, edit.Blood, edit.Spring];
+        if (values.Any(v => v < -1 || v > TrainingCounterMax)) return Fail($"底下的牌數量範圍 0–{TrainingCounterMax}。");
+        if (edit.Blood > 0 && unit.Card.Id != "WCG-364") return Fail("血誓只能放在血誓祭壇底下。");
+        if (edit.Spring > 0 && unit.Card.Id != "WCG-403") return Fail("聖泉只能放在聖泉之井底下。");
+        if (edit.Shield > 0 && (!unit.IsUnit || !CanShield(unit))) return Fail("這張卡不能獲得聖盾。");
+        if (edit.Shield > unit.ShieldCards.Count && side.Hand.Count < edit.Shield - unit.ShieldCards.Count) return Fail("手牌不足，無法放上這麼多張聖盾牌。");
+        void Set(UnderKind kind, int n)
+        {
+            if (n < 0) return;
+            var have = unit.UnderCount(kind);
+            if (n > have) PadUnder(side, unit, kind, n - have, unit.Card); else ReturnUnder(unit, kind, have - n);
+        }
+        Set(UnderKind.Countdown, edit.Countdown); Set(UnderKind.Dp, edit.Dp); Set(UnderKind.BloodOath, edit.Blood); Set(UnderKind.HolySpring, edit.Spring);
+        if (edit.Shield >= 0)
+        {
+            while (unit.ShieldCards.Count > edit.Shield) { var a = unit.ShieldCards[^1]; unit.ShieldCards.RemoveAt(unit.ShieldCards.Count - 1); PlayerById(a.OwnerId).Graveyard.Add(a.Card); }
+            while (unit.ShieldCards.Count < edit.Shield && side.Hand.Count > 0) { var c = side.Hand[^1]; side.Hand.RemoveAt(side.Hand.Count - 1); unit.ShieldCards.Add(new(c, side.Id)); }
+        }
         RefreshBoard();
-        Present("status", side, unit.InstanceId, card: unit.Card, label: "設定測試指示物");
-        Log($"訓練調整：【{unit.Card.Name}】倒數 {unit.Countdown}、DP {unit.DpCounters}、聖盾 {unit.ShieldCounters}、腐蝕 {unit.CorrosionCounters}、血誓 {unit.BloodCounters}、聖泉 {unit.SpringCounters}。", "action");
+        Present("status", side, unit.InstanceId, card: unit.Card, label: "設定底下的牌");
+        Log($"訓練調整：【{unit.Card.Name}】底下倒數牌 {unit.CountdownCards}、DP 牌 {unit.DpCards}、聖盾牌 {unit.ShieldCards.Count}、血誓 {unit.BloodCards}、聖泉 {unit.SpringCards}（牌庫剩 {side.Deck.Count}）。", "action");
         return true;
     }
 
@@ -109,7 +121,7 @@ public partial class GameEngine
                 Unit(Computer, "WCG-101", 1); Unit(Computer, "WCG-154", 3);
                 break;
             case "countdown": // End the computer's turn: at your turn start 星沙學徒 fires (draw 2), 封時守衛 2→1, 倒懸時鐘 fires.
-                Unit(Player, "WCG-409", 0).Countdown = 1; Unit(Player, "WCG-413", 2).Countdown = 2; Unit(Player, "WCG-410", 4).Countdown = 1;
+                PadUnder(Player, Unit(Player, "WCG-409", 0), UnderKind.Countdown, 1); PadUnder(Player, Unit(Player, "WCG-413", 2), UnderKind.Countdown, 2); PadUnder(Player, Unit(Player, "WCG-410", 4), UnderKind.Countdown, 1);
                 Unit(Computer, "WCG-101", 1); Unit(Computer, "WCG-154", 3);
                 active = "computer";
                 break;

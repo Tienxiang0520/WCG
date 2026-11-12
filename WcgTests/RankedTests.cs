@@ -287,58 +287,47 @@ public sealed class RankedTests : IDisposable
         Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
         Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost); // 3 before the 2026-10-17 狂怒 face-damage cost-up
     }
-    // 2026-11-05 鐵皮巨獸 DP 3→2 之前開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
-    [Fact] public void PreIronhideDpMatchResumesReplaysAndItsCodeReplays()
+    // 2026-11-12 指示物改為牌組裡的卡：之前的 35 個卡表（聖盾指示物到鐵皮巨獸 DP）以整數指示物表示狀態，引擎已不再支援，
+    // 未完成的對局作廢、不計勝負，舊重播回報版本不再支援。
+    private void RetiredCounterEra(CardDatabase prior)
+    {
+        store.Save(new(){Season="2026-11",Stars=22,BestStars=22,SeasonBest=22});
+        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
+        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);var rules=profile.Match.Rules;var stars=profile.Stars;old.Coordinator.Dispose();
+        var current=Session();Assert.Empty(current.Error);Assert.Equal(RankedSession.RetiredMatchNotice,current.BalanceNotice);
+        Assert.Null(current.Read().Match);Assert.Null(store.Load().Match);Assert.Equal(stars,current.Read().Stars);
+        Assert.True(current.Start(DeckService.Copy(cards.PresetDecks[3])).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
+        current.Coordinator.Dispose();
+    }
+    [Fact] public void MatchFromTheLastCounterCatalogIsVoided()
+    {
+        var prior=CardBalanceHistory.BeforeDeckCards(cards);Assert.True(CardBalanceHistory.DeckCardsCatalog(cards));Assert.False(CardBalanceHistory.DeckCardsCatalog(prior));
+        Assert.Contains("指示物",prior.GetCard("WCG-410")!.Text);Assert.DoesNotContain("指示物",cards.GetCard("WCG-410")!.Text);
+        RetiredCounterEra(prior);
+    }
+    // 2026-11-05 鐵皮巨獸 DP 3→2 之前開始的對局（已隨整數指示物作廢）。
+    [Fact] public void PreIronhideDpMatchIsVoidedWithTheCounterEras()
     {
         var prior=CardBalanceHistory.BeforeIronhideDp(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeIronhideDp(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
         Assert.Equal(3,prior.GetCard("WCG-343")!.DP);Assert.Equal(2,cards.GetCard("WCG-343")!.DP);
-        Assert.Equal(cards.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)));
+        Assert.Equal(CardBalanceHistory.BeforeDeckCards(cards).AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)));
         Assert.False(CardBalanceHistory.IronhideDpCatalog(prior));
-        store.Save(new(){Season="2026-11",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;
-        var liveCode=old.CurrentMatchCode()!;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.False(CardTextClarityTests.IsLegacy(current.Engine));
-        var fromLive=current.BuildReplay(MatchCode.Decode(liveCode,out var liveError,out _)!);Assert.Equal("",liveError);Assert.Empty(fromLive.Error);
-        Assert.True(Send(current,"surrender").Success);var record=current.Read().Records!.Last();Assert.Empty(current.BuildReplay(record.Id).Error);
-        var code=current.MatchCodeFor(record.Id)!;current.Coordinator.Dispose();
-        Directory.Delete(dir,true);var other=Session();var fromCode=other.BuildReplay(MatchCode.Decode(code,out var error,out _)!);Assert.Equal("",error);Assert.Empty(fromCode.Error);
-        other.Coordinator.Dispose();
+        RetiredCounterEra(prior);
     }
     // 2026-10-22 卡表（PR #63 巨熊咆哮文字白話化之前）開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
-    [Fact] public void PreBearRoarTextMatchResumesReplaysAndItsCodeReplays()
+    [Fact] public void PreBearRoarTextMatchIsVoidedWithTheCounterEras()
     {
         var prior=CardBalanceHistory.BeforeBearRoarText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBearRoarText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
         Assert.Contains("可消滅的 PP 上限 +500",prior.GetCard("WCG-048")!.Text);Assert.Contains("己方場上怪物數 × 500",cards.GetCard("WCG-048")!.Text);
         Assert.Equal(CardBalanceHistory.BeforeShieldAnyCombat(cards).AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)));
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;
-        var liveCode=old.CurrentMatchCode()!;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.False(CardTextClarityTests.IsLegacy(current.Engine));
-        var fromLive=current.BuildReplay(MatchCode.Decode(liveCode,out var liveError,out _)!);Assert.Equal("",liveError);Assert.Empty(fromLive.Error);
-        Assert.True(Send(current,"surrender").Success);var record=current.Read().Records!.Last();Assert.Empty(current.BuildReplay(record.Id).Error);
-        var code=current.MatchCodeFor(record.Id)!;current.Coordinator.Dispose();
-        Directory.Delete(dir,true);var other=Session();var fromCode=other.BuildReplay(MatchCode.Decode(code,out var error,out _)!);Assert.Equal("",error);Assert.Empty(fromCode.Error);
-        other.Coordinator.Dispose();
+        RetiredCounterEra(prior);
     }
     // 印刷 PP 文字規則（2026-10-23）之前開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
-    [Fact] public void PrePrintedPpTextMatchResumesReplaysAndItsCodeReplays()
+    [Fact] public void PrePrintedPpTextMatchIsVoidedWithTheCounterEras()
     {
         var prior=CardBalanceHistory.BeforePrintedPpText(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforePrintedPpText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
@@ -346,22 +335,7 @@ public sealed class RankedTests : IDisposable
         var changed=CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>prior.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
         Assert.All(changed,c=>{Assert.Contains("印刷 PP",c.Text);Assert.DoesNotContain("印刷",prior.GetCard(c.Id)!.Text);var o=JsonSerializer.Deserialize<CardDefinition>(JsonSerializer.Serialize(prior.GetCard(c.Id)))!;o.Text=c.Text;Assert.Equal(JsonSerializer.Serialize(c),JsonSerializer.Serialize(o));});
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;
-        var liveCode=old.CurrentMatchCode()!;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.False(CardTextClarityTests.IsLegacy(current.Engine));
-        var fromLive=current.BuildReplay(MatchCode.Decode(liveCode,out var liveError,out _)!);Assert.Equal("",liveError);Assert.Empty(fromLive.Error);
-        Assert.True(Send(current,"surrender").Success);var record=current.Read().Records!.Last();Assert.Empty(current.BuildReplay(record.Id).Error);
-        var code=current.MatchCodeFor(record.Id)!;current.Coordinator.Dispose();
-        Directory.Delete(dir,true);var other=Session();var fromCode=other.BuildReplay(MatchCode.Decode(code,out var error,out _)!);Assert.Equal("",error);Assert.Empty(fromCode.Error);
-        other.Coordinator.Dispose();
+        RetiredCounterEra(prior);
     }
     [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
     {
@@ -766,7 +740,7 @@ public sealed class RankedTests : IDisposable
             var e=new GameEngine(cards,new Random(103)){AiLevel=entry.Tier};e.StartGame(entry.Deck,cards.PresetDecks[0],entry.Tier%2==0);e.Player.IsAi=true;
             for(int n=0;n<2500&&!e.IsOver;n++)Assert.True(e.ExecuteAiStep(),entry.Deck.Name+": "+e.LastError);
             Assert.True(e.IsOver,entry.Deck.Name);
-            Assert.Equal(100+e.OpeningCoins,new[]{e.Player,e.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null)));
+            Assert.Equal(100+e.OpeningCoins,new[]{e.Player,e.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Board.Sum(m=>m.Attachments.Count+m.Under.Count+m.ShieldCards.Count)+p.Field.Count(m=>m.SilenceSpell!=null)));
         }
     }
     [Fact] public void HigherAiTakesCombinedLethalBeforeTrading()

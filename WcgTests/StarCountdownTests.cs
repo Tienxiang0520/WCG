@@ -6,7 +6,8 @@ using WcgWeb.Models;
 using WcgWeb.Services;
 namespace WcgTests;
 
-// 新流派「星律倒數」（WCG-409–417，2026-10-25）：回合開始時移除 1 個倒數指示物，移除最後 1 個時觸發；沉默移除且不觸發。
+// 新流派「星律倒數」（WCG-409–417，2026-10-25；2026-11-12 起倒數牌是從牌庫底墊在卡底下的牌）：回合開始時 1 張倒數牌放回牌庫底，
+// 移走最後 1 張時觸發；沉默全部放回牌庫底且不觸發。
 public class StarCountdownTests
 {
     private readonly CardDatabase cards;
@@ -30,73 +31,95 @@ public class StarCountdownTests
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeStarCountdownCards(cards).AllCards),JsonSerializer.Serialize(old.AllCards));
         Assert.Equal(CardBalanceHistory.BeforeIronhideDp(cards).AllCards.Where(c=>!CardBalanceHistory.IsStarCountdownCard(c.Id)&&!CardBalanceHistory.IsFateFlipCard(c.Id)).Select(c=>JsonSerializer.Serialize(c)),old.AllCards.Select(c=>JsonSerializer.Serialize(c)));
     }
-    // 畫面回饋：回合開始移除倒數指示物時要有 status 事件，畫面才會在那張卡上顯示剩幾個。
-    [Fact] public void RemovingACountdownCounterIsPresentedOnTheCard()
+    // 畫面回饋：回合開始倒數牌放回牌庫底時要有 status 事件，畫面才會在那張卡上顯示底下還剩幾張。
+    [Fact] public void ReturningACountdownCardIsPresentedOnTheCard()
     {
-        var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,413)));Settle(g);var m=g.Player.Field.Single();var before=m.Countdown;Assert.True(before>=2);
+        var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,413)));Settle(g);var m=g.Player.Field.Single();var before=m.CountdownCards;Assert.Equal(2,before);
         StartTurn(g,g.Player);
-        Assert.Contains(g.PresentationEvents,e=>e.Type=="status"&&e.InstanceId==m.InstanceId&&e.Label==$"移除 1 個倒數指示物（剩 {before-1}）");
+        Assert.Contains(g.PresentationEvents,e=>e.Type=="status"&&e.InstanceId==m.InstanceId&&e.Label==$"1 張倒數牌放回牌庫底（剩 {before-1}）");
+    }
+    [Fact] public void CountdownCardsComeFromTheDeckBottomAndGoBackThere()
+    {
+        var g=Game();var deck=g.Player.Deck.Count;var bottom=g.Player.Deck[^1];
+        Assert.True(g.SummonMonster(g.Player,Hand(g,409)));Settle(g);var m=g.Player.Field.Single();
+        Assert.Equal(deck-1,g.Player.Deck.Count);Assert.Same(bottom,m.Under.Single().Card);Assert.Equal(UnderKind.Countdown,m.Under.Single().Kind);
+        StartTurn(g,g.Player);Assert.Empty(m.Under);Assert.Contains(bottom,g.Player.Deck);
+    }
+    [Fact] public void ShortDeckPlacesWhatItCanAndPlacingNoneNeverFires()
+    {
+        var g=Game();g.Player.Deck.RemoveRange(0,g.Player.Deck.Count-2);
+        Assert.True(g.PlayEnchantment(g.Player,Hand(g,410)));Settle(g);var clock=g.Player.Structures.Single();Assert.Equal(2,clock.CountdownCards);Assert.Empty(g.Player.Deck);
+        var empty=Game();empty.Player.Deck.Clear();var hand=empty.Player.Hand.Count;
+        Assert.True(empty.SummonMonster(empty.Player,Hand(empty,409)));Settle(empty);var m=empty.Player.Field.Single();
+        Assert.Equal(0,m.CountdownCards);StartTurn(empty,empty.Player);Assert.Equal(hand,empty.Player.Hand.Count);
+    }
+    [Fact] public void WardenCanHoldCountdownAndDpCardsApart()
+    {
+        var g=Game();var w=Unit(g.Player,413,0).Pad(g.Player,UnderKind.Countdown,2).Pad(g.Player,UnderKind.Dp,1);Refresh(g);
+        Assert.Equal(2,w.CountdownCards);Assert.Equal(1,w.DpCards);Assert.Equal((w.Card.DP??1)+1,w.CurrentDP);
+        StartTurn(g,g.Player);Assert.Equal(1,w.CountdownCards);Assert.Equal(1,w.DpCards);
     }
     [Fact] public void ApprenticeDrawsTwoWhenItsLastCounterGoes()
     {
-        var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,409)));Settle(g);var m=g.Player.Field.Single();Assert.Equal(1,m.Countdown);
-        var hand=g.Player.Hand.Count;StartTurn(g,g.Player);Assert.Equal(0,m.Countdown);Assert.Equal(hand+2,g.Player.Hand.Count);
+        var g=Game();Assert.True(g.SummonMonster(g.Player,Hand(g,409)));Settle(g);var m=g.Player.Field.Single();Assert.Equal(1,m.CountdownCards);
+        var hand=g.Player.Hand.Count;StartTurn(g,g.Player);Assert.Equal(0,m.CountdownCards);Assert.Equal(hand+2,g.Player.Hand.Count);
         StartTurn(g,g.Player);Assert.Equal(hand+2,g.Player.Hand.Count); // only once
     }
     [Fact] public void SilenceRemovesCountersWithoutTriggering()
     {
-        var g=Game();var m=Unit(g.Player,414,0);m.Countdown=1;var foe=Unit(g.Computer,101,0);Refresh(g);var hp=g.Computer.Hp;
+        var g=Game();var m=Unit(g.Player,414,0).Pad(g.Player,UnderKind.Countdown,1);var foe=Unit(g.Computer,101,0);Refresh(g);var hp=g.Computer.Hp;var deck=g.Player.Deck.Count;
         m.IsSilenced=true;typeof(GameEngine).GetMethod("SilenceStrip",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[m]);
-        Assert.Equal(0,m.Countdown);StartTurn(g,g.Player);Assert.Equal(hp,g.Computer.Hp);Assert.Contains(foe,g.Computer.Field);
+        Assert.Equal(0,m.CountdownCards);Assert.Equal(deck+1,g.Player.Deck.Count);StartTurn(g,g.Player);Assert.Equal(hp,g.Computer.Hp);Assert.Contains(foe,g.Computer.Field);
     }
     [Fact] public void ClockEntersWithThreeAndLoops()
     {
-        var g=Game();Assert.True(g.PlayEnchantment(g.Player,Hand(g,410)));Settle(g);var clock=g.Player.Structures.Single();Assert.Equal(3,clock.Countdown);
+        var g=Game();Assert.True(g.PlayEnchantment(g.Player,Hand(g,410)));Settle(g);var clock=g.Player.Structures.Single();Assert.Equal(3,clock.CountdownCards);
         var foe=Unit(g.Computer,113,0);Refresh(g);
         StartTurn(g,g.Player);StartTurn(g,g.Player);Assert.Contains(foe,g.Computer.Field);StartTurn(g,g.Player);
-        Assert.DoesNotContain(foe,g.Computer.Field);Assert.Equal(3,clock.Countdown);
+        Assert.DoesNotContain(foe,g.Computer.Field);Assert.Equal(3,clock.CountdownCards);
     }
     [Fact] public void SeerHitsFaceAndClearsPrintedSmallMonsters()
     {
-        var g=Game();var seer=Unit(g.Player,414,0);seer.Countdown=1;var small=Unit(g.Computer,101,0);var big=Unit(g.Computer,113,1);Refresh(g);var hp=g.Computer.Hp;
+        var g=Game();var seer=Unit(g.Player,414,0).Pad(g.Player,UnderKind.Countdown,1);var small=Unit(g.Computer,101,0);var big=Unit(g.Computer,113,1);Refresh(g);var hp=g.Computer.Hp;
         StartTurn(g,g.Player);Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(small.Card.PP<=900,!g.Computer.Field.Contains(small));Assert.Contains(big,g.Computer.Field);
     }
     [Fact] public void WardenIsSpellProofWhileTickingThenHardens()
     {
-        var g=Game();var w=Unit(g.Computer,413,0);w.Countdown=1;Refresh(g);
+        var g=Game();var w=Unit(g.Computer,413,0).Pad(g.Computer,UnderKind.Countdown,1);g.Computer.Hand.Add(new(cards.GetCard("WCG-101")!));Refresh(g);
         Assert.DoesNotContain(w,Targets(g));
-        StartTurn(g,g.Computer);Assert.Equal(2,w.DpCounters);Assert.Equal(1,w.ShieldCounters);
+        StartTurn(g,g.Computer);Assert.Equal(2,w.DpCards);Assert.Single(w.ShieldCards);Assert.True(w.HasShield);
         Assert.Contains(w,Targets(g));
     }
     [Fact] public void AdeptRemovesAnExtraCounterFromWhatItsArrowsPointAt()
     {
-        var g=Game();Unit(g.Player,411,1);var a=Unit(g.Player,414,0);a.Countdown=2;var b=Unit(g.Player,413,3);b.Countdown=2;Refresh(g);
-        StartTurn(g,g.Player);Assert.Equal(0,a.Countdown);Assert.Equal(1,b.Countdown);
+        var g=Game();Unit(g.Player,411,1);var a=Unit(g.Player,414,0).Pad(g.Player,UnderKind.Countdown,2);var b=Unit(g.Player,413,3).Pad(g.Player,UnderKind.Countdown,2);Refresh(g);
+        StartTurn(g,g.Player);Assert.Equal(0,a.CountdownCards);Assert.Equal(1,b.CountdownCards);
     }
     [Fact] public void CatalystAcceleratesOrDraws()
     {
-        var g=Game();var a=Unit(g.Player,409,0);a.Countdown=2;Refresh(g);var hand=g.Player.Hand.Count;
-        Assert.True(g.CastSpell(g.Player,Hand(g,412)));Settle(g);Assert.Equal(0,a.Countdown);Assert.Equal(hand+2,g.Player.Hand.Count);
+        var g=Game();var a=Unit(g.Player,409,0).Pad(g.Player,UnderKind.Countdown,2);Refresh(g);var hand=g.Player.Hand.Count;
+        Assert.True(g.CastSpell(g.Player,Hand(g,412)));Settle(g);Assert.Equal(0,a.CountdownCards);Assert.Equal(hand+2,g.Player.Hand.Count);
         var g2=Game();var h2=g2.Player.Hand.Count;Assert.True(g2.CastSpell(g2.Player,Hand(g2,412)));Settle(g2);Assert.Equal(h2+1,g2.Player.Hand.Count);
     }
     [Fact] public void RealignRearmsASpentStarCardOrDraws()
     {
         var g=Game();var a=Unit(g.Player,414,0);Refresh(g);
-        Assert.True(g.CastSpell(g.Player,Hand(g,415)));Settle(g);Assert.Equal(2,a.Countdown);
+        Assert.True(g.CastSpell(g.Player,Hand(g,415)));Settle(g);Assert.Equal(2,a.CountdownCards);
         var g2=Game();var h2=g2.Player.Hand.Count;Assert.True(g2.CastSpell(g2.Player,Hand(g2,415)));Settle(g2);Assert.Equal(h2+1,g2.Player.Hand.Count);
-        Assert.All(g2.Computer.Board,x=>Assert.Equal(0,x.Countdown));
+        Assert.All(g2.Computer.Board,x=>Assert.Equal(0,x.CountdownCards));
     }
     [Fact] public void EndFiresEverythingAndHitsFacePerTrigger()
     {
-        var g=Game();var a=Unit(g.Player,409,0);a.Countdown=1;var b=Unit(g.Player,413,1);b.Countdown=2;Structure(g.Player,416,4);Refresh(g);var hp=g.Computer.Hp;var hand=g.Player.Hand.Count;
+        var g=Game();var a=Unit(g.Player,409,0).Pad(g.Player,UnderKind.Countdown,1);var b=Unit(g.Player,413,1).Pad(g.Player,UnderKind.Countdown,2);Structure(g.Player,416,4);Refresh(g);var hp=g.Computer.Hp;var hand=g.Player.Hand.Count;
         Assert.True(g.CastSpell(g.Player,Hand(g,417)));Settle(g);
-        Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(0,a.Countdown);Assert.Equal(0,b.Countdown);Assert.Equal(2,b.DpCounters);
-        Assert.Equal(hand+2+2,g.Player.Hand.Count); // 409 draws 2, the tower draws 1 per trigger
+        Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(0,a.CountdownCards);Assert.Equal(0,b.CountdownCards);Assert.Equal(2,b.DpCards);
+        Assert.Equal(hand+2+2-1,g.Player.Hand.Count); // 409 draws 2, the tower draws 1 per trigger, 413 puts 1 hand card under itself (聖盾)
+        Assert.Single(b.ShieldCards);
         var g2=Game();var h2=g2.Player.Hand.Count;Assert.True(g2.CastSpell(g2.Player,Hand(g2,417)));Settle(g2);Assert.Equal(h2+3,g2.Player.Hand.Count);
     }
-    [Fact] public void PrintToolsAddACountdownSheetForStarDecks()
+    [Fact] public void PrintToolsNeedNoCountdownSheet()
     {
         var plan=new DeckPrintPlan("t","理智",[new PrintedCard("WCG-409","星沙學徒","怪物","理智",1,500,0,"")]);
-        Assert.Equal(0,DeckPrintTools.Defaults(plan with {Cards=[]})[PrintTool.CountdownTokens]);Assert.Equal(1,DeckPrintTools.Defaults(plan)[PrintTool.CountdownTokens]);
+        Assert.Equal([PrintTool.Life,PrintTool.Coin],DeckPrintTools.Defaults(plan).Keys.OrderBy(x=>x).ToArray());
     }
 }

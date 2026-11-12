@@ -1,37 +1,32 @@
 using WcgWeb.Models;
 namespace WcgWeb.Services;
 
-// 新流派「血誓反擊」（秩序＋狂怒，WCG-364–372，2026-10-24）：故意挨打，每受一次傷害就在 364 血誓祭壇疊血誓指示物，
-// 生命 3 以下整套暴走，最後用 370／372 把指示物換成清場或傷害。
+// 新流派「血誓反擊」（秩序＋狂怒，WCG-364–372，2026-10-24）：故意挨打，每受一次傷害就在 364 血誓祭壇底下從牌庫底墊 1 張血誓，
+// 生命 3 以下整套暴走，最後用 370／372 把血誓放回牌庫底換成清場或傷害。
 // Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
-    internal const string BloodSettleTitle = "血帳清算：選擇消滅的敵方怪物（移除 2 個血誓指示物）";
+    internal const string BloodSettleTitle = "血帳清算：選擇消滅的敵方怪物（祭壇底下 2 張放回牌庫底）";
     private static bool LowLife(PlayerState p) => p.Hp <= 3;
-    private static int BloodTotal(PlayerState p) => p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364").Sum(s => s.BloodCounters);
-    private void AddBlood(PlayerState p, MonsterInstance altar, int n = 1)
-    {
-        altar.BloodCounters += n;
-        Present("status", p, altar.InstanceId, amount: n, card: altar.Card, label: "血誓指示物");
-    }
-    // Removes n counters from your altars (fullest first). Returns how many were removed.
+    private static int BloodTotal(PlayerState p) => p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364").Sum(s => s.BloodCards);
+    private void AddBlood(PlayerState p, MonsterInstance altar, int n = 1) => PadUnder(p, altar, UnderKind.BloodOath, n, altar.Card);
+    // Puts n 血誓 cards from under your altars back on the deck bottom (fullest altar first). Returns how many were returned.
     private int RemoveBlood(PlayerState p, int n)
     {
         var removed = 0;
-        foreach (var s in p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364" && s.BloodCounters > 0).OrderByDescending(s => s.BloodCounters))
+        foreach (var s in p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364" && s.BloodCards > 0).OrderByDescending(s => s.BloodCards).ToArray())
         {
-            var take = Math.Min(n - removed, s.BloodCounters); s.BloodCounters -= take; removed += take;
-            Present("status", p, s.InstanceId, card: s.Card, label: $"移除 {take} 個血誓指示物（剩 {s.BloodCounters}）");
+            removed += ReturnUnder(s, UnderKind.BloodOath, n - removed);
             if (removed >= n) break;
         }
         return removed;
     }
-    // Every damage event you take, whatever its source (also 369 hitting yourself): 364 gets 1 血誓指示物, 365 gets 1 DP 指示物.
+    // Every damage event you take, whatever its source (also 369 hitting yourself): each 364 gets 1 血誓 card, 365 gets 1 DP card.
     // Paying life is not damage and never comes here.
     private void BloodHurt(PlayerState p)
     {
         foreach (var altar in p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364")) AddBlood(p, altar);
-        foreach (var guard in p.Field.Where(x => Active(x, "WCG-365")).ToArray()) AddDpCounter(guard, guard.Card);
+        foreach (var guard in p.Field.Where(x => Active(x, "WCG-365")).ToArray()) AddDpCards(p, guard, guard.Card);
     }
     // 367 誓言之怒: +600 PP and +1 DP while your life is 3 or less.
     private int BloodPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-367" ? (LowLife(p) ? 600 : 0) : SurgePower(p, m);
@@ -58,7 +53,7 @@ public partial class GameEngine
             case "WCG-370": BloodSettle(p, source.Card); break;
             case "WCG-372":
                 var n = RemoveBlood(p, BloodTotal(p));
-                Log($"【{p.Name}】移除 {n} 個血誓指示物。", "action");
+                Log($"【{p.Name}】把祭壇底下 {n} 張血誓放回牌庫底。", "action");
                 if (n > 0) SpellDamage(p, e, n, source.Card);
                 break;
             default: return TideSpell(p, source, t);
@@ -66,7 +61,7 @@ public partial class GameEngine
         RefreshBoard();
         return true;
     }
-    // 370: one enemy monster at a time, 2 counters each; the player may stop whenever they like.
+    // 370: one enemy monster at a time, 2 血誓 cards back to the deck bottom each; the player may stop whenever they like.
     private void BloodSettle(PlayerState p, CardDefinition card)
     {
         var e = GetOpponent(p);
@@ -79,7 +74,7 @@ public partial class GameEngine
     }
     private string BloodPlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
-        "WCG-370" when BloodTotal(p) < 2 => "你場上的血誓指示物不足 2 個。",
+        "WCG-370" when BloodTotal(p) < 2 => "你的血誓祭壇底下不足 2 張牌。",
         "WCG-370" when !GetOpponent(p).Field.Any(x => x.IsUnit) => "敵方場上沒有怪物。",
         _ => TidePlayProblem(p, c)
     };

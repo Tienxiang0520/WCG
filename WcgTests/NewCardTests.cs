@@ -232,13 +232,13 @@ public class NewCardTests
     }
 
     // ---- 5.1 反制 ----
-    // 聖盾指示物: 209 removes 1 counter for good; it does not come back next turn.
-    [Fact] public void ShieldBreakersRemoveTheHolyShieldCounter()
+    // 2026-11-12 聖盾來源: 209 sends 1 聖盾 card under the monster to the graveyard; it does not come back next turn.
+    [Fact] public void ShieldBreakersSendAShieldCardToTheGraveyard()
     {
-        var g=Game();var wall=Unit(g.Computer,31,2);Refresh(g);Assert.True(wall.HasShield);Assert.False(wall.ShieldSpent);
-        Summon(g,209,0);Assert.True(g.SelectTarget(wall));Assert.True(wall.ShieldSpent);
+        var g=Game();var wall=Unit(g.Computer,101,2);var shield=new CardInstance(cards.GetCard("WCG-101")!);wall.ShieldCards.Add(new(shield,g.Computer.Id));Refresh(g);Assert.True(wall.HasShield);
+        Summon(g,209,0);Assert.True(g.SelectTarget(wall));Refresh(g);Assert.Empty(wall.ShieldCards);Assert.False(wall.HasShield);Assert.Contains(shield,g.Computer.Graveyard);
         var hitter=Unit(g.Player,154,1);Assert.True(g.PreviewAttack(hitter,wall)!.DefenderDies);
-        EndTurnQuietly(g);Assert.True(wall.ShieldSpent);Assert.True(g.PreviewAttack(wall,hitter) is null or {AttackerShieldBreaks:false});
+        EndTurnQuietly(g);Assert.False(wall.HasShield);
     }
     [Fact] public void TauntAnswersSilenceDestroyAndWalkPast()
     {

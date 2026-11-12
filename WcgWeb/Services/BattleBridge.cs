@@ -92,7 +92,7 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
     {
         if(m.IsSet)return new(new(m.InstanceId,"SET","蓋牌","蓋牌","",0,null,null,"玩家被宣告攻擊時可翻開。",""),0,0,["蓋牌"],false,"蓋牌不能攻擊",[],null,m.Slot,false,true,false,[]);
         var status = new List<string>();
-        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldCounterRules)for(int i=0;i<m.ShieldCounters;i++)status.Add("聖盾指示物");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCounters;i++)status.Add("DP 指示物");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulCounter)status.Add("奪魂指示物");for(int i=0;i<m.BloodCounters;i++)status.Add("血誓指示物");for(int i=0;i<m.CorrosionCounters;i++)status.Add("腐蝕指示物");for(int i=0;i<m.Countdown;i++)status.Add("倒數指示物");for(int i=0;i<m.SpringCounters;i++)status.Add("聖泉指示物");status.Add(m.IsTapped?"橫置":"直立");
+        if(m.IsTaunt)status.Add("嘲諷");if(engine.ShieldSourceRules)for(int i=0,n=engine.ShieldSourceCount(m);i<n;i++)status.Add("聖盾來源");else if(m.HasShield)status.Add(engine.SimplifiedRules?(m.ShieldSpent?"本回合聖盾已用":"聖盾（本回合可用）"):"能量護盾資格（每次1能量）");for(int i=0;i<m.DpCards;i++)status.Add("DP 牌");if(m.TurnUnblockable)status.Add("本回合嘲諷擋不住");if(engine.LaneStatus(m) is {} lane)status.Add(lane);if(m.Turned)status.Add("暫時控制（轉 180 度）");if(m.SoulSpell)status.Add("永久控制（王座篡奪）");for(int i=0;i<m.BloodCards;i++)status.Add("血誓");for(int i=0;i<m.CountdownCards;i++)status.Add("倒數牌");for(int i=0;i<m.SpringCards;i++)status.Add("聖泉");status.Add(m.IsTapped?"橫置":"直立");
         if(m.Card.Arrows.Length>0)status.Add("箭頭："+string.Join(" ",m.Card.Arrows.Select(a=>a=="left"?"←":a=="right"?"→":"↑")));
         if (m.IsSilenced) status.Add("沉默"); if (m.HasPoison) status.Add("劇毒");
         if (m.HasTrample) status.Add("貫穿");
@@ -109,7 +109,9 @@ public sealed class BattleBridge(GameEngine engine, DeckService decks)
         return new(visible, m.CurrentPP, m.CurrentDP,
             status.ToArray(), canAttack, problem, targets.ToArray(),
             m.SilenceSpell == null ? null : GameEngine.VisibleCard(m.SilenceSpell),m.Slot,m.IsTapped,m.IsSet,owner==engine.Player&&engine.CanActivate(owner,m),m.Attachments.Select(a=>GameEngine.VisibleCard(a.Card)).ToArray())
-            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)), Locked = !m.IsSet && m.AttackLocked, Turned = m.Turned, Soul = m.SoulCounter };
+            { PpParts = Parts(engine.PowerModifiers(m)), DpParts = Parts(engine.DamageModifiers(m)), Locked = !m.IsSet && m.AttackLocked, Turned = m.Turned,
+              Under = m.Under.Count == 0 ? null : m.Under.GroupBy(u => u.Kind).OrderBy(g => g.Key).Select(g => new BattleUnder(GameEngine.UnderKey(g.Key), g.Count())).ToArray(),
+              ShieldCards = m.ShieldCards.Count == 0 ? null : m.ShieldCards.Select(a => GameEngine.VisibleCard(a.Card)).ToArray() };
     }
     private static BattleStatPart[]? Parts(IReadOnlyList<StatSource> parts) =>
         parts.Count == 0 ? null : parts.Select(x => new BattleStatPart(x.Label, x.Source?.Id, x.Amount)).ToArray();

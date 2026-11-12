@@ -19,15 +19,29 @@ public partial class GameEngine
         foreach (var c in milled) Present("discard", target, c.InstanceId, card: c.Card, label: "牌庫頂送入墓地");
         Log($"【{target.Name}】牌庫頂 {milled.Count} 張送入墓地，牌庫剩 {target.Deck.Count} 張。", "action");
     }
-    // 205 碎盾狂戰士 removes all 聖盾指示物 (its whole identity); 209 破甲工匠 is a cheap utility body and removes 1.
+    // 205 碎盾狂戰士 sends all 聖盾 cards under 1 enemy monster to the graveyard (its whole identity); 209 破甲工匠 is a cheap
+    // utility body and sends 1. 聖盾 cards are attached 聖盾 spells and hand cards put face up as a 聖盾 source; creatures giving
+    // 聖盾 with arrows are never destroyed by this. Older catalogs make the monster lose 聖盾 this turn.
+    private static List<(AttachedSpell Card, bool Spell)> ShieldCardsUnder(MonsterInstance x) =>
+        [.. x.Attachments.Where(a => ShieldSpell(a.Card.Card.Id)).Select(a => (a, true)), .. x.ShieldCards.Select(a => (a, false))];
     private void BreakShield(PlayerState p, bool all = true)
     {
-        var counters = ShieldCounterRules;
-        PickMonster(p, counters ? "選擇要移除聖盾指示物的敵方怪物" : "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
+        if (ShieldSourceRules)
         {
-            if (counters) { x.ShieldCounters = all ? 0 : Math.Max(0, x.ShieldCounters - 1); x.ShieldQualified = x.ShieldCounters > 0; x.ShieldSpent = x.ShieldCounters == 0; }
-            else x.ShieldSpent = true;
-            Present("status", Owner(x), x.InstanceId, card: x.Card, label: counters ? (all ? "移除所有聖盾指示物" : "移除 1 個聖盾指示物") : "本回合失去聖盾");
+            PickMonster(p, all ? "選擇底下聖盾法術全部送入墓地的敵方怪物" : "選擇底下 1 張聖盾法術送入墓地的敵方怪物", GetOpponent(p).Field.Where(x => x.IsUnit && ShieldCardsUnder(x).Count > 0), x =>
+            {
+                var cards = ShieldCardsUnder(x); if (!all) cards = cards.Take(1).ToList();
+                foreach (var (a, spell) in cards) { if (spell ? x.Attachments.Remove(a) : x.ShieldCards.Remove(a)) PlayerById(a.OwnerId).Graveyard.Add(a.Card); }
+                RefreshBoard();
+                Present("status", Owner(x), x.InstanceId, card: x.Card, label: cards.Count == 1 ? "1 張聖盾法術送入墓地" : $"{cards.Count} 張聖盾法術送入墓地");
+                Log($"【{x.Card.Name}】底下 {cards.Count} 張聖盾來源送入墓地。", "action");
+            });
+            return;
+        }
+        PickMonster(p, "選擇本回合失去聖盾的敵方怪物", GetOpponent(p).Field.Where(x => x.HasShield && !x.ShieldSpent), x =>
+        {
+            x.ShieldSpent = true;
+            Present("status", Owner(x), x.InstanceId, card: x.Card, label: "本回合失去聖盾");
         });
     }
 
@@ -73,7 +87,7 @@ public partial class GameEngine
     // After the 理智 buff: enemy spells can never target it.
     private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && (Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1) || StarWarded(m));
     private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221") + HoofAttackDp(a) + LaneAttackDp(a);
-    private static int NewAttachmentPower(string id) => id switch { "WCG-221" => 300, "WCG-338" => 200, _ => 0 };
+    private static int NewAttachmentPower(string id) => id switch { "WCG-221" => 300, "WCG-338" => 200, "WCG-382" or "WCG-387" => -300, "WCG-388" => -600, _ => 0 };
     private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : GraveCostReduction(p, card);
 
     private List<MonsterInstance>? NewSpellTargets(PlayerState p, CardDefinition c)
@@ -105,7 +119,7 @@ public partial class GameEngine
         var e = GetOpponent(p);
         switch (m.Card.Id)
         {
-            case "WCG-205": BreakShield(p); break; case "WCG-209": BreakShield(p, !ShieldCounterRules); break;
+            case "WCG-205": BreakShield(p); break; case "WCG-209": BreakShield(p, !ShieldSourceRules); break;
             // Before the silence-spell change (2026-10-16) 寂靜學者 was a monster; old-era matches keep its entry effect.
             case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); SilenceStrip(x); }); break;
             case "WCG-212": Mill(e, 2); break;

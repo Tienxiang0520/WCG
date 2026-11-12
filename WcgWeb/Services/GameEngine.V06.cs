@@ -22,39 +22,22 @@ public partial class GameEngine
     {
         EnsureSlots(Player); EnsureSlots(Computer);
         Player.Lent = Computer.Field.Count(x => x.Turned); Computer.Lent = Player.Field.Count(x => x.Turned);
-        var counters=ShieldCounterRules;
+        var sources=ShieldSourceRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
             var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338")+RootAndBloodDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*200 : 0)+
-                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit)-300*unit.CorrosionCounters);
+                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*300 : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id=="WCG-133" && p.Hp<=3)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
                     && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Across(source,unit)));
             // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
             if (!LegacyCardRules && unit.ShieldQualified && Arbitrated(p, unit)) unit.ShieldQualified = false;
-            if (counters) ShieldCounterSources(p, unit);
+            // 聖盾 (2026-11-12): a monster has 聖盾 while it has a source (cards under it or a creature's arrow); 147's ↑ purges them.
+            if (sources) { if (Arbitrated(p, unit)) PurgeShieldCards(unit, "聖堂仲裁護衛"); unit.ShieldQualified = ShieldSourcesOf(unit).Count > 0; unit.ShieldSpent = !unit.ShieldQualified; }
         }
-    }
-    // 聖盾指示物: every 聖盾 source that starts applying (printed 聖盾 on entry or after Dispel, 133's condition, each arrow,
-    // each attached 聖盾 spell) adds 1 counter; counters stack. Being silenced, or 147's up arrow pointing at it, removes all counters.
-    // A monster "has 聖盾" while it has counters; ShieldSpent mirrors "no counters" for code shared with the per-turn era.
-    private void ShieldCounterSources(PlayerState p, MonsterInstance unit)
-    {
-        var now = new HashSet<string>();
-        if (!unit.IsSilenced && (unit.Card.HasEnergyShield || unit.Card.Id == "WCG-133" && p.Hp <= 3)) now.Add("native");
-        if (RootShield(p, unit)) now.Add("root");
-        foreach (var a in unit.Attachments.Where(a => a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")) now.Add("T:" + a.Card.InstanceId);
-        foreach (var source in Player.Field.Concat(Computer.Field).Where(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length > 0 && PointsAt(Owner(source), source, p, unit)
-            && !(source.Card.Id == "WCG-147" && !LegacyCardRules && Across(source, unit)))) now.Add("A:" + source.InstanceId);
-        if (unit.IsSilenced && !unit.WasSilenced) unit.ShieldCounters = 0;
-        unit.WasSilenced = unit.IsSilenced;
-        unit.ShieldCounters += now.Count(s => !unit.ShieldSources.Contains(s));
-        unit.ShieldSources = now;
-        if (!LegacyCardRules && Arbitrated(p, unit)) unit.ShieldCounters = 0;
-        unit.ShieldQualified = unit.ShieldCounters > 0; unit.ShieldSpent = unit.ShieldCounters == 0;
     }
     private bool Arbitrated(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && source.Card.Id == "WCG-147" && source.Card.Arrows.Contains("up")
@@ -62,13 +45,11 @@ public partial class GameEngine
     // Arrow side by physical row (2026-10-24): ← → stay in the card's own row, ↑ crosses to the other row. Unturned cards
     // stand in their controller's row, so for them this equals the old own/enemy split.
     private bool Across(MonsterInstance source, MonsterInstance target) => !ReferenceEquals(RowOf(source), RowOf(target));
-    // Only these arrows hand out energy shield; the other arrow cards link slots for their own effects.
-    public static bool ShieldArrows(string id) => id is "WCG-061" or "WCG-073" or "WCG-147";
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     internal static (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), "WCG-355" => (200, 0), "WCG-361" => (300, 300), "WCG-362" => (300, 0), "WCG-363" => (600, 0), "WCG-367" => (0, -300), "WCG-371" => (200, 0), "WCG-376" => (200, 0), "WCG-380" => (0, -300), "WCG-387" => (200, 0), "WCG-422" => (0, -200), "WCG-398" => (0, -300), _ => (0, 0) };
+    { "WCG-005" => (200, 0), "WCG-049" => (200, 0), "WCG-085" => (0, -300), "WCG-283" => (0, -300), "WCG-287" => (0, -500), "WCG-347" => (200, 0), "WCG-355" => (200, 0), "WCG-361" => (300, 300), "WCG-362" => (300, 0), "WCG-363" => (600, 0), "WCG-367" => (0, -300), "WCG-371" => (200, 0), "WCG-376" => (200, 0), "WCG-380" => (0, -300), "WCG-383" => (0, -300), "WCG-386" => (0, -300), "WCG-387" => (200, 0), "WCG-422" => (0, -200), "WCG-398" => (0, -300), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
-        Player.Field.Concat(Computer.Field).Where(source => source != unit && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
+        Player.Board.Concat(Computer.Board).Where(source => source != unit && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
     // Monsters currently linked by a unit's arrows (own neighbours left/right, the enemy straight ahead).
     private IEnumerable<MonsterInstance> ArrowTargets(PlayerState p, MonsterInstance m) =>
@@ -118,21 +99,23 @@ public partial class GameEngine
         return true;
     });
     private void DestroyStructure(MonsterInstance m)
-    { if(!Alive(m))return;var p=Owner(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:DamageCounters?"摧毀結界":"摧毀結界／蓋牌"); }
+    { if(!Alive(m))return;var p=Owner(m);ReturnAllUnder(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:DamageCounters?"摧毀結界":"摧毀結界／蓋牌"); }
     // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
     private void OptionalDispel(PlayerState p,MonsterInstance source)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter||x.CorrosionCounters>0)
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(Dispellable)
             .Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
         if(Targetable(p,all).Count==0)return;
         Ask(p,$"【{source.Card.Name}】進場：要驅散附著或摧毀結界嗎？",[new(){Id="DISPEL_OPT",Title="選擇驅散或摧毀目標"},new(){Id="SKIP",Title="不發動"}],o=>{if(o.Id=="DISPEL_OPT")Dispel(p);});
     }
     private void Dispel(PlayerState p,bool structures=true)
     {
-        var all=p.Field.Concat(GetOpponent(p).Field).Where(x=>x.Attachments.Count>0||x.IsSilenced||SilenceCounterRules&&x.SoulCounter||x.CorrosionCounters>0);
+        var all=p.Field.Concat(GetOpponent(p).Field).Where(Dispellable);
         if(structures)all=all.Concat(p.Structures.Concat(GetOpponent(p).Structures).Where(x=>!x.IsSet));
-        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{ReleaseAttachments(x);x.IsSilenced=false;x.CorrosionCounters=0;RefreshBoard();UnSoul(x);}});
+        PickMonster(p,"選擇驅散目標",all,x=>{if(!x.IsUnit)DestroyStructure(x);else{var soul=SilenceCounterRules&&x.SoulSpell;ReleaseAttachments(x);x.IsSilenced=false;RefreshBoard();if(soul)UnSoul(x,true);}});
     }
+    // Dispel targets: monsters with cards under them that dispel removes (attachments, 聖盾 hand cards, a silence spell).
+    private static bool Dispellable(MonsterInstance x)=>x.Attachments.Count>0||x.ShieldCards.Count>0||x.IsSilenced;
     private void FreeFaction(PlayerState p,int cost,string faction, bool grave=false, Action<MonsterInstance>? after=null)
     {
         if(p.Occupied>=5)return; var zone=grave?p.Graveyard:p.Hand;

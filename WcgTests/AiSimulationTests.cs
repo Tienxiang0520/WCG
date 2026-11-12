@@ -14,7 +14,7 @@ public class AiSimulationTests
         $"{p.Id}:{p.Hp}:{p.EnergyZone.Count}/{p.AvailableEnergy}:{p.Hand.Count}:{p.Deck.Count}:{p.Graveyard.Count}:"+
         string.Join(",",p.Field.OrderBy(m=>m.Slot).Select(m=>$"{m.Card.Id}@{m.Slot}/{m.CurrentPP}/{m.CurrentDP}/{(m.IsTapped?1:0)}/{(m.HasShield?1:0)}"))+":"+
         string.Join(",",p.Structures.OrderBy(m=>m.Slot).Select(m=>$"{(m.IsSet?"set":m.Card.Id)}@{m.Slot}"))))+$"|{g.CurrentTurnPlayerId}:{g.TurnNumber}:{g.CurrentPhase}";
-    private static int Count(GameEngine g)=>new[]{g.Player,g.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
+    private static int Count(GameEngine g)=>new[]{g.Player,g.Computer}.Sum(p=>p.Hand.Count+p.Deck.Count+p.Graveyard.Count+p.EnergyZone.Count+p.Occupied+p.Board.Sum(m=>m.Attachments.Count+m.Under.Count+m.ShieldCards.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
 
     // Self-play positions at quiescent points across several matches.
     internal static IEnumerable<GameEngine> Positions(CardDatabase cards,int matches=6,int every=7)

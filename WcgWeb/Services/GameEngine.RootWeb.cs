@@ -2,7 +2,7 @@ using WcgWeb.Models;
 namespace WcgWeb.Services;
 
 // 新流派「根脈連營」（生機＋中立，WCG-355–363，2026-10-24）：五格排滿，用 ← → 箭頭串成一條根脈，整排互相餵養。
-// Everything is read from the arrows on the table plus the existing DP／聖盾指示物, so no new counter is needed.
+// Everything is read from the arrows on the table plus the DP cards and 聖盾 sources under the monsters, so no counter is needed.
 // Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
@@ -15,10 +15,10 @@ public partial class GameEngine
         Player.Field.Concat(Computer.Field).Any(s => s != unit && Active(s, id) && PointsAt(Owner(s), s, owner, unit));
     // 357 根脈樞紐: +400 PP for each arrow pointing at it.
     private int RootPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-357" ? 400 * ArrowsAt(p, m) : BloodPower(p, m);
-    // 357's arrows: the monsters they point at get +1 DP while pointed at (no counter).
+    // 357's arrows: the monsters they point at get +1 DP while pointed at (the arrow itself, no DP card).
     private int RootDp(PlayerState p, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Count(s => s != unit && Active(s, "WCG-357") && PointsAt(Owner(s), s, p, unit));
-    // 356 連枝守衛: pointed at by 2 or more arrows is a 聖盾 source (1 counter each time it starts applying).
+    // 356 連枝守衛: pointed at by 2 or more arrows, it has 聖盾 (each creature pointing at it is a source).
     private bool RootShield(PlayerState p, MonsterInstance unit) => Active(unit, "WCG-356") && ArrowsAt(p, unit) >= 2;
     // 362 擠枝新芽: played from hand, it only goes into an empty slot between two of your monsters.
     private bool RootSlotAllowed(PlayerState p, CardDefinition card, int slot) => card.Id != "WCG-362" ||
@@ -38,19 +38,19 @@ public partial class GameEngine
         {
             case "WCG-361": OptionalTarget(p, RootReturnTitle, p.Field.Where(x => x != m && x.IsUnit), Bounce); break;
             case "WCG-363":
-                foreach (var x in p.Field.Where(x => x.IsUnit && ArrowsAt(p, x) > 0).ToArray()) AddDpCounter(x, m.Card);
+                foreach (var x in p.Field.Where(x => x.IsUnit && ArrowsAt(p, x) > 0).ToArray()) AddDpCards(p, x, m.Card);
                 break;
             default: return BloodDeploy(p, m);
         }
         return true;
     }
-    // 359 斷根反噬: the monsters its arrows pointed at each get 1 DP 指示物, and the enemy player takes 1 damage.
+    // 359 斷根反噬: the monsters its arrows pointed at each get 1 DP card from your deck bottom, and the enemy player takes 1 damage.
     private bool RootDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
         if (m.Card.Id != "WCG-359" || m.IsSilenced) return MireDeath(p, m, grave);
         var row = m.Turned ? GetOpponent(p) : p;
         Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
-        foreach (var x in RowUnits(row).Where(x => x.IsUnit && (x.Slot == m.Slot - 1 || x.Slot == m.Slot + 1)).ToArray()) AddDpCounter(x, m.Card);
+        foreach (var x in RowUnits(row).Where(x => x.IsUnit && (x.Slot == m.Slot - 1 || x.Slot == m.Slot + 1)).ToArray()) AddDpCards(p, x, m.Card);
         Damage(GetOpponent(p), 1, new(p, m.Card, null, "death"));
         return true;
     }

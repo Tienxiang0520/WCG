@@ -58,7 +58,7 @@ public partial class GameEngine
             var unit=side.Board.FirstOrDefault(m=>m.InstanceId==id); if(unit==null)return Fail("指定卡片已離場。");
             if(type=="training-ready") { unit.IsTapped=false; unit.HasAttacked=false; unit.HasSummoningSickness=false; }
             else if(type=="training-tap")unit.IsTapped=true;
-            else { side.Field.Remove(unit);side.Structures.Remove(unit);ReleaseAttachments(unit);side.Graveyard.Add(new(unit.Card){InstanceId=unit.InstanceId}); }
+            else { side.Field.Remove(unit);side.Structures.Remove(unit);LeavePlay(unit);side.Graveyard.Add(new(unit.Card){InstanceId=unit.InstanceId}); }
             Log("已調整測試卡片狀態（不觸發死亡效果）。","action"); return true;
         }
         var card=_cardDb.GetCard(edit.CardId??"");if(card==null)return Fail("請選擇卡片。");

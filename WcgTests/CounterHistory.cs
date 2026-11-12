@@ -52,8 +52,17 @@ internal static class CounterHistory
     // Catalog before 鐵皮巨獸 (WCG-343) DP 3→2.
     // Catalog before the 命運翻牌 cards WCG-418–426 existed.
     // Catalog before 鐵皮巨獸 (WCG-343) DP 3→2 (2026-11-05); only its DP and design note changed.
+    // Catalog before 指示物改用牌組裡的卡 (2026-11-12; text, keywords, arrows and design notes of 64 cards).
+    internal static CardDatabase BeforeDeckCards(CardDatabase current)
+    {
+        if(current.GetCard("WCG-410")?.Text.Contains("牌庫底")!=true)return current;
+        var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-deck-cards.json"));
+        var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
+        return new(JsonSerializer.Serialize(current.AllCards.Select(c=>overrides.GetValueOrDefault(c.Id,c))),JsonSerializer.Serialize(current.PresetDecks));
+    }
     internal static CardDatabase BeforeIronhideDp(CardDatabase current)
     {
+        current=BeforeDeckCards(current);
         if(current.GetCard("WCG-343")?.DP!=2)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-ironhide-dp.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
