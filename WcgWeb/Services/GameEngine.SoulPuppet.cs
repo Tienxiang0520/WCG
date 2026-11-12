@@ -3,7 +3,7 @@ namespace WcgWeb.Services;
 
 // 新流派「奪魂傀儡」（深淵＋理智，WCG-328–336，2026-10-24）：把對手的怪物搶過來，用它打對手，用完就把它獻祭掉。
 // Physical record: temporary control leaves the card in its owner's row turned 180° (Turned) and turns it back at the end
-// of turn ControlUntil; 335 moves the card into an empty slot of yours with a 奪魂指示物 (SoulCounter). A monster you
+// of turn ControlUntil; 335 moves the card into an empty slot of yours and 王座篡奪 itself is attached under it (SoulSpell). A monster you
 // control but don't own (OwnerId set) leaves play to its owner's graveyard or hand. Only catalogs from that day contain
 // these ids, and only they can steal, so older eras never reach this code.
 public partial class GameEngine
@@ -25,8 +25,8 @@ public partial class GameEngine
         var from = Owner(m);
         if (ReferenceEquals(from, p)) return;
         from.Field.Remove(m); p.Field.Add(m);
-        if (m.OwnerId == p.Id) { m.OwnerId = null; m.Turned = false; m.ControlUntil = -1; m.SoulCounter = false; }
-        else { m.OwnerId ??= from.Id; if (!m.SoulCounter) m.Turned = true; m.ControlUntil = m.SoulCounter ? -1 : until; }
+        if (m.OwnerId == p.Id) { m.OwnerId = null; m.Turned = false; m.ControlUntil = -1; DropSoul(m); }
+        else { m.OwnerId ??= from.Id; if (!m.SoulSpell) m.Turned = true; m.ControlUntil = m.SoulSpell ? -1 : until; }
         if (ready) ReadyMonster(m);
         if (noAttack) m.AttackBanned = true;
         RefreshBoard();
@@ -39,10 +39,15 @@ public partial class GameEngine
         var ctrl = Owner(m); var home = PlayerById(m.OwnerId);
         if (ReferenceEquals(ctrl, home)) { m.OwnerId = null; m.Turned = false; return; }
         ctrl.Field.Remove(m); home.Field.Add(m);
-        m.OwnerId = null; m.Turned = false; m.ControlUntil = -1; m.SoulCounter = false;
+        m.OwnerId = null; m.Turned = false; m.ControlUntil = -1; DropSoul(m);
         RefreshBoard();
         Present("status", home, m.InstanceId, card: m.Card, label: "控制權歸還（轉回）");
         Log($"【{m.Card.Name}】回到【{home.Name}】的控制。", "action");
+    }
+    // Control went back to the owner some other way: 王座篡奪 under it goes to the graveyard.
+    private void DropSoul(MonsterInstance m)
+    {
+        foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-335").ToArray()) { m.Attachments.Remove(a); PlayerById(a.OwnerId).Graveyard.Add(a.Card); }
     }
     // End of every turn: monsters whose temporary control ends this turn turn back (tapped stays tapped).
     private void SoulReturnControl()
@@ -136,7 +141,7 @@ public partial class GameEngine
                 break;
             case "WCG-335":
                 if (t == null || !Alive(t) || !e.Field.Contains(t) || p.Occupied >= 5) break;
-                ChooseSlot(p, t.Card, slot => Usurp(p, t, slot, source.Card));
+                ChooseSlot(p, t.Card, slot => Usurp(p, t, slot, source));
                 break;
             case "WCG-336":
                 var foreign = SpellResolvePickable(p, p.Field.Where(x => x.IsUnit && Foreign(p, x)));
@@ -148,20 +153,21 @@ public partial class GameEngine
         RefreshBoard();
         return true;
     }
-    // 335 王座篡奪: the card moves into your empty slot keeping its tapped state, with a 奪魂指示物; you control it for good.
-    // Like any monster that changes sides it can't attack the turn you take it.
-    private void Usurp(PlayerState p, MonsterInstance t, int slot, CardDefinition source)
+    // 335 王座篡奪: the card moves into your empty slot keeping its tapped state and 王座篡奪 is put under it; you control it for good.
+    // Taking back a monster you own leaves 王座篡奪 in the graveyard. Like any monster that changes sides it can't attack the turn you take it.
+    private void Usurp(PlayerState p, MonsterInstance t, int slot, CardInstance spell)
     {
         var e = Owner(t);
         if (!Alive(t) || ReferenceEquals(e, p) || RowTaken(p, slot)) return;
         e.Field.Remove(t); p.Field.Add(t);
         var owner = t.OwnerId ?? e.Id;
         t.Slot = slot; t.Turned = false; t.ControlUntil = -1;
-        if (owner == p.Id) { t.OwnerId = null; t.SoulCounter = false; }
-        else { t.OwnerId = owner; t.SoulCounter = true; }
+        var source = spell.Card;
+        if (owner == p.Id) { t.OwnerId = null; DropSoul(t); }
+        else { t.OwnerId = owner; if (p.Graveyard.Remove(spell)) t.Attachments.Add(new(spell, p.Id)); }
         t.AttackBanned = true;
         RefreshBoard();
-        Present("status", p, t.InstanceId, card: source, label: t.SoulCounter ? "放置奪魂指示物：永久控制" : "取得控制權");
+        Present("status", p, t.InstanceId, card: source, label: t.SoulSpell ? "王座篡奪放在它底下：永久控制" : "取得控制權");
         Log($"【{p.Name}】永久取得【{t.Card.Name}】的控制權。", "action");
     }
     private string SoulPlayProblem(PlayerState p, CardDefinition c) => c.Id switch

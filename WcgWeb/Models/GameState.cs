@@ -28,6 +28,13 @@ public record StatSource(CardDefinition? Source, string Label, int Amount);
 
 public record AttachedSpell(CardInstance Card, string OwnerId, int? ExpireTurn = null);
 
+// 墊牌 (2026-11-12): persistent state is shown only with cards from the decks. A face-down card taken from its owner's deck
+// bottom (never looked at) sits under a monster or structure; it goes back to that deck's bottom when removed or when the card
+// leaves play. Countdown cards lie straight (aligned with the card), DP cards sideways; 血誓 only sits under 血誓祭壇 and
+// 聖泉 only under 聖泉之井.
+public enum UnderKind { Countdown, Dp, BloodOath, HolySpring }
+public record UnderCard(CardInstance Card, string OwnerId, UnderKind Kind);
+
 public class MonsterInstance
 {
     public Guid InstanceId { get; set; } = Guid.NewGuid();
@@ -43,10 +50,11 @@ public class MonsterInstance
     public bool ShieldQualified { get; set; }
     // 聖盾 used this turn (simplified rules); every monster refreshes at each turn change.
     public bool ShieldSpent { get; set; }
-    // 聖盾指示物 (2026-10-17 catalog): counters on the card, the 聖盾 sources already counted, and whether it was silenced last check.
-    public int ShieldCounters { get; set; }
-    public HashSet<string> ShieldSources { get; set; } = [];
-    public bool WasSilenced { get; set; }
+    // 聖盾來源 (2026-11-12): hand cards put face up under this monster as 聖盾 sources (133／264／270／413). Attached 聖盾 spells
+    // stay in Attachments; creatures giving 聖盾 with their arrows are found on the board. Being attacked sends one source to the graveyard.
+    public List<AttachedSpell> ShieldCards { get; set; } = [];
+    // 269／272: this combat (started by its own entry) can't destroy it; cleared when that combat ends.
+    public bool CombatProtected { get; set; }
     public int NextCombatBonus { get; set; }
     public int TurnBonus { get; set; }
     // Display only (stat breakdown): which cards gave TurnBonus / NextCombatBonus. Never read by rules or AI.
@@ -59,33 +67,33 @@ public class MonsterInstance
     public int AttackDamageBonus { get; set; }
     private int baseDP;
     public int BaseDP => baseDP;
-    // 重蹄碾壓 (WCG-337–345): DP 指示物 on the card (+1 DP each, removed when it leaves play — a new instance starts at 0),
-    // DP from attachments (set by RefreshBoard) and 「本回合」 DP (cleared at every turn change).
-    public int DpCounters { get; set; }
+    // Face-down cards under this card (墊牌): countdown, DP, 血誓 and 聖泉 cards, each from its owner's deck bottom.
+    public List<UnderCard> Under { get; set; } = [];
+    public int UnderCount(UnderKind kind) => Under.Count(u => u.Kind == kind);
+    // 重蹄碾壓 (WCG-337–345): DP cards lying sideways under the monster (+1 DP each, back to the deck bottom when it leaves play),
+    // DP from attachments and arrows (set by RefreshBoard) and 「本回合」 DP (cleared at every turn change).
+    public int DpCards => UnderCount(UnderKind.Dp);
     public int DpBonus { get; set; }
     public int TurnDpBonus { get; set; }
     // 「本回合嘲諷擋不住它」 (340／345); cleared at every turn change.
     public bool TurnUnblockable { get; set; }
-    public int CurrentDP { get => baseDP + DpCounters + DpBonus + TurnDpBonus + AttackDamageBonus; set => baseDP = value; }
+    public int CurrentDP { get => baseDP + DpCards + DpBonus + TurnDpBonus + AttackDamageBonus; set => baseDP = value; }
     public bool HasAttacked { get; set; }
     // 奪魂傀儡 (WCG-328–336): control of an opponent's monster. OwnerId is the owning player while someone else controls it
     // (null = its controller owns it). Turned = temporary control: the card stays in its owner's row turned 180°, at Slot,
-    // and goes back at the end of turn ControlUntil. SoulCounter = 335's permanent steal (moved into the controller's row).
+    // and goes back at the end of turn ControlUntil. 王座篡奪 (335) attached under it = permanent steal (moved into the controller's row).
     public string? OwnerId { get; set; }
     public bool Turned { get; set; }
     public int ControlUntil { get; set; } = -1;
-    public bool SoulCounter { get; set; }
-    // 血誓指示物 on 364 血誓祭壇 (血誓反擊). They sit on the structure and leave play with it; silence never touches them.
-    public int BloodCounters { get; set; }
-    // 腐蝕指示物 (腐沼蔓生, WCG-382–390): -300 PP each, stacking; removed by silence, dispel, or leaving play.
-    public int CorrosionCounters { get; set; }
-    // 聖泉指示物 on 403 聖泉之井 (聖泉滿溢). They sit on the structure and leave play with it; silence never touches them.
-    public int SpringCounters { get; set; }
-    // 405 泉誓騎士: DP counters gained this turn (at most 2).
+    public bool SoulSpell => Attachments.Any(a => a.Card.Card.Id == "WCG-335");
+    // 血誓 cards under 364 血誓祭壇 and 聖泉 cards under 403 聖泉之井: they leave play with the structure; silence never touches them.
+    public int BloodCards => UnderCount(UnderKind.BloodOath);
+    public int SpringCards => UnderCount(UnderKind.HolySpring);
+    // 405 泉誓騎士: DP cards gained this turn (at most 2).
     public int SpringDpTurn { get; set; } = -1;
     public int SpringDpCount { get; set; }
-    // 倒數指示物 (星律倒數) on a monster or structure; removing the last one triggers the card. Silence removes them without triggering.
-    public int Countdown { get; set; }
+    // 倒數牌 (星律倒數) under a monster or structure; removing the last one triggers the card. Silence returns them without triggering.
+    public int CountdownCards => UnderCount(UnderKind.Countdown);
     // 怒濤連擊 (WCG-391–399), all reset at every turn change: attacks made this turn (397), times readied by its own text
     // (394／399 limits), 396's "can't attack the enemy player this turn", and whether this 398 has readied a monster this turn.
     public int SurgeAttacks { get; set; }

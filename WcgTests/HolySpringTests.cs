@@ -6,7 +6,7 @@ using WcgWeb.Models;
 using WcgWeb.Services;
 namespace WcgTests;
 
-// 新流派「聖泉滿溢」（WCG-400–408，2026-10-25）：每回復 1 點生命在聖泉之井放 1 個聖泉指示物（超過上限也算）。
+// 新流派「聖泉滿溢」（WCG-400–408，2026-10-25）：每回復 1 點生命，從牌庫底在聖泉之井底下墊 1 張聖泉（超過上限也算；2026-11-12 起不用指示物）。
 public class HolySpringTests
 {
     private readonly CardDatabase cards;
@@ -30,15 +30,15 @@ public class HolySpringTests
     [Fact] public void WellStoresEveryPointHealedIncludingOverflow()
     {
         var g=Game();var well=Structure(g.Player,403,4);g.Player.Hp=6;
-        Heal(g,g.Player,3);Assert.Equal(7,g.Player.Hp);Assert.Equal(3,well.SpringCounters);
+        Heal(g,g.Player,3);Assert.Equal(7,g.Player.Hp);Assert.Equal(3,well.SpringCards);
         Assert.True(g.CanActivate(g.Player,well));var hand=g.Player.Hand.Count;Assert.True(g.Activate(g.Player,well));Settle(g);
-        Assert.Equal(1,well.SpringCounters);Assert.Equal(hand+1,g.Player.Hand.Count);Assert.True(well.IsTapped);
+        Assert.Equal(1,well.SpringCards);Assert.Equal(hand+1,g.Player.Hand.Count);Assert.True(well.IsTapped);
     }
     [Fact] public void DelugeHealsFirstThenDealsOneDamagePerTwoCounters()
     {
-        var g=Game();var well=Structure(g.Player,403,4);well.SpringCounters=7;var hp=g.Computer.Hp;
+        var g=Game();var well=Structure(g.Player,403,4);well.Pad(g.Player,UnderKind.HolySpring,7);var hp=g.Computer.Hp;
         Assert.True(g.CastSpell(g.Player,Hand(g,408)));Settle(g);
-        Assert.Equal(hp-4,g.Computer.Hp);Assert.Equal(0,well.SpringCounters);
+        Assert.Equal(hp-4,g.Computer.Hp);Assert.Equal(0,well.SpringCards);
     }
     [Fact] public void PrayerDrawsOnlyAtFullLife()
     {
@@ -53,10 +53,10 @@ public class HolySpringTests
         var g2=Game();var small=Unit(g2.Computer,101,0);Refresh(g2);Heal(g2,g2.Player,2);
         Assert.True(g2.CastSpell(g2.Player,Hand(g2,406)));Settle(g2);Assert.DoesNotContain(small,g2.Computer.Field);
     }
-    [Fact] public void KnightGainsAtMostTwoDpCountersPerTurn()
+    [Fact] public void KnightGainsAtMostTwoDpCardsPerTurn()
     {
         var g=Game();var k=Unit(g.Player,405,0);Refresh(g);
-        for(int i=0;i<4;i++)Heal(g,g.Player,1);Assert.Equal(2,k.DpCounters);
+        for(int i=0;i<4;i++)Heal(g,g.Player,1);Assert.Equal(2,k.DpCards);
     }
     [Fact] public void AcolyteBuffsWhatItsArrowsPointAtOnHeal()
     {
@@ -73,9 +73,11 @@ public class HolySpringTests
     {
         var g=Game();Unit(g.Player,404,0);g.Player.Hp=4;Assert.True(g.EndTurn());Settle(g);Assert.Equal(5,g.Player.Hp);
     }
-    [Fact] public void PrintToolsAddASpringSheetForSpringDecks()
+    [Fact] public void SilenceLeavesSpringCardsAloneAndTheWellReturnsThemWhenItLeaves()
     {
-        var plan=new DeckPrintPlan("t","秩序",[new PrintedCard("WCG-403","聖泉之井","結界","秩序",2,null,null,"")]);
-        Assert.Equal(0,DeckPrintTools.Defaults(plan with {Cards=[]})[PrintTool.SpringTokens]);Assert.Equal(1,DeckPrintTools.Defaults(plan)[PrintTool.SpringTokens]);
+        var g=Game();var well=Structure(g.Player,403,4);Refresh(g);var deck=g.Player.Deck.Count;
+        Heal(g,g.Player,2);Assert.Equal(2,well.SpringCards);Assert.Equal(deck-2,g.Player.Deck.Count);Assert.All(well.Under,u=>Assert.Equal(UnderKind.HolySpring,u.Kind));
+        typeof(GameEngine).GetMethod("DestroyStructure",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[well]);
+        Assert.Equal(deck,g.Player.Deck.Count);
     }
 }

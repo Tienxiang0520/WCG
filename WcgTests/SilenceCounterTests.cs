@@ -17,36 +17,37 @@ public class SilenceCounterTests
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
     private static void Settle(GameEngine g,MonsterInstance? pick=null){for(int i=0;i<50&&g.IsWaiting;i++){if(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.FirstOrDefault(o=>o.Id.StartsWith("SLOT:"))??c.Options.FirstOrDefault(o=>o.Id!="SKIP")??c.Options[0]));else{var t=g.CurrentPendingTarget!;var m=pick!=null&&t.Validator!(pick)?pick:g.Player.Board.Concat(g.Computer.Board).First(x=>t.Validator!(x));Assert.True(g.SelectTarget(m));}}}
 
-    [Fact] public void SilenceRemovesDpCountersOnlyInTheNewEra()
+    [Fact] public void SilenceReturnsDpCardsOnlyInTheNewEra()
     {
         foreach(var (db,expected) in new[]{(cards,0),(CardBalanceHistory.BeforeSilenceCounters(cards),2)})
         {
-            var g=Game(db);var foe=Unit(g.Computer,db,101,1);foe.DpCounters=2;Refresh(g);
+            var g=Game(db);var foe=Unit(g.Computer,db,101,1);foe.Pad(g.Computer,UnderKind.Dp,2);var deck=g.Computer.Deck.Count;Refresh(g);
             Assert.True(g.CastSpellAt(g.Player,Hand(g,db,72),foe));Settle(g,foe);
-            Assert.True(foe.IsSilenced);Assert.Equal(expected,foe.DpCounters);
+            Assert.True(foe.IsSilenced);Assert.Equal(expected,foe.DpCards);Assert.Equal(deck+2-expected,g.Computer.Deck.Count);
         }
     }
     [Fact] public void SilencedUsurpedMonsterGoesBackToItsOwner()
     {
         var g=Game(cards);var foe=Unit(g.Computer,cards,113,2);Refresh(g);
         Assert.True(g.CastSpellAt(g.Player,Hand(g,cards,335),foe));Settle(g);
-        Assert.Contains(foe,g.Player.Field);Assert.True(foe.SoulCounter);
+        Assert.Contains(foe,g.Player.Field);Assert.True(foe.SoulSpell);
         Unit(g.Computer,cards,101,2);Refresh(g); // its old slot is taken now: it goes to the nearest empty one
         Assert.True(g.CastSpellAt(g.Player,Hand(g,cards,72),foe));Settle(g,foe);
-        Assert.Contains(foe,g.Computer.Field);Assert.False(foe.SoulCounter);Assert.Null(foe.OwnerId);Assert.NotEqual(2,foe.Slot);Assert.True(foe.IsSilenced);
+        Assert.Contains(foe,g.Computer.Field);Assert.False(foe.SoulSpell);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-335");Assert.DoesNotContain(foe.Attachments,a=>a.Card.Card.Id=="WCG-335");Assert.Null(foe.OwnerId);Assert.NotEqual(2,foe.Slot);Assert.True(foe.IsSilenced);
     }
-    [Fact] public void DispelledUsurpedMonsterGoesBackAndOldEraKeepsIt()
+    // The pre-2026-10-24 era that kept a dispelled usurped monster used integer counters and is retired (2026-11-12).
+    [Fact] public void DispelledUsurpedMonsterGoesBack()
     {
-        foreach(var (db,back) in new[]{(cards,true),(CardBalanceHistory.BeforeSilenceCounters(cards),false)})
+        foreach(var (db,back) in new[]{(cards,true)})
         {
             var g=Game(db);var foe=Unit(g.Computer,db,113,2);Unit(g.Computer,db,101,0);Refresh(g);
-            Assert.True(g.CastSpellAt(g.Player,Hand(g,db,335),foe));Settle(g);Assert.True(foe.SoulCounter);
+            Assert.True(g.CastSpellAt(g.Player,Hand(g,db,335),foe));Settle(g);Assert.True(foe.SoulSpell);
             var targets=(IEnumerable<MonsterInstance>)typeof(GameEngine).GetMethod("DispelTargets",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Computer])!;
             Assert.Equal(back,targets.Contains(foe));
             if(!back)continue;
             typeof(GameEngine).GetMethod("Dispel",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[g.Computer,true]);
             Assert.True(g.CurrentPendingTarget!.Validator!(foe));Assert.True(g.SelectTarget(foe));Settle(g);
-            Assert.Contains(foe,g.Computer.Field);Assert.False(foe.SoulCounter);Assert.Equal(1,foe.Slot); // nearest empty slot of its owner to where it stood (slot 0)
+            Assert.Contains(foe,g.Computer.Field);Assert.False(foe.SoulSpell);Assert.Equal(1,foe.Slot); // nearest empty slot of its owner to where it stood (slot 0)
         }
     }
     [Fact] public void OldEraOnlyChangesUsurpText()

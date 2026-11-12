@@ -35,18 +35,19 @@ public class OathDuelTests
         foreach(var n in new[]{264,265,266,269,270,272}){var c=cards.GetCard($"WCG-{n}")!;Assert.True(c.PP<vanilla[c.TotalCost],c.Id);Assert.Equal("秩序",c.Will);}
         Assert.DoesNotContain(cards.AllCards.Where(c=>CardBalanceHistory.IsOathDuelCard(c.Id)).SelectMany(c=>c.Keywords),k=>k is not ("聖盾"));
     }
-    [Fact] public void WitnessGivesAFriendlyMonsterACounter()
+    [Fact] public void WitnessPutsAHandCardUnderAFriendlyMonster()
     {
-        var g=Game();var ally=Unit(g.Player,101,1);Refresh(g);var w=Summon(g,264,0);
-        Assert.Equal(GameEngine.ShieldGiftTitle,g.CurrentPendingTarget!.Title);Assert.True(g.SelectTarget(ally));
-        Assert.Equal(1,ally.ShieldCounters);Assert.True(ally.HasShield);Assert.Equal(0,w.ShieldCounters);
-        Refresh(g);Assert.Equal(1,ally.ShieldCounters); // a manual counter is not recounted by RefreshBoard
+        var g=Game();var ally=Unit(g.Player,101,1);var card=Hand(g,101);Refresh(g);var w=Summon(g,264,0);
+        Assert.Equal(GameEngine.ShieldGiftTitle,g.CurrentPendingChoice!.Title);Choose(g,o=>o.Id==ally.InstanceId.ToString());
+        Assert.Equal(GameEngine.ShieldCardTitle,g.CurrentPendingChoice!.Title);Choose(g,o=>o.Id==card.InstanceId.ToString());
+        Assert.Equal(card,ally.ShieldCards.Single().Card);Assert.DoesNotContain(card,g.Player.Hand);Assert.True(ally.HasShield);Assert.Empty(w.ShieldCards);
+        Refresh(g);Assert.Equal(1,g.ShieldSourceCount(ally)); // the card stays under it until it is spent
     }
     [Fact] public void SquireDrawsWhenItSurvivesACombat()
     {
-        var g=Game();var squire=Unit(g.Player,265,0);var foe=Unit(g.Computer,101,2);Refresh(g);Assert.Equal(1,squire.ShieldCounters);
+        var g=Game();var squire=Unit(g.Player,265,0);var foe=Unit(g.Computer,101,2);squire.Attachments.Add(new(new(cards.GetCard("WCG-271")!),g.Player.Id));Refresh(g);Assert.False(squire.HasShield); // 700 + 400 beats 1000: no 聖盾 needed
         var hand=g.Player.Hand.Count;Assert.True(g.Attack(g.Player,squire,foe));Settle(g);
-        Assert.Contains(squire,g.Player.Field);Assert.Equal(0,squire.ShieldCounters);Assert.Equal(hand+1,g.Player.Hand.Count);
+        Assert.Contains(squire,g.Player.Field);Assert.Equal(hand+1,g.Player.Hand.Count);
     }
     [Fact] public void ChallengerDuelsOnEntryPastTauntAndMaySkip()
     {
@@ -76,17 +77,17 @@ public class OathDuelTests
         var g2=Game();var m2=Unit(g2.Player,155,0);var foe=Unit(g2.Computer,101,1);Refresh(g2);var decl=Hand(g2,230);
         Assert.True(g2.CastSpellAt(g2.Player,decl,m2));Assert.True(g2.SelectTarget(foe));AssertLunge(g2,m2,foe,0);Settle(g2);Assert.DoesNotContain(foe,g2.Computer.Field);
     }
-    [Fact] public void ChampionDuelsABigTauntAndSurvivesWithItsCounter()
+    [Fact] public void ChampionDuelsABigTauntAndSurvivesThatDuel()
     {
-        var g=Game();var wall=Unit(g.Computer,113,0);Refresh(g);var champ=Summon(g,269,0);Assert.Equal(1,champ.ShieldCounters);
-        Duel(g,wall);Settle(g);Assert.DoesNotContain(wall,g.Computer.Field);Assert.Contains(champ,g.Player.Field);Assert.Equal(0,champ.ShieldCounters);
+        var g=Game();var wall=Unit(g.Computer,113,0);Refresh(g);var champ=Summon(g,269,0);Assert.False(champ.HasShield);
+        Duel(g,wall);Settle(g);Assert.DoesNotContain(wall,g.Computer.Field);Assert.Contains(champ,g.Player.Field);Assert.False(champ.CombatProtected);
     }
     [Fact] public void DuelOfHonorShieldsTapsAndFights()
     {
         var g=Game();var mine=Unit(g.Player,101,0);var big=Unit(g.Computer,155,1);Refresh(g);var spell=Hand(g,267);
         Assert.Contains(mine,g.GetDirectPlayTargets(g.Player,spell));Assert.True(g.CastSpellAt(g.Player,spell,mine));
         Assert.True(g.SelectTarget(big));Settle(g);
-        Assert.Contains(mine,g.Player.Field);Assert.True(mine.IsTapped);Assert.Equal(0,mine.ShieldCounters);Assert.Contains(big,g.Computer.Field);
+        Assert.Contains(mine,g.Player.Field);Assert.True(mine.IsTapped);Assert.DoesNotContain(mine.Attachments,a=>a.Card==spell);Assert.Contains(spell,g.Player.Graveyard);Assert.Contains(big,g.Computer.Field);
         var tapped=Unit(g.Player,155,2,tapped:true);var spell2=Hand(g,267);Assert.DoesNotContain(tapped,g.GetDirectPlayTargets(g.Player,spell2));
     }
     [Fact] public void ArenaDuelsAnyEnemyMonsterAndTapsBoth()
@@ -111,8 +112,10 @@ public class OathDuelTests
     [Fact] public void StandardBearerShieldsAVictorOncePerTurn()
     {
         var g=Game();var flag=Unit(g.Player,270,0);var a=Unit(g.Player,155,1);var b=Unit(g.Player,155,2);var f1=Unit(g.Computer,101,0);var f2=Unit(g.Computer,101,1);Refresh(g);
-        Assert.True(g.Attack(g.Player,a,f1));Settle(g);Assert.Equal(1,a.ShieldCounters);
-        Assert.True(g.Attack(g.Player,b,f2));Settle(g);Assert.Equal(0,b.ShieldCounters);Assert.Equal(1,a.ShieldCounters);
+        var c1=Hand(g,101);Hand(g,101);
+        Assert.True(g.Attack(g.Player,a,f1));Assert.Equal(GameEngine.ShieldCardTitle,g.CurrentPendingChoice!.Title);Choose(g,o=>o.Id==c1.InstanceId.ToString());Settle(g);
+        Assert.Equal(c1,a.ShieldCards.Single().Card);
+        Assert.True(g.Attack(g.Player,b,f2));Settle(g);Assert.Empty(b.ShieldCards);Assert.Single(a.ShieldCards);
     }
     [Fact] public void DuelingBladeAddsFourHundredUntilItsMonsterFights()
     {

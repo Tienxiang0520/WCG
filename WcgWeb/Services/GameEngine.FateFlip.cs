@@ -24,7 +24,7 @@ public partial class GameEngine
             actions.Add(() =>
             {
                 if (!Alive(s) || !Active(s, "WCG-423")) return;
-                if (c.Card.IsSpell) AddDpCounter(s, s.Card);
+                if (c.Card.IsSpell) AddDpCards(p, s, s.Card);
                 else if (c.Card.IsMonster) AddTurnBonus(s, 300, s.Card);
             });
         if (c.Card.TotalCost >= 5)

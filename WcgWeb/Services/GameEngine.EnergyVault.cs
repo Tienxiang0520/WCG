@@ -73,7 +73,7 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-301": HideFromHand(p, HideMonsterTitle, c => c.Card.IsMonster, true); break;
-            case "WCG-304": if (p.EnergyZone.Count >= 5) GainShieldCounter(m, m.Card); break;
+            case "WCG-304": break;
             case "WCG-308":
                 var energy = RealEnergy(p).ToList();
                 if (energy.Count == 0) break;

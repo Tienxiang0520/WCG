@@ -15,7 +15,7 @@ public class SpellWardTargetingTests
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private MonsterInstance Unit(PlayerState p,int n,int slot){var m=new MonsterInstance(cards.GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);return m;}
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
-    private MonsterInstance Warden(GameEngine g,PlayerState p,int slot){var w=Unit(p,413,slot);w.Countdown=2;return w;}
+    private MonsterInstance Warden(GameEngine g,PlayerState p,int slot){var w=Unit(p,413,slot);w.Pad(p,UnderKind.Countdown,2);return w;}
 
     [Fact] public void SilenceSpell208CannotTargetTickingWardenOr152()
     {
@@ -23,7 +23,7 @@ public class SpellWardTargetingTests
         var spell=Hand(g,208);var targets=g.GetDirectPlayTargets(g.Player,spell);
         Assert.DoesNotContain(w,targets);Assert.DoesNotContain(golem,targets);Assert.Contains(foe,targets);
         Assert.False(g.CastSpellAt(g.Player,spell,w));Assert.False(w.IsSilenced);
-        w.Countdown=0;Assert.Contains(w,g.GetDirectPlayTargets(g.Player,spell));
+        w.Under.Clear();Assert.Contains(w,g.GetDirectPlayTargets(g.Player,spell));
     }
     [Fact] public void Spell248SecondPickSkipsTickingWarden()
     {
@@ -41,11 +41,11 @@ public class SpellWardTargetingTests
     {
         var g=Game();var w=Warden(g,g.Player,0);Refresh(g);var hand=g.Player.Hand.Count;
         Assert.True(g.CastSpell(g.Player,Hand(g,412)));
-        Assert.Null(g.CurrentPendingTarget);Assert.Equal(2,w.Countdown);Assert.Equal(hand+1,g.Player.Hand.Count);
+        Assert.Null(g.CurrentPendingTarget);Assert.Equal(2,w.CountdownCards);Assert.Equal(hand+1,g.Player.Hand.Count);
     }
-    [Fact] public void AreaSpell384StillCorrodesWarden()
+    [Fact] public void AreaSpell384StillShrinksWarden()
     {
         var g=Game();var w=Warden(g,g.Computer,0);Refresh(g);
-        Assert.True(g.CastSpell(g.Player,Hand(g,384)));Assert.True(w.CorrosionCounters>0);
+        Assert.True(g.CastSpell(g.Player,Hand(g,384)));Assert.Equal(-300,w.TurnBonus);
     }
 }

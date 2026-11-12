@@ -138,27 +138,31 @@ public static class TutorialLessons
         new()
         {
             Id = "shield", Icon = "shield", Title = "聖盾與箭頭",
-            Summary = "聖盾放 1 個指示物，交戰 1 次就用掉；學會用箭頭把聖盾交給相鄰的隊友。",
-            Topics = ["聖盾", "聖盾指示物", "箭頭 ← → ↑", "固定格位"],
+            Summary = "聖盾來自卡底下的聖盾法術、手牌或箭頭；被攻擊時用掉 1 個來源。學會用箭頭把聖盾交給相鄰的隊友。",
+            Topics = ["聖盾", "聖盾來源", "箭頭 ← → ↑", "固定格位"],
             Scene = new(
-                new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-155", 1)] }),
+                new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2), new("WCG-155", 4)] },
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-061", 2), new("WCG-101", 3)] }),
             Steps =
             [
-                new() { Title = "聖盾", Spot = ["own-card:WCG-154"],
-                    Text = "怪物獲得聖盾時，在牌上放 1 個聖盾指示物。它每次交戰（攻擊或受到攻擊）時，不論會不會被消滅，都要移除 1 個指示物，並在這次交戰中存活。指示物用掉就沒了，不會每回合補回。" },
+                new() { Title = "聖盾", Spot = ["enemy-card:WCG-061", "enemy-card:WCG-101"],
+                    Text = "有聖盾的怪物被攻擊時，這次交戰不會被消滅，但要把 1 個給它聖盾的來源送入墓地：底下的聖盾法術、正面朝上放在底下的手牌，或用箭頭給它聖盾的生物。有多個來源時由控制者選。攻擊別人時不會用掉聖盾，聖盾也不會每回合補回。" },
                 new() { Title = "放對格位", Spot = ["hand:WCG-061", "own:1"], Allow = [Play("WCG-061"), Slot(1)],
                     Done = e => Unit(e.Player, "WCG-061")?.Slot == 1,
                     Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-061"), CardEffect("WCG-061"), CardName("WCG-154")],
                     Hint = "請把「{0}」放在第 2 格（{1}左邊）。", HintValues = [CardName("WCG-061"), CardName("WCG-154")] },
                 new() { Title = "箭頭", Spot = ["own-card:WCG-061", "own-card:WCG-154"],
-                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了聖盾。", TextValues = [CardName("WCG-154")] },
-                new() { Title = "聖盾擋下", Spot = ["own-card:WCG-154", "enemy-card:WCG-155"], Allow = [Attack("WCG-154", "WCG-155")],
-                    Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true, ShieldSpent: true } && Settled(e),
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，但聖盾指示物會自動擋下這一次，然後被移除。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-155"), EnemyPP("WCG-155")],
-                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-155")] },
+                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了聖盾；對手的「{1}」也用同樣的方式保護著「{2}」。", TextValues = [CardName("WCG-154"), CardName("WCG-061"), CardName("WCG-101")] },
+                new() { Title = "聖盾擋下", Spot = ["own-card:WCG-154", "enemy-card:WCG-101"], Allow = [Attack("WCG-154", "WCG-101")],
+                    Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true } && !OnField(e.Computer, "WCG-061") && OnField(e.Computer, "WCG-101") && Settled(e),
+                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，但被攻擊時聖盾擋下這一次，給它聖盾的「{4}」進入墓地。你的「{0}」是攻擊方，聖盾不會用掉。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-101"), EnemyPP("WCG-101"), CardName("WCG-061")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-101")] },
+                new() { Title = "來源用完", Spot = ["own-card:WCG-155", "enemy-card:WCG-101"], Allow = [Attack("WCG-155", "WCG-101")],
+                    Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
+                    Text = "給予者已經進入墓地，「{0}」沒有聖盾了。用「{1}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-101"), CardName("WCG-155")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-101")] },
                 new() { Title = "本課重點",
-                    Text = "聖盾只防交戰中的消滅，指示物擋 1 次就用掉，不擋法術消滅、犧牲或返回手牌。有的怪物天生具有聖盾，也有附著法術或箭頭能給予聖盾；沉默會讓怪物失去自身的聖盾和指示物。" }
+                    Text = "聖盾只防被攻擊時的交戰消滅，每次用掉 1 個來源，不擋法術消滅、犧牲或返回手牌。沉默或驅散會把底下的聖盾來源卡送入墓地；給予聖盾的生物被沉默就不再給予，但它不會因此進墓地。" }
             ]
         },
         new()
@@ -319,8 +323,8 @@ public static class TutorialLessons
         new()
         {
             Id = "status", Icon = "eye", Title = "附著、沉默與狀態",
-            Summary = "用附著法術強化怪物，用沉默拔掉嘲諷與聖盾，再一舉擊破。",
-            Topics = ["附著法術", "沉默", "驅散", "PP 加成", "電腦的聖盾"],
+            Summary = "用附著法術強化怪物，用沉默拔掉嘲諷與箭頭，再一舉擊破。",
+            Topics = ["附著法術", "沉默", "驅散", "PP 加成", "電腦的嘲諷"],
             Scene = new(
                 new() { Hand = ["WCG-135", "WCG-072"], Deck = Deck(), Energy = 6, Board = [new("WCG-154", 2)] },
                 new() { Hp = 3, Deck = Deck(), Energy = 2, Board = [new("WCG-069", 2)] }),
@@ -333,14 +337,14 @@ public static class TutorialLessons
                     Text = "把「{0}」拖到「{1}」上，效果：{2}", TextValues = [CardName("WCG-135"), CardName("WCG-154"), CardEffect("WCG-135")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-135"), CardName("WCG-154")] },
                 new() { Title = "棘手的守衛", Spot = ["enemy-card:WCG-069"],
-                    Text = "「{0}」（{1} PP）的效果：{2} 就算你打贏它，聖盾指示物也會讓它存活一次。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
+                    Text = "「{0}」（{1} PP）的效果：{2} 嘲諷逼你先打它，它的箭頭還能把聖盾交給隊友。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
                 new() { Title = "沉默", Spot = ["hand:WCG-072", "enemy-card:WCG-069"], Allow = [Play("WCG-072", "WCG-069"), Pick("WCG-069")],
                     Done = e => Unit(e.Computer, "WCG-069") is { IsSilenced: true } && Settled(e),
-                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與聖盾。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
+                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與箭頭；底下的聖盾來源卡也會進入墓地。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-072"), CardName("WCG-069")] },
                 new() { Title = "擊破", Spot = ["own-card:WCG-154", "enemy-card:WCG-069"], Allow = [Attack("WCG-154", "WCG-069")],
                     Done = e => !OnField(e.Computer, "WCG-069"),
-                    Text = "現在用 {0} PP 的「{1}」攻擊失去聖盾的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
+                    Text = "現在用 {0} PP 的「{1}」攻擊失去嘲諷的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-069")] },
                 new() { Title = "本課重點",
                     Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：交戰後送入墓地的附著 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
@@ -348,34 +352,34 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "counters", Icon = "sigil", Title = "指示物與控制權",
-            Summary = "認識 DP、腐蝕、血誓與奪魂指示物，學會永久奪取敵方怪物，以及沉默、驅散怎麼處理它們。",
-            Topics = ["DP 指示物", "腐蝕指示物", "血誓指示物", "奪魂指示物", "暫時控制：卡轉 180 度", "沉默與驅散", "箭頭不分敵我", "對手的卡轉 180 度"],
+            Id = "counters", Icon = "sigil", Title = "卡底下的牌與控制權",
+            Summary = "認識從牌庫底墊在卡底下的 DP 牌、倒數牌、血誓與聖泉，腐蝕與王座篡奪，學會永久奪取敵方怪物，以及沉默、驅散怎麼處理它們。",
+            Topics = ["墊牌：從牌庫底背面朝上", "DP 牌（橫放）", "腐蝕：箭頭與附著", "王座篡奪放在怪物底下", "暫時控制：卡轉 180 度", "沉默與驅散", "箭頭不分敵我", "對手的卡轉 180 度"],
             Scene = new(
                 new() { Hand = ["WCG-384", "WCG-335"], Deck = Deck(), Energy = 9, Board = [new("WCG-337", 0)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-101", 1), new("WCG-155", 3)] }),
             Steps =
             [
                 new() { Title = "對手的卡", Spot = ["field"],
-                    Text = "對手的卡會轉 180 度，卡頂朝向對手，就像坐在桌子兩邊；PP 和 DP 數字照常朝向你。實體對戰時，持續的變化都用指示物記在牌上。" },
-                new() { Title = "DP 指示物", Spot = ["own-card:WCG-337", "enemy-card:WCG-101"], Allow = [Attack("WCG-337", "WCG-101")],
-                    Done = e => Unit(e.Player, "WCG-337") is { DpCounters: > 0 } && Settled(e),
-                    Text = "「{0}」的效果：{1} 用它攻擊「{2}」。DP 指示物是紅色的，每個使 DP +1，可以疊加；被沉默或離場時移除。", TextValues = [CardName("WCG-337"), CardEffect("WCG-337"), CardName("WCG-101")],
+                    Text = "對手的卡會轉 180 度，卡頂朝向對手，就像坐在桌子兩邊；PP 和 DP 數字照常朝向你。實體對戰時，持續的變化都用牌組裡的卡表示：從手牌打出的卡、放在卡底下的卡，或箭頭；不用另外的指示物。" },
+                new() { Title = "DP 牌", Spot = ["own-card:WCG-337", "enemy-card:WCG-101"], Allow = [Attack("WCG-337", "WCG-101")],
+                    Done = e => Unit(e.Player, "WCG-337") is { DpCards: > 0 } && Settled(e),
+                    Text = "「{0}」的效果：{1} 用它攻擊「{2}」。DP 牌是從你牌庫底拿的牌，背面朝上、不檢視，橫放在怪物底下，每張使 DP +1，可以疊加；被沉默或離場時放回牌庫底。牌庫不夠時能放幾張就放幾張。", TextValues = [CardName("WCG-337"), CardEffect("WCG-337"), CardName("WCG-101")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-337"), CardName("WCG-101")] },
-                new() { Title = "腐蝕指示物", Spot = ["hand:WCG-384", "enemy-card:WCG-155"], Allow = [Play("WCG-384")],
-                    Done = e => Unit(e.Computer, "WCG-155") is { CorrosionCounters: > 0 } && Settled(e),
-                    Text = "「{0}」的效果：{1} 每個腐蝕指示物使 PP -300，可以疊加；PP 最低為 0，降到 0 也不會陣亡。被沉默、被驅散或離場時移除；「印刷 PP」的判定不受影響。", TextValues = [CardName("WCG-384"), CardEffect("WCG-384")],
+                new() { Title = "腐蝕", Spot = ["hand:WCG-384", "enemy-card:WCG-155"], Allow = [Play("WCG-384")],
+                    Done = e => Unit(e.Computer, "WCG-155") is { } x && x.CurrentPP < (x.Card.PP ?? 0) && Settled(e),
+                    Text = "「{0}」的效果：{1} 持續的腐蝕則是箭頭（例如腐霧散布者的 ↑）或附著在敵方怪物底下的卡（例如孢沼爬蟲陣亡後附著），各自依卡文降低 PP；PP 最低為 0，降到 0 也不會陣亡。附著的卡被沉默、被驅散或離場時進入墓地；「印刷 PP」的判定不受影響。", TextValues = [CardName("WCG-384"), CardEffect("WCG-384")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-384")] },
-                new() { Title = "奪魂指示物", Spot = ["hand:WCG-335", "enemy-card:WCG-155"], Allow = [Play("WCG-335", "WCG-155"), Pick("WCG-155"), Slot()],
+                new() { Title = "王座篡奪", Spot = ["hand:WCG-335", "enemy-card:WCG-155"], Allow = [Play("WCG-335", "WCG-155"), Pick("WCG-155"), Slot()],
                     Done = e => OnField(e.Player, "WCG-155") && Settled(e),
                     Text = "「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-335"), CardEffect("WCG-335"), CardName("WCG-155")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-335"), CardName("WCG-155")] },
                 new() { Title = "你控制、但不是你擁有", Spot = ["own-card:WCG-155"],
-                    Text = "被奪來的怪物不觸發進場，附著卡和指示物跟著它，剛移過來的這回合不能攻擊；它陣亡時由現在控制它的你處理陣亡，離場時回到擁有者的墓地或手牌。被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。" },
+                    Text = "被奪來的怪物不觸發進場，王座篡奪放在它底下，原本底下的牌也跟著它，剛移過來的這回合不能攻擊；它陣亡時由現在控制它的你處理陣亡，離場時回到擁有者的墓地或手牌。被沉默或驅散時，王座篡奪進入墓地，控制權歸還擁有者。" },
                 new() { Title = "暫時控制", Spot = ["field"],
                     Text = "卡面寫「取得控制權直到回合結束」時，那隻怪物留在原本的格子，把卡轉 180 度表示由你控制，回合結束時轉回去。轉向的怪物箭頭照常有效：↑ 指正對面那格，← → 指它所在那排的相鄰格，左右跟著對調。" },
                 new() { Title = "本課重點",
-                    Text = "血誓指示物放在血誓祭壇（結界）上，你每受到 1 次傷害放 1 個；沉默碰不到它，祭壇被驅散摧毀或離場時一起移除。沉默移除怪物的聖盾、DP、腐蝕與奪魂指示物；驅散移除附著、沉默、腐蝕與奪魂指示物，或依卡文摧毀結界。" }
+                    Text = "血誓只放在血誓祭壇（結界）底下：你每受到 1 次傷害，從牌庫底背面朝上放 1 張；沉默碰不到它，祭壇被驅散摧毀或離場時全部放回牌庫底。沉默把 DP 牌與倒數牌放回牌庫底（倒數不發動），把聖盾牌、腐蝕附著與王座篡奪送入墓地；驅散移除附著、聖盾牌與沉默（不動背面墊牌），或依卡文摧毀結界。" }
             ]
         },
         new()
@@ -439,22 +443,22 @@ public static class TutorialLessons
         new()
         {
             Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、聖盾與雙色卡",
-            Summary = "PP 門檻只有三段；聖盾指示物只擋一次；雙色卡屬於兩個意志。",
-            Topics = ["PP 900／1200 以下、1800 以上", "聖盾指示物一次", "連續攻擊破盾", "雙色卡"],
+            Summary = "PP 門檻只有三段；聖盾每次被攻擊用掉 1 個來源；雙色卡屬於兩個意志。",
+            Topics = ["PP 900／1200 以下、1800 以上", "聖盾來源一次", "連續攻擊破盾", "雙色卡"],
             Scene = new(
                 new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-031", 2), new("WCG-101", 4)] }),
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-061", 1), new("WCG-031", 2), new("WCG-101", 4)] }),
             Steps =
             [
                 new() { Title = "三段門檻", Spot = ["enemy-card:WCG-157", "enemy-card:WCG-101"],
                     Text = "卡牌上的 PP 門檻只有三種：PP 900 以下、PP 1200 以下、PP 1800 以上。門檻只看怪物卡上印的 PP，不計加成與減益。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
-                    Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Settled(e),
-                    Text = "「{0}」有嘲諷與聖盾。用「{1}」（{2} PP）攻擊它，聖盾指示物會擋下這次消滅並被移除。", TextValues = [CardName("WCG-031"), CardName("WCG-154"), OwnPP("WCG-154")],
+                    Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && !OnField(e.Computer, "WCG-061") && Settled(e),
+                    Text = "「{0}」有嘲諷，左邊的「{1}」用箭頭給它聖盾。用「{2}」（{3} PP）攻擊它，聖盾擋下這次消滅，給予聖盾的「{1}」進入墓地。", TextValues = [CardName("WCG-031"), CardName("WCG-061"), CardName("WCG-154"), OwnPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-031")] },
                 new() { Title = "同回合再攻擊", Spot = ["own-card:WCG-155", "enemy-card:WCG-031"], Allow = [Attack("WCG-155", "WCG-031")],
                     Done = e => !OnField(e.Computer, "WCG-031") && Settled(e),
-                    Text = "指示物已經用掉了，不會補回。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
+                    Text = "給予聖盾的卡已經進入墓地，不會補回。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
                 new() { Title = "看門檻選目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
@@ -519,8 +523,8 @@ public static class TutorialLessons
         new()
         {
             Id = "training", Icon = "swords", Title = "訓練場：布置與重複測試",
-            Summary = "在訓練場載入情境、指定卡片、布置戰場、調整生命能量與指示物，並保存場面反覆測試。",
-            Topics = ["快速情境", "測試工具", "加入手牌與牌庫頂", "直接擺放／進場", "生命與能量", "指示物", "保存場面"],
+            Summary = "在訓練場載入情境、指定卡片、布置戰場、調整生命能量與卡底下的牌，並保存場面反覆測試。",
+            Topics = ["快速情境", "測試工具", "加入手牌與牌庫頂", "直接擺放／進場", "生命與能量", "底下的牌", "保存場面"],
             Route = "battle",
             Tour =
             [
@@ -531,7 +535,7 @@ public static class TutorialLessons
                 new("指定卡片", "選擇己方或電腦，搜尋卡名或編號，可以把卡加入手牌、放到牌庫頂，或讓該方抽 1 張。", ".tt-cards"),
                 new("布置戰場", "選一個空格，按「直接擺放」不會觸發進場或召喚效果；按「進場並觸發效果」會正常結算，但不扣費。", ".tt-place"),
                 new("生命與能量", "修改生命（0–7）、總能量與可用能量（0–30），再按「套用生命與能量」。回合數也能修改。", ".tt-resources"),
-                new("指示物", "選好場上卡片後，直接設定倒數、DP、聖盾等指示物數量，按「套用指示物」。這是直接設定，不觸發放置效果；要測倒數歸零，請設成 1 再結束回合。", ".training-counters"),
+                new("底下的牌", "選好場上卡片後，設定底下的倒數牌、DP 牌、聖盾牌、血誓與聖泉數量，按「套用底下的牌」。墊牌從牌庫底拿、放回牌庫底；聖盾牌從手牌放入。這是直接設定，不觸發放置效果；要測倒數結束，請設成 1 再結束回合。", ".training-counters"),
                 new("保存場面", "輸入名稱按「另存新場面」，之後可以從「已保存場面」還原、改名或刪除。場面存在這個瀏覽器，入口頁也能直接載入。", ".tt-scenes")
             ]
         },

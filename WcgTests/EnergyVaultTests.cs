@@ -54,10 +54,16 @@ public class EnergyVaultTests
         Assert.Equal(hand,g.Player.Hand.Count);Assert.True(g.CanAttack(m)); // 直立進場 = 可以攻擊
         var none=Game(0);var s2=Hand(none,303);Energy(none.Player,306);Assert.False(none.CanPlayCard(none.Player,s2));
     }
-    [Fact] public void SentinelGetsAShieldCounterWithFiveEnergy()
+    [Fact] public void SentinelSendsAnEnergyCardToTheGraveyardToSurviveWithFiveEnergy()
     {
-        var g=Game(5);var s=Summon(g,304);Settle(g);Assert.Equal(1,s.ShieldCounters);
-        var g2=Game(4);var s2=Summon(g2,304);Settle(g2);Assert.Equal(0,s2.ShieldCounters);
+        foreach(var (energy,survives) in new[]{(5,true),(4,false)})
+        {
+            var g=Game();g.Computer.EnergyZone.Clear();for(int i=0;i<energy;i++)Energy(g.Computer,101);
+            var s=Unit(g.Computer,304,0);var big=Unit(g.Player,306,0);Refresh(g);Assert.False(s.HasShield);var grave=g.Computer.Graveyard.Count;
+            Assert.True(g.Attack(g.Player,big,s));Settle(g);
+            Assert.Equal(survives,g.Computer.Field.Contains(s));
+            if(survives){Assert.Equal(4,g.Computer.EnergyZone.Count);Assert.Equal(grave+1,g.Computer.Graveyard.Count);}
+        }
     }
     [Fact] public void KeeperGoesToTheEnergyZoneWhenItDies()
     {
@@ -75,7 +81,7 @@ public class EnergyVaultTests
     {
         var g=Game();var a=Energy(g.Player,40);var b=Energy(g.Player,80);Assert.True(g.CastSpell(g.Player,Hand(g,307)));
         Pick(g,a.InstanceId.ToString());Pick(g,"SLOT:0");Assert.Equal(GameEngine.EnergySummonMoreTitle,g.CurrentPendingChoice!.Title);Pick(g,b.InstanceId.ToString());Pick(g,"SLOT:1");
-        Assert.Equal(2,g.Player.Field.Count);Assert.All(g.Player.Field,m=>Assert.True(m.IsTapped));Assert.Equal(1,g.Player.Field.Single(m=>m.Card.Id=="WCG-080").ShieldCounters);
+        Assert.Equal(2,g.Player.Field.Count);Assert.All(g.Player.Field,m=>Assert.True(m.IsTapped));Assert.Equal(1,g.ShieldSourceCount(g.Player.Field.Single(m=>m.Card.Id=="WCG-040")));
     }
     [Fact] public void DivinerSwapsAndKeepsTheTappedState()
     {

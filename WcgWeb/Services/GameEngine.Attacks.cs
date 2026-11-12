@@ -22,7 +22,8 @@ public partial class GameEngine
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
     {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP));var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
-        var ash=(ah||SimplifiedRules&&ShieldAnyCombatRules)&&a.HasShield&&ShieldReady(a);var dsh=(dh||SimplifiedRules&&ShieldCounterRules)&&d.HasShield&&ShieldReady(d);
+        // 聖盾來源: only the attacked monster spends a source (it survives the combat even when it would anyway); the attacker never does.
+        var src=ShieldSourceRules;var ash=!src&&ah&&a.HasShield&&ShieldReady(a);var dsh=(dh||src)&&d.HasShield&&ShieldReady(d)||dh&&EnergyGuard(d);
         var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
         var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):0;
         return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable,a.CurrentPP,d.CurrentPP);}
@@ -53,13 +54,15 @@ public partial class GameEngine
         // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.
         if(!LegacyCardRules)a.NextCombatBonus=0;
         if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>ThresholdPP(x)<=Low(500)),x=>KillBatch([x],a.Card.Name));}
-    private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d)
+    // effect: a combat started by an effect (duel); both monsters count as attacked, so both spend a 聖盾 source.
+    // CombatProtected (269／272 "此次交戰此怪物不會被消滅") survives without spending one.
+    private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d,bool effect=false)
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
         var ap=a.CurrentPP;var dp=d.CurrentPP;var mirror=d.IsUnit&&!d.IsSilenced&&d.Card.Id=="WCG-258";var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
-        // 聖盾指示物: the defender spends 1 counter whenever it is attacked, even when it would survive anyway;
-        // from 聖盾交戰必扣 the attacker does too.
-        Resolve(()=>ShieldDecision(a,ah||ShieldAnyCombatRules,b=>asaved=b,ah),()=>ShieldDecision(d,dh||ShieldCounterRules,b=>dsaved=b,dh),()=>
+        // 聖盾來源: the attacked monster spends one source whenever it is attacked, even when it would survive anyway.
+        var src=ShieldSourceRules;
+        Resolve(()=>{if(a.CombatProtected){asaved=true;return;}ShieldDecision(a,src?effect:ah,b=>asaved=b,ah);},()=>{if(d.CombatProtected){dsaved=true;return;}ShieldDecision(d,src||dh,b=>dsaved=b,dh);},()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();
@@ -136,7 +139,7 @@ public partial class GameEngine
         effects.Add(() =>
         {
             foreach(var coin in p.EnergyZone.Where(x=>x.TemporaryEnergy).ToArray()){p.EnergyZone.Remove(coin);coin.TemporaryEnergy=false;coin.IsTapped=false;p.Graveyard.Add(coin);Present("discard",p,coin.InstanceId,card:coin.Card,label:"臨時能量消失");}
-            var counters=ShieldCounterRules;
+            var counters=ShieldSourceRules;
             foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TurnDpBonus=0;unit.TurnUnblockable=false;unit.SurgeAttacks=0;unit.SurgeReadies=0;unit.SurgeNoFace=false;unit.SurgeHornUsed=false;unit.TriggersThisTurn=0;if(!counters)unit.ShieldSpent=false;}
             p.NextCreatureDiscount=0;
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;

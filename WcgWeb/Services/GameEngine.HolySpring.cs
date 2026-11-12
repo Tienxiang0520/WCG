@@ -1,9 +1,9 @@
 using WcgWeb.Models;
 namespace WcgWeb.Services;
 
-// 新流派「聖泉滿溢」（秩序＋中立，WCG-400–408，2026-10-25）：每一點回血都存成聖泉指示物，最後倒到對手臉上。
-// 聖泉指示物 sit on 403 聖泉之井 (a structure), one per point healed, including healing beyond the 7-life maximum.
-// Silence never touches them; they leave play with the well. "Healed this turn" (406) also counts the overflow.
+// 新流派「聖泉滿溢」（秩序＋中立，WCG-400–408，2026-10-25）：每一點回血都從牌庫底墊 1 張聖泉在井底下，最後倒到對手臉上。
+// 聖泉 cards sit under 403 聖泉之井 (a structure), one per point healed, including healing beyond the 7-life maximum.
+// Silence never touches them; they go back to the deck bottom when the well leaves play. "Healed this turn" (406) also counts the overflow.
 // Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
@@ -18,9 +18,7 @@ public partial class GameEngine
         p.SpringHealed += amount;
         foreach (var well in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403"))
         {
-            well.SpringCounters += amount;
-            Present("status", p, well.InstanceId, card: well.Card, label: $"放置 {amount} 個聖泉指示物");
-            Log($"【{well.Card.Name}】獲得 {amount} 個聖泉指示物（共 {well.SpringCounters} 個）。", "action");
+            PadUnder(p, well, UnderKind.HolySpring, amount, well.Card);
         }
         foreach (var acolyte in p.Field.Where(x => Active(x, "WCG-401")).ToArray())
             foreach (var x in PointedUnits(acolyte)) AddTurnBonus(x, 300, acolyte.Card);
@@ -28,11 +26,11 @@ public partial class GameEngine
         {
             if (knight.SpringDpTurn != TurnNumber) { knight.SpringDpTurn = TurnNumber; knight.SpringDpCount = 0; }
             if (knight.SpringDpCount >= 2) continue;
-            knight.SpringDpCount++; AddDpCounter(knight, knight.Card);
+            knight.SpringDpCount++; AddDpCards(p, knight, knight.Card);
         }
         RefreshBoard();
     }
-    private static int SpringCounters(PlayerState p) => p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403").Sum(x => x.SpringCounters);
+    private static int SpringCards(PlayerState p) => p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403").Sum(x => x.SpringCards);
     // Monsters a spell may pick (禁魔石像 152 and other spell-immune monsters are skipped).
     private List<MonsterInstance> SpellPickable(PlayerState p, IEnumerable<MonsterInstance> source) =>
         Targetable(p, source).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(p, m)).ToList();
@@ -91,8 +89,8 @@ public partial class GameEngine
             case "WCG-408":
                 Heal(p, 2);
                 var n = 0;
-                foreach (var well in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403")) { n += well.SpringCounters; well.SpringCounters = 0; }
-                Log($"【{p.Name}】移除 {n} 個聖泉指示物。", "action");
+                foreach (var well in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403").ToArray()) n += ReturnUnder(well, UnderKind.HolySpring, well.SpringCards);
+                Log($"【{p.Name}】把聖泉之井底下 {n} 張聖泉放回牌庫底。", "action");
                 if (n / 2 > 0) Damage(e, n / 2, new(p, source.Card, null, "spell"));
                 break;
             default: return StarSpell(p, source, t);
@@ -100,13 +98,13 @@ public partial class GameEngine
         RefreshBoard();
         return true;
     }
-    // 403 聖泉之井: tap and remove 2 counters to draw 1.
-    private static bool SpringCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-403" && s.SpringCounters >= 2 && p.Deck.Count > 0 || FateCanActivate(p, s);
+    // 403 聖泉之井: tap and put 2 聖泉 cards from under it back on the deck bottom to draw 1.
+    private static bool SpringCanActivate(PlayerState p, MonsterInstance s) => s.Card.Id == "WCG-403" && s.SpringCards >= 2 || FateCanActivate(p, s);
     private void SpringActivate(PlayerState p, MonsterInstance s)
     {
         if (s.Card.Id != "WCG-403") { FateActivate(p, s); return; }
-        if (s.SpringCounters < 2) return;
-        s.IsTapped = true; s.SpringCounters -= 2; DrawMany(p, 1);
+        if (s.SpringCards < 2) return;
+        s.IsTapped = true; ReturnUnder(s, UnderKind.HolySpring, 2); DrawMany(p, 1);
     }
 
     // ── 天梯電腦 ──
@@ -121,7 +119,7 @@ public partial class GameEngine
                 var kill = e.Field.Where(x => x.IsUnit && x.CurrentPP <= shrink).Select(BodyValue).DefaultIfEmpty(0).Max();
                 return kill > 0 ? kill + 1 : 0.5;
             case "WCG-408":
-                var dmg = (SpringCounters(p) + 2) / 2;
+                var dmg = (SpringCards(p) + 2) / 2;
                 return dmg >= e.Hp ? 1000 : dmg * 1.2 - 1;
         }
         return StarPlayValue(p, c);

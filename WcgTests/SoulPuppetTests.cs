@@ -83,11 +83,11 @@ public class SoulPuppetTests
         Assert.True(g.EndTurn());Settle(g);
         Assert.Contains(g.Computer.Graveyard,c=>c.InstanceId==foe.InstanceId);Assert.Contains(g.Computer.Graveyard,c=>c.InstanceId==small.InstanceId);
     }
-    [Fact] public void UsurpMovesItToYourEmptySlotWithASoulCounterForGood()
+    [Fact] public void UsurpMovesItToYourEmptySlotWithTheSpellUnderItForGood()
     {
         var g=Game();var giant=Unit(g.Computer,119,2);Refresh(g);
         Assert.True(g.CastSpellAt(g.Player,Hand(g,335),giant));Settle(g);
-        Assert.Contains(giant,g.Player.Field);Assert.True(giant.SoulCounter);Assert.False(giant.Turned);Assert.False(g.CanAttack(giant));
+        Assert.Contains(giant,g.Player.Field);Assert.True(giant.SoulSpell);Assert.Contains(giant.Attachments,a=>a.Card.Card.Id=="WCG-335"&&a.OwnerId==g.Player.Id);Assert.DoesNotContain(g.Player.Graveyard,c=>c.Card.Id=="WCG-335");Assert.False(giant.Turned);Assert.False(g.CanAttack(giant));
         Assert.True(g.EndTurn());Settle(g);Assert.True(g.EndTurn());Settle(g);Assert.Contains(giant,g.Player.Field);Assert.True(g.CanAttack(giant));
         // Full row: can't be cast.
         var g2=Game();for(int i=0;i<5;i++)Unit(g2.Player,101,i);Unit(g2.Computer,101,0);Refresh(g2);Assert.False(g2.CastSpellAt(g2.Player,Hand(g2,335),g2.Computer.Field[0]));
@@ -105,10 +105,11 @@ public class SoulPuppetTests
         var snap=bridge.Snapshot();var shown=snap.Computer.Field.Single(m=>m.Card.InstanceId==foe.InstanceId);
         Assert.True(shown.Turned);Assert.True(shown.CanAttack);Assert.DoesNotContain(snap.Player.Field,m=>m.Card.InstanceId==foe.InstanceId);
     }
-    [Fact] public void PrintToolsAddASoulSheetForUsurpDecks()
+    [Fact] public void UsurpSpellGoesToTheGraveyardWhenTheMonsterLeaves()
     {
-        var plan=new DeckPrintPlan("t","深淵",[new PrintedCard("WCG-335","王座篡奪","法術","深淵",7,null,null,"")]);Assert.Equal(0,DeckPrintTools.Defaults(plan with {Cards=[]})[PrintTool.SoulTokens]);
-        Assert.Equal(1,DeckPrintTools.Defaults(plan)[PrintTool.SoulTokens]);
+        var g=Game();var giant=Unit(g.Computer,119,2);Refresh(g);Assert.True(g.CastSpellAt(g.Player,Hand(g,335),giant));Settle(g);
+        typeof(GameEngine).GetMethod("KillBatch",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[new[]{giant},"test",true]);Settle(g);
+        Assert.DoesNotContain(giant,g.Player.Field);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-335");Assert.Contains(g.Computer.Graveyard,c=>c.Card.Id=="WCG-119");
     }
     [Fact] public void TurnedMonstersArrowsHitWhateverTheyPointAt()
     {

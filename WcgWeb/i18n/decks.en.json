@@ -1051,9 +1051,9 @@
  },
  "RANKED-5-VITAL-HOOFCRUSH": {
   "zhName": "生機＋狂怒・重蹄碾壓（碾壓）",
-  "zhDescription": "讓怪物交戰、直立待命或附著來疊 DP 指示物，再越過嘲諷一下打 3～4 點。",
+  "zhDescription": "讓怪物交戰、直立待命或附著，從牌庫底橫放 DP 牌疊高 DP，再越過嘲諷一下打 3～4 點。",
   "name": "Life + Fury · Hoof Crush (Crush)",
-  "description": "Grow DP counters through combat, staying upright and attachments, then get past Taunt and hit for 3–4 at once."
+  "description": "Grow DP through combat, staying upright and attachments, stacking DP cards sideways from the deck bottom, then get past Taunt and hit for 3–4 at once."
  },
  "RANKED-5-WRATH-LANERAID": {
   "zhName": "狂怒＋理智・斷路突襲（突襲）",
@@ -1081,9 +1081,9 @@
  },
  "RANKED-5-ORDER-BLOODOATH": {
   "zhName": "秩序・血誓反擊（血誓）",
-  "zhDescription": "故意讓對手打臉，每挨一下就在血誓祭壇疊血誓指示物；血越少越兇，最後一擊千倍奉還。",
+  "zhDescription": "故意讓對手打臉，每挨一下就從牌庫底在血誓祭壇底下墊 1 張；血越少越兇，最後一擊千倍奉還。",
   "name": "Order · Blood Oath Riposte (Blood Oath)",
-  "description": "Let the opponent hit your face; every hit stacks a Blood Oath counter on the altar. The lower your life, the harder you hit, until you pay it all back at once."
+  "description": "Let the opponent hit your face; every hit puts 1 card from the deck bottom under the altar. The lower your life, the harder you hit, until you pay it all back at once."
  },
  "RANKED-5-REASON-TIDECYCLE": {
   "zhName": "理智・潮汐輪迴（潮汐）",
@@ -1093,9 +1093,9 @@
  },
  "RANKED-5-VITAL-ROTMIRE": {
   "zhName": "生機・腐沼蔓生（腐沼）",
-  "zhDescription": "在敵方怪物上疊腐蝕指示物，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
+  "zhDescription": "用 ↑ 箭頭和附著在敵方怪物底下的腐沼卡壓低 PP，劇毒小怪擋路；最後萬腐之母一口氣讓整排爛掉。",
   "name": "Life · Rotting Mire (Mire)",
-  "description": "Stack Corrosion counters on enemy monsters while poisonous creatures hold the line; Mother of All Rot finishes the whole row at once."
+  "description": "Lower enemy PP with ↑ arrows and cards attached under enemy monsters while poisonous creatures hold the line; Mother of All Rot finishes the whole row at once."
  },
  "RANKED-5-WRATH-SURGE": {
   "zhName": "狂怒・怒濤連擊（連擊）",
@@ -1105,15 +1105,15 @@
  },
  "RANKED-5-ORDER-HOLYSPRING": {
   "zhName": "秩序・聖泉滿溢（聖泉）",
-  "zhDescription": "每次回血都存成聖泉指示物，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
+  "zhDescription": "每次回血都從牌庫底在聖泉之井底下墊牌，滿血也照存；最後聖泉傾瀉把存下的回血倒到對手臉上。",
   "name": "Order · Holy Spring Overflow (Spring)",
-  "description": "Every heal is stored as Holy Spring counters, even at full life; Holy Spring Deluge pours it all onto the enemy's face."
+  "description": "Every heal puts cards from the deck bottom under the Holy Spring Well, even at full life; Holy Spring Deluge pours it all onto the enemy's face."
  },
  "RANKED-5-REASON-STARCLOCK": {
   "zhName": "理智・星律倒數（星律）",
-  "zhDescription": "把大效果預約在幾回合後，牌上放倒數指示物撐到歸零；最後星律終焉讓全場倒數同時爆開。",
+  "zhDescription": "把大效果預約在幾回合後，從牌庫底在卡底下墊倒數牌，撐到倒數結束；最後星律終焉讓全場倒數同時爆開。",
   "name": "Reason · Star Law Countdown (Star)",
-  "description": "Schedule big effects a few turns ahead with Countdown counters and hold on until they fire; End of the Star Law sets them all off at once."
+  "description": "Schedule big effects a few turns ahead with countdown cards from the deck bottom and hold on until they fire; End of the Star Law sets them all off at once."
  },
  "RANKED-5-ABYSS-FATEFLIP": {
   "zhName": "深淵・命運翻牌（命運）",

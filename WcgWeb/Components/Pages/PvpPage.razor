@@ -229,7 +229,8 @@
             <b>@L.CardName(unit.Card)</b>
             <span>@(unit.IsSet ? L["蓋放"] : $"{unit.CurrentPP} / {unit.CurrentDP}")</span>
             @if (unit.IsTapped) { <small>@L["橫置"]</small> }
-            @if (unit.Countdown > 0) { <small>@L.F("倒數 {0}", unit.Countdown)</small> }
+            @foreach (var pile in unit.Under.GroupBy(x => x.Kind).OrderBy(x => x.Key)) { <small>@L[WcgWeb.Services.GameEngine.UnderLabel(pile.Key)] ×@pile.Count()</small> }
+            @foreach (var a in unit.ShieldCards.Concat(unit.Attachments)) { <small title="@L.Text(a.Card.Card.Text)">@L["底下："]@L.CardName(a.Card.Card)</small> }
             @if (targeting) { <button class="btn btn-sm btn-warning" @onclick="() => Do(e => e.SelectTarget(unit))">@L["選擇"]</button> }
             else if (PendingSpell is { } spell && myTurn) { <button class="btn btn-sm btn-warning" @onclick="() => Do(e => e.CastSpellAt(me, spell, unit))">@L["目標"]</button> }
             else if (myTurn && mineSide && g.CanAttack(unit))

@@ -33,16 +33,19 @@ public partial class GameEngine
                 var copy = new MonsterInstance(hidden ? HiddenCard : m.Card)
                 {
                     InstanceId = hidden ? NewId() : m.InstanceId, Slot = m.Slot, IsTapped = m.IsTapped, IsSet = m.IsSet,
-                    ShieldQualified = m.ShieldQualified, ShieldSpent = m.ShieldSpent, ShieldCounters = m.ShieldCounters, ShieldSources = [.. m.ShieldSources], WasSilenced = m.WasSilenced, NextCombatBonus = m.NextCombatBonus, TurnBonus = m.TurnBonus,
+                    ShieldQualified = m.ShieldQualified, ShieldSpent = m.ShieldSpent, CombatProtected = m.CombatProtected, NextCombatBonus = m.NextCombatBonus, TurnBonus = m.TurnBonus,
                     TriggersThisTurn = m.TriggersThisTurn, CombatPowerBonus = m.CombatPowerBonus, HasAttacked = m.HasAttacked, AttackBanned = m.AttackBanned, FromEnergy = m.FromEnergy,
                     HasSummoningSickness = m.HasSummoningSickness, IsSilenced = m.IsSilenced, IsStealthed = m.IsStealthed,
                     ExtraTaunt = m.ExtraTaunt, ExtraTrample = m.ExtraTrample, ShieldOwnerId = m.ShieldOwnerId, SilenceOwnerId = m.SilenceOwnerId,
                 };
                 copy.CurrentPP = m.BasePP;
-                copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpCounters = m.DpCounters; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
-                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SoulCounter = m.SoulCounter; copy.BloodCounters = m.BloodCounters; copy.CorrosionCounters = m.CorrosionCounters; copy.SpringCounters = m.SpringCounters; copy.SpringDpTurn = m.SpringDpTurn; copy.SpringDpCount = m.SpringDpCount; copy.Countdown = m.Countdown; copy.SurgeAttacks = m.SurgeAttacks; copy.SurgeReadies = m.SurgeReadies; copy.SurgeNoFace = m.SurgeNoFace; copy.SurgeHornUsed = m.SurgeHornUsed;
+                copy.CurrentDP = m.BaseDP; copy.AttackDamageBonus = m.AttackDamageBonus; copy.DpBonus = m.DpBonus; copy.TurnDpBonus = m.TurnDpBonus; copy.TurnUnblockable = m.TurnUnblockable;
+                copy.OwnerId = m.OwnerId; copy.Turned = m.Turned; copy.ControlUntil = m.ControlUntil; copy.SpringDpTurn = m.SpringDpTurn; copy.SpringDpCount = m.SpringDpCount; copy.SurgeAttacks = m.SurgeAttacks; copy.SurgeReadies = m.SurgeReadies; copy.SurgeNoFace = m.SurgeNoFace; copy.SurgeHornUsed = m.SurgeHornUsed;
                 map[m] = copy;
                 copy.Attachments = m.Attachments.Select(a => a with { Card = Card(a.Card, false) }).ToList();
+                copy.ShieldCards = m.ShieldCards.Select(a => a with { Card = Card(a.Card, false) }).ToList();
+                // Face-down padding cards were never looked at: hidden for both sides.
+                copy.Under = m.Under.Select(u => u with { Card = Card(u.Card, true) }).ToList();
                 copy.LostAttachments = m.LostAttachments.Select(c => Card(c, false)).ToList();
                 copy.ShieldEnergies = m.ShieldEnergies.Select(c => Card(c, false)).ToList();
                 copy.SilenceSpell = m.SilenceSpell == null ? null : Card(m.SilenceSpell, false);

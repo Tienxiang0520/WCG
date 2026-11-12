@@ -115,8 +115,8 @@
                     <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>@L["轉直立"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>@L["橫置"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>@L["移至墓地"]</button></div>
                     <small>@L["移至墓地是調整場面，不觸發死亡效果。"]</small>
                     <div class="training-counters">@foreach(var (k,label) in CounterLabels){<label>@L[label]<input aria-label="@L[label]" type="number" min="0" max="20" value="@Counters[k]" @onchange="e=>SetCounter(k,e.Value)" /></label>}</div>
-                    <button disabled="@(SelectedUnit=="")" @onclick="ApplyCounters">@L["套用指示物"]</button>
-                    <small>@L["直接設定數量，不觸發放置效果；倒數設為 0 不會觸發歸零效果，要測歸零請設 1 再結束回合。"]</small>
+                    <button disabled="@(SelectedUnit=="")" @onclick="ApplyCounters">@L["套用底下的牌"]</button>
+                    <small>@L["倒數牌、DP 牌、血誓、聖泉從牌庫底背面朝上墊入或放回牌庫底；聖盾牌從手牌正面朝上放入，減少時進墓地。直接設定不觸發放置效果；倒數牌設為 0 不會觸發倒數結束，要測倒數結束請設 1 再結束回合。"]</small>
                 </fieldset>
                 <h3>@L["重複測試"]</h3>
                 <label class="tt-scenes">@L["場面名稱"]<input aria-label="@L["場面名稱"]" maxlength="40" @bind="SceneName" @bind:event="oninput" /></label>
@@ -152,15 +152,15 @@
         "defeat"=>"你只剩 1 點生命且沒有怪物。按「電腦執行一步」或恢復電腦自動行動，電腦會攻擊造成敗北。",
         "victory"=>"電腦只剩 1 點生命且沒有怪物。用沼澤巨鱷攻擊電腦頭像即可勝利。",
         _=>""};
-    private static readonly (string Key,string Label)[] CounterLabels=[("countdown","倒數指示物"),("dp","DP 指示物"),("shield","聖盾指示物"),("corrosion","腐蝕指示物"),("blood","血誓指示物"),("spring","聖泉指示物")];
-    private readonly Dictionary<string,int> Counters=new(){["countdown"]=0,["dp"]=0,["shield"]=0,["corrosion"]=0,["blood"]=0,["spring"]=0};
+    private static readonly (string Key,string Label)[] CounterLabels=[("countdown","倒數牌"),("dp","DP 牌"),("shield","聖盾牌（手牌）"),("blood","血誓"),("spring","聖泉")];
+    private readonly Dictionary<string,int> Counters=new(){["countdown"]=0,["dp"]=0,["shield"]=0,["blood"]=0,["spring"]=0};
     private void SetCounter(string k,object? v){if(int.TryParse(v?.ToString(),out var n))Counters[k]=n;}
     private void LoadCounters()
     {
         var m=State?.Player.Field.Concat(State.Computer.Field).FirstOrDefault(x=>x.Card.InstanceId.ToString()==SelectedUnit);
-        foreach(var (k,label) in CounterLabels)Counters[k]=m?.Status.Count(x=>x==label)??0;
+        foreach(var (k,_) in CounterLabels)Counters[k]=k=="shield"?m?.ShieldCards?.Length??0:m?.Under?.FirstOrDefault(u=>u.Kind==k)?.Count??0;
     }
-    private Task ApplyCounters()=>Command("training-counters",new TrainingEdit(Side,Countdown:Counters["countdown"],Dp:Counters["dp"],Shield:Counters["shield"],Corrosion:Counters["corrosion"],Blood:Counters["blood"],Spring:Counters["spring"]));
+    private Task ApplyCounters()=>Command("training-counters",new TrainingEdit(Side,Countdown:Counters["countdown"],Dp:Counters["dp"],Shield:Counters["shield"],Blood:Counters["blood"],Spring:Counters["spring"]));
     private async Task LoadPreset(string id){Coordinator.AiPaused=true;await Command("training-preset",new TrainingEdit(Preset:id));PresetId=id;if(State?.Phase!="NotStarted"){LoadResources();ToolNotice="已載入訓練情境。";}}
     private async Task SwapSides(){Coordinator.AiPaused=true;await Command("training-swap",new TrainingEdit());LoadResources();}
     private async Task CancelPending(){if(LastStable==null)return;Coordinator.AiPaused=true;await Command("training-restore",new TrainingEdit(Scene:LastStable));LoadResources();ToolNotice="已取消待選效果，回到效果發動前的場面。";}

@@ -127,13 +127,11 @@
                         <div><span>@L.CardName(group.First().Id, group.First().Name)</span><strong>× @group.Count()</strong></div>
                     }
                 </div>
-                <p class="print-reference-note">@L["生命計數卡與聖盾指示物不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
-                <p class="print-reference-note">@L["DP 指示物：每個使怪物 DP +1，可以疊加；被沉默或怪物離場時移除。"]</p>
-                <p class="print-reference-note">@L["血誓指示物：放在血誓祭壇上，沉默不影響；祭壇離場時一起移除。"]</p>
-                <p class="print-reference-note">@L["腐蝕指示物：每個使怪物 PP -300，可以疊加；PP 降到 0 不會自己陣亡。被沉默、被驅散或怪物離場時移除。"]</p>
-                <p class="print-reference-note">@L["聖泉指示物：放在聖泉之井上，每回復 1 點生命放 1 個（超過上限也算）；沉默不影響，聖泉之井離場時一起移除。"]</p>
-                <p class="print-reference-note">@L["倒數指示物：你的回合開始時從你的每張卡各移除 1 個，移除最後 1 個時觸發卡上的效果；被沉默時全部移除、不觸發，卡離場時移除。"]</p>
-                <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。奪魂指示物：永久控制，離場時回到擁有者那邊；被沉默或驅散時移除，怪物歸還擁有者。"]</p>
+                <p class="print-reference-note">@L["生命計數卡與幸運幣不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
+                <p class="print-reference-note">@L["不需另外的指示物：聖盾、倒數、DP、血誓、聖泉、腐蝕與永久控制都用牌組裡的卡表示。"]</p>
+                <p class="print-reference-note">@L["墊牌從你的牌庫底拿，背面朝上、不檢視：倒數牌對齊直放，DP 牌橫放（每張 DP +1），血誓與聖泉只放在各自的結界底下。離開時放回牌庫底。"]</p>
+                <p class="print-reference-note">@L["聖盾來源：底下的聖盾法術、正面朝上放在底下的手牌，或用箭頭給予的生物；被攻擊時選 1 個進入墓地。"]</p>
+                <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。永久控制：把王座篡奪放在怪物底下；被沉默或驅散時王座篡奪進入墓地，怪物歸還擁有者。"]</p>
             </section>
         }
     </div>
@@ -173,7 +171,7 @@
     }
     private static string ToolName(PrintTool t) => t switch
     {
-        PrintTool.Life => "生命計數卡", PrintTool.Coin => "幸運幣（後攻用）", PrintTool.ShieldTokens => "聖盾指示物卡（12 個）", PrintTool.DpTokens => "DP 指示物卡（12 個）", PrintTool.BloodTokens => "血誓指示物卡（12 個）", PrintTool.CorrosionTokens => "腐蝕指示物卡（12 個）", PrintTool.CountdownTokens => "倒數指示物卡（12 個）", PrintTool.SpringTokens => "聖泉指示物卡（12 個）", _ => "奪魂指示物卡（12 個）"
+        PrintTool.Life => "生命計數卡", _ => "幸運幣（後攻用）"
     };
     private string ToolSummary => string.Concat(DeckPrintTools.Order.Where(t => Count(t) > 0).Select(t => L.F("＋{0} 張{1}", Count(t), L[ToolName(t)])));
     private RenderFragment ToolCard(PrintToolItem item) => __builder =>
@@ -191,62 +189,13 @@
                     @CropMarks
                 </article>
                 break;
-            case PrintTool.Coin:
+            default:
                 @* 幸運幣: the second player's extra opening card (outside the 50-card deck). *@
                 <article class="print-card life-card coin-card" aria-label="@L.CardName("WCG-263", "幸運幣")">
                     <h2>@L.CardName("WCG-263", "幸運幣") · 0 @L["費"]</h2><p>@L["中立 · 法術"]</p>
                     <p>@L.CardText("WCG-263", "將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。")</p>
                     <p>@L["後攻玩家開局多拿這 1 張。"]</p>
                     <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.ShieldTokens:
-                @* 聖盾指示物: one-time Holy Shield counters to cut out and place on monsters (any small object works too). *@
-                <article class="print-card shield-token-card" aria-label="@L["聖盾指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="shield-token"><ShieldIcon Class="shield-token-icon" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.BloodTokens:
-                @* 血誓指示物 (血誓反擊): stacked on 364 血誓祭壇, one per damage event you took. *@
-                <article class="print-card shield-token-card blood-token-card" aria-label="@L["血誓指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="blood-token"><BloodTokenIcon Class="blood-token-icon" Ink="@(!Color)" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.CorrosionTokens:
-                @* 腐蝕指示物 (腐沼蔓生): -300 PP each on the monster it sits on. *@
-                <article class="print-card shield-token-card corrosion-token-card" aria-label="@L["腐蝕指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="corrosion-token"><CorrosionTokenIcon Class="corrosion-token-icon" Ink="@(!Color)" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.SpringTokens:
-                @* 聖泉指示物 (聖泉滿溢). *@
-                <article class="print-card shield-token-card spring-token-card" aria-label="@L["聖泉指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="spring-token"><SpringTokenIcon Class="spring-token-icon" Ink="@(!Color)" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.CountdownTokens:
-                @* 倒數指示物 (星律倒數). *@
-                <article class="print-card shield-token-card countdown-token-card" aria-label="@L["倒數指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="countdown-token"><CountdownTokenIcon Class="countdown-token-icon" Ink="@(!Color)" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            case PrintTool.SoulTokens:
-                @* 奪魂指示物 (奪魂傀儡): marks a monster taken for good with 王座篡奪; it still belongs to its owner. *@
-                <article class="print-card shield-token-card soul-token-card" aria-label="@L["奪魂指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="soul-token"><SoulTokenIcon Class="soul-token-icon" Ink="@(!Color)" /></span> }</div>
-                    @CropMarks
-                </article>
-                break;
-            default:
-                @* DP 指示物 (重蹄碾壓): each is +1 DP on the monster it sits on; removed when the monster leaves play. *@
-                <article class="print-card shield-token-card dp-token-card" aria-label="@L["DP 指示物"]">
-                    <div class="shield-tokens">@for (var i = 0; i < 12; i++) { <span class="dp-token"><DpTokenIcon Class="dp-token-icon" Ink="@(!Color)" /></span> }</div>
                     @CropMarks
                 </article>
                 break;

@@ -201,10 +201,11 @@
   "WCG-031": {
     "zh": "鏡像護衛",
     "name": "Mirror Guard",
-    "text": "Taunt. Holy Shield (enters with 1 counter).",
-    "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+    "text": "Taunt. [Arrow: →] Gives Holy Shield to the monster → points at.",
+    "zh_text": "嘲諷；【箭頭：→】給予 → 指向的怪物聖盾。",
     "prev": {
-      "嘲諷；聖盾。": "Taunt. Holy Shield."
+      "嘲諷；聖盾。": "Taunt. Holy Shield.",
+      "嘲諷；聖盾（進場放 1 個指示物）。": "Taunt. Holy Shield (enters with 1 counter)."
     }
   },
   "WCG-032": {
@@ -376,28 +377,31 @@
   "WCG-061": {
     "zh": "銀色誓言衛",
     "name": "Silver Oath Guard",
-    "text": "[Arrow: →] The monster → points at gets 1 Holy Shield counter (when the arrow starts pointing at it).",
-    "zh_text": "【箭頭：→】→ 指向的怪物獲得 1 個聖盾指示物（開始指向時）。",
+    "text": "[Arrow: →] Gives Holy Shield to the monster → points at.",
+    "zh_text": "【箭頭：→】給予 → 指向的怪物聖盾。",
     "prev": {
-      "【箭頭：→】右側相鄰的己方怪物具有聖盾。": "[Arrow: →] Your adjacent monster on the right has Holy Shield."
+      "【箭頭：→】右側相鄰的己方怪物具有聖盾。": "[Arrow: →] Your adjacent monster on the right has Holy Shield.",
+      "【箭頭：→】→ 指向的怪物獲得 1 個聖盾指示物（開始指向時）。": "[Arrow: →] The monster → points at gets 1 Holy Shield counter (when the arrow starts pointing at it)."
     }
   },
   "WCG-062": {
     "zh": "保護之手",
     "name": "Hand of Protection",
-    "text": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then restore 1 life to yourself.",
-    "zh_text": "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後回復己方 1 點生命。",
+    "text": "Attach this card under 1 of your monsters: it gains Holy Shield. Then restore 1 life to yourself.",
+    "zh_text": "將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。然後回復己方 1 點生命。",
     "prev": {
-      "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself."
+      "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後回復己方 1 點生命。": "Give 1 of your monsters Holy Shield (attach this card to it), then restore 1 life to yourself.",
+      "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後回復己方 1 點生命。": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then restore 1 life to yourself."
     }
   },
   "WCG-063": {
     "zh": "聖印侍從",
     "name": "Sigil Squire",
-    "text": "Holy Shield (enters with 1 counter).",
-    "zh_text": "聖盾（進場放 1 個指示物）。",
+    "text": "[Arrow: →] Gives Holy Shield to the monster → points at.",
+    "zh_text": "【箭頭：→】給予 → 指向的怪物聖盾。",
     "prev": {
-      "聖盾。": "Holy Shield."
+      "聖盾。": "Holy Shield.",
+      "聖盾（進場放 1 個指示物）。": "Holy Shield (enters with 1 counter)."
     }
   },
   "WCG-064": {
@@ -438,10 +442,11 @@
   "WCG-069": {
     "zh": "鐵壁騎士",
     "name": "Bulwark Knight",
-    "text": "Taunt. Holy Shield (enters with 1 counter).",
-    "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+    "text": "Taunt. [Arrow: ←] Gives Holy Shield to the monster ← points at.",
+    "zh_text": "嘲諷；【箭頭：←】給予 ← 指向的怪物聖盾。",
     "prev": {
-      "嘲諷；聖盾。": "Taunt. Holy Shield."
+      "嘲諷；聖盾。": "Taunt. Holy Shield.",
+      "嘲諷；聖盾（進場放 1 個指示物）。": "Taunt. Holy Shield (enters with 1 counter)."
     }
   },
   "WCG-070": {
@@ -463,28 +468,31 @@
   "WCG-073": {
     "zh": "榮耀護衛官",
     "name": "Glory Warden",
-    "text": "Taunt. [Arrows: ← →] The monsters the arrows point at each get 1 Holy Shield counter (when the arrow starts pointing at them).",
-    "zh_text": "嘲諷；【箭頭：← →】箭頭指向的怪物各獲得 1 個聖盾指示物（開始指向時）。",
+    "text": "Taunt. [Arrows: ← →] Gives Holy Shield to the monsters the arrows point at.",
+    "zh_text": "嘲諷；【箭頭：← →】給予箭頭指向的怪物聖盾。",
     "prev": {
-      "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield."
+      "嘲諷；【箭頭：← →】左右相鄰的己方怪物具有聖盾。": "Taunt. [Arrow: ← →] Your adjacent monsters on the left and right have Holy Shield.",
+      "嘲諷；【箭頭：← →】箭頭指向的怪物各獲得 1 個聖盾指示物（開始指向時）。": "Taunt. [Arrows: ← →] The monsters the arrows point at each get 1 Holy Shield counter (when the arrow starts pointing at them)."
     }
   },
   "WCG-074": {
     "zh": "堅壁祈願",
     "name": "Prayer of the Bulwark",
-    "text": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then draw 1 card.",
-    "zh_text": "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後抽 1 張牌。",
+    "text": "Attach this card under 1 of your monsters: it gains Holy Shield. Then draw 1 card.",
+    "zh_text": "將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。然後抽 1 張牌。",
     "prev": {
-      "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card."
+      "使 1 隻己方怪物獲得聖盾（將此卡附著其上），然後抽 1 張牌。": "Give 1 of your monsters Holy Shield (attach this card to it), then draw 1 card.",
+      "使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上），然後抽 1 張牌。": "Give 1 of your monsters 1 Holy Shield counter (attach this card to it), then draw 1 card."
     }
   },
   "WCG-075": {
     "zh": "破邪大天使",
     "name": "Evil-Breaker Archangel",
-    "text": "Holy Shield (enters with 1 counter). Deploy: Restore 1 life to yourself.",
-    "zh_text": "聖盾（進場放 1 個指示物）；進場：回復己方 1 點生命。",
+    "text": "[Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. Deploy: Restore 1 life to yourself.",
+    "zh_text": "【箭頭：← →】給予箭頭指向的怪物聖盾；進場：回復己方 1 點生命。",
     "prev": {
-      "聖盾；進場：回復己方 1 點生命。": "Holy Shield. Deploy: Restore 1 life to yourself."
+      "聖盾；進場：回復己方 1 點生命。": "Holy Shield. Deploy: Restore 1 life to yourself.",
+      "聖盾（進場放 1 個指示物）；進場：回復己方 1 點生命。": "Holy Shield (enters with 1 counter). Deploy: Restore 1 life to yourself."
     }
   },
   "WCG-076": {
@@ -518,21 +526,23 @@
   "WCG-079": {
     "zh": "日耀聖堂巨像",
     "name": "Sunblaze Temple Colossus",
-    "text": "Taunt. Holy Shield (enters with 1 counter).",
-    "zh_text": "嘲諷；聖盾（進場放 1 個指示物）。",
+    "text": "Taunt. [Arrows: ← →] Gives Holy Shield to the monsters the arrows point at.",
+    "zh_text": "嘲諷；【箭頭：← →】給予箭頭指向的怪物聖盾。",
     "prev": {
-      "嘲諷；聖盾。": "Taunt. Holy Shield."
+      "嘲諷；聖盾。": "Taunt. Holy Shield.",
+      "嘲諷；聖盾（進場放 1 個指示物）。": "Taunt. Holy Shield (enters with 1 counter)."
     }
   },
   "WCG-080": {
     "zh": "光輝聖皇·弗丁",
     "name": "Radiant Holy Emperor, Fordin",
-    "text": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 printed PP or less.",
-    "zh_text": "聖盾（進場放 1 個指示物）；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。",
+    "text": "[Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. On Death: Destroy all enemy monsters with 1200 printed PP or less.",
+    "zh_text": "【箭頭：← →】給予箭頭指向的怪物聖盾；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。",
     "prev": {
       "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
       "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less.",
-      "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 PP or less."
+      "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 PP or less.",
+      "聖盾（進場放 1 個指示物）；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 printed PP or less."
     }
   },
   "WCG-081": {
@@ -861,10 +871,11 @@
   "WCG-133": {
     "zh": "厚甲石像鬼",
     "name": "Armored Gargoyle",
-    "text": "Taunt. Whenever your life drops to 3 or less, this monster gets 1 Holy Shield counter.",
-    "zh_text": "嘲諷；每當你的生命降到 3 點以下，此怪物獲得 1 個聖盾指示物。",
+    "text": "Taunt. Whenever your life drops to 3 or less, you may put 1 card from your hand face up under this monster: it gains Holy Shield.",
+    "zh_text": "嘲諷；每當你的生命降到 3 點以下，你可將 1 張手牌正面朝上放在此怪物底下，此怪物獲得聖盾。",
     "prev": {
-      "嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。": "Taunt. While you have 3 or less life, this monster has Holy Shield."
+      "嘲諷；只要你的生命在 3 點以下，此怪物具有聖盾。": "Taunt. While you have 3 or less life, this monster has Holy Shield.",
+      "嘲諷；每當你的生命降到 3 點以下，此怪物獲得 1 個聖盾指示物。": "Taunt. Whenever your life drops to 3 or less, this monster gets 1 Holy Shield counter."
     }
   },
   "WCG-134": {
@@ -942,10 +953,11 @@
   "WCG-147": {
     "zh": "聖堂仲裁護衛",
     "name": "Temple Arbiter Guard",
-    "text": "[Arrows: ← ↑] The monster ← points at gets 1 Holy Shield counter (when the arrow starts pointing at it); the monster ↑ points at loses all Holy Shield counters and can't get new ones.",
-    "zh_text": "【箭頭：← ↑】← 指向的怪物獲得 1 個聖盾指示物（開始指向時）；↑ 指向的怪物移除所有聖盾指示物，且不能獲得新的。",
+    "text": "[Arrows: ← ↑] Gives Holy Shield to the monster ← points at. The monster ↑ points at loses Holy Shield and can't gain Holy Shield (the Holy Shield spells under it go to the graveyard).",
+    "zh_text": "【箭頭：← ↑】給予 ← 指向的怪物聖盾；↑ 指向的怪物失去聖盾，且不能獲得聖盾（其底下的聖盾法術進入墓地）。",
     "prev": {
-      "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield."
+      "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield.",
+      "【箭頭：← ↑】← 指向的怪物獲得 1 個聖盾指示物（開始指向時）；↑ 指向的怪物移除所有聖盾指示物，且不能獲得新的。": "[Arrows: ← ↑] The monster ← points at gets 1 Holy Shield counter (when the arrow starts pointing at it); the monster ↑ points at loses all Holy Shield counters and can't get new ones."
     }
   },
   "WCG-148": {
@@ -1083,10 +1095,11 @@
   "WCG-171": {
     "zh": "聖光審判巨神",
     "name": "Holy Light Judgment Colossus",
-    "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore 2 life to yourself.",
-    "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：回復己方 2 點生命。",
+    "text": "Taunt. [Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. Deploy: Restore 2 life to yourself.",
+    "zh_text": "嘲諷；【箭頭：← →】給予箭頭指向的怪物聖盾；進場：回復己方 2 點生命。",
     "prev": {
-      "嘲諷；聖盾；進場：回復己方 2 點生命。": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself."
+      "嘲諷；聖盾；進場：回復己方 2 點生命。": "Taunt. Holy Shield. Deploy: Restore 2 life to yourself.",
+      "嘲諷；聖盾（進場放 1 個指示物）；進場：回復己方 2 點生命。": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore 2 life to yourself."
     }
   },
   "WCG-172": {
@@ -1131,10 +1144,11 @@
   "WCG-179": {
     "zh": "光輝至高大天使·阿曼蘇爾",
     "name": "Radiant Supreme Archangel, Amansul",
-    "text": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore your life to its maximum (7).",
-    "zh_text": "嘲諷；聖盾（進場放 1 個指示物）；進場：將你的生命回復至上限（7 點）。",
+    "text": "Taunt. [Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. Deploy: Restore your life to its maximum (7).",
+    "zh_text": "嘲諷；【箭頭：← →】給予箭頭指向的怪物聖盾；進場：將你的生命回復至上限（7 點）。",
     "prev": {
-      "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7)."
+      "嘲諷；聖盾；進場：將你的生命回復至上限（7 點）。": "Taunt. Holy Shield. Deploy: Restore your life to its maximum (7).",
+      "嘲諷；聖盾（進場放 1 個指示物）；進場：將你的生命回復至上限（7 點）。": "Taunt. Holy Shield (enters with 1 counter). Deploy: Restore your life to its maximum (7)."
     }
   },
   "WCG-180": {
@@ -1190,10 +1204,11 @@
   "WCG-189": {
     "zh": "聖堂集結號角",
     "name": "Temple Rally Horn",
-    "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
-    "zh_text": "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。",
+    "text": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, attach this card under 1 of your monsters: it gains Holy Shield.",
+    "zh_text": "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。",
     "prev": {
-      "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it)."
+      "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
+      "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it)."
     }
   },
   "WCG-190": {
@@ -1249,10 +1264,11 @@
   "WCG-198": {
     "zh": "神聖救贖誓約",
     "name": "Oath of Holy Redemption",
-    "text": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
-    "zh_text": "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。",
+    "text": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may attach this card under 1 of your monsters: it gains Holy Shield.",
+    "zh_text": "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。",
     "prev": {
-      "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters Holy Shield (attach this card to it)."
+      "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters Holy Shield (attach this card to it).",
+      "【反擊】受到傷害時：抵銷傷害，回復 2 點生命；可使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "[Counter] When you take damage: Cancel the damage and restore 2 life. You may give 1 of your monsters 1 Holy Shield counter (attach this card to it)."
     }
   },
   "WCG-199": {
@@ -1296,10 +1312,11 @@
   "WCG-205": {
     "zh": "碎盾狂戰士",
     "name": "Shieldbreaker Berserker",
-    "text": "Charge. Deploy: Remove all Holy Shield counters from 1 enemy monster.",
-    "zh_text": "衝鋒；進場：移除 1 隻敵方怪物的所有聖盾指示物。",
+    "text": "Charge. Deploy: Put all Holy Shield spells under 1 enemy monster into the graveyard.",
+    "zh_text": "衝鋒；進場：將 1 隻敵方怪物底下的所有聖盾法術送入墓地。",
     "prev": {
-      "衝鋒；進場：1 隻敵方怪物本回合失去聖盾。": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn."
+      "衝鋒；進場：1 隻敵方怪物本回合失去聖盾。": "Charge. Deploy: 1 enemy monster loses Holy Shield this turn.",
+      "衝鋒；進場：移除 1 隻敵方怪物的所有聖盾指示物。": "Charge. Deploy: Remove all Holy Shield counters from 1 enemy monster."
     }
   },
   "WCG-206": {
@@ -1325,10 +1342,11 @@
   "WCG-209": {
     "zh": "破甲工匠",
     "name": "Armorbreaker Smith",
-    "text": "Deploy: Remove 1 Holy Shield counter from 1 enemy monster.",
-    "zh_text": "進場：移除 1 隻敵方怪物的 1 個聖盾指示物。",
+    "text": "Deploy: Put 1 Holy Shield spell under 1 enemy monster into the graveyard.",
+    "zh_text": "進場：將 1 隻敵方怪物底下的 1 張聖盾法術送入墓地。",
     "prev": {
-      "進場：1 隻敵方怪物本回合失去聖盾。": "Deploy: 1 enemy monster loses Holy Shield this turn."
+      "進場：1 隻敵方怪物本回合失去聖盾。": "Deploy: 1 enemy monster loses Holy Shield this turn.",
+      "進場：移除 1 隻敵方怪物的 1 個聖盾指示物。": "Deploy: Remove 1 Holy Shield counter from 1 enemy monster."
     }
   },
   "WCG-210": {
@@ -1487,10 +1505,11 @@
   "WCG-240": {
     "zh": "聖焰騎士",
     "name": "Holy Flame Knight",
-    "text": "Charge. Holy Shield (enters with 1 counter).",
-    "zh_text": "衝鋒；聖盾（進場放 1 個指示物）。",
+    "text": "Charge. [Arrow: →] Gives Holy Shield to the monster → points at.",
+    "zh_text": "衝鋒；【箭頭：→】給予 → 指向的怪物聖盾。",
     "prev": {
-      "衝鋒；聖盾。": "Charge. Holy Shield."
+      "衝鋒；聖盾。": "Charge. Holy Shield.",
+      "衝鋒；聖盾（進場放 1 個指示物）。": "Charge. Holy Shield (enters with 1 counter)."
     }
   },
   "WCG-241": {
@@ -1620,14 +1639,20 @@
   "WCG-264": {
     "zh": "決鬥見證官",
     "name": "Duel Witness",
-    "text": "Deploy: 1 of your monsters gains 1 Holy Shield counter.",
-    "zh_text": "進場：使 1 隻己方怪物獲得 1 個聖盾指示物。"
+    "text": "Deploy: You may put 1 card from your hand face up under 1 of your monsters: it gains Holy Shield.",
+    "zh_text": "進場：你可將 1 張手牌正面朝上放在 1 隻己方怪物底下，該怪物獲得聖盾。",
+    "prev": {
+      "進場：使 1 隻己方怪物獲得 1 個聖盾指示物。": "Deploy: 1 of your monsters gains 1 Holy Shield counter."
+    }
   },
   "WCG-265": {
     "zh": "誓劍侍從",
     "name": "Oathblade Squire",
-    "text": "Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card.",
-    "zh_text": "聖盾（進場放 1 個指示物）；每當此怪物交戰後仍在場，抽 1 張牌。"
+    "text": "Whenever this monster is still in play after a combat, draw 1 card.",
+    "zh_text": "每當此怪物交戰後仍在場，抽 1 張牌。",
+    "prev": {
+      "聖盾（進場放 1 個指示物）；每當此怪物交戰後仍在場，抽 1 張牌。": "Holy Shield (enters with 1 counter). Whenever this monster is still in play after a combat, draw 1 card."
+    }
   },
   "WCG-266": {
     "zh": "挑戰騎士",
@@ -1637,8 +1662,11 @@
   "WCG-267": {
     "zh": "榮譽決鬥",
     "name": "Duel of Honor",
-    "text": "1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it).",
-    "zh_text": "使 1 隻己方直立怪物獲得 1 個聖盾指示物，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。"
+    "text": "Attach this card under 1 of your upright monsters: it gains Holy Shield, then tap it and have it fight 1 enemy monster (Taunt can't stop it).",
+    "zh_text": "將此卡附著於 1 隻己方直立怪物底下：該怪物獲得聖盾，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。",
+    "prev": {
+      "使 1 隻己方直立怪物獲得 1 個聖盾指示物，然後橫置它，令它與 1 隻敵方怪物交戰（嘲諷擋不住）。": "1 of your upright monsters gains 1 Holy Shield counter, then tap it and have it fight 1 enemy monster (Taunt can't stop it)."
+    }
   },
   "WCG-268": {
     "zh": "決鬥競技場",
@@ -1649,14 +1677,20 @@
   "WCG-269": {
     "zh": "冠軍騎士",
     "name": "Champion Knight",
-    "text": "Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it).",
-    "zh_text": "聖盾（進場放 1 個指示物）；進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。"
+    "text": "Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it); this monster isn't destroyed in that fight.",
+    "zh_text": "進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）；此次交戰此怪物不會被消滅。",
+    "prev": {
+      "聖盾（進場放 1 個指示物）；進場：你可以令此怪物立刻與 1 隻敵方怪物交戰（嘲諷擋不住）。": "Holy Shield (enters with 1 counter). Deploy: You may have this monster fight 1 enemy monster right away (Taunt can't stop it)."
+    }
   },
   "WCG-270": {
     "zh": "誓約持旗官",
     "name": "Oath Standard-Bearer",
-    "text": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn).",
-    "zh_text": "每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。"
+    "text": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, you may put 1 card from your hand face up under it: it gains Holy Shield (once per turn).",
+    "zh_text": "每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，你可將 1 張手牌正面朝上放在它底下，該怪物獲得聖盾（每回合限 1 次）。",
+    "prev": {
+      "每當另 1 隻己方怪物在交戰中消滅敵方怪物後仍在場，使它獲得 1 個聖盾指示物（每回合限 1 次）。": "Whenever another of your monsters destroys an enemy monster in combat and is still in play, it gains 1 Holy Shield counter (once per turn)."
+    }
   },
   "WCG-271": {
     "zh": "決鬥之劍",
@@ -1666,8 +1700,11 @@
   "WCG-272": {
     "zh": "終局騎士團長",
     "name": "Grand Marshal of the Last Oath",
-    "text": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight).",
-    "zh_text": "聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。"
+    "text": "Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight); it isn't destroyed in the first of those fights.",
+    "zh_text": "進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）；其中第一次交戰此怪物不會被消滅。",
+    "prev": {
+      "聖盾（進場放 1 個指示物）；進場：此怪物可以立刻依序與至多 2 隻敵方嘲諷怪物交戰（每次都可以選擇不交戰）。": "Holy Shield (enters with 1 counter). Deploy: This monster may fight up to 2 enemy Taunt monsters right away, one after another (you may decline each fight)."
+    }
   },
   "WCG-273": {
     "zh": "林語抄寫員",
@@ -1841,8 +1878,11 @@
   "WCG-304": {
     "zh": "能量哨兵",
     "name": "Energy Sentinel",
-    "text": "Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter.",
-    "zh_text": "嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。"
+    "text": "Taunt. When this monster is attacked, if you have 5 or more cards in your energy zone, you may put 1 card from your energy zone into the graveyard: this monster isn't destroyed in that combat.",
+    "zh_text": "嘲諷；此怪物被攻擊時，若你的能量區有 5 張以上的牌，你可將能量區 1 張牌送入墓地，此次交戰此怪物不會被消滅。",
+    "prev": {
+      "嘲諷；進場：若你的能量區有 5 張以上的牌，此怪物獲得 1 個聖盾指示物。": "Taunt. Deploy: If you have 5 or more cards in your energy zone, this monster gains 1 Holy Shield counter."
+    }
   },
   "WCG-305": {
     "zh": "星庫守門人",
@@ -2027,8 +2067,11 @@
   "WCG-335": {
     "zh": "王座篡奪",
     "name": "Usurp the Throne",
-    "text": "Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner.",
-    "zh_text": "將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。"
+    "text": "Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put this card under it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, this card goes to the graveyard and the monster returns to its owner.",
+    "zh_text": "將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），將此卡放在它底下：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，此卡進入墓地，控制權歸還擁有者。",
+    "prev": {
+      "將 1 隻敵方怪物移到你場上 1 個空格（保持原本的直立或橫置），在它上面放置 1 個奪魂指示物：你永久控制它。你場上沒有空格時不能施放。那隻怪物被沉默或驅散時，移除奪魂指示物，控制權歸還擁有者。": "Move 1 enemy monster to an empty slot on your side (keeping it upright or tapped) and put a soul counter on it: you control it permanently. Can't be cast if you have no empty slot. If that monster is Silenced or Dispelled, remove the soul counter and it returns to its owner."
+    }
   },
   "WCG-336": {
     "zh": "傀儡回歸",
@@ -2039,8 +2082,11 @@
   "WCG-337": {
     "zh": "角鬥幼犀",
     "name": "Gladiator Calf",
-    "text": "Whenever this monster survives combat, put 1 DP counter on it.",
-    "zh_text": "每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。"
+    "text": "Whenever this monster survives combat, put 1 card from the bottom of your deck face down sideways under this monster (without looking): it gets +1 DP.",
+    "zh_text": "每當此怪物交戰後仍在場，從你牌庫底把 1 張牌背面朝上、橫放在此怪物底下（不檢視）：它 DP +1。",
+    "prev": {
+      "每當此怪物交戰後仍在場，在此怪物上放置 1 個 DP 指示物。": "Whenever this monster survives combat, put 1 DP counter on it."
+    }
   },
   "WCG-338": {
     "zh": "重蹄蹄鐵",
@@ -2051,14 +2097,20 @@
   "WCG-339": {
     "zh": "岩甲犀王",
     "name": "Rock-Plated Rhino King",
-    "text": "At the end of your turn, if this monster is upright, put 1 DP counter on it.",
-    "zh_text": "你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。"
+    "text": "At the end of your turn, if this monster is upright, put 1 card from the bottom of your deck sideways under it: it gets +1 DP.",
+    "zh_text": "你的回合結束時，若此怪物直立，從你牌庫底把 1 張牌橫放在此怪物底下：它 DP +1。",
+    "prev": {
+      "你的回合結束時，若此怪物直立，在此怪物上放置 1 個 DP 指示物。": "At the end of your turn, if this monster is upright, put 1 DP counter on it."
+    }
   },
   "WCG-340": {
     "zh": "破欄衝撞",
     "name": "Fence-Breaking Charge",
-    "text": "Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead.",
-    "zh_text": "選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。"
+    "text": "Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 card from the bottom of your deck sideways under 1 of your monsters: it gets +1 DP.",
+    "zh_text": "選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，從你牌庫底把 1 張牌橫放在 1 隻己方怪物底下：它 DP +1。",
+    "prev": {
+      "選 1 隻 DP 3 以上的己方怪物：本回合嘲諷擋不住它。若你沒有 DP 3 以上的怪物，改為在 1 隻己方怪物上放置 1 個 DP 指示物。": "Choose 1 of your monsters with 3 or more DP: Taunt can't block it this turn. If you have none, put 1 DP counter on 1 of your monsters instead."
+    }
   },
   "WCG-341": {
     "zh": "怒蹄戰士",
@@ -2069,8 +2121,11 @@
   "WCG-342": {
     "zh": "荒野角力場",
     "name": "Wildland Arena",
-    "text": "Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it.",
-    "zh_text": "每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。"
+    "text": "Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 card from the bottom of your deck sideways under it: it gets +1 DP.",
+    "zh_text": "每當你的怪物在交戰中消滅敵方怪物後仍在場，從你牌庫底把 1 張牌橫放在它底下：它 DP +1。",
+    "prev": {
+      "每當你的怪物在交戰中消滅敵方怪物後仍在場，在它上面放置 1 個 DP 指示物。": "Whenever one of your monsters destroys an enemy monster in combat and is still on the field, put 1 DP counter on it."
+    }
   },
   "WCG-343": {
     "zh": "鐵皮巨獸",
@@ -2081,8 +2136,11 @@
   "WCG-344": {
     "zh": "萬蹄奔騰",
     "name": "Stampede of Hooves",
-    "text": "Put 1 DP counter on each of your monsters. Draw 1 card.",
-    "zh_text": "在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。"
+    "text": "Put 1 card from the bottom of your deck sideways under each of your monsters: they each get +1 DP. Draw 1 card.",
+    "zh_text": "從你牌庫底把牌各橫放 1 張在你的每隻怪物底下：它們各 DP +1。抽 1 張牌。",
+    "prev": {
+      "在你的每隻怪物上各放置 1 個 DP 指示物。抽 1 張牌。": "Put 1 DP counter on each of your monsters. Draw 1 card."
+    }
   },
   "WCG-345": {
     "zh": "致命頂撞",
@@ -2153,14 +2211,20 @@
   "WCG-356": {
     "zh": "連枝守衛",
     "name": "Linked-Branch Warden",
-    "text": "Taunt. While 2 or more arrows point at it, it gets 1 Holy Shield counter (1 each time this starts applying). [Arrow: ← →] Only links the rootweb; no other effect.",
-    "zh_text": "嘲諷；被至少 2 個箭頭指向時，獲得 1 個聖盾指示物（每次開始成立時放 1 個）。【箭頭：← →】只用來連結根脈，沒有其他效果。"
+    "text": "Taunt. While 2 or more arrows point at it, it has Holy Shield (when it is attacked, choose 1 source pointing at it to go to the graveyard). [Arrow: ← →] Only links the rootweb; no other effect.",
+    "zh_text": "嘲諷；被至少 2 個箭頭指向時獲得聖盾（被攻擊時，選擇 1 個指向此怪物的來源進入墓地）。【箭頭：← →】只用來連結根脈，沒有其他效果。",
+    "prev": {
+      "嘲諷；被至少 2 個箭頭指向時，獲得 1 個聖盾指示物（每次開始成立時放 1 個）。【箭頭：← →】只用來連結根脈，沒有其他效果。": "Taunt. While 2 or more arrows point at it, it gets 1 Holy Shield counter (1 each time this starts applying). [Arrow: ← →] Only links the rootweb; no other effect."
+    }
   },
   "WCG-357": {
     "zh": "根脈樞紐",
     "name": "Rootweb Nexus",
-    "text": "This monster gets +400 PP for each arrow pointing at it. [Arrow: ← →] The monsters the arrows point at get +1 DP (no counter; it ends when the arrow stops pointing at them).",
-    "zh_text": "每有 1 個箭頭指向此怪物，此怪物 PP +400；【箭頭：← →】箭頭指向的怪物 DP +1（不放指示物，箭頭停止指向就消失）。"
+    "text": "This monster gets +400 PP for each arrow pointing at it. [Arrow: ← →] The monsters the arrows point at get +1 DP (it ends when the arrow stops pointing at them).",
+    "zh_text": "每有 1 個箭頭指向此怪物，此怪物 PP +400；【箭頭：← →】箭頭指向的怪物 DP +1（箭頭停止指向就消失）。",
+    "prev": {
+      "每有 1 個箭頭指向此怪物，此怪物 PP +400；【箭頭：← →】箭頭指向的怪物 DP +1（不放指示物，箭頭停止指向就消失）。": "This monster gets +400 PP for each arrow pointing at it. [Arrow: ← →] The monsters the arrows point at get +1 DP (no counter; it ends when the arrow stops pointing at them)."
+    }
   },
   "WCG-358": {
     "zh": "地脈回響",
@@ -2171,8 +2235,11 @@
   "WCG-359": {
     "zh": "斷根反噬",
     "name": "Severed-Root Backlash",
-    "text": "[Arrow: ← →] On Death: put 1 DP counter on each monster its arrows pointed at, and deal 1 damage to the enemy player.",
-    "zh_text": "【箭頭：← →】陣亡：箭頭原本指向的每隻怪物各放置 1 個 DP 指示物，並對敵方玩家造成 1 點傷害。"
+    "text": "[Arrow: ← →] On Death: put 1 card from the bottom of your deck sideways under each monster its arrows pointed at: they each get +1 DP; deal 1 damage to the enemy player.",
+    "zh_text": "【箭頭：← →】陣亡：從你牌庫底把牌各橫放 1 張在原箭頭指向的每隻怪物底下：它們各 DP +1，並對敵方玩家造成 1 點傷害。",
+    "prev": {
+      "【箭頭：← →】陣亡：箭頭原本指向的每隻怪物各放置 1 個 DP 指示物，並對敵方玩家造成 1 點傷害。": "[Arrow: ← →] On Death: put 1 DP counter on each monster its arrows pointed at, and deal 1 damage to the enemy player."
+    }
   },
   "WCG-360": {
     "zh": "林冠滿營",
@@ -2195,20 +2262,29 @@
   "WCG-363": {
     "zh": "世界樹之心",
     "name": "Heart of the World Tree",
-    "text": "On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn).",
-    "zh_text": "進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。"
+    "text": "On deploy: put 1 card from the bottom of your deck sideways under each of your monsters that an arrow points at: they each get +1 DP. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn).",
+    "zh_text": "進場：從你牌庫底把牌各橫放 1 張在你每隻被箭頭指向的怪物底下：它們各 DP +1。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。",
+    "prev": {
+      "進場：你每隻被箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +600；進入箭頭指向格子的怪物直立進場（當回合可以攻擊）。": "On deploy: put 1 DP counter on each of your monsters that an arrow points at. [Arrow: ← →] The monsters the arrows point at get +600 PP; a monster entering a slot the arrows point at enters upright (it can attack that turn)."
+    }
   },
   "WCG-364": {
     "zh": "血誓祭壇",
     "name": "Blood Oath Altar",
-    "text": "Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it.",
-    "zh_text": "你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。"
+    "text": "Each time you take damage, put 1 card from the bottom of your deck face down under this card (without looking). When this card leaves play, all cards under it go back to the bottom of your deck.",
+    "zh_text": "你每次受到傷害，從你牌庫底把 1 張牌背面朝上放在此卡底下（不檢視）。此卡離開戰場時，底下的牌全部放回牌庫底。",
+    "prev": {
+      "你每次受到傷害，在此卡放 1 個血誓指示物。此卡離開戰場時，上面的血誓指示物一起移除。": "Each time you take damage, put 1 Blood Oath counter on this card. When this card leaves play, the Blood Oath counters on it are removed with it."
+    }
   },
   "WCG-365": {
     "zh": "忍辱誓衛",
     "name": "Enduring Oathguard",
-    "text": "Each time you take damage, put 1 DP counter on this monster.",
-    "zh_text": "你每次受到傷害，在此怪物放 1 個 DP 指示物。"
+    "text": "Each time you take damage, put 1 card from the bottom of your deck sideways under this monster: it gets +1 DP.",
+    "zh_text": "你每次受到傷害，從你牌庫底把 1 張牌橫放在此怪物底下：它 DP +1。",
+    "prev": {
+      "你每次受到傷害，在此怪物放 1 個 DP 指示物。": "Each time you take damage, put 1 DP counter on this monster."
+    }
   },
   "WCG-366": {
     "zh": "以血還血",
@@ -2225,8 +2301,11 @@
   "WCG-368": {
     "zh": "審判之盾",
     "name": "Shield of Judgment",
-    "text": "[Counter] When you take damage from a monster's attack: destroy that monster, then put 1 Blood Oath counter on 1 of your Blood Oath Altars.",
-    "zh_text": "【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。"
+    "text": "[Counter] When you take damage from a monster's attack: destroy that monster, then put 1 card from the bottom of your deck under 1 of your Blood Oath Altars.",
+    "zh_text": "【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後從你牌庫底把 1 張牌放在你的 1 張血誓祭壇底下。",
+    "prev": {
+      "【反擊】受到怪物攻擊的傷害時：消滅那隻怪物，然後在你的 1 張血誓祭壇放 1 個血誓指示物。": "[Counter] When you take damage from a monster's attack: destroy that monster, then put 1 Blood Oath counter on 1 of your Blood Oath Altars."
+    }
   },
   "WCG-369": {
     "zh": "殉誓狂徒",
@@ -2237,8 +2316,11 @@
   "WCG-370": {
     "zh": "血帳清算",
     "name": "Settling the Blood Debt",
-    "text": "Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP).",
-    "zh_text": "移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。"
+    "text": "Put any number of cards under your Blood Oath Altars back on the bottom of your deck: for every 2 returned, destroy 1 enemy monster (any PP).",
+    "zh_text": "將你場上血誓祭壇底下任意數量的牌放回牌庫底：每放回 2 張，消滅 1 隻敵方怪物（不限 PP）。",
+    "prev": {
+      "移除你場上任意數量的血誓指示物：每移除 2 個，消滅 1 隻敵方怪物（不限 PP）。": "Remove any number of Blood Oath counters from your side of the field: for every 2 removed, destroy 1 enemy monster (any PP)."
+    }
   },
   "WCG-371": {
     "zh": "誓血軍旗手",
@@ -2249,8 +2331,11 @@
   "WCG-372": {
     "zh": "千倍奉還",
     "name": "Thousandfold Return",
-    "text": "Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed.",
-    "zh_text": "移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。"
+    "text": "Put all cards under your Blood Oath Altars back on the bottom of your deck. Deal 1 damage to the enemy player for each one returned.",
+    "zh_text": "將你場上血誓祭壇底下的牌全部放回牌庫底，每放回 1 張，對敵方玩家造成 1 點傷害。",
+    "prev": {
+      "移除你場上所有血誓指示物，每移除 1 個，對敵方玩家造成 1 點傷害。": "Remove all Blood Oath counters from your side of the field. Deal 1 damage to the enemy player for each one removed."
+    }
   },
   "WCG-373": {
     "zh": "潮間採集者",
@@ -2273,8 +2358,11 @@
   "WCG-376": {
     "zh": "孢潮使者",
     "name": "Sporetide Envoy",
-    "text": "On deploy: put 1 DP counter on each monster the arrows point at. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
-    "zh_text": "進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。"
+    "text": "On deploy: put 1 card from the bottom of your deck sideways under each monster the arrows point at: they each get +1 DP. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "進場：從你牌庫底把牌各橫放 1 張在箭頭指向的怪物底下：它們各 DP +1。【箭頭：← →】箭頭指向的怪物 PP +200。",
+    "prev": {
+      "進場：箭頭指向的怪物各放置 1 個 DP 指示物。【箭頭：← →】箭頭指向的怪物 PP +200。": "On deploy: put 1 DP counter on each monster the arrows point at. [Arrow: ← →] The monsters the arrows point at get +200 PP."
+    }
   },
   "WCG-377": {
     "zh": "鏡湖賢者",
@@ -2309,56 +2397,83 @@
   "WCG-382": {
     "zh": "孢沼爬蟲",
     "name": "Sporebog Crawler",
-    "text": "Poison. On death: put 1 Corrosion counter on 1 enemy monster.",
-    "zh_text": "劇毒；陣亡：在 1 隻敵方怪物上放置 1 個腐蝕指示物。"
+    "text": "Poison. On death: attach this card under 1 enemy monster: it gets -300 PP.",
+    "zh_text": "劇毒；陣亡：將此卡附著於 1 隻敵方怪物底下：它 PP -300。",
+    "prev": {
+      "劇毒；陣亡：在 1 隻敵方怪物上放置 1 個腐蝕指示物。": "Poison. On death: put 1 Corrosion counter on 1 enemy monster."
+    }
   },
   "WCG-383": {
     "zh": "腐霧散布者",
     "name": "Rotmist Spreader",
-    "text": "On deploy: put 1 Corrosion counter on 1 enemy monster. [Arrow: ↑] At the end of your turn, put 1 Corrosion counter on the monster the arrow points at.",
-    "zh_text": "進場：在 1 隻敵方怪物上放置 1 個腐蝕指示物。【箭頭：↑】你的回合結束時，在箭頭指向的怪物上放置 1 個腐蝕指示物。"
+    "text": "[Arrow: ↑] The monster ↑ points at gets -300 PP.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物 PP -300。",
+    "prev": {
+      "進場：在 1 隻敵方怪物上放置 1 個腐蝕指示物。【箭頭：↑】你的回合結束時，在箭頭指向的怪物上放置 1 個腐蝕指示物。": "On deploy: put 1 Corrosion counter on 1 enemy monster. [Arrow: ↑] At the end of your turn, put 1 Corrosion counter on the monster the arrow points at."
+    }
   },
   "WCG-384": {
     "zh": "蔓延孢雲",
     "name": "Spreading Spore Cloud",
-    "text": "Put 1 Corrosion counter on each enemy monster.",
-    "zh_text": "在每隻敵方怪物上各放置 1 個腐蝕指示物。"
+    "text": "Each enemy monster gets -300 PP this turn.",
+    "zh_text": "本回合每隻敵方怪物 PP -300。",
+    "prev": {
+      "在每隻敵方怪物上各放置 1 個腐蝕指示物。": "Put 1 Corrosion counter on each enemy monster."
+    }
   },
   "WCG-385": {
     "zh": "腐根獵手",
     "name": "Rotroot Stalker",
-    "text": "Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn.",
-    "zh_text": "劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。"
+    "text": "Poison. When it attacks a monster whose PP you lowered (your arrow points at it, or your card is under it), this monster gets +500 PP until end of turn.",
+    "zh_text": "劇毒；攻擊 PP 被你減少的怪物時（被你的箭頭指向，或底下有你的卡），此怪物 PP +500 直到回合結束。",
+    "prev": {
+      "劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn."
+    }
   },
   "WCG-386": {
     "zh": "沼母孵巢",
     "name": "Bogmother's Brood",
-    "text": "At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead.",
-    "zh_text": "你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。"
+    "text": "[Arrow: ↑] The monster ↑ points at gets -300 PP. At the start of your turn, if that monster's current PP is 0, destroy it.",
+    "zh_text": "【箭頭：↑】↑ 指向的怪物 PP -300；你的回合開始時，若該怪物當下 PP 0，消滅它。",
+    "prev": {
+      "你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。": "At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead."
+    }
   },
   "WCG-387": {
     "zh": "屍菇傳播者",
     "name": "Corpsecap Spreader",
-    "text": "On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
-    "zh_text": "進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。"
+    "text": "On deploy: put 1 card from the bottom of your deck sideways under each monster the arrows point at: they each get +1 DP. On death: attach this card under 1 enemy monster: it gets -300 PP; then choose another enemy monster: it gets -300 PP this turn. [Arrow: ← →] The monsters the arrows point at get +200 PP.",
+    "zh_text": "進場：從你牌庫底把牌各橫放 1 張在箭頭指向的怪物底下：它們各 DP +1。陣亡：將此卡附著於 1 隻敵方怪物底下：它 PP -300；然後另選 1 隻敵方怪物，本回合它 PP -300。【箭頭：← →】箭頭指向的怪物 PP +200。",
+    "prev": {
+      "進場：在箭頭指向的每隻怪物上各放置 1 個 DP 指示物。陣亡：在敵方怪物上分配放置 2 個腐蝕指示物。【箭頭：← →】箭頭指向的怪物 PP +200。": "On deploy: put 1 DP counter on each monster the arrows point at. On death: put 2 Corrosion counters divided among enemy monsters. [Arrow: ← →] The monsters the arrows point at get +200 PP."
+    }
   },
   "WCG-388": {
     "zh": "腐朽收割",
     "name": "Rotting Harvest",
-    "text": "Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead.",
-    "zh_text": "消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。"
+    "text": "Destroy 1 enemy monster with 2 or more of your attached cards under it, or that 2 or more of your arrows point at. If there is none, attach this card under 1 enemy monster: it gets -600 PP.",
+    "zh_text": "消滅 1 隻底下有至少 2 張你的附著卡、或被至少 2 個你的箭頭指向的敵方怪物；若沒有，將此卡附著於 1 隻敵方怪物底下：它 PP -600。",
+    "prev": {
+      "消滅 1 隻有 2 個以上腐蝕指示物的敵方怪物；若沒有，改為在 1 隻敵方怪物上放置 2 個腐蝕指示物。": "Destroy 1 enemy monster with 2 or more Corrosion counters. If there is none, put 2 Corrosion counters on 1 enemy monster instead."
+    }
   },
   "WCG-389": {
     "zh": "瘴氣巨口",
     "name": "Miasma Maw",
-    "text": "Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3).",
-    "zh_text": "貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。"
+    "text": "Trample. On deploy: deal 1 damage to the enemy player for each of your Corrosion sources on the enemy's side (arrows pointing at enemy monsters, or your cards attached under them), at most 3.",
+    "zh_text": "貫穿；進場：敵方場上每有 1 個你的腐蝕來源（指向敵方的箭頭，或敵方底下你的附著卡），對敵方玩家造成 1 點傷害（最多 3 點）。",
+    "prev": {
+      "貫穿；進場：敵方場上每有 1 個腐蝕指示物，對敵方玩家造成 1 點傷害（最多 3 點）。": "Trample. On deploy: deal 1 damage to the enemy player for each Corrosion counter on the enemy's side of the field (at most 3)."
+    }
   },
   "WCG-390": {
     "zh": "萬腐之母",
     "name": "Mother of All Rot",
-    "text": "Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less.",
-    "zh_text": "劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。"
+    "text": "Poison. On deploy: each enemy monster gets -600 PP this turn, then destroy every enemy monster whose current PP is 0 or less.",
+    "zh_text": "劇毒；進場：每隻敵方怪物本回合 PP -600，然後消滅所有當下 PP 0 以下的敵方怪物。",
+    "prev": {
+      "劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。": "Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less."
+    }
   },
   "WCG-391": {
     "zh": "連斬見習兵",
@@ -2435,8 +2550,11 @@
   "WCG-403": {
     "zh": "聖泉之井",
     "name": "Holy Spring Well",
-    "text": "Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it.",
-    "zh_text": "每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。"
+    "text": "Whenever you heal, put cards from the bottom of your deck face down under this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and put 2 cards under it back on the bottom of your deck: draw 1 card. When this card leaves play, all cards under it go back to the bottom of your deck.",
+    "zh_text": "每當你回復生命，從你牌庫底把等同回復量的牌背面朝上放在此卡底下（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，將此卡底下 2 張牌放回牌庫底：抽 1 張牌。此卡離開戰場時，底下的牌全部放回牌庫底。",
+    "prev": {
+      "每當你回復生命，在此卡放置等同回復量的聖泉指示物（超過生命上限、沒有回到的部分也算）。主動：橫置此卡，移除此卡 2 個聖泉指示物：抽 1 張牌。此卡離開戰場時，上面的聖泉指示物一起移除。": "Whenever you heal, put Holy Spring counters on this card equal to the amount healed (healing beyond your maximum life counts too). Active: tap this card and remove 2 Holy Spring counters from it: draw 1 card. When this card leaves play, its Holy Spring counters go with it."
+    }
   },
   "WCG-404": {
     "zh": "流浪治療師",
@@ -2447,8 +2565,11 @@
   "WCG-405": {
     "zh": "泉誓騎士",
     "name": "Spring-Sworn Knight",
-    "text": "Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn).",
-    "zh_text": "嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。"
+    "text": "Taunt. Whenever you heal, put 1 card from the bottom of your deck sideways under this monster: it gets +1 DP (at most twice per turn).",
+    "zh_text": "嘲諷；每當你回復生命，從你牌庫底把 1 張牌橫放在此怪物底下：它 DP +1（每回合最多 2 次）。",
+    "prev": {
+      "嘲諷；每當你回復生命，在此怪物放置 1 個 DP 指示物（每回合最多 2 次）。": "Taunt. Whenever you heal, put 1 DP counter on this monster (at most twice per turn)."
+    }
   },
   "WCG-406": {
     "zh": "洗禮之潮",
@@ -2465,62 +2586,92 @@
   "WCG-408": {
     "zh": "聖泉傾瀉",
     "name": "Holy Spring Deluge",
-    "text": "You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed.",
-    "zh_text": "回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。"
+    "text": "You heal 2 life. Then put all cards under your Holy Spring Wells back on the bottom of your deck; deal 1 damage to the enemy player for every 2 returned.",
+    "zh_text": "回復你 2 點生命。然後將你場上聖泉之井底下的牌全部放回牌庫底，每放回 2 張，對敵方玩家造成 1 點傷害。",
+    "prev": {
+      "回復你 2 點生命。然後移除你場上所有聖泉指示物，每移除 2 個，對敵方玩家造成 1 點傷害。": "You heal 2 life. Then remove all Holy Spring counters you have; deal 1 damage to the enemy player for every 2 removed."
+    }
   },
   "WCG-409": {
     "zh": "星沙學徒",
     "name": "Starsand Apprentice",
-    "text": "On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards.",
-    "zh_text": "進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。"
+    "text": "On deploy: put 1 card from the bottom of your deck face down under this monster (without looking). When its countdown ends: draw 2 cards.",
+    "zh_text": "進場：從你牌庫底把 1 張牌背面朝上放在此怪物底下（不檢視）。倒數結束時：抽 2 張牌。",
+    "prev": {
+      "進場：在此怪物放置 1 個倒數指示物。移除最後 1 個倒數指示物時：抽 2 張牌。": "On deploy: put 1 Countdown counter on this monster. When its last Countdown counter is removed: draw 2 cards."
+    }
   },
   "WCG-410": {
     "zh": "倒懸時鐘",
     "name": "Inverted Clock",
-    "text": "On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again.",
-    "zh_text": "進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。"
+    "text": "On entering: put 3 cards from the bottom of your deck face down under this card (without looking). When its countdown ends: destroy 1 enemy monster, then put 3 cards from the bottom of your deck face down under this card again.",
+    "zh_text": "進場：從你牌庫底把 3 張牌背面朝上放在此卡底下（不檢視）。倒數結束時：消滅 1 隻敵方怪物，然後再從牌庫底把 3 張牌背面朝上放在此卡底下。",
+    "prev": {
+      "進場：在此卡放置 3 個倒數指示物。移除最後 1 個倒數指示物時：消滅 1 隻敵方怪物，然後在此卡再放置 3 個倒數指示物。": "On entering: put 3 Countdown counters on this card. When its last Countdown counter is removed: destroy 1 enemy monster, then put 3 Countdown counters on this card again."
+    }
   },
   "WCG-411": {
     "zh": "觀星術士",
     "name": "Stargazer Adept",
-    "text": "[Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter.",
-    "zh_text": "【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。"
+    "text": "[Arrows: ← →] At the start of your turn, put 1 countdown card from under each card the arrows point at back on the bottom of your deck (removing the last one ends that card's countdown).",
+    "zh_text": "【箭頭：← →】你的回合開始時，將箭頭指向的卡底下各 1 張倒數牌放回牌庫底（因此移走最後 1 張就發動倒數結束）。",
+    "prev": {
+      "【箭頭：← →】你的回合開始時，箭頭指向的卡（怪物或結界）各額外移除 1 個倒數指示物。": "[Arrows: ← →] At the start of your turn, the cards the arrows point at (monsters or structures) each remove 1 extra Countdown counter."
+    }
   },
   "WCG-412": {
     "zh": "時隙催化",
     "name": "Time-Gap Catalyst",
-    "text": "Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead.",
-    "zh_text": "從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。"
+    "text": "Put 2 countdown cards from under 1 card you control back on the bottom of your deck (removing the last one ends its countdown). If no card you control has countdown cards under it, draw 1 card instead.",
+    "zh_text": "將你場上 1 張卡底下的 2 張倒數牌放回牌庫底（因此移走最後 1 張就發動倒數結束）。若你場上沒有底下有倒數牌的卡，改為抽 1 張牌。",
+    "prev": {
+      "從你場上 1 張卡移除 2 個倒數指示物。若你場上沒有倒數指示物，改為抽 1 張牌。": "Remove 2 Countdown counters from 1 card you control. If you have no Countdown counters, draw 1 card instead."
+    }
   },
   "WCG-413": {
     "zh": "封時守衛",
     "name": "Timeseal Warden",
-    "text": "Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster.",
-    "zh_text": "嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。"
+    "text": "Taunt. On deploy: put 2 cards from the bottom of your deck face down, straight, under this monster (without looking). While it has countdown cards under it, it can't be targeted by spells. When its countdown ends: put 2 cards from the bottom of your deck sideways under this monster: it gets +2 DP; you may put 1 card from your hand face up under this monster: it gains Holy Shield.",
+    "zh_text": "嘲諷；進場：從你牌庫底把 2 張牌背面朝上、對齊直放在此怪物底下（不檢視）。此怪物底下有倒數牌時，不能成為法術的目標。倒數結束時：從你牌庫底把 2 張牌橫放在此怪物底下：它 DP +2；你可將 1 張手牌正面朝上放在此怪物底下，此怪物獲得聖盾。",
+    "prev": {
+      "嘲諷；進場：在此怪物放置 2 個倒數指示物。此怪物有倒數指示物時，不能成為法術的目標。移除最後 1 個倒數指示物時：在此怪物放置 2 個 DP 指示物與 1 個聖盾指示物。": "Taunt. On deploy: put 2 Countdown counters on this monster. While it has Countdown counters, it can't be targeted by spells. When its last Countdown counter is removed: put 2 DP counters and 1 Divine Shield counter on this monster."
+    }
   },
   "WCG-414": {
     "zh": "隕星預言者",
     "name": "Meteor Seer",
-    "text": "On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less.",
-    "zh_text": "進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。"
+    "text": "On deploy: put 2 cards from the bottom of your deck face down under this monster (without looking). When its countdown ends: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less.",
+    "zh_text": "進場：從你牌庫底把 2 張牌背面朝上放在此怪物底下（不檢視）。倒數結束時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。",
+    "prev": {
+      "進場：在此怪物放置 2 個倒數指示物。移除最後 1 個倒數指示物時：對敵方玩家造成 2 點傷害，並消滅所有印刷 PP 900 以下的敵方怪物。": "On deploy: put 2 Countdown counters on this monster. When its last Countdown counter is removed: deal 2 damage to the enemy player and destroy every enemy monster with printed PP 900 or less."
+    }
   },
   "WCG-415": {
     "zh": "星軌重排",
     "name": "Star-Orbit Realignment",
-    "text": "Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says \"When its last Countdown counter is removed\" (it can trigger again). If there is no such card, draw 1 card instead.",
-    "zh_text": "在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。"
+    "text": "Put 2 cards from the bottom of your deck face down, straight, as countdown cards under 1 card you control that has no countdown cards and whose text says \"When its countdown ends\" (it can trigger again). If there is no such card, draw 1 card instead.",
+    "zh_text": "從你牌庫底把 2 張倒數牌背面朝上、對齊直放在你場上 1 張沒有倒數牌、卡面有「倒數結束時」的卡底下（它之後可以再發動一次）。若沒有這樣的卡，改為抽 1 張牌。",
+    "prev": {
+      "在你場上 1 張沒有倒數指示物、卡面有「移除最後 1 個倒數指示物時」的卡上放置 2 個倒數指示物（它之後可以再觸發一次）。若沒有這樣的卡，改為抽 1 張牌。": "Put 2 Countdown counters on 1 card you control that has no Countdown counters and whose text says \"When its last Countdown counter is removed\" (it can trigger again). If there is no such card, draw 1 card instead."
+    }
   },
   "WCG-416": {
     "zh": "永恆鐘塔",
     "name": "Eternal Clocktower",
-    "text": "Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life.",
-    "zh_text": "每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。"
+    "text": "Whenever the countdown of a card you control ends, draw 1 card and heal 1 life.",
+    "zh_text": "每當你場上的卡倒數結束，抽 1 張牌並回復你 1 點生命。",
+    "prev": {
+      "每當你場上的卡移除最後 1 個倒數指示物，抽 1 張牌並回復你 1 點生命。": "Whenever a card you control has its last Countdown counter removed, draw 1 card and heal 1 life."
+    }
   },
   "WCG-417": {
     "zh": "星律終焉",
     "name": "End of the Star Law",
-    "text": "Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead.",
-    "zh_text": "移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。"
+    "text": "Put all countdown cards under cards you control back on the bottom of your deck (their countdowns end one by one, left to right). Deal 1 damage to the enemy player for each card whose countdown ends this way. If none end, draw 3 cards instead.",
+    "zh_text": "將你場上所有倒數牌全部放回牌庫底（由左到右逐張發動倒數結束）。每因此發動 1 張，對敵方玩家造成 1 點傷害。若沒有任何發動，改為抽 3 張牌。",
+    "prev": {
+      "移除你場上所有倒數指示物（由左到右逐張觸發）。每因此觸發 1 張，對敵方玩家造成 1 點傷害。若沒有任何觸發，改為抽 3 張牌。": "Remove all Countdown counters from cards you control (they trigger one by one, left to right). Deal 1 damage to the enemy player for each card that triggers this way. If none trigger, draw 3 cards instead."
+    }
   },
   "WCG-418": {
     "zh": "擲骨巫童",
@@ -2555,8 +2706,11 @@
   "WCG-423": {
     "zh": "宿命拾荒者",
     "name": "Fate Scavenger",
-    "text": "Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn.",
-    "zh_text": "每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。"
+    "text": "Whenever you reveal a card: if it's a spell, put 1 card from the bottom of your deck sideways under this monster: it gets +1 DP; if it's a monster, this monster gets +300 PP this turn.",
+    "zh_text": "每當你翻開牌：若是法術，從你牌庫底把 1 張牌橫放在此怪物底下：它 DP +1；若是怪物，此怪物本回合 PP +300。",
+    "prev": {
+      "每當你翻開牌：若是法術，在此怪物放置 1 個 DP 指示物；若是怪物，此怪物本回合 PP +300。": "Whenever you reveal a card: if it's a spell, put 1 DP counter on this monster; if it's a monster, this monster gets +300 PP this turn."
+    }
   },
   "WCG-424": {
     "zh": "黑籤召喚師",

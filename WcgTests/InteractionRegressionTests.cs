@@ -97,7 +97,7 @@ public class InteractionRegressionTests
             if(definition.IsMonster) Assert.Contains(e.Player.Field,m=>m.InstanceId==card.InstanceId);
             if(definition.IsMonster) { Energy(e.Player);var wipe=Hand(e.Player,"WCG-098");before=Count();Assert.True(e.CastSpell(e.Player,wipe),definition.Id+": "+e.LastError);Choices();Assert.Equal(before,Count()); }
         }
-        int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Occupied+p.Field.Sum(m=>m.Attachments.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
+        int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Occupied+p.Board.Sum(m=>m.Attachments.Count+m.Under.Count+m.ShieldCards.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
     }
     [Fact] public void SacrificeTriggersLastWordsAndCountsAsDestroyed()
     {

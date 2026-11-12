@@ -39,7 +39,7 @@ public partial class GameEngine
     }
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
-    private double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (V10 && ShieldCounterRules ? 2 * Math.Min(m.ShieldCounters, 2) : m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
+    private double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (V10 && ShieldSourceRules ? 2 * Math.Min(ShieldSourceCount(m), 2) : m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0) + BeaconBodyValue(m);
     private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0)
         : 3 + c.TotalCost * .6;
@@ -216,6 +216,7 @@ public partial class GameEngine
     private bool TieredChoice(PlayerState p, PlayerState e, PendingChoice choice, AiProfile prof)
     {
                 if(choice.Title==OathGuardTitle)return ChooseOathGuard(choice);
+        if (ShieldCardChoice(p, choice) is { } shieldCard) return SelectChoice(shieldCard);
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
         if (choice.Title == "受到傷害，可從手牌發動反擊")
@@ -366,7 +367,7 @@ public partial class GameEngine
     private AiMove? PlanAttacks(PlayerState p, PlayerState e, AiProfile prof)
     {
         int budget = prof.PlanBudget;
-        var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldCounterRules; var attackerSpends = attackedSpends && ShieldAnyCombatRules;
+        var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldSourceRules;
         PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (!fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m),
             !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
@@ -402,10 +403,11 @@ public partial class GameEngine
                     else
                     {
                         bool ah = a.PP <= d.PP || d.Poison, dh = d.PP <= a.PP || a.Poison;
-                        bool asaved = (ah || attackerSpends) && a.Shield && (fresh || me > 0), dsaved = (dh || attackedSpends) && d.Shield && (fresh || them > 0);
+                        // 聖盾來源: only the attacked monster spends one, so the attacker is never saved.
+                        bool asaved = !attackedSpends && ah && a.Shield && (fresh || me > 0), dsaved = (dh || attackedSpends) && d.Shield && (fresh || them > 0);
                         if (asaved && !fresh) me--; if (dsaved && !fresh) them--;
                         // Simplified rules: a Holy Shield saves once per turn and needs no energy.
-                        var after = asaved && fresh ? a with { Shield = false, Ready = false, Value = attackerSpends ? a.Value - 2 : a.Value } : a with { Ready = false };
+                        var after = asaved && fresh ? a with { Shield = false, Ready = false, Value = a.Value } : a with { Ready = false };
                         if (ah && !asaved) aa.RemoveAt(ai); else aa[ai] = after;
                         var di = dd.FindIndex(u => u.Id == d.Id);
                         if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && (fresh || a.PP - d.PP >= 700)) nhp--; }

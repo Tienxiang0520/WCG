@@ -32,10 +32,9 @@ public partial class GameEngine
         Tracked(m.NextCombatSources, m.NextCombatBonus, "下次戰鬥加成");
         Tracked(m.TurnBonusSources, m.TurnBonus, "本回合加成");
         Add(null, "戰鬥加成", m.CombatPowerBonus);
-        Add(null, "腐蝕指示物", -300 * m.CorrosionCounters);
         if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, GetOpponent(owner).Field.Count * 200);
         if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * 300);
-        foreach (var source in Player.Field.Concat(Computer.Field).Where(source => source != m && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))
+        foreach (var source in Player.Board.Concat(Computer.Board).Where(source => source != m && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))
         {
             var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, m)) continue;
             var aura = ArrowAura(source.Card.Id); Add(source.Card, source.Card.Name, Across(source, m) ? aura.Enemy : aura.Ally);
@@ -66,7 +65,7 @@ public partial class GameEngine
         if (m.IsSet) return list;
         var baseDp = m.BaseDP - (m.Card.DP ?? 1);
         if (baseDp != 0) list.Add(new(null, "其他", baseDp));
-        if (m.DpCounters != 0) list.Add(new(null, "DP 指示物", m.DpCounters));
+        if (m.DpCards != 0) list.Add(new(null, "DP 牌", m.DpCards));
         foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-338")) list.Add(new(a.Card.Card, a.Card.Card.Name, 1));
         foreach (var s in Player.Field.Concat(Computer.Field).Where(s => s != m && Active(s, "WCG-357") && PointsAt(Owner(s), s, Owner(m), m))) list.Add(new(s.Card, s.Card.Name, 1));
         if (BloodDp(Owner(m), m) is var blood && blood != 0) list.Add(new(m.Card, m.Card.Name, blood));

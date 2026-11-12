@@ -41,7 +41,7 @@ public partial class GameEngine
             case "WCG-373": Resolve(() => Heal(p, 1), () => DrawMany(p, 1)); break;
             case "WCG-374": OptionalTarget(p, TideReturnTitle, p.Field.Where(x => x != m && x.IsUnit), x => { Bounce(x); p.TideDiscountTurn = TurnNumber; }); break;
             case "WCG-376":
-                foreach (var x in Player.Field.Concat(Computer.Field).Where(x => x != m && x.IsUnit && PointsAt(p, m, Owner(x), x)).ToArray()) AddDpCounter(x, m.Card);
+                foreach (var x in Player.Field.Concat(Computer.Field).Where(x => x != m && x.IsUnit && PointsAt(p, m, Owner(x), x)).ToArray()) AddDpCards(p, x, m.Card);
                 break;
             case "WCG-377": Search(p, 3, _ => true); break;
             case "WCG-379": Resolve(() => Heal(p, 2), () => DrawMany(p, 1)); break;

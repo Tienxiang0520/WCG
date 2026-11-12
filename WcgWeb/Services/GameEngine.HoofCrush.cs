@@ -2,21 +2,14 @@ using WcgWeb.Models;
 namespace WcgWeb.Services;
 
 // 新流派「重蹄碾壓」（生機＋狂怒，WCG-337–345，2026-10-24）：讓怪物的 DP 越長越大，一下打 3～4 點，兩下就贏。
-// DP 指示物 (+1 DP each) are physical counters on the card: they stack, are removed when the monster is silenced (2026-10-24 rule; older catalogs keep them) or
-// removed when it leaves play (a monster coming back is a new instance with none). Only catalogs from that day contain
-// these ids, so older eras never reach this code.
+// DP cards (+1 DP each) are face-down cards from your deck bottom lying sideways under the monster (2026-11-12): they stack and
+// go back to the deck bottom when the monster is silenced or leaves play (a monster coming back is a new instance with none).
+// Only catalogs from that day contain these ids, so older eras never reach this code.
 public partial class GameEngine
 {
-    internal const string HoofCounterTitle = "選擇放置 1 個 DP 指示物的己方怪物";
+    internal const string HoofCounterTitle = "選擇底下墊 1 張 DP 牌的己方怪物";
     internal const string HoofRamTitle = "選擇本回合嘲諷擋不住的 DP 3 以上己方怪物";
 
-    private void AddDpCounter(MonsterInstance m, CardDefinition source, int n = 1)
-    {
-        if (!Alive(m) || n <= 0) return;
-        m.DpCounters += n;
-        Present("status", Owner(m), m.InstanceId, card: source, label: n == 1 ? "放置 1 個 DP 指示物" : $"放置 {n} 個 DP 指示物");
-        Log($"【{m.Card.Name}】獲得 {n} 個 DP 指示物（DP {m.CurrentDP}）。", "action");
-    }
     private void MakeUnblockable(PlayerState p, MonsterInstance m)
     {
         if (!Alive(m)) return;
@@ -24,10 +17,10 @@ public partial class GameEngine
         Present("status", p, m.InstanceId, card: m.Card, label: "本回合嘲諷擋不住");
     }
 
-    // 337 角鬥幼犀: each combat it survives puts 1 DP 指示物 on it.
+    // 337 角鬥幼犀: each combat it survives puts 1 DP card under it.
     private void HoofSurvived(PlayerState p, MonsterInstance m)
     {
-        if (Active(m, "WCG-337")) AddDpCounter(m, m.Card);
+        if (Active(m, "WCG-337")) AddDpCards(p, m, m.Card);
     }
     // 342 荒野角力場: your monster destroyed an enemy monster in combat and is still on the field.
     private void HoofCombatWon(PlayerState p, MonsterInstance m, MonsterInstance other)
@@ -36,14 +29,14 @@ public partial class GameEngine
         foreach (var s in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-342").ToArray())
         {
             Present("trigger", p, s.InstanceId, card: s.Card, label: s.Card.Name);
-            AddDpCounter(m, s.Card);
+            AddDpCards(p, m, s.Card);
         }
     }
-    // 339 岩甲犀王: at the end of your turn, if it is upright, put 1 DP 指示物 on it.
+    // 339 岩甲犀王: at the end of your turn, if it is upright, put 1 DP card under it.
     private void HoofEndTurn(PlayerState p, List<Action> effects)
     {
         foreach (var m in p.Field.Where(x => Active(x, "WCG-339")).ToArray())
-            effects.Add(() => { if (Alive(m) && Active(m, "WCG-339") && Upright(m)) { Present("trigger", p, m.InstanceId, card: m.Card, label: m.Card.Name); AddDpCounter(m, m.Card); } });
+            effects.Add(() => { if (Alive(m) && Active(m, "WCG-339") && Upright(m)) { Present("trigger", p, m.InstanceId, card: m.Card, label: m.Card.Name); AddDpCards(p, m, m.Card); } });
     }
     // 341 怒蹄戰士: attacking the enemy player, + the number of your other monsters with DP 2 or more.
     private int HoofAttackDp(MonsterInstance a)
@@ -66,10 +59,10 @@ public partial class GameEngine
             case "WCG-340":
                 var big = SpellResolvePickable(p, p.Field.Where(x => x.IsUnit && x.CurrentDP >= 3));
                 if (big.Count > 0) PickMonster(p, HoofRamTitle, big, x => MakeUnblockable(p, x));
-                else PickMonster(p, HoofCounterTitle, SpellResolvePickable(p, p.Field.Where(x => x.IsUnit)), x => AddDpCounter(x, source.Card));
+                else PickMonster(p, HoofCounterTitle, SpellResolvePickable(p, p.Field.Where(x => x.IsUnit)), x => AddDpCards(p, x, source.Card));
                 break;
             case "WCG-344":
-                Resolve(() => { foreach (var m in p.Field.Where(x => x.IsUnit).ToArray()) AddDpCounter(m, source.Card); }, () => DrawMany(p, 1));
+                Resolve(() => { foreach (var m in p.Field.Where(x => x.IsUnit).ToArray()) AddDpCards(p, m, source.Card); }, () => DrawMany(p, 1));
                 break;
             case "WCG-345":
                 if (t == null || !Alive(t) || !p.Field.Contains(t)) break;

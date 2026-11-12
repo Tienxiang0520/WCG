@@ -6,7 +6,7 @@ using WcgWeb.Models;
 using WcgWeb.Services;
 namespace WcgTests;
 
-// 新流派「血誓反擊」（WCG-364–372，2026-10-24）：每受一次傷害就疊血誓指示物。
+// 新流派「血誓反擊」（WCG-364–372，2026-10-24）：每受一次傷害就從牌庫底在血誓祭壇底下墊 1 張血誓（2026-11-12 起不用指示物）。
 public class BloodOathTests
 {
     private readonly CardDatabase cards;
@@ -40,13 +40,13 @@ public class BloodOathTests
     {
         var g=Game();var altar=Structure(g.Player,364,4);var guard=Unit(g.Player,365,0);Refresh(g);
         Hurt(g,g.Player,1);Settle(g);Hurt(g,g.Player,2);Settle(g);
-        Assert.Equal(2,altar.BloodCounters);Assert.Equal(2,guard.DpCounters);
+        Assert.Equal(2,altar.BloodCards);Assert.Equal(2,guard.DpCards);
     }
     [Fact] public void ZealotHitsItselfAndThatCountsAsDamage()
     {
         var g=Game();var altar=Structure(g.Player,364,4);Refresh(g);var hp=g.Player.Hp;var hand=g.Player.Hand.Count;
         Assert.True(g.SummonMonster(g.Player,Hand(g,369)));Settle(g);
-        Assert.Equal(hp-1,g.Player.Hp);Assert.Equal(1,altar.BloodCounters);Assert.Equal(hand+1,g.Player.Hand.Count);
+        Assert.Equal(hp-1,g.Player.Hp);Assert.Equal(1,altar.BloodCards);Assert.Equal(hand+1,g.Player.Hand.Count);
     }
     [Fact] public void WrathGrowsAtThreeLifeOrLess()
     {
@@ -60,16 +60,16 @@ public class BloodOathTests
     }
     [Fact] public void ThousandfoldReturnTurnsEveryCounterIntoDamage()
     {
-        var g=Game();var a=Structure(g.Player,364,3);var b=Structure(g.Player,364,4);a.BloodCounters=2;b.BloodCounters=1;g.Computer.Hp=7;Refresh(g);
+        var g=Game();var a=Structure(g.Player,364,3);var b=Structure(g.Player,364,4);a.Pad(g.Player,UnderKind.BloodOath,2);b.Pad(g.Player,UnderKind.BloodOath,1);g.Computer.Hp=7;Refresh(g);
         Assert.True(g.CastSpell(g.Player,Hand(g,372)));Settle(g);
-        Assert.Equal(4,g.Computer.Hp);Assert.Equal(0,a.BloodCounters+b.BloodCounters);
+        Assert.Equal(4,g.Computer.Hp);Assert.Equal(0,a.BloodCards+b.BloodCards);
     }
     [Fact] public void SettlingKillsOneEnemyPerTwoCounters()
     {
-        var g=Game();var a=Structure(g.Player,364,4);a.BloodCounters=5;var x=Unit(g.Computer,113,0);var y=Unit(g.Computer,113,1);var z=Unit(g.Computer,113,2);Refresh(g);
+        var g=Game();var a=Structure(g.Player,364,4);a.Pad(g.Player,UnderKind.BloodOath,5);var x=Unit(g.Computer,113,0);var y=Unit(g.Computer,113,1);var z=Unit(g.Computer,113,2);Refresh(g);
         Assert.True(g.CastSpell(g.Player,Hand(g,370)));Settle(g);
-        Assert.Equal(1,g.Computer.Field.Count);Assert.Equal(1,a.BloodCounters);
-        var g2=Game();var a2=Structure(g2.Player,364,4);a2.BloodCounters=1;Unit(g2.Computer,113,0);Refresh(g2);Assert.False(g2.CastSpell(g2.Player,Hand(g2,370)));
+        Assert.Equal(1,g.Computer.Field.Count);Assert.Equal(1,a.BloodCards);
+        var g2=Game();var a2=Structure(g2.Player,364,4);a2.Pad(g2.Player,UnderKind.BloodOath,1);Unit(g2.Computer,113,0);Refresh(g2);Assert.False(g2.CastSpell(g2.Player,Hand(g2,370)));
     }
     [Fact] public void BloodForBloodAndShieldOfJudgmentAnswerDamage()
     {
@@ -81,12 +81,13 @@ public class BloodOathTests
         typeof(GameEngine).GetMethod("Damage",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g2,[g2.Player,1,src]);Drain(g2);
         Assert.Contains(g2.CurrentPendingChoice!.Options,o=>o.Title=="審判之盾");
         Assert.True(g2.SelectChoice(g2.CurrentPendingChoice!.Options.First(o=>o.Title=="審判之盾")));Settle(g2);
-        Assert.DoesNotContain(foe,g2.Computer.Field);Assert.Equal(2,altar.BloodCounters);
+        Assert.DoesNotContain(foe,g2.Computer.Field);Assert.Equal(2,altar.BloodCards);
     }
-    [Fact] public void PrintToolsAddABloodSheetForAltarDecks()
+    [Fact] public void BloodCardsComeFromTheDeckBottomAndReturnThere()
     {
-        var plan=new DeckPrintPlan("t","秩序",[new PrintedCard("WCG-364","血誓祭壇","結界","秩序",2,null,null,"")]);
-        Assert.Equal(0,DeckPrintTools.Defaults(plan with {Cards=[]})[PrintTool.BloodTokens]);Assert.Equal(1,DeckPrintTools.Defaults(plan)[PrintTool.BloodTokens]);
-        Assert.Contains(PrintTool.BloodTokens,DeckPrintTools.Order);
+        var g=Game();var altar=Structure(g.Player,364,4);Refresh(g);var deck=g.Player.Deck.Count;var bottom=g.Player.Deck[^1];
+        Hurt(g,g.Player,1);Settle(g);Assert.Same(bottom,altar.Under.Single().Card);Assert.Equal(UnderKind.BloodOath,altar.Under.Single().Kind);Assert.Equal(deck-1,g.Player.Deck.Count);
+        typeof(GameEngine).GetMethod("DestroyStructure",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,[altar]);Drain(g);
+        Assert.Equal(deck,g.Player.Deck.Count);Assert.Same(bottom,g.Player.Deck[^1]);
     }
 }

@@ -134,20 +134,28 @@ public partial class GameEngine
     private void ApplyPlayerDamage(PlayerState p, int amount, DamageSource? source)
     {
         if (IsOver || amount <= 0) return;
-        var lost = Math.Min(p.Hp, amount);
+        var lost = Math.Min(p.Hp, amount); var before = p.Hp;
         p.Hp = Math.Max(0, p.Hp - amount); Present("damage", p, amount: amount, label: "生命傷害"); Log($"【{p.Name}】受到 {amount} 點傷害，目前 {p.Hp}。", "danger");
         BloodHurt(p);
-        if (!DamageCounters) { CheckLethal(p); return; }
+        if (!DamageCounters) { CheckLethal(p); Resolve(() => GargoyleGuard(p, before)); return; }
         var context = new DamageContext(p, lost, source);
         _reactionDepth++;
-        Resolve(() => DamageReaction(context), () => FinishDamageReaction(context));
+        Resolve(() => DamageReaction(context), () => FinishDamageReaction(context), () => GargoyleGuard(p, before));
     }
     // Paying life is a cost, not damage, and never creates a reaction window.
     private void PayLife(PlayerState p, int amount)
     {
+        var before = p.Hp;
         p.Hp = Math.Max(0, p.Hp - amount);
         Present("damage", p, amount: amount, label: "支付生命代價");
         CheckLethal(p);
+        Resolve(() => GargoyleGuard(p, before));
+    }
+    // 133 厚甲石像鬼 (2026-11-12): whenever your life drops to 3 or less, you may put a hand card face up under it as a 聖盾 source.
+    private void GargoyleGuard(PlayerState p, int before)
+    {
+        if (!DeckCardRules || IsOver || before <= 3 || p.Hp > 3) return;
+        Resolve(p.Field.Where(x => Active(x, "WCG-133")).Select(g => (Action)(() => { if (Alive(g) && Active(g, "WCG-133") && p.Hand.Count > 0 && !IsOver) OfferShieldCard(p, g, g.Card); })).ToArray());
     }
     private void Lose(PlayerState p, string reason)
     { foreach(var m in Player.Field.Concat(Computer.Field)){m.AttackDamageBonus=0;m.CombatPowerBonus=0;} p.HasLost = true; p.LossReason = reason; CurrentPhase = TurnPhase.GameOver; Present("gameover", p, label: reason); Log($"【{p.Name}】敗北：{reason}", "victory"); }
@@ -445,7 +453,7 @@ public partial class GameEngine
         }
     }
     private void Bounce(MonsterInstance m)
-    { if (!Alive(m)) return; var owner = Owner(m); ReleaseAttachments(m); owner.Field.Remove(m); var home = HomeOf(m, owner); home.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); RefreshBoard(); TideBounced(home, m); Present("bounce", home, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
+    { if (!Alive(m)) return; var owner = Owner(m); LeavePlay(m); owner.Field.Remove(m); var home = HomeOf(m, owner); home.Hand.Add(new(m.Card) { InstanceId = m.InstanceId }); RefreshBoard(); TideBounced(home, m); Present("bounce", home, m.InstanceId, card: m.Card, label: "返回手牌"); Log($"【{m.Card.Name}】回到手牌。"); }
     private void PickLowest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
     { var list = candidates.Where(Alive).ToList(); if (list.Count > 0) PickMonster(p, "選擇最低 PP 的怪物", list.Where(m => ThresholdPP(m) == list.Min(ThresholdPP)), action); }
     private void PickHighest(PlayerState p, IEnumerable<MonsterInstance> candidates, Action<MonsterInstance> action)
