@@ -43,16 +43,16 @@ public class CardFaceTests
     [Fact]
     public async Task FullFaceCarriesEveryPhysicalCardElement()
     {
-        var html = await Render(Localizer.Chinese, new() { ["Card"] = Cards.GetCard("WCG-061") });
+        var html = await Render(Localizer.Chinese, new() { ["Card"] = Cards.GetCard("WCG-063") });
         Assert.Contains("data-will=\"order\"", html);
-        Assert.Matches(new Regex("face-name.*銀色誓言衛", RegexOptions.Singleline), html);
-        Assert.Matches(new Regex("face-cost\"[^>]*><b>2</b><small>費</small>"), html);
+        Assert.Matches(new Regex("face-name.*聖印侍從", RegexOptions.Singleline), html);
+        Assert.Matches(new Regex("face-cost\"[^>]*><b>1</b><small>費</small>"), html);
         Assert.Matches(new Regex("face-band\"><span>秩序</span><i>・</i><span>怪物</span>"), html);
         Assert.Single(Regex.Matches(html, "face-arrow right"));
-        Assert.Contains("<p>給予 → 指向的怪物聖盾。</p>", html); // arrow prefix becomes a gold triangle instead of text
-        Assert.Matches(new Regex("<small>力量</small><b>1000</b><small>PP</small>"), html);
-        Assert.Matches(new Regex("<small>傷害</small><b>1</b><small>DP</small>"), html);
-        Assert.Matches(new Regex("face-foot\"><span>魂誓</span><span>WCG-061</span>"), html);
+        Assert.Contains("友軍獲得格擋。</p>", html); // arrow prefix becomes a gold triangle instead of text
+        Assert.Matches(new Regex("<span class=\"pp\"><b>8</b><small>PP</small></span>"), html);
+        Assert.Matches(new Regex("<span class=\"dp\"><b>0</b><small>DP</small></span>"), html);
+        Assert.Matches(new Regex("face-foot\"><span>魂誓</span><span>WCG-063</span>"), html);
         Assert.Contains("face-compass", html);
     }
 
@@ -78,7 +78,7 @@ public class CardFaceTests
     }
 
     [Theory]
-    [InlineData("WCG-061", "order")] [InlineData("WCG-005", "wrath")] [InlineData("WCG-021", "reason")]
+    [InlineData("WCG-063", "order")] [InlineData("WCG-005", "wrath")] [InlineData("WCG-021", "reason")]
     [InlineData("WCG-049", "vitality")] [InlineData("WCG-085", "abyss")] [InlineData("WCG-101", "neutral")]
     public async Task EachWillGetsItsOwnFrameOrnaments(string id, string will)
     {

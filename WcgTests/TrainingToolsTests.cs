@@ -7,9 +7,10 @@ using WcgWeb.Services;
 namespace WcgTests;
 public class TrainingToolsTests
 {
+    readonly IWebHostEnvironment env;
     readonly CardDatabase cards;
     readonly DeckService decks;
-    public TrainingToolsTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);decks=new(cards,env.Object);}
+    public TrainingToolsTests(){var m=new Mock<IWebHostEnvironment>();m.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));env=m.Object;cards=new(env);decks=new(cards,env);}
     (GameEngine, BattleBridge) Game(){var g=GameEngine.CreateTraining(cards);g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);return(g,new(g,decks));}
     static BattleResponse Edit(BattleBridge b,string type,TrainingEdit? edit=null,Guid? id=null){var s=b.Snapshot();return b.Submit(new(Guid.NewGuid(),s.MatchId,s.Revision,type,InstanceId:id,Training:edit??new()));}
     (GameEngine, BattleBridge) Preset(string name){var g=GameEngine.CreateTraining(cards);var b=new BattleBridge(g,decks);Assert.True(Edit(b,"training-preset",new(Preset:name)).Success,name);return(g,b);}
@@ -19,9 +20,11 @@ public class TrainingToolsTests
         foreach(var name in GameEngine.TrainingPresets){var(g,_)=Preset(name);Assert.Equal(TurnPhase.MainPhase,g.CurrentPhase);Assert.All(g.Player.Board.Concat(g.Computer.Board),m=>Assert.Same(cards.GetCard(m.Card.Id),m.Card));Assert.NotEmpty(g.ExportTrainingScene());}
         var normal=new GameEngine(cards);Assert.False(Edit(new BattleBridge(normal,decks),"training-preset",new(Preset:"taunt")).Success);
     }
-    [Fact]public void CardsUnderAreSetOnEitherSideFromTheDeckBottomAndCountdownTicksAtTurnStart()
+    [Fact]public void LegacyCardsUnderAreSetOnEitherSideFromTheDeckBottomAndCountdownTicksAtTurnStart()
     {
-        var(g,b)=Game();Assert.True(Edit(b,"training-place",new(Side:"computer",CardId:"WCG-413",Slot:0)).Success);
+        var old=CardBalanceHistory.BeforeV2(cards);var oldDecks=new DeckService(old,env);
+        var g=GameEngine.CreateTraining(old);g.StartGame(old.PresetDecks[0],old.PresetDecks[1]);var b=new BattleBridge(g,oldDecks);
+        Assert.True(Edit(b,"training-place",new(Side:"computer",CardId:"WCG-413",Slot:0)).Success);
         var guard=g.Computer.Field.Single();var deck=g.Computer.Deck.Count;var bottom=g.Computer.Deck[^1];
         Assert.True(Edit(b,"training-counters",new(Side:"computer",Countdown:2,Dp:1),guard.InstanceId).Success);
         Assert.Equal(2,guard.CountdownCards);Assert.Equal(1,guard.DpCards);Assert.Equal(deck-3,g.Computer.Deck.Count);Assert.Contains(guard.Under,u=>u.Card==bottom);
@@ -31,12 +34,13 @@ public class TrainingToolsTests
         Assert.True(Edit(b,"training-counters",new(Side:"computer",Dp:0),guard.InstanceId).Success);Assert.Equal(0,guard.DpCards);Assert.Equal(deck-2,g.Computer.Deck.Count);
         Assert.True(Edit(b,"training-endturn").Success);Assert.Equal("computer",g.CurrentTurnPlayerId);Assert.Equal(1,guard.CountdownCards);
     }
-    [Fact]public void CountdownPresetFiresAtTheStartOfYourTurn()
+    [Fact]public void BlockAndBypassPresetsTestV2Mechanics()
     {
-        var(g,b)=Preset("countdown");var hand=g.Player.Hand.Count;var guard=g.Player.Field.Single(m=>m.Card.Id=="WCG-413");
-        Assert.True(Edit(b,"training-endturn").Success);
-        Assert.Equal("player",g.CurrentTurnPlayerId);Assert.Equal(hand+3,g.Player.Hand.Count);// turn draw + 星沙學徒 draws 2Assert.Equal(1,guard.CountdownCards);
-        Assert.True(g.IsWaiting);// 倒懸時鐘 asks which enemy monster to destroy
+        var(g,_)=Preset("block");var attacker=g.Player.Field.Single(m=>m.Card.Id=="WCG-154");var defender=g.Computer.Field.Single(m=>m.Card.Id=="WCG-101");
+        Assert.False(defender.IsTapped);Assert.True(defender.HasShield);
+        Assert.True(g.Attack(g.Player,attacker,defender));
+        Assert.True(defender.IsTapped);Assert.Contains(defender,g.Computer.Field);
+        var(bp,_)=Preset("bypass");var ghost=bp.Player.Field.Single(m=>m.Card.Id=="WCG-261");Assert.True(bp.Attack(bp.Player,ghost,null));Assert.Equal(6,bp.Computer.Hp);
     }
     [Fact]public void UntapPresetUntapsAtTurnStartAndTauntPresetBlocksFace()
     {

@@ -10,7 +10,7 @@ namespace WcgTests;
 public class BloodOathTests
 {
     private readonly CardDatabase cards;
-    public BloodOathTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
+    public BloodOathTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=CardBalanceHistory.BeforeV2(new(env.Object));}
     private GameEngine Game(int energy=12){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],true);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.Structures.Clear();p.EnergyZone.Clear();p.Graveyard.Clear();for(int i=0;i<energy;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}return g;}
     private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private void Grave(PlayerState p,int n,int id=101){for(int i=0;i<n;i++)p.Graveyard.Add(new(cards.GetCard($"WCG-{id:000}")!));}
@@ -68,7 +68,7 @@ public class BloodOathTests
     {
         var g=Game();var a=Structure(g.Player,364,4);a.Pad(g.Player,UnderKind.BloodOath,5);var x=Unit(g.Computer,113,0);var y=Unit(g.Computer,113,1);var z=Unit(g.Computer,113,2);Refresh(g);
         Assert.True(g.CastSpell(g.Player,Hand(g,370)));Settle(g);
-        Assert.Equal(1,g.Computer.Field.Count);Assert.Equal(1,a.BloodCards);
+        Assert.Single(g.Computer.Field);Assert.Equal(1,a.BloodCards);
         var g2=Game();var a2=Structure(g2.Player,364,4);a2.Pad(g2.Player,UnderKind.BloodOath,1);Unit(g2.Computer,113,0);Refresh(g2);Assert.False(g2.CastSpell(g2.Player,Hand(g2,370)));
     }
     [Fact] public void BloodForBloodAndShieldOfJudgmentAnswerDamage()

@@ -286,3 +286,13 @@ test('a shield spent in combat never pops back: 「聖盾抵擋消滅」 shatter
     assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='shield-break').length,1,'status alone still shows the break');
     h.feedback.clear();
 });
+test('v2 Block trigger: 「格擋橫置保命」 shatters once with no shield icon popup', async t=>{
+    resetFastForward();
+    const h=harness(t);
+    const before={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['格擋','直立'],pp:10}]},computer:{field:[]}};
+    const after={player:{field:[{card:{instanceId:'dead',name:'m'},slot:0,status:['無法格擋（已橫置）','橫置'],pp:10}]},computer:{field:[]}};
+    await h.settle(h.feedback.present(before,after,[{type:'attack',side:'computer',instanceId:'dead',order:0},{type:'status',side:'player',instanceId:'dead',label:'格擋橫置保命',order:1}]));
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='icon').length,0,'no gained-shield pop');
+    assert.equal(h.record.filter(r=>r.el.dataset.wcgEffect==='shield-break').length,1,'shatters once');
+    h.feedback.clear();
+});

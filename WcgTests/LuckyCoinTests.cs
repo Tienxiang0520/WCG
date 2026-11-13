@@ -40,39 +40,44 @@ public sealed class LuckyCoinTests
         Assert.Equal(7,g.Computer.Hand.Count);Assert.Equal(0,g.OpeningCoins);
         g=new GameEngine(cards,new Random(3)){EqualStartingLife=true};g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
         Assert.Equal(7,g.Computer.Hand.Count);
-        var old=CardBalanceHistory.BeforeLuckyCoin(cards);Assert.Null(old.GetCard("WCG-263"));Assert.Equal(cards.AllCards.Count(c=>int.Parse(c.Id[4..])<=263)-1,old.AllCards.Count);
+        var preV2=CardBalanceHistory.BeforeV2(cards);
+        var old=CardBalanceHistory.BeforeLuckyCoin(preV2);Assert.Null(old.GetCard("WCG-263"));Assert.Equal(preV2.AllCards.Count(c=>int.Parse(c.Id[4..])<=263)-1,old.AllCards.Count);
         g=new GameEngine(old,new Random(3));g.StartGame(old.PresetDecks[0],old.PresetDecks[1]);Assert.Equal(7,g.Computer.Hand.Count);
         Assert.Same(old,CardBalanceHistory.BeforeLuckyCoin(old));
     }
-    [Fact] public void CoinGivesOneEnergyForThisTurnOnly()
+    [Fact] public void CoinReducesNextCardCostByOneForThisTurnOnly()
     {
         var g=Game(2,"WCG-263","WCG-155");
         Assert.False(g.CanPlayCard(g.Player,Hand(g,"WCG-155")));
         Assert.True(g.CastSpell(g.Player,Hand(g,"WCG-263")));
-        Assert.Equal(3,g.Player.AvailableEnergy);Assert.Equal(1,g.Player.TemporaryEnergy);
-        Assert.DoesNotContain(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");
-        var coin=g.Player.EnergyZone.Single(e=>e.TemporaryEnergy);Assert.False(coin.IsTapped);Assert.Equal("WCG-263",coin.Card.Id);
-        Assert.True(g.SummonMonster(g.Player,Hand(g,"WCG-155")));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.First()));Assert.Single(g.Player.Field);Assert.Equal(0,g.Player.AvailableEnergy);
-        Assert.True(g.EndTurn());
-        Assert.Equal(2,g.Player.EnergyZone.Count);Assert.Equal(0,g.Player.TemporaryEnergy);
-        Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");Assert.False(coin.TemporaryEnergy);
+        Assert.Equal(1,g.Player.NextCardDiscount);
+        Assert.Equal(2,g.Player.AvailableEnergy);
+        Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");
+        Assert.True(g.SummonMonster(g.Player,Hand(g,"WCG-155")));while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options.First()));Assert.Single(g.Player.Field);
+        Assert.Equal(0,g.Player.AvailableEnergy);
+        Assert.Equal(0,g.Player.NextCardDiscount);
     }
-    [Fact] public void UnusedCoinStillLeavesAtEndOfTurn()
+    [Fact] public void UnusedCoinDiscountExpiresAtEndOfTurn()
     {
-        var g=Game(1,"WCG-263");Assert.True(g.CastSpell(g.Player,Hand(g,"WCG-263")));Assert.Equal(2,g.Player.AvailableEnergy);
-        Assert.True(g.EndTurn());Assert.Single(g.Player.EnergyZone);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");
+        var g=Game(1,"WCG-263");Assert.True(g.CastSpell(g.Player,Hand(g,"WCG-263")));Assert.Equal(1,g.Player.NextCardDiscount);
+        Assert.True(g.EndTurn());Assert.Single(g.Player.EnergyZone);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-263");Assert.Equal(0,g.Player.NextCardDiscount);
     }
     [Fact] public void CoinCanStillBeFilledAsNormalEnergy()
     {
         var g=Game(1,"WCG-263");g.Player.HasFilledEnergyThisTurn=false;
-        Assert.True(g.PlayEnergy(g.Player,Hand(g,"WCG-263")));Assert.Equal(0,g.Player.TemporaryEnergy);
+        Assert.True(g.PlayEnergy(g.Player,Hand(g,"WCG-263")));Assert.Equal(0,g.Player.NextCardDiscount);
         Assert.True(g.EndTurn());Assert.Equal(2,g.Player.EnergyZone.Count);
     }
-    [Fact] public void SnapshotMarksTemporaryEnergy()
+    [Fact] public void LegacyCatalogCoinMarksTemporaryEnergy()
     {
-        var g=Game(1,"WCG-263");var storage=new Mock<IPlayerStorage>();storage.Setup(x=>x.Gate).Returns(new object());var b=new BattleBridge(g,new DeckService(cards,storage.Object));
+        var old=CardBalanceHistory.BeforeV2(cards);
+        var g=new GameEngine(old,new Random(11));g.StartGame(old.PresetDecks[0],old.PresetDecks[1]);
+        g.Player.Hand.Clear();g.Player.EnergyZone.Clear();
+        g.Player.EnergyZone.Add(new(old.GetCard("WCG-101")!));
+        var coin=new CardInstance(old.GetCard("WCG-263")!);g.Player.Hand.Add(coin);
+        var storage=new Mock<IPlayerStorage>();storage.Setup(x=>x.Gate).Returns(new object());var b=new BattleBridge(g,new DeckService(old,storage.Object));
         Assert.DoesNotContain(b.Snapshot().Player.Energy,e=>e.Temporary);
-        Assert.True(g.CastSpell(g.Player,Hand(g,"WCG-263")));
+        Assert.True(g.CastSpell(g.Player,coin));
         Assert.Single(b.Snapshot().Player.Energy,e=>e.Temporary);
     }
     [Theory][InlineData(-1)][InlineData(3)][InlineData(5)] // low tiers blunder on purpose

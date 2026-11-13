@@ -45,6 +45,7 @@ else
         </header>
         @if (Ranked.Error != "" || Notice != "") { <p class="alert alert-warning" role="alert">@L.Text(Ranked.Error != "" ? Ranked.Error : Notice)</p> }
         @if (Ranked.Restoring) { <p class="alert alert-info" role="status">@L["正在還原進行中的天梯對局…"]</p> }
+        @if (Ranked.BalanceNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@L.Text(Ranked.BalanceNotice)</p> }
         @if (Ranked.ResetNotice != "" && Ranked.Error == "") { <p class="alert alert-info" role="status">@L.Text(Ranked.ResetNotice)</p> }
         <div class="ranked-grid">
             <section class="ranked-card tier-@RankedRules.Tier(Profile.Stars)" aria-label="@L["目前牌位"]">
@@ -69,6 +70,10 @@ else
                     <h3 class="panel-title">@L["有一場尚未完成的對局"]</h3><p class="ranked-matchup"><b>@ongoing.PlayerDeck.Name</b><span>VS</span><b>@ongoing.ComputerDeck.Name</b></p>
                     @if (ongoing.ComputerDeck.Description != "") { <p class="ranked-help">@L.Text(ongoing.ComputerDeck.Description)</p> }
                     <button class="btn btn-primary btn-lg" data-sfx="matchStart" disabled="@(!Interactive || Busy || Ranked.Error != "")" @onclick="Resume"><Icon Name="play" Size="18" />@L["繼續對局"]</button>
+                    @if (Ranked.CanDiscardBrokenMatch)
+                    {
+                        <button type="button" class="btn btn-outline-warning btn-sm mt-2" disabled="@(!Interactive || Busy)" @onclick="DiscardBroken">@L["作廢無法還原的對局（保留戰績）"]</button>
+                    }
                     <p class="ranked-help">@L["離開頁面會保留進度。要放棄此局，請按對戰畫面上方的「投降」。"]</p>
                 }
                 else
@@ -300,6 +305,12 @@ else
             if (response.Success) await Resume(); else ShowingBattle = false;
         }
         finally { Busy = false; Profile = Ranked.Read(); }
+    }
+    private async Task DiscardBroken()
+    {
+        if (Busy) return; Busy = true;
+        try { await StopDriver(); Ranked.DiscardBrokenMatch(); ShowingBattle = false; Notice = ""; }
+        finally { Busy = false; Profile = Ranked.Read(); StateHasChanged(); }
     }
     private Task Ready()
     {

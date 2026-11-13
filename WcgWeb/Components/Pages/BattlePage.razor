@@ -114,9 +114,11 @@
                     <select aria-label="@L["調整場上卡片"]" @bind="SelectedUnit" @bind:after="LoadCounters"><option value="">@L["選擇場上卡片"]</option>@foreach(var m in SelectedSide.Field){<option value="@m.Card.InstanceId">@L.F("第 {0} 格", m.Slot+1) · @L.CardName(m.Card)</option>}</select>
                     <div class="training-buttons"><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-ready")'>@L["轉直立"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-tap")'>@L["橫置"]</button><button disabled="@(SelectedUnit=="")" @onclick='()=>Edit("training-grave")'>@L["移至墓地"]</button></div>
                     <small>@L["移至墓地是調整場面，不觸發死亡效果。"]</small>
+                    @if(!Engine.V2Rules){
                     <div class="training-counters">@foreach(var (k,label) in CounterLabels){<label>@L[label]<input aria-label="@L[label]" type="number" min="0" max="20" value="@Counters[k]" @onchange="e=>SetCounter(k,e.Value)" /></label>}</div>
                     <button disabled="@(SelectedUnit=="")" @onclick="ApplyCounters">@L["套用底下的牌"]</button>
                     <small>@L["倒數牌、DP 牌、血誓、聖泉從牌庫底背面朝上墊入或放回牌庫底；聖盾牌從手牌正面朝上放入，減少時進墓地。直接設定不觸發放置效果；倒數牌設為 0 不會觸發倒數結束，要測倒數結束請設 1 再結束回合。"]</small>
+                    }
                 </fieldset>
                 <h3>@L["重複測試"]</h3>
                 <label class="tt-scenes">@L["場面名稱"]<input aria-label="@L["場面名稱"]" maxlength="40" @bind="SceneName" @bind:event="oninput" /></label>
@@ -142,15 +144,15 @@
     private SceneInfo[] Scenes=[];
     private int Slot,Hp=7,TotalEnergy,AvailableEnergy,TurnNo=1;
     public record SceneInfo(string Id,string Name,double SavedAt);
-    private static readonly (string Id,string Label)[] Presets=[("taunt","嘲諷阻擋"),("combat","怪物對打"),("countdown","倒數計數"),("reveal","翻開牌庫頂"),("untap","橫置與回合開始轉直立"),("defeat","敗北"),("victory","勝利")];
+    private static readonly (string Id,string Label)[] Presets=[("taunt","嘲諷阻擋"),("combat","怪物對打"),("block","格擋與橫置"),("bypass","越陣突破嘲諷"),("untap","橫置與回合開始轉直立"),("defeat","敗北"),("victory","勝利")];
     private static string PresetHint(string id)=>id switch{
         "taunt"=>"白銀巡邏衛有嘲諷：拖曳攻擊對方頭像或巡邏輕步兵會被擋下，先擊破嘲諷怪物後才能攻擊。",
-        "combat"=>"沼澤巨鱷 1900 攻擊巡邏輕步兵 1000，防守方被擊破；淡水狂鱷 1300 對 1300，兩邊都被擊破。",
-        "countdown"=>"目前是電腦回合。按「結束目前回合」：你的回合開始時星沙學徒歸零抽 2 張、封時守衛 2→1、倒懸時鐘歸零並選擇消滅敵方怪物。",
-        "reveal"=>"手上有擲骨巫童與黑籤召喚師，牌庫頂是雪人巨獸。召喚擲骨巫童即可看到翻開。",
+        "combat"=>"雪人巨獸 19 PP 攻擊巡邏輕步兵 10 PP，防守方被擊破；淡水狂鱷 13 對 13，兩邊都被擊破。",
+        "block"=>"鏡像護衛以 → 箭頭讓直立的巡邏輕步兵獲得格擋。第一次被打到應被消滅時會橫置存活，已橫置後再被攻擊就會被消滅。",
+        "bypass"=>"對方場上有白銀巡邏衛（PP 12 嘲諷）。我方的霧翼斥候與蓋亞暴龍具有越陣，可直接攻擊後方或玩家頭像。",
         "untap"=>"你的怪物橫置中、目前是電腦回合。按「結束目前回合」後你的怪物轉為直立；新召喚的怪物會橫置進場。",
         "defeat"=>"你只剩 1 點生命且沒有怪物。按「電腦執行一步」或恢復電腦自動行動，電腦會攻擊造成敗北。",
-        "victory"=>"電腦只剩 1 點生命且沒有怪物。用沼澤巨鱷攻擊電腦頭像即可勝利。",
+        "victory"=>"電腦只剩 1 點生命且沒有怪物。用雪人巨獸攻擊電腦頭像即可勝利。",
         _=>""};
     private static readonly (string Key,string Label)[] CounterLabels=[("countdown","倒數牌"),("dp","DP 牌"),("shield","聖盾牌（手牌）"),("blood","血誓"),("spring","聖泉")];
     private readonly Dictionary<string,int> Counters=new(){["countdown"]=0,["dp"]=0,["shield"]=0,["blood"]=0,["spring"]=0};

@@ -20,7 +20,7 @@ public partial class GameEngine
         if (CardReach(c) > 0 && !c.IsMonster) r |= AiRole.Burn;
         if (c.IsCounter) r |= AiRole.Counter;
         if (Regex.IsMatch(t, @"抽\s*\d+\s*張")) r |= AiRole.Draw;
-        if (Regex.IsMatch(t, @"回復(己方|其)?\s*\d+\s*點生命")) r |= AiRole.Heal;
+        if (Regex.IsMatch(t, @"回復(?:己方|其)?\s*\d+\s*(?:點)?生命")) r |= AiRole.Heal;
         return r;
     });
 

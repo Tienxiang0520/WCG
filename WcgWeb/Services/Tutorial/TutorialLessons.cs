@@ -30,7 +30,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "歡迎來到魂誓", Spot = ["face", "hero"],
-                    Text = "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；先攻玩家從 6 點生命開始、第一回合不抽牌，後攻玩家從 7 點生命開始，另外多拿 1 張「幸運幣」：施放後本回合多 1 點能量，沒用掉就在回合結束時消失。" },
+                    Text = "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；先攻玩家從 6 點生命開始、第一回合不抽牌，後攻玩家從 7 點生命開始，另外多拿 1 張「幸運幣」：打出後讓本回合下 1 張打出的牌費用 -1，並直接進入墓地。" },
                 new() { Title = "手牌與卡面", Spot = ["hand"],
                     Text = "下方是你的手牌。卡面右上角是費用；怪物另有 PP（戰力，交戰時比大小）與 DP（攻擊玩家時造成的傷害）。點一下卡片可以放大查看完整效果。" },
                 new() { Title = "填能量", Spot = ["hand:WCG-121", "energy"], Allow = [Energy("WCG-121")],
@@ -72,7 +72,7 @@ public static class TutorialLessons
                     Text = "法術打出後立即結算，然後進入墓地。「{0}」的效果：{1} 把它拖到戰場中央打出，完成致命一擊。", TextValues = [CardName("WCG-014"), CardEffect("WCG-014")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-014")] },
                 new() { Title = "勝利！",
-                    Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、聖盾與各種關鍵字。" }
+                    Text = "電腦生命歸零，你贏了！勝利條件有兩種：對手生命歸零，或對手需要抽牌時牌庫已空。對局中也可以按「投降」認輸。接下來的課程會帶你認識交戰、嘲諷、格擋與各種關鍵字。" }
             ]
         },
         new()
@@ -82,7 +82,7 @@ public static class TutorialLessons
             Topics = ["怪物攻擊怪物", "PP 比較", "平手同歸於盡", "無累積傷害", "攻擊後橫置", "墓地與紀錄", "略過怪物直接攻擊玩家"],
             Scene = new(
                 new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 2, Board = [new("WCG-114", 1), new("WCG-154", 2), new("WCG-155", 3)] },
-                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-157", 1), new("WCG-154", 2), new("WCG-101", 3)] }),
+                new() { Deck = Deck(), Energy = 2, Board = [new("WCG-119", 1), new("WCG-154", 2), new("WCG-101", 3)] }),
             Steps =
             [
                 new() { Title = "交戰規則", Spot = ["field"],
@@ -101,7 +101,7 @@ public static class TutorialLessons
                     Text = "被消滅的卡會進入墓地。按「墓地」可以查看雙方墓地，按「紀錄」可以查看完整對戰紀錄；看完記得關閉視窗。" },
                 new() { Title = "略過怪物，直接打玩家", Spot = ["own-card:WCG-155", "face"], Allow = [Attack("WCG-155")],
                     Done = e => e.Computer.Hp == 6,
-                    Text = "對手沒有嘲諷怪物時，可以直接攻擊玩家。敵方「{0}」目前有 {1} PP，我方「{2}」目前有 {3} PP，所以改打電腦頭像。", TextValues = [CardName("WCG-157"), EnemyPP("WCG-157"), CardName("WCG-155"), OwnPP("WCG-155")],
+                    Text = "對手沒有嘲諷怪物時，可以直接攻擊玩家。敵方「{0}」目前有 {1} PP，我方「{2}」目前有 {3} PP，所以改打電腦頭像。", TextValues = [CardName("WCG-119"), EnemyPP("WCG-119"), CardName("WCG-155"), OwnPP("WCG-155")],
                     Hint = "請把「{0}」拖到電腦頭像。", HintValues = [CardName("WCG-155")] },
                 new() { Title = "本課重點",
                     Text = "出手前先比 PP：贏了換掉對方、平手一換一、輸了只會白白損失。能量、手牌與場上格位都是資源，好的交換能讓你掌握戰場。" }
@@ -137,58 +137,58 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "shield", Icon = "shield", Title = "聖盾與箭頭",
-            Summary = "聖盾來自卡底下的聖盾法術、手牌或箭頭；被攻擊時用掉 1 個來源。學會用箭頭把聖盾交給相鄰的隊友。",
-            Topics = ["聖盾", "聖盾來源", "箭頭 ← → ↑", "固定格位"],
+            Id = "shield", Icon = "shield", Title = "格擋與箭頭",
+            Summary = "直立且具格擋的怪物被攻擊將被消滅時，改為橫置並存活；學會用箭頭把格擋交給相鄰隊友。",
+            Topics = ["格擋", "直立才能格擋", "箭頭 ← → ↑", "固定格位"],
             Scene = new(
-                new() { Hand = ["WCG-061"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2), new("WCG-155", 4)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-061", 2), new("WCG-101", 3)] }),
+                new() { Hand = ["WCG-063"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 2), new("WCG-155", 4)] },
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-063", 2), new("WCG-101", 3)] }),
             Steps =
             [
-                new() { Title = "聖盾", Spot = ["enemy-card:WCG-061", "enemy-card:WCG-101"],
-                    Text = "有聖盾的怪物被攻擊時，這次交戰不會被消滅，但要把 1 個給它聖盾的來源送入墓地：底下的聖盾法術、正面朝上放在底下的手牌，或用箭頭給它聖盾的生物。有多個來源時由控制者選。攻擊別人時不會用掉聖盾，聖盾也不會每回合補回。" },
-                new() { Title = "放對格位", Spot = ["hand:WCG-061", "own:1"], Allow = [Play("WCG-061"), Slot(1)],
-                    Done = e => Unit(e.Player, "WCG-061")?.Slot == 1,
-                    Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-061"), CardEffect("WCG-061"), CardName("WCG-154")],
-                    Hint = "請把「{0}」放在第 2 格（{1}左邊）。", HintValues = [CardName("WCG-061"), CardName("WCG-154")] },
-                new() { Title = "箭頭", Spot = ["own-card:WCG-061", "own-card:WCG-154"],
-                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了聖盾；對手的「{1}」也用同樣的方式保護著「{2}」。", TextValues = [CardName("WCG-154"), CardName("WCG-061"), CardName("WCG-101")] },
-                new() { Title = "聖盾擋下", Spot = ["own-card:WCG-154", "enemy-card:WCG-101"], Allow = [Attack("WCG-154", "WCG-101")],
-                    Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true } && !OnField(e.Computer, "WCG-061") && OnField(e.Computer, "WCG-101") && Settled(e),
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它本該被消滅，但被攻擊時聖盾擋下這一次，給它聖盾的「{4}」進入墓地。你的「{0}」是攻擊方，聖盾不會用掉。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-101"), EnemyPP("WCG-101"), CardName("WCG-061")],
+                new() { Title = "格擋", Spot = ["enemy-card:WCG-063", "enemy-card:WCG-101"],
+                    Text = "直立且具「格擋」的怪物成為攻擊或決鬥目標、並將在交戰中被消滅時（包含劇毒），會改為橫置並存活。若已橫置，就無法觸發格擋，會直接被消滅。" },
+                new() { Title = "放對格位", Spot = ["hand:WCG-063", "own:1"], Allow = [Play("WCG-063"), Slot(1)],
+                    Done = e => Unit(e.Player, "WCG-063")?.Slot == 1,
+                    Text = "「{0}」的效果：{1} 把它放在第 2 格，也就是「{2}」的左邊。", TextValues = [CardName("WCG-063"), CardEffect("WCG-063"), CardName("WCG-154")],
+                    Hint = "請把「{0}」放在第 2 格（{1}左邊）。", HintValues = [CardName("WCG-063"), CardName("WCG-154")] },
+                new() { Title = "箭頭", Spot = ["own-card:WCG-063", "own-card:WCG-154"],
+                    Text = "→ 指向右側相鄰格，← 指向左側相鄰格，↑ 指向正對面的敵方格。格位進場後不能換，所以放在哪裡很重要。現在「{0}」獲得了格擋；對手的「{1}」也用同樣的方式保護著「{2}」。", TextValues = [CardName("WCG-154"), CardName("WCG-063"), CardName("WCG-101")] },
+                new() { Title = "格擋擋下", Spot = ["own-card:WCG-154", "enemy-card:WCG-101"], Allow = [Attack("WCG-154", "WCG-101")],
+                    Done = e => Unit(e.Player, "WCG-154") is { IsTapped: true } && Unit(e.Computer, "WCG-101") is { IsTapped: true } && OnField(e.Computer, "WCG-101") && Settled(e),
+                    Text = "用「{0}」（{1} PP）攻擊直立的「{2}」（{3} PP）。它本該被消滅，但格擋讓它改為橫置並存活。", TextValues = [CardName("WCG-154"), OwnPP("WCG-154"), CardName("WCG-101"), EnemyPP("WCG-101")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-101")] },
-                new() { Title = "來源用完", Spot = ["own-card:WCG-155", "enemy-card:WCG-101"], Allow = [Attack("WCG-155", "WCG-101")],
+                new() { Title = "已橫置就不能格擋", Spot = ["own-card:WCG-155", "enemy-card:WCG-101"], Allow = [Attack("WCG-155", "WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
-                    Text = "給予者已經進入墓地，「{0}」沒有聖盾了。用「{1}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-101"), CardName("WCG-155")],
+                    Text = "「{0}」現在是橫置狀態，這回合無法再靠格擋保命。用「{1}」再攻擊一次，這次就能消滅它。", TextValues = [CardName("WCG-101"), CardName("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-101")] },
                 new() { Title = "本課重點",
-                    Text = "聖盾只防被攻擊時的交戰消滅，每次用掉 1 個來源，不擋法術消滅、犧牲或返回手牌。沉默或驅散會把底下的聖盾來源卡送入墓地；給予聖盾的生物被沉默就不再給予，但它不會因此進墓地。" }
+                    Text = "格擋只防交戰與決鬥中的消滅且要求怪物處於直立狀態，不防法術消滅、犧牲或移回手牌。若給予格擋的怪物被沉默或離場，受保護的友軍就會失去該格擋。" }
             ]
         },
         new()
         {
             Id = "arrows", Icon = "compass", Title = "箭頭與站位",
-            Summary = "箭頭不只給聖盾：用左右箭頭強化相鄰隊友，用上箭頭影響正對面的敵人。",
+            Summary = "箭頭不只給格擋：用左右箭頭強化相鄰隊友，用上箭頭牽制正對面的敵人。",
             Topics = ["箭頭 ← → ↑", "相鄰格光環", "正對面同列格", "五大意志的箭頭"],
             Scene = new(
-                new() { Hand = ["WCG-005", "WCG-033"], Deck = Deck(), Energy = 7, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
+                new() { Hand = ["WCG-005", "WCG-216"], Deck = Deck(), Energy = 7, Board = [new("WCG-101", 1), new("WCG-154", 3)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-132", 0), new("WCG-155", 2)] }),
             Steps =
             [
                 new() { Title = "箭頭連結格位", Spot = ["field"],
-                    Text = "卡圖邊緣的金色三角就是箭頭：← → 連到左右相鄰格，↑ 連到正對面那格。箭頭只看指到的格子，影響那格裡的怪物，不分敵我。每張卡用箭頭做的事不同，看效果文字就知道。" },
+                    Text = "卡圖邊緣的金色三角就是箭頭：← → 連到左右相鄰格，↑ 連到正對面那格。箭頭只看指到的格子，影響那格裡的怪物。每張卡用箭頭做的事不同，看效果文字就知道。" },
                 new() { Title = "左右光環", Spot = ["hand:WCG-005", "own:2"], Allow = [Play("WCG-005"), Slot(2)],
                     Done = e => Unit(e.Player, "WCG-005")?.Slot == 2,
                     Text = "「{0}」的效果：{1} 把它放在第 3 格，夾在「{2}」和「{3}」中間。", TextValues = [CardName("WCG-005"), CardEffect("WCG-005"), CardName("WCG-101"), CardName("WCG-154")],
                     Hint = "請把「{0}」放在第 3 格。", HintValues = [CardName("WCG-005")] },
                 new() { Title = "站在中間最划算", Spot = ["own-card:WCG-101", "own-card:WCG-154"],
                     Text = "兩側隊友都變強了：「{0}」目前 {1} PP，「{2}」目前 {3} PP。放在邊格只能照顧一側；來源被沉默或離場，加成立刻消失。", TextValues = [CardName("WCG-101"), OwnPP("WCG-101"), CardName("WCG-154"), OwnPP("WCG-154")] },
-                new() { Title = "正對面", Spot = ["hand:WCG-033", "own:4", "enemy-card:WCG-132"], Allow = [Play("WCG-033"), Slot(4)],
-                    Done = e => Unit(e.Computer, "WCG-132")?.IsTapped == true && Settled(e),
-                    Text = "「{0}」的效果：{1} 己方第 5 格正對敵方第 1 格的「{2}」，把它放在第 5 格。", TextValues = [CardName("WCG-033"), CardEffect("WCG-033"), CardName("WCG-132")],
-                    Hint = "請把「{0}」放在第 5 格（{1}的正對面）。", HintValues = [CardName("WCG-033"), CardName("WCG-132")] },
+                new() { Title = "正對面", Spot = ["hand:WCG-216", "own:4", "enemy-card:WCG-132"], Allow = [Play("WCG-216"), Slot(4)],
+                    Done = e => Unit(e.Player, "WCG-216")?.Slot == 4 && Settled(e),
+                    Text = "「{0}」的效果：{1} 己方第 5 格正對敵方第 1 格的「{2}」，把它放在第 5 格鎖住它。", TextValues = [CardName("WCG-216"), CardEffect("WCG-216"), CardName("WCG-132")],
+                    Hint = "請把「{0}」放在第 5 格（{1}的正對面）。", HintValues = [CardName("WCG-216"), CardName("WCG-132")] },
                 new() { Title = "本課重點",
-                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ← → 帶隊衝鋒，理智依站位抽牌或橫置對手，生機用嘲諷守住戰線並強化兩側，秩序用箭頭分配聖盾，深淵壓低正對面敵怪的 PP。" }
+                    Text = "格位進場後不能換，箭頭讓站位成為策略：狂怒用 ← → 帶隊強化與衝鋒，理智依站位抽牌或牽制對手，生機用嘲諷守住戰線並強化兩側，秩序用箭頭分配格擋，深淵壓低正對面敵怪的 PP。" }
             ]
         },
         new()
@@ -197,7 +197,7 @@ public static class TutorialLessons
             Summary = "施放指定目標的法術、從抉擇效果二選一、棄牌與回復生命。",
             Topics = ["指定目標法術", "抽牌", "抉擇", "棄牌", "回復生命（上限 7）", "法術進墓地"],
             Scene = new(
-                new() { Hp = 4, Hand = ["WCG-004", "WCG-046", "WCG-050"], Deck = Deck(), Energy = 5 },
+                new() { Hp = 4, Hand = ["WCG-004", "WCG-046", "WCG-066"], Deck = Deck(), Energy = 7 },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-101", 0), new("WCG-132", 2)] }),
             Steps =
             [
@@ -209,14 +209,14 @@ public static class TutorialLessons
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-004"), CardName("WCG-132")] },
                 new() { Title = "抉擇", Spot = ["hand:WCG-046", "dialog"], Allow = [Play("WCG-046"), Choose("LOOT"), ChooseCard("WCG-101"), ChooseCard("WCG-154")],
                     Done = e => e.Player.Graveyard.Any(c => c.Card.Id == "WCG-046") && e.Player.Graveyard.Count >= 3 && Settled(e),
-                    Text = "「{0}」的效果：{1} 這一步選抽牌與棄牌，再棄掉剛抽到的「{2}」或「{3}」（留下「{4}」）。", TextValues = [CardName("WCG-046"), CardEffect("WCG-046"), CardName("WCG-101"), CardName("WCG-154"), CardName("WCG-050")],
+                    Text = "「{0}」的效果：{1} 這一步選抽牌與棄牌，再棄掉剛抽到的「{2}」或「{3}」（留下「{4}」）。", TextValues = [CardName("WCG-046"), CardEffect("WCG-046"), CardName("WCG-101"), CardName("WCG-154"), CardName("WCG-066")],
                     Hint = "請打出「{0}」，選擇抽 1 棄 1，並棄掉剛抽到的怪物。", HintValues = [CardName("WCG-046")] },
-                new() { Title = "回復生命", Spot = ["hand:WCG-050", "hero"], Allow = [PlayPlayer("WCG-050", "player"), PickPlayer("player")],
+                new() { Title = "回復生命", Spot = ["hand:WCG-066", "hero"], Allow = [PlayPlayer("WCG-066", "player"), PickPlayer("player")],
                     Done = e => e.Player.Hp == 6,
-                    Text = "「{0}」的效果：{1} 這一步請拖向自己的頭像。生命上限是 7，超過的部分不會累積。", TextValues = [CardName("WCG-050"), CardEffect("WCG-050")],
-                    Hint = "請將「{0}」拖向自己的頭像，或施放後點選自己的頭像。", HintValues = [CardName("WCG-050")] },
+                    Text = "「{0}」的效果：{1} 這一步請拖向自己的頭像。生命上限是 7，超過的部分不會累積。", TextValues = [CardName("WCG-066"), CardEffect("WCG-066")],
+                    Hint = "請將「{0}」拖向自己的頭像，或施放後點選自己的頭像。", HintValues = [CardName("WCG-066")] },
                 new() { Title = "一次選多張",
-                    Text = "有些效果要一次選好幾張卡，例如從牌庫頂檢視取牌、把卡依序放到牌庫底，或選擇送入墓地的能量牌。這時會跳出選擇視窗：點卡片選取，再點一次取消，視窗會顯示已選張數，選好後按「確認」；放到牌庫底時，卡上的數字就是放入的順序。" },
+                    Text = "有些效果要一次選好幾張卡，例如從牌庫頂檢視取牌或將多張牌依序放到牌庫底。這時會跳出選擇視窗：點卡片選取，再點一次取消，視窗會顯示已選張數，選好後按「確認」；放到牌庫底時，卡上的數字就是放入的順序。" },
                 new() { Title = "本課重點",
                     Text = "常見法術效果：直接傷害、消滅、抽牌、回復、返回手牌、橫置或直立怪物、附著在怪物上。所有費用都是通用能量，任何意志的卡都能用同一池能量支付。" }
             ]
@@ -239,7 +239,7 @@ public static class TutorialLessons
                     Hint = "請召喚「{0}」，並用進場效果免費召喚「{1}」。", HintValues = [CardName("WCG-047"), CardName("WCG-102")] },
                 new() { Title = "非付費召喚", Spot = ["own-card:WCG-102"],
                     Text = "「{0}」是被效果免費召喚的，所以不會觸發它的進場效果；陣亡效果則照常有效。", TextValues = [CardName("WCG-102")] },
-                new() { Title = "陣亡效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), Pick("WCG-132")],
+                new() { Title = "陣亡效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), ChooseCard("WCG-132")],
                     Done = e => !OnField(e.Computer, "WCG-132") && !OnField(e.Player, "WCG-083") && Settled(e),
                     Text = "讓「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它會被消滅，陣亡效果：{4} 選擇「{5}」。", TextValues = [CardName("WCG-083"), OwnPP("WCG-083"), CardName("WCG-158"), EnemyPP("WCG-158"), CardEffect("WCG-083"), CardName("WCG-132")],
                     Hint = "請用「{0}」攻擊「{1}」，陣亡時選擇「{2}」。", HintValues = [CardName("WCG-083"), CardName("WCG-158"), CardName("WCG-132")] },
@@ -258,15 +258,15 @@ public static class TutorialLessons
             Topics = ["劇毒", "貫穿", "衝鋒"],
             Scene = new(
                 new() { Hand = ["WCG-110"], Deck = Deck(), Energy = 3, Board = [new("WCG-051", 0), new("WCG-053", 2)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-154", 2), new("WCG-157", 4)] }),
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-154", 2), new("WCG-119", 4)] }),
             Steps =
             [
                 new() { Title = "戰鬥關鍵字", Spot = ["own-card:WCG-051", "own-card:WCG-053"],
                     Text = "劇毒：與它交戰的怪物無論 PP 多高都會被消滅。貫穿：攻擊方存活並在交戰中消滅防守方時，對敵方玩家造成 1 點傷害。" },
-                new() { Title = "劇毒", Spot = ["own-card:WCG-051", "enemy-card:WCG-157"], Allow = [Attack("WCG-051", "WCG-157")],
-                    Done = e => !OnField(e.Computer, "WCG-157"),
-                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。PP 較低的蜥蜴會被消滅，但劇毒也會帶走對方。", TextValues = [CardName("WCG-051"), OwnPP("WCG-051"), CardName("WCG-157"), EnemyPP("WCG-157")],
-                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-051"), CardName("WCG-157")] },
+                new() { Title = "劇毒", Spot = ["own-card:WCG-051", "enemy-card:WCG-119"], Allow = [Attack("WCG-051", "WCG-119")],
+                    Done = e => !OnField(e.Computer, "WCG-119"),
+                    Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。PP 較低的蜥蜴會被消滅，但劇毒也會帶走對方。", TextValues = [CardName("WCG-051"), OwnPP("WCG-051"), CardName("WCG-119"), EnemyPP("WCG-119")],
+                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-051"), CardName("WCG-119")] },
                 new() { Title = "貫穿", Spot = ["own-card:WCG-053", "enemy-card:WCG-154"], Allow = [Attack("WCG-053", "WCG-154")],
                     Done = e => !OnField(e.Computer, "WCG-154") && e.Computer.Hp == 6,
                     Text = "用「{0}」（{1} PP）攻擊「{2}」（{3} PP）。攻擊方存活並消滅對方，貫穿會額外對電腦造成 1 點傷害。", TextValues = [CardName("WCG-053"), OwnPP("WCG-053"), CardName("WCG-154"), EnemyPP("WCG-154")],
@@ -337,10 +337,10 @@ public static class TutorialLessons
                     Text = "把「{0}」拖到「{1}」上，效果：{2}", TextValues = [CardName("WCG-135"), CardName("WCG-154"), CardEffect("WCG-135")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-135"), CardName("WCG-154")] },
                 new() { Title = "棘手的守衛", Spot = ["enemy-card:WCG-069"],
-                    Text = "「{0}」（{1} PP）的效果：{2} 嘲諷逼你先打它，它的箭頭還能把聖盾交給隊友。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
+                    Text = "「{0}」（{1} PP）的效果：{2} 嘲諷逼你先打它，它的箭頭還能把格擋交給隊友。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
                 new() { Title = "沉默", Spot = ["hand:WCG-072", "enemy-card:WCG-069"], Allow = [Play("WCG-072", "WCG-069"), Pick("WCG-069")],
                     Done = e => Unit(e.Computer, "WCG-069") is { IsSilenced: true } && Settled(e),
-                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與箭頭；底下的聖盾來源卡也會進入墓地。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
+                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與箭頭；底下的附著也會進入墓地。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-072"), CardName("WCG-069")] },
                 new() { Title = "擊破", Spot = ["own-card:WCG-154", "enemy-card:WCG-069"], Allow = [Attack("WCG-154", "WCG-069")],
                     Done = e => !OnField(e.Computer, "WCG-069"),
@@ -352,34 +352,30 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "counters", Icon = "sigil", Title = "卡底下的牌與控制權",
-            Summary = "認識從牌庫底墊在卡底下的 DP 牌、倒數牌、血誓與聖泉，腐蝕與王座篡奪，學會永久奪取敵方怪物，以及沉默、驅散怎麼處理它們。",
-            Topics = ["墊牌：從牌庫底背面朝上", "DP 牌（橫放）", "腐蝕：箭頭與附著", "王座篡奪放在怪物底下", "暫時控制：卡轉 180 度", "沉默與驅散", "箭頭不分敵我", "對手的卡轉 180 度"],
+            Id = "duel", Icon = "swords", Title = "越陣、魔免與決鬥",
+            Summary = "認識越陣無視嘲諷、魔免不受指定目標法術影響，以及決鬥強制雙方怪物交戰。",
+            Topics = ["越陣", "魔免", "決鬥", "對手的卡（轉 180 度）"],
             Scene = new(
-                new() { Hand = ["WCG-384", "WCG-335"], Deck = Deck(), Energy = 9, Board = [new("WCG-337", 0)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-101", 1), new("WCG-155", 3)] }),
+                new() { Hp = 6, Hand = ["WCG-094", "WCG-266"], Deck = Deck(), Energy = 9, Board = [new("WCG-261", 1)] },
+                new() { Hp = 6, Deck = Deck(), Energy = 1, Board = [new("WCG-152", 1), new("WCG-101", 3)] }),
             Steps =
             [
-                new() { Title = "對手的卡", Spot = ["field"],
-                    Text = "對手的卡會轉 180 度，卡頂朝向對手，就像坐在桌子兩邊；PP 和 DP 數字照常朝向你。實體對戰時，持續的變化都用牌組裡的卡表示：從手牌打出的卡、放在卡底下的卡，或箭頭；不用另外的指示物。" },
-                new() { Title = "DP 牌", Spot = ["own-card:WCG-337", "enemy-card:WCG-101"], Allow = [Attack("WCG-337", "WCG-101")],
-                    Done = e => Unit(e.Player, "WCG-337") is { DpCards: > 0 } && Settled(e),
-                    Text = "「{0}」的效果：{1} 用它攻擊「{2}」。DP 牌是從你牌庫底拿的牌，背面朝上、不檢視，橫放在怪物底下，每張使 DP +1，可以疊加；被沉默或離場時放回牌庫底。牌庫不夠時能放幾張就放幾張。", TextValues = [CardName("WCG-337"), CardEffect("WCG-337"), CardName("WCG-101")],
-                    Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-337"), CardName("WCG-101")] },
-                new() { Title = "腐蝕", Spot = ["hand:WCG-384", "enemy-card:WCG-155"], Allow = [Play("WCG-384")],
-                    Done = e => Unit(e.Computer, "WCG-155") is { } x && x.CurrentPP < (x.Card.PP ?? 0) && Settled(e),
-                    Text = "「{0}」的效果：{1} 持續的腐蝕則是箭頭（例如腐霧散布者的 ↑）或附著在敵方怪物底下的卡（例如孢沼爬蟲陣亡後附著），各自依卡文降低 PP；PP 最低為 0，降到 0 也不會陣亡。附著的卡被沉默、被驅散或離場時進入墓地；「印刷 PP」的判定不受影響。", TextValues = [CardName("WCG-384"), CardEffect("WCG-384")],
-                    Hint = "請打出「{0}」。", HintValues = [CardName("WCG-384")] },
-                new() { Title = "王座篡奪", Spot = ["hand:WCG-335", "enemy-card:WCG-155"], Allow = [Play("WCG-335", "WCG-155"), Pick("WCG-155"), Slot()],
-                    Done = e => OnField(e.Player, "WCG-155") && Settled(e),
-                    Text = "「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-335"), CardEffect("WCG-335"), CardName("WCG-155")],
-                    Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-335"), CardName("WCG-155")] },
-                new() { Title = "你控制、但不是你擁有", Spot = ["own-card:WCG-155"],
-                    Text = "被奪來的怪物不觸發進場，王座篡奪放在它底下，原本底下的牌也跟著它，剛移過來的這回合不能攻擊；它陣亡時由現在控制它的你處理陣亡，離場時回到擁有者的墓地或手牌。被沉默或驅散時，王座篡奪進入墓地，控制權歸還擁有者。" },
-                new() { Title = "暫時控制", Spot = ["field"],
-                    Text = "卡面寫「取得控制權直到回合結束」時，那隻怪物留在原本的格子，把卡轉 180 度表示由你控制，回合結束時轉回去。轉向的怪物箭頭照常有效：↑ 指正對面那格，← → 指它所在那排的相鄰格，左右跟著對調。" },
+                new() { Title = "對手的卡與進階關鍵字", Spot = ["field"],
+                    Text = "對手的卡會轉 180 度、卡頂朝向對手（PP 與 DP 數字照常朝向你）。這一課練習三個進階關鍵字：越陣、魔免與決鬥。" },
+                new() { Title = "越陣：繞過嘲諷", Spot = ["own-card:WCG-261", "face"], Allow = [Attack("WCG-261")],
+                    Done = e => e.Computer.Hp == 5,
+                    Text = "敵方場上的「{0}」有嘲諷，但我方「{1}」具有「越陣」：攻擊時無視嘲諷（少數例外如蓋亞暴龍仍會受 PP 18 以上嘲諷阻擋）。直接用「{1}」攻擊電腦頭像！", TextValues = [CardName("WCG-152"), CardName("WCG-261")],
+                    Hint = "請用「{0}」直接攻擊電腦頭像。", HintValues = [CardName("WCG-261")] },
+                new() { Title = "魔免：不受指定法術影響", Spot = ["hand:WCG-094", "enemy-card:WCG-101"], Allow = [Play("WCG-094", "WCG-101"), Pick("WCG-101")],
+                    Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
+                    Text = "「{0}」具有「魔免」，雙方需要指定目標的法術都無法指定它；不指定目標的全場法術、怪物進場效果與箭頭則不受限制。把「{1}」拖到右邊沒有魔免的「{2}」上消滅它。", TextValues = [CardName("WCG-152"), CardName("WCG-094"), CardName("WCG-101")],
+                    Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-094"), CardName("WCG-101")] },
+                new() { Title = "決鬥：主動發起交戰", Spot = ["hand:WCG-266", "enemy-card:WCG-152"], Allow = [Play("WCG-266"), Slot(), ChooseCard("WCG-152")],
+                    Done = e => !OnField(e.Computer, "WCG-152") && OnField(e.Player, "WCG-266") && Settled(e),
+                    Text = "要怎麼解掉嘲諷又魔免的「{0}」？召喚「{1}」（{2}），這不是指定法術，所以能挑上「{0}」進行決鬥。召喚後在視窗中選擇「{0}」擊破它！", TextValues = [CardName("WCG-152"), CardName("WCG-266"), CardEffect("WCG-266")],
+                    Hint = "請召喚「{0}」並選擇「{1}」決鬥。", HintValues = [CardName("WCG-266"), CardName("WCG-152")] },
                 new() { Title = "本課重點",
-                    Text = "血誓只放在血誓祭壇（結界）底下：你每受到 1 次傷害，從牌庫底背面朝上放 1 張；沉默碰不到它，祭壇被驅散摧毀或離場時全部放回牌庫底。沉默把 DP 牌與倒數牌放回牌庫底（倒數不發動），把聖盾牌、腐蝕附著與王座篡奪送入墓地；驅散移除附著、聖盾牌與沉默（不動背面墊牌），或依卡文摧毀結界。" }
+                    Text = "越陣可繞過嘲諷（除非卡面另有門檻限制），魔免保護怪物不受任何指定目標法術指定；決鬥視同交戰，雙方都會算作被攻擊，因此直立且具格擋的怪物能在決鬥中橫置保命。" }
             ]
         },
         new()
@@ -388,12 +384,12 @@ public static class TutorialLessons
             Summary = "犧牲怪物、支付生命換取效果，最後讓電腦牌庫抽空而落敗。",
             Topics = ["額外代價：犧牲", "以生命換取資源", "牌庫抽空落敗", "勝利條件總結"],
             Scene = new(
-                new() { Hand = ["WCG-006", "WCG-019"], Deck = Deck(), Energy = 7, Board = [new("WCG-101", 0)] },
+                new() { Hand = ["WCG-006", "WCG-019"], Deck = Deck(), Energy = 8, Board = [new("WCG-101", 0)] },
                 new() { Hp = 4, Hand = ["WCG-101"], Deck = [], Energy = 1 }),
             Steps =
             [
                 new() { Title = "額外代價", Spot = ["hand:WCG-006"],
-                    Text = "有些卡除了能量，還要付「額外代價」：犧牲己方怪物、隨機棄手牌或失去生命。代價在效果之前支付；犧牲也算被消滅，會觸發陣亡與「每當…被消滅」的效果。" },
+                    Text = "有些卡除了能量，還要付「額外代價」：犧牲己方怪物、棄 1 張手牌或失去生命。代價在效果之前支付；犧牲也算被消滅，會觸發陣亡與「每當…被消滅」的效果。" },
                 new() { Title = "犧牲", Spot = ["hand:WCG-006", "own-card:WCG-101"], Allow = [Play("WCG-006"), Pick("WCG-101")],
                     Done = e => e.Computer.Hp == 2 && Settled(e),
                     Text = "「{0}」的效果：{1} 打出它，選擇犧牲「{2}」。", TextValues = [CardName("WCG-006"), CardEffect("WCG-006"), CardName("WCG-101")],
@@ -437,32 +433,32 @@ public static class TutorialLessons
                     Text = "電腦的牌庫空了。按「結束回合」，它回合開始需要抽牌時就會落敗。",
                     Hint = "請按「結束回合」。" },
                 new() { Title = "本課重點",
-                    Text = "磨牌適合對手牌庫快見底時收尾。其他新機制也會在對局中遇到：箭頭要看左右是否有隊友，附著卡疊在同一隻怪物上，手牌反擊在受到傷害時發動，有些卡看場上的空格數，犧牲與墓地怪物能讓大怪物降費，中立傭兵會互相加成。" }
+                    Text = "磨牌適合對手牌庫快見底時收尾。其他進階機制也會在對局中遇到：箭頭連動左右隊友或正對面敵怪，附著卡疊在同一隻怪物上，手牌反擊在受到傷害時發動，有些卡看空格數與墓地張數，中立傭兵會互相加成。" }
             ]
         },
         new()
         {
-            Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、聖盾與雙色卡",
-            Summary = "PP 門檻只有三段；聖盾每次被攻擊用掉 1 個來源；雙色卡屬於兩個意志。",
-            Topics = ["PP 900／1200 以下、1800 以上", "聖盾來源一次", "連續攻擊破盾", "雙色卡"],
+            Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、格擋與雙色卡",
+            Summary = "PP 門檻以目前 PP 判定；直立具格擋的怪物首戰改為橫置存活；雙色卡屬於兩個意志。",
+            Topics = ["PP 10 以下／PP 18 以上", "直立格擋橫置存活", "連續攻擊擊破", "雙色卡"],
             Scene = new(
                 new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
-                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-157", 0), new("WCG-061", 1), new("WCG-031", 2), new("WCG-101", 4)] }),
+                new() { Deck = Deck(), Energy = 1, Board = [new("WCG-119", 0), new("WCG-063", 1), new("WCG-031", 2), new("WCG-101", 4)] }),
             Steps =
             [
-                new() { Title = "三段門檻", Spot = ["enemy-card:WCG-157", "enemy-card:WCG-101"],
-                    Text = "卡牌上的 PP 門檻只有三種：PP 900 以下、PP 1200 以下、PP 1800 以上。門檻只看怪物卡上印的 PP，不計加成與減益。" },
+                new() { Title = "門檻判定", Spot = ["enemy-card:WCG-119", "enemy-card:WCG-101"],
+                    Text = "卡牌上的 PP 門檻主要為 PP 10 以下或 PP 18 以上，全部以怪物目前的 PP 判定；另一類則看印刷費用（如費用 2 以下）。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
-                    Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && !OnField(e.Computer, "WCG-061") && Settled(e),
-                    Text = "「{0}」有嘲諷，左邊的「{1}」用箭頭給它聖盾。用「{2}」（{3} PP）攻擊它，聖盾擋下這次消滅，給予聖盾的「{1}」進入墓地。", TextValues = [CardName("WCG-031"), CardName("WCG-061"), CardName("WCG-154"), OwnPP("WCG-154")],
+                    Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Unit(e.Computer, "WCG-031") is { IsTapped: true } && OnField(e.Computer, "WCG-031") && Settled(e),
+                    Text = "「{0}」有嘲諷，左邊的「{1}」用箭頭給它格擋。用「{2}」（{3} PP）攻擊它時，直立的「{0}」會靠格擋改為橫置並存活。", TextValues = [CardName("WCG-031"), CardName("WCG-063"), CardName("WCG-154"), OwnPP("WCG-154")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-031")] },
                 new() { Title = "同回合再攻擊", Spot = ["own-card:WCG-155", "enemy-card:WCG-031"], Allow = [Attack("WCG-155", "WCG-031")],
                     Done = e => !OnField(e.Computer, "WCG-031") && Settled(e),
-                    Text = "給予聖盾的卡已經進入墓地，不會補回。再用「{0}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-155")],
+                    Text = "「{0}」現在已經橫置，這回合無法再格擋。再用「{1}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-031"), CardName("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
                 new() { Title = "看門檻選目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
-                    Text = "「{0}」的效果：{1} 「{2}」PP 太高不能選，請選「{3}」。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-157"), CardName("WCG-101")],
+                    Text = "「{0}」的效果：{1} 「{2}」PP 太高不能選，請選「{3}」。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-119"), CardName("WCG-101")],
                     Hint = "請打出「{0}」並選擇「{1}」。", HintValues = [CardName("WCG-246"), CardName("WCG-101")] },
                 new() { Title = "本課重點",
                     Text = "雙色卡同時屬於兩個意志，只能放進主色與副色剛好是這兩個意志的牌組，也同時滿足兩個意志的條件。天梯對手牌組會用到這些新機制，牌位越高越常見。" }
@@ -480,7 +476,7 @@ public static class TutorialLessons
                 new("建立空白牌組", "按「新建」開始一副全新的牌組。", ".deck-panel-card .card-footer .btn-outline-secondary", "deck-new"),
                 new("選擇主色", "從「主色」選單選一個意志作為這副牌的主色。", "#main-will", "deck-main"),
                 new("單色或雙色", "單色只放主色與中立；雙色可再加一個副色，副色張數不限。雙色卡要主色與副色剛好是它的兩個意志才能放入。卡牌庫會自動只顯示這副牌能放入的卡，鎖住的意志會顯示鎖頭。", ".color-mode"),
-                new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、聖盾與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
+                new("五大意志", "狂怒：直接傷害與速攻。理智：抽牌與控制。生機：鋪場與成長。秩序：嘲諷、格擋與保護。深淵：消滅、墓地與犧牲。中立卡任何牌組都能使用。", ".filter-panel .filter-row"),
                 new("加入卡片", "按任一張卡下方的「＋ 加入」，把它放進牌組。點卡面可以查看完整效果。", ".add-card-btn", "deck-add"),
                 new("張數與統計", "牌組面板會即時顯示張數進度、派系數與怪物／法術比例。湊滿 50 張才能儲存與出戰。", ".deck-panel-card .card-header"),
                 new("載入、儲存與列印", "「我的牌組」只放你自己的牌組；按「＋ 新增牌組」可選空白牌組，或複製官方預組再修改；「儲存牌組」會檢查規則後存下；也能列印實體牌組。", ".deck-panel-card .card-footer"),
@@ -523,8 +519,8 @@ public static class TutorialLessons
         new()
         {
             Id = "training", Icon = "swords", Title = "訓練場：布置與重複測試",
-            Summary = "在訓練場載入情境、指定卡片、布置戰場、調整生命能量與卡底下的牌，並保存場面反覆測試。",
-            Topics = ["快速情境", "測試工具", "加入手牌與牌庫頂", "直接擺放／進場", "生命與能量", "底下的牌", "保存場面"],
+            Summary = "在訓練場載入情境、指定卡片、布置戰場、調整生命能量與回合，並保存場面反覆測試。",
+            Topics = ["快速情境", "測試工具", "加入手牌與牌庫頂", "直接擺放／進場", "生命與能量", "結束回合測試", "保存場面"],
             Route = "battle",
             Tour =
             [
@@ -535,7 +531,7 @@ public static class TutorialLessons
                 new("指定卡片", "選擇己方或電腦，搜尋卡名或編號，可以把卡加入手牌、放到牌庫頂，或讓該方抽 1 張。", ".tt-cards"),
                 new("布置戰場", "選一個空格，按「直接擺放」不會觸發進場或召喚效果；按「進場並觸發效果」會正常結算，但不扣費。", ".tt-place"),
                 new("生命與能量", "修改生命（0–7）、總能量與可用能量（0–30），再按「套用生命與能量」。回合數也能修改。", ".tt-resources"),
-                new("底下的牌", "選好場上卡片後，設定底下的倒數牌、DP 牌、聖盾牌、血誓與聖泉數量，按「套用底下的牌」。墊牌從牌庫底拿、放回牌庫底；聖盾牌從手牌放入。這是直接設定，不觸發放置效果；要測倒數結束，請設成 1 再結束回合。", ".training-counters"),
+                new("切換控制與結束回合", "按「直接結束目前回合」可立即推進到下一回合，也能「互換雙方控制權」改由對手角度測試反應。", ".tt-resources"),
                 new("保存場面", "輸入名稱按「另存新場面」，之後可以從「已保存場面」還原、改名或刪除。場面存在這個瀏覽器，入口頁也能直接載入。", ".tt-scenes")
             ]
         },

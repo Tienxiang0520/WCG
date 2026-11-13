@@ -9,7 +9,7 @@ namespace WcgTests;
 public class NewCardTests
 {
     private readonly CardDatabase cards;
-    public NewCardTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
+    public NewCardTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=CardBalanceHistory.BeforeV2(new(env.Object));}
     private GameEngine Game(){var g=new GameEngine(cards,new Random(17));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();for(int i=0;i<12;i++)p.EnergyZone.Add(new(cards.GetCard("WCG-101")!));}return g;}
     private CardInstance Card(int n)=>new(cards.GetCard($"WCG-{n:000}")!);
     private CardInstance Hand(GameEngine g,int n,PlayerState? p=null){var c=Card(n);(p??g.Player).Hand.Add(c);return c;}

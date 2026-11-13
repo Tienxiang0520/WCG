@@ -17,7 +17,7 @@ public partial class GameEngine
     private int _reactionDepth;
 
     private bool CanDestroyDamageSource(DamageContext damage) => damage.Source?.Unit is { } unit
-        && unit.IsUnit && Alive(unit) && (unit.IsSilenced || unit.Card.Id != "WCG-152");
+        && unit.IsUnit && Alive(unit) && (unit.IsSilenced || (V2Rules ? !unit.Card.HasSpellward : unit.Card.Id != "WCG-152"));
     private bool CanRecoverCounter(PlayerState p) => p.Graveyard.Any(c => c.Card.IsMonster && c.Card.HasWill("深淵"))
         && p.Graveyard.Any(c => c.Card.IsMonster && c.Card.TotalCost <= 2);
     private bool CanReact(PlayerState p, CardInstance card, DamageContext damage)
@@ -102,7 +102,7 @@ public partial class GameEngine
             // If the monster already left the board, the counter only cancels the damage.
             var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? ThresholdPP(source!) : 0;
             Resolve(() => ReverseDamage(damage), () => { if (killable) KillBatch([source!], card.Card.Name); },
-                () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= 1800) SpellDamage(p, enemy, 1, card.Card); } else if (CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
+                () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= (V2Rules ? 18 : 1800)) SpellDamage(p, enemy, 1, card.Card); } else if (!V2Rules && CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
             return;
         }
         switch (card.Card.Id)
@@ -121,7 +121,7 @@ public partial class GameEngine
                 break;
             case "WCG-198":
                 Resolve(() => ReverseDamage(damage), () => Heal(p, 2),
-                    () => OptionalTarget(p, SimplifiedRules ? "可附著聖盾" : "可附著能量護盾", SpellResolvePickable(p, p.Field), x => Attach(p, card, x)));
+                    () => OptionalTarget(p, V2Rules ? "可附著格擋" : SimplifiedRules ? "可附著聖盾" : "可附著能量護盾", SpellResolvePickable(p, V2Rules ? p.Field.Concat(enemy.Field) : p.Field), x => Attach(p, card, x)));
                 break;
             case "WCG-199":
                 Resolve(() =>

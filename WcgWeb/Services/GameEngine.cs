@@ -291,30 +291,35 @@ public partial class GameEngine
     }
     private List<MonsterInstance> SpellTargets(PlayerState p, CardDefinition c)
     {
-        var enemy = GetOpponent(p).Field; IEnumerable<MonsterInstance> candidates = c.Id switch
+        var enemy = GetOpponent(p).Field;
+        var both = V2Rules ? p.Field.Concat(enemy) : enemy;
+        IEnumerable<MonsterInstance> candidates = c.Id switch
         {
+            "WCG-002" when V2Rules => both.Where(m => m.Card.TotalCost <= 3),
             "WCG-002" or "WCG-086" => enemy.Where(m => ThresholdPP(m) <= Low(1000)),
-            "WCG-012" or "WCG-064" => enemy.Where(m => m.Card.TotalCost <= 2),
-            "WCG-004" or "WCG-046" => enemy.Where(m => ThresholdPP(m) <= Low(500)),
-            "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * 500),
-            "WCG-024" or "WCG-137" or "WCG-184" => enemy,
-            "WCG-062" or "WCG-074" => p.Field.Where(CanShield),
+            "WCG-012" or "WCG-064" => both.Where(m => m.Card.TotalCost <= 2),
+            "WCG-004" or "WCG-046" => both.Where(m => ThresholdPP(m) <= Low(500)),
+            "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
+            "WCG-024" or "WCG-137" or "WCG-184" => both,
+            "WCG-062" or "WCG-074" => (V2Rules ? both : p.Field).Where(CanShield),
+            "WCG-032" when V2Rules => both.Where(m => ThresholdPP(m) <= 10 || m.IsTapped),
             "WCG-032" when ReasonBuff => enemy.Where(m => ThresholdPP(m) <= (m.IsTapped ? 2300 : 1600)),
             "WCG-017" or "WCG-032" => enemy.Where(m => ThresholdPP(m) <= Low(1700)),
-            "WCG-082" or "WCG-084" => enemy.Where(m => ThresholdPP(m) <= Low(1300)),
-            "WCG-076" => enemy.Where(m => ThresholdPP(m) >= High(1700)),
-            "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => enemy,
-            "WCG-036" or "WCG-135" => p.Field,
+            "WCG-082" or "WCG-084" => both.Where(m => ThresholdPP(m) <= Low(1300)),
+            "WCG-076" => both.Where(m => ThresholdPP(m) >= High(1700)),
+            "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => both,
+            "WCG-036" => p.Field,
+            "WCG-135" => V2Rules ? both : p.Field,
             "WCG-141" when !LegacyCardRules => p.Field,
             "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-168" or "WCG-165" => p.Field.Concat(enemy),
             "WCG-143" => p.Field.Concat(enemy).Where(m => m.IsTapped),
-            "WCG-167" => p.Field.Where(m => m.IsTapped),
+            "WCG-167" => (V2Rules ? both : p.Field).Where(m => m.IsTapped),
             "WCG-164" => p.Field.Where(m => !m.IsTapped),
             "WCG-169" => p.Field,
             "WCG-072" => p.Field.Concat(enemy).Where(m => !m.IsSilenced),
             _ => NewSpellTargets(p, c) ?? []
         };
-        return Targetable(p, candidates).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(p, m)).ToList();
+        return Targetable(p, candidates).Where(m => (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152")) && (V2Rules || !Hermit(p, m))).ToList();
     }
     // 寂靜禁咒 (WCG-208) needs a target only as a spell; in old-era catalogs it is the monster 寂靜學者.
     private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) || card.Id == "WCG-208" && card.IsSpell;
@@ -340,12 +345,13 @@ public partial class GameEngine
     }
     public bool CanPlayCard(PlayerState p, CardInstance c) => GetPlayProblem(p, c) == "";
     // Describe the first step before payment using the same predicates as BeginPlay.
+    internal const string DiscardCostTitle = "選擇要棄掉的手牌（代價，尚未扣費）";
     private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233" or "WCG-329" or "WCG-348";
     // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
-        card.Id is "WCG-050" or "WCG-066" or "WCG-070" && card.Text.Contains("任一玩家", StringComparison.Ordinal);
+        card.Id is "WCG-050" or "WCG-066" or "WCG-070" && (card.Text.Contains("任一玩家", StringComparison.Ordinal) || card.Text.Contains("1 位玩家", StringComparison.Ordinal));
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
-        : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : "none";
+        : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : card.Id == "WCG-095" && card.Text.Contains("額外代價：棄", StringComparison.Ordinal) ? "choice" : "none";
     public bool SummonMonster(PlayerState p, CardInstance c) => AiTracked(AiNote("summon", p, c), () => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
     public bool CastSpell(PlayerState p, CardInstance c) => AiTracked(AiNote("spell", p, c), () => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
@@ -375,15 +381,36 @@ public partial class GameEngine
         if (c.Card.Id == "WCG-046" && mode == "")
         {
             var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張牌，然後棄 1 張手牌" } };
-            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = $"消滅 PP {Low(500)} 以下敵怪" });
+            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? "消滅 1 隻 PP 10 以下怪物" : $"消滅 PP {Low(500)} 以下敵怪" });
             Ask(p, "自然之怒抉擇（尚未扣費）", modes, o => BeginPlay(p, c, o.Id), true, c.InstanceId); return true;
+        }
+        void PlaceAndCommit(MonsterInstance? sacrifice, List<CardInstance>? discards)
+        {
+            if (c.Card.IsMonster || c.Card.IsEnchantment)
+                ChooseSlot(p, c.Card, slot => { plannedSlots[c.InstanceId] = slot; CommitPlay(p, c, targetForCommit(), sacrifice, mode, null, discards); }, true, c.InstanceId);
+            else CommitPlay(p, c, targetForCommit(), sacrifice, mode, null, discards);
+        }
+        MonsterInstance? pickedTarget = null;
+        MonsterInstance? targetForCommit() => pickedTarget;
+        void PickCostDiscard(int needed, List<CardInstance> picked, Action<List<CardInstance>> done)
+        {
+            if (picked.Count >= needed) { done(picked); return; }
+            var avail = p.Hand.Where(x => x != c && !picked.Contains(x)).ToList();
+            if (avail.Count < needed - picked.Count) { CancelTargetOrChoice(); Fail($"需要另外 {needed} 張手牌支付棄牌代價。"); return; }
+            var options = avail.Select(x => new ChoiceOption { Id = x.InstanceId.ToString(), Title = x.Card.Name, PreviewCard = x.Card }).ToList();
+            var stepTitle = needed > 1 ? $"{DiscardCostTitle}（第 {picked.Count + 1}/{needed} 張）" : DiscardCostTitle;
+            Ask(p, stepTitle, options, o =>
+            {
+                var chosen = avail.First(x => x.InstanceId.ToString() == o.Id);
+                PickCostDiscard(needed, [.. picked, chosen], done);
+            }, true, c.InstanceId);
         }
         void WithTarget(MonsterInstance? target)
         {
-            if (NeedsSacrifice(c.Card.Id)) PickMonster(p, "選擇要犧牲的己方怪物（尚未扣費）", p.Field, sacrifice => CommitPlay(p, c, target, sacrifice, mode), true, c.InstanceId);
-            else if (c.Card.IsMonster || c.Card.IsEnchantment)
-                ChooseSlot(p, c.Card, slot => { plannedSlots[c.InstanceId] = slot; CommitPlay(p, c, target, null, mode); }, true, c.InstanceId);
-            else CommitPlay(p, c, target, null, mode);
+            pickedTarget = target;
+            if (NeedsSacrifice(c.Card.Id)) PickMonster(p, "選擇要犧牲的己方怪物（尚未扣費）", p.Field, sacrifice => PlaceAndCommit(sacrifice, null), true, c.InstanceId);
+            else if (V2Rules && c.Card.Id is "WCG-084" or "WCG-095") PickCostDiscard(c.Card.Id == "WCG-095" ? 2 : 1, [], discards => PlaceAndCommit(null, discards));
+            else PlaceAndCommit(null, null);
         }
         if (initialTarget != null) WithTarget(initialTarget);
         else if (NeedsSpellTarget(c.Card) || c.Card.Id == "WCG-046" && mode == "KILL") PickMonster(p, "選擇卡牌目標（尚未扣費，可取消）", SpellTargets(p, c.Card), m => WithTarget(m), true, c.InstanceId);
@@ -393,18 +420,26 @@ public partial class GameEngine
     // Pending selection itself makes CanPlayCard false; validate candidates without that waiting-state check.
     private IReadOnlyList<PlayerState> GetDirectPlayerTargetsForSelection(PlayerState p, CardInstance c) =>
         NeedsPlayerSpellTarget(c.Card) && p.Hand.Contains(c) ? [Player, Computer] : [];
-    private void CommitPlay(PlayerState p, CardInstance c, MonsterInstance? target, MonsterInstance? sacrifice, string mode, PlayerState? playerTarget = null)
+    private void CommitPlay(PlayerState p, CardInstance c, MonsterInstance? target, MonsterInstance? sacrifice, string mode, PlayerState? playerTarget = null, List<CardInstance>? discards = null)
     {
+        var id = c.Card.Id;
+        var discardNeed = V2Rules && id is "WCG-084" or "WCG-095" ? (id == "WCG-095" ? 2 : 1) : 0;
         if (GetPlayProblem(p, c) != "" || (target != null && !SpellTargets(p, c.Card).Contains(target)) || (sacrifice != null && !p.Field.Contains(sacrifice))
-            || (NeedsPlayerSpellTarget(c.Card) && (playerTarget == null || !GetDirectPlayerTargetsForSelection(p, c).Contains(playerTarget))))
+            || (NeedsPlayerSpellTarget(c.Card) && (playerTarget == null || !GetDirectPlayerTargetsForSelection(p, c).Contains(playerTarget)))
+            || (discardNeed > 0 && (discards == null || discards.Count != discardNeed || discards.Any(x => x == c || !p.Hand.Contains(x)) || discards.Distinct().Count() != discardNeed)))
         { Fail("卡牌或代價已失效，未扣費。"); return; }
         CanPayCost(p, c.Card, out var payment); foreach (var e in payment) e.IsTapped = true;
         Present("pay", p, amount: payment.Count, label: "支付能量");
         Present("play", p, c.InstanceId, playerTarget != null ? TargetId(playerTarget) : target?.InstanceId, card: c.Card, label: c.Card.IsMonster ? "打出怪物" : "施放法術");
-        var id = c.Card.Id;
-        if (id is "WCG-084" or "WCG-095") RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
+        if (id is "WCG-084" or "WCG-095")
+        {
+            if (V2Rules && discards != null)
+                foreach (var d in discards) { p.Hand.Remove(d); p.Graveyard.Add(d); Present("discard", p, d.InstanceId, card: d.Card, label: "棄牌代價"); Log($"【{p.Name}】棄掉【{d.Card.Name}】作為代價。", "action"); }
+            else RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
+        }
         p.Hand.Remove(c);
         if (c.Card.IsMonster && p.NextCreatureDiscount > 0) p.NextCreatureDiscount = 0;
+        if (V2Rules && id != LuckyCoinId && p.NextCardDiscount > 0) p.NextCardDiscount = 0;
         if (c.Card.IsMonster) TidePaidSummon(p);
         if (c.Card.IsSpell) p.Graveyard.Add(c);
         if (id == "WCG-164" && target != null) target.IsTapped = true;

@@ -43,7 +43,7 @@ public partial class GameEngine
             {
                 var top = choice.Options[0].PreviewCard;
                 if (top == null) return choice.Options[0];
-                bool bottom = ActualCost(p, top) > p.TotalEnergy + 2 || top.IsMonster && (top.PP ?? 0) < 900 && TurnNumber > 10;
+                bool bottom = ActualCost(p, top) > p.TotalEnergy + 2 || top.IsMonster && (top.PP ?? 0) < ScalePP(900) && TurnNumber > 10;
                 return choice.Options.First(o => o.Id == (bottom ? "BOTTOM" : "TOP"));
             }
         }

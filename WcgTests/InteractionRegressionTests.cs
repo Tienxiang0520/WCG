@@ -26,8 +26,8 @@ public class InteractionRegressionTests
     {
         for(int i=0;e.IsWaiting && i<100;i++)
         {
-            if(e.CurrentPendingChoice is {} c) Assert.True(e.SelectChoice(c.Options.FirstOrDefault(x=>x.Id=="KEEP")??c.Options.First()));
-            else { var t=e.CurrentPendingTarget!;if(t.PlayerValidator!=null){Assert.True(e.SelectPlayerTarget(e.Player));continue;}Assert.True(e.SelectTarget(e.Player.Field.Concat(e.Computer.Field).First(m=>t.Validator!(m)))); }
+            if(e.CurrentPendingChoice is {} c) Assert.True(e.SelectChoice(c.Options.FirstOrDefault(x=>x.Id=="KEEP")??c.Options.FirstOrDefault(x=>e.Computer.Field.Any(m=>m.InstanceId.ToString()==x.Id))??c.Options.FirstOrDefault(x=>x.Id!="SKIP"&&!e.Player.Field.Any(m=>m.InstanceId.ToString()==x.Id))??c.Options.FirstOrDefault(x=>x.Id=="SKIP")??c.Options.First()));
+            else { var t=e.CurrentPendingTarget!;if(t.PlayerValidator!=null){Assert.True(e.SelectPlayerTarget(e.Player));continue;}Assert.True(e.SelectTarget(e.Computer.Field.Concat(e.Player.Field).First(m=>t.Validator!(m)))); }
         }
         Assert.False(e.IsWaiting);
     }
@@ -72,14 +72,14 @@ public class InteractionRegressionTests
     }
     [Fact] public void SearchUsesActualTopCardsAndChosenBottomOrder()
     {
-        var top=new[]{Card("WCG-101"),Card("WCG-121"),Card("WCG-122")};e.Player.Deck.Clear();e.Player.Deck.AddRange(top);var spell=Hand(e.Player,"WCG-030");
+        var top=new[]{Card("WCG-101"),Card("WCG-121"),Card("WCG-122")};e.Player.Deck.Clear();e.Player.Deck.AddRange(top);var spell=Hand(e.Player,"WCG-122");
         Assert.True(e.CastSpell(e.Player,spell));Assert.True(e.SelectChoice(e.CurrentPendingChoice!.Options.Single(x=>x.Id==top[0].InstanceId.ToString())));
         Assert.True(e.SelectChoice(e.CurrentPendingChoice!.Options.Single(x=>x.Id==top[2].InstanceId.ToString())));
         Assert.Contains(top[0],e.Player.Hand);Assert.Equal(new[]{top[2],top[1]},e.Player.Deck);
     }
     [Fact] public void SimultaneousDeathRemovesBothBeforeDeathDraw()
     {
-        var a=Field(e.Player,"WCG-025",3000);var b=Field(e.Computer,"WCG-103",3000);int pd=e.Player.Deck.Count,cd=e.Computer.Deck.Count;Assert.True(e.Attack(e.Player,a,b));
+        var a=Field(e.Player,"WCG-025",30);var b=Field(e.Computer,"WCG-103",30);int pd=e.Player.Deck.Count,cd=e.Computer.Deck.Count;Assert.True(e.Attack(e.Player,a,b));
         Assert.Empty(e.Player.Field);Assert.Empty(e.Computer.Field);Assert.Equal(pd-1,e.Player.Deck.Count);Assert.Equal(cd-1,e.Computer.Deck.Count);
     }
     [Fact] public void EveryMonsterAndSpellResolvesWithoutCreatingCards()
@@ -88,28 +88,32 @@ public class InteractionRegressionTests
         {
             e.StartGame(db.PresetDecks[0],db.PresetDecks[1]);e.Computer.IsAi=false;e.Player.Hand.Clear();e.Computer.Hand.Clear();Energy(e.Player);Energy(e.Computer);
             Field(e.Player,"WCG-101");Field(e.Player,"WCG-103");
-            Field(e.Computer,"WCG-007",325);Field(e.Computer,"WCG-113");
+            Field(e.Computer,"WCG-007",3);Field(e.Computer,"WCG-113");
             Hand(e.Player,"WCG-001");Hand(e.Player,"WCG-003");Hand(e.Player,"WCG-121");
             e.Player.Graveyard.Add(Card("WCG-101"));e.Player.Graveyard.Add(Card("WCG-103"));
             var card=new CardInstance(definition);e.Player.Hand.Add(card);int before=Count();
             var played=definition.IsCounter?e.SetCard(e.Player,card):definition.IsMonster?e.SummonMonster(e.Player,card):definition.IsEnchantment?e.PlayEnchantment(e.Player,card):e.CastSpell(e.Player,card);if(!played){Assert.NotEmpty(e.LastError);continue;}Choices();
             Assert.False(e.IsOver);Assert.Equal(before,Count());
-            if(definition.IsMonster) Assert.Contains(e.Player.Field,m=>m.InstanceId==card.InstanceId);
+            if(definition.IsMonster) Assert.True(e.Player.Field.Any(m=>m.InstanceId==card.InstanceId),definition.Id+" "+definition.Name);
             if(definition.IsMonster) { Energy(e.Player);var wipe=Hand(e.Player,"WCG-098");before=Count();Assert.True(e.CastSpell(e.Player,wipe),definition.Id+": "+e.LastError);Choices();Assert.Equal(before,Count()); }
         }
         int Count()=>new[]{e.Player,e.Computer}.Sum(p=>p.Deck.Count+p.Hand.Count+p.EnergyZone.Count+p.Graveyard.Count+p.Occupied+p.Board.Sum(m=>m.Attachments.Count+m.Under.Count+m.ShieldCards.Count)+p.Field.Count(m=>m.SilenceSpell!=null));
     }
     [Fact] public void SacrificeTriggersLastWordsAndCountsAsDestroyed()
     {
-        // 卡牌文字白話化: a sacrifice counts as destroyed, so 嗜血戰狂 draws and 幽冥巨龍 heals.
-        e.Player.Hp=5;Field(e.Player,"WCG-011");Field(e.Player,"WCG-099");var victim=Field(e.Player,"WCG-003");var c=Hand(e.Player,"WCG-096");int deck=e.Player.Deck.Count;
-        Assert.True(e.CastSpell(e.Player,c));Assert.True(e.SelectTarget(victim));Assert.Equal(5,e.Player.Hp);Assert.Equal(6,e.Computer.Hp);Assert.Equal(deck-4,e.Player.Deck.Count);
+        // 卡牌文字白話化: a sacrifice counts as destroyed, so 嗜血戰狂 draws.
+        e.Player.Hp=5;Field(e.Player,"WCG-011");var victim=Field(e.Player,"WCG-003");var c=Hand(e.Player,"WCG-096");int deck=e.Player.Deck.Count;
+        Assert.True(e.CastSpell(e.Player,c));Assert.True(e.SelectTarget(victim));Assert.Equal(4,e.Player.Hp);Assert.Equal(6,e.Computer.Hp);Assert.Equal(deck-4,e.Player.Deck.Count);
     }
     [Fact] public void LegacySacrificeTriggersLastWordsButNotDestroyedListeners()
     {
-        CardTextClarityTests.Legacy(e);
-        e.Player.Hp=5;Field(e.Player,"WCG-011");Field(e.Player,"WCG-099");var victim=Field(e.Player,"WCG-003");var c=Hand(e.Player,"WCG-096");int deck=e.Player.Deck.Count;
-        Assert.True(e.CastSpell(e.Player,c));Assert.True(e.SelectTarget(victim));Assert.Equal(4,e.Player.Hp);Assert.Equal(6,e.Computer.Hp);Assert.Equal(deck-3,e.Player.Deck.Count);
+        var oldDb=CardBalanceHistory.BeforeV2(db);var g=new GameEngine(oldDb,new Random(7));
+        g.StartGame(oldDb.PresetDecks[0],oldDb.PresetDecks[1]);g.Computer.IsAi=false;g.Player.Hand.Clear();g.Computer.Hand.Clear();Energy(g.Player);
+        CardTextClarityTests.Legacy(g);
+        g.Player.Hp=5;g.Player.Field.Add(new(oldDb.GetCard("WCG-011")!){IsTapped=false});g.Player.Field.Add(new(oldDb.GetCard("WCG-099")!){IsTapped=false});
+        var victim=new MonsterInstance(oldDb.GetCard("WCG-003")!){IsTapped=false};g.Player.Field.Add(victim);
+        var c=new CardInstance(oldDb.GetCard("WCG-096")!);g.Player.Hand.Add(c);int deck=g.Player.Deck.Count;
+        Assert.True(g.CastSpell(g.Player,c));Assert.True(g.SelectTarget(victim));Assert.Equal(4,g.Player.Hp);Assert.Equal(6,g.Computer.Hp);Assert.Equal(deck-3,g.Player.Deck.Count);
     }
 
 }

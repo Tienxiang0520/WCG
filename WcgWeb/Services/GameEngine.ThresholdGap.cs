@@ -9,11 +9,11 @@ public partial class GameEngine
     internal static bool InPrintedGap(MonsterInstance m) => m.Card.PP is >= 1300 and <= 1700;
     private int GapPower(PlayerState p, MonsterInstance m) => m.Card.Id switch
     {
-        "WCG-273" => 100 * Math.Min(5, p.Hand.Count),
-        "WCG-275" => 200 * p.Field.Count(x => x != m),
-        "WCG-276" => p.Hand.Count >= 4 ? 400 : 0,
-        "WCG-279" => p.Hand.Count >= 5 ? 500 : 0,
-        "WCG-281" => 200 * p.Field.Count(x => x != m && x.IsUnit && InPrintedGap(x)),
+        "WCG-273" => ScalePP(100) * Math.Min(5, p.Hand.Count),
+        "WCG-275" => ScalePP(200) * p.Field.Count(x => x != m),
+        "WCG-276" => p.Hand.Count >= 4 ? ScalePP(400) : 0,
+        "WCG-279" => p.Hand.Count >= 5 ? ScalePP(500) : 0,
+        "WCG-281" => ScalePP(200) * p.Field.Count(x => x != m && x.IsUnit && InPrintedGap(x)),
         _ => 0
     };
     // Combat-only modifiers added by later archetypes; 274's own +300 is in CombatPower.

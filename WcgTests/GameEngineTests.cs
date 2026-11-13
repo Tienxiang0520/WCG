@@ -23,7 +23,7 @@ public class GameEngineTests
     [Fact]
     public void TestCardDatabaseLoadsCards()
     {
-        Assert.Equal(426, _cardDb.AllCards.Count);
+        Assert.Equal(236, _cardDb.AllCards.Count);
         Assert.Null(_cardDb.GetCard("ENG-01"));
         Assert.NotNull(_cardDb.GetCard("WCG-001"));
         Assert.NotNull(_cardDb.GetCard("WCG-123"));
@@ -80,7 +80,7 @@ public class GameEngineTests
         var resource = engine.Player.Hand[0];
         var handBefore = engine.Player.Hand.Count;
         var deckBefore = engine.Player.Deck.ToArray();
-        engine.Player.Field.Add(new MonsterInstance(_cardDb.GetCard("WCG-039")!));
+        engine.Player.Field.Add(new MonsterInstance(_cardDb.GetCard("WCG-101")!));
         Assert.True(engine.PlayEnergy(engine.Player, resource));
         Assert.Equal(handBefore - 1, engine.Player.Hand.Count);
         Assert.Equal(deckBefore, engine.Player.Deck);
@@ -155,7 +155,7 @@ public class GameEngineTests
     {
         var engine = new GameEngine(_cardDb);
         engine.StartGame(_cardDb.PresetDecks[0], _cardDb.PresetDecks[1]);
-        var enemy = new MonsterInstance(new CardDefinition { Id = "WEAK", Type = "怪物", PP = 325, DP = 1 });
+        var enemy = new MonsterInstance(new CardDefinition { Id = "WEAK", Type = "怪物", PP = 3, DP = 1 });
         engine.Computer.Field.Add(enemy);
         for (int i = 0; i < 2; i++) engine.Player.EnergyZone.Add(new CardInstance(_cardDb.GetCard("WCG-101")!));
         var source = new CardInstance(_cardDb.GetCard("WCG-001")!); engine.Player.Hand.Add(source);
@@ -171,13 +171,14 @@ public class GameEngineTests
     [Fact]
     public void TestRagnarosLethalStopsTurnTransition()
     {
-        var engine = new GameEngine(_cardDb);
-        var pDeck = _cardDb.PresetDecks[0];
-        var cDeck = _cardDb.PresetDecks[1];
+        var cards = CardBalanceHistory.BeforeV2(_cardDb);
+        var engine = new GameEngine(cards);
+        var pDeck = cards.PresetDecks[0];
+        var cDeck = cards.PresetDecks[1];
         engine.StartGame(pDeck, cDeck, playerFirst: true);
 
         // Put Ragnaros on Player's field
-        var ragCard = _cardDb.GetCard("WCG-120");
+        var ragCard = cards.GetCard("WCG-120");
         Assert.NotNull(ragCard);
         Assert.Equal(8, ragCard.TotalCost);
         var ragMonster = new MonsterInstance(ragCard);
@@ -209,11 +210,12 @@ public class GameEngineTests
     [Fact]
     public void TestRagnarosDeployDoesNotMillOrShuffle()
     {
-        var engine = new GameEngine(_cardDb);
-        engine.StartGame(_cardDb.PresetDecks[0], _cardDb.PresetDecks[1]);
-        var rag = new CardInstance(_cardDb.GetCard("WCG-120")!);
+        var cards = CardBalanceHistory.BeforeV2(_cardDb);
+        var engine = new GameEngine(cards);
+        engine.StartGame(cards.PresetDecks[0], cards.PresetDecks[1]);
+        var rag = new CardInstance(cards.GetCard("WCG-120")!);
         engine.Player.Hand.Add(rag);
-        for (int i = 0; i < 8; i++) engine.Player.EnergyZone.Add(new CardInstance(_cardDb.GetCard("WCG-101")!));
+        for (int i = 0; i < 8; i++) engine.Player.EnergyZone.Add(new CardInstance(cards.GetCard("WCG-101")!));
         var before = engine.Player.Deck.ToArray();
         Assert.True(engine.SummonMonster(engine.Player, rag));
         Assert.Equal(before, engine.Player.Deck);
@@ -224,14 +226,15 @@ public class GameEngineTests
     [Fact]
     public void TestAiCanSummonRagnarosWithEightResources()
     {
-        var engine = new GameEngine(_cardDb);
-        engine.StartGame(_cardDb.PresetDecks[0], _cardDb.PresetDecks[1]);
+        var cards = CardBalanceHistory.BeforeV2(_cardDb);
+        var engine = new GameEngine(cards);
+        engine.StartGame(cards.PresetDecks[0], cards.PresetDecks[1]);
         engine.Computer.IsAi = false;
         engine.EndTurn();
         engine.Computer.IsAi = true;
         engine.Computer.Hand.Clear();
-        engine.Computer.Hand.Add(new CardInstance(_cardDb.GetCard("WCG-120")!));
-        for (int i = 0; i < 8; i++) engine.Computer.EnergyZone.Add(new CardInstance(_cardDb.GetCard("WCG-101")!));
+        engine.Computer.Hand.Add(new CardInstance(cards.GetCard("WCG-120")!));
+        for (int i = 0; i < 8; i++) engine.Computer.EnergyZone.Add(new CardInstance(cards.GetCard("WCG-101")!));
         engine.ExecuteAiTurn();
         var rag = Assert.Single(engine.Computer.Field);
         Assert.Equal("WCG-120", rag.Card.Id);

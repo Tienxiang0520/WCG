@@ -152,15 +152,13 @@ public class TutorialTests
     }
 
     [Fact]
-    public async Task CounterLessonLeavesRealDpCardsAndTheUsurpSpellUnderTheMonsters()
+    public async Task DuelLessonResolvesBypassSpellproofAndDuel()
     {
-        using var s = New(); s.Load(TutorialLessons.Find("counters")!);
-        await Play(s, "counters");
+        using var s = New(); s.Load(TutorialLessons.Find("duel")!);
+        await Play(s, "duel");
         var e = s.Engine;
-        var calf = e.Player.Field.Single(m => m.Card.Id == "WCG-337");
-        Assert.True(calf.DpCards > 0); Assert.All(calf.Under, u => Assert.Equal(e.Player.Id, u.OwnerId));
-        var stolen = e.Player.Field.Single(m => m.Card.Id == "WCG-155");
-        Assert.True(stolen.SoulSpell); Assert.Equal("computer", stolen.OwnerId); Assert.Contains(stolen.Attachments, a => a.Card.Card.Id == "WCG-335");
+        Assert.DoesNotContain(e.Computer.Field, m => m.Card.Id == "WCG-152");
+        Assert.Contains(e.Player.Field, m => m.Card.Id == "WCG-266");
     }
 
     [Fact]
@@ -189,8 +187,8 @@ public class TutorialTests
         using var s = New(); var lesson = TutorialLessons.Find("status")!; s.Load(lesson);
         using var language = new Localizer(new PlayerProfileStore(new MemoryStorage()));
         var unit = s.Engine.Player.Field.Single(x => x.Card.Id == "WCG-154");
-        unit.TurnBonus += 300;
-        Assert.Equal(1600, unit.CurrentPP);
+        unit.TurnBonus += 3;
+        Assert.Equal(unit.Card.PP!.Value + 3, unit.CurrentPP);
         Assert.Contains($"{unit.CurrentPP} PP", s.RenderText(lesson.Steps.Single(x => x.Title == "擊破"), language));
         var taunt = TutorialLessons.Find("taunt")!; s.Load(taunt);
         cards.GetCard("WCG-156")!.DP = 4;

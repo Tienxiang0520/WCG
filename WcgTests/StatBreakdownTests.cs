@@ -32,31 +32,31 @@ public class StatBreakdownTests
         var g=Game();var ally=Unit(g.Player,101,1);var src=Unit(g.Player,49,2);var foe=Unit(g.Computer,154,3);var weakener=Unit(g.Computer,85,2);Refresh(g);
         // 049 points left/right at 101; 085 (enemy slot 2) points up at our slot 4-2=2 → src.
         var allyParts=g.PowerModifiers(ally);
-        Assert.Equal([("WCG-049",200)],allyParts.Select(x=>(x.Source!.Id,x.Amount)));Assert.Equal(src.Card.Name,allyParts[0].Label);
+        Assert.Equal([("WCG-049",2)],allyParts.Select(x=>(x.Source!.Id,x.Amount)));Assert.Equal(src.Card.Name,allyParts[0].Label);
         Consistent(ally,allyParts);
-        var srcParts=g.PowerModifiers(src);Assert.Contains(srcParts,x=>x.Source?.Id=="WCG-085"&&x.Amount==-300);Consistent(src,srcParts);
+        var srcParts=g.PowerModifiers(src);Assert.Contains(srcParts,x=>x.Source?.Id=="WCG-085"&&x.Amount==-3);Consistent(src,srcParts);
         Consistent(foe,g.PowerModifiers(foe));Consistent(weakener,g.PowerModifiers(weakener));
     }
     [Fact] public void AttachmentsAreListedWithTheirName()
     {
         var g=Game();var m=Unit(g.Player,101,1);var banner=new CardInstance(cards.GetCard("WCG-221")!);m.Attachments.Add(new(banner,"player"));Refresh(g);
         var parts=g.PowerModifiers(m);
-        Assert.Equal([("WCG-221",300)],parts.Select(x=>(x.Source!.Id,x.Amount)));Consistent(m,parts);
+        Assert.Equal([("WCG-221",2)],parts.Select(x=>(x.Source!.Id,x.Amount)));Consistent(m,parts);
     }
     [Fact] public void TurnBonusSourcesAreTrackedAndResetWithTheBonus()
     {
         var g=Game();var m=Unit(g.Player,101,1);Refresh(g);var source=cards.GetCard("WCG-252")!;
-        AddTurnBonus(m,300,source);AddTurnBonus(m,300,source);
-        var parts=g.PowerModifiers(m);Assert.Equal([("WCG-252",600)],parts.Select(x=>(x.Source!.Id,x.Amount)));Consistent(m,parts);
+        AddTurnBonus(m,3,source);AddTurnBonus(m,3,source);
+        var parts=g.PowerModifiers(m);Assert.Equal([("WCG-252",6)],parts.Select(x=>(x.Source!.Id,x.Amount)));Consistent(m,parts);
         m.TurnBonus=0; // turn change (rules code resets only the number)
         Assert.Empty(g.PowerModifiers(m));
-        AddTurnBonus(m,300,source);Assert.Equal([300],g.PowerModifiers(m).Select(x=>x.Amount));
+        AddTurnBonus(m,3,source);Assert.Equal([3],g.PowerModifiers(m).Select(x=>x.Amount));
     }
     [Fact] public void UntrackedBonusFallsBackToAGenericLine()
     {
-        var g=Game();var m=Unit(g.Player,101,1);Refresh(g);m.CombatPowerBonus=500;m.NextCombatBonus=-500;
-        var parts=g.PowerModifiers(m);Assert.Contains(parts,x=>x.Source==null&&x.Label=="戰鬥加成"&&x.Amount==500);
-        Assert.Contains(parts,x=>x.Source==null&&x.Label=="下次戰鬥加成"&&x.Amount==-500);Consistent(m,parts);
+        var g=Game();var m=Unit(g.Player,101,1);Refresh(g);m.CombatPowerBonus=5;m.NextCombatBonus=-5;
+        var parts=g.PowerModifiers(m);Assert.Contains(parts,x=>x.Source==null&&x.Label=="戰鬥加成"&&x.Amount==5);
+        Assert.Contains(parts,x=>x.Source==null&&x.Label=="下次戰鬥加成"&&x.Amount==-5);Consistent(m,parts);
         m.AttackDamageBonus=2;Assert.Equal([("攻擊加成",2)],g.DamageModifiers(m).Select(x=>(x.Label,x.Amount)));
     }
     [Fact] public void BreakdownMatchesCurrentPowerThroughoutSelfPlay()

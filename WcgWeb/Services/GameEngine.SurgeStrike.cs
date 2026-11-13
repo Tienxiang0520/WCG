@@ -38,16 +38,17 @@ public partial class GameEngine
     // 397 血浪劍豪: +400 PP for each attack it has made this turn.
     private static int SurgePower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-397" ? 400 * m.SurgeAttacks : 0;
 
-    private List<MonsterInstance>? SurgeSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-392" ? p.Field.Where(x => x.IsUnit).ToList() : null;
+    private List<MonsterInstance>? SurgeSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-392" ? (V2Rules ? p.Field.Concat(GetOpponent(p).Field) : p.Field).Where(x => x.IsUnit).ToList() : null;
     private static bool SurgeNeedsTarget(string id) => id == "WCG-392";
     private bool SurgeSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {
         switch (source.Card.Id)
         {
             case "WCG-392":
-                if (t == null || !Alive(t) || !p.Field.Contains(t)) break;
-                if (t.IsTapped) SurgeReady(p, t, source.Card);
-                AddTurnBonus(t, 300, source.Card);
+                if (t == null || !Alive(t) || (!V2Rules && !p.Field.Contains(t))) break;
+                if (t.IsTapped) SurgeReady(Owner(t), t, source.Card);
+                if (V2Rules) t.SurgeNoFace = true;
+                AddTurnBonus(t, ScalePP(300), source.Card);
                 break;
             case "WCG-396":
                 foreach (var x in p.Field.Where(x => x.IsUnit && x.IsTapped).ToArray()) { SurgeReady(p, x, source.Card); x.SurgeNoFace = true; }
@@ -59,7 +60,7 @@ public partial class GameEngine
     }
     private string SurgePlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
-        "WCG-392" when !p.Field.Any(x => x.IsUnit) => "需要 1 隻己方怪物。",
+        "WCG-392" when !(V2Rules ? p.Field.Concat(GetOpponent(p).Field) : p.Field).Any(x => x.IsUnit) => "需要 1 隻怪物。",
         "WCG-396" when !p.Field.Any(x => x.IsUnit && x.IsTapped) => "你沒有已橫置的怪物。",
         _ => FatePlayProblem(p, c)
     };
@@ -80,6 +81,7 @@ public partial class GameEngine
         {
             case "WCG-392":
                 if (spent.Count == 0) return -3;
+                if (V2Rules) return e.Field.Any(x => x.IsUnit) ? 2 : -3;
                 var best = spent.Max(x => x.CurrentDP);
                 return best >= e.Hp && !e.Field.Any(x => x.IsTaunt) ? 1000 : 2 + best;
             case "WCG-396":

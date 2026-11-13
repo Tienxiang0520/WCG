@@ -8,7 +8,7 @@ namespace WcgWeb.Services;
 // normal controls) and one-click preset scenes. Only TrainingMode engines reach this; ranked and normal play reject it.
 public partial class GameEngine
 {
-    internal static readonly string[] TrainingPresets = ["taunt", "combat", "countdown", "reveal", "untap", "defeat", "victory"];
+    internal static readonly string[] TrainingPresets = ["taunt", "combat", "block", "bypass", "untap", "defeat", "victory"];
     private const int TrainingCounterMax = 20;
 
     // Returns null when the type is not one of these tools (the caller handles it).
@@ -51,6 +51,7 @@ public partial class GameEngine
         if (values.Any(v => v < -1 || v > TrainingCounterMax)) return Fail($"底下的牌數量範圍 0–{TrainingCounterMax}。");
         if (edit.Blood > 0 && unit.Card.Id != "WCG-364") return Fail("血誓只能放在血誓祭壇底下。");
         if (edit.Spring > 0 && unit.Card.Id != "WCG-403") return Fail("聖泉只能放在聖泉之井底下。");
+        if (V2Rules && edit.Shield > 0) return Fail("v2.0 已改為「格擋」，不再放置手牌聖盾。");
         if (edit.Shield > 0 && (!unit.IsUnit || !CanShield(unit))) return Fail("這張卡不能獲得聖盾。");
         if (edit.Shield > unit.ShieldCards.Count && side.Hand.Count < edit.Shield - unit.ShieldCards.Count) return Fail("手牌不足，無法放上這麼多張聖盾牌。");
         void Set(UnderKind kind, int n)
@@ -113,34 +114,32 @@ public partial class GameEngine
         switch (name)
         {
             case "taunt": // 白銀巡邏衛 (嘲諷) guards 巡邏輕步兵; attack the face or the other monster and taunt blocks it.
-                Unit(Player, "WCG-055", 1); Unit(Player, "WCG-154", 2);
+                Unit(Player, "WCG-114", 1); Unit(Player, "WCG-154", 2);
                 Unit(Computer, "WCG-065", 2); Unit(Computer, "WCG-101", 3);
                 break;
-            case "combat": // 1900 vs 1000 (defender breaks), 1300 vs 1300 (both break).
-                Unit(Player, "WCG-055", 1); Unit(Player, "WCG-154", 3);
+            case "combat": // 19 vs 10 (defender breaks), 13 vs 13 (both break).
+                Unit(Player, "WCG-114", 1); Unit(Player, "WCG-154", 3);
                 Unit(Computer, "WCG-101", 1); Unit(Computer, "WCG-154", 3);
                 break;
-            case "countdown": // End the computer's turn: at your turn start 星沙學徒 fires (draw 2), 封時守衛 2→1, 倒懸時鐘 fires.
-                PadUnder(Player, Unit(Player, "WCG-409", 0), UnderKind.Countdown, 1); PadUnder(Player, Unit(Player, "WCG-413", 2), UnderKind.Countdown, 2); PadUnder(Player, Unit(Player, "WCG-410", 4), UnderKind.Countdown, 1);
-                Unit(Computer, "WCG-101", 1); Unit(Computer, "WCG-154", 3);
-                active = "computer";
+            case "block": // 聖印侍從 grants 格擋 via → arrow to upright 巡邏輕步兵; first attack taps it to block instead of dying.
+                Unit(Player, "WCG-114", 1); Unit(Player, "WCG-154", 3);
+                Unit(Computer, "WCG-063", 1); Unit(Computer, "WCG-101", 2);
                 break;
-            case "reveal": // Play 擲骨巫童: the deck top 雪人巨獸 is revealed (a monster, so draw 1).
-                Player.Hand.Add(Inst("WCG-418")); Player.Hand.Add(Inst("WCG-424"));
-                Player.Deck.Insert(0, Inst("WCG-114")); Player.Deck.Insert(1, Inst("WCG-055"));
-                for (var i = 0; i < 4; i++) Player.EnergyZone.Add(Inst("WCG-101"));
+            case "bypass": // 霧翼斥候 & 蓋亞暴龍 test 越陣 past 白銀巡邏衛 (PP 12) and PP threshold.
+                Unit(Player, "WCG-261", 1); Unit(Player, "WCG-059", 3);
+                Unit(Computer, "WCG-065", 1); Unit(Computer, "WCG-101", 3);
                 break;
-            case "untap": // Your monsters are tapped during the computer's turn; end it and they untap. A summon enters tapped.
-                Unit(Player, "WCG-055", 1).IsTapped = true; Unit(Player, "WCG-154", 2).IsTapped = true;
+            case "untap": // Your monsters are tapped during the computer's turn; end it and they untap.
+                Unit(Player, "WCG-114", 1).IsTapped = true; Unit(Player, "WCG-154", 2).IsTapped = true;
                 Unit(Computer, "WCG-101", 2);
                 active = "computer";
                 break;
             case "defeat": // You have 1 life and no blockers; step or resume the computer and it attacks for the win.
-                Player.Hp = 1; Unit(Computer, "WCG-055", 1); Unit(Computer, "WCG-154", 3);
+                Player.Hp = 1; Unit(Computer, "WCG-114", 1); Unit(Computer, "WCG-154", 3);
                 active = "computer";
                 break;
             case "victory": // The computer has 1 life and no monsters; attack its avatar.
-                Computer.Hp = 1; Unit(Player, "WCG-055", 1);
+                Computer.Hp = 1; Unit(Player, "WCG-114", 1);
                 break;
         }
         CurrentTurnPlayerId = active; TurnNumber = 5; CurrentPhase = TurnPhase.MainPhase;

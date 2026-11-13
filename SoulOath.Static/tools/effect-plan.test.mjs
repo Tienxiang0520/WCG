@@ -86,3 +86,11 @@ test('a unit that attacked and is upright again was readied by an effect (391 / 
     const tapped = planSteps(snap([unit('b', 0)]), snap([unit('b', 0, { tapped: true })]), [{ type: 'attack', side: 'player', instanceId: 'b', order: 0 }]);
     assert.deepEqual(kinds(tapped), ['attack']);
 });
+test('v2 keywords: 格擋 / 越陣 / 魔免 on deploy show no popup, gained 格擋 badges with source, and 無法格擋 is not badged as a keyword', () => {
+    const fresh = unit('v', 0, { status: ['格擋', '越陣', '魔免', '直立'] });
+    assert.deepEqual(kinds(planSteps(snap(), snap([fresh]), [{ type: 'summon', side: 'player', instanceId: 'v', card: card('v'), order: 0 }])), ['summon']);
+    assert.equal(keywordOf('格擋（附著）'), '格擋');
+    assert.equal(keywordOf('越陣'), '越陣');
+    assert.equal(keywordOf('魔免'), '魔免');
+    assert.equal(keywordOf('無法格擋（已橫置）'), null);
+});

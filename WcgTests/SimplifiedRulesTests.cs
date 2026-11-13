@@ -11,9 +11,9 @@ public class SimplifiedRulesTests
     private readonly CardDatabase cards;
     public SimplifiedRulesTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
     private GameEngine Game(CardDatabase? db=null){db??=cards;var g=new GameEngine(db,new Random(17));g.StartGame(db.PresetDecks[0],db.PresetDecks[1]);foreach(var p in new[]{g.Player,g.Computer}){p.Hand.Clear();p.Field.Clear();p.EnergyZone.Clear();}for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));return g;}
-    private CardInstance Hand(GameEngine g,int n){var c=new CardInstance(cards.GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
+    private CardInstance Hand(GameEngine g,int n,CardDatabase? db=null){var c=new CardInstance((db??cards).GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private MonsterInstance Unit(PlayerState p,int n,int slot,int? pp=null,CardDatabase? db=null){db??=cards;var card=db.GetCard($"WCG-{n:000}")!;if(pp!=null)card=Printed(card,pp.Value);var m=new MonsterInstance(card){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}
-    // PP thresholds read the printed PP, so a test monster with another PP gets its own printed copy of the card.
+    // PP thresholds read current PP in v2.0.
     private static CardDefinition Printed(CardDefinition c,int pp){var copy=System.Text.Json.JsonSerializer.Deserialize<CardDefinition>(System.Text.Json.JsonSerializer.Serialize(c))!;copy.PP=pp;return copy;}
     private static void Refresh(GameEngine g)=>typeof(GameEngine).GetMethod("RefreshBoard",BindingFlags.NonPublic|BindingFlags.Instance)!.Invoke(g,null);
     private static void Choose(GameEngine g,Func<ChoiceOption,bool> pick)=>Assert.True(g.SelectChoice(g.CurrentPendingChoice!.Options.First(pick)));
@@ -30,7 +30,7 @@ public class SimplifiedRulesTests
     // Catalogs before 聖盾指示物 (2026-10-17) keep the per-turn refresh.
     [Fact] public void HolyShieldSavesOncePerTurnWithoutEnergyAndRefreshesEachTurn()
     {
-        var db=CounterHistory.BeforeShieldCounter(cards);var g=Game(db);Assert.False(g.ShieldSourceRules);var knight=Unit(g.Player,69,1,db:db);var wall=Unit(g.Computer,155,3,db:db);var energy=g.Player.AvailableEnergy;Refresh(g);
+        var db=CounterHistory.BeforeShieldCounter(CardBalanceHistory.BeforeV2(cards));var g=Game(db);Assert.False(g.ShieldSourceRules);var knight=Unit(g.Player,69,1,db:db);var wall=Unit(g.Computer,155,3,db:db);var energy=g.Player.AvailableEnergy;Refresh(g);
         Assert.True(g.PreviewAttack(knight,wall)!.AttackerShieldBreaks);
         Assert.True(g.Attack(g.Player,knight,wall));Assert.False(g.IsWaiting);
         Assert.Contains(knight,g.Player.Field);Assert.True(knight.ShieldSpent);Assert.Equal(energy,g.Player.AvailableEnergy);
@@ -42,16 +42,15 @@ public class SimplifiedRulesTests
 
     [Fact] public void TrampleNoLongerNeedsA700Margin()
     {
-        var g=Game();var cat=Unit(g.Player,111,1);var foe=Unit(g.Computer,129,3);Refresh(g);var hp=g.Computer.Hp;
-        Assert.Equal(1,g.PreviewAttack(cat,foe)!.PlayerDamage);
-        Assert.True(g.Attack(g.Player,cat,foe));Assert.DoesNotContain(foe,g.Computer.Field);Assert.Equal(hp-1,g.Computer.Hp);
+        var g=Game();var rhino=Unit(g.Player,53,1);var foe=Unit(g.Computer,154,3);Refresh(g);var hp=g.Computer.Hp;
+        Assert.Equal(1,g.PreviewAttack(rhino,foe)!.PlayerDamage);
+        Assert.True(g.Attack(g.Player,rhino,foe));Assert.DoesNotContain(foe,g.Computer.Field);Assert.Equal(hp-1,g.Computer.Hp);
     }
 
     [Theory]
-    [InlineData(4,900,true)] [InlineData(4,1000,false)]
-    [InlineData(2,1200,true)] [InlineData(2,1300,false)]
-    [InlineData(32,1600,true)] [InlineData(32,1700,false)]
-    [InlineData(76,1800,true)] [InlineData(76,1700,false)]
+    [InlineData(4,10,true)] [InlineData(4,11,false)]
+    [InlineData(32,10,true)] [InlineData(32,11,false)]
+    [InlineData(76,18,true)] [InlineData(76,17,false)]
     public void PrintedThresholdsUseThreeLevels(int spell,int pp,bool legal)
     {
         var g=Game();var foe=Unit(g.Computer,155,2,pp);
@@ -61,22 +60,22 @@ public class SimplifiedRulesTests
 
     [Fact] public void AreaThresholdsUseThreeLevels()
     {
-        var g=Game();var low=Unit(g.Computer,101,0,900);var mid=Unit(g.Computer,101,1,950);
+        var g=Game();var low=Unit(g.Computer,101,0,10);var mid=Unit(g.Computer,101,1,11);
         Assert.True(g.CastSpell(g.Player,Hand(g,68)));Assert.DoesNotContain(low,g.Computer.Field);Assert.Contains(mid,g.Computer.Field);
     }
 
     [Fact] public void OathguardTapsItselfToReduceDamageByOne()
     {
-        var g=Game();var guard=Unit(g.Player,200,1);var ogre=Unit(g.Computer,156,2);var hp=g.Player.Hp;
+        var g=Game();var guard=Unit(g.Player,200,1);var ogre=Unit(g.Computer,156,2);var ogre2=Unit(g.Computer,156,3);var hp=g.Player.Hp;
         ComputerTurn(g);Assert.True(g.Attack(g.Computer,ogre));
         Assert.Equal(GameEngine.OathGuardTitle,g.CurrentPendingChoice!.Title);
         Choose(g,o=>o.Id=="GUARD:1");Assert.Equal(hp-1,g.Player.Hp);Assert.True(guard.IsTapped);
-        ogre.IsTapped=false;Assert.True(g.Attack(g.Computer,ogre));Assert.False(g.IsWaiting);Assert.Equal(hp-3,g.Player.Hp); // A tapped guard can't reduce again.
+        Assert.True(g.Attack(g.Computer,ogre2));Assert.False(g.IsWaiting);Assert.Equal(hp-3,g.Player.Hp); // A tapped guard can't reduce again.
     }
 
     [Fact] public void FixedAttackAndCombatBonusesReplaceEnergyKeywords()
     {
-        var old=CardBalanceHistory.BeforeCardFixes(cards);
+        var old=CardBalanceHistory.BeforeCardFixes(CardBalanceHistory.BeforeV2(cards));
         var g=Game(old);var breaker=Unit(g.Player,201,0,db:old);Refresh(g);var hp=g.Computer.Hp;var energy=g.Player.AvailableEnergy;
         Assert.Equal(2,g.PreviewAttack(breaker)!.PlayerDamage);
         Assert.True(g.Attack(g.Player,breaker));Assert.False(g.IsWaiting);Assert.Equal(hp-2,g.Computer.Hp);Assert.Equal(1,breaker.CurrentDP);
@@ -88,15 +87,17 @@ public class SimplifiedRulesTests
 
     [Fact] public void ObserverLooksAtTopTwoOnDeploy()
     {
-        var g=Game();var card=Hand(g,202);var top=g.Player.Deck[0];
+        var old=CardBalanceHistory.BeforeV2(cards);
+        var g=Game(old);var card=Hand(g,202,old);var top=g.Player.Deck[0];
         Assert.True(g.SummonMonster(g.Player,card));Choose(g,o=>o.Id=="SLOT:0");
         Choose(g,o=>o.Id==top.InstanceId.ToString());Assert.Contains(top,g.Player.Hand);
     }
 
     [Fact] public void WandererReturnsAnotherCheapMonsterOnDeath()
     {
-        var g=Game();var wanderer=Unit(g.Player,204,0);var cheap=new CardInstance(cards.GetCard("WCG-101")!);g.Player.Graveyard.Add(cheap);
-        var yeti=Unit(g.Computer,114,2);Assert.True(g.Attack(g.Player,wanderer,yeti));
+        var old=CardBalanceHistory.BeforeV2(cards);
+        var g=Game(old);var wanderer=Unit(g.Player,204,0,db:old);var cheap=new CardInstance(old.GetCard("WCG-101")!);g.Player.Graveyard.Add(cheap);
+        var yeti=Unit(g.Computer,114,2,db:old);Assert.True(g.Attack(g.Player,wanderer,yeti));
         if(g.CurrentPendingChoice!=null)Choose(g,o=>o.Id==cheap.InstanceId.ToString());
         Assert.Contains(cheap,g.Player.Hand);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-204");
     }
@@ -104,12 +105,14 @@ public class SimplifiedRulesTests
     [Fact] public void CombatBuffsAreAttachmentsThatLeaveAfterTheMonsterBattles()
     {
         var g=Game();var croc=Unit(g.Player,154,0);croc.IsTapped=true;var buff=Hand(g,143);
-        Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.Equal(1800,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
-        Assert.True(g.Attack(g.Player,croc));Assert.Equal(1800,croc.CurrentPP); // Attacking the player is not a battle.
-        croc.IsTapped=false;var foe=Unit(g.Computer,155,2);
-        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(1300,croc.CurrentPP);
+        Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.True(croc.SurgeNoFace);Assert.Equal(18,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
+        Assert.False(g.Attack(g.Player,croc)); // WCG-143 explicitly states it cannot attack players this turn.
+        var pumper=Unit(g.Player,154,1);Assert.True(g.CastSpellAt(g.Player,Hand(g,165),pumper));
+        Assert.True(g.Attack(g.Player,pumper));Assert.Equal(18,pumper.CurrentPP); // Attacking the player is not a battle.
+        var foe=Unit(g.Computer,155,2);
+        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(13,croc.CurrentPP);
         Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
-        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(1400,weak.CurrentPP);
+        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(14,weak.CurrentPP);
     }
 
     [Fact] public void OnlyOneCounterPerDamageAndDeadSourceStillCancels()

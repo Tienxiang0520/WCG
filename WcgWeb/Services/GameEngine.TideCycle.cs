@@ -26,7 +26,7 @@ public partial class GameEngine
     {
         if (!ReferenceEquals(home, ActivePlayer)) return;
         home.TideBounceTurn = TurnNumber;
-        foreach (var ring in home.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-378" && s.TriggersThisTurn < 2).ToArray())
+        foreach (var ring in home.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-378" && (V2Rules || s.TriggersThisTurn < 2)).ToArray())
         {
             ring.TriggersThisTurn++;
             _effects.AddLast(() => { if (!home.Structures.Contains(ring)) return; Present("trigger", home, ring.InstanceId, card: ring.Card, label: ring.Card.Name); DrawMany(home, 1); });
@@ -39,7 +39,7 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-373": Resolve(() => Heal(p, 1), () => DrawMany(p, 1)); break;
-            case "WCG-374": OptionalTarget(p, TideReturnTitle, p.Field.Where(x => x != m && x.IsUnit), x => { Bounce(x); p.TideDiscountTurn = TurnNumber; }); break;
+            case "WCG-374": OptionalTarget(p, V2Rules ? "可選擇另 1 隻己方怪物移回手牌（重置 1 點能量）" : TideReturnTitle, p.Field.Where(x => x != m && x.IsUnit), x => { Bounce(x); if (V2Rules) UntapEnergy(p, m.Card); else p.TideDiscountTurn = TurnNumber; }); break;
             case "WCG-376":
                 foreach (var x in Player.Field.Concat(Computer.Field).Where(x => x != m && x.IsUnit && PointsAt(p, m, Owner(x), x)).ToArray()) AddDpCards(p, x, m.Card);
                 break;

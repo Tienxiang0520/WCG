@@ -117,6 +117,8 @@ public class MonsterInstance
     public bool HasCharge => !IsSilenced && Card.HasCharge || Attachments.Any(a => a.Card.Card.Id == "WCG-141");
     public bool HasPoison => !IsSilenced && Card.HasPoison;
     public bool HasTrample => !IsSilenced && Card.HasTrample || ExtraTrample;
+    public bool HasBypass => !IsSilenced && Card.HasBypass;
+    public bool HasSpellward => !IsSilenced && Card.HasSpellward;
     public List<CardInstance> ShieldEnergies { get; set; } = [];
     public int ShieldCount => ShieldEnergies.Count;
     public string? ShieldOwnerId { get; set; }
@@ -165,6 +167,8 @@ public class PlayerState
     public int Lent { get; set; }
     public int Occupied => Field.Count(m => !m.Turned) + Structures.Count + Lent;
     public int NextCreatureDiscount { get; set; }
+    // 幸運幣 (WCG-263, v2.0): next card played this turn costs 1 less energy.
+    public int NextCardDiscount { get; set; }
     // 潮汐輪迴 (WCG-373–381), all for the turn number stored: 374's next-paid-monster -1, 381's every-paid-monster -2,
     // and the turn you last returned one of your monsters to your hand (379 costs 2 less that turn).
     public int TideDiscountTurn { get; set; } = -1;

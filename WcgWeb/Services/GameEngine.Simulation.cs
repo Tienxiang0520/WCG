@@ -57,7 +57,7 @@ public partial class GameEngine
                 bool viewer = s.Id == viewerId;
                 var copy = new PlayerState
                 {
-                    Id = s.Id, Name = s.Name, IsAi = true, Hp = s.Hp, NextCreatureDiscount = s.NextCreatureDiscount,
+                    Id = s.Id, Name = s.Name, IsAi = true, Hp = s.Hp, NextCreatureDiscount = s.NextCreatureDiscount, NextCardDiscount = s.NextCardDiscount,
                     HasLost = s.HasLost, LossReason = s.LossReason, HasFilledEnergyThisTurn = s.HasFilledEnergyThisTurn, EnergyAmbushTurn = s.EnergyAmbushTurn, Lent = s.Lent, LaneRushTurn = s.LaneRushTurn, TideDiscountTurn = s.TideDiscountTurn, TideSurgeTurn = s.TideSurgeTurn, TideBounceTurn = s.TideBounceTurn, SpringHealTurn = s.SpringHealTurn, SpringHealed = s.SpringHealed, BurnedEnergy = new(s.BurnedEnergy),
                 };
                 copy.Hand = s.Hand.Select(c => Card(c, !viewer)).ToList();

@@ -9,7 +9,7 @@ namespace WcgTests;
 public class DualWillCardTests
 {
     private readonly CardDatabase cards;
-    public DualWillCardTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=new(env.Object);}
+    public DualWillCardTests(){var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));cards=CardBalanceHistory.BeforeV2(new(env.Object));}
     public static TheoryData<string,string,string,string> Changed=>new(){
         {"WCG-234","生機","生機","深淵"},{"WCG-031","理智","理智","秩序"},{"WCG-027","理智","理智","生機"},{"WCG-058","生機","生機","深淵"},
         {"WCG-067","秩序","秩序","理智"},{"WCG-211","理智","理智","深淵"},{"WCG-213","理智","理智","深淵"}};

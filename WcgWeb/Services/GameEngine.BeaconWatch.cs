@@ -34,8 +34,8 @@ public partial class GameEngine
         foreach (var x in VaultPowerSources(p, m)) yield return x;
         if (Upright(m))
         {
-            foreach (var tree in p.Field.Where(x => x != m && Active(x, "WCG-296") && Upright(x))) yield return (tree.Card, 200);
-            foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-297")) yield return (a.Card.Card, 400);
+            foreach (var tree in p.Field.Where(x => x != m && Active(x, "WCG-296") && Upright(x))) yield return (tree.Card, ScalePP(200));
+            foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-297")) yield return (a.Card.Card, ScalePP(400));
         }
     }
     private int BeaconPower(PlayerState p, MonsterInstance m) => BeaconPowerSources(p, m).Sum(x => x.Amount);
@@ -52,7 +52,7 @@ public partial class GameEngine
         }
         return true;
     }
-    private List<MonsterInstance>? BeaconSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-297" ? p.Field.Where(x => x.IsUnit).ToList() : HoofSpellTargets(p, c);
+    private List<MonsterInstance>? BeaconSpellTargets(PlayerState p, CardDefinition c) => c.Id == "WCG-297" ? (V2Rules ? p.Field.Concat(GetOpponent(p).Field) : p.Field).Where(x => x.IsUnit).ToList() : HoofSpellTargets(p, c);
     private static bool BeaconNeedsTarget(string id) => id == "WCG-297" || HoofNeedsTarget(id);
     private bool BeaconSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {

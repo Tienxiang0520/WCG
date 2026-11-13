@@ -142,17 +142,17 @@ public class EnergyEngineTests
     [Fact]
     public void ObserverDrawsTwoOnlyWhenSummonedNotWhenFilled()
     {
-        var observer = Card("WCG-039");
+        var observer = Card("WCG-021");
         engine.Player.Hand.Add(observer);
         var deckBefore = engine.Player.Deck.Count;
         Assert.True(engine.PlayEnergy(engine.Player, observer));
         Assert.Equal(deckBefore, engine.Player.Deck.Count);
         Assert.Empty(engine.Player.Field);
-        var summonedObserver = Card("WCG-039");
+        var summonedObserver = Card("WCG-021");
         engine.Player.Hand.Add(summonedObserver);
         for (int i = 1; i < observer.Card.TotalCost; i++) engine.Player.EnergyZone.Add(Card("WCG-101"));
         Assert.True(engine.SummonMonster(engine.Player, summonedObserver)); TestV06.FinishPlacement(engine);
-        Assert.Equal(deckBefore - 2, engine.Player.Deck.Count);
+        Assert.Equal(deckBefore - 1, engine.Player.Deck.Count);
         Assert.Single(engine.Player.Field);
     }
 

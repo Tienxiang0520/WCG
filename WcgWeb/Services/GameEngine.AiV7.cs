@@ -322,7 +322,7 @@ public partial class GameEngine
     internal static int CardReach(CardDefinition c) => _cardReach.GetOrAdd(c.Id + "\u0001" + c.Text, _ =>
     {
         int reach = 0;
-        foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(c.Text, @"(?:敵方玩家|任一玩家|玩家)造成\s*(\d+)\s*點傷害"))
+        foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(c.Text, @"(?:敵方玩家|任一玩家|玩家)(?:造成)?\s*(\d+)\s*(?:點)?傷害"))
             reach += int.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
         foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(c.Text, @"DP\s*\+\s*(\d+)"))
             reach += int.Parse(m.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);

@@ -22,17 +22,19 @@ public sealed partial class RankedSession
     // Retired EraSteps entries: the engine no longer implements their rules, so these eras are still built (to recognise their
     // fingerprints and to chain the older eras) but can neither resume nor replay: an unfinished match is voided without a
     // result and its replay reports that the version is no longer supported.
-    // 0–34: catalogs from 聖盾指示物 (2026-10-17) up to the 2026-11-12 deck-card update kept 聖盾／DP／腐蝕／血誓／聖泉／倒數／奪魂
+    // 0: v0.6 final catalog before v2.0 (PP÷100, 格擋, 7-life DP, unified targeting).
+    // 1–35: catalogs from 聖盾指示物 (2026-10-17) up to the 2026-11-12 deck-card update kept 聖盾／DP／腐蝕／血誓／聖泉／倒數／奪魂
     // as integer counters on cards; the engine now only shows that state with real cards (under a card, attached, or arrows).
-    // 42–43: catalogs that still carried the removed 怒擊/野性/觀測/回魂/護主 keywords (WCG-200–204 before the rules simplification).
-    internal static readonly int[] RetiredEraIndexes = [.. Enumerable.Range(0, 35), 42, 43];
+    // 36–54: all earlier pre-v2.0 catalogs.
+    internal static readonly int[] RetiredEraIndexes = [.. Enumerable.Range(0, CardBalanceHistory.EraSteps.Length)];
     internal const string RetiredMatchNotice = "未完成的天梯對局使用已移除的舊版規則（整數指示物或舊版關鍵字），無法繼續，已作廢且不計勝負。";
+    internal const string SupersededMatchNotice = "未完成的天梯對局使用先前的卡表或規則版本，無法繼續，已作廢且不計勝負。";
     // Engine flags per CardBalanceHistory.EraSteps entry (same order, newest first). Matches started before the card-text
     // clarity update keep the old wording and engine behaviour (LegacyCardRules); matches started before the arrow-card
     // expansion keep their original cards (arrow effects are keyed to card arrows, so replays stay deterministic); the
     // oldest catalog also limits faction triggers.
     private static readonly (bool LimitFactionTriggers, bool LegacyCardRules)[] EraFlags =
-        [.. Enumerable.Repeat((false, false), 51), (false, true), (false, true), (true, true)];
+        [.. Enumerable.Repeat((false, false), 52), (false, true), (false, true), (true, true)];
     // Built on demand: most visits only touch the current catalog, and a lookup stops at the first matching era,
     // building each older catalog from the previous one in a single step (no repeated history chains).
     private readonly object eraGate = new();
@@ -85,6 +87,7 @@ public sealed partial class RankedSession
         try
         {
             profile = store.Load();
+            profileLoaded = true;
             if (store.ResetOnLoad)
             {
                 store.Save(profile);
@@ -104,6 +107,7 @@ public sealed partial class RankedSession
         lock (gate) { if (Error == "" && !thinking && !restorePending) RefreshSeason(); return RankedStore.Copy(profile); }
     }
     private readonly ILogger<BattleCoordinator> logger;
+    private bool profileLoaded;
     private bool restorePending;
     private Task? restoring;
     // True until RestoreAsync has replayed the saved match (only with deferRestore).
@@ -211,11 +215,11 @@ public sealed partial class RankedSession
         if (match.Settled && match.Rules != rules && match.Rules != priorIdentifierRules) return null; // Completed results survive card balance updates.
         if (match.Rules != rules && match.Rules != priorIdentifierRules)
         {
-            var era = PriorEra(match.Rules) ?? throw new InvalidOperationException("存檔對局使用不同規則版本。");
-            if (era.Retired)
+            var era = PriorEra(match.Rules);
+            if (era == null || era.Retired)
             {
                 if (match.Settled) return null;
-                profile.Match = null; store.Save(profile); BalanceNotice = RetiredMatchNotice;
+                profile.Match = null; store.Save(profile); BalanceNotice = era == null ? SupersededMatchNotice : RetiredMatchNotice;
                 return null;
             }
             Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
@@ -229,6 +233,20 @@ public sealed partial class RankedSession
     {
         Engine.StackableShields = true; Engine.AiRevision = GameEngine.RankedAiVersion;
         if (match.Settled != Engine.IsOver) throw new InvalidOperationException("對局結算紀錄不一致。");
+    }
+    public bool CanDiscardBrokenMatch { get { lock (gate) return profileLoaded && Error != "" && profile.Match is { Settled: false }; } }
+    public bool DiscardBrokenMatch()
+    {
+        lock (gate)
+        {
+            if (!profileLoaded || Error == "" || profile.Match is not { Settled: false }) return false;
+            var previous = profile.Match;
+            profile.Match = null;
+            try { store.Save(profile); }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { profile.Match = previous; return false; }
+            Error = ""; BalanceNotice = SupersededMatchNotice; Engine.ResetToNotStarted(); BackfillRecord(); RefreshSeason();
+            return true;
+        }
     }
     private BattleResponse Reject(string reason) => new(false, "ranked", reason, Guid.NewGuid(), Bridge.Snapshot(), []);
     private static string Fingerprint(string catalog) => "ranked-v06:" + Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(catalog)));

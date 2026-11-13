@@ -13,7 +13,7 @@ public sealed class CardFixesTests
     {
         var env = new Mock<IWebHostEnvironment>();
         env.Setup(x => x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb")));
-        cards = new(env.Object);
+        cards = CardBalanceHistory.BeforeV2(new(env.Object));
     }
 
     private GameEngine Game(CardDatabase? db = null)
