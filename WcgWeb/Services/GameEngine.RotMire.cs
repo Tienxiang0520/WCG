@@ -39,7 +39,7 @@ public partial class GameEngine
                 if (n > 0) Damage(e, n, new(p, m.Card, m, "deploy"));
                 break;
             case "WCG-390":
-                foreach (var x in e.Field.Where(x => x.IsUnit).ToArray()) AddTurnBonus(x, -600, m.Card);
+                foreach (var x in e.Field.Where(x => x.IsUnit).ToArray()) AddTurnBonus(x, ScalePP(-600), m.Card);
                 RefreshBoard();
                 KillBatch(e.Field.Where(x => x.IsUnit && x.CurrentPP <= 0).ToArray(), m.Card.Name);
                 break;
@@ -47,12 +47,16 @@ public partial class GameEngine
         }
         return true;
     }
-    // 382: attach itself under 1 enemy monster. 387: the same, then another enemy monster gets -300 PP this turn.
+    // 382: (v2.0) optional attach under any monster; (legacy) enemy monster. 387: the same, then another enemy monster gets -300 PP this turn.
     private bool MireDeath(PlayerState p, MonsterInstance m, CardInstance grave)
     {
         if (m.IsSilenced || m.Card.Id is not ("WCG-382" or "WCG-387")) return false;
         Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力");
-        if (m.Card.Id == "WCG-382") Corrode(p, grave, m.Card);
+        if (m.Card.Id == "WCG-382")
+        {
+            if (V2Rules) OptionalTarget(p, "孢沼爬蟲陣亡：可附著於 1 隻怪物（PP -3）", p.Field.Concat(GetOpponent(p).Field).Where(x => x.IsUnit), x => AttachFromGraveyard(grave, x, m.Card));
+            else Corrode(p, grave, m.Card);
+        }
         else
         {
             MonsterInstance? first = null;
@@ -82,9 +86,10 @@ public partial class GameEngine
                 KillBatch(dead, s.Card.Name);
             });
     }
-    // 385 腐根獵手: +500 PP attacking a monster whose PP you lowered (your arrow points at it, or your card is under it).
+    // 385 腐根獵手: (v2.0) +5 PP this turn attacking PP 10 以下; (legacy) +500 PP attacking corroded monster.
     private int MireCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) =>
-        attacking && !m.IsSilenced && m.Card.Id == "WCG-385" && other.IsUnit && Alive(m) && Corroded(Owner(m), other) ? 500 : 0;
+        !attacking || m.IsSilenced || m.Card.Id != "WCG-385" || !other.IsUnit || !Alive(m) ? 0
+        : V2Rules ? (ThresholdPP(other) <= 10 ? 5 : 0) : (Corroded(Owner(m), other) ? 500 : 0);
 
     private bool MireSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {

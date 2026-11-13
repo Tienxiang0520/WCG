@@ -25,7 +25,7 @@ public class DeckPrintFaceTests
         public void Write(string key, string value, string? expected) => Values[key] = value;
     }
     // One card of every will (incl. Neutral) plus the arrow cards; the plan itself is never validated here.
-    private static readonly string[] Mixed = ["WCG-001", "WCG-005", "WCG-021", "WCG-033", "WCG-049", "WCG-061", "WCG-085", "WCG-147", "WCG-164"];
+    private static readonly string[] Mixed = ["WCG-001", "WCG-005", "WCG-021", "WCG-025", "WCG-049", "WCG-063", "WCG-085", "WCG-147", "WCG-164"];
     private DeckPrintPlan MixedPlan()
     {
         var cards = Mixed.Select(id => database.GetCard(id)!)
@@ -50,7 +50,7 @@ public class DeckPrintFaceTests
     [Fact]
     public async Task DecksGetNoCounterSheetsEvenWithCounterCards()
     {
-        var ids = Mixed.Take(Mixed.Length - 1).Append("WCG-337").ToArray();
+        var ids = Mixed.Take(Mixed.Length - 1).Append("WCG-195").ToArray();
         var cards = ids.Select(id => database.GetCard(id)!).Select(c => new PrintedCard(c.Id, c.Name, c.Type, c.Will, c.TotalCost, c.PP, c.DP, c.Text, c.Arrows.ToArray())).ToArray();
         var html = await Render("zh-Hant", new("重蹄", "生機", cards));
         Assert.DoesNotContain("-token", html);

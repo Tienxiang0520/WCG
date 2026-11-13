@@ -185,14 +185,14 @@ public class PvpLockstepTests
     [Fact]
     public void ShortLockstepSample() => Run(24, 0);
 
-    // The newest archetypes (WCG-382–426: 翻開, 倒數, 聖泉…) are rare in the ranked pool, so these decks put
-    // 4 copies of each card of one range into a ranked deck of the same main will. Not tuned or deck-legal.
+    // The newest archetypes in live v2.0 (WCG-382–402: 腐根/劇毒, 再起戰吼, 聖泉) get dedicated decks so every kept new card is exercised in lockstep. Not tuned or deck-legal.
     private static List<Deck> NewCardDecks()
     {
         var decks = new List<Deck>();
         foreach (var (lo, hi) in new[] { (382, 390), (391, 399), (400, 408), (409, 417), (418, 426) })
         {
             var ids = Enumerable.Range(lo, hi - lo + 1).Select(n => $"WCG-{n:000}").Where(id => Cards.GetCard(id) != null).ToList();
+            if (ids.Count == 0) continue;
             var will = Cards.GetCard(ids[0])!.Will;
             var filler = (Pool.FirstOrDefault(e => e.Deck.MainWill == will) ?? Pool[0]).Deck.CardIds;
             var list = ids.SelectMany(id => Enumerable.Repeat(id, 4)).Take(36).ToList();
@@ -205,7 +205,7 @@ public class PvpLockstepTests
     [Fact, Trait("Category", "Slow")]
     public void NewestCardsStayInLockstep()
     {
-        var decks = NewCardDecks(); int reveal = 0, moves = 0;
+        var decks = NewCardDecks(); int moves = 0;
         var errors = new System.Collections.Concurrent.ConcurrentBag<string>();
         var jobs = (from a in Enumerable.Range(0, decks.Count) from b in Enumerable.Range(0, decks.Count) from s in Enumerable.Range(0, 4) select (a, b, s)).ToArray();
         var results = new Outcome?[jobs.Length];
@@ -216,9 +216,9 @@ public class PvpLockstepTests
             catch (Exception ex) { errors.Add($"{decks[a].Name} vs {decks[b].Name} #{s}: {ex.Message}"); }
         });
         Assert.True(errors.IsEmpty, string.Join("\n", errors.Take(5)));
-        foreach (var o in results) { Assert.True(o!.Over); reveal += o.Reveal ? 1 : 0; moves += o.Moves; }
-        Console.WriteLine($"PvP lockstep, newest cards: {jobs.Length} matches, {moves} moves, {reveal} with a reveal");
-        Assert.True(reveal > 0);
+        foreach (var o in results) { Assert.True(o!.Over); moves += o.Moves; }
+        Console.WriteLine($"PvP lockstep, newest cards: {jobs.Length} matches, {moves} moves");
+        Assert.True(moves > 0);
     }
 
     [Fact, Trait("Category", "Slow")]

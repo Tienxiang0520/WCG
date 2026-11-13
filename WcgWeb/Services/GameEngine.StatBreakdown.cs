@@ -32,19 +32,19 @@ public partial class GameEngine
         Tracked(m.NextCombatSources, m.NextCombatBonus, "下次戰鬥加成");
         Tracked(m.TurnBonusSources, m.TurnBonus, "本回合加成");
         Add(null, "戰鬥加成", m.CombatPowerBonus);
-        if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, GetOpponent(owner).Field.Count * 200);
-        if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * 300);
+        if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, GetOpponent(owner).Field.Count * ScalePP(200));
+        if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * ScalePP(V2Rules ? 200 : 300));
         foreach (var source in Player.Board.Concat(Computer.Board).Where(source => source != m && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))
         {
             var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, m)) continue;
             var aura = ArrowAura(source.Card.Id); Add(source.Card, source.Card.Name, Across(source, m) ? aura.Enemy : aura.Ally);
         }
         foreach (var (source, amount) in ArchArrowSources(owner, m)) Add(source, source.Name, amount);
-        foreach (var bog in GetOpponent(owner).Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-289")) if (m.IsTaunt) Add(bog.Card, bog.Card.Name, -300);
-        if (owner.Occupied >= 5) foreach (var x in owner.Field.Where(x => Active(x, "WCG-219"))) Add(x.Card, x.Card.Name, 300);
+        foreach (var bog in GetOpponent(owner).Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-289")) if (m.IsTaunt) Add(bog.Card, bog.Card.Name, ScalePP(-300));
+        if (owner.Occupied >= 5) foreach (var x in owner.Field.Where(x => Active(x, "WCG-219"))) Add(x.Card, x.Card.Name, ScalePP(300));
         // Self abilities of NewPower: the remainder after the shared 219 aura.
         foreach (var (source, amount) in BeaconPowerSources(owner, m)) Add(source, source.Name, amount);
-        var self = NewPower(owner, m) - (owner.Occupied >= 5 ? 300 * owner.Field.Count(x => Active(x, "WCG-219")) : 0) - BeaconPower(owner, m);
+        var self = NewPower(owner, m) - (owner.Occupied >= 5 ? ScalePP(300) * owner.Field.Count(x => Active(x, "WCG-219")) : 0) - BeaconPower(owner, m);
         Add(m.Card, m.Card.Name, self);
         // One line per card name: repeated buffs from the same card (or copies of it) are summed.
         return list.GroupBy(x => (x.Source?.Id, x.Label)).Select(g => new StatSource(g.First().Source, g.Key.Label, g.Sum(x => x.Amount)))

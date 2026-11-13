@@ -37,12 +37,13 @@ public class AiHoldTests
     [Fact]
     public void KeepsUnconditionalRemovalForARealThreat()
     {
-        var g=Game();var removal=Hand(g,"WCG-094");Unit(g.Computer,"WCG-101",0,700,1);
-        // Our 1500-PP monster can deal with the small body by attacking, so the removal is kept.
-        Unit(g.Player,"WCG-101",0,1500,1);
+        var g=Game();foreach(var p in new[]{g.Player,g.Computer})p.Deck=Enumerable.Range(0,43).Select(_=>new CardInstance(cards.GetCard("WCG-101")!)).ToList();
+        var removal=Hand(g,"WCG-094");Unit(g.Computer,"WCG-101",0,7,1);
+        // Our 15-PP monster can deal with the small body by attacking, so the removal is kept.
+        Unit(g.Player,"WCG-101",0,15,1);
         PlayTurn(g);
         Assert.Contains(removal,g.Player.Hand);
-        var big=cards.AllCards.Where(c=>c.IsMonster&&(c.PP??0)>=2300).OrderByDescending(c=>c.PP).First();
+        var big=cards.AllCards.Where(c=>c.IsMonster&&(c.PP??0)>=23).OrderByDescending(c=>c.PP).First();
         var h=Game();var r2=new CardInstance(cards.GetCard("WCG-094")!);h.Player.Hand.Add(r2);
         var threat=new MonsterInstance(big){Slot=0,IsTapped=false,HasSummoningSickness=false};h.Computer.Field.Add(threat);
         PlayTurn(h);
@@ -56,7 +57,7 @@ public class AiHoldTests
         {
             var g=Game();
             foreach(var id in new[]{"WCG-101","WCG-101","WCG-101","WCG-101"})Hand(g,id);
-            Unit(g.Player,"WCG-101",0,700,1);Unit(g.Player,"WCG-101",1,700,1);
+            Unit(g.Player,"WCG-101",0,7,1);Unit(g.Player,"WCG-101",1,7,1);
             // A wipe in the graveyard reveals a will whose pool holds board wipes.
             var wipe=cards.GetCard("WCG-098")!;if(wipeWill)g.Computer.Graveyard.Add(new(wipe));
             var hand=g.Player.Hand.Count;PlayTurn(g);return hand-g.Player.Hand.Count;

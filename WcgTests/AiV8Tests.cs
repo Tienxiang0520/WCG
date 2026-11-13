@@ -20,8 +20,9 @@ public sealed class AiV8Tests : IDisposable
     GameEngine MatchAt(int actions)
     {
         var store=new RankedStore(new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string,string?>{["Ranked:SavePath"]=Path.Combine(dir,"ranked.json")}).Build());
-        var s=new RankedSession(cards,env,store,new RankedDecks(cards,env),NullLogger<BattleCoordinator>.Instance,TimeProvider.System);
         var record=MatchCode.Decode(DiamondMatch,out var error,out _)!;Assert.Equal("",error);
+        var matchCards=CounterHistory.MatchCatalog(cards,record.Rules);
+        var s=new RankedSession(matchCards,new DeckService(matchCards,env),store,CounterHistory.LegacyDecks(matchCards),NullLogger<BattleCoordinator>.Instance,TimeProvider.System);
         return s.ReplayEngine(record,actions)!;
     }
     static List<string> Turn(GameEngine g,int revision)

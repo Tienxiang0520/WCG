@@ -24,15 +24,16 @@ public partial class GameEngine
                 return SelectChoice(choice.Options.OrderByDescending(Position).First());}
             if(choice.Title=="受到傷害，可從手牌發動反擊")return SelectChoice(choice.Options.First(o=>o.Id!="SKIP"));
             if(choice.Title.Contains("翻開"))return SelectChoice(choice.Options.FirstOrDefault(o=>o.Id!="SKIP")??choice.Options[0]);
-            var option=choice.Options.OrderByDescending(o=>o.Id=="KEEP"?100:o.Id=="SKIP"?-100:o.Id=="DISPEL_OPT"?(DispelWorth(p)?0:-200):o.PreviewCard is {} c?(c.PP??0)/500d+c.TotalCost:0).First();
+            var discard=choice.Title.Contains("棄")||choice.Title.Contains("牌庫底")||choice.Title.Contains("置底");
+            var option=choice.Options.OrderByDescending(o=>o.Id=="KEEP"?100:o.Id=="SKIP"?-100:o.Id=="DISPEL_OPT"?(DispelWorth(p)?0:-200):o.PreviewCard is {} c?(discard?-1:1)*((c.PP??0)/(V2Rules?5d:500d)+c.TotalCost):0).First();
             return SelectChoice(option);
         }
         if(CurrentPendingTarget is {} target)
         {
             if (target.PlayerValidator != null) return SelectPlayerTarget(p);
             var all=p.Board.Concat(e.Board).Where(m=>target.Validator?.Invoke(m)!=false).ToArray();
-            var friendly=target.Title.Contains("犧牲")||target.Title.Contains("附著能量護盾")||target.Title.Contains("己方怪物");
-            var selected=all.OrderByDescending(m=>(p.Board.Contains(m)==friendly?20:0)+(target.Title.Contains("犧牲")?-m.CurrentPP:m.CurrentPP)/500d).FirstOrDefault();
+            var friendly=target.Title.Contains("犧牲")||target.Title.Contains("附著格擋")||target.Title.Contains("附著能量護盾")||target.Title.Contains("己方怪物");
+            var selected=all.OrderByDescending(m=>(p.Board.Contains(m)==friendly?20:0)+(target.Title.Contains("犧牲")?-m.CurrentPP:m.CurrentPP)/(V2Rules?5d:500d)).FirstOrDefault();
             return selected!=null&&SelectTarget(selected);
         }
         if(!Main(p))return false;
@@ -66,7 +67,7 @@ public partial class GameEngine
         if(!x.IsUnit)return mine?-3:3+x.Card.TotalCost*.5;
         var held=x.Attachments.Concat(x.ShieldCards).ToList();var theirs=held.Count(a=>a.OwnerId!=p.Id);var ours=held.Count-theirs;
         var value=mine?theirs*2-ours*2+(x.IsSilenced?2:0)-(SilenceCounterRules&&x.SoulSpell?4+x.Card.TotalCost:0):theirs*2-ours*2-(x.IsSilenced?2:0)+(SilenceCounterRules&&x.SoulSpell?4+x.Card.TotalCost:0);
-        return value==0?-1:value+(x.CurrentPP/1000d);
+        return value==0?-1:value+(x.CurrentPP/(V2Rules?10d:1000d));
     }
     public bool PlayEnchantment(PlayerState p,CardInstance c)=>AiTracked(AiNote("enchant",p,c),()=>c.Card.IsEnchantment?BeginPlay(p,c):Fail("不是結界。"));
     private void SpellDamage(PlayerState source,PlayerState target,int amount, CardDefinition card)

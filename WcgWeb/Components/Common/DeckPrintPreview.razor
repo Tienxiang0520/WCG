@@ -87,7 +87,7 @@
                                 <div class="print-card-text">@PrintedText(card)</div>
                                 @if (card.IsMonster)
                                 {
-                                    <div class="print-card-stats"><span>@L["力量"] <b>@card.PP</b> PP</span><span>@L["傷害"] <b>@card.DP</b> DP</span></div>
+                                    <div class="print-card-stats"><span><b>@card.PP</b> PP</span><span><b>@card.DP</b> DP</span></div>
                                 }
                                 <footer class="print-card-footer"><span>@L["魂誓"]</span><span>@card.Id</span></footer>
                                 @CropMarks
@@ -128,10 +128,10 @@
                     }
                 </div>
                 <p class="print-reference-note">@L["生命計數卡與幸運幣不放入牌組。召喚醉意與已攻擊可用卡片位置或小物記錄。"]</p>
-                <p class="print-reference-note">@L["不需另外的指示物：聖盾、倒數、DP、血誓、聖泉、腐蝕與永久控制都用牌組裡的卡表示。"]</p>
-                <p class="print-reference-note">@L["墊牌從你的牌庫底拿，背面朝上、不檢視：倒數牌對齊直放，DP 牌橫放（每張 DP +1），血誓與聖泉只放在各自的結界底下。離開時放回牌庫底。"]</p>
-                <p class="print-reference-note">@L["聖盾來源：底下的聖盾法術、正面朝上放在底下的手牌，或用箭頭給予的生物；被攻擊時選 1 個進入墓地。"]</p>
-                <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。永久控制：把王座篡奪放在怪物底下；被沉默或驅散時王座篡奪進入墓地，怪物歸還擁有者。"]</p>
+                <p class="print-reference-note">@L["不需另外的指示物：附著法術與沉默法術直接放在怪物下方，怪物離場時各自進入擁有者的墓地。"]</p>
+                <p class="print-reference-note">@L["格擋：直立且具格擋的怪物被攻擊（含決鬥）且將在交戰中被消滅時，改為橫置並存活；若已橫置則直接被消滅。"]</p>
+                <p class="print-reference-note">@L["越陣：攻擊時無視嘲諷（蓋亞暴龍仍會受 PP 18 以上嘲諷阻擋）。魔免：無法成為雙方指定目標法術的目標。"]</p>
+                <p class="print-reference-note">@L["暫時取得控制權：卡留在原格轉 180 度，回合結束轉回。PP 門檻均以目前場上實際 PP 判定，費用門檻看印刷費用。"]</p>
             </section>
         }
     </div>
@@ -193,7 +193,7 @@
                 @* 幸運幣: the second player's extra opening card (outside the 50-card deck). *@
                 <article class="print-card life-card coin-card" aria-label="@L.CardName("WCG-263", "幸運幣")">
                     <h2>@L.CardName("WCG-263", "幸運幣") · 0 @L["費"]</h2><p>@L["中立 · 法術"]</p>
-                    <p>@L.CardText("WCG-263", "將此卡正面朝上、直立放入你的能量區，作為 1 點臨時能量；你的回合結束時，將此卡送入墓地（不論是否已使用）。")</p>
+                    <p>@L.CardText("WCG-263", "本回合你打出的下 1 張牌費用 -1。")</p>
                     <p>@L["後攻玩家開局多拿這 1 張。"]</p>
                     <footer class="print-card-footer">@L["輔助卡 · 不放入 50 張牌組"]</footer>
                     @CropMarks

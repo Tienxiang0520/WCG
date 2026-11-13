@@ -9,7 +9,7 @@
 //   stat      a unit's PP or DP changed (buff / debuff); `stat: 'DP'` marks a DP change
 //   tap       a unit was tapped or readied by an effect (not by attacking)
 
-export const BADGE_KEYWORDS = ['能量護盾', '聖盾', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '反擊'];
+export const BADGE_KEYWORDS = ['能量護盾', '聖盾', '格擋', '嘲諷', '沉默', '劇毒', '貫穿', '衝鋒', '越陣', '魔免', '反擊'];
 const SOURCE_TYPES = new Set(['effect', 'trigger']);
 const TARGETED = new Set(['energy-out', 'death', 'bounce', 'status', 'attach', 'reveal', 'damage', 'heal', 'draw', 'take', 'recover', 'discard', 'energy']);
 
@@ -79,7 +79,7 @@ export function planSteps(previous, next, events) {
         const was = keywords(old);
         for (const k of keywords(unit)) {
             if (was.has(k) || badged.has(`${id}:${k}`)) continue;
-            steps.push({ kind: 'badge', target: id, keyword: k, from: (k === '能量護盾' || k === '聖盾') ? auraSource(unit, after, k) : null });
+            steps.push({ kind: 'badge', target: id, keyword: k, from: (k === '能量護盾' || k === '聖盾' || k === '格擋') ? auraSource(unit, after, k) : null });
         }
         // A keyword lost without its own event (an aura source left play, a lock ended) shows its icon struck through on the card.
         for (const k of was) if (!keywords(unit).has(k) && !ordered.some(ev => ev.instanceId === id && ev.type === 'status')) steps.push({ kind: 'badge', target: id, keyword: k, lost: true });

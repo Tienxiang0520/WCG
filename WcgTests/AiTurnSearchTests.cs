@@ -23,7 +23,7 @@ public class AiTurnSearchTests
     public void KillsTheAttackerThatWouldBeLethalInsteadOfHittingFace()
     {
         var g=Game();g.Player.Hp=3;g.Computer.Hp=6;
-        Unit(g.Player,"WCG-101",0,2000,1);var threat=Unit(g.Computer,"WCG-101",0,1000,3);
+        Unit(g.Player,"WCG-101",0,20,1);var threat=Unit(g.Computer,"WCG-101",0,10,3);
         PlayTurn(g);
         Assert.DoesNotContain(threat,g.Computer.Field);Assert.Equal(6,g.Computer.Hp);
     }
@@ -31,7 +31,7 @@ public class AiTurnSearchTests
     [Fact]
     public void DoesNotSuicideIntoABiggerMonster()
     {
-        var g=Game();var mine=Unit(g.Player,"WCG-101",0,800,1);Unit(g.Computer,"WCG-101",0,2500,1);
+        var g=Game();var mine=Unit(g.Player,"WCG-101",0,8,1);Unit(g.Computer,"WCG-101",0,25,1);
         PlayTurn(g);Assert.Contains(mine,g.Player.Field);
     }
 
@@ -41,7 +41,7 @@ public class AiTurnSearchTests
         foreach(var level in new[]{0,3,5})
         {
             var a=Game(level);var b=Game(level);
-            foreach(var g in new[]{a,b}){g.Player.Hand.AddRange(new[]{"WCG-001","WCG-014","WCG-094"}.Select(id=>new CardInstance(cards.GetCard(id)!)));Unit(g.Player,"WCG-101",0,1200,1);Unit(g.Computer,"WCG-101",0,900,1);}
+            foreach(var g in new[]{a,b}){g.Player.Hand.AddRange(new[]{"WCG-001","WCG-014","WCG-094"}.Select(id=>new CardInstance(cards.GetCard(id)!)));Unit(g.Player,"WCG-101",0,12,1);Unit(g.Computer,"WCG-101",0,9,1);}
             Assert.Equal(PlayTurn(a),PlayTurn(b));
         }
     }
@@ -51,14 +51,14 @@ public class AiTurnSearchTests
     {
         List<string> Run(string filler)
         {
-            var g=Game();g.Player.Hand.AddRange(new[]{"WCG-001","WCG-014","WCG-094"}.Select(id=>new CardInstance(cards.GetCard(id)!)));Unit(g.Player,"WCG-101",0,1200,1);Unit(g.Computer,"WCG-101",0,900,2);
+            var g=Game();g.Player.Hand.AddRange(new[]{"WCG-001","WCG-014","WCG-094"}.Select(id=>new CardInstance(cards.GetCard(id)!)));Unit(g.Player,"WCG-101",0,12,1);Unit(g.Computer,"WCG-101",0,9,2);
             var n=g.Computer.Hand.Count;g.Computer.Hand.AddRange(Enumerable.Range(0,4).Select(_=>new CardInstance(cards.GetCard(filler)!)));
             var deck=g.Computer.Deck.Count;g.Computer.Deck.Clear();g.Computer.Deck.AddRange(Enumerable.Range(0,deck).Select(_=>new CardInstance(cards.GetCard(filler)!)));
             // Compare only our own side: the opponent's hidden cards are not part of the decision.
             var log=new List<string>();for(int i=0;i<60&&!g.IsOver&&g.DecisionPlayerId=="player";i++){if(!g.ExecuteAiStep())break;log.Add(AiSimulationTests.Board(g).Split('|')[0]+g.Computer.Hp+string.Join(",",g.Computer.Field.Select(m=>m.CurrentPP)));}
             return log;
         }
-        var a=Run("WCG-101");Assert.NotEmpty(a);Assert.Equal(a,Run("WCG-195"));Assert.Equal(a,Run("WCG-170"));
+        var a=Run("WCG-101");Assert.NotEmpty(a);Assert.Equal(a,Run("WCG-195"));Assert.Equal(a,Run("WCG-003"));
     }
 
     [Fact, Trait("Category", "Slow")]

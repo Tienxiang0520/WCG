@@ -3,7 +3,7 @@ import { planSteps, batchSpeed, isSpellCard, keywordOf, isCoin, stepGap } from '
 
 // Fixed animation strings. Event labels and card names arrive already localized from the server.
 const EN = { '我方': 'You', '電腦': 'Computer', '魂 誓': 'SOUL OATH', '背面卡片': 'Face-down card', '你的回合': 'Your turn', '電腦回合': "Computer's turn", '勝利': 'Victory', '敗北': 'Defeat',
-    '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
+    '快轉': 'Fast-forward', '點擊快轉': 'Tap to fast-forward', '能量護盾': 'Energy Shield', '聖盾': 'Holy Shield', '格擋': 'Block', '無法格擋（已橫置）': 'Block inactive (tapped)', '越陣': 'Bypass', '魔免': 'Spellward', '決鬥': 'Duel', '嘲諷': 'Taunt', '沉默': 'Silence', '劇毒': 'Poison', '貫穿': 'Trample', '衝鋒': 'Charge', '反擊': 'Counter',
     '橫置': 'Tapped', '直立': 'Ready', '附著': 'Attach', '抽牌': 'Draw', '棄牌': 'Discard', '返回手牌': 'Return to hand',
     '費': 'Cost', '力量': 'Power', '傷害': 'Damage', '魂誓': 'Soul Oath', '無異能': 'No ability', '怪物': 'Monster', '法術': 'Spell', '法術（反擊）': 'Counter spell', '結界': 'Ward',
     '攻擊': 'Attack', '召喚': 'Summon', '蓋牌': 'Set', '出牌': 'Play', '支付能量': 'Pay energy', '獲得能量': 'Energy', '陣亡': 'Destroyed', '造成傷害': 'Damage', '回復生命': 'Heal',
@@ -24,8 +24,8 @@ export function showCombatPP(card, value, current, stat = 'PP') {
     b.dataset.combatPp = String(value); b.dataset.combatDir = value > current ? 'up' : 'down'; return true;
 }
 export function clearCombatPP(scope) { for (const b of scope?.querySelectorAll?.('.field-stats b[data-combat-pp]') ?? []) { delete b.dataset.combatPp; delete b.dataset.combatDir; } }
-export const iconOf = keyword => keyword === '能量護盾' || keyword === '聖盾' ? 'shield' : keyword === '劇毒' ? 'poison' : null;
-const KEYWORD_COLORS = { '沉默': '#c49bff', '劇毒': '#8dff6a', '嘲諷': '#cfd8ea', '衝鋒': '#ffb27a', '貫穿': '#ffb27a', '反擊': '#9fd8ff' };
+export const iconOf = keyword => keyword === '能量護盾' || keyword === '聖盾' || keyword === '格擋' ? 'shield' : keyword === '劇毒' ? 'poison' : null;
+const KEYWORD_COLORS = { '沉默': '#c49bff', '劇毒': '#8dff6a', '嘲諷': '#cfd8ea', '衝鋒': '#ffb27a', '貫穿': '#ffb27a', '越陣': '#87e5ff', '魔免': '#c5a3ff', '反擊': '#9fd8ff' };
 const WILL_KEYS = { '狂怒': 'wrath', '理智': 'reason', '生機': 'vitality', '秩序': 'order', '深淵': 'abyss' };
 const STAR = 'M10 0 11.6 8.4 20 10 11.6 11.6 10 20 8.4 11.6 0 10 8.4 8.4Z';
 // Per-will ornaments (corner, name spark, gem, emblem) — keep in sync with Services/CardFaceThemes.cs (CardFaceTests checks).
@@ -42,12 +42,12 @@ export function bindFeedback(root, sound = null, fx = null) {
     let combatPower = [];
     const animations = new Set(), hidden = new Map(), ghosts = new Map(), lunged = new Set();
     let publicUnits = new Map(), priorUnits = new Map(), nextUnits = new Map();
-    const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾')));
+    const shielded = (units, id) => !!units.get(id)?.status?.some(x => (String(x).startsWith('能量護盾') || String(x).startsWith('聖盾') || String(x) === '格擋'));
     // A energy shield that was up before this batch and is gone afterwards (unit still alive) shattered in combat.
     const shieldBroke = id => !!id && shielded(priorUnits, id) && nextUnits.has(id) && !shielded(nextUnits, id);
     // A status label can name a keyword it removes (「聖盾抵擋消滅」 spends the shield), so only a keyword the unit really
     // gained in this batch may pop its icon; otherwise a spent shield would flash back onto the card.
-    const has = (units, id, keyword) => !!units.get(id)?.status?.some(x => keywordOf(x) === keyword || (keyword === '聖盾' || keyword === '能量護盾') && (String(x).startsWith('聖盾') || String(x).startsWith('能量護盾')));
+    const has = (units, id, keyword) => !!units.get(id)?.status?.some(x => keywordOf(x) === keyword || (keyword === '聖盾' || keyword === '能量護盾' || keyword === '格擋') && (String(x).startsWith('聖盾') || String(x).startsWith('能量護盾') || String(x) === '格擋'));
     const gained = (id, keyword) => !!id && !!keyword && has(nextUnits, id, keyword) && !has(priorUnits, id, keyword);
     const shattered = new Set();
     const scope = root.getAttributeNames().find(name => name.startsWith('b-'));
@@ -118,8 +118,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         body.append(head, band, art, text);
         if (card.pp != null) {
             const stats = node('div', 'face-stats'), pp = node('span', 'pp'), dp = node('span', 'dp');
-            pp.append(node('small', '', t('力量')), node('b', '', String(card.pp)), node('small', '', 'PP'));
-            dp.append(node('small', '', t('傷害')), node('b', '', String(card.dp ?? 1)), node('small', '', 'DP'));
+            pp.append(node('b', '', String(card.pp)), node('small', '', 'PP'));
+            dp.append(node('b', '', String(card.dp ?? 1)), node('small', '', 'DP'));
             stats.append(pp, star('mid'), dp); body.append(stats);
         }
         const foot = node('footer', 'face-foot'); foot.append(node('span', '', t('魂誓')), node('span', '', card.cardId ?? '')); body.append(foot);
@@ -512,8 +512,8 @@ export function bindFeedback(root, sound = null, fx = null) {
         if (step.kind === 'badge') {
             const el = visual(step.target); if (!el) return;
             if (step.lost) { if (iconOf(step.keyword) === 'shield' && shattered.has(step.target)) return; void sound?.play('trigger'); await Promise.all([flash(el, '#9aa3ad'), keywordLost(el, step.keyword)]); return; }
-            if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾') ? '#ffe08a' : '#ffd77a');
-            if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾') void sound?.play('glass'); else void sound?.play('trigger');
+            if (step.from) await beam(visual(step.from), el, (step.keyword === '能量護盾' || step.keyword === '聖盾' || step.keyword === '格擋') ? '#ffe08a' : '#ffd77a');
+            if (step.keyword === '嘲諷') void sound?.play('taunt', .1); else if (step.keyword === '能量護盾' || step.keyword === '聖盾' || step.keyword === '格擋') void sound?.play('glass'); else void sound?.play('trigger');
             await keywordPulse(el, step.keyword);
             return;
         }

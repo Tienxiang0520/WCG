@@ -60,8 +60,8 @@ public class BattleBridgeTests
     }
     [Fact] public void DirectSpellTargetsRejectFriendlyAndStealthWithoutSpendingThenResolveEnemy()
     {
-        Energy();var card=Hand("WCG-026");var own=Field(engine.Player,"WCG-101");
-        var hidden=Field(engine.Computer,"WCG-111"); engine.Computer.Field.Remove(hidden); engine.Computer.Structures.Add(new(hidden.Card){InstanceId=hidden.InstanceId,IsSet=true});var enemy=Field(engine.Computer,"WCG-101");
+        Energy();var card=Hand("WCG-331");var own=Field(engine.Player,"WCG-101");
+        var hidden=Field(engine.Computer,"WCG-195"); engine.Computer.Field.Remove(hidden); engine.Computer.Structures.Add(new(hidden.Card){InstanceId=hidden.InstanceId,IsSet=true});var enemy=Field(engine.Computer,"WCG-101");
         var hand=bridge.Snapshot().Hand.Single(h=>h.Card.InstanceId==card.InstanceId);
         Assert.Equal(new[]{enemy.InstanceId.ToString()},hand.PlayTargets);
         foreach(var id in new[]{own.InstanceId,hidden.InstanceId,Guid.NewGuid()})
@@ -190,7 +190,7 @@ public class BattleBridgeTests
         Energy();var c=Hand("WCG-101");bridge.Submit(Cmd("play",c.InstanceId));var summon=bridge.Submit(Cmd("choice",option:engine.CurrentPendingChoice!.Options[0].Id));
         Assert.True(summon.Success);Assert.Equal(new[]{"pay","play","summon"},summon.Events.Select(e=>e.Type));
         var attacker=engine.Player.Field.Single();attacker.IsTapped=false;attacker.HasSummoningSickness=false;
-        var victim=Field(engine.Computer,"WCG-003");attacker.CurrentPP=2000;
+        var victim=Field(engine.Computer,"WCG-003");attacker.CurrentPP=20;
         var response=bridge.Submit(Cmd("attack",attacker.InstanceId,victim.InstanceId));
         var types=response.Events.Select(e=>e.Type).ToList();
         Assert.True(types.IndexOf("attack")<types.IndexOf("death"));Assert.True(types.IndexOf("death")<types.IndexOf("trigger"));
@@ -215,7 +215,9 @@ public class BattleBridgeTests
         var attach=cast.Events.Single(e=>e.Type=="attach");
         Assert.Equal(shield.InstanceId,attach.InstanceId);Assert.Equal(own.InstanceId,attach.TargetId);
         var types=cast.Events.Select(e=>e.Type).ToList();Assert.True(types.IndexOf("play")<types.IndexOf("attach"));
-        Assert.Contains(bridge.Snapshot().Player.Field.Single().Status,s=>s.StartsWith("聖盾"));
+        Assert.Contains("無法格擋（已橫置）",bridge.Snapshot().Player.Field.Single().Status);
+        own.IsTapped=false;
+        Assert.Contains(bridge.Snapshot().Player.Field.Single().Status,s=>s.StartsWith("格擋"));
     }
     [Fact] public void CoordinatorRejectsOldPresenterAndMismatchedAcknowledgement()
     {
@@ -230,7 +232,7 @@ public class BattleBridgeTests
     }
     [Fact] public void ChoiceOptionsUseCanonicalEngineInstances()
     {
-        Energy();var c=Hand("WCG-030");var a=bridge.Submit(Cmd("play",c.InstanceId));Assert.True(a.Success);
+        Energy();var c=Hand("WCG-122");var a=bridge.Submit(Cmd("play",c.InstanceId));Assert.True(a.Success);
         Assert.Equal("choice",a.State.Pending!.Kind);
         Assert.False(bridge.Submit(Cmd("choice",option:"made-up")).Success);
         Assert.True(bridge.Submit(Cmd("choice",option:a.State.Pending.Options[0].Id)).Success);

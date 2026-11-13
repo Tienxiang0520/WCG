@@ -28,13 +28,13 @@ public partial class GameEngine
         foreach (var altar in p.Structures.Where(s => !s.IsSet && s.Card.Id == "WCG-364")) AddBlood(p, altar);
         foreach (var guard in p.Field.Where(x => Active(x, "WCG-365")).ToArray()) AddDpCards(p, guard, guard.Card);
     }
-    // 367 誓言之怒: +600 PP and +1 DP while your life is 3 or less.
-    private int BloodPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-367" ? (LowLife(p) ? 600 : 0) : SurgePower(p, m);
+    // 367 誓言之怒: +600 (+6 in v2) PP and +1 DP while your life is 3 or less.
+    private int BloodPower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-367" ? (LowLife(p) ? ScalePP(600) : 0) : SurgePower(p, m);
     private int BloodDp(PlayerState p, MonsterInstance m) => Active(m, "WCG-367") && LowLife(p) ? 1 : 0;
-    // 371 誓血軍旗手: its ← → arrows give another +200 for each life its controller has less than the opponent.
+    // 371 誓血軍旗手: its ← → arrows give another +200 (+2 in v2) for each life its controller has less than the opponent.
     private IEnumerable<(CardDefinition Source, int Amount)> BloodArrowSources(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(s => s != unit && Active(s, "WCG-371") && PointsAt(Owner(s), s, owner, unit) && !Across(s, unit))
-            .Select(s => (s.Card, 200 * Math.Max(0, GetOpponent(Owner(s)).Hp - Owner(s).Hp))).Where(x => x.Item2 != 0);
+            .Select(s => (s.Card, ScalePP(200) * Math.Max(0, GetOpponent(Owner(s)).Hp - Owner(s).Hp))).Where(x => x.Item2 != 0);
 
     private bool BloodDeploy(PlayerState p, MonsterInstance m)
     {

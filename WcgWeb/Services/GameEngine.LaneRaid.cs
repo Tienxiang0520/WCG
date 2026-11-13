@@ -37,15 +37,16 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-321":
+                var bounceCost = V2Rules ? 1 : 2;
                 if (facing == null) DrawMany(p, 1);
-                else if (unit != null && unit.Card.TotalCost <= 2) PickMonster(p, "選擇正對面費用 2 以下的敵方怪物移回手牌", [unit], Bounce);
+                else if (unit != null && unit.Card.TotalCost <= bounceCost) PickMonster(p, $"選擇正對面費用 {bounceCost} 以下的敵方怪物移回手牌", [unit], Bounce);
                 break;
             case "WCG-325":
                 if (facing == null) DrawMany(p, 1);
                 else if (unit != null) PickMonster(p, "選擇正對面的敵方怪物橫置", [unit], x => { x.IsTapped = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: "橫置"); });
                 break;
             case "WCG-326":
-                if (unit != null && (unit.Card.PP ?? 0) <= 1800) PickMonster(p, "選擇正對面印刷 PP 1800 以下的敵方怪物消滅", [unit], x => KillBatch([x], m.Card.Name));
+                if (unit != null && (V2Rules ? ThresholdPP(unit) <= 12 : (unit.Card.PP ?? 0) <= 1800)) PickMonster(p, V2Rules ? "選擇正對面 PP 12 以下的敵方怪物消滅" : "選擇正對面印刷 PP 1800 以下的敵方怪物消滅", [unit], x => KillBatch([x], m.Card.Name));
                 break;
             default: return SoulDeploy(p, m);
         }
@@ -127,9 +128,9 @@ public partial class GameEngine
             var u = f is { IsUnit: true } ? f : null;
             return card.Id switch
             {
-                "WCG-321" => u != null && u.Card.TotalCost <= 2 ? 5 + BodyValue(u) * .3 : f == null ? 3 : 0,
+                "WCG-321" => u != null && u.Card.TotalCost <= (V2Rules ? 1 : 2) ? 5 + BodyValue(u) * .3 : f == null ? 3 : 0,
                 "WCG-325" => u != null ? 4 + u.CurrentDP + (u.IsTapped ? 0 : 1) : f == null ? 2 : 0,
-                "WCG-326" => u != null && (u.Card.PP ?? 0) <= 1800 ? 6 + BodyValue(u) * .3 : f == null ? 4 : 0,
+                "WCG-326" => u != null && (V2Rules ? ThresholdPP(u) <= 12 : (u.Card.PP ?? 0) <= 1800) ? 6 + BodyValue(u) * .3 : f == null ? 4 : 0,
                 _ => f == null ? 5 : 0,
             };
         }

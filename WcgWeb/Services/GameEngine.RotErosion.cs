@@ -7,9 +7,9 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     internal const string DecayTitle = "選擇本回合 PP -300 的敵方怪物";
-    // 289 瘴氣沼澤: each unset copy the opponent controls gives this taunt -300.
+    // 289 瘴氣沼澤: each unset copy the opponent controls gives this taunt -300 (-3 in v2).
     private int BogPower(PlayerState owner, MonsterInstance m) =>
-        m.IsTaunt ? -300 * GetOpponent(owner).Structures.Count(x => !x.IsSet && x.Card.Id == "WCG-289") : 0;
+        m.IsTaunt ? ScalePP(-300) * GetOpponent(owner).Structures.Count(x => !x.IsSet && x.Card.Id == "WCG-289") : 0;
     // 286 枯萎獵手: the monster it attacks gets -400 for that combat.
     private static int RotCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) =>
         !attacking && other.IsUnit && !other.IsSilenced && other.Card.Id == "WCG-286" ? -400 : 0;
@@ -28,7 +28,7 @@ public partial class GameEngine
         return true;
     }
     private List<MonsterInstance>? RotSpellTargets(PlayerState p, CardDefinition c) =>
-        c.Id is "WCG-284" or "WCG-288" ? GetOpponent(p).Field.Where(x => x.IsUnit).ToList() : BeaconSpellTargets(p, c);
+        c.Id is "WCG-284" or "WCG-288" ? (V2Rules ? p.Field.Concat(GetOpponent(p).Field) : GetOpponent(p).Field).Where(x => x.IsUnit).ToList() : BeaconSpellTargets(p, c);
     private static bool RotNeedsTarget(string id) => id is "WCG-284" or "WCG-288" || BeaconNeedsTarget(id);
     private bool RotSpell(PlayerState p, CardInstance source, MonsterInstance? t)
     {

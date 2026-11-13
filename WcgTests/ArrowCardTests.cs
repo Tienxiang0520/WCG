@@ -10,7 +10,7 @@ public class ArrowCardTests
 {
     private readonly CardDatabase cards;
     private readonly string root;
-    public ArrowCardTests(){root=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb"));var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(root);cards=new(env.Object);}
+    public ArrowCardTests(){root=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb"));var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(root);cards=CardBalanceHistory.BeforeV2(new(env.Object));}
     private GameEngine Game(CardDatabase? db=null){db??=cards;var g=new GameEngine(db,new Random(17));g.StartGame(db.PresetDecks[0],db.PresetDecks[1]);g.Player.Hand.Clear();g.Computer.Hand.Clear();g.Player.Field.Clear();g.Computer.Field.Clear();for(int i=0;i<12;i++)g.Player.EnergyZone.Add(new(db.GetCard("WCG-101")!));return g;}
     private CardInstance Hand(GameEngine g,int n,CardDatabase? db=null){var c=new CardInstance((db??cards).GetCard($"WCG-{n:000}")!);g.Player.Hand.Add(c);return c;}
     private MonsterInstance Unit(PlayerState p,int n,int slot,CardDatabase? db=null){var m=new MonsterInstance((db??cards).GetCard($"WCG-{n:000}")!){Slot=slot,IsTapped=false,HasSummoningSickness=false};p.Field.Add(m);p.Field.Sort((a,b)=>a.Slot.CompareTo(b.Slot));return m;}

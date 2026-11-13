@@ -53,8 +53,15 @@ internal static class CounterHistory
     // Catalog before the 命運翻牌 cards WCG-418–426 existed.
     // Catalog before 鐵皮巨獸 (WCG-343) DP 3→2 (2026-11-05); only its DP and design note changed.
     // Catalog before 指示物改用牌組裡的卡 (2026-11-12; text, keywords, arrows and design notes of 64 cards).
+    internal static CardDatabase BeforeV2(CardDatabase current)
+    {
+        if(current.GetCard("WCG-001")?.PP is not (> 0 and < 100) || current.AllCards.Count >= 300)return current;
+        var dir=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data"));
+        return new(File.ReadAllText(Path.Combine(dir,"balance-before-v2.json")),File.ReadAllText(Path.Combine(dir,"balance-before-v2-presets.json")));
+    }
     internal static CardDatabase BeforeDeckCards(CardDatabase current)
     {
+        current=BeforeV2(current);
         if(current.GetCard("WCG-410")?.Text.Contains("牌庫底")!=true)return current;
         var path=Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb/Data/balance-before-deck-cards.json"));
         var overrides=JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(path))!.ToDictionary(c=>c.Id);
@@ -363,5 +370,20 @@ internal static class CounterHistory
         typeof(GameEngine).GetMethod("UseMatchCatalog",BindingFlags.Instance|BindingFlags.NonPublic)!.Invoke(engine,[old,false,false]);
         engine.EqualStartingLife=true; // old-era matches start both players at 7
         engine.StartGame(old.PresetDecks[0],old.PresetDecks[1]);
+    }
+    internal static string RankedDecksJson(CardDatabase c)=>JsonSerializer.Serialize(
+        Enumerable.Range(0,6).SelectMany(tier=>c.PresetDecks.Select(d=>new{Tier=tier,Archetype="預設",Deck=new Deck{Id=$"{d.Id}-{tier}",Name=d.Name,Description=d.Description,MainWill=d.MainWill,CardIds=d.CardIds}})));
+    internal static RankedDecks LegacyDecks(CardDatabase c)=>new(c,RankedDecksJson(c));
+    internal static CardDatabase MatchCatalog(CardDatabase current,string rules)
+    {
+        static string Hash(string json)=>"ranked-v06:"+Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(json)));
+        var cur=current;
+        foreach(var step in CardBalanceHistory.EraSteps)
+        {
+            cur=step(cur);
+            var json=JsonSerializer.Serialize(cur.AllCards);
+            if(Hash(json)==rules || Hash(json.Replace(CardIdentifier.CurrentPrefix,CardIdentifier.LegacyPrefix,StringComparison.Ordinal))==rules) return cur;
+        }
+        return cur;
     }
 }

@@ -8,9 +8,9 @@ public partial class GameEngine
     public IReadOnlyList<MonsterInstance> GetAttackTargets(MonsterInstance a)
     {if(!CanAttack(a))return [];var all=OpponentPlayer.Field.ToArray();var taunts=all.Where(m=>Blocks(a,m)).ToArray();return taunts.Length>0?taunts:all;}
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!a.SurgeNoFace&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
-    // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 1800 or less (1100/1300 in older eras), 178/201/210/261 past every taunt.
-    private int GaiaTauntLimit()=>CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||ThresholdPP(m)>GaiaTauntLimit())&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 18+ in v2 (>1800 / 1100/1300 in older eras), 261/越陣 past every taunt.
+    private int GaiaTauntLimit()=>V2Rules?18:CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||(!a.Card.HasBypass||a.Card.Id=="WCG-059")&&a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||(V2Rules?ThresholdPP(m)>=18:ThresholdPP(m)>GaiaTauntLimit()))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int AttackerPP=0,int DefenderPP=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
@@ -22,9 +22,9 @@ public partial class GameEngine
     }
     private AttackPreview CompareAttackCore(MonsterInstance a,MonsterInstance? d)
     {if(d==null)return new(false,false,false,false,a.CurrentDP,GuardReduction(GetOpponent(Owner(a)),a.CurrentDP));var ah=a.CurrentPP<=d.CurrentPP||d.HasPoison;var dh=d.CurrentPP<=a.CurrentPP||a.HasPoison;
-        // 聖盾來源: only the attacked monster spends a source (it survives the combat even when it would anyway); the attacker never does.
-        var src=ShieldSourceRules;var ash=!src&&ah&&a.HasShield&&ShieldReady(a);var dsh=(dh||src)&&d.HasShield&&ShieldReady(d)||dh&&EnergyGuard(d);
-        var damage=!ah||ash ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
+        // 聖盾來源 / 格擋: in v2.0 / 聖盾來源, normal attack never saves the attacker; only the attacked monster can block.
+        var src=ShieldSourceRules;var ash=!src&&!V2Rules&&ah&&a.HasShield&&ShieldReady(a);var dsh=(dh||src)&&d.HasShield&&ShieldReady(d)||dh&&EnergyGuard(d);
+        var damage=(!ah||ash) ? dh&&!dsh&&a.HasTrample&&(SimplifiedRules||a.CurrentPP-d.CurrentPP>=700)?1:0:0;
         var preventable=SimplifiedRules?Math.Min(damage,OathGuards(GetOpponent(Owner(a))).Count(m=>m!=d||!dh||dsh)):0;
         return new(ah&&!ash,dh&&!dsh,ash,dsh,damage,preventable,a.CurrentPP,d.CurrentPP);}
     private int GuardReduction(PlayerState p,int damage)=>SimplifiedRules?Math.Min(damage,OathGuards(p).Length):0;
@@ -38,7 +38,7 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}},
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){if(V2Rules&&!a.IsSilenced&&a.Card.Id=="WCG-385"&&ThresholdPP(d)<=10){AddTurnBonus(a,5,a.Card);RefreshBoard();Present("trigger",p,a.InstanceId,card:a.Card,label:"PP +5（本回合）");}else if(!V2Rules){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}}},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a,d);});return true;
     });
     // Display only: a combat-only PP bonus lasts for one resolution step, so the board never renders it; this event lets the
@@ -53,16 +53,16 @@ public partial class GameEngine
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;SurgeAfterAttack(p,a,d);
         // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.
         if(!LegacyCardRules)a.NextCombatBonus=0;
-        if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136")PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>ThresholdPP(x)<=Low(500)),x=>KillBatch([x],a.Card.Name));}
-    // effect: a combat started by an effect (duel); both monsters count as attacked, so both spend a 聖盾 source.
+        if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136"){var small=Low(500);if(V2Rules)OptionalTarget(p,$"攻擊後：可消滅 1 隻 PP {small} 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>ThresholdPP(x)<=small),x=>KillBatch([x],a.Card.Name));else PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>ThresholdPP(x)<=small),x=>KillBatch([x],a.Card.Name));}}
+    // effect: a combat started by an effect (duel); both monsters count as attacked, so both can block / spend a 聖盾 source.
     // CombatProtected (269／272 "此次交戰此怪物不會被消滅") survives without spending one.
     private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d,bool effect=false)
     {
         if(!Alive(a))return;var e=GetOpponent(p);if(d==null){Damage(e,a.CurrentDP,new(p,a.Card,a,"attack"));return;}if(!e.Field.Contains(d))return;
         var ap=a.CurrentPP;var dp=d.CurrentPP;var mirror=d.IsUnit&&!d.IsSilenced&&d.Card.Id=="WCG-258";var ah=ap<=dp||d.HasPoison;var dh=dp<=ap||a.HasPoison;bool asaved=false,dsaved=false;
-        // 聖盾來源: the attacked monster spends one source whenever it is attacked, even when it would survive anyway.
+        // 聖盾來源: the attacked monster spends one source whenever it is attacked. 格擋: attacked upright monster taps if it would die.
         var src=ShieldSourceRules;
-        Resolve(()=>{if(a.CombatProtected){asaved=true;return;}ShieldDecision(a,src?effect:ah,b=>asaved=b,ah);},()=>{if(d.CombatProtected){dsaved=true;return;}ShieldDecision(d,src||dh,b=>dsaved=b,dh);},()=>
+        Resolve(()=>{if(a.CombatProtected){asaved=true;return;}ShieldDecision(a,src?effect:(V2Rules?effect&&ah:ah),b=>asaved=b,ah);},()=>{if(d.CombatProtected){dsaved=true;return;}ShieldDecision(d,src||dh,b=>dsaved=b,dh);},()=>
         {
             var dead=new List<MonsterInstance>();if(ah&&!asaved)dead.Add(a);if(dh&&!dsaved)dead.Add(d);
             var kills=dead.ToArray();
@@ -104,10 +104,10 @@ public partial class GameEngine
             foreach(var x in payment)x.IsTapped=true;var e=GetOpponent(p);var power=attacker.CurrentPP;
             switch(c.Card.Id)
             {
-                case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=1500)SpellDamage(p,e,1,c.Card);});break;
+                case "WCG-195":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(power>=ScalePP(V2Rules?1800:1500))SpellDamage(p,e,1,c.Card);});break;
                 case "WCG-196":ctx.Cancelled=true;attacker.IsTapped=true;DrawMany(p,1);break;
                 case "WCG-197":ctx.Cancelled=true;FreeFaction(p,3,"生機");break;
-                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,"可附著能量護盾",SpellResolvePickable(p,p.Field),x=>Attach(p,c,x)));break;
+                case "WCG-198":ctx.Cancelled=true;Resolve(()=>Heal(p,2),()=>PickMonster(p,V2Rules?"可附著格擋":"可附著能量護盾",SpellResolvePickable(p,V2Rules?p.Field.Concat(e.Field):p.Field),x=>Attach(p,c,x)));break;
                 case "WCG-199":Resolve(()=>KillBatch([attacker],c.Card.Name),()=>{if(p.Graveyard.Any(x=>x.Card.IsMonster&&x.Card.HasWill("深淵")))Recover(p,2,1);});break;
             }
             UsedSpell(p,c.Card);
@@ -141,7 +141,7 @@ public partial class GameEngine
             foreach(var coin in p.EnergyZone.Where(x=>x.TemporaryEnergy).ToArray()){p.EnergyZone.Remove(coin);coin.TemporaryEnergy=false;coin.IsTapped=false;p.Graveyard.Add(coin);Present("discard",p,coin.InstanceId,card:coin.Card,label:"臨時能量消失");}
             var counters=ShieldSourceRules;
             foreach(var unit in Player.Field.Concat(Computer.Field)){unit.TurnBonus=0;unit.TurnDpBonus=0;unit.TurnUnblockable=false;unit.SurgeAttacks=0;unit.SurgeReadies=0;unit.SurgeNoFace=false;unit.SurgeHornUsed=false;unit.TriggersThisTurn=0;if(!counters)unit.ShieldSpent=false;}
-            p.NextCreatureDiscount=0;
+            p.NextCreatureDiscount=0;p.NextCardDiscount=0;
             CurrentTurnPlayerId = GetOpponent(p).Id; TurnNumber++; CurrentPhase = TurnPhase.MainPhase;
             Present("turn", ActivePlayer, label: $"第 {TurnNumber} 回合");
             ActivePlayer.ResetEnergyForOwnTurn(); foreach (var m in ActivePlayer.Board) { var held = m.IsTapped && m.IsUnit && BridgeLocked(m); m.ResetTurnState(); if (held) { m.IsTapped = true; Present("status", ActivePlayer, m.InstanceId, card: m.Card, label: "被斷橋術士鎖住，不轉為直立"); } } RefreshBoard();

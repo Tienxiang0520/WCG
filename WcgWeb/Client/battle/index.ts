@@ -217,8 +217,8 @@ class BattleScene extends Phaser.Scene {
         if(spellLabel)container.add(this.text(0,ch/2-8,spellLabel,focus?14:12,'#ffe7b6').setName('spell-badge'));
         if(monster){const status=monster.status.join(' · ')||(monster.canAttack?'可攻擊':monster.problem==='目前不能攻擊'?'':monster.problem),limit=Math.max(3,Math.floor((cw-8)/13));
             container.add(this.text(0,ch/2-8,focus&&status.length>limit?status.slice(0,limit-1)+'…':status,focus?14:(this.compact?10:11),'#b7d9da'));}
-        if(monster?.status.some(s=>s.startsWith('能量護盾')||s.startsWith('聖盾'))){container.add(this.add.rectangle(cw/4,0,cw/2,ch-6,0x69c8cc,.25).setStrokeStyle(2,0x69c8cc).setName('shield'));
-            container.add(this.text(cw/4,-ch/2+30,monster.status.find(s=>s.startsWith('能量護盾')||s.startsWith('聖盾'))!,12,'#d5ffff').setBackgroundColor('#164452').setPadding(3).setName('shield-count'));}
+        if(monster?.status.some(s=>s.startsWith('能量護盾')||s.startsWith('聖盾')||s==='格擋')){container.add(this.add.rectangle(cw/4,0,cw/2,ch-6,0x69c8cc,.25).setStrokeStyle(2,0x69c8cc).setName('shield'));
+            container.add(this.text(cw/4,-ch/2+30,monster.status.find(s=>s.startsWith('能量護盾')||s.startsWith('聖盾')||s==='格擋')!,12,'#d5ffff').setBackgroundColor('#164452').setPadding(3).setName('shield-count'));}
         if(monster?.status.includes('沉默'))container.add(this.add.rectangle(-cw/4,0,cw/2,ch-6,0xa5a5c4,.2).setStrokeStyle(2,0xa5a5c4));
         }
         this.borders.set(card.instanceId,container.getData('border'));
@@ -454,7 +454,7 @@ class BattleScene extends Phaser.Scene {
                 if(card&&id!==this.attack?.id&&(card.x!==slot.x||card.y!==slot.y))await this.tween(card,{x:slot.x,y:slot.y,duration:this.owner.fast?80:180,ease:'Cubic.Out'});
             }));
         }else{
-            if(event.type==='status'&&(event.label.includes('能量護盾')||event.label.includes('聖盾')))piece?.list.find(child=>child.name==='shield')?.destroy();
+            if(event.type==='status'&&(event.label.includes('能量護盾')||event.label.includes('聖盾')||event.label.includes('格擋')))piece?.list.find(child=>child.name==='shield')?.destroy();
             if(this.attack||event.type==='damage'||event.type==='heal'){
                 const place=(event.type==='damage'||event.type==='heal')?this.heroZone(event.side):piece;
                 this.owner.status.textContent=`${event.card?.name??''} ${event.label}${event.amount?' '+event.amount:''}`;

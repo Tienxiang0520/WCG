@@ -38,7 +38,7 @@ public class AiLethalTests
     public void RemovesTheOnlyTauntThenAttacksForLethal()
     {
         var g=Game();g.Computer.Hp=2;Hand(g,"WCG-094");Unit(g.Player,"WCG-101",0,dp:2);
-        var taunt=cards.AllCards.First(c=>c.IsMonster&&c.HasTaunt&&!c.HasEnergyShield&&c.PP>=1500);
+        var taunt=cards.AllCards.First(c=>c.IsMonster&&c.HasTaunt&&!c.HasBlock&&c.PP>=15);
         g.Computer.Field.Add(new MonsterInstance(taunt){Slot=0});g.Computer.Field.Add(new MonsterInstance(taunt){Slot=1});
         g.Player.Field[0].CurrentDP=2;
         // Two taunts: removal clears one, the attacker still cannot reach the player, so no false lethal.

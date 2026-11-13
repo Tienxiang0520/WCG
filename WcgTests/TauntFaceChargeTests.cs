@@ -12,7 +12,7 @@ public sealed class TauntFaceChargeTests
     public TauntFaceChargeTests()
     {
         var env=new Mock<IWebHostEnvironment>();env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));
-        cards=new(env.Object);
+        cards=CardBalanceHistory.BeforeV2(new(env.Object));
     }
     [Theory]
     [InlineData("WCG-031",1100,700)][InlineData("WCG-069",1400,1000)][InlineData("WCG-073",1800,1600)]

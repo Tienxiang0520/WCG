@@ -65,7 +65,7 @@
         Engine.Computer.IsAi = false; Engine.Player.Hand.Clear();
         if(ShieldPrototype)
         {
-            foreach(var id in new[]{"WCG-079","WCG-062","WCG-074"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
+            foreach(var id in new[]{"WCG-073","WCG-062","WCG-198"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
             for(int i=0;i<ShieldEnergy;i++) Engine.Player.EnergyZone.Add(new(Cards.GetCard("WCG-101")!));
             var m=new MonsterInstance(Cards.GetCard("WCG-063")!){HasSummoningSickness=false,ShieldOwnerId=Engine.Player.Id};
             m.ShieldEnergies.Add(new(Cards.GetCard("WCG-101")!));Engine.Player.Field.Add(m);
@@ -85,7 +85,7 @@
         }
         if(SpellPrototype)
         {
-            foreach(var id in new[]{"WCG-026","WCG-121","WCG-046","WCG-030","WCG-024","WCG-096"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
+            foreach(var id in new[]{"WCG-026","WCG-121","WCG-046","WCG-122","WCG-024","WCG-096"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
             for(int i=0;i<15;i++) Engine.Player.EnergyZone.Add(new(Cards.GetCard("WCG-101")!));
             Engine.Player.Field.Add(new(Cards.GetCard("WCG-101")!){HasSummoningSickness=false});
             foreach(var id in new[]{"WCG-003","WCG-063","WCG-101"}) Engine.Computer.Field.Add(new(Cards.GetCard(id)!){HasSummoningSickness=false});
@@ -99,7 +99,7 @@
             Engine.Player.Field.Add(new(Cards.GetCard("WCG-101")!){HasSummoningSickness=false});
             return;
         }
-        foreach (var id in new[]{"WCG-003","WCG-009","WCG-026","WCG-030","WCG-046","WCG-062","WCG-072","WCG-096"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
+        foreach (var id in new[]{"WCG-003","WCG-009","WCG-026","WCG-122","WCG-046","WCG-062","WCG-072","WCG-096"}) Engine.Player.Hand.Add(new(Cards.GetCard(id)!));
         for(int i=0;i<10;i++) Engine.Player.EnergyZone.Add(new(Cards.GetCard("WCG-101")!));
         foreach(var id in new[]{"WCG-003","WCG-009"}) Engine.Player.Field.Add(new(Cards.GetCard(id)!){HasSummoningSickness=false});
         foreach(var id in new[]{"WCG-063","WCG-003","WCG-101","WCG-081"}) Engine.Computer.Field.Add(new(Cards.GetCard(id)!){HasSummoningSickness=false});

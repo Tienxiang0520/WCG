@@ -14,10 +14,11 @@ public partial class GameEngine
             case "WCG-001": case "WCG-102":
                 var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張，然後棄 1 張" } };
                 var small = Low(500);
-                if (Targetable(p, enemy.Field.Where(x => ThresholdPP(x) <= small)).Count > 0)
-                    modes.Insert(0, new() { Id = "KILL", Title = $"消滅 1 隻 PP {small} 以下敵怪" });
+                var smallPool = (V2Rules ? p.Field.Concat(enemy.Field) : enemy.Field).Where(x => ThresholdPP(x) <= small);
+                if (Targetable(p, smallPool).Count > 0)
+                    modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? $"消滅 1 隻 PP {small} 以下怪物" : $"消滅 1 隻 PP {small} 以下敵怪" });
                 Ask(p, $"【{m.Card.Name}】進場抉擇", modes, o =>
-                { if (o.Id == "LOOT") Loot(p); else PickMonster(p, $"選擇 PP {small} 以下敵怪", enemy.Field.Where(x => ThresholdPP(x) <= small), x => KillBatch(new[] { x }, m.Card.Name)); });
+                { if (o.Id == "LOOT") Loot(p); else PickMonster(p, V2Rules ? $"選擇 PP {small} 以下怪物" : $"選擇 PP {small} 以下敵怪", (V2Rules ? p.Field.Concat(enemy.Field) : enemy.Field).Where(x => ThresholdPP(x) <= small), x => KillBatch(new[] { x }, m.Card.Name)); });
                 break;
             case "WCG-007": PickLowest(p, enemy.Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-013": Resolve(() => Damage(enemy, 1, new(p,m.Card,m,"deploy")), () => Damage(p, 1, new(p,m.Card,m,"deploy"))); break;
@@ -26,18 +27,23 @@ public partial class GameEngine
             case "WCG-021" when m.Card.Arrows.Length > 0: DrawMany(p, ArrowTargets(p, m).Count(x => !Across(m, x)) == 2 ? 2 : 1); break;
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
             case "WCG-047": FreeHand(p, 1, 1); break;
-            case "WCG-027": case "WCG-115": FreeHand(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1, 1); break;
-            case "WCG-104": PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
-            case "WCG-067": var maxBounce = CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2; PickMonster(p, $"選擇費用 {maxBounce} 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= maxBounce), Bounce); break;
+            case "WCG-027": case "WCG-115": FreeHand(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1, 1); break;
+            case "WCG-104": if (V2Rules) OptionalTarget(p, "可選擇費用 2 以下怪物回手", p.Field.Concat(enemy.Field).Where(x => x.Card.TotalCost <= 2), Bounce); else PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
+            case "WCG-067": var maxBounce = V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2; PickMonster(p, $"選擇費用 {maxBounce} 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= maxBounce), Bounce); break;
             case "WCG-033" when m.Card.Arrows.Length > 0:
                 if (ArrowTargets(p, m).FirstOrDefault(x => Across(m, x) && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
                 else DrawMany(p, 1);
                 break;
             case "WCG-033": if (enemy.Hand.Count > p.Hand.Count) DrawMany(p, 1); break;
             // 2026-10-17: 冰霜魔導師 and 時間靜止者 work directly on entry; older catalogs keep the combat / already-tapped versions.
+            case "WCG-029" when V2Rules:
+                Resolve(() => OptionalTarget(p, "可橫置 1 隻直立怪物", p.Field.Concat(enemy.Field).Where(x => !x.IsTapped), x => { x.IsTapped = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: "橫置"); }), () => DrawMany(p, 1));
+                break;
             case "WCG-029" when m.Card.Text.StartsWith("進場", StringComparison.Ordinal):
                 Resolve(() => PickMonster(p, "選擇直立的敵方怪物橫置", enemy.Field.Where(x => !x.IsTapped), x => { x.IsTapped = true; Present("status", enemy, x.InstanceId, card: x.Card, label: "橫置"); }), () => DrawMany(p, 1));
                 break;
+            case "WCG-035" when V2Rules:
+                Resolve(() => OptionalTarget(p, "可選 1 隻怪物回手", p.Field.Concat(enemy.Field).ToArray(), Bounce), () => { foreach (var x in enemy.Field.Where(x => !x.IsTapped)) x.IsTapped = true; }); break;
             case "WCG-035" when !m.Card.Text.Contains("已橫置", StringComparison.Ordinal):
                 foreach (var x in enemy.Field.Where(x => !x.IsTapped)) x.IsTapped = true; OptionalTarget(p, "可選敵怪回手", enemy.Field.ToArray(), Bounce); break;
             case "WCG-035": var tapped=enemy.Field.Where(x=>x.IsTapped).ToArray(); foreach(var x in enemy.Field.Where(x=>!x.IsTapped)) x.IsTapped=true; OptionalTarget(p,"可選原本橫置敵怪回手",tapped,Bounce); break;
@@ -53,11 +59,11 @@ public partial class GameEngine
             case "WCG-061": break;
             case "WCG-073": break;
             case "WCG-057": case "WCG-075": case "WCG-106": Heal(p, 1); break;
-            case "WCG-077": PickMonster(p, $"選擇 PP {High(2300)} 以上敵怪", enemy.Field.Where(x => ThresholdPP(x) >= High(2300)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-077": if (V2Rules) OptionalTarget(p, "可消滅 PP 18 以上怪物", p.Field.Concat(enemy.Field).Where(x => ThresholdPP(x) >= 18), x => KillBatch(new[] { x }, m.Card.Name)); else PickMonster(p, $"選擇 PP {High(2300)} 以上敵怪", enemy.Field.Where(x => ThresholdPP(x) >= High(2300)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-085": Damage(p, 1, new(p,m.Card,m,"deploy")); break;
             case "WCG-087": if (p.Graveyard.Count >= 5) Heal(p, 1); break;
             case "WCG-091": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name); break;
-            case "WCG-100": Resolve(() => Heal(p, 2), () => Recover(p, int.MaxValue, 1)); break;
+            case "WCG-100": Resolve(() => Heal(p, V2Rules ? 1 : 2), () => Recover(p, int.MaxValue, 1)); break;
             case "WCG-105": KillBatch(p.Field.Concat(enemy.Field).Where(x => x != m && ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name); break;
             case "WCG-112": if (LegacyCardRules) Dispel(p); else OptionalDispel(p, m); break;
             case "WCG-117": PickLowest(p, enemy.Field.Where(x => ThresholdPP(x) <= Low(1000)), x => KillBatch(new[] { x }, m.Card.Name)); break;
@@ -147,12 +153,12 @@ public partial class GameEngine
             case "WCG-010": DrawMany(p, Math.Min(2, p.Field.Count)); break;
             case "WCG-064": case "WCG-012": case "WCG-032": case "WCG-076": case "WCG-082": case "WCG-084": case "WCG-088": KillTarget(); break;
             case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
-            case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 4 : 2)); break;
+            case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 4 : 2)); break;
             case "WCG-022": Search(p, 3, x => x.Card.IsSpell, optional: true); break;
-            case "WCG-024": if(target!=null&&Alive(target)){if(target.IsTapped)Loot(p);else target.IsTapped=true;} break;
+            case "WCG-024": if(target!=null&&Alive(target)){if(target.IsTapped)Loot(p);else{target.IsTapped=true;Present("status",Owner(target),target.InstanceId,card:target.Card,label:"橫置");}} break;
             case "WCG-026": if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); break;
             case "WCG-028": DrawMany(p, 2); break;
-            case "WCG-096": DrawMany(p, CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2); break;
+            case "WCG-096": DrawMany(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2); break;
             case "WCG-030": Search(p, 3, _ => true); break;
             case "WCG-034": DrawMany(p, 3); break;
             case "WCG-036": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); }, () => DrawMany(p, 1)); break;
@@ -168,7 +174,7 @@ public partial class GameEngine
             case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;
             case "WCG-068": KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(700)).ToArray(), c.Name); break;
-            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(CardBalanceHistory.CardFixesCatalog(_cardDb) ? 1000 : 700)).ToArray(), c.Name), () => Heal(p, 1)); break;
+            case "WCG-078": Resolve(() => KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 1000 : 700)).ToArray(), c.Name), () => Heal(p, 1)); break;
             case "WCG-086": Resolve(KillTarget, () => DrawMany(p, 1)); break;
             case "WCG-090": Recover(p, int.MaxValue, 1); break;
             case "WCG-092": KillBatch(p.Field.Concat(enemy.Field).Where(m => ThresholdPP(m) <= Low(800)).ToArray(), c.Name); break;
@@ -176,7 +182,8 @@ public partial class GameEngine
             case "WCG-098": KillBatch(p.Field.Concat(enemy.Field).ToArray(), c.Name); break;
             case "WCG-121": DrawMany(p, 1); break;
             case LuckyCoinId:
-                // Face up and untapped in the energy zone: 1 extra energy this turn only (EndTurn puts it into the graveyard).
+                if (V2Rules) { p.NextCardDiscount += 1; Present("status", p, label: "下 1 張牌費用 -1"); Log($"【{p.Name}】本回合打出的下 1 張牌費用 -1。", "action"); break; }
+                // Legacy: Face up and untapped in the energy zone: 1 extra energy this turn only (EndTurn puts it into the graveyard).
                 if (p.Graveyard.Remove(source)) { source.IsTapped = false; source.TemporaryEnergy = true; p.EnergyZone.Add(source); Present("energy", p, source.InstanceId, card: c, label: "臨時能量"); Log($"【{p.Name}】獲得 1 點臨時能量（本回合）。", "action"); }
                 break;
             case "WCG-122": Search(p, 5, x => x.Card.IsMonster); break;
@@ -222,14 +229,14 @@ public partial class GameEngine
             case "WCG-025": case "WCG-103": DrawMany(p, 1); break;
             case "WCG-043": case "WCG-108": Recover(p, 1, 1, grave); break;
             case "WCG-080": KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(1000)).ToArray(), m.Card.Name); break;
-            case "WCG-083": PickMonster(p, $"腐爛食屍鬼陣亡：選擇 PP {Low(500)} 以下敵怪", enemy.Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
+            case "WCG-083": if (V2Rules) OptionalTarget(p, "腐爛食屍鬼陣亡：可消滅 PP 10 以下怪物", p.Field.Concat(enemy.Field).Where(x => ThresholdPP(x) <= 10), x => KillBatch(new[] { x }, m.Card.Name)); else PickMonster(p, $"腐爛食屍鬼陣亡：選擇 PP {Low(500)} 以下敵怪", enemy.Field.Where(x => ThresholdPP(x) <= Low(500)), x => KillBatch(new[] { x }, m.Card.Name)); break;
             case "WCG-093": Revive(p, 2, grave, optional: true); break;
             case "WCG-131":FreeHand(p,2,1);break;
             case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>ThresholdPP(x)<=Low(700)).ToArray(),m.Card.Name);break;
             case "WCG-172":TopEnergy(p);break;
             case "WCG-204" when SimplifiedRules: Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); Recover(p, 2, 1, grave); break;
             default: NewDeath(p, m, grave); break;
-            case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, 3, grave, optional: !LegacyCardRules)); break;
+            case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, V2Rules ? 2 : 3, grave, optional: !LegacyCardRules)); break;
         }
     }
 }

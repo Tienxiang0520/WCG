@@ -5,34 +5,32 @@ namespace WcgWeb.Services;
 // The catalog wording selects these rules, so saved ranked matches on older catalogs replay with their original engine.
 public partial class GameEngine
 {
-    public bool SimplifiedRules => CardBalanceHistory.SimplifiedCatalog(_cardDb);
-    // Printed "PP n 以下" thresholds collapse to 600 / 1100 (or 900 / 1200 after the 2026-10-22 curve update); "PP n 以上" thresholds collapse to 1800.
-    private int Low(int printed) => !SimplifiedRules ? printed : CardBalanceHistory.CardFixesCatalog(_cardDb) ? (printed <= 800 ? 900 : 1200) : (printed <= 800 ? 600 : 1100);
-    private int High(int printed) => !SimplifiedRules ? printed : 1800;
-    private int SkyfireLimit() => CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2300 : 1500;
-    // PP thresholds ("PP n 以下／以上", 059's taunt limit, 195's bonus) check the target's printed PP from the 2026-10-22 catalog on;
-    // bonuses and penalties are ignored. Older catalogs keep checking the current PP so saved matches replay unchanged.
-    public bool PrintedPpThresholds => CardBalanceHistory.CardFixesCatalog(_cardDb);
+    public bool V2Rules => CardBalanceHistory.V2Catalog(_cardDb);
+    public bool SimplifiedRules => V2Rules || CardBalanceHistory.SimplifiedCatalog(_cardDb);
+    private int ScalePP(int pp) => V2Rules ? pp / 100 : pp;
+    // Printed "PP n 以下" thresholds collapse to 600 / 1100 (or 900 / 1200 after the 2026-10-22 curve update); "PP n 以上" thresholds collapse to 1800. v2.0 uses 10 / 18.
+    private int Low(int printed) => V2Rules ? 10 : !SimplifiedRules ? printed : CardBalanceHistory.CardFixesCatalog(_cardDb) ? (printed <= 800 ? 900 : 1200) : (printed <= 800 ? 600 : 1100);
+    private int High(int printed) => V2Rules ? 18 : !SimplifiedRules ? printed : 1800;
+    private int SkyfireLimit() => V2Rules ? 18 : CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2300 : 1500;
+    // PP thresholds ("PP n 以下／以上", 059's taunt limit, 195's bonus) check the target's printed PP from 2026-10-22 to pre-v2; v2.0 always checks current PP.
+    public bool PrintedPpThresholds => !V2Rules && CardBalanceHistory.CardFixesCatalog(_cardDb);
     // From the same catalog, "PP 最低" picks (007/016/107/117/120, ties chosen by the controller) and 248's "PP 比它低" compare printed PP too.
     private int ThresholdPP(MonsterInstance m) => PrintedPpThresholds ? m.Card.PP ?? 0 : m.CurrentPP;
     public const string OathGuardTitle = "護誓守衛：要橫置它使傷害 -1 嗎？";
     // 聖盾: the first time each turn this monster would be destroyed in combat, it survives instead. No energy is paid.
-    // 聖盾來源 (2026-11-12, see GameEngine.DeckCards.cs): a monster has 聖盾 while it has a source (attached 聖盾 spell, hand card
-    // put face up under it, or a creature giving it with an arrow); when it is attacked one source goes to the graveyard and it
-    // isn't destroyed that combat. Counter-era catalogs (2026-10-17 to 2026-11-12) are retired, so their engines use the same
-    // code. Older catalogs refresh 聖盾 each turn (ShieldSpent).
-    public bool ShieldSourceRules => SimplifiedRules && (DeckCardRules || CardBalanceHistory.ShieldCounterCatalog(_cardDb));
-    private bool ShieldReady(MonsterInstance m) => SimplifiedRules ? (ShieldSourceRules ? m.HasShield : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
+    // v2.0 格擋: upright attacked monster that would be destroyed in combat taps and survives instead (no hand-card stuffing).
+    public bool ShieldSourceRules => !V2Rules && SimplifiedRules && (DeckCardRules || CardBalanceHistory.ShieldCounterCatalog(_cardDb));
+    private bool ShieldReady(MonsterInstance m) => V2Rules ? m.HasShield && !m.IsTapped : SimplifiedRules ? (ShieldSourceRules ? m.HasShield : !m.ShieldSpent) : Owner(m).AvailableEnergy > 0;
     // 304 能量哨兵 can keep itself alive with its energy when it has no 聖盾.
     private bool EnergyGuard(MonsterInstance m) => ShieldSourceRules && !m.HasShield && Active(m, "WCG-304") && Owner(m).EnergyZone.Count >= 5;
-    private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
+    private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !V2Rules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     // Fixed bonuses that only exist during an attack's combat (203 +500; from 2026-10-23 also 274 +300 for itself).
-    private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking);
+    private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced || V2Rules ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking);
     private void ApplyCombatPower(MonsterInstance a, MonsterInstance d)
     { var x = CombatPower(a, d, true); var y = CombatPower(d, a, false); if (x != 0) a.CombatPowerBonus = x; if (y != 0) d.CombatPowerBonus = y; }
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
     internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277" or "WCG-284";
-    internal static int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => 500, "WCG-141" => 700, "WCG-168" => -500, "WCG-271" => 400, "WCG-277" => 500, "WCG-284" => -700, "WCG-288" => -500, _ => 0 };
+    private int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" or "WCG-165" => ScalePP(500), "WCG-141" => ScalePP(700), "WCG-168" => ScalePP(-500), "WCG-271" => ScalePP(400), "WCG-277" => ScalePP(500), "WCG-284" => ScalePP(-700), "WCG-288" => ScalePP(-500), _ => 0 };
     private void SpendCombatAttachments(MonsterInstance m)
     {
         if (!Alive(m)) return;
@@ -44,6 +42,15 @@ public partial class GameEngine
     }
     private void ApplyShield(MonsterInstance m, bool hit, Action<bool> finish, bool lethal = true)
     {
+        if (V2Rules)
+        {
+            if (!hit || !lethal || !Alive(m) || !m.HasShield || m.IsTapped) { finish(false); return; }
+            m.IsTapped = true; RefreshBoard();
+            Present("status", Owner(m), m.InstanceId, card: m.Card, label: "格擋橫置保命");
+            Log($"【{m.Card.Name}】處於直立且具有格擋，改為橫置並存活。", "combat");
+            finish(true);
+            return;
+        }
         if (ShieldSourceRules) { if (!hit || !Alive(m)) finish(false); else SpendShield(m, lethal, finish); return; }
         if (!hit || !Alive(m) || !m.HasShield || m.ShieldSpent) { finish(false); return; }
         m.ShieldSpent = true;

@@ -98,12 +98,12 @@ public sealed class LocalizationTests
         var old=CounterHistory.BeforeEnergyShield(cards).GetCard("WCG-198")!;
         Assert.Contains("能量護盾",language.CardText(old));Assert.DoesNotContain("聖盾",language.CardText(old));
         var official=new Deck{Id="RANKED-0-ORDER-AEGIS",Name="秩序・能量護盾防線（防守）"};
-        Assert.Equal("秩序・聖盾防線（防守）",language.DeckName(official));
-        Assert.Equal("秩序・聖盾防線（防守）",language.DeckName(new Deck{Id="RANKED-0-ORDER-AEGIS",Name="秩序・聖盾防線（防守）"}));
+        Assert.Equal("秩序・格擋防線（防守）",language.DeckName(official));
+        Assert.Equal("秩序・格擋防線（防守）",language.DeckName(new Deck{Id="RANKED-0-ORDER-AEGIS",Name="秩序・聖盾防線（防守）"}));
         var custom=new Deck{Id="custom",Name="我的聖盾牌組"};Assert.Equal(custom.Name,language.DeckName(custom));
         language.Set(Localizer.English);Assert.Contains("Energy Shield",language.CardText(old));Assert.DoesNotContain("Holy Shield",language.CardText(old));
         Assert.Equal(custom.Name,language.DeckName(custom));
-        Assert.Equal("Order · Holy Shield Line (Defense)",language.DeckName(official));
+        Assert.Equal("Order · Block Line (Defense)",language.DeckName(official));
         Assert.All(TutorialLessons.All.SelectMany(l=>l.Topics.Concat(l.Steps.Select(s=>s.Text))),t=>Assert.DoesNotContain("冰凍",t));
     }
 

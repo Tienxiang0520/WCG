@@ -142,31 +142,16 @@ public sealed class RankedTests : IDisposable
     [Fact] public void BalanceUpdatePreservesActiveOldMatchAndUsesNewRulesOnNextMatch()
     {
         var oldCards=Overlay(Overlay(Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json"),"balance-before-unlimited-faction-triggers.json");
-        var deck=DeckService.Copy(oldCards.PresetDecks[1]);deck.CardIds.RemoveRange(0,4);deck.CardIds.AddRange(Enumerable.Repeat("WCG-185",4));
-        var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(oldSession.Start(deck).Success);
-        var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
-        var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));
-        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
-        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).Concat(restored.Engine.Player.EnergyZone).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
+        RetiredCounterEra(oldCards);
         Assert.Equal(4,cards.GetCard("WCG-185")!.TotalCost);Assert.Equal(3,cards.GetCard("WCG-190")!.TotalCost);
-        Assert.True(Send(restored,"surrender").Success);Assert.True(restored.Start(deck).Success);
-        Assert.Empty(restored.BalanceNotice);
-        Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-185").Card.TotalCost);
-        Assert.Empty(Session().Error);
     }
     [Fact] public void DamageCounterUpgradePreservesOldMatchAndNextMatchUsesHandCounters()
     {
         var oldCards=CounterHistory.Before(cards);
-        var old=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(old.Start(oldCards.PresetDecks[0]).Success);Assert.False(old.Engine.DamageCounters);
-        var before=JsonSerializer.Serialize(StateShape(old.Engine));
-        var restored=Session();Assert.Empty(restored.Error);Assert.False(restored.Engine.DamageCounters);
-        Assert.NotEmpty(restored.BalanceNotice);Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.True(Send(restored,"surrender").Success);Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
+        var old=new RankedSession(oldCards,env,store,CounterHistory.LegacyDecks(oldCards),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(old.Start(oldCards.PresetDecks[0]).Success);Assert.False(old.Engine.DamageCounters);old.Coordinator.Dispose();
+        var restored=Session();Assert.Empty(restored.Error);Assert.Equal(RankedSession.RetiredMatchNotice,restored.BalanceNotice);
+        Assert.Null(restored.Read().Match);
         Assert.True(restored.Start(cards.PresetDecks[0]).Success);Assert.True(restored.Engine.DamageCounters);
         Assert.True(Session().Engine.DamageCounters);Assert.Empty(Session().Error);
     }
@@ -217,7 +202,7 @@ public sealed class RankedTests : IDisposable
     private static Deck HealingDeck()
     {
         var deck = DeckService.CreateStarterDeck();
-        deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-050" : id).ToList();
+        deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-070" : id).ToList();
         return deck;
     }
     [Fact, Trait("Category", "Slow")] public void PlayerHealingJournalResumesAndReplaysBothHeroTargets()
@@ -231,9 +216,9 @@ public sealed class RankedTests : IDisposable
             for (var seed = 0; seed < 50; seed++)
             {
                 profile.Match.Seed = seed; store.Save(profile); session = Session();
-                if (session.Engine.Player.Hand.Any(c => c.Card.Id == "WCG-050")) break;
+                if (session.Engine.Player.Hand.Any(c => c.Card.Id == "WCG-070")) break;
             }
-            var healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-050");
+            var healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-070");
             var lease = session.Coordinator.Attach(); session.Coordinator.AiPaused = true;
             Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c != healing).InstanceId).Success);
             Assert.True(Send(session, "end").Success);
@@ -243,8 +228,8 @@ public sealed class RankedTests : IDisposable
                 session.Coordinator.Acknowledge(lease, step.State.MatchId, step.State.Revision, step.BatchId);
             }
             Assert.Equal("player", session.Engine.DecisionPlayerId);
-            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-050").InstanceId).Success);
-            healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-050");
+            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-070").InstanceId).Success);
+            healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-070");
             Assert.True(Send(session, "play", healing.InstanceId).Success);
             var pending = Session(); Assert.Empty(pending.Error); Assert.NotNull(pending.Engine.CurrentPendingTarget?.PlayerValidator);
             Assert.True(Send(pending, "target", target: target).Success);
@@ -259,40 +244,19 @@ public sealed class RankedTests : IDisposable
     [Fact] public void PrePlayerTargetMatchKeepsOldHealingAndRankAfterUpgrade()
     {
         var prior = Overlay(cards, "balance-before-player-targets.json");
-        Assert.Equal("88C0C870C9CC1E0CEA81399269174E23D1A1E7649EA41F6BB91DCAE57EABA187", Hash(prior));
-        store.Save(new() { Season = "2026-10", Stars = 22, BestStars = 22, SeasonBest = 22 });
-        var old = new RankedSession(prior, env, store, new RankedDecks(prior, env), NullLogger<BattleCoordinator>.Instance, clock);
-        Assert.True(old.Start(HealingDeck()).Success);
-        var before = JsonSerializer.Serialize(StateShape(old.Engine));
-        var current = Session(); Assert.Empty(current.Error); Assert.NotEmpty(current.BalanceNotice);
-        Assert.Equal(22, current.Read().Stars); Assert.Equal(before, JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.Equal("回復 2 點生命。", current.Engine.Player.Hand.Concat(current.Engine.Player.Deck).First(c => c.Card.Id == "WCG-050").Card.Text);
-        Assert.True(Send(current, "surrender").Success);
-        Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
+        RetiredCounterEra(prior);
     }
     [Fact] public void DiversityUpdateResumesPostClarityMatchWithoutEnablingLegacyEffects()
     {
         var prior=Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json");
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[0]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var before=JsonSerializer.Serialize(StateShape(old.Engine));var restored=Session();
-        Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);Assert.Equal(22,restored.Read().Stars);
-        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.True(Send(restored,"surrender").Success);
-        var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
-        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.Equal(4,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-124").Card.TotalCost); // 3 before the 2026-10-17 狂怒 face-damage cost-up
+        RetiredCounterEra(prior);
     }
-    // 2026-11-12 指示物改為牌組裡的卡：之前的 35 個卡表（聖盾指示物到鐵皮巨獸 DP）以整數指示物表示狀態，引擎已不再支援，
+    // 2026-11-12 指示物改為牌組裡的卡與 v2.0 大改版：之前的舊版卡表（含整數指示物）引擎已不再支援，
     // 未完成的對局作廢、不計勝負，舊重播回報版本不再支援。
     private void RetiredCounterEra(CardDatabase prior)
     {
         store.Save(new(){Season="2026-11",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var old=new RankedSession(prior,env,store,CounterHistory.LegacyDecks(prior),NullLogger<BattleCoordinator>.Instance,clock);
         var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
         var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);var rules=profile.Match.Rules;var stars=profile.Stars;old.Coordinator.Dispose();
         var current=Session();Assert.Empty(current.Error);Assert.Equal(RankedSession.RetiredMatchNotice,current.BalanceNotice);
@@ -302,36 +266,37 @@ public sealed class RankedTests : IDisposable
     }
     [Fact] public void MatchFromTheLastCounterCatalogIsVoided()
     {
-        var prior=CardBalanceHistory.BeforeDeckCards(cards);Assert.True(CardBalanceHistory.DeckCardsCatalog(cards));Assert.False(CardBalanceHistory.DeckCardsCatalog(prior));
-        Assert.Contains("指示物",prior.GetCard("WCG-410")!.Text);Assert.DoesNotContain("指示物",cards.GetCard("WCG-410")!.Text);
+        var prior=CardBalanceHistory.BeforeDeckCards(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
+        Assert.True(CardBalanceHistory.DeckCardsCatalog(v1End));Assert.False(CardBalanceHistory.DeckCardsCatalog(prior));
+        Assert.Contains("指示物",prior.GetCard("WCG-410")!.Text);Assert.DoesNotContain("指示物",v1End.GetCard("WCG-410")!.Text);
         RetiredCounterEra(prior);
     }
-    // 2026-11-05 鐵皮巨獸 DP 3→2 之前開始的對局（已隨整數指示物作廢）。
+    // 2026-11-05 鐵皮巨獸 DP 3→2 之前開始的對局（已隨舊版本作廢）。
     [Fact] public void PreIronhideDpMatchIsVoidedWithTheCounterEras()
     {
-        var prior=CardBalanceHistory.BeforeIronhideDp(cards);
+        var prior=CardBalanceHistory.BeforeIronhideDp(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeIronhideDp(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
-        Assert.Equal(3,prior.GetCard("WCG-343")!.DP);Assert.Equal(2,cards.GetCard("WCG-343")!.DP);
+        Assert.Equal(3,prior.GetCard("WCG-343")!.DP);Assert.Equal(2,v1End.GetCard("WCG-343")!.DP);
         Assert.Equal(CardBalanceHistory.BeforeDeckCards(cards).AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-343").Select(c=>JsonSerializer.Serialize(c)));
         Assert.False(CardBalanceHistory.IronhideDpCatalog(prior));
         RetiredCounterEra(prior);
     }
-    // 2026-10-22 卡表（PR #63 巨熊咆哮文字白話化之前）開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
+    // 2026-10-22 卡表（PR #63 巨熊咆哮文字白話化之前）開始的對局（已隨舊版本作廢）。
     [Fact] public void PreBearRoarTextMatchIsVoidedWithTheCounterEras()
     {
-        var prior=CardBalanceHistory.BeforeBearRoarText(cards);
+        var prior=CardBalanceHistory.BeforeBearRoarText(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforeBearRoarText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
-        Assert.Contains("可消滅的 PP 上限 +500",prior.GetCard("WCG-048")!.Text);Assert.Contains("己方場上怪物數 × 500",cards.GetCard("WCG-048")!.Text);
+        Assert.Contains("可消滅的 PP 上限 +500",prior.GetCard("WCG-048")!.Text);Assert.Contains("己方場上怪物數 × 500",v1End.GetCard("WCG-048")!.Text);
         Assert.Equal(CardBalanceHistory.BeforeShieldAnyCombat(cards).AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)),prior.AllCards.Where(c=>c.Id!="WCG-048").Select(c=>JsonSerializer.Serialize(c)));
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
         RetiredCounterEra(prior);
     }
-    // 印刷 PP 文字規則（2026-10-23）之前開始的對局：續玩、重播與對局代碼都要對得上自己的時代。
+    // 印刷 PP 文字規則（2026-10-23）之前開始的對局（已隨舊版本作廢）。
     [Fact] public void PrePrintedPpTextMatchIsVoidedWithTheCounterEras()
     {
-        var prior=CardBalanceHistory.BeforePrintedPpText(cards);
+        var prior=CardBalanceHistory.BeforePrintedPpText(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
         Assert.Equal(JsonSerializer.Serialize(CounterHistory.BeforePrintedPpText(cards).AllCards),JsonSerializer.Serialize(prior.AllCards));
-        Assert.Equal("消滅 1 隻 PP 1200 以下的敵方怪物。",prior.GetCard("WCG-082")!.Text);Assert.Contains("印刷 PP",cards.GetCard("WCG-082")!.Text);
+        Assert.Equal("消滅 1 隻 PP 1200 以下的敵方怪物。",prior.GetCard("WCG-082")!.Text);Assert.Contains("印刷 PP",v1End.GetCard("WCG-082")!.Text);
         var changed=CardBalanceHistory.BeforeArrowText(cards).AllCards.Where(c=>prior.GetCard(c.Id)!=null&&JsonSerializer.Serialize(c)!=JsonSerializer.Serialize(prior.GetCard(c.Id))).ToList();Assert.Equal(39,changed.Count);
         Assert.All(changed,c=>{Assert.Contains("印刷 PP",c.Text);Assert.DoesNotContain("印刷",prior.GetCard(c.Id)!.Text);var o=JsonSerializer.Deserialize<CardDefinition>(JsonSerializer.Serialize(prior.GetCard(c.Id)))!;o.Text=c.Text;Assert.Equal(JsonSerializer.Serialize(c),JsonSerializer.Serialize(o));});
         Assert.True(CardBalanceHistory.CardFixesCatalog(prior));
@@ -340,38 +305,15 @@ public sealed class RankedTests : IDisposable
     [Fact] public void AddingHeroGuardKeepsReleasedMatchAndReplayAndAllowsNewCardNextMatch()
     {
         var prior=CounterHistory.BeforeHeroGuard(cards);Assert.Equal(199,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-200"));
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
-        deck.CardIds=Enumerable.Repeat("WCG-200",4).Concat(deck.CardIds.Skip(4)).ToList();
-        Assert.True(deck.IsValid(cards.GetCard,out _));Assert.True(current.Start(deck).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
-        Assert.Equal(4,current.Engine.Player.Hand.Concat(current.Engine.Player.Deck).Count(c=>c.Card.Id=="WCG-200"));
-        current.Coordinator.Dispose();
+        RetiredCounterEra(prior);
+        Assert.NotNull(cards.GetCard("WCG-200"));
     }
 
     [Fact] public void NewCardsPreserveActiveMatchAndReplay()
     {
         var prior=CounterHistory.BeforeNewCards(cards);
-        Assert.Equal(204,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-205"));Assert.NotNull(cards.GetCard("WCG-257"));
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[4]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.NotEmpty(current.BalanceNotice);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
-        Assert.True(current.Start(deck).Success);Assert.Empty(current.BalanceNotice);Assert.NotEqual(rules,current.Read().Match!.Rules);
-        current.Coordinator.Dispose();
+        Assert.Equal(204,prior.AllCards.Count);Assert.Null(prior.GetCard("WCG-205"));Assert.NotNull(CardBalanceHistory.BeforeV2(cards).GetCard("WCG-257"));
+        RetiredCounterEra(prior);
     }
 
     // The pre-simplification catalogs (WCG-200–204 with 怒擊/野性/觀測/回魂/護主) were retired with those keywords:
@@ -382,10 +324,10 @@ public sealed class RankedTests : IDisposable
         var prior=beforeEnergyKeywords?CounterHistory.BeforeEnergyKeywords(cards):CounterHistory.BeforeRulesSimplification(cards);
         Assert.NotEmpty(prior.GetCard("WCG-200")!.Keywords);Assert.Empty(cards.GetCard("WCG-200")!.Keywords);
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        var old=new RankedSession(prior,env,store,CounterHistory.LegacyDecks(prior),NullLogger<BattleCoordinator>.Instance,clock);
         var deck=DeckService.Copy(prior.PresetDecks[0]);Assert.True(old.Start(deck).Success);
         var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
+        old=new(prior,env,store,CounterHistory.LegacyDecks(prior),NullLogger<BattleCoordinator>.Instance,clock);
         Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
         Assert.True(Send(old,"surrender").Success);var record=old.Read().Records!.Last();Assert.Empty(old.BuildReplay(record.Id).Error);
         Assert.True(old.Start(deck).Success);var rules=old.Read().Match!.Rules;var stars=old.Read().Stars;old.Coordinator.Dispose();
@@ -398,20 +340,10 @@ public sealed class RankedTests : IDisposable
 
     [Fact] public void DeflationPreservesPreDeflationMatchAndReplay()
     {
-        var prior=CounterHistory.BeforeDeflation(cards);Assert.Equal(4000,prior.GetCard("WCG-161")!.PP);Assert.Equal(7,prior.GetCard("WCG-160")!.TotalCost);
-        Assert.Equal(3300,cards.GetCard("WCG-161")!.PP);Assert.Equal(8,cards.GetCard("WCG-160")!.TotalCost);
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[0]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var rules=old.Read().Match!.Rules;old.Coordinator.Dispose();
-        var current=Session();Assert.Empty(current.Error);Assert.Equal(22,current.Read().Stars);
-        Assert.Equal(rules,current.Read().Match!.Rules);Assert.Equal(shape,JsonSerializer.Serialize(StateShape(current.Engine)));
-        Assert.True(Send(current,"surrender").Success);Assert.Empty(current.BuildReplay(current.Read().Records!.Last().Id).Error);
-        Assert.True(current.Start(DeckService.Copy(cards.PresetDecks[0])).Success);Assert.NotEqual(rules,current.Read().Match!.Rules);
-        current.Coordinator.Dispose();
+        var prior=CounterHistory.BeforeDeflation(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
+        Assert.Equal(4000,prior.GetCard("WCG-161")!.PP);Assert.Equal(7,prior.GetCard("WCG-160")!.TotalCost);
+        Assert.Equal(3300,v1End.GetCard("WCG-161")!.PP);Assert.Equal(33,cards.GetCard("WCG-161")!.PP);Assert.Equal(8,v1End.GetCard("WCG-160")!.TotalCost);
+        RetiredCounterEra(prior);
     }
 
     [Fact] public void StrongBuildAdjustmentPreservesActiveMatchReplayAndNextMatchUsesNewValues()
@@ -423,56 +355,18 @@ public sealed class RankedTests : IDisposable
         Assert.Equal(6,prior.GetCard("WCG-194")!.TotalCost);
         Assert.Equal(2,prior.GetCard("WCG-186")!.TotalCost);
         Assert.Equal(4,prior.GetCard("WCG-017")!.TotalCost);
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[4]);
-        Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        old.Coordinator.Dispose();
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
-        old.Coordinator.Dispose();
-        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
-        Assert.Equal(22,restored.Read().Stars);Assert.Equal(oldRules,restored.Read().Match!.Rules);
-        Assert.Equal(shape,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.Equal(6,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-194").Card.TotalCost);
-        Assert.True(Send(restored,"surrender").Success);
-        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
-        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
-        Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
-        Assert.Equal(5,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-194").Card.TotalCost);
-        Assert.Equal(1100,restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-148").Card.PP);
-        restored.Coordinator.Dispose();
+        RetiredCounterEra(prior);
     }
 
     [Fact] public void OctoberBalancePreservesActiveMatchReplayAndNextMatchUsesNewValues()
     {
-        var prior=CounterHistory.BeforeOctoberBalance(cards);
+        var prior=CounterHistory.BeforeOctoberBalance(cards);var v1End=CardBalanceHistory.BeforeV2(cards);
         Assert.Equal(2,prior.GetCard("WCG-082")!.TotalCost);
         Assert.Equal(9,prior.GetCard("WCG-160")!.TotalCost);
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[4]);
-        deck.CardIds=deck.CardIds.Select(id=>id=="WCG-095"?"WCG-082":id=="WCG-138"?"WCG-160":id).ToList();
-        Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var shape=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
-        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
-        Assert.Equal(22,restored.Read().Stars);Assert.Equal(oldRules,restored.Read().Match!.Rules);
-        Assert.Equal(shape,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.True(restored.Engine.DamageCounters);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.True(Send(restored,"surrender").Success);
-        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
-        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
-        Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
-        var arrow=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-082");
-        Assert.Equal(2,arrow.Card.TotalCost);
+        RetiredCounterEra(prior);
         Assert.Equal(2,cards.GetCard("WCG-082")!.TotalCost);
         Assert.Equal(3,CounterHistory.BeforeCardFixes(cards).GetCard("WCG-082")!.TotalCost);
-        Assert.Equal(8,cards.GetCard("WCG-160")!.TotalCost);
+        Assert.Equal(8,v1End.GetCard("WCG-160")!.TotalCost);
     }
 
     [Fact] public void EnergyShieldRenamePreservesActiveMatchAndItsReplay()
@@ -480,20 +374,7 @@ public sealed class RankedTests : IDisposable
         var prior=CounterHistory.BeforeEnergyShield(cards);
         // Fingerprint read from the deployed pre-rename version; design notes also participate in the hash.
         Assert.Equal("B480EB9937F9EF5760C83B3AB13A6AC39310ABF96F99A29D44154EF2A91FE887",Hash(prior));
-        store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        var deck=DeckService.Copy(prior.PresetDecks[3]);Assert.True(old.Start(deck).Success);
-        var profile=old.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        old=new(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(old,"energy",old.Engine.Player.Hand[0].InstanceId).Success);
-        var before=JsonSerializer.Serialize(StateShape(old.Engine));var oldRules=old.Read().Match!.Rules;
-        var restored=Session();Assert.Empty(restored.Error);Assert.Equal(22,restored.Read().Stars);
-        Assert.True(restored.Engine.DamageCounters);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.Equal(oldRules,restored.Read().Match!.Rules);
-        Assert.True(Send(restored,"surrender").Success);
-        Assert.Empty(restored.BuildReplay(restored.Read().Records!.Last().Id).Error);
-        Assert.True(restored.Start(deck).Success);Assert.NotEqual(oldRules,restored.Read().Match!.Rules);
+        RetiredCounterEra(prior);
     }
 
     [Fact] public void HistoricCatalogsReproduceTheReleasedFingerprints()
@@ -512,41 +393,14 @@ public sealed class RankedTests : IDisposable
     {
         var oldCards=Overlay(Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json"),"balance-before-arrow-cards.json");
         Assert.Empty(oldCards.GetCard("WCG-005")!.Arrows);Assert.Equal("衝鋒。",oldCards.GetCard("WCG-005")!.Text);
-        var deck=DeckService.Copy(oldCards.PresetDecks[0]);
-        var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(oldSession.Start(deck).Success);
-        var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
-        Assert.Empty(oldSession.Engine.Player.Hand.Concat(oldSession.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-005").Card.Arrows);
-        var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));var stars=oldSession.Read().Stars;
-        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
-        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));
-        Assert.Equal(stars,restored.Read().Stars);
-        Assert.True(Send(restored,"surrender").Success);
-        var record=restored.Read().Records!.Last();
-        var replay=restored.BuildReplay(record.Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
-        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);
-        var rider=restored.Engine.Player.Hand.Concat(restored.Engine.Player.Deck).First(c=>c.Card.Id=="WCG-005").Card;
-        Assert.Equal(["left","right"],rider.Arrows);
+        RetiredCounterEra(oldCards);
+        Assert.Equal(["left","right"],cards.GetCard("WCG-005")!.Arrows);
     }
     [Fact] public void CardTextUpdatePreservesActiveOldMatchWithLegacyRulesAndReplays()
     {
         var oldCards=Overlay(Overlay(Overlay(cards,"balance-before-player-targets.json"),"balance-before-diversity.json"),"balance-before-card-text.json");
         Assert.Equal(1200,oldCards.GetCard("WCG-147")!.PP);Assert.StartsWith("離場：",oldCards.GetCard("WCG-003")!.Text);
-        var deck=DeckService.Copy(oldCards.PresetDecks[0]);
-        var oldSession=new RankedSession(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(oldSession.Start(deck).Success);
-        var profile=oldSession.Read();profile.Match!.PlayerFirst=true;store.Save(profile);
-        oldSession=new(oldCards,env,store,new RankedDecks(oldCards,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(Send(oldSession,"energy",oldSession.Engine.Player.Hand[0].InstanceId).Success);
-        var before=JsonSerializer.Serialize(StateShape(oldSession.Engine));var stars=oldSession.Read().Stars;
-        var restored=Session();Assert.Empty(restored.Error);Assert.NotEmpty(restored.BalanceNotice);
-        Assert.Equal(before,JsonSerializer.Serialize(StateShape(restored.Engine)));Assert.Equal(stars,restored.Read().Stars);
-        Assert.True(CardTextClarityTests.IsLegacy(restored.Engine));
-        Assert.True(Send(restored,"surrender").Success);
-        var replay=restored.BuildReplay(restored.Read().Records!.Last().Id);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
-        Assert.True(restored.Start(deck).Success);Assert.Empty(restored.BalanceNotice);Assert.False(CardTextClarityTests.IsLegacy(restored.Engine));
+        RetiredCounterEra(oldCards);
     }
     [Fact] public void CorruptSaveIsPreservedAndBlocksRankedOnly()
     {
@@ -625,7 +479,7 @@ public sealed class RankedTests : IDisposable
             var e=new GameEngine(cards,new Random(1)){AiLevel=level,AiRevision=6};e.SeedRankedAi(1);e.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],false);
             e.Computer.Hand.Clear();e.Player.Hp=2;
             for(int i=0;i<2;i++)e.Computer.Field.Add(new(cards.GetCard("WCG-101")!){IsTapped=false,HasSummoningSickness=false});
-            e.Player.Field.Add(new(CounterHistory.BeforeTauntFaceCharge(cards).GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false}); // the 400-PP goblin this v6 scene was written for
+            var goblin=new MonsterInstance(CounterHistory.BeforeTauntFaceCharge(cards).GetCard("WCG-003")!){IsTapped=false,HasSummoningSickness=false};goblin.CurrentPP=4;e.Player.Field.Add(goblin); // the 4-PP goblin this v6 scene was written for
             return e;
         }
         var master=Setup(5);Assert.True(master.ExecuteAiStep());Assert.Equal(1,master.Player.Hp);Assert.True(master.ExecuteAiStep());Assert.True(master.Player.HasLost);
@@ -663,9 +517,8 @@ public sealed class RankedTests : IDisposable
         // Rebuilt draw, sacrifice and swarm themes remain available at high tiers; strong control stays gated above.
         foreach(var key in new[]{"REASON-ARCANE","ABYSS-SOULFEAST","REASON-ORACLE","WRATH-WARBAND"}) Assert.Contains(key,keys[5]);
         Assert.True(keys[5].IsSupersetOf(keys[0]));
-        Assert.Equal(new[]{12,22,29,30,34,55}, keys.Select(k=>k.Count));
+        Assert.Equal(new[]{11,21,28,29,33,44}, keys.Select(k=>k.Count));
         // PR E 新流派：機制越複雜越晚出現。
-        Assert.Equal([0,1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-MERCENARY")));
         Assert.Equal([1,2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-LONEWOLF")));
         foreach(var key in new[]{"VITAL-PHALANX","REASON-PROPHECY","VITAL-ROTCYCLE"}) Assert.Equal([2,3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains(key)));
         Assert.Equal([3,4,5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-TIDE")));
@@ -675,23 +528,14 @@ public sealed class RankedTests : IDisposable
         Assert.DoesNotContain("白銀長城",decks.Summary(4));Assert.Contains("白銀長城",decks.Summary(5));
         // 2026-10-23 新流派：先只放大師。
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-OATHDUEL")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-VERDANTGAP")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ABYSS-ROTEROSION")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-BEACONWATCH")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-ENERGYVAULT")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-ENERGYBURN")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("VITAL-HOOFCRUSH")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("WRATH-LANERAID")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ABYSS-SOULPUPPET")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-GRAVEOATH")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("VITAL-ROOTWEB")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-BLOODOATH")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-TIDECYCLE")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("VITAL-ROTMIRE")));
         Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ORDER-HOLYSPRING")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("REASON-STARCLOCK")));
-        Assert.Equal([5],Enumerable.Range(0,6).Where(t=>keys[t].Contains("ABYSS-FATEFLIP")));
-        Assert.Equal(55,keys.SelectMany(k=>k).Distinct().Count());
+        Assert.Equal(44,keys.SelectMany(k=>k).Distinct().Count());
         // 大師使用完整牌表；同一流派在較低牌位的牌表是簡化版。
         var thorn=decks.Pool(5).Single(e=>ArchetypeKey(e.Deck.Id)=="VITAL-THORN").Deck;
         Assert.Contains(thorn.CardIds,id=>id=="WCG-082");
@@ -982,12 +826,14 @@ public sealed class RankedTests : IDisposable
     {
         var prior=Overlay(cards,"balance-before-player-targets.json");
         store.Save(new(){Season="2026-10",Stars=22,BestStars=22,SeasonBest=22});
-        var old=new RankedSession(prior,env,store,new RankedDecks(prior,env),NullLogger<BattleCoordinator>.Instance,clock);
-        Assert.True(old.Start(HealingDeck()).Success);Assert.True(Send(old,"surrender").Success);
+        var old=new RankedSession(prior,new DeckService(prior,env),store,CounterHistory.LegacyDecks(prior),NullLogger<BattleCoordinator>.Instance,clock);
+        Assert.True(old.Start(prior.PresetDecks[2]).Success);Assert.True(Send(old,"surrender").Success);
         var record=old.Read().Records!.Last();var code=old.MatchCodeFor(record.Id)!;
         Directory.Delete(dir,true);var current=Session();Assert.Null(current.MatchCodeFor(record.Id));
         var decoded=MatchCode.Decode(code,out var error,out _)!;Assert.Equal("",error);Assert.Equal(record.Rules,decoded.Rules);
-        var replay=current.BuildReplay(decoded);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
+        Assert.NotEmpty(current.BuildReplay(decoded).Error);
+        var matching=new RankedSession(prior,new DeckService(prior,env),store,CounterHistory.LegacyDecks(prior),NullLogger<BattleCoordinator>.Instance,clock);
+        var replay=matching.BuildReplay(decoded);Assert.Empty(replay.Error);Assert.True(replay.Steps.Count>=2);
         // A code whose rules fingerprint matches no known era explains that it cannot be re-simulated.
         var unknown=new RankedRecord{Rules="ranked-v06:"+new string('0',64),Tier=0,PlayerDeck=decoded.PlayerDeck,ComputerDeck=decoded.ComputerDeck,Actions=""};
         Assert.NotEmpty(current.BuildReplay(MatchCode.Decode(MatchCode.Encode(unknown),out _,out _)!).Error);
@@ -1064,7 +910,10 @@ public sealed class RankedTests : IDisposable
     [Fact, Trait("Category", "Slow")] public async Task LegacyAndJournaledRestoresOfAnInProgressMatchAgree()
     {
         var legacyRecord = MatchCode.Decode(AiV8Tests.DiamondMatch, out var error, out _)!; Assert.Equal("", error);
-        var s = Session(); var journaled = s.JournaledActions(legacyRecord)!; Assert.NotNull(journaled);
+        var matchCards = CounterHistory.MatchCatalog(cards, legacyRecord.Rules);
+        var legacyDecks = CounterHistory.LegacyDecks(matchCards);
+        var s = new RankedSession(matchCards, new DeckService(matchCards, env), store, legacyDecks, NullLogger<BattleCoordinator>.Instance, clock);
+        var journaled = s.JournaledActions(legacyRecord)!; Assert.NotNull(journaled);
         var legacy = RankedRecord.Decode(legacyRecord.Actions); var fast = RankedRecord.Decode(journaled);
         Assert.Equal(legacy.Count, fast.Count); Assert.DoesNotContain(fast, a => a.Type == "ai");
         Assert.Equal(Shapes(s.BuildReplay(legacyRecord)), Shapes(s.BuildReplay(new RankedRecord { Rules = legacyRecord.Rules, Tier = legacyRecord.Tier, Seed = legacyRecord.Seed,
@@ -1075,7 +924,7 @@ public sealed class RankedTests : IDisposable
             var p = s.Read(); p.Match = new() { Season = p.Season, Seed = legacyRecord.Seed, Tier = legacyRecord.Tier, PlayerFirst = legacyRecord.PlayerFirst, Rules = legacyRecord.Rules,
                 StartRules = legacyRecord.StartRules, PlayerDeck = legacyRecord.PlayerDeck, ComputerDeck = legacyRecord.ComputerDeck, Actions = journal.Take(cut).ToList() };
             store.Save(p);
-            var d = new RankedSession(cards, new DeckService(cards, env, decks), store, decks, NullLogger<BattleCoordinator>.Instance, clock, deferRestore: true);
+            var d = new RankedSession(matchCards, new DeckService(matchCards, env, legacyDecks), store, legacyDecks, NullLogger<BattleCoordinator>.Instance, clock, deferRestore: true);
             var watch = System.Diagnostics.Stopwatch.StartNew(); await d.RestoreAsync(); var ms = watch.Elapsed.TotalMilliseconds;
             Assert.Empty(d.Error); Assert.False(d.Restoring); return (JsonSerializer.Serialize(StateShape(d.Engine)), ms);
         }
@@ -1101,5 +950,35 @@ public sealed class RankedTests : IDisposable
         var s = Session(); Assert.True(s.Start(cards.PresetDecks[0]).Success);
         var p = s.Read(); p.Match!.Actions = [new("aic:teleport", RulesVersion: GameEngine.RankedAiVersion)]; store.Save(p);
         Assert.NotEmpty(Session().Error);
+    }
+    [Fact] public void SupersededMatchIsVoidedWhileKeepingRankAndBrokenMatchCanBeDiscarded()
+    {
+        store.Save(new() { Season = "2026-11", Stars = 1, BestStars = 3, SeasonBest = 3, Wins = 1, Losses = 0 });
+        var s = Session(); Assert.True(s.Start(cards.PresetDecks[0]).Success);
+        var p = s.Read(); p.Match!.Rules = "ranked-v06:" + new string('f', 64); store.Save(p); s.Coordinator.Dispose();
+
+        var reloaded = Session();
+        Assert.Empty(reloaded.Error);
+        Assert.Equal(RankedSession.SupersededMatchNotice, reloaded.BalanceNotice);
+        Assert.Null(reloaded.Read().Match);
+        Assert.Equal(1, reloaded.Read().Stars);
+        Assert.Equal(1, reloaded.Read().Wins);
+        Assert.True(reloaded.Start(cards.PresetDecks[0]).Success);
+        // Simulate an action-level replay failure when rules hash matches current cards.
+        var brokenMatch = reloaded.Read();
+        brokenMatch.Match!.Actions = [new("energy", Source: 999, RulesVersion: GameEngine.RankedAiVersion)];
+        store.Save(brokenMatch);
+        reloaded.Coordinator.Dispose();
+
+        var failed = Session();
+        Assert.NotEmpty(failed.Error);
+        Assert.True(failed.CanDiscardBrokenMatch);
+        Assert.True(failed.DiscardBrokenMatch());
+        Assert.Empty(failed.Error);
+        Assert.Null(failed.Read().Match);
+        Assert.Equal(1, failed.Read().Stars);
+        Assert.Equal(1, failed.Read().Wins);
+        Assert.True(failed.Start(cards.PresetDecks[0]).Success);
+        failed.Coordinator.Dispose();
     }
 }

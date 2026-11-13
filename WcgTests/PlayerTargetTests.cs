@@ -12,7 +12,7 @@ public class PlayerTargetTests
     private static readonly string Root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../WcgWeb/Data"));
     private static CardDatabase Cards(bool old = false)
     {
-        var cards = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "cards.json")))!;
+        var cards = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, old ? "balance-before-v2.json" : "cards.json")))!;
         if (old)
         {
             cards = cards.Where(c => int.Parse(c.Id[4..]) < 205).ToList();
@@ -48,7 +48,7 @@ public class PlayerTargetTests
             var prior = JsonSerializer.Deserialize<List<CardDefinition>>(File.ReadAllText(Path.Combine(Root, "balance-before-player-targets.json")))!.ToDictionary(c => c.Id);
             cards = cards.Select(c => prior.GetValueOrDefault(c.Id, c)).ToList();
         }
-        var presets = File.ReadAllText(Path.Combine(Root, "preset_decks.json"));
+        var presets = File.ReadAllText(Path.Combine(Root, old ? "balance-before-v2-presets.json" : "preset_decks.json"));
         // Before PR E the v0.6 深淵 preset had no new cards.
         if (old) presets = presets.Replace("\"WCG-249\"", "\"WCG-128\"").Replace("\"WCG-250\"", "\"WCG-169\"").Replace("\"WCG-212\"", "\"WCG-169\"");
         return new(JsonSerializer.Serialize(cards), presets);
@@ -72,7 +72,6 @@ public class PlayerTargetTests
     private static BattleCommand Command(GameEngine g, string type, Guid? source = null, Guid? target = null) =>
         new(Guid.NewGuid(), g.MatchId, g.Revision, type, source, target);
     [Theory]
-    [InlineData("WCG-050", false, 2)] [InlineData("WCG-050", true, 2)]
     [InlineData("WCG-066", false, 2)] [InlineData("WCG-066", true, 2)]
     [InlineData("WCG-070", false, 1)] [InlineData("WCG-070", true, 1)]
     public void DirectHealingUsesChosenPlayerAndOnlyCasterDraws(string id, bool enemy, int amount)
@@ -93,7 +92,7 @@ public class PlayerTargetTests
     }
     [Fact] public void PendingHealingOnlyOffersHeroesAndCancelNeverPays()
     {
-        var (g, bridge, card) = Scene("WCG-050"); var monster = new MonsterInstance(g.Player.Deck.First(c => c.Card.IsMonster).Card);
+        var (g, bridge, card) = Scene("WCG-066"); var monster = new MonsterInstance(g.Player.Deck.First(c => c.Card.IsMonster).Card);
         g.Player.Field.Add(monster);
         Assert.True(bridge.Submit(Command(g, "play", card.InstanceId)).Success);
         Assert.Equal(new[] { GameEngine.PlayerTargetId.ToString(), GameEngine.ComputerTargetId.ToString() }, bridge.Snapshot().Pending!.Targets);
@@ -113,17 +112,17 @@ public class PlayerTargetTests
         Assert.True(g.CanPlayCard(g.Player, card));
         Assert.False(bridge.Submit(Command(g, "play", card.InstanceId, GameEngine.PlayerTargetId)).Success);
         Assert.Contains(card, g.Player.Hand); Assert.Equal(12, g.Player.AvailableEnergy);
-        var scene = Scene("WCG-050");
+        var scene = Scene("WCG-066");
         var unit = new MonsterInstance(scene.Game.Player.Deck.First(c => c.Card.IsMonster).Card); scene.Game.Player.Field.Add(unit);
         Assert.False(scene.Bridge.Submit(Command(scene.Game, "play", scene.Card.InstanceId, unit.InstanceId)).Success);
         Assert.Contains(scene.Card, scene.Game.Player.Hand); Assert.Equal(12, scene.Game.Player.AvailableEnergy);
     }
     [Fact] public void PlayerHealCannotBypassEnergyAndCapsAtSeven()
     {
-        var (g, bridge, card) = Scene("WCG-050"); g.Player.EnergyZone.Clear();
+        var (g, bridge, card) = Scene("WCG-066"); g.Player.EnergyZone.Clear();
         Assert.False(bridge.Submit(Command(g, "play", card.InstanceId, GameEngine.PlayerTargetId)).Success);
         Assert.Contains(card, g.Player.Hand);
-        var ready = Scene("WCG-050"); ready.Game.Computer.Hp = 6;
+        var ready = Scene("WCG-066"); ready.Game.Computer.Hp = 6;
         Assert.True(ready.Bridge.Submit(Command(ready.Game, "play", ready.Card.InstanceId, GameEngine.ComputerTargetId)).Success);
         Assert.Equal(7, ready.Game.Computer.Hp);
     }
@@ -145,12 +144,11 @@ public class PlayerTargetTests
         Assert.True(g.CastSpell(g.Player, card)); Assert.Equal(4, g.Player.Hp); Assert.Equal(3, g.Computer.Hp); Assert.False(g.IsWaiting);
     }
     [Theory]
-    [InlineData("WCG-050", "Restore 2 life.")]
     [InlineData("WCG-066", "Restore 2 life, then draw 1 card.")]
     [InlineData("WCG-070", "Restore 1 life.")]
     public void HistoricEnglishTextDoesNotPromiseNewPlayerTargeting(string id, string oldEnglish)
     {
         Assert.Equal(oldEnglish, LocalizationCatalog.CardText(id, Cards(true).GetCard(id)!.Text));
-        Assert.Contains("either player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
+        Assert.Contains("to 1 player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
     }
 }

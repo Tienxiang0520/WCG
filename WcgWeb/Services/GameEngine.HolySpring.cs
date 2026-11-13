@@ -21,7 +21,7 @@ public partial class GameEngine
             PadUnder(p, well, UnderKind.HolySpring, amount, well.Card);
         }
         foreach (var acolyte in p.Field.Where(x => Active(x, "WCG-401")).ToArray())
-            foreach (var x in PointedUnits(acolyte)) AddTurnBonus(x, 300, acolyte.Card);
+            foreach (var x in PointedUnits(acolyte)) AddTurnBonus(x, ScalePP(300), acolyte.Card);
         foreach (var knight in p.Field.Where(x => Active(x, "WCG-405")).ToArray())
         {
             if (knight.SpringDpTurn != TurnNumber) { knight.SpringDpTurn = TurnNumber; knight.SpringDpCount = 0; }
@@ -33,11 +33,11 @@ public partial class GameEngine
     private static int SpringCards(PlayerState p) => p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-403").Sum(x => x.SpringCards);
     // Monsters a spell may pick (禁魔石像 152 and other spell-immune monsters are skipped).
     private List<MonsterInstance> SpellPickable(PlayerState p, IEnumerable<MonsterInstance> source) =>
-        Targetable(p, source).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !Hermit(p, m)).ToList();
-    // Monsters a spell may choose while it resolves (禁魔石像 152; 封時守衛 413 while it has Countdown counters).
+        Targetable(p, source).Where(m => (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152")) && (V2Rules || !Hermit(p, m))).ToList();
+    // Monsters a spell may choose while it resolves (禁魔石像 152 / 魔免; 封時守衛 413 while it has Countdown counters).
     // Area effects that don't choose still hit them.
     private List<MonsterInstance> SpellResolvePickable(PlayerState p, IEnumerable<MonsterInstance> source) =>
-        Targetable(p, source).Where(m => (m.IsSilenced || m.Card.Id != "WCG-152") && !StarWarded(m)).ToList();
+        Targetable(p, source).Where(m => (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152")) && !StarWarded(m)).ToList();
     // 406／420: -X PP until end of turn; destroyed if that brings it to 0.
     private void ShrinkUntilEndOfTurn(MonsterInstance x, int amount, CardDefinition source)
     {

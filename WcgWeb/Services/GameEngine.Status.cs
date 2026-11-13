@@ -4,7 +4,7 @@ public partial class GameEngine
 {
     private PlayerState PlayerById(string? id) => id == Player.Id ? Player : Computer;
     internal bool StackableShields { get; set; } = false;
-    private bool CanShield(MonsterInstance m) => Alive(m) && m.IsUnit && (m.IsSilenced || m.Card.Id != "WCG-152");
+    private bool CanShield(MonsterInstance m) => Alive(m) && m.IsUnit && (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152"));
     private void ReleaseAttachments(MonsterInstance m)
     {
         if(m.SilenceSpell is {} spell)PlayerById(m.SilenceOwnerId).Graveyard.Add(spell);

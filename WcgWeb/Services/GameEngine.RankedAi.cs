@@ -39,9 +39,10 @@ public partial class GameEngine
     }
     private T Pick<T>(IReadOnlyList<T> items, int salt) => items[(int)(Noise(salt) * items.Count) % items.Count];
 
-    private double BodyValue(MonsterInstance m) => m.CurrentPP / 450d + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (V10 && ShieldSourceRules ? 2 * Math.Min(ShieldSourceCount(m), 2) : m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
+    private double BodyValue(MonsterInstance m) => m.CurrentPP / (V2Rules ? 4.5d : 450d) + m.CurrentDP * 2 + (m.IsTaunt ? 1.5 : 0) + (V2Rules ? (m.HasShield && !m.IsTapped ? 2 : m.HasShield ? .8 : 0) : V10 && ShieldSourceRules ? 2 * Math.Min(ShieldSourceCount(m), 2) : m.HasShield ? 2 : 0) + (m.HasPoison ? 3 : 0)
+        + (m.HasBypass ? 1.5 : 0) + (m.HasSpellward ? 1.5 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0) + BeaconBodyValue(m);
-    private static double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / 450d + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield ? 2 : 0)
+    private double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / (V2Rules ? 4.5d : 450d) + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield || c.HasBlock ? 2 : 0) + (c.HasBypass ? 1.5 : 0) + (c.HasSpellward ? 1.5 : 0)
         : 3 + c.TotalCost * .6;
 
     private bool ExecuteTieredAi()
@@ -93,7 +94,7 @@ public partial class GameEngine
         if (targets.Count == 0) return CastSpell(p, card);
         var target = move.Target != null && targets.Contains(move.Target) ? move.Target
             : prof.SmartTargets ? BestSpellTarget(p, e, card.Card.Id, targets)
-            : AiLevel == 0 ? Pick(targets, 6) : targets.OrderByDescending(m => (e.Field.Contains(m) ? 20 : 0) + m.CurrentPP / 500d).First();
+            : AiLevel == 0 ? Pick(targets, 6) : targets.OrderByDescending(m => (e.Field.Contains(m) ? 20 : 0) + m.CurrentPP / (V2Rules ? 5d : 500d)).First();
         return target != null ? CastSpellAt(p, card, target) : CastSpell(p, card);
     }
 
@@ -179,8 +180,9 @@ public partial class GameEngine
 
     private bool StructureWorthIt(PlayerState p, PlayerState e, MonsterInstance s) => s.Card.Id switch
     {
+        "WCG-126" => !V2Rules || p.EnergyZone.Count(x => x.IsTapped) >= 2 || p.Hand.Any(c => ActualCost(p, c.Card) == p.AvailableEnergy + 1),
         "WCG-128" => p.Field.Any(m => BodyValue(m) < 5 || m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016") && p.Deck.Count > 3,
-        "WCG-151" => e.Field.Any(m => m.CurrentPP <= 800),
+        "WCG-151" => e.Field.Any(m => m.CurrentPP <= ScalePP(800)),
         _ => true,
     };
 
@@ -193,11 +195,11 @@ public partial class GameEngine
         if (NewAi && id is "WCG-220" or "WCG-221" or "WCG-230" or "WCG-248")
             return own.OrderByDescending(m => id switch
             {
-                "WCG-220" => m.HasTrample ? -5 : m.CurrentPP / 500d + (CanAttack(m) ? 2 : 0),
+                "WCG-220" => m.HasTrample ? -5 : m.CurrentPP / (V2Rules ? 5d : 500d) + (CanAttack(m) ? 2 : 0),
                 "WCG-221" => (m.Card.Id == "WCG-222" ? 5 : 0) + (CanAttack(m) ? 3 : 0) + BodyValue(m),
-                _ => m.CurrentPP / 500d,
+                _ => m.CurrentPP / (V2Rules ? 5d : 500d),
             }).FirstOrDefault();
-        if (FriendlySpells.Contains(id))
+        if (FriendlySpells.Contains(id) || id is "WCG-076" or "WCG-082" or "WCG-084" && V2Rules)
             return own.OrderByDescending(m => (CanAttack(m) || m.IsTapped && id is "WCG-143" or "WCG-167" ? 5 : 0) + BodyValue(m)).FirstOrDefault();
         if (id is "WCG-024" or "WCG-137" or "WCG-184") return enemy.OrderByDescending(m => (m.IsTapped ? 0 : m.CurrentDP * 3) + BodyValue(m)).FirstOrDefault();
         return enemy.OrderByDescending(m => BodyValue(m) + (m.IsTaunt ? 3 : 0)).FirstOrDefault() ?? (id == "WCG-072" ? null : own.FirstOrDefault());
@@ -261,7 +263,7 @@ public partial class GameEngine
         if (!prof.SmartTargets) return ExecuteV06Ai();
         if (!LegacyCardRules && pending.Title == "選擇驅散目標") return SelectTarget(legal.OrderByDescending(m => DispelScore(p, m)).First());
         var cost = pending.Title.Contains("犧牲") || pending.Title.Contains("祭品") || pending.Title.Contains("代價");
-        var friendly = cost || pending.Title.Contains("附著能量護盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
+        var friendly = cost || pending.Title.Contains("附著格擋") || pending.Title.Contains("附著能量護盾") || pending.Title.Contains("己方") || pending.Title.Contains("可附著");
         MonsterInstance target;
         if (NewTarget(p, pending, legal) is { } chosen) return SelectTarget(chosen);
         if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => (m.Turned ? -100 : 0) + BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
@@ -295,17 +297,17 @@ public partial class GameEngine
                 "WCG-013" => e.Hp == 1 ? 1000 : 0,
                 "WCG-035" => e.Field.Count(m => !m.IsTapped) * 2 + (c.Card.Text.Contains("已橫置", StringComparison.Ordinal) ? 0 : e.Field.Select(BodyValue).DefaultIfEmpty(0).Max()),
                 "WCG-029" when c.Card.Text.StartsWith("進場", StringComparison.Ordinal) => (e.Field.Any(m => !m.IsTapped) ? 2 : 0) + (p.Deck.Count > 3 ? 3 : -5),
-                "WCG-020" => Sum(e.Field.Where(m => m.CurrentPP <= 1300)),
-                "WCG-091" => Sum(e.Field.Where(m => m.CurrentPP <= 500)),
-                "WCG-105" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)),
+                "WCG-020" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(1300))),
+                "WCG-091" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
+                "WCG-105" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
                 "WCG-095" => -4,
                 "WCG-047" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
-                "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1)) ? 4 : 0,
-                "WCG-001" or "WCG-007" or "WCG-102" => e.Field.Any(m => m.CurrentPP <= 500) ? 3 : 0,
-                "WCG-077" => e.Field.Any(m => m.CurrentPP >= 2300) ? 6 : 0,
-                "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= 2000) ? 6 : 0,
-                "WCG-117" => e.Field.Any(m => m.CurrentPP <= 1000) ? 3 : 0,
+                "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? 4 : 0,
+                "WCG-001" or "WCG-007" or "WCG-102" => e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
+                "WCG-077" => e.Field.Any(m => m.CurrentPP >= ScalePP(V2Rules ? 1800 : 2300)) ? 6 : 0,
+                "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= ScalePP(2000)) ? 6 : 0,
+                "WCG-117" => e.Field.Any(m => m.CurrentPP <= ScalePP(1000)) ? 3 : 0,
                 _ => NewPlayValue(p, c) ?? 0,
             };
             return score;
@@ -345,12 +347,12 @@ public partial class GameEngine
             "WCG-006" => e.Hp <= 2 ? 1000 : 6 - p.Field.Select(BodyValue).DefaultIfEmpty(20).Min(),
             "WCG-050" or "WCG-066" or "WCG-070" => p.Hp == 7 ? -10 : (7 - p.Hp) * 2 + (id == "WCG-066" ? 2 : 0),
             "WCG-098" => Sum(e.Field) - Sum(p.Field) - 2,
-            "WCG-068" or "WCG-078" => Sum(e.Field.Where(m => m.CurrentPP <= 700)) + (id == "WCG-078" && p.Hp < 7 ? 2 : 0) - 2,
-            "WCG-092" => Sum(e.Field.Where(m => m.CurrentPP <= 800)) - Sum(p.Field.Where(m => m.CurrentPP <= 800)) - 2,
-            "WCG-008" => Sum(e.Field.Where(m => m.CurrentPP <= 500)) - Sum(p.Field.Where(m => m.CurrentPP <= 500)) - 2,
+            "WCG-068" or "WCG-078" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700))) + (id == "WCG-078" && p.Hp < 7 ? 2 : 0) - 2,
+            "WCG-092" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(800))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(800))) - 2,
+            "WCG-008" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))) - 2,
             "WCG-038" => Sum(e.Field.Where(m => m.Card.TotalCost <= 2)) - Sum(p.Field.Where(m => m.Card.TotalCost <= 2)) - 2,
             "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => ThresholdPP(m) <= SkyfireLimit())) - 2,
-            "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= 1500)) - Sum(p.Field.Where(m => m.CurrentPP >= 1500)) + (p.Hp < 7 ? 2 : 0) - 2,
+            "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= ScalePP(1500))) - Sum(p.Field.Where(m => m.CurrentPP >= ScalePP(1500))) + (p.Hp < 7 ? 2 : 0) - 2,
             "WCG-173" => Sum(e.Field) - Sum(p.Field) + 2,
             "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? 5 : -1,
             "WCG-052" => Math.Min(2, p.Hand.Count(x => x.Card.IsMonster && x.Card.TotalCost <= 2)) * 5 - 3,
@@ -363,13 +365,13 @@ public partial class GameEngine
 
     // Bounded public-board attack search (鑽石 depth 2, 大師 depth 3). Shields spend the owner's
     // untapped energy; death/entry triggers and hidden cards are deliberately not simulated.
-    private sealed record PlanUnit(Guid Id, int PP, int DP, bool Taunt, bool Poison, bool Shield, bool Trample, bool Ready, bool IgnoresLowTaunt, bool Attacks, double Value);
+    private sealed record PlanUnit(Guid Id, int PP, int DP, bool Taunt, bool Poison, bool Shield, bool Trample, bool Ready, bool Upright, bool IgnoresLowTaunt, bool Bypass, bool IsGaia, bool CanFace, bool Attacks, double Value);
     private AiMove? PlanAttacks(PlayerState p, PlayerState e, AiProfile prof)
     {
         int budget = prof.PlanBudget;
         var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldSourceRules;
-        PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (!fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m),
-            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
+        PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (V2Rules || !fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m), !m.IsTapped,
+            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), m.HasBypass, !m.IsSilenced && m.Card.Id == "WCG-059", !m.SurgeNoFace, !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
         {
             if (hp <= 0) return 10000;
@@ -393,24 +395,24 @@ public partial class GameEngine
             if (left == 0 || hp <= 0) return;
             foreach (var a in own.Where(u => u.Ready).ToArray())
             {
-                var taunts = opp.Where(u => u.Taunt && (!a.IgnoresLowTaunt || !fresh && u.PP > 1300 || fresh && p.Field.First(m => m.InstanceId == a.Id).Card.Id == "WCG-059" && u.PP > GaiaTauntLimit())).ToList();
+                var taunts = opp.Where(u => u.Taunt && (V2Rules ? (!a.Bypass || a.IsGaia && u.PP >= GaiaTauntLimit()) : (!a.IgnoresLowTaunt || !fresh && u.PP > 1300 || fresh && p.Field.First(m => m.InstanceId == a.Id).Card.Id == "WCG-059" && u.PP > GaiaTauntLimit()))).ToList();
                 var targets = taunts.Count > 0 ? taunts.Cast<PlanUnit?>().ToList() : opp.Cast<PlanUnit?>().Append(null).ToList();
                 foreach (var d in targets)
                 {
                     var aa = own.ToList(); var dd = opp.ToList(); int me = myEnergy, them = oppEnergy, nhp = hp;
                     var ai = aa.FindIndex(u => u.Id == a.Id);
-                    if (d == null) { if (a.DP <= 0) continue; nhp -= a.DP; aa[ai] = a with { Ready = false }; }
+                    if (d == null) { if (a.DP <= 0 || V2Rules && !a.CanFace) continue; nhp -= a.DP; aa[ai] = a with { Ready = false, Upright = false, CanFace = false }; }
                     else
                     {
                         bool ah = a.PP <= d.PP || d.Poison, dh = d.PP <= a.PP || a.Poison;
-                        // 聖盾來源: only the attacked monster spends one, so the attacker is never saved.
-                        bool asaved = !attackedSpends && ah && a.Shield && (fresh || me > 0), dsaved = (dh || attackedSpends) && d.Shield && (fresh || them > 0);
-                        if (asaved && !fresh) me--; if (dsaved && !fresh) them--;
-                        // Simplified rules: a Holy Shield saves once per turn and needs no energy.
-                        var after = asaved && fresh ? a with { Shield = false, Ready = false, Value = a.Value } : a with { Ready = false };
+                        bool asaved = !V2Rules && !attackedSpends && ah && a.Shield && (fresh || me > 0);
+                        bool dsaved = V2Rules ? (dh && d.Shield && d.Upright) : ((dh || attackedSpends) && d.Shield && (fresh || them > 0));
+                        if (asaved && !fresh) me--; if (!V2Rules && dsaved && !fresh) them--;
+                        var after = asaved && fresh ? a with { Shield = false, Ready = false, Upright = false } : a with { Ready = false, Upright = false };
                         if (ah && !asaved) aa.RemoveAt(ai); else aa[ai] = after;
                         var di = dd.FindIndex(u => u.Id == d.Id);
-                        if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && (fresh || a.PP - d.PP >= 700)) nhp--; }
+                        if (dh && !dsaved) { dd.RemoveAt(di); if ((!ah || asaved) && a.Trample && (!V2Rules || a.CanFace) && (fresh || a.PP - d.PP >= 700)) { nhp--; if (V2Rules && aa.ElementAtOrDefault(ai) == after) aa[ai] = after with { CanFace = false }; } }
+                        else if (V2Rules && dsaved) dd[di] = d with { Upright = false, Value = d.Value - 1.2 };
                         else if (fresh && dsaved) dd[di] = d with { Shield = false, Value = attackedSpends ? d.Value - 2 : d.Value };
                     }
                     Search(aa, dd, nhp, me, them, left - 1, first ?? (a.Id, d?.Id));

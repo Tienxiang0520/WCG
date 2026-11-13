@@ -21,7 +21,7 @@ public partial class GameEngine
         {
             var guarded = d.HasShield && ShieldReady(d);
             var kill = !guarded && d.CurrentPP <= pp; var live = shield || pp > d.CurrentPP && !d.HasPoison;
-            return !kill ? -1 : BodyValue(d) + (d.IsTaunt ? 3 : 0) - (live ? 0 : pp / 450d + 2);
+            return !kill ? -1 : BodyValue(d) + (d.IsTaunt ? 3 : 0) - (live ? 0 : pp / (V2Rules ? 4.5d : 450d) + 2);
         }).Where(v => v > 0).DefaultIfEmpty(0).Max();
     }
 

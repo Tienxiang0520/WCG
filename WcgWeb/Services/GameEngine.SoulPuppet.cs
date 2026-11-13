@@ -90,7 +90,8 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-333":
-                if (!e.Field.Any(x => x.IsUnit)) DrawMany(p, 1);
+                if (V2Rules) PickMonster(p, "選擇 PP 10 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && ThresholdPP(x) <= 10), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
+                else if (!e.Field.Any(x => x.IsUnit)) DrawMany(p, 1);
                 else PickMonster(p, "選擇印刷 PP 1200 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
                 break;
             default: return GraveDeploy(p, m);
@@ -115,7 +116,7 @@ public partial class GameEngine
         return c.Id switch
         {
             "WCG-330" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200).ToList(),
-            "WCG-331" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1800).ToList(),
+            "WCG-331" => e.Field.Where(x => x.IsUnit && (V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList(),
             "WCG-335" => e.Field.Where(x => x.IsUnit).ToList(),
             _ => GraveSpellTargets(p, c)
         };
@@ -195,7 +196,7 @@ public partial class GameEngine
                 if (t330.Count == 0) return -5;
                 return t330.Any(x => x.IsTapped) && SacrificeOutlet(p) ? 3 : 1.2;
             case "WCG-331":
-                var t331 = e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1800).ToList();
+                var t331 = e.Field.Where(x => x.IsUnit && (V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList();
                 return t331.Count == 0 ? -5 : t331.Max(Steal) + 0.5;
             case "WCG-335":
                 var all = e.Field.Where(x => x.IsUnit).ToList();
