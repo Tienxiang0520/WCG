@@ -140,25 +140,34 @@ test('vanilla text (無。 / None.) leaves the effect box blank but keeps the wi
         h.feedback.clear();
     }
 });
-test('fast-forward shortens the remaining animations: the button, or a tap on empty board (cards still zoom)', async t=>{
+test('fast-forward shortens the remaining animations via the ⏩ button only (empty board no longer jumps to max)', async t=>{
     resetFastForward();
     const h=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];
     await h.settle(h.feedback.present(h.state,h.state,events));
-    const normal=h.record.find(r=>r.el.dataset.wcgEffect==='damage').options.duration;
     const layer=h.body.children[0];
     assert.ok(descendants(layer).some(el=>el.className==='event-ff'),'fast-forward button');
-    assert.equal(typeof h.root.listeners.click,'function','tap on empty board');
+    assert.equal(h.root.listeners?.click,undefined,'empty-board click must not change speed');
     const normalHeal=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
     h.feedback.clear();h.record.length=0;
     const pending=h.feedback.present(h.state,h.state,events),fastLayer=h.body.children[0];
     const button=descendants(fastLayer).find(el=>el.className==='event-ff');
     button.click();assert.equal(fastLayer.attributes['data-fast'],'3');
-    h.root.listeners.click({target:{closest:()=>({})},stopPropagation(){}});assert.equal(fastLayer.attributes['data-fast'],'3','a click on a card zooms instead');
-    h.root.listeners.click({target:{closest:()=>null},stopPropagation(){}});assert.equal(fastLayer.attributes['data-fast'],'12');
+    button.click();assert.equal(fastLayer.attributes['data-fast'],'12');
     await h.settle(pending);
     const fast=h.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
     assert.ok(fast<=normalHeal/12+1,`${fast} vs ${normalHeal}`);
     h.feedback.clear();resetFastForward();
+});
+test('a new feedback binding starts at 1× fast-forward even if the previous match was left at 12×', async t=>{
+    resetFastForward();
+    const first=harness(t);
+    first.feedback.fastForward();first.feedback.fastForward();
+    first.feedback.dispose();
+    const second=harness(t),events=[{type:'damage',side:'player',amount:1,order:0},{type:'heal',side:'player',amount:1,order:1}];
+    await second.settle(second.feedback.present(second.state,second.state,events));
+    const heal=second.record.find(r=>r.el.dataset.wcgEffect==='heal').options.duration;
+    assert.ok(heal>=90,`fresh binding must not inherit 12× (${heal})`);
+    second.feedback.clear();resetFastForward();
 });
 test('a freshly summoned unit\'s deploy ability glows without a text badge', async t=>{
     resetFastForward();
@@ -204,7 +213,7 @@ test('a shield that breaks in combat shatters its icon', async t=>{
     assert.ok(h.record.some(r=>r.el.dataset.wcgEffect==='shield-break'));
     h.feedback.clear();
 });
-test('幸運幣 skips the showcase and only pops the gold energy diamond; own spells are shown briefly', async t=>{
+test('幸運幣 skips the showcase and only pops the gold energy diamond; 1× spell showcase uses the full readable duration', async t=>{
     resetFastForward();
     const h=harness(t),coin={instanceId:'c',cardId:'WCG-263',name:'幸運幣',type:'法術'};
     await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'player',instanceId:'c',card:coin,order:0},{type:'energy',side:'player',instanceId:'c',card:coin,label:'臨時能量',order:1}]));
@@ -217,7 +226,8 @@ test('幸運幣 skips the showcase and only pops the gold energy diamond; own sp
     h.feedback.clear();h.record.length=0;
     await h.settle(h.feedback.present(h.state,h.state,[{type:'play',side:'computer',instanceId:'b',card:bolt,order:0}]));
     const enemy=h.record.filter(r=>r.el.dataset.wcgEffect==='showcase').reduce((n,r)=>n+r.options.duration,0);
-    assert.ok(own<=500&&own<enemy,`${own} vs ${enemy}`);
+    // grow 460 + shrink 300 at 1× (hold is a pause, not a showcase animation record)
+    assert.equal(own,760); assert.equal(enemy,760);
     h.feedback.clear();
 });
 test('DP changes get their own number; stat changes use stat sounds, not heal/damage', async t=>{

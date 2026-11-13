@@ -99,7 +99,8 @@ export function planSteps(previous, next, events) {
 }
 
 // Long batches (a whole AI combo) speed up a little so a turn stays readable without dragging on.
-export function batchSpeed(stepCount) { return stepCount > 14 ? 1.8 : stepCount > 8 ? 1.5 : stepCount > 4 ? 1.25 : 1; }
+// At the player's 1× setting this stays 1 until a batch is long; do not raise the floor for testing.
+export function batchSpeed(stepCount) { return stepCount > 14 ? 1.8 : stepCount > 8 ? 1.35 : 1; }
 // Pause after a step: small results (status, stat, tap, keyword, pay, energy) follow quickly; bigger beats get a breath.
 const SMALL_EVENTS = new Set(['pay', 'energy', 'status', 'reveal', 'attach']);
 export function stepGap(step) { return step.kind === 'event' ? (SMALL_EVENTS.has(step.ev?.type) ? 60 : 170) : step.kind === 'showcase' ? 120 : step.kind === 'source' ? 120 : 60; }

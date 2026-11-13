@@ -89,6 +89,11 @@ def drag(card,destination):
 
 out=Path(args.out);out.parent.mkdir(parents=True,exist_ok=True)
 try:
+    # Tests must pick the fastest speed explicitly. Never redefine what 1× means for players.
+    run('eval','--stdin',stdin="localStorage.setItem('wcg.animSpeed','3');localStorage.setItem('wcg.motion','reduced');document.documentElement.dataset.wcgMotion='reduced';document.documentElement.style.setProperty('--wcg-motion-scale','0.333');")
+except RuntimeError:
+    pass
+try:
     # Reduced effects speeds a UI smoke run without changing rules or AI.
     run('find','role','button','click','--name','切換為精簡特效')
 except RuntimeError:

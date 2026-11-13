@@ -67,8 +67,9 @@ test('a unit entering with 劇毒 / 聖盾 / 嘲諷 / 衝鋒 gets no keyword pop
     const steps = planSteps(snap(), snap([fresh]), [{ type: 'summon', side: 'player', instanceId: 'v', card: card('v'), order: 0 }]);
     assert.deepEqual(kinds(steps), ['summon']);
 });
-test('pacing: speed-up starts above 4 steps; small results follow with a short gap', () => {
-    assert.equal(batchSpeed(4), 1); assert.ok(batchSpeed(5) > 1);
+test('pacing: speed-up starts only for long batches; small results follow with a short gap', () => {
+    assert.equal(batchSpeed(4), 1); assert.equal(batchSpeed(5), 1); assert.equal(batchSpeed(8), 1);
+    assert.equal(batchSpeed(9), 1.35); assert.equal(batchSpeed(15), 1.8);
     assert.ok(stepGap({ kind: 'stat' }) < stepGap({ kind: 'event', ev: { type: 'attack' } }));
     assert.ok(stepGap({ kind: 'event', ev: { type: 'pay' } }) < stepGap({ kind: 'event', ev: { type: 'death' } }));
 });
