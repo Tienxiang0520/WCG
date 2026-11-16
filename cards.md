@@ -46,7 +46,7 @@ source: WcgWeb/Data/cards.json
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 看牌庫頂 3 張，選狂怒怪物與狂怒法術各 1 張入手，其餘置底。 | **Warsong Command** — Look at the top 3 cards of your deck, add 1 [Fury] monster and 1 [Fury] spell to hand, put the rest on the bottom. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 5 | 17 | 2 | — | 衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +2。 | **Bloodrage Centurion** — Charge. Gets +2 PP for each other ally [Fury] monster. |
-| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受怪物傷害時：抵銷並消滅它；若它 PP 18 以上，對敵造成 1 傷害。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel it and destroy the attacker; if it has 18 PP or more, deal 1 damage to the enemy player. |
+| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受怪物傷害：抵銷並消滅；若 PP 18 以上，對敵方玩家造成 1 傷害。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel it and destroy the attacker; if it has 18 PP or more, deal 1 damage to the enemy player. |
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2，攻擊玩家時 DP +1。 | **Flame War-Rune** — Attach: Monster gets +2 PP, and +1 DP when attacking a player. |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 11 | 1 | — | 陣亡：將附著在此怪上的 1 張己方卡移回手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards attached to this monster to hand. |
 | WCG-230 | 決鬥宣言 | 法術 | 2 | — | — | — | 橫置 1 隻直立己怪，令它與 1 隻敵怪決鬥。 | **Declaration of Duel** — Tap 1 untapped ally monster and have it duel 1 enemy monster. |
@@ -175,7 +175,7 @@ source: WcgWeb/Data/cards.json
 | WCG-158 | 白銀持戟禁衛 | 怪物 | 2 | 14 | 0 | — | 無。 | **Silver Halberd Guard** — None. |
 | WCG-168 | 正義壓制 | 法術 | 0 | — | — | — | 附著：此怪 PP -5，戰後送墓。 | **Righteous Suppression** — Attach: -5 PP, graveyard after combat. |
 | WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 27 | 2 | ←→ | 嘲諷；進場：將你的生命回滿。←→ 友軍獲得格擋。 | **Radiant Supreme Archangel, Amansul** — Taunt. Deploy: Restore your life to full. [Arrows: ← →] Allied monsters gain Block. |
-| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 看牌庫頂 3 張，選 1 張秩序怪入手；己場有秩序怪時，附著 1 怪：獲得格擋。 | **Temple Rally Horn** — Look at the top 3 cards of your deck, add 1 [Order] monster to hand; if you control an [Order] monster, attach: Block. |
+| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 看牌庫頂 3 張，選 1 秩序怪入手；己場有秩序怪時，附著於 1 隻怪：獲得格擋。 | **Temple Rally Horn** — Look at the top 3 cards of your deck, add 1 [Order] monster to hand; if you control an [Order] monster, attach: Block. |
 | WCG-190 | 白銀軍團旗手 | 怪物 | 3 | 13 | 0 | — | 嘲諷；每當秩序怪物進入己場，回復 1 生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your field, restore 1 life. |
 | WCG-198 | 神聖救贖誓約 | 法術（反擊） | 3 | — | — | — | 【反擊】受到傷害時：抵銷並回復 2 生命；可附著於 1 隻怪物：獲得格擋。 | **Oath of Holy Redemption** — [Counter] On damage: Cancel it and restore 2 life; you may attach to 1 monster: Block. |
 | WCG-200 | 護誓守衛 | 怪物 | 4 | 16 | 1 | — | 你將受傷害時，可橫置此怪使傷害 -1。 | **Oathguard** — When you would take damage, you may tap this monster to reduce it by 1. |

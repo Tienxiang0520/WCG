@@ -6,6 +6,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     public bool V2Rules => CardBalanceHistory.V2Catalog(_cardDb);
+    public bool V21Rules => CardBalanceHistory.V21Catalog(_cardDb);
     public bool ZeroPpDeathRules => V2Rules;
     public bool SimplifiedRules => V2Rules || CardBalanceHistory.SimplifiedCatalog(_cardDb);
     private int ScalePP(int pp) => V2Rules ? pp / 100 : pp;
@@ -26,13 +27,21 @@ public partial class GameEngine
     private bool EnergyGuard(MonsterInstance m) => ShieldSourceRules && !m.HasShield && Active(m, "WCG-304") && Owner(m).EnergyZone.Count >= 5;
     private bool FixedAttackBonus(MonsterInstance a) => SimplifiedRules && !V2Rules && !CardBalanceHistory.CardFixesCatalog(_cardDb) && a.IsUnit && !a.IsSilenced && a.Card.Id == "WCG-201";
     // Fixed bonuses that only exist during an attack's combat (203 +500; from 2026-10-23 also 274 +300 for itself).
-    private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced || V2Rules ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking) + (ZeroPpDeathRules ? CombatAttachmentDebuff(m) : 0);
+    private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced || V2Rules ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking) + (ZeroPpDeathRules && !V21Rules ? CombatAttachmentDebuff(m) : 0);
     private void ApplyCombatPower(MonsterInstance a, MonsterInstance d)
     { var x = CombatPower(a, d, true); var y = CombatPower(d, a, false); if (x != 0) a.CombatPowerBonus = x; if (y != 0) d.CombatPowerBonus = y; }
     // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
     internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277" or "WCG-284";
-    private int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" => ScalePP(500), "WCG-165" => ScalePP(_cardDb.GetCard("WCG-165")?.Text.Contains("PP +6", StringComparison.Ordinal) == true ? 600 : 500), "WCG-141" => ScalePP(700), "WCG-168" => ZeroPpDeathRules ? 0 : ScalePP(-500), "WCG-271" => ScalePP(400), "WCG-277" => ScalePP(500), "WCG-284" => ZeroPpDeathRules ? 0 : ScalePP(-700), "WCG-288" => ScalePP(-500), _ => 0 };
+    private int AttachmentPower(string id) => id switch { "WCG-135" or "WCG-143" => ScalePP(500), "WCG-165" => ScalePP(_cardDb.GetCard("WCG-165")?.Text.Contains("PP +6", StringComparison.Ordinal) == true ? 600 : 500), "WCG-141" => ScalePP(700), "WCG-168" => V21Rules || !ZeroPpDeathRules ? ScalePP(-500) : 0, "WCG-271" => ScalePP(400), "WCG-277" => ScalePP(500), "WCG-284" => V21Rules || !ZeroPpDeathRules ? ScalePP(-700) : 0, "WCG-288" => ScalePP(-500), _ => 0 };
     private static int CombatAttachmentDebuff(MonsterInstance m) => m.Attachments.Sum(a => a.Card.Card.Id switch { "WCG-168" => -5, "WCG-284" => -7, _ => 0 });
+    /// <summary>備戰：令目標轉為直立，但本回合不能直接攻擊玩家。</summary>
+    private void PrepUnit(MonsterInstance m, CardDefinition? source = null)
+    {
+        if (!Alive(m)) return;
+        ReadyMonster(m);
+        m.SurgeNoFace = true;
+        if (source != null) Present("status", Owner(m), m.InstanceId, card: source, label: "備戰");
+    }
     private void DebuffTurn(MonsterInstance target, int delta, CardDefinition source)
     {
         if (!Alive(target)) return;

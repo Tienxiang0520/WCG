@@ -19,8 +19,8 @@ public sealed class FirstPlayerLifeTests
     {
         var g=new GameEngine(cards,new Random(3));g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1],playerFirst);
         var (first,second)=playerFirst?(g.Player,g.Computer):(g.Computer,g.Player);
-        Assert.Equal(6,first.Hp);Assert.Equal(7,second.Hp);Assert.Equal(first.Id,g.CurrentTurnPlayerId);
-        Assert.Contains(g.Logs,l=>l.Message.Contains("先攻 6 點生命、後攻 7 點生命"));
+        Assert.Equal(7,first.Hp);Assert.Equal(7,second.Hp);Assert.Equal(first.Id,g.CurrentTurnPlayerId);
+        Assert.Contains(g.Logs,l=>l.Message.Contains("雙方 7 點生命，先攻第一回合不抽牌"));
     }
     [Fact]
     public void HealingStillCapsAtSeven()
@@ -43,7 +43,7 @@ public sealed class FirstPlayerLifeTests
     {
         var g=new GameEngine(cards,new Random(5));var storage=new Mock<IPlayerStorage>();storage.Setup(x=>x.Gate).Returns(new object());var b=new BattleBridge(g,new DeckService(cards,storage.Object));
         Assert.True(b.Submit(new(Guid.NewGuid(),g.MatchId,g.Revision,"start",PlayerDeckId:cards.PresetDecks[0].Id,ComputerDeckId:cards.PresetDecks[1].Id,PlayerFirst:false)).Success);
-        Assert.Equal(7,g.Player.Hp);Assert.Equal(6,g.Computer.Hp);
-        Assert.Equal(6,b.Snapshot().Computer.Hp);
+        Assert.Equal(7,g.Player.Hp);Assert.Equal(7,g.Computer.Hp);
+        Assert.Equal(7,b.Snapshot().Computer.Hp);
     }
 }

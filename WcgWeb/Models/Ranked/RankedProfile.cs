@@ -87,7 +87,8 @@ public static class RankedRules
     public const int MaxRecords = 30;
     // Starting rule for new matches. 0: both players start at 7. 1: the first player starts at 6 (2026-10-17).
     // 2: also the second player starts with 1 extra 幸運幣 in hand (2026-10-17).
-    public const int CurrentStartRules = 2;
+    // 3: both players start at 7, and the second player starts with 1 extra 幸運幣 (v2.1).
+    public const int CurrentStartRules = 3;
     public static readonly string[] Tiers = ["青銅", "白銀", "黃金", "白金", "鑽石", "大師"];
     public static int Tier(int stars) => Math.Min(5, Math.Max(0, stars) / 15);
     public static string Label(int stars) => Tier(stars) == 5 ? $"大師 · {stars - 75} 星" : $"{Tiers[Tier(stars)]} {new[] { "III", "II", "I" }[(stars % 15) / 5]}";

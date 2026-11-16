@@ -61,9 +61,8 @@ public partial class GameEngine
                 var hornBuff = source.Card.Text.Contains("PP +3", StringComparison.Ordinal);
                 foreach (var m in p.Field.Where(x => x.IsUnit && x.IsTapped && !x.AttackLocked))
                 {
-                    m.IsTapped = false;
-                    if (hornBuff) { m.SurgeNoFace = true; AddTurnBonus(m, ScalePP(300), source.Card); Present("status", p, m.InstanceId, card: m.Card, label: "轉直立＋PP +3"); }
-                    else { m.AttackBanned = true; Present("status", p, m.InstanceId, card: m.Card, label: "轉為直立"); }
+                    if (hornBuff) { PrepUnit(m, source.Card); AddTurnBonus(m, ScalePP(300), source.Card); }
+                    else { m.IsTapped = false; m.AttackBanned = true; Present("status", p, m.InstanceId, card: m.Card, label: "轉為直立"); }
                 }
                 RefreshBoard(); Log($"【{p.Name}】的橫置怪物轉為直立（{(hornBuff ? "本回合 PP +3、不能攻擊玩家" : "本回合不能攻擊")}）。", "action");
                 break;

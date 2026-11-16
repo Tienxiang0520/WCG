@@ -1402,7 +1402,7 @@
     "zh": "聖堂集結號角",
     "name": "Temple Rally Horn",
     "text": "Look at the top 3 cards of your deck, add 1 [Order] monster to hand; if you control an [Order] monster, attach: Block.",
-    "zh_text": "看牌庫頂 3 張，選 1 張秩序怪入手；己場有秩序怪時，附著 1 怪：獲得格擋。",
+    "zh_text": "看牌庫頂 3 張，選 1 秩序怪入手；己場有秩序怪時，附著於 1 隻怪：獲得格擋。",
     "prev": {
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
@@ -1446,7 +1446,7 @@
     "zh": "熔火爆炸陷阱",
     "name": "Molten Blast Trap",
     "text": "[Counter] On monster damage: Cancel it and destroy the attacker; if it has 18 PP or more, deal 1 damage to the enemy player.",
-    "zh_text": "【反擊】受怪物傷害時：抵銷並消滅它；若它 PP 18 以上，對敵造成 1 傷害。",
+    "zh_text": "【反擊】受怪物傷害：抵銷並消滅；若 PP 18 以上，對敵方玩家造成 1 傷害。",
     "prev": {
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它印刷 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 printed PP or more, deal 1 damage to the enemy player."

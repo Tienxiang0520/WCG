@@ -165,7 +165,7 @@ public partial class GameEngine
                     () => { if (c.Id == "WCG-062") Heal(p, 1); else DrawMany(p, 1); }); break;
             case "WCG-066": Resolve(() => Heal(playerTarget ?? p, 2), () => DrawMany(p, 1)); break;
             case "WCG-070": Heal(playerTarget ?? p, 1); break;
-            case "WCG-072": Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
+            case "WCG-072": if (V21Rules) Resolve(() => Dispel(p), () => DrawMany(p, 1)); else Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
             case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1,c); }); break;
             case "WCG-008":
                 if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field), -10, c);

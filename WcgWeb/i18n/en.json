@@ -2465,5 +2465,18 @@
   "降 PP 與門檻": "PP debuffs & thresholds",
   "怪物當前 PP 降到 0 時會直接被消滅並觸發陣亡（且不被格擋阻擋）；另一類則看 PP 18 以上或印刷費用（如費用 2 以下）。": "When a monster's current PP drops to 0, it is immediately destroyed and triggers On Death (and is not stopped by Block); other conditions check PP 18+ or printed cost (such as cost 2 or less).",
   "用降 PP 消滅目標": "Destroy target via PP reduction",
-  "「{0}」的效果：{1} 「{2}」的 PP 超過 10 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。": "{0}'s effect: {1} {2} has more than 10 PP and won't die this turn, so cast it on {3} to drop its PP to 0 and destroy it."
+  "「{0}」的效果：{1} 「{2}」的 PP 超過 10 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。": "{0}'s effect: {1} {2} has more than 10 PP and won't die this turn, so cast it on {3} to drop its PP to 0 and destroy it.",
+  "雙方開局 7 點 · 回復上限 7": "Both start at 7 · heal up to 7",
+  "50 張牌組、同卡最多 4 張，最多兩個意志，中立不計。生命上限 7 點：雙方皆從 7 點開始；起手 7 張，先攻首回合不抽牌，後手玩家另外多拿 1 張幸運幣（不計入 50 張牌組）；致命傷害先結算反擊，再判定敗北；需要抽牌時牌庫已空則立即敗北。": "50-card deck, up to 4 copies each, up to two wills (Neutral doesn't count). Max life is 7: both players start at 7 life. Starting hand is 7 cards; the first player skips drawing on turn 1, and the second player gets an extra Coin (not part of the 50-card deck). On lethal damage, Counters resolve before checking defeat; needing to draw from an empty deck loses immediately.",
+  "雙方 7 點生命，回復上限 7 點；後手開局多 1 張幸運幣。": "Both players start at 7 life, heal up to 7; the second player starts with 1 The Coin.",
+  "對局開始：50 張牌組、起手 7 張；雙方 7 點生命，先攻第一回合不抽牌。": "Match start: 50-card decks, 7-card opening hands; both players start at 7 life, and the first player skips the first draw.",
+  "備戰": "Prep",
+  "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；雙方皆從 7 點生命開始，先攻第一回合不抽牌，後攻玩家另外多拿 1 張「幸運幣」：打出後讓本回合下 1 張打出的牌費用 -1，並直接進入墓地。": "This is a fixed tutorial duel: the computer is above, you are below. Max life is 7; bring your opponent to 0 to win. Standard games start with 50-card decks and 7 starting cards: both players start at 7 life, the first player skips turn 1 draw, and the second player gets an extra \"The Coin\", which reduces the cost of the next card you play this turn by 1 and goes straight to the graveyard.",
+  "附著、狀態與驅散": "Attach, Status & Dispel",
+  "用附著法術強化怪物，用狀態法術削弱嘲諷敵怪，再一舉擊破。": "Buff a monster with an attachment, weaken a Taunt enemy with a status spell, then break through.",
+  "橫置與降 PP": "Tap & -PP",
+  "削弱嘲諷": "Weaken Taunt",
+  "狀態法術可橫置敵怪或降低其 PP。「{0}」的效果：{1} 把它拖到「{2}」上。": "Status spells can tap enemy monsters or lower their PP. {0}: {1} Drag it onto {2}.",
+  "現在用 {0} PP 的「{1}」攻擊被削弱的「{2}」。": "Now attack the weakened {2} with your {0} PP {1}.",
+  "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。": "Dispel removes attached cards from a monster, or destroys an enchantment. Other status effects include graveyard-after-combat PP attachments, this-turn PP boosts, Prep, tapping monsters, and tapping the opponent's energy."
 }

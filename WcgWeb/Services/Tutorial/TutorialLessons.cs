@@ -30,7 +30,7 @@ public static class TutorialLessons
             Steps =
             [
                 new() { Title = "歡迎來到魂誓", Spot = ["face", "hero"],
-                    Text = "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；先攻玩家從 6 點生命開始、第一回合不抽牌，後攻玩家從 7 點生命開始，另外多拿 1 張「幸運幣」：打出後讓本回合下 1 張打出的牌費用 -1，並直接進入墓地。" },
+                    Text = "這是一場固定場面的教學對局。上方是電腦，下方是你。生命上限是 7 點，先讓對手生命歸零就獲勝。正式對局以 50 張牌組開始，起手 7 張；雙方皆從 7 點生命開始，先攻第一回合不抽牌，後攻玩家另外多拿 1 張「幸運幣」：打出後讓本回合下 1 張打出的牌費用 -1，並直接進入墓地。" },
                 new() { Title = "手牌與卡面", Spot = ["hand"],
                     Text = "下方是你的手牌。卡面右上角是費用；怪物另有 PP（戰力，交戰時比大小）與 DP（攻擊玩家時造成的傷害）。點一下卡片可以放大查看完整效果。" },
                 new() { Title = "填能量", Spot = ["hand:WCG-121", "energy"], Allow = [Energy("WCG-121")],
@@ -322,11 +322,11 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "status", Icon = "eye", Title = "附著、沉默與狀態",
-            Summary = "用附著法術強化怪物，用沉默拔掉嘲諷與箭頭，再一舉擊破。",
-            Topics = ["附著法術", "沉默", "驅散", "PP 加成", "電腦的嘲諷"],
+            Id = "status", Icon = "eye", Title = "附著、狀態與驅散",
+            Summary = "用附著法術強化怪物，用狀態法術削弱嘲諷敵怪，再一舉擊破。",
+            Topics = ["附著法術", "橫置與降 PP", "驅散", "PP 加成", "電腦的嘲諷"],
             Scene = new(
-                new() { Hand = ["WCG-135", "WCG-072"], Deck = Deck(), Energy = 6, Board = [new("WCG-154", 2)] },
+                new() { Hand = ["WCG-135", "WCG-206"], Deck = Deck(), Energy = 6, Board = [new("WCG-154", 2)] },
                 new() { Hp = 3, Deck = Deck(), Energy = 2, Board = [new("WCG-069", 2)] }),
             Steps =
             [
@@ -338,16 +338,16 @@ public static class TutorialLessons
                     Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-135"), CardName("WCG-154")] },
                 new() { Title = "棘手的守衛", Spot = ["enemy-card:WCG-069"],
                     Text = "「{0}」（{1} PP）的效果：{2} 嘲諷逼你先打它，它的箭頭還能把格擋交給隊友。", TextValues = [CardName("WCG-069"), EnemyPP("WCG-069"), CardEffect("WCG-069")] },
-                new() { Title = "沉默", Spot = ["hand:WCG-072", "enemy-card:WCG-069"], Allow = [Play("WCG-072", "WCG-069"), Pick("WCG-069")],
-                    Done = e => Unit(e.Computer, "WCG-069") is { IsSilenced: true } && Settled(e),
-                    Text = "沉默會移除怪物卡面上的能力，包括嘲諷與箭頭；底下的附著也會進入墓地。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-072"), CardEffect("WCG-072"), CardName("WCG-069")],
-                    Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-072"), CardName("WCG-069")] },
+                new() { Title = "削弱嘲諷", Spot = ["hand:WCG-206", "enemy-card:WCG-069"], Allow = [Play("WCG-206", "WCG-069"), Pick("WCG-069")],
+                    Done = e => Unit(e.Computer, "WCG-069") is { IsTapped: true } && Settled(e),
+                    Text = "狀態法術可橫置敵怪或降低其 PP。「{0}」的效果：{1} 把它拖到「{2}」上。", TextValues = [CardName("WCG-206"), CardEffect("WCG-206"), CardName("WCG-069")],
+                    Hint = "請把「{0}」拖到「{1}」上。", HintValues = [CardName("WCG-206"), CardName("WCG-069")] },
                 new() { Title = "擊破", Spot = ["own-card:WCG-154", "enemy-card:WCG-069"], Allow = [Attack("WCG-154", "WCG-069")],
                     Done = e => !OnField(e.Computer, "WCG-069"),
-                    Text = "現在用 {0} PP 的「{1}」攻擊失去嘲諷的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
+                    Text = "現在用 {0} PP 的「{1}」攻擊被削弱的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-069")] },
                 new() { Title = "本課重點",
-                    Text = "驅散能移除怪物身上的附著卡與沉默，或摧毀結界。其他狀態效果包括：交戰後送入墓地的附著 PP 加成、本回合 PP 加成、讓怪物無法攻擊的枷鎖、橫置或重新直立怪物，以及橫置對手的能量。" }
+                    Text = "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。" }
             ]
         },
         new()

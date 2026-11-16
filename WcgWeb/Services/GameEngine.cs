@@ -57,7 +57,7 @@ public partial class GameEngine
     public string DecisionPlayerId => CurrentPendingChoice?.OwnerId ?? CurrentPendingTarget?.OwnerId ?? CurrentTurnPlayerId;
     public event Action? OnStateChanged;
     public GameEngine(CardDatabase cardDb) : this(cardDb, new Random()) { }
-    public GameEngine(CardDatabase cardDb, Random random) { _cardDb = cardDb; _random = random; }
+    public GameEngine(CardDatabase cardDb, Random random) { _cardDb = cardDb; _random = random; EqualStartingLife = CardBalanceHistory.V21Catalog(cardDb); }
 
     private bool Fail(string reason) { LastError = reason; return false; }
     private bool Change(Func<bool> action)
@@ -182,9 +182,9 @@ public partial class GameEngine
             if (!EqualStartingLife) ActivePlayer.Hp = PlayerState.FirstPlayerStartHp;
             Present("turn", ActivePlayer, label: "對局開始");
             for (int i = 0; i < 7; i++) { Draw(Player); Draw(Computer); }
-            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action");
+            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；雙方 7 點生命，先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action");
             OpeningCoins = 0;
-            if (SecondPlayerCoin && !EqualStartingLife && _cardDb.GetCard(LuckyCoinId) is { } coin)
+            if (SecondPlayerCoin && (V21Rules || !EqualStartingLife) && _cardDb.GetCard(LuckyCoinId) is { } coin)
             {
                 var second = GetOpponent(ActivePlayer); second.Hand.Add(new(coin)); OpeningCoins = 1;
                 Log($"【{second.Name}】後攻，開局手牌多 1 張【{coin.Name}】。", "action");
@@ -299,7 +299,7 @@ public partial class GameEngine
             "WCG-002" or "WCG-086" => enemy.Where(m => ThresholdPP(m) <= Low(1000)),
             "WCG-012" or "WCG-064" => both.Where(m => m.Card.TotalCost <= 2),
             "WCG-004" or "WCG-046" => V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(500)),
-            "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
+            "WCG-048" => V21Rules ? (p.Field.Count > 0 ? enemy.Where(m => ThresholdPP(m) <= 10) : []) : enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
             "WCG-024" or "WCG-137" or "WCG-184" => both,
             "WCG-062" or "WCG-074" => (V2Rules ? both : p.Field).Where(CanShield),
             "WCG-032" when V2Rules => both,
@@ -322,7 +322,7 @@ public partial class GameEngine
         return Targetable(p, candidates).Where(m => (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152")) && (V2Rules || !Hermit(p, m))).ToList();
     }
     // 寂靜禁咒 (WCG-208) needs a target only as a spell; in old-era catalogs it is the monster 寂靜學者.
-    private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) || card.Id == "WCG-208" && card.IsSpell;
+    private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) && !(card.Id == "WCG-072" && card.Text.Contains("驅散", StringComparison.Ordinal)) || card.Id == "WCG-208" && card.IsSpell;
     private static bool NeedsSpellTarget(string id) => NewNeedsTarget(id) || id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
     public string GetPlayProblem(PlayerState p, CardInstance c)
     {

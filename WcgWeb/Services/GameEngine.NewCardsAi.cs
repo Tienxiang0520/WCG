@@ -21,6 +21,8 @@ public partial class GameEngine
         switch (id)
         {
             case "WCG-208" when c.Card.IsSpell:
+                if (V21Rules)
+                    return e.Field.Select(m => DebuffEnemyScore(p, m, 5) + (m.Attachments.Count > 0 ? 2 : 0)).DefaultIfEmpty(-5).Max() - 1;
                 // 寂靜禁咒: worth casting only on an enemy whose ability matters (taunt, shield, poison or any text).
                 var hush = e.Field.Where(m => !m.IsSilenced && !m.Card.IsVanilla).Select(m => (m.IsTaunt ? 3 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + 1 + BodyValue(m) * .3).DefaultIfEmpty(-5).Max();
                 return hush - 1;
@@ -39,6 +41,8 @@ public partial class GameEngine
             case "WCG-237": return p.Deck.Count > 3 ? 3 : -5;
             case "WCG-242": return p.Hp <= 2 ? -20 : Draw(2) - 1.5;
             case "WCG-248":
+                if (V21Rules)
+                    return p.Field.Where(a => a.Card.HasWill("生機")).SelectMany(a => e.Field.Where(d => a.CurrentPP > d.CurrentPP && !(d.HasShield && ShieldReady(d)) && !d.HasPoison).Select(d => BodyValue(d))).DefaultIfEmpty(-6).Max() - 1;
                 var strongest = p.Field.Where(m => m.Card.HasWill("生機")).Select(ThresholdPP).DefaultIfEmpty(0).Max();
                 return Best(e.Field.Where(m => ThresholdPP(m) < strongest)) + 1 - 1.5;
             case "WCG-250": return Draw(p.Graveyard.Count(x => x.Card.IsMonster) >= 5 ? 2 : 1);

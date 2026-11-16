@@ -172,7 +172,7 @@ public partial class GameEngine
             var taunts = e.Field.Where(m => m.IsTaunt).ToArray();
             var ready = p.Field.Where(m => CanAttack(m) && m.CurrentDP > 0).ToArray();
             if (taunts.Length == 1 && ready.Sum(m => m.CurrentDP) >= e.Hp)
-                foreach (var c in p.Hand.Where(c => c.Card.IsSpell && !c.Card.IsCounter && CanPlayCard(p, c) && c.Card.Id is not ("WCG-024" or "WCG-137" or "WCG-168")))
+                foreach (var c in p.Hand.Where(c => c.Card.IsSpell && !c.Card.IsCounter && CanPlayCard(p, c) && c.Card.Id is not ("WCG-024" or "WCG-137") && (c.Card.Id != "WCG-168" || V21Rules && taunts[0].CurrentPP <= 5)))
                 {
                     if (ZeroPpDeathRules && (c.Card.Id is "WCG-004" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246" && taunts[0].CurrentPP > 10 || c.Card.Id == "WCG-032" && !taunts[0].IsTapped && taunts[0].CurrentPP > 10)) continue;
                     if (GetDirectPlayTargets(p, c).Contains(taunts[0]) && c.Card.Id is not ("WCG-141" or "WCG-165" or "WCG-143")) return CastSpellAt(p, c, taunts[0]);

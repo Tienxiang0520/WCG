@@ -116,7 +116,7 @@ public partial class GameEngine
         return c.Id switch
         {
             "WCG-330" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200).ToList(),
-            "WCG-331" => e.Field.Where(x => x.IsUnit && (V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList(),
+            "WCG-331" => e.Field.Where(x => x.IsUnit && (V21Rules ? x.Card.TotalCost <= 4 : V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList(),
             "WCG-335" => e.Field.Where(x => x.IsUnit).ToList(),
             _ => GraveSpellTargets(p, c)
         };

@@ -96,13 +96,13 @@ public partial class GameEngine
         var both = V2Rules ? p.Field.Concat(enemy) : enemy;
         return c.Id switch
         {
-            "WCG-206" => both.Where(m => m.IsTaunt && !m.IsSilenced).ToList(),
-            "WCG-208" when c.IsSpell => both.Where(m => !m.IsSilenced).ToList(),
+            "WCG-206" => both.Where(m => m.IsTaunt && (V21Rules || !m.IsSilenced)).ToList(),
+            "WCG-208" when c.IsSpell => (V21Rules ? both : both.Where(m => !m.IsSilenced)).ToList(),
             "WCG-207" => enemy.Where(m => m.IsTaunt && ThresholdPP(m) >= (V2Rules ? 18 : 1800)).ToList(),
             "WCG-220" or "WCG-221" => (V2Rules ? p.Field.Concat(enemy) : p.Field).ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
             "WCG-246" => (V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(1100))).ToList(),
-            "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
+            "WCG-248" => V21Rules ? (enemy.Count > 0 ? p.Field.Where(m => m.Card.HasWill("生機")).ToList() : []) : p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
             _ => OathSpellTargets(p, c)
         };
     }
@@ -139,7 +139,16 @@ public partial class GameEngine
         bool Valid() => t != null && Alive(t) && SpellTargets(p, c).Contains(t);
         switch (c.Id)
         {
-            case "WCG-206": case "WCG-208": if (Valid()) Silence(p, source, t!); break;
+            case "WCG-206":
+                if (!Valid()) break;
+                if (V21Rules) { if (!t!.IsTapped) { t.IsTapped = true; Present("status", Owner(t), t.InstanceId, card: t.Card, label: "橫置"); } DebuffTurn(t, -5, c); }
+                else Silence(p, source, t!);
+                break;
+            case "WCG-208":
+                if (!Valid()) break;
+                if (V21Rules) { DispelMonster(t!); if (Alive(t!)) DebuffTurn(t!, -5, c); }
+                else Silence(p, source, t!);
+                break;
             case "WCG-207": if (Valid()) KillBatch([t!], c.Name); break;
             case "WCG-246": if (Valid()) { if (V2Rules) DebuffTurn(t!, -10, c); else KillBatch([t!], c.Name); } break;
             case "WCG-211": Mill(e, 3); break;
@@ -158,7 +167,8 @@ public partial class GameEngine
             case "WCG-242": Resolve(() => DrawMany(p, 2), () => PayLife(p, 1)); break;
             case "WCG-248":
                 if (t == null || !Alive(t)) break;
-                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
+                if (V21Rules) PickMonster(p, $"選擇與【{t.Card.Name}】決鬥的敵方怪物", SpellResolvePickable(p, e.Field), d => { if (Alive(t) && Alive(d)) Duel(p, t, d); });
+                else PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
             default: return OathSpell(p, source, t);

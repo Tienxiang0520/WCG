@@ -845,10 +845,10 @@ public sealed class RankedTests : IDisposable
     {
         var s=Session();Assert.True(s.Start(cards.PresetDecks[0]).Success);var match=s.Read().Match!;
         Assert.Equal(RankedRules.CurrentStartRules,match.StartRules);
-        Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(s.Engine,match.PlayerFirst));
-        var reloaded=Session();Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(reloaded.Engine,match.PlayerFirst));
+        Assert.Equal((PlayerState.MaxHp,PlayerState.MaxHp),StartLife(s.Engine,match.PlayerFirst));
+        var reloaded=Session();Assert.Equal((PlayerState.MaxHp,PlayerState.MaxHp),StartLife(reloaded.Engine,match.PlayerFirst));
         var record=MatchCode.Decode(reloaded.CurrentMatchCode(),out var error,out _)!;Assert.Equal("",error);Assert.Equal(RankedRules.CurrentStartRules,record.StartRules);
-        Assert.Equal((PlayerState.FirstPlayerStartHp,PlayerState.MaxHp),StartLife(reloaded.ReplayEngine(record,0)!,match.PlayerFirst));
+        Assert.Equal((PlayerState.MaxHp,PlayerState.MaxHp),StartLife(reloaded.ReplayEngine(record,0)!,match.PlayerFirst));
     }
     [Fact] public void MatchesSavedBeforeTheFirstPlayerLifeRuleResumeAndReplayAtSevenSeven()
     {
@@ -861,11 +861,12 @@ public sealed class RankedTests : IDisposable
             var restored=Session();Assert.Equal((7,7),StartLife(restored.Engine,first));
             var code=restored.CurrentMatchCode()!;var record=MatchCode.Decode(code,out var error,out _)!;Assert.Equal("",error);Assert.Equal(0,record.StartRules);
             Assert.Equal((7,7),StartLife(restored.ReplayEngine(record,0)!,first));
-            record.StartRules=RankedRules.CurrentStartRules;Assert.Equal((PlayerState.FirstPlayerStartHp,7),StartLife(restored.ReplayEngine(record,0)!,first));
+            record.StartRules=2;Assert.Equal((PlayerState.FirstPlayerStartHp,7),StartLife(restored.ReplayEngine(record,0)!,first));
+            record.StartRules=RankedRules.CurrentStartRules;Assert.Equal((7,7),StartLife(restored.ReplayEngine(record,0)!,first));
             Assert.True(Send(restored,"surrender").Success);
             // A new match after the old one uses the current rule on the same engine.
             Assert.True(restored.Start(cards.PresetDecks[0]).Success);var next=restored.Read().Match!;
-            Assert.Equal((PlayerState.FirstPlayerStartHp,7),StartLife(restored.Engine,next.PlayerFirst));Assert.True(Send(restored,"surrender").Success);
+            Assert.Equal((7,7),StartLife(restored.Engine,next.PlayerFirst));Assert.True(Send(restored,"surrender").Success);
         }
     }
     [Fact] public void MatchCodesCarryTheStartingLifeRuleOnlyWhenItIsNew()

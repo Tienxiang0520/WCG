@@ -5,7 +5,7 @@ namespace WcgWeb.Services;
 public partial class GameEngine
 {
     // Catalog wording also selects the rules for old ranked journals. No existing save is rewritten.
-    public bool DamageCounters => _cardDb.GetCard("WCG-195")?.Text.Contains("受到", StringComparison.Ordinal) == true;
+    public bool DamageCounters => _cardDb.GetCard("WCG-195")?.Text is { } t && (t.Contains("受到", StringComparison.Ordinal) || t.Contains("受怪物傷害", StringComparison.Ordinal));
     private sealed record DamageSource(PlayerState Owner, CardDefinition Card, MonsterInstance? Unit, string Kind);
     private sealed class DamageContext(PlayerState recipient, int lostHp, DamageSource? source)
     {

@@ -135,16 +135,18 @@ public class V2MechanicsTests
         Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-004"), intact));
         Assert.DoesNotContain(intact, g.Computer.Field);
 
-        // 聖堂仲裁護衛 ↑ 指向對面敵怪（4 - slot），使其失去且不能獲得格擋。
+        // 聖堂仲裁護衛 ↑ 指向對面敵怪（4 - slot），使其 PP -3（不再禁止格擋）。
         var g2 = Game();
         Unit(g2.Computer, "WCG-063", 0);
         var blocked = Unit(g2.Computer, "WCG-101", 1); // 電腦 slot 1 正對玩家 slot 3
         Unit(g2.Player, "WCG-147", 3);
         var killer = Unit(g2.Player, "WCG-155", 0);
         Refresh(g2);
-        Assert.False(blocked.HasShield);
+        Assert.True(blocked.HasShield);
+        Assert.Equal(7, blocked.CurrentPP);
         Assert.True(g2.Attack(g2.Player, killer, blocked));
-        Assert.DoesNotContain(blocked, g2.Computer.Field);
+        Assert.Contains(blocked, g2.Computer.Field);
+        Assert.True(blocked.IsTapped);
     }
 
     [Fact]
@@ -197,14 +199,14 @@ public class V2MechanicsTests
 
         var bounce = Hand(g, "WCG-026");
         var buff = Hand(g, "WCG-135");
-        var silence = Hand(g, "WCG-072");
+        var hush = Hand(g, "WCG-208");
 
         Assert.DoesNotContain(ownGolem, g.GetDirectPlayTargets(g.Player, bounce));
         Assert.DoesNotContain(enemyHermit, g.GetDirectPlayTargets(g.Player, bounce));
         Assert.DoesNotContain(ownGolem, g.GetDirectPlayTargets(g.Player, buff));
         Assert.DoesNotContain(enemyHermit, g.GetDirectPlayTargets(g.Player, buff));
-        Assert.DoesNotContain(ownGolem, g.GetDirectPlayTargets(g.Player, silence));
-        Assert.DoesNotContain(enemyHermit, g.GetDirectPlayTargets(g.Player, silence));
+        Assert.DoesNotContain(ownGolem, g.GetDirectPlayTargets(g.Player, hush));
+        Assert.DoesNotContain(enemyHermit, g.GetDirectPlayTargets(g.Player, hush));
         Assert.Contains(plainAlly, g.GetDirectPlayTargets(g.Player, buff));
     }
 
@@ -343,7 +345,7 @@ public class V2MechanicsTests
     {
         var g = new GameEngine(cards, new Random(23));
         g.StartGame(cards.PresetDecks[0], cards.PresetDecks[1], playerFirst: false);
-        Assert.Equal(6, g.Computer.Hp);
+        Assert.Equal(7, g.Computer.Hp);
         Assert.Equal(7, g.Player.Hp);
         var coin = g.Player.Hand.Single(c => c.Card.Id == GameEngine.LuckyCoinId);
         Assert.Equal("本回合你打出的下 1 張牌費用 -1。", coin.Card.Text);
@@ -530,33 +532,25 @@ public class V2MechanicsTests
         while (g.CurrentPendingChoice is { } ch) Assert.True(g.SelectChoice(ch.Options.Last()));
         Assert.True(small5.HasShield);
 
-        var sup5 = Hand(g, "WCG-168"); // Next combat -5 PP
-        var tend7 = Hand(g, "WCG-284"); // Next combat -7 PP
+        var sup5 = Hand(g, "WCG-168"); // -5 PP immediately
+        var tend7 = Hand(g, "WCG-284"); // -7 PP immediately
         Assert.True(g.CastSpellAt(g.Player, sup5, small5));
         Assert.True(g.CastSpellAt(g.Player, tend7, small6));
 
-        // Out of combat: neither dies from 0 PP and PP reads unchanged
-        Assert.Contains(small5, g.Computer.Field);
-        Assert.Equal(5, small5.CurrentPP);
-        Assert.Contains(small6, g.Computer.Field);
-        Assert.Equal(6, small6.CurrentPP);
-
-        // Combat against upright Blocked 5-PP monster with WCG-168 (-5): combat PP is 0 < 5, but Block saves it!
-        var atk5 = Unit(g.Player, "WCG-319", 3);
-        Assert.True(g.Attack(g.Player, atk5, small5));
-        Assert.Contains(small5, g.Computer.Field);
-        Assert.True(small5.IsTapped);
-        Assert.Equal(5, small5.CurrentPP);
+        // Immediate PP <= 0 kills both even when small5 has Block
+        Assert.DoesNotContain(small5, g.Computer.Field);
         Assert.Contains(sup5, g.Player.Graveyard);
+        Assert.DoesNotContain(small6, g.Computer.Field);
+        Assert.Contains(tend7, g.Player.Graveyard);
 
-        // Combat against 19-PP upright monster with Block + WCG-284 (-7 -> 12 PP vs 13 PP attacker) also saves via Block
+        // Combat against 19-PP upright monster with Block + WCG-284 (-7 -> 15 PP vs 16 PP attacker) still saves via Block
         var tall = Unit(g.Computer, "WCG-114", 4); // 19 PP
         var shieldGrant = Hand(g, "WCG-297");
         Assert.True(g.CastSpellAt(g.Player, shieldGrant, tall)); // +3 PP => 22 PP + Block
         var tend2 = Hand(g, "WCG-284");
         Assert.True(g.CastSpellAt(g.Player, tend2, tall));
-        Assert.Equal(22, tall.CurrentPP);
-        var atk16 = Unit(g.Player, "WCG-155", 4); // 16 PP vs (22 - 7 = 15 PP)
+        Assert.Equal(15, tall.CurrentPP);
+        var atk16 = Unit(g.Player, "WCG-155", 4); // 16 PP vs 15 PP
         Assert.True(g.Attack(g.Player, atk16, tall));
         Assert.Contains(tall, g.Computer.Field);
         Assert.True(tall.IsTapped);
@@ -618,6 +612,84 @@ public class V2MechanicsTests
         Assert.True(g390.SummonMonster(g390.Player, Hand(g390, "WCG-390")));
         Assert.True(g390.SelectChoice(g390.CurrentPendingChoice!.Options.First(o => o.Id == "SLOT:3"))); // 7 - 6 = 1 PP left
         Assert.Equal(1, target9.CurrentPP);
+    }
+
+    [Fact]
+    public void V21RulesSyncBehaviorTests()
+    {
+        // 1. 先手 7 血、第 1 回合可出牌但不抽牌
+        var g1 = new GameEngine(cards, new Random(7));
+        g1.StartGame(cards.PresetDecks[0], cards.PresetDecks[1], playerFirst: true);
+        Assert.Equal(7, g1.Player.Hp);
+        Assert.Equal(7, g1.Computer.Hp);
+        Assert.Equal(7, g1.Player.Hand.Count);
+        Assert.Equal(8, g1.Computer.Hand.Count);
+        var res = g1.Player.Hand[0];
+        Assert.True(g1.PlayEnergy(g1.Player, res));
+        var oneDrop = g1.Player.Hand.FirstOrDefault(c => c.Card.TotalCost <= 1);
+        if (oneDrop != null) Assert.True(g1.CanPlayCard(g1.Player, oneDrop));
+
+        // 2. 攻擊者宣告即橫置所以不能格擋（即使被反擊抵銷也保持橫置），且 WCG-136 攻擊後觸發正常
+        var g2 = Game();
+        var atk = Unit(g2.Player, "WCG-101", 0); // 10 PP
+        var shieldGrant = Hand(g2, "WCG-297"); // +3 PP + 格擋 => 13 PP
+        Assert.True(g2.CastSpellAt(g2.Player, shieldGrant, atk));
+        var big = Unit(g2.Computer, "WCG-114", 0); // 19 PP
+        Assert.True(g2.Attack(g2.Player, atk, big));
+        Assert.DoesNotContain(atk, g2.Player.Field); // 攻擊者宣告即橫置，不能格擋
+
+        // 被反擊抵銷的攻擊仍維持橫置
+        var g2b = Game();
+        var faceAtk = Unit(g2b.Player, "WCG-101", 0);
+        var barrier = new CardInstance(cards.GetCard("WCG-196")!);
+        g2b.Computer.Hand.Add(barrier);
+        for (int i = 0; i < 4; i++) g2b.Computer.EnergyZone.Add(new(cards.GetCard("WCG-101")!));
+        Assert.True(g2b.Attack(g2b.Player, faceAtk));
+        Choose(g2b, o => o.Id == barrier.InstanceId.ToString());
+        Assert.True(faceAtk.IsTapped);
+
+        // WCG-136 攻擊後仍可觸發減 PP
+        var g136 = Game();
+        var scout = Unit(g136.Player, "WCG-136", 0);
+        var foe = Unit(g136.Computer, "WCG-114", 0);
+        Assert.True(g136.Attack(g136.Player, scout));
+        Assert.True(g136.IsWaiting);
+        Choose(g136, o => o.Id == foe.InstanceId.ToString());
+        Assert.Equal(9, foe.CurrentPP);
+
+        // 3. 決鬥雙方直立且有格擋都可格擋存活
+        var g3c = Game();
+        var nature = Unit(g3c.Player, "WCG-041", 0); // 13 PP 生機
+        var foeBlk = Unit(g3c.Computer, "WCG-041", 0); // 13 PP
+        Assert.True(g3c.CastSpellAt(g3c.Player, Hand(g3c, "WCG-297"), nature)); // 16 PP + 格擋
+        Assert.True(g3c.CastSpellAt(g3c.Player, Hand(g3c, "WCG-297"), foeBlk)); // 16 PP + 格擋
+        Assert.True(g3c.CastSpellAt(g3c.Player, Hand(g3c, "WCG-248"), nature));
+        Assert.True(g3c.SelectTarget(foeBlk));
+        Assert.Contains(nature, g3c.Player.Field);
+        Assert.Contains(foeBlk, g3c.Computer.Field);
+        Assert.True(nature.IsTapped);
+        Assert.True(foeBlk.IsTapped);
+
+        // 4. 143 / 165 / 271 立即加 PP；168 / 284 立即歸零消滅
+        var g4 = Game();
+        var u1 = Unit(g4.Player, "WCG-101", 0); // 10 PP
+        u1.IsTapped = true;
+        Assert.True(g4.CastSpellAt(g4.Player, Hand(g4, "WCG-143"), u1));
+        Assert.Equal(15, u1.CurrentPP);
+        Assert.False(u1.IsTapped);
+        Assert.True(u1.SurgeNoFace);
+        Assert.False(g4.CanAttackPlayer(u1));
+        var u2 = Unit(g4.Player, "WCG-101", 1); // 10 PP
+        Assert.True(g4.CastSpellAt(g4.Player, Hand(g4, "WCG-165"), u2));
+        Assert.Equal(16, u2.CurrentPP);
+        Assert.True(u2.HasTrample);
+        var u3 = Unit(g4.Player, "WCG-101", 2); // 10 PP
+        Assert.True(g4.CastSpellAt(g4.Player, Hand(g4, "WCG-271"), u3));
+        Assert.Equal(14, u3.CurrentPP);
+        // 備戰可打怪物不能打玩家
+        var enemy = Unit(g4.Computer, "WCG-101", 0);
+        Assert.True(g4.Attack(g4.Player, u1, enemy));
+        Assert.DoesNotContain(enemy, g4.Computer.Field);
     }
 
     [Fact]

@@ -63,7 +63,7 @@ public class GameEngineTests
 
         engine.StartGame(pDeck, cDeck, playerFirst: true);
 
-        Assert.Equal(6, engine.Player.Hp); // the first player starts one life short
+        Assert.Equal(7, engine.Player.Hp); // v2.1: both players start at 7 life
         Assert.Equal(7, engine.Computer.Hp);
         Assert.Equal(7, engine.Player.Hand.Count);
         Assert.Equal(8, engine.Computer.Hand.Count); // 後攻 7 + 1 幸運幣

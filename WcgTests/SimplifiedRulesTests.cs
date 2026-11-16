@@ -117,7 +117,7 @@ public class SimplifiedRulesTests
         var foe=Unit(g.Computer,155,2);
         Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(13,croc.CurrentPP);
         Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
-        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(19,weak.CurrentPP);
+        var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(14,weak.CurrentPP);
         var knight=Unit(g.Player,155,3);
         Assert.True(g.Attack(g.Player,knight,weak));Assert.Contains(knight,g.Player.Field);Assert.DoesNotContain(weak,g.Computer.Field);
     }

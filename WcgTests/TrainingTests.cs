@@ -16,13 +16,13 @@ public class TrainingTests
     [Fact]public void NormalAndRankedEnginesRejectTrainingEdits()
     {
         var g=new GameEngine(cards);g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);var b=new BattleBridge(g,decks);var revision=g.Revision;
-        Assert.False(Edit(b,"training-resources",new(Hp:1,TotalEnergy:20,AvailableEnergy:20)).Success);Assert.Equal(PlayerState.FirstPlayerStartHp,g.Player.Hp);Assert.Empty(g.Player.EnergyZone);Assert.Equal(revision,g.Revision);
+        Assert.False(Edit(b,"training-resources",new(Hp:1,TotalEnergy:20,AvailableEnergy:20)).Success);Assert.Equal(PlayerState.MaxHp,g.Player.Hp);Assert.Empty(g.Player.EnergyZone);Assert.Equal(revision,g.Revision);
         Assert.Throws<InvalidOperationException>(()=>g.ExportTrainingScene());
     }
     [Fact]public void DirectPlacementSkipsEntryButEntryModeUsesRealRules()
     {
-        var(g,b)=Game();Assert.True(Edit(b,"training-place",new(CardId:"WCG-013",Slot:0)).Success);Assert.Equal(6,g.Player.Hp);Assert.Equal(7,g.Computer.Hp);
-        Assert.True(Edit(b,"training-enter",new(CardId:"WCG-013",Slot:1)).Success);Assert.Equal(5,g.Player.Hp);Assert.Equal(6,g.Computer.Hp);Assert.Empty(g.Player.EnergyZone);
+        var(g,b)=Game();Assert.True(Edit(b,"training-place",new(CardId:"WCG-013",Slot:0)).Success);Assert.Equal(7,g.Player.Hp);Assert.Equal(7,g.Computer.Hp);
+        Assert.True(Edit(b,"training-enter",new(CardId:"WCG-013",Slot:1)).Success);Assert.Equal(6,g.Player.Hp);Assert.Equal(6,g.Computer.Hp);Assert.Empty(g.Player.EnergyZone);
         var revision=g.Revision;Assert.False(Edit(b,"training-place",new(CardId:"WCG-101",Slot:0)).Success);Assert.Equal(revision,g.Revision);Assert.Equal(2,g.Player.Occupied);
         Assert.False(Edit(b,"training-place",new(CardId:"WCG-014",Slot:2)).Success);
         Assert.False(Edit(b,"training-set",new(Side:"computer",CardId:"WCG-195",Slot:2)).Success);Assert.Empty(g.Computer.Structures);Assert.True(Edit(b,"training-hand",new(Side:"computer",CardId:"WCG-195")).Success);Assert.Contains(g.Computer.Hand,c=>c.Card.Id=="WCG-195");
@@ -36,7 +36,7 @@ public class TrainingTests
         var(current,bridge)=Game();Assert.True(Edit(bridge,"training-restore",new(Scene:scene)).Success);
         Assert.True(current.DamageCounters);Assert.Empty(current.Player.Structures);
         var returned=current.Player.Hand.Single(c=>c.InstanceId==id);Assert.Same(cards.GetCard("WCG-195"),returned.Card);
-        Assert.Contains("受到",returned.Card.Text);Assert.DoesNotContain("IsSet\":true",current.ExportTrainingScene());
+        Assert.Contains("受怪物傷害",returned.Card.Text);Assert.DoesNotContain("IsSet\":true",current.ExportTrainingScene());
     }
     [Fact]public void SceneRestoresAttachmentsBasePowerResourcesAndCanonicalCardsRepeatedly()
     {
@@ -59,7 +59,7 @@ public class TrainingTests
         var(g,b)=Game();var match=g.MatchId;var revision=g.Revision;
         Assert.False(Edit(b,"training-resources",new(Hp:8)).Success);Assert.False(Edit(b,"training-resources",new(TotalEnergy:3,AvailableEnergy:4)).Success);
         Assert.False(Edit(b,"training-restore",new(Scene:"{broken")).Success);Assert.False(Edit(b,"training-restore",new(Scene:g.ExportTrainingScene().Replace("WCG-","MISSING-"))).Success);
-        Assert.Equal(match,g.MatchId);Assert.Equal(revision,g.Revision);Assert.Equal(PlayerState.FirstPlayerStartHp,g.Player.Hp);
+        Assert.Equal(match,g.MatchId);Assert.Equal(revision,g.Revision);Assert.Equal(PlayerState.MaxHp,g.Player.Hp);
     }
     [Fact]public void PendingEffectsBlockEditsAndSavingButRestoreCanResetThem()
     {

@@ -33,6 +33,7 @@ public partial class GameEngine
     public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>AiTracked(AiNote("attack",p,unit:a,target:d),()=>
     {
         if(!Main(p)||!CanAttack(a)||(d==null?!CanAttackPlayer(a):!GetAttackTargets(a).Contains(d)))return Fail("攻擊目標或直立狀態不合法。");
+        if(V21Rules){a.IsTapped=true;a.HasAttacked=true;}
         LastAttack=new(a.InstanceId,d?.InstanceId,Revision+1);Present("attack",p,a.InstanceId,d?.InstanceId,card:a.Card,label:"攻擊");
         var ctx=new AttackContext();var e=GetOpponent(p);
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
