@@ -2,12 +2,13 @@
   "WCG-001": {
     "zh": "赤誓殘酷監工",
     "name": "Crimson Oath Taskmaster",
-    "text": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1.",
-    "zh_text": "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。",
+    "text": "Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1.",
+    "zh_text": "進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。",
     "prev": {
       "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
       "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-      "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card."
+      "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+      "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1."
     }
   },
   "WCG-002": {
@@ -30,12 +31,13 @@
   "WCG-004": {
     "zh": "熾炎猛擊",
     "name": "Blazing Smash",
-    "text": "Destroy 1 monster with 10 PP or less, then draw 1 card.",
-    "zh_text": "消滅 1 隻 PP 10 以下的怪物，抽 1 張牌。",
+    "text": "Give 1 monster -10 PP this turn, then draw 1 card.",
+    "zh_text": "使 1 隻怪物本回合 PP -10，抽 1 張牌。",
     "prev": {
       "消滅 1 隻 PP 600 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 600 PP or less, then draw 1 card.",
       "消滅 1 隻 PP 900 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 900 PP or less, then draw 1 card.",
-      "消滅 1 隻印刷 PP 900 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 900 printed PP or less, then draw 1 card."
+      "消滅 1 隻印刷 PP 900 以下的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with 900 printed PP or less, then draw 1 card.",
+      "消滅 1 隻 PP 10 以下的怪物，抽 1 張牌。": "Destroy 1 monster with 10 PP or less, then draw 1 card."
     }
   },
   "WCG-005": {
@@ -57,23 +59,25 @@
   "WCG-007": {
     "zh": "狂血投擲者",
     "name": "Bloodfrenzy Hurler",
-    "text": "Deploy: Destroy the enemy monster with the lowest PP (10 or less).",
-    "zh_text": "進場：消滅 PP 最低且 10 以下的 1 隻敵怪。",
+    "text": "Deploy: Give the enemy monster with the lowest PP -10 PP this turn.",
+    "zh_text": "進場：使 PP 最低的 1 隻敵怪本回合 PP -10。",
     "prev": {
       "進場：消滅 PP 最低的 1 隻敵方怪物（須在 600 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 600 PP or less).",
       "進場：消滅 PP 最低的 1 隻敵方怪物（須在 900 以下）。": "Deploy: Destroy the enemy monster with the lowest PP (only if it has 900 PP or less).",
-      "進場：消滅印刷 PP 最低的 1 隻敵方怪物（須在 900 以下）。": "Deploy: Destroy the enemy monster with the lowest printed PP (only if it has 900 printed PP or less)."
+      "進場：消滅印刷 PP 最低的 1 隻敵方怪物（須在 900 以下）。": "Deploy: Destroy the enemy monster with the lowest printed PP (only if it has 900 printed PP or less).",
+      "進場：消滅 PP 最低且 10 以下的 1 隻敵怪。": "Deploy: Destroy the enemy monster with the lowest PP (10 or less)."
     }
   },
   "WCG-008": {
     "zh": "烈焰旋風",
     "name": "Flame Whirlwind",
-    "text": "Destroy all monsters with 10 PP or less.",
-    "zh_text": "消滅雙方所有 PP 10 以下的怪物。",
+    "text": "All monsters get -10 PP this turn.",
+    "zh_text": "雙方所有怪物本回合 PP -10。",
     "prev": {
       "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
       "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less.",
-      "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less."
+      "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less.",
+      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less."
     }
   },
   "WCG-009": {
@@ -155,12 +159,13 @@
   "WCG-020": {
     "zh": "赤帝·燼滅之龍",
     "name": "Crimson Emperor, Cinder Dragon",
-    "text": "Deploy: Destroy all enemy monsters with 10 PP or less.",
-    "zh_text": "進場：消滅所有 PP 10 以下的敵怪。",
+    "text": "Deploy: All enemy monsters get -10 PP this turn.",
+    "zh_text": "進場：所有敵怪本回合 PP -10。",
     "prev": {
       "進場：消滅所有 PP 1100 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1100 PP or less.",
       "進場：消滅所有 PP 1200 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1200 PP or less.",
-      "進場：消滅所有印刷 PP 1200 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1200 printed PP or less."
+      "進場：消滅所有印刷 PP 1200 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 1200 printed PP or less.",
+      "進場：消滅所有 PP 10 以下的敵怪。": "Deploy: Destroy all enemy monsters with 10 PP or less."
     }
   },
   "WCG-021": {
@@ -243,11 +248,12 @@
   "WCG-032": {
     "zh": "質能瓦解",
     "name": "Mass Disruption",
-    "text": "Destroy 1 monster with 10 PP or less.",
-    "zh_text": "消滅 1 隻 PP 10 以下或已橫置的怪物。",
+    "text": "Destroy 1 tapped monster, or give 1 monster -10 PP this turn.",
+    "zh_text": "消滅 1 隻已橫置的怪物，或使 1 隻怪物本回合 PP -10。",
     "prev": {
       "消滅 1 隻 PP 1600 以下的敵方怪物；若目標已橫置，改為 PP 2300 以下。": "Destroy 1 enemy monster with 1600 PP or less; if the target is tapped, 2300 PP or less instead.",
-      "消滅 1 隻印刷 PP 1600 以下的敵方怪物；若目標已橫置，改為印刷 PP 2300 以下。": "Destroy 1 enemy monster with 1600 printed PP or less; if the target is tapped, 2300 printed PP or less instead."
+      "消滅 1 隻印刷 PP 1600 以下的敵方怪物；若目標已橫置，改為印刷 PP 2300 以下。": "Destroy 1 enemy monster with 1600 printed PP or less; if the target is tapped, 2300 printed PP or less instead.",
+      "消滅 1 隻 PP 10 以下或已橫置的怪物。": "Destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-033": {
@@ -270,8 +276,8 @@
   "WCG-036": {
     "zh": "虛空調度",
     "name": "Void Recall",
-    "text": "Return 1 ally monster to hand, then draw 1 card.",
-    "zh_text": "將 1 隻己怪移回手牌，抽 1 張牌。"
+    "text": "Return 1 ally monster to hand, untap 1 energy, and draw 1 card.",
+    "zh_text": "將 1 隻己怪移回手牌，重置 1 點能量並抽 1 張牌。"
   },
   "WCG-037": {
     "zh": "符文構裝巨像",
@@ -329,12 +335,13 @@
   "WCG-046": {
     "zh": "自然之怒",
     "name": "Nature's Wrath",
-    "text": "Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1.",
-    "zh_text": "抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。",
+    "text": "Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1.",
+    "zh_text": "抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。",
     "prev": {
       "抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
       "抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-      "抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card."
+      "抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+      "抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。": "Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1."
     }
   },
   "WCG-047": {
@@ -591,12 +598,13 @@
   "WCG-078": {
     "zh": "聖光普照",
     "name": "Radiant Dawn",
-    "text": "Destroy all enemy monsters with 10 PP or less, then restore 1 life.",
-    "zh_text": "消滅所有 PP 10 以下的敵怪，回復 1 生命。",
+    "text": "All enemy monsters get -10 PP this turn, then restore 1 life.",
+    "zh_text": "所有敵怪本回合 PP -10，回復 1 生命。",
     "prev": {
       "消滅所有 PP 600 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 600 PP or less, then restore 1 life to yourself.",
       "消滅所有 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 1200 PP or less, then restore 1 life to yourself.",
-      "消滅所有印刷 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 1200 printed PP or less, then restore 1 life to yourself."
+      "消滅所有印刷 PP 1200 以下的敵方怪物，然後回復己方 1 點生命。": "Destroy all enemy monsters with 1200 printed PP or less, then restore 1 life to yourself.",
+      "消滅所有 PP 10 以下的敵怪，回復 1 生命。": "Destroy all enemy monsters with 10 PP or less, then restore 1 life."
     }
   },
   "WCG-079": {
@@ -612,14 +620,15 @@
   "WCG-080": {
     "zh": "光輝聖皇·弗丁",
     "name": "Radiant Holy Emperor, Fordin",
-    "text": "On Death: Destroy all enemy monsters with 10 PP or less. [Arrows: ← →] Allied monsters gain Block.",
-    "zh_text": "陣亡：消滅所有 PP 10 以下敵怪。←→ 友軍獲得格擋。",
+    "text": "On Death: All enemy monsters get -10 PP this turn. [Arrows: ← →] Allied monsters gain Block.",
+    "zh_text": "陣亡：所有敵怪本回合 PP -10。←→ 友軍獲得格擋。",
     "prev": {
       "聖盾；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield. On Death: Destroy all enemy monsters with 1100 PP or less.",
       "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1100 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1100 PP or less.",
       "聖盾（進場放 1 個指示物）；陣亡：消滅所有 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 PP or less.",
       "聖盾（進場放 1 個指示物）；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。": "Holy Shield (enters with 1 counter). On Death: Destroy all enemy monsters with 1200 printed PP or less.",
-      "【箭頭：← →】給予箭頭指向的怪物聖盾；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。": "[Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. On Death: Destroy all enemy monsters with 1200 printed PP or less."
+      "【箭頭：← →】給予箭頭指向的怪物聖盾；陣亡：消滅所有印刷 PP 1200 以下的敵方怪物。": "[Arrows: ← →] Gives Holy Shield to the monsters the arrows point at. On Death: Destroy all enemy monsters with 1200 printed PP or less.",
+      "陣亡：消滅所有 PP 10 以下敵怪。←→ 友軍獲得格擋。": "On Death: Destroy all enemy monsters with 10 PP or less. [Arrows: ← →] Allied monsters gain Block."
     }
   },
   "WCG-081": {
@@ -631,34 +640,37 @@
   "WCG-082": {
     "zh": "暗影裂箭",
     "name": "Shadow Rift Arrow",
-    "text": "Destroy 1 monster with 10 PP or less.",
-    "zh_text": "消滅 1 隻 PP 10 以下的怪物。",
+    "text": "Give 1 monster -10 PP this turn.",
+    "zh_text": "使 1 隻怪物本回合 PP -10。",
     "prev": {
       "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
       "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less.",
-      "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less."
+      "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less.",
+      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-083": {
     "zh": "腐爛食屍鬼",
     "name": "Rotting Ghoul",
-    "text": "On Death: You may destroy 1 monster with 10 PP or less.",
-    "zh_text": "陣亡：可消滅 1 隻 PP 10 以下的怪物。",
+    "text": "On Death: You may give 1 monster -10 PP this turn.",
+    "zh_text": "陣亡：可使 1 隻怪物本回合 PP -10。",
     "prev": {
       "陣亡：消滅 1 隻 PP 600 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 600 PP or less.",
       "陣亡：消滅 1 隻 PP 900 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 900 PP or less.",
-      "陣亡：消滅 1 隻印刷 PP 900 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 900 printed PP or less."
+      "陣亡：消滅 1 隻印刷 PP 900 以下的敵方怪物。": "On Death: Destroy 1 enemy monster with 900 printed PP or less.",
+      "陣亡：可消滅 1 隻 PP 10 以下的怪物。": "On Death: You may destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-084": {
     "zh": "靈魂撕裂",
     "name": "Soul Rend",
-    "text": "Additional cost: discard 1 card. Destroy 1 monster with 10 PP or less.",
-    "zh_text": "額外代價：棄 1 張手牌。消滅 1 隻 PP 10 以下怪物。",
+    "text": "Additional cost: discard 1 card. Give 1 monster -10 PP this turn.",
+    "zh_text": "額外代價：棄 1 張手牌。使 1 隻怪物本回合 PP -10。",
     "prev": {
       "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less.",
       "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 PP or less.",
-      "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 printed PP or less."
+      "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 printed PP or less.",
+      "額外代價：棄 1 張手牌。消滅 1 隻 PP 10 以下怪物。": "Additional cost: discard 1 card. Destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-085": {
@@ -707,23 +719,25 @@
   "WCG-091": {
     "zh": "哀慟女妖",
     "name": "Wailing Banshee",
-    "text": "Deploy: Destroy all enemy monsters with 10 PP or less.",
-    "zh_text": "進場：消滅所有 PP 10 以下的敵怪。",
+    "text": "Deploy: All enemy monsters get -10 PP this turn.",
+    "zh_text": "進場：所有敵怪本回合 PP -10。",
     "prev": {
       "進場：消滅所有 PP 600 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 600 PP or less.",
       "進場：消滅所有 PP 900 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 900 PP or less.",
-      "進場：消滅所有印刷 PP 900 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 900 printed PP or less."
+      "進場：消滅所有印刷 PP 900 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 900 printed PP or less.",
+      "進場：消滅所有 PP 10 以下的敵怪。": "Deploy: Destroy all enemy monsters with 10 PP or less."
     }
   },
   "WCG-092": {
     "zh": "絕望疫病",
     "name": "Plague of Despair",
-    "text": "Destroy all monsters with 10 PP or less.",
-    "zh_text": "消滅雙方所有 PP 10 以下的怪物。",
+    "text": "All monsters get -10 PP this turn.",
+    "zh_text": "雙方所有怪物本回合 PP -10。",
     "prev": {
       "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
       "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less.",
-      "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less."
+      "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less.",
+      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less."
     }
   },
   "WCG-093": {
@@ -792,12 +806,13 @@
   "WCG-102": {
     "zh": "精靈遊俠",
     "name": "Elven Ranger",
-    "text": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1.",
-    "zh_text": "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。",
+    "text": "Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1.",
+    "zh_text": "進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。",
     "prev": {
       "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
       "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
-      "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card."
+      "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
+      "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1."
     }
   },
   "WCG-103": {
@@ -815,12 +830,13 @@
   "WCG-105": {
     "zh": "狂暴投彈手",
     "name": "Mad Bomber",
-    "text": "Deploy: Destroy all other monsters with 10 PP or less.",
-    "zh_text": "進場：消滅雙方所有其他 PP 10 以下怪物。",
+    "text": "Deploy: All other monsters get -10 PP this turn.",
+    "zh_text": "進場：雙方所有其他怪物本回合 PP -10。",
     "prev": {
       "進場：消滅雙方所有其他 PP 600 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 600 PP or less.",
       "進場：消滅雙方所有其他 PP 900 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 900 PP or less.",
-      "進場：消滅雙方所有其他印刷 PP 900 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 900 printed PP or less."
+      "進場：消滅雙方所有其他印刷 PP 900 以下的怪物。": "Deploy: Destroy all other monsters on both sides with 900 printed PP or less.",
+      "進場：消滅雙方所有其他 PP 10 以下怪物。": "Deploy: Destroy all other monsters with 10 PP or less."
     }
   },
   "WCG-106": {
@@ -969,8 +985,8 @@
   "WCG-128": {
     "zh": "萬魂之井",
     "name": "Well of Myriad Souls",
-    "text": "Tap this card and sacrifice 1 ally monster: Draw 1 card.",
-    "zh_text": "橫置此卡並犧牲 1 隻己怪：抽 1 張牌。"
+    "text": "Tap this card and sacrifice 1 ally monster: Draw 1 card and your opponent loses 1 life.",
+    "zh_text": "橫置此卡並犧牲 1 隻己怪：抽 1 張牌，對手失去 1 生命。"
   },
   "WCG-129": {
     "zh": "白銀哨衛",
@@ -1021,12 +1037,13 @@
   "WCG-136": {
     "zh": "狂戰士斥候",
     "name": "Berserker Scout",
-    "text": "Charge. Whenever this monster survives attacking, you may destroy 1 monster with 10 PP or less.",
-    "zh_text": "衝鋒；攻擊後仍在場時，可消滅 1 隻 PP 10 以下怪物。",
+    "text": "Charge. Whenever this monster survives attacking, you may give 1 monster -10 PP this turn.",
+    "zh_text": "衝鋒；攻擊後仍在場時，可使 1 隻怪物本回合 PP -10。",
     "prev": {
       "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 600 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 600 PP or less.",
       "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻 PP 900 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 PP or less.",
-      "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻印刷 PP 900 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 printed PP or less."
+      "衝鋒；每當此怪物攻擊後仍在場，消滅 1 隻印刷 PP 900 以下的敵方怪物。": "Charge. Whenever this monster is still in play after attacking, destroy 1 enemy monster with 900 printed PP or less.",
+      "衝鋒；攻擊後仍在場時，可消滅 1 隻 PP 10 以下怪物。": "Charge. Whenever this monster survives attacking, you may destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-137": {
@@ -1109,8 +1126,8 @@
   "WCG-149": {
     "zh": "靈魂集市",
     "name": "Soul Bazaar",
-    "text": "Tap: Put 1 card from hand on the bottom of your deck, then draw 1 card.",
-    "zh_text": "橫置：將 1 張手牌置底，抽 1 張牌。"
+    "text": "Tap: Put 1 card from hand on the bottom of your deck, draw 1 card, and recover 1 life.",
+    "zh_text": "橫置：將 1 張手牌置底，抽 1 張牌並回復 1 生命。"
   },
   "WCG-150": {
     "zh": "自爆發條偶",
@@ -1125,12 +1142,13 @@
   "WCG-151": {
     "zh": "熔火鍛爐",
     "name": "Molten Forge",
-    "text": "Tap: Destroy 1 monster with 10 PP or less.",
-    "zh_text": "橫置：消滅 1 隻 PP 10 以下的怪物。",
+    "text": "Tap: Give 1 monster -10 PP this turn.",
+    "zh_text": "橫置：使 1 隻怪物本回合 PP -10。",
     "prev": {
       "橫置此卡：消滅 1 隻 PP 600 以下的怪物。": "Tap this card: destroy 1 monster with 600 PP or less.",
       "橫置此卡：消滅 1 隻 PP 900 以下的怪物。": "Tap this card: destroy 1 monster with 900 PP or less.",
-      "橫置此卡：消滅 1 隻印刷 PP 900 以下的怪物。": "Tap this card: destroy 1 monster with 900 printed PP or less."
+      "橫置此卡：消滅 1 隻印刷 PP 900 以下的怪物。": "Tap this card: destroy 1 monster with 900 printed PP or less.",
+      "橫置：消滅 1 隻 PP 10 以下的怪物。": "Tap: Destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-152": {
@@ -1210,8 +1228,8 @@
   "WCG-165": {
     "zh": "血祭狂暴",
     "name": "Blood Sacrifice Frenzy",
-    "text": "Cost: Lose 1 life. Attach: +5 PP on next combat, then put this card into the graveyard.",
-    "zh_text": "代價：失去 1 生命。附著：下一次交戰 PP +5，戰後送墓。",
+    "text": "Cost: Lose 1 life. Attach: +6 PP and Trample on next combat, then put this card into the graveyard.",
+    "zh_text": "代價：失去 1 生命。附著：下一次交戰 PP +6 且獲得貫穿，戰後送墓。",
     "prev": {
       "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard."
     }
@@ -1353,12 +1371,13 @@
   "WCG-185": {
     "zh": "魔導樞紐守衛",
     "name": "Arcane Nexus Warden",
-    "text": "Whenever you cast a [Reason] spell, you may destroy 1 monster with 10 PP or less.",
-    "zh_text": "每當你施放理智法術，可消滅 1 隻 PP 10 以下的怪物。",
+    "text": "Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn.",
+    "zh_text": "每當你施放理智法術，可使 1 隻怪物本回合 PP -10。",
     "prev": {
       "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less.",
       "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 PP or less.",
-      "每當你施放 1 張【理智】法術牌，消滅 1 隻印刷 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 printed PP or less."
+      "每當你施放 1 張【理智】法術牌，消滅 1 隻印刷 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 printed PP or less.",
+      "每當你施放理智法術，可消滅 1 隻 PP 10 以下的怪物。": "Whenever you cast a [Reason] spell, you may destroy 1 monster with 10 PP or less."
     }
   },
   "WCG-186": {
@@ -1779,13 +1798,14 @@
   "WCG-246": {
     "zh": "藤鞭絞殺",
     "name": "Vine Strangle",
-    "text": "Destroy 1 monster with 10 PP or less.",
+    "text": "Give 1 monster -10 PP this turn.",
     "prev": {
       "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
       "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less.",
-      "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less."
+      "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less.",
+      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less."
     },
-    "zh_text": "消滅 1 隻 PP 10 以下的怪物。"
+    "zh_text": "使 1 隻怪物本回合 PP -10。"
   },
   "WCG-247": {
     "zh": "大地之心",
@@ -2085,8 +2105,8 @@
   "WCG-294": {
     "zh": "堅守號角",
     "name": "Horn of Holding",
-    "text": "Untap all ally monsters; they can't attack this turn.",
-    "zh_text": "令所有己方橫置怪物轉直立；它們本回合不能攻擊。",
+    "text": "Untap all ally monsters and give them +3 PP this turn; they cannot attack players this turn.",
+    "zh_text": "令所有己方橫置怪物轉直立並在本回合獲得 PP +3；它們本回合不能攻擊玩家。",
     "prev": {
       "將你所有橫置的怪物轉為直立；它們本回合不能攻擊。": "Untap all your tapped monsters. They can't attack this turn."
     }
@@ -2106,8 +2126,8 @@
   "WCG-297": {
     "zh": "守夜祈禱",
     "name": "Vigil Prayer",
-    "text": "Attach: While untapped, this monster gets +4 PP.",
-    "zh_text": "附著：此怪直立時 PP +4。",
+    "text": "Attach: This monster gets +3 PP and gains Block.",
+    "zh_text": "附著：此怪 PP +3、獲得格擋。",
     "prev": {
       "附著：附著的己方怪物直立時，PP +400。": "Attach to 1 of your monsters: while it is upright, it gets +400 PP."
     }
@@ -2296,11 +2316,12 @@
   "WCG-326": {
     "zh": "開路先鋒",
     "name": "Trailblazer Vanguard",
-    "text": "Charge. Deploy: Destroy directly opposite monster with 12 PP or less. Bypass while opposite slot is empty.",
-    "zh_text": "衝鋒；進場：消滅正對面 PP 12 以下敵怪。正對面空著時，具有越陣。",
+    "text": "Charge. Deploy: Give directly opposite enemy monster -12 PP this turn. Bypass while opposite slot is empty.",
+    "zh_text": "衝鋒；進場：使正對面敵怪本回合 PP -12。正對面空著時，具有越陣。",
     "prev": {
       "衝鋒；【箭頭：↑】進場：消滅 ↑ 指向的印刷 PP 1800 以下的怪物。↑ 沒有指向怪物時，嘲諷擋不住此怪物。": "Charge; [Arrow: ↑] On deploy: destroy the monster ↑ points at if its printed PP is 1800 or less. While ↑ doesn't point at a monster, Taunt can't stop this monster.",
-      "衝鋒；進場：消滅正對面 PP 18 以下敵怪。正對面空著時，具有越陣。": "Charge. Deploy: Destroy directly opposite monster with 18 PP or less. Bypass while opposite slot is empty."
+      "衝鋒；進場：消滅正對面 PP 18 以下敵怪。正對面空著時，具有越陣。": "Charge. Deploy: Destroy directly opposite monster with 18 PP or less. Bypass while opposite slot is empty.",
+      "衝鋒；進場：消滅正對面 PP 12 以下敵怪。正對面空著時，具有越陣。": "Charge. Deploy: Destroy directly opposite monster with 12 PP or less. Bypass while opposite slot is empty."
     }
   },
   "WCG-327": {
@@ -2766,11 +2787,12 @@
   "WCG-386": {
     "zh": "沼母孵巢",
     "name": "Bogmother's Brood",
-    "text": "[Arrow: ↑] Enemy monster gets -3 PP. Start of turn: If its PP is 0, destroy it.",
-    "zh_text": "↑ 敵怪 PP -3。回合開始：若它 PP 為 0，消滅它。",
+    "text": "[Arrow: ↑] Enemy monster gets -3 PP.",
+    "zh_text": "↑ 敵怪 PP -3。",
     "prev": {
       "你的回合開始時，在 1 隻敵方怪物上放置 1 個腐蝕指示物；若該怪物已有 3 個以上，改為消滅它。": "At the start of your turn, put 1 Corrosion counter on 1 enemy monster. If it already has 3 or more, destroy it instead.",
-      "【箭頭：↑】↑ 指向的怪物 PP -300；你的回合開始時，若該怪物當下 PP 0，消滅它。": "[Arrow: ↑] The monster ↑ points at gets -300 PP. At the start of your turn, if that monster's current PP is 0, destroy it."
+      "【箭頭：↑】↑ 指向的怪物 PP -300；你的回合開始時，若該怪物當下 PP 0，消滅它。": "[Arrow: ↑] The monster ↑ points at gets -300 PP. At the start of your turn, if that monster's current PP is 0, destroy it.",
+      "↑ 敵怪 PP -3。回合開始：若它 PP 為 0，消滅它。": "[Arrow: ↑] Enemy monster gets -3 PP. Start of turn: If its PP is 0, destroy it."
     }
   },
   "WCG-387": {
@@ -2803,11 +2825,12 @@
   "WCG-390": {
     "zh": "萬腐之母",
     "name": "Mother of All Rot",
-    "text": "Poison. Deploy: All enemy monsters get -6 PP this turn, then destroy all enemy monsters with 0 PP.",
-    "zh_text": "劇毒；進場：全體敵怪本回合 PP -6，消滅所有 PP 0 敵怪。",
+    "text": "Poison. Deploy: All enemy monsters get -6 PP this turn.",
+    "zh_text": "劇毒；進場：全體敵怪本回合 PP -6。",
     "prev": {
       "劇毒；進場：在每隻敵方怪物上各放置 2 個腐蝕指示物，然後消滅所有當下 PP 0 以下的敵方怪物。": "Poison. On deploy: put 2 Corrosion counters on each enemy monster, then destroy every enemy monster whose current PP is 0 or less.",
-      "劇毒；進場：每隻敵方怪物本回合 PP -600，然後消滅所有當下 PP 0 以下的敵方怪物。": "Poison. On deploy: each enemy monster gets -600 PP this turn, then destroy every enemy monster whose current PP is 0 or less."
+      "劇毒；進場：每隻敵方怪物本回合 PP -600，然後消滅所有當下 PP 0 以下的敵方怪物。": "Poison. On deploy: each enemy monster gets -600 PP this turn, then destroy every enemy monster whose current PP is 0 or less.",
+      "劇毒；進場：全體敵怪本回合 PP -6，消滅所有 PP 0 敵怪。": "Poison. Deploy: All enemy monsters get -6 PP this turn, then destroy all enemy monsters with 0 PP."
     }
   },
   "WCG-391": {

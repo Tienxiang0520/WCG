@@ -15,8 +15,8 @@ public partial class GameEngine
     internal static AiRole RoleOf(CardDefinition c) => _roles.GetOrAdd(c.Id + "\u0001" + c.Type + "\u0001" + c.Text, _ =>
     {
         var t = c.Text; var r = AiRole.None;
-        if (Regex.IsMatch(t, "消滅(雙方)?所有")) r |= AiRole.Wipe;
-        else if (c.IsSpell && !c.IsCounter && Regex.IsMatch(t, @"消滅\s*1\s*隻")) r |= AiRole.Removal;
+        if (Regex.IsMatch(t, "消滅(雙方)?所有|(?:所有|全體).*本回合 PP -")) r |= AiRole.Wipe;
+        else if (c.IsSpell && !c.IsCounter && Regex.IsMatch(t, @"消滅\s*1\s*隻|使 1 隻怪物本回合 PP -")) r |= AiRole.Removal;
         if (CardReach(c) > 0 && !c.IsMonster) r |= AiRole.Burn;
         if (c.IsCounter) r |= AiRole.Counter;
         if (Regex.IsMatch(t, @"抽\s*\d+\s*張")) r |= AiRole.Draw;

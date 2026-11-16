@@ -75,7 +75,7 @@ public partial class GameEngine
         };
     }
     private bool NewTrample(PlayerState p, MonsterInstance m) =>
-        m.Attachments.Any(a => a.Card.Card.Id == "WCG-220")
+        m.Attachments.Any(a => a.Card.Card.Id == "WCG-220" || a.Card.Card.Id == "WCG-165" && a.Card.Card.Text.Contains("貫穿", StringComparison.Ordinal))
         || Player.Field.Concat(Computer.Field).Any(x => x != m && Active(x, "WCG-218") && HasArrows(x) && PointsAt(Owner(x), x, p, m));
     // 前鋒盾衛: the enemy monster straight ahead of its up arrow can't attack.
     private bool Pinned(MonsterInstance m)
@@ -101,7 +101,7 @@ public partial class GameEngine
             "WCG-207" => enemy.Where(m => m.IsTaunt && ThresholdPP(m) >= (V2Rules ? 18 : 1800)).ToList(),
             "WCG-220" or "WCG-221" => (V2Rules ? p.Field.Concat(enemy) : p.Field).ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
-            "WCG-246" => both.Where(m => ThresholdPP(m) <= Low(1100)).ToList(),
+            "WCG-246" => (V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(1100))).ToList(),
             "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
             _ => OathSpellTargets(p, c)
         };
@@ -140,7 +140,8 @@ public partial class GameEngine
         switch (c.Id)
         {
             case "WCG-206": case "WCG-208": if (Valid()) Silence(p, source, t!); break;
-            case "WCG-207": case "WCG-246": if (Valid()) KillBatch([t!], c.Name); break;
+            case "WCG-207": if (Valid()) KillBatch([t!], c.Name); break;
+            case "WCG-246": if (Valid()) { if (V2Rules) DebuffTurn(t!, -10, c); else KillBatch([t!], c.Name); } break;
             case "WCG-211": Mill(e, 3); break;
             case "WCG-214": Mill(e, Math.Min(8, GraveMonsters(p))); break;
             case "WCG-217": DrawMany(p, Math.Min(3, p.Field.Count(HasArrows))); break;

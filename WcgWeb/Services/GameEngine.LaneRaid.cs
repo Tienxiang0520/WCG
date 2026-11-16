@@ -46,7 +46,8 @@ public partial class GameEngine
                 else if (unit != null) PickMonster(p, "選擇正對面的敵方怪物橫置", [unit], x => { x.IsTapped = true; Present("status", Owner(x), x.InstanceId, card: x.Card, label: "橫置"); });
                 break;
             case "WCG-326":
-                if (unit != null && (V2Rules ? ThresholdPP(unit) <= 12 : (unit.Card.PP ?? 0) <= 1800)) PickMonster(p, V2Rules ? "選擇正對面 PP 12 以下的敵方怪物消滅" : "選擇正對面印刷 PP 1800 以下的敵方怪物消滅", [unit], x => KillBatch([x], m.Card.Name));
+                if (unit != null && (V2Rules || (unit.Card.PP ?? 0) <= 1800))
+                    PickMonster(p, V2Rules ? "選擇正對面的敵方怪物本回合 PP -12" : "選擇正對面印刷 PP 1800 以下的敵方怪物消滅", [unit], x => { if (V2Rules) DebuffTurn(x, -12, m.Card); else KillBatch([x], m.Card.Name); });
                 break;
             default: return SoulDeploy(p, m);
         }
@@ -130,7 +131,7 @@ public partial class GameEngine
             {
                 "WCG-321" => u != null && u.Card.TotalCost <= (V2Rules ? 1 : 2) ? 5 + BodyValue(u) * .3 : f == null ? 3 : 0,
                 "WCG-325" => u != null ? 4 + u.CurrentDP + (u.IsTapped ? 0 : 1) : f == null ? 2 : 0,
-                "WCG-326" => u != null && (V2Rules ? ThresholdPP(u) <= 12 : (u.Card.PP ?? 0) <= 1800) ? 6 + BodyValue(u) * .3 : f == null ? 4 : 0,
+                "WCG-326" => u != null ? (V2Rules ? (u.CurrentPP <= 12 ? 6 + BodyValue(u) * .3 : 3) : ((u.Card.PP ?? 0) <= 1800 ? 6 + BodyValue(u) * .3 : 0)) : f == null ? 4 : 0,
                 _ => f == null ? 5 : 0,
             };
         }

@@ -18,7 +18,30 @@ public partial class GameEngine
         var used = new HashSet<int>(GetOpponent(p).Field.Where(x => x.Turned).Select(x => x.Slot));
         foreach (var m in p.Board.Where(x => !x.Turned)) { if (m.Slot < 0 || !used.Add(m.Slot)) { m.Slot = Enumerable.Range(0,5).First(i => !used.Contains(i)); used.Add(m.Slot); } }
     }
+    private bool _checkingZeroPp;
     private void RefreshBoard()
+    {
+        RefreshPowerAndFlags();
+        if (ZeroPpDeathRules) CheckZeroPpDeaths();
+    }
+    private void CheckZeroPpDeaths()
+    {
+        if (_checkingZeroPp || !ZeroPpDeathRules) return;
+        _checkingZeroPp = true;
+        try
+        {
+            while (!IsOver)
+            {
+                // Skip units currently holding temporary negative combat-only debuffs (WCG-168/284) so combat resolution & 格擋 settle first.
+                var dead = Player.Field.Concat(Computer.Field).Where(m => m.IsUnit && m.CombatPowerBonus >= 0 && m.CurrentPP <= 0).ToArray();
+                if (dead.Length == 0) break;
+                KillBatch(dead, "PP 歸零");
+                RefreshPowerAndFlags();
+            }
+        }
+        finally { _checkingZeroPp = false; }
+    }
+    private void RefreshPowerAndFlags()
     {
         EnsureSlots(Player); EnsureSlots(Computer);
         Player.Lent = Computer.Field.Count(x => x.Turned); Computer.Lent = Player.Field.Count(x => x.Turned);
@@ -30,7 +53,7 @@ public partial class GameEngine
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*ScalePP(200) : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*ScalePP(V2Rules ? 200 : 300) : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasBlock || unit.Card.Id=="WCG-133" && p.Hp<=3 || V2Rules && unit.Card.Id=="WCG-215" && unit.ExtraTaunt)
-                || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198")
+                || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198" || a.Card.Card.Id=="WCG-297" && a.Card.Card.Text.Contains("格擋", StringComparison.Ordinal))
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
                     && !(source.Card.Id=="WCG-147" && !LegacyCardRules && Across(source,unit)));
             // 聖堂仲裁護衛: the enemy monster its up arrow points at can't have energy shield from any source.
@@ -98,7 +121,7 @@ public partial class GameEngine
     public bool SetCard(PlayerState p, CardInstance c) => AiTracked(AiNote("set",p,c),()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
-    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
+    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>V2Rules?p.Field.Concat(GetOpponent(p).Field).Any():p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
     public bool Activate(PlayerState p, MonsterInstance m)=>AiTracked(AiNote("activate",p,unit:m),()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
@@ -108,9 +131,12 @@ public partial class GameEngine
         {
             case "WCG-125": CardChoice(p,"選擇置底卡，其餘留在牌庫頂",p.Deck.Take(2),c=>Pay(()=>{p.Deck.Remove(c);p.Deck.Add(c);}));break;
             case "WCG-126":Pay(()=>{if(V2Rules)UntapEnergy(p,m.Card,2);else p.NextCreatureDiscount++;});break;
-            case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1));KillBatch([x],"犧牲",!LegacyCardRules);}));break;
-            case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);DrawMany(p,1);}));break;
-            case "WCG-151":PickMonster(p,$"選擇 PP {Low(800)} 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>ThresholdPP(x)<=Low(800)),x=>Pay(()=>KillBatch([x],m.Card.Name)));break;
+            case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("失去 1 生命",StringComparison.Ordinal))PayLife(GetOpponent(p),1);});KillBatch([x],"犧牲",!LegacyCardRules);}));break;
+            case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("回復 1 生命",StringComparison.Ordinal))Heal(p,1);});}));break;
+            case "WCG-151":
+                if (V2Rules) PickMonster(p, "選擇本回合 PP -10 的怪物", p.Field.Concat(GetOpponent(p).Field), x => Pay(() => DebuffTurn(x, -10, m.Card)));
+                else PickMonster(p, $"選擇 PP {Low(800)} 以下怪物", p.Field.Concat(GetOpponent(p).Field).Where(x => ThresholdPP(x) <= Low(800)), x => Pay(() => KillBatch([x], m.Card.Name)));
+                break;
             case "WCG-268":ActivateOath(p,m);break;
             case "WCG-349":GraveActivate(p,m);break;
             default:SurgeActivate(p,m);break;
@@ -151,7 +177,7 @@ public partial class GameEngine
     {
         if(spell==null)return;
         foreach(var x in p.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-185"&&(!LimitFactionTriggers||x.TriggersThisTurn<2)).ToArray())
-            if(spell.HasWill("理智")){if(LimitFactionTriggers)x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x)){if(V2Rules)OptionalTarget(p,"魔導樞紐守衛：可消滅 PP 10 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(m=>ThresholdPP(m)<=10),m=>KillBatch([m],x.Card.Name));else PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>ThresholdPP(m)<=(SimplifiedRules?Low(600):1000)),m=>KillBatch([m],x.Card.Name));}});}
+            if(spell.HasWill("理智")){if(LimitFactionTriggers)x.TriggersThisTurn++;_effects.AddLast(()=>{if(Alive(x)){if(V2Rules)OptionalTarget(p,"魔導樞紐守衛：可使 1 隻怪物本回合 PP -10",GetOpponent(p).Field.Concat(p.Field),m=>DebuffTurn(m,-10,x.Card));else PickMonster(p,"法術聯動消滅",GetOpponent(p).Field.Where(m=>ThresholdPP(m)<=(SimplifiedRules?Low(600):1000)),m=>KillBatch([m],x.Card.Name));}});}
         NewSpellCast(p);
         foreach(var x in p.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-153").ToArray())
             if(spell.TotalCost>=2){_effects.AddLast(()=>{var cards=p.Graveyard.Where(c=>c.Card.IsSpell&&c.Card.TotalCost==1).ToArray();if(cards.Length>0){var c=cards[_random.Next(cards.Length)];p.Graveyard.Remove(c);p.Hand.Add(c);Present("recover",p,c.InstanceId,card:c.Card,label:"墓地回收");}});}

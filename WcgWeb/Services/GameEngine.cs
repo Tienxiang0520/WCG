@@ -298,14 +298,14 @@ public partial class GameEngine
             "WCG-002" when V2Rules => both.Where(m => m.Card.TotalCost <= 3),
             "WCG-002" or "WCG-086" => enemy.Where(m => ThresholdPP(m) <= Low(1000)),
             "WCG-012" or "WCG-064" => both.Where(m => m.Card.TotalCost <= 2),
-            "WCG-004" or "WCG-046" => both.Where(m => ThresholdPP(m) <= Low(500)),
+            "WCG-004" or "WCG-046" => V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(500)),
             "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
             "WCG-024" or "WCG-137" or "WCG-184" => both,
             "WCG-062" or "WCG-074" => (V2Rules ? both : p.Field).Where(CanShield),
-            "WCG-032" when V2Rules => both.Where(m => ThresholdPP(m) <= 10 || m.IsTapped),
+            "WCG-032" when V2Rules => both,
             "WCG-032" when ReasonBuff => enemy.Where(m => ThresholdPP(m) <= (m.IsTapped ? 2300 : 1600)),
             "WCG-017" or "WCG-032" => enemy.Where(m => ThresholdPP(m) <= Low(1700)),
-            "WCG-082" or "WCG-084" => both.Where(m => ThresholdPP(m) <= Low(1300)),
+            "WCG-082" or "WCG-084" => V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(1300)),
             "WCG-076" => both.Where(m => ThresholdPP(m) >= High(1700)),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => both,
             "WCG-036" => p.Field,
@@ -381,7 +381,7 @@ public partial class GameEngine
         if (c.Card.Id == "WCG-046" && mode == "")
         {
             var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張牌，然後棄 1 張手牌" } };
-            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? "消滅 1 隻 PP 10 以下怪物" : $"消滅 PP {Low(500)} 以下敵怪" });
+            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? "使 1 隻怪物本回合 PP -10" : $"消滅 PP {Low(500)} 以下敵怪" });
             Ask(p, "自然之怒抉擇（尚未扣費）", modes, o => BeginPlay(p, c, o.Id), true, c.InstanceId); return true;
         }
         void PlaceAndCommit(MonsterInstance? sacrifice, List<CardInstance>? discards)
@@ -467,7 +467,8 @@ public partial class GameEngine
     {
         if (IsOver || p.Occupied >= 5) return;
         var slot = plannedSlots.Remove(c.InstanceId, out var chosen) ? chosen : FirstSlot(p);
-        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshBoard(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
+        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshPowerAndFlags(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
+        CheckZeroPpDeaths();
         Summoned(p, m);
         if (!paid) return;
         OfferEbbTide(p, m);

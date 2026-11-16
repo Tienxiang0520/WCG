@@ -20,14 +20,14 @@ source: WcgWeb/Data/cards.json
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| WCG-001 | 赤誓殘酷監工 | 怪物 | 2 | 11 | 0 | — | 進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。 | **Crimson Oath Taskmaster** — Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1. |
+| WCG-001 | 赤誓殘酷監工 | 怪物 | 2 | 11 | 0 | — | 進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。 | **Crimson Oath Taskmaster** — Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1. |
 | WCG-002 | 致死衝擊 | 法術 | 3 | — | — | — | 消滅 1 隻費用 3 以下的怪物；你的生命 3 以下時，再對敵方玩家造成 1 傷害。 | **Lethal Strike** — Destroy 1 monster with cost 3 or less; if your life is 3 or less, deal 1 damage to the enemy player. |
 | WCG-003 | 熔岩地精 | 怪物 | 2 | 8 | 0 | — | 陣亡：對敵方玩家造成 1 傷害。 | **Lava Goblin** — On Death: Deal 1 damage to the enemy player. |
-| WCG-004 | 熾炎猛擊 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 10 以下的怪物，抽 1 張牌。 | **Blazing Smash** — Destroy 1 monster with 10 PP or less, then draw 1 card. |
+| WCG-004 | 熾炎猛擊 | 法術 | 3 | — | — | — | 使 1 隻怪物本回合 PP -10，抽 1 張牌。 | **Blazing Smash** — Give 1 monster -10 PP this turn, then draw 1 card. |
 | WCG-005 | 突擊狼騎兵 | 怪物 | 3 | 10 | 1 | ←→ | 衝鋒。←→ 友軍 PP +1。 | **Raiding Wolf Rider** — Charge. [Arrows: ← →] Allied monsters get +1 PP. |
 | WCG-006 | 怒意沸騰 | 法術 | 5 | — | — | — | 額外代價：犧牲 1 隻己怪。對敵方玩家造成 2 傷害。 | **Boiling Rage** — Additional cost: sacrifice 1 ally monster. Deal 2 damage to the enemy player. |
-| WCG-007 | 狂血投擲者 | 怪物 | 2 | 10 | 1 | — | 進場：消滅 PP 最低且 10 以下的 1 隻敵怪。 | **Bloodfrenzy Hurler** — Deploy: Destroy the enemy monster with the lowest PP (10 or less). |
-| WCG-008 | 烈焰旋風 | 法術 | 1 | — | — | — | 消滅雙方所有 PP 10 以下的怪物。 | **Flame Whirlwind** — Destroy all monsters with 10 PP or less. |
+| WCG-007 | 狂血投擲者 | 怪物 | 2 | 10 | 1 | — | 進場：使 PP 最低的 1 隻敵怪本回合 PP -10。 | **Bloodfrenzy Hurler** — Deploy: Give the enemy monster with the lowest PP -10 PP this turn. |
+| WCG-008 | 烈焰旋風 | 法術 | 1 | — | — | — | 雙方所有怪物本回合 PP -10。 | **Flame Whirlwind** — All monsters get -10 PP this turn. |
 | WCG-009 | 阿曼尼狂戰士 | 怪物 | 2 | 9 | 1 | — | 敵方場上每有 1 隻怪物，此怪 PP +2。 | **Amani Berserker** — Gets +2 PP for each enemy monster. |
 | WCG-010 | 戰鬥狂怒 | 法術 | 3 | — | — | — | 己場每有 1 隻怪物，抽 1 張牌（最多 2 張）。 | **Battle Fury** — Draw 1 card for each ally monster (up to 2). |
 | WCG-011 | 嗜血戰狂 | 怪物 | 3 | 13 | 0 | — | 每當另一隻己怪被消滅，抽 1 張牌。 | **Bloodthirsty Warmonger** — Whenever another ally monster is destroyed, draw 1 card. |
@@ -36,13 +36,13 @@ source: WcgWeb/Data/cards.json
 | WCG-016 | 灰燼復仇者 | 怪物 | 3 | 13 | 1 | — | 陣亡：消滅 PP 最低的 1 隻敵怪。 | **Ashen Avenger** — On Death: Destroy the enemy monster with the lowest PP. |
 | WCG-018 | 地獄戰狂 | 怪物 | 6 | 24 | 2 | — | 衝鋒。 | **Infernal Warmonger** — Charge. |
 | WCG-019 | 燃血召喚 | 法術 | 3 | — | — | — | 失去 2 生命，抽 4 張牌。 | **Bloodcall** — Lose 2 life, draw 4 cards. |
-| WCG-020 | 赤帝·燼滅之龍 | 怪物 | 6 | 24 | 2 | — | 進場：消滅所有 PP 10 以下的敵怪。 | **Crimson Emperor, Cinder Dragon** — Deploy: Destroy all enemy monsters with 10 PP or less. |
+| WCG-020 | 赤帝·燼滅之龍 | 怪物 | 6 | 24 | 2 | — | 進場：所有敵怪本回合 PP -10。 | **Crimson Emperor, Cinder Dragon** — Deploy: All enemy monsters get -10 PP this turn. |
 | WCG-124 | 血怒祭壇 | 結界 | 4 | — | — | — | 每當己怪交戰消滅敵怪，對敵方玩家造成 1 傷害。 | **Bloodrage Altar** — Whenever an ally monster destroys an enemy monster in combat, deal 1 damage to the enemy player. |
-| WCG-136 | 狂戰士斥候 | 怪物 | 3 | 9 | 1 | — | 衝鋒；攻擊後仍在場時，可消滅 1 隻 PP 10 以下怪物。 | **Berserker Scout** — Charge. Whenever this monster survives attacking, you may destroy 1 monster with 10 PP or less. |
+| WCG-136 | 狂戰士斥候 | 怪物 | 3 | 9 | 1 | — | 衝鋒；攻擊後仍在場時，可使 1 隻怪物本回合 PP -10。 | **Berserker Scout** — Charge. Whenever this monster survives attacking, you may give 1 monster -10 PP this turn. |
 | WCG-144 | 狂熱嘲弄者 | 怪物 | 3 | 14 | 0 | — | 嘲諷；被攻擊後仍在場時，對敵方玩家造成 1 傷害。 | **Fanatical Taunter** — Taunt. Whenever this monster survives being attacked, deal 1 damage to the enemy player. |
-| WCG-151 | 熔火鍛爐 | 結界 | 2 | — | — | — | 橫置：消滅 1 隻 PP 10 以下的怪物。 | **Molten Forge** — Tap: Destroy 1 monster with 10 PP or less. |
+| WCG-151 | 熔火鍛爐 | 結界 | 2 | — | — | — | 橫置：使 1 隻怪物本回合 PP -10。 | **Molten Forge** — Tap: Give 1 monster -10 PP this turn. |
 | WCG-156 | 荒原巨槌食人魔 | 怪物 | 3 | 16 | 2 | — | 無。 | **Wasteland Maul Ogre** — None. |
-| WCG-165 | 血祭狂暴 | 法術 | 0 | — | — | — | 代價：失去 1 生命。附著：下一次交戰 PP +5，戰後送墓。 | **Blood Sacrifice Frenzy** — Cost: Lose 1 life. Attach: +5 PP on next combat, then put this card into the graveyard. |
+| WCG-165 | 血祭狂暴 | 法術 | 0 | — | — | — | 代價：失去 1 生命。附著：下一次交戰 PP +6 且獲得貫穿，戰後送墓。 | **Blood Sacrifice Frenzy** — Cost: Lose 1 life. Attach: +6 PP and Trample on next combat, then put this card into the graveyard. |
 | WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 看牌庫頂 3 張，選狂怒怪物與狂怒法術各 1 張入手，其餘置底。 | **Warsong Command** — Look at the top 3 cards of your deck, add 1 [Fury] monster and 1 [Fury] spell to hand, put the rest on the bottom. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 5 | 17 | 2 | — | 衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +2。 | **Bloodrage Centurion** — Charge. Gets +2 PP for each other ally [Fury] monster. |
@@ -53,7 +53,7 @@ source: WcgWeb/Data/cards.json
 | WCG-242 | 戰火補給 | 法術 | 2 | — | — | — | 抽 2 張牌，失去 1 生命。 | **War Supplies** — Draw 2 cards, lose 1 life. |
 | WCG-243 | 赤鱗護衛 | 怪物 | 4 | 17 | 0 | — | 嘲諷；陣亡：對敵方玩家造成 1 傷害。 | **Red-Scale Guard** — Taunt. On Death: Deal 1 damage to the enemy player. |
 | WCG-319 | 斷路斥候 | 怪物 | 1 | 5 | 1 | ↑ | 正對面沒有敵怪時，具有越陣。 | **Lane Scout** — While there is no enemy monster directly opposite, this monster has Bypass. |
-| WCG-326 | 開路先鋒 | 怪物 | 5 | 16 | 1 | ↑ | 衝鋒；進場：消滅正對面 PP 12 以下敵怪。正對面空著時，具有越陣。 | **Trailblazer Vanguard** — Charge. Deploy: Destroy directly opposite monster with 12 PP or less. Bypass while opposite slot is empty. |
+| WCG-326 | 開路先鋒 | 怪物 | 5 | 16 | 1 | ↑ | 衝鋒；進場：使正對面敵怪本回合 PP -12。正對面空著時，具有越陣。 | **Trailblazer Vanguard** — Charge. Deploy: Give directly opposite enemy monster -12 PP this turn. Bypass while opposite slot is empty. |
 | WCG-366 | 以血還血 | 法術（反擊） | 1 | — | — | — | 【反擊】受到傷害時：對敵方玩家造成 1 傷害；你的生命 3 以下改為 2。 | **Blood for Blood** — [Counter] On damage: Deal 1 damage to the enemy player (2 if your life is 3 or less). |
 | WCG-367 | 誓言之怒 | 怪物 | 3 | 14 | 1 | ↑ | 衝鋒；你的生命 3 以下時，此怪 PP +6、DP +1。↑ 敵怪 PP -3。 | **Wrath of the Oath** — Charge. While your life is 3 or less, gets +6 PP and +1 DP. [Arrow: ↑] Enemy monster gets -3 PP. |
 | WCG-369 | 殉誓狂徒 | 怪物 | 1 | 9 | 0 | — | 進場：對你造成 1 傷害，抽 1 張牌。 | **Oathbound Zealot** — Deploy: Deal 1 damage to yourself, then draw 1 card. |
@@ -71,9 +71,9 @@ source: WcgWeb/Data/cards.json
 | WCG-026 | 空間回折 | 法術 | 2 | — | — | — | 將 1 隻怪物移回手牌。 | **Spatial Fold** — Return 1 monster to its owner's hand. |
 | WCG-028 | 奧術靈感 | 法術 | 3 | — | — | — | 抽 2 張牌。 | **Arcane Insight** — Draw 2 cards. |
 | WCG-029 | 冰霜魔導師 | 怪物 | 4 | 16 | 1 | — | 進場：可橫置 1 隻直立怪物，抽 1 張牌。 | **Frost Magus** — Deploy: You may tap 1 untapped monster, then draw 1 card. |
-| WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻 PP 10 以下或已橫置的怪物。 | **Mass Disruption** — Destroy 1 monster with 10 PP or less. |
+| WCG-032 | 質能瓦解 | 法術 | 3 | — | — | — | 消滅 1 隻已橫置的怪物，或使 1 隻怪物本回合 PP -10。 | **Mass Disruption** — Destroy 1 tapped monster, or give 1 monster -10 PP this turn. |
 | WCG-035 | 時間靜止者 | 怪物 | 4 | 16 | 1 | — | 進場：可將 1 隻怪物移回手牌，然後橫置所有敵怪。 | **Timestopper** — Deploy: You may return 1 monster to its owner's hand, then tap all enemy monsters. |
-| WCG-036 | 虛空調度 | 法術 | 1 | — | — | — | 將 1 隻己怪移回手牌，抽 1 張牌。 | **Void Recall** — Return 1 ally monster to hand, then draw 1 card. |
+| WCG-036 | 虛空調度 | 法術 | 1 | — | — | — | 將 1 隻己怪移回手牌，重置 1 點能量並抽 1 張牌。 | **Void Recall** — Return 1 ally monster to hand, untap 1 energy, and draw 1 card. |
 | WCG-037 | 符文構裝巨像 | 怪物 | 4 | 17 | 1 | — | 每當你施放法術，若你的手牌 3 張以下，抽 1 張牌。 | **Runebound Colossus** — Whenever you cast a spell, if you have 3 or fewer cards in hand, draw 1 card. |
 | WCG-038 | 逆流風暴 | 法術 | 4 | — | — | — | 將雙方所有費用 2 以下的怪物移回手牌。 | **Reverse Tide** — Return all monsters with cost 2 or less to their owners' hands. |
 | WCG-040 | 星穹領主·奧瑞斯 | 怪物 | 6 | 24 | 2 | — | 進場：檢視對手手牌，棄掉其中 1 張法術牌。 | **Starvault Lord, Oris** — Deploy: Look at your opponent's hand and discard 1 spell card from it. |
@@ -85,7 +85,7 @@ source: WcgWeb/Data/cards.json
 | WCG-166 | 思維置換 | 法術 | 0 | — | — | — | 將 1 張手牌置於牌庫底，抽 1 張牌。 | **Mind Swap** — Put 1 card from hand on the bottom of your deck, then draw 1 card. |
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 8 | 0 | — | 進場：看牌庫頂 3 張，選 1 張法術牌入手，其餘置底。 | **Stargazing Diviner** — Deploy: Look at the top 3 cards of your deck, add 1 spell to hand, put the rest on the bottom. |
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。 | **Arcane Resonance Wave** — Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card. |
-| WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放理智法術，可消滅 1 隻 PP 10 以下的怪物。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, you may destroy 1 monster with 10 PP or less. |
+| WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放理智法術，可使 1 隻怪物本回合 PP -10。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方傷害時：抵銷傷害，抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] On enemy damage: Cancel it and draw 1 card. |
 | WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 沉默 1 隻怪物。 | **Hush Hex** — Silence 1 monster. |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] On spell damage: Cancel it and draw 1 card. |
@@ -111,7 +111,7 @@ source: WcgWeb/Data/cards.json
 | WCG-043 | 孢子幼芽 | 怪物 | 1 | 7 | 0 | — | 陣亡：將墓地另 1 張費用 1 以下怪物牌移回手牌。 | **Spore Sprout** — On Death: Return another monster with cost 1 or less from your graveyard to hand. |
 | WCG-044 | 滋養萌發 | 法術 | 2 | — | — | — | 將牌庫頂 1 張牌橫置放入你的能量區。 | **Nourishing Bloom** — Put the top card of your deck tapped into your energy zone. |
 | WCG-045 | 叢林行者 | 怪物 | 2 | 11 | 0 | — | 進場：若己場另有怪物，抽 1 棄 1。 | **Jungle Strider** — Deploy: If you control another monster, draw 1 and discard 1. |
-| WCG-046 | 自然之怒 | 法術 | 1 | — | — | — | 抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。 | **Nature's Wrath** — Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1. |
+| WCG-046 | 自然之怒 | 法術 | 1 | — | — | — | 抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。 | **Nature's Wrath** — Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1. |
 | WCG-047 | 繁衍蜂群 | 怪物 | 2 | 11 | 1 | — | 進場：可從手牌免費召喚 1 隻費用 1 以下的怪物。 | **Breeding Swarm** — Deploy: You may summon 1 monster with cost 1 or less from hand for free. |
 | WCG-048 | 巨熊咆哮 | 法術 | 3 | — | — | — | 消滅 1 隻 PP ≤（己怪數 × 5）的敵怪，抽 1 張牌。 | **Ursine Roar** — Destroy 1 enemy monster with PP ≤ (your monster count × 5), then draw 1 card. |
 | WCG-049 | 鐵木樹人 | 怪物 | 3 | 15 | 0 | ←→ | 嘲諷。←→ 友軍 PP +2。 | **Ironwood Treant** — Taunt. [Arrows: ← →] Allied monsters get +2 PP. |
@@ -138,7 +138,7 @@ source: WcgWeb/Data/cards.json
 | WCG-215 | 根鬚哨兵 | 怪物 | 2 | 12 | 0 | ←→ | 兩個箭頭皆指向怪物時，具有嘲諷與格擋。 | **Rootwatch Sentry** — While both arrows point at monsters, this monster has Taunt and Block. |
 | WCG-220 | 荊棘甲殼 | 法術 | 1 | — | — | — | 附著：此怪具有貫穿。 | **Thorn Carapace** — Attach: Monster gains Trample. |
 | WCG-232 | 腐土苗床 | 怪物 | 2 | 11 | 0 | — | 陣亡：將牌庫頂 1 張牌橫置放入你的能量區。 | **Rotsoil Seedbed** — On Death: Put the top card of your deck tapped into your energy zone. |
-| WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 消滅 1 隻 PP 10 以下的怪物。 | **Vine Strangle** — Destroy 1 monster with 10 PP or less. |
+| WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -10。 | **Vine Strangle** — Give 1 monster -10 PP this turn. |
 | WCG-247 | 大地之心 | 結界 | 3 | — | — | — | 回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — Start of turn: If you control 3 or more [Life] monsters, draw 1 card. |
 | WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 選 1 隻己方生機怪，消滅 1 隻 PP 比它低的敵怪。 | **Primal Trample** — Choose 1 ally [Life] monster, destroy 1 enemy monster with less PP than it. |
 | WCG-276 | 碧根巨鹿 | 怪物 | 4 | 16 | 1 | — | 貫穿；手牌 4 張以上時，此怪 PP +4。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, gets +4 PP. |
@@ -165,8 +165,8 @@ source: WcgWeb/Data/cards.json
 | WCG-075 | 破邪大天使 | 怪物 | 5 | 21 | 2 | ←→ | 進場：回復 1 生命。←→ 友軍獲得格擋。 | **Evil-Breaker Archangel** — Deploy: Restore 1 life. [Arrows: ← →] Allied monsters gain Block. |
 | WCG-076 | 誓約封禁 | 法術 | 4 | — | — | — | 消滅 1 隻 PP 18 以上的怪物。 | **Oathbound Seal** — Destroy 1 monster with 18 PP or more. |
 | WCG-077 | 秩序聖裁者 | 怪物 | 5 | 18 | 1 | — | 進場：可消滅 1 隻 PP 18 以上的怪物。 | **Order Adjudicator** — Deploy: You may destroy 1 monster with 18 PP or more. |
-| WCG-078 | 聖光普照 | 法術 | 4 | — | — | — | 消滅所有 PP 10 以下的敵怪，回復 1 生命。 | **Radiant Dawn** — Destroy all enemy monsters with 10 PP or less, then restore 1 life. |
-| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 24 | 2 | ←→ | 陣亡：消滅所有 PP 10 以下敵怪。←→ 友軍獲得格擋。 | **Radiant Holy Emperor, Fordin** — On Death: Destroy all enemy monsters with 10 PP or less. [Arrows: ← →] Allied monsters gain Block. |
+| WCG-078 | 聖光普照 | 法術 | 4 | — | — | — | 所有敵怪本回合 PP -10，回復 1 生命。 | **Radiant Dawn** — All enemy monsters get -10 PP this turn, then restore 1 life. |
+| WCG-080 | 光輝聖皇·弗丁 | 怪物 | 6 | 24 | 2 | ←→ | 陣亡：所有敵怪本回合 PP -10。←→ 友軍獲得格擋。 | **Radiant Holy Emperor, Fordin** — On Death: All enemy monsters get -10 PP this turn. [Arrows: ← →] Allied monsters gain Block. |
 | WCG-127 | 守誓者壁壘 | 結界 | 3 | — | — | — | 只要己場有直立怪物，敵方法術對你的傷害 -1。 | **Oathkeeper's Rampart** — While you control an untapped monster, enemy spells deal 1 less damage to you. |
 | WCG-129 | 白銀哨衛 | 怪物 | 1 | 9 | 0 | — | 嘲諷。 | **Silver Sentry** — Taunt. |
 | WCG-142 | 誓言枷鎖 | 法術 | 3 | — | — | — | 橫置並附著：此怪不能攻擊且不會重置。 | **Shackles of Oath** — Tap and attach: Monster can't attack and doesn't untap. |
@@ -186,8 +186,8 @@ source: WcgWeb/Data/cards.json
 | WCG-268 | 決鬥競技場 | 結界 | 3 | — | — | — | 橫置此卡並橫置 1 隻直立己怪：令它與 1 隻敵怪決鬥。 | **Dueling Arena** — Tap this card and 1 untapped ally monster: Have it duel 1 enemy monster. |
 | WCG-271 | 決鬥之劍 | 法術 | 1 | — | — | — | 附著：下一次交戰 PP +4，戰後送墓。 | **Dueling Blade** — Attach: +4 PP on next combat, then put this card into the graveyard. |
 | WCG-292 | 烽火哨兵 | 怪物 | 2 | 9 | 1 | — | 回合結束：若此怪直立，對敵方玩家造成 1 傷害。 | **Beacon Sentry** — End of turn: If untapped, deal 1 damage to the enemy player. |
-| WCG-294 | 堅守號角 | 法術 | 2 | — | — | — | 令所有己方橫置怪物轉直立；它們本回合不能攻擊。 | **Horn of Holding** — Untap all ally monsters; they can't attack this turn. |
-| WCG-297 | 守夜祈禱 | 法術 | 1 | — | — | — | 附著：此怪直立時 PP +4。 | **Vigil Prayer** — Attach: While untapped, this monster gets +4 PP. |
+| WCG-294 | 堅守號角 | 法術 | 2 | — | — | — | 令所有己方橫置怪物轉直立並在本回合獲得 PP +3；它們本回合不能攻擊玩家。 | **Horn of Holding** — Untap all ally monsters and give them +3 PP this turn; they cannot attack players this turn. |
+| WCG-297 | 守夜祈禱 | 法術 | 1 | — | — | — | 附著：此怪 PP +3、獲得格擋。 | **Vigil Prayer** — Attach: This monster gets +3 PP and gains Block. |
 | WCG-400 | 汲泉修女 | 怪物 | 1 | 6 | 0 | — | 進場：回復 1 生命。 | **Wellspring Nun** — Deploy: Restore 1 life. |
 | WCG-401 | 泉光侍祭 | 怪物 | 2 | 9 | 0 | ←→ | ←→ 每當你回復生命，友軍本回合 PP +3。 | **Springlight Acolyte** — [Arrows: ← →] Whenever you restore life, allied monsters get +3 PP this turn. |
 | WCG-402 | 滿溢之禱 | 法術 | 1 | — | — | — | 回復 2 生命；若回復前生命已為 7，抽 1 張牌。 | **Overflowing Prayer** — Restore 2 life; if your life was already 7, draw 1 card. |
@@ -197,16 +197,16 @@ source: WcgWeb/Data/cards.json
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-081 | 虛空夜行魔 | 怪物 | 1 | 9 | 0 | — | 嘲諷。 | **Void Nightstalker** — Taunt. |
-| WCG-082 | 暗影裂箭 | 法術 | 2 | — | — | — | 消滅 1 隻 PP 10 以下的怪物。 | **Shadow Rift Arrow** — Destroy 1 monster with 10 PP or less. |
-| WCG-083 | 腐爛食屍鬼 | 怪物 | 1 | 7 | 1 | — | 陣亡：可消滅 1 隻 PP 10 以下的怪物。 | **Rotting Ghoul** — On Death: You may destroy 1 monster with 10 PP or less. |
-| WCG-084 | 靈魂撕裂 | 法術 | 1 | — | — | — | 額外代價：棄 1 張手牌。消滅 1 隻 PP 10 以下怪物。 | **Soul Rend** — Additional cost: discard 1 card. Destroy 1 monster with 10 PP or less. |
+| WCG-082 | 暗影裂箭 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -10。 | **Shadow Rift Arrow** — Give 1 monster -10 PP this turn. |
+| WCG-083 | 腐爛食屍鬼 | 怪物 | 1 | 7 | 1 | — | 陣亡：可使 1 隻怪物本回合 PP -10。 | **Rotting Ghoul** — On Death: You may give 1 monster -10 PP this turn. |
+| WCG-084 | 靈魂撕裂 | 法術 | 1 | — | — | — | 額外代價：棄 1 張手牌。使 1 隻怪物本回合 PP -10。 | **Soul Rend** — Additional cost: discard 1 card. Give 1 monster -10 PP this turn. |
 | WCG-085 | 苦痛契約者 | 怪物 | 1 | 8 | 0 | ↑ | 進場：失去 1 生命。↑ 敵怪 PP -3。 | **Pain Pactbearer** — Deploy: Lose 1 life. [Arrow: ↑] Enemy monster gets -3 PP. |
 | WCG-087 | 墓穴行屍 | 怪物 | 2 | 11 | 1 | — | 進場：若你墓地有 5 張以上牌，回復 1 生命。 | **Crypt Walker** — Deploy: If your graveyard has 5 or more cards, restore 1 life. |
 | WCG-088 | 恐懼吞噬 | 法術 | 3 | — | — | — | 額外代價：犧牲 1 隻己怪。消滅 1 隻怪物。 | **Devouring Dread** — Additional cost: sacrifice 1 ally monster. Destroy 1 monster. |
 | WCG-089 | 骨鐮刺客 | 怪物 | 3 | 11 | 1 | — | 劇毒。 | **Bonescythe Assassin** — Poison. |
 | WCG-090 | 冥界引渡 | 法術 | 2 | — | — | — | 將墓地 1 張怪物牌移回手牌。 | **Underworld Passage** — Return 1 monster from your graveyard to hand. |
-| WCG-091 | 哀慟女妖 | 怪物 | 4 | 12 | 1 | — | 進場：消滅所有 PP 10 以下的敵怪。 | **Wailing Banshee** — Deploy: Destroy all enemy monsters with 10 PP or less. |
-| WCG-092 | 絕望疫病 | 法術 | 3 | — | — | — | 消滅雙方所有 PP 10 以下的怪物。 | **Plague of Despair** — Destroy all monsters with 10 PP or less. |
+| WCG-091 | 哀慟女妖 | 怪物 | 4 | 12 | 1 | — | 進場：所有敵怪本回合 PP -10。 | **Wailing Banshee** — Deploy: All enemy monsters get -10 PP this turn. |
+| WCG-092 | 絕望疫病 | 法術 | 3 | — | — | — | 雙方所有怪物本回合 PP -10。 | **Plague of Despair** — All monsters get -10 PP this turn. |
 | WCG-093 | 深淵伏擊魔 | 怪物 | 3 | 14 | 1 | — | 陣亡：可從墓地免費召喚 1 隻費用 2 以下的怪物。 | **Abyssal Ambusher** — On Death: You may summon 1 monster with cost 2 or less from your graveyard for free. |
 | WCG-094 | 靈魂汲取 | 法術 | 6 | — | — | — | 消滅 1 隻怪物，回復 1 生命。 | **Soul Drain** — Destroy 1 monster, then restore 1 life. |
 | WCG-095 | 縛魂巨怪 | 怪物 | 4 | 17 | 2 | — | 額外代價：棄 2 張手牌。衝鋒。 | **Soulbound Brute** — Additional cost: discard 2 cards. Charge. |
@@ -214,7 +214,7 @@ source: WcgWeb/Data/cards.json
 | WCG-097 | 亡靈女王·希爾瓦 | 怪物 | 5 | 17 | 1 | — | 陣亡：消滅 PP 最高的 1 隻敵怪，可從墓地免費召喚 1 隻 2 費以下怪。 | **Undead Queen, Sylva** — On Death: Destroy the enemy monster with the highest PP; you may summon 1 monster costing 2 or less from your graveyard for free. |
 | WCG-098 | 凋零降臨 | 法術 | 5 | — | — | — | 消滅雙方所有怪物。 | **Withering Descent** — Destroy all monsters. |
 | WCG-100 | 深淵之主·瑪爾加尼斯 | 怪物 | 7 | 25 | 2 | — | 嘲諷；進場：回復 1 生命，將墓地另 1 張怪物移回手牌。 | **Abyss Lord, Malganis** — Taunt. Deploy: Restore 1 life and return another monster from your graveyard to hand. |
-| WCG-128 | 萬魂之井 | 結界 | 1 | — | — | — | 橫置此卡並犧牲 1 隻己怪：抽 1 張牌。 | **Well of Myriad Souls** — Tap this card and sacrifice 1 ally monster: Draw 1 card. |
+| WCG-128 | 萬魂之井 | 結界 | 1 | — | — | — | 橫置此卡並犧牲 1 隻己怪：抽 1 張牌，對手失去 1 生命。 | **Well of Myriad Souls** — Tap this card and sacrifice 1 ally monster: Draw 1 card and your opponent loses 1 life. |
 | WCG-132 | 腐肉食腐蛛 | 怪物 | 1 | 6 | 0 | — | 劇毒。 | **Carrion Spider** — Poison. |
 | WCG-138 | 暗影伏擊者 | 怪物 | 3 | 12 | 1 | — | 衝鋒；進場：橫置對手 1 點直立能量。 | **Shadow Ambusher** — Charge. Deploy: If you control another [Abyss] monster, deal 1 damage to the enemy player. |
 | WCG-148 | 墓園守夜人 | 怪物 | 2 | 11 | 0 | — | 每當另一隻己怪被消滅，橫置對手 1 點直立能量。 | **Graveyard Nightwatch** — Whenever another ally monster is destroyed, tap 1 untapped enemy energy. |
@@ -240,10 +240,10 @@ source: WcgWeb/Data/cards.json
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-101 | 巡邏輕步兵 | 怪物 | 1 | 10 | 1 | — | 無。 | **Patrol Footman** — None. |
-| WCG-102 | 精靈遊俠 | 怪物 | 1 | 7 | 0 | — | 進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。 | **Elven Ranger** — Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1. |
+| WCG-102 | 精靈遊俠 | 怪物 | 1 | 7 | 0 | — | 進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。 | **Elven Ranger** — Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1. |
 | WCG-103 | 淘金鼠人 | 怪物 | 2 | 10 | 0 | — | 陣亡：抽 1 張牌。 | **Gold-Panning Ratfolk** — On Death: Draw 1 card. |
 | WCG-104 | 腐蝕軟泥怪 | 怪物 | 2 | 10 | 0 | — | 進場：可將 1 隻費用 2 以下的怪物移回手牌。 | **Corrosive Ooze** — Deploy: You may return 1 monster with cost 2 or less to its owner's hand. |
-| WCG-105 | 狂暴投彈手 | 怪物 | 2 | 11 | 1 | — | 進場：消滅雙方所有其他 PP 10 以下怪物。 | **Mad Bomber** — Deploy: Destroy all other monsters with 10 PP or less. |
+| WCG-105 | 狂暴投彈手 | 怪物 | 2 | 11 | 1 | — | 進場：雙方所有其他怪物本回合 PP -10。 | **Mad Bomber** — Deploy: All other monsters get -10 PP this turn. |
 | WCG-109 | 苦痛信徒 | 怪物 | 3 | 13 | 0 | — | 每當此怪交戰後仍在場，抽 1 張牌。 | **Acolyte of Agony** — Whenever this monster survives combat, draw 1 card. |
 | WCG-110 | 狼騎兵先遣隊 | 怪物 | 3 | 12 | 1 | — | 衝鋒。 | **Wolf Rider Vanguard** — Charge. |
 | WCG-112 | 破咒者 | 怪物 | 3 | 14 | 1 | — | 進場：可驅散 1 隻怪物或 1 個結界。 | **Spellbreaker** — Deploy: You may dispel 1 monster or 1 Ward. |
@@ -256,7 +256,7 @@ source: WcgWeb/Data/cards.json
 | WCG-122 | 傭兵號召 | 法術 | 2 | — | — | — | 看牌庫頂 5 張，選 1 張怪物牌入手，其餘置底。 | **Call to Arms** — Look at the top 5 cards of your deck, add 1 monster to hand, put the rest on the bottom. |
 | WCG-123 | 終焉彗星 | 法術 | 6 | — | — | — | 消滅 1 隻怪物，對敵方玩家造成 1 傷害。 | **Doomsday Comet** — Destroy 1 monster, deal 1 damage to the enemy player. |
 | WCG-133 | 厚甲石像鬼 | 怪物 | 2 | 11 | 0 | — | 嘲諷；你的生命 3 以下時，此怪具有格擋。 | **Armored Gargoyle** — Taunt. While your life is 3 or less, this monster has Block. |
-| WCG-149 | 靈魂集市 | 結界 | 2 | — | — | — | 橫置：將 1 張手牌置底，抽 1 張牌。 | **Soul Bazaar** — Tap: Put 1 card from hand on the bottom of your deck, then draw 1 card. |
+| WCG-149 | 靈魂集市 | 結界 | 2 | — | — | — | 橫置：將 1 張手牌置底，抽 1 張牌並回復 1 生命。 | **Soul Bazaar** — Tap: Put 1 card from hand on the bottom of your deck, draw 1 card, and recover 1 life. |
 | WCG-154 | 淡水狂鱷 | 怪物 | 2 | 13 | 1 | — | 無。 | **Freshwater Crocolisk** — None. |
 | WCG-155 | 鋼鐵構裝體 | 怪物 | 3 | 16 | 1 | — | 無。 | **Steel Construct** — None. |
 | WCG-161 | 萬物終結者·世界之蝕 | 怪物 | 9 | 33 | 3 | — | 進場：消滅所有其他怪物與結界，並棄掉全部手牌。 | **World Ender, Eclipse** — Deploy: Destroy all other monsters and Wards, and discard your entire hand. |
@@ -284,5 +284,5 @@ source: WcgWeb/Data/cards.json
 | WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 13 | 1 | → | 衝鋒。→ 友軍獲得格擋。 | **Holy Flame Knight** — Charge. [Arrow: →] Allied monster gains Block. |
 | WCG-371 | 誓血軍旗手 | 怪物（秩序／狂怒） | 4 | 14 | 1 | ←→ | ←→ 友軍 PP +2；你的生命每比對手少 1 點，再 +2。 | **Bloodoath Standard-Bearer** — [Arrows: ← →] Allied monsters get +2 PP, plus +2 PP for each life you are behind your opponent. |
 | WCG-378 | 輪迴之環 | 結界（理智／生機） | 3 | — | — | — | 每當你將己怪移回手牌，抽 1 張牌。 | **Ring of Recurrence** — Whenever you return an ally monster to hand, draw 1 card. |
-| WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | ↑ | ↑ 敵怪 PP -3。回合開始：若它 PP 為 0，消滅它。 | **Bogmother's Brood** — [Arrow: ↑] Enemy monster gets -3 PP. Start of turn: If its PP is 0, destroy it. |
-| WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 23 | 2 | — | 劇毒；進場：全體敵怪本回合 PP -6，消滅所有 PP 0 敵怪。 | **Mother of All Rot** — Poison. Deploy: All enemy monsters get -6 PP this turn, then destroy all enemy monsters with 0 PP. |
+| WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | ↑ | ↑ 敵怪 PP -3。 | **Bogmother's Brood** — [Arrow: ↑] Enemy monster gets -3 PP. |
+| WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 23 | 2 | — | 劇毒；進場：全體敵怪本回合 PP -6。 | **Mother of All Rot** — Poison. Deploy: All enemy monsters get -6 PP this turn. |

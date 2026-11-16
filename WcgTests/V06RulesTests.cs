@@ -81,7 +81,7 @@ public class V06RulesTests
     {
         var g=Game();var guard=Unit(g.Player,185,4);Hand(g,101);
         for(int i=0;i<3;i++)Unit(g.Computer,132,i); // Simplified rules: 185 now destroys PP 600 or less.
-        for(int i=0;i<3;i++){Assert.True(g.CastSpell(g.Player,Hand(g,166)));Finish(g);Assert.Equal(2-i,g.Computer.Field.Count);}
+        for(int i=0;i<3;i++){Assert.True(g.CastSpell(g.Player,Hand(g,166)));while(g.IsWaiting&&!g.IsOver){var foe=g.Computer.Field.FirstOrDefault();if(g.CurrentPendingChoice is {} ch)Assert.True(g.SelectChoice((foe!=null?ch.Options.FirstOrDefault(o=>o.Id==foe.InstanceId.ToString()):null)??ch.Options.FirstOrDefault(o=>o.Id!="SKIP")??ch.Options[0]));else Assert.True(g.SelectTarget(foe!));}Assert.Equal(2-i,g.Computer.Field.Count);}
         Assert.False(guard.IsTapped);Assert.Equal(0,guard.TriggersThisTurn);Assert.Equal(4,guard.Card.TotalCost);
     }
     [Fact]public void SilverFlagHealsOnItsEntryAndEveryLaterOrderSummon()

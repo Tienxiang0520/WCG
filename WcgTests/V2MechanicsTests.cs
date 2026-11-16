@@ -376,6 +376,251 @@ public class V2MechanicsTests
     }
 
     [Fact]
+    public void BuffedUtilityAndCombatCardsWorkAsSpecified()
+    {
+        // WCG-036: bounce 1 ally monster, untap 1 energy, draw 1 card
+        var g = Game(playerFirst: false);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch) Assert.True(g.SelectChoice(ch.Options.Last()));
+        Assert.Equal("player", g.CurrentTurnPlayerId);
+        g.Player.Hand.Clear();
+
+        var ally = Unit(g.Player, "WCG-101", 0);
+        g.Player.EnergyZone[0].IsTapped = true; // 1 tapped beforehand, 11 available
+        var availBefore = g.Player.AvailableEnergy;
+        var recall = Hand(g, "WCG-036");
+        Assert.True(g.CastSpellAt(g.Player, recall, ally));
+        Assert.DoesNotContain(ally, g.Player.Field);
+        Assert.Contains(ally.Card, g.Player.Hand.Select(x => x.Card));
+        Assert.Equal(availBefore, g.Player.AvailableEnergy); // paid 1, untapped 1 -> unchanged
+        Assert.Equal(2, g.Player.Hand.Count); // bounced monster + 1 drawn
+
+        // WCG-128: tap & sacrifice 1 ally monster -> draw 1 and opponent loses 1 life
+        var g2 = Game(playerFirst: false);
+        Assert.True(g2.EndTurn());
+        while (g2.CurrentPendingChoice is { } ch2) Assert.True(g2.SelectChoice(ch2.Options.Last()));
+        g2.Player.Hand.Clear();
+        var well = new MonsterInstance(cards.GetCard("WCG-128")!) { Slot = 0, IsTapped = false };
+        g2.Player.Structures.Add(well);
+        var sac = Unit(g2.Player, "WCG-101", 1);
+        var compHpBefore = g2.Computer.Hp;
+        Assert.True(g2.Activate(g2.Player, well));
+        Assert.NotNull(g2.CurrentPendingTarget);
+        Assert.True(g2.SelectTarget(sac));
+        Assert.True(well.IsTapped);
+        Assert.DoesNotContain(sac, g2.Player.Field);
+        Assert.Single(g2.Player.Hand);
+        Assert.Equal(compHpBefore - 1, g2.Computer.Hp);
+
+        // WCG-149: tap, bottom 1 card from hand, draw 1 and recover 1 life
+        var bazaar = new MonsterInstance(cards.GetCard("WCG-149")!) { Slot = 2, IsTapped = false };
+        g2.Player.Structures.Add(bazaar);
+        g2.Player.Hp = 5;
+        var bottomCard = Hand(g2, "WCG-101");
+        Assert.True(g2.Activate(g2.Player, bazaar));
+        if (g2.CurrentPendingChoice is { } bazaarChoice)
+            Assert.True(g2.SelectChoice(bazaarChoice.Options.First(o => o.Id == bottomCard.InstanceId.ToString())));
+        Assert.True(bazaar.IsTapped);
+        Assert.Equal(bottomCard, g2.Player.Deck[^1]);
+        Assert.Equal(2, g2.Player.Hand.Count);
+        Assert.Equal(6, g2.Player.Hp);
+
+        // WCG-165: lose 1 life, +6 PP and Trample on next combat, then to graveyard
+        var g3 = Game(playerFirst: false);
+        Assert.True(g3.EndTurn());
+        while (g3.CurrentPendingChoice is { } ch3) Assert.True(g3.SelectChoice(ch3.Options.Last()));
+        var attacker = Unit(g3.Player, "WCG-101", 0);
+        var enemyTapped = Unit(g3.Computer, "WCG-101", 0, tapped: true);
+        var frenzy = Hand(g3, "WCG-165");
+        var pHpBefore = g3.Player.Hp;
+        var cHpBefore = g3.Computer.Hp;
+        Assert.True(g3.CastSpellAt(g3.Player, frenzy, attacker));
+        Assert.Equal(pHpBefore - 1, g3.Player.Hp);
+        Assert.Equal(16, attacker.CurrentPP);
+        Assert.True(attacker.HasTrample);
+        Assert.True(g3.Attack(g3.Player, attacker, enemyTapped));
+        Assert.DoesNotContain(enemyTapped, g3.Computer.Field);
+        Assert.Equal(cHpBefore - 1, g3.Computer.Hp);
+        Assert.Contains(frenzy, g3.Player.Graveyard);
+        Assert.Equal(10, attacker.CurrentPP);
+        Assert.False(attacker.HasTrample);
+
+        // WCG-294: untap all tapped allies, +3 PP this turn, can attack monsters but not players
+        var g4 = Game(playerFirst: false);
+        Assert.True(g4.EndTurn());
+        while (g4.CurrentPendingChoice is { } ch4) Assert.True(g4.SelectChoice(ch4.Options.Last()));
+        var tappedAlly = Unit(g4.Player, "WCG-101", 0, tapped: true);
+        var tappedEnemy = Unit(g4.Computer, "WCG-101", 0, tapped: true);
+        var horn = Hand(g4, "WCG-294");
+        Assert.True(g4.CastSpell(g4.Player, horn));
+        Assert.False(tappedAlly.IsTapped);
+        Assert.Equal(13, tappedAlly.CurrentPP);
+        Assert.True(g4.CanAttack(tappedAlly));
+        Assert.False(g4.CanAttackPlayer(tappedAlly));
+        Assert.Contains(tappedEnemy, g4.GetAttackTargets(tappedAlly));
+        Assert.True(g4.Attack(g4.Player, tappedAlly, tappedEnemy));
+        Assert.DoesNotContain(tappedEnemy, g4.Computer.Field);
+
+        // WCG-297: +3 PP (upright or tapped) and grants Block
+        var guard = Unit(g4.Player, "WCG-101", 1, tapped: true);
+        var prayer = Hand(g4, "WCG-297");
+        Assert.True(g4.CastSpellAt(g4.Player, prayer, guard));
+        Assert.Equal(13, guard.CurrentPP);
+        Assert.True(guard.HasShield);
+        guard.IsTapped = false;
+        Assert.Equal(13, guard.CurrentPP);
+        Assert.True(guard.HasShield);
+    }
+
+    [Fact]
+    public void ZeroPpDestroysImmediatelyTriggersDeathAndBypassesBlock()
+    {
+        var g = Game(playerFirst: false);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch) Assert.True(g.SelectChoice(ch.Options.Last()));
+
+        var graver = new CardInstance(cards.GetCard("WCG-101")!);
+        var g2 = Game(playerFirst: false);
+        var giver2 = Unit(g2.Computer, "WCG-063", 0);
+        var sprout2 = Unit(g2.Computer, "WCG-043", 1);
+        g2.Computer.Graveyard.Add(graver);
+        Assert.True(g2.EndTurn());
+        while (g2.CurrentPendingChoice is { } ch) Assert.True(g2.SelectChoice(ch.Options.Last()));
+        Assert.True(sprout2.HasShield);
+        Assert.False(sprout2.IsTapped);
+
+        var handBefore = g2.Player.Hand.Count;
+        Assert.True(g2.CastSpellAt(g2.Player, Hand(g2, "WCG-004"), sprout2)); // -10 PP + draw 1
+        if (g2.CurrentPendingChoice is { } recoverChoice)
+            Assert.True(g2.SelectChoice(recoverChoice.Options.First()));
+
+        Assert.DoesNotContain(sprout2, g2.Computer.Field);
+        Assert.Contains(g2.Computer.Graveyard, c => c.InstanceId == sprout2.InstanceId);
+        Assert.Contains(graver, g2.Computer.Hand); // On Death fired via PP 0 destruction (bypassing upright Block)
+        Assert.Equal(handBefore + 1, g2.Player.Hand.Count); // Hand(WCG-004) added after snapshot: -1 cast +1 draw => +1 total
+
+        // Own death listener WCG-011 also fires when a friendly unit dies to PP 0
+        var g3 = Game(playerFirst: false);
+        var b3 = Unit(g3.Player, "WCG-011", 0);
+        var boosted = Unit(g3.Player, "WCG-101", 1); // 10 PP
+        var buffer = Unit(g3.Player, "WCG-362", 2); // 4 PP, <- -> allies +3 PP => boosted = 13 PP
+        Assert.True(g3.EndTurn());
+        while (g3.CurrentPendingChoice is { } ch2) Assert.True(g3.SelectChoice(ch2.Options.Last()));
+        Assert.Equal(13, boosted.CurrentPP);
+        Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-082"), boosted)); // 13 - 10 = 3 PP (survives while buffer is on board)
+        Assert.Contains(boosted, g3.Player.Field);
+        Assert.Equal(3, boosted.CurrentPP);
+        var h2 = g3.Player.Hand.Count;
+        // Now remove buffer via WCG-082 (-10 on 4 PP) -> buffer dies (draws 1), then boosted drops 3 -> 0 PP and dies (draws 1 more)
+        Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-082"), buffer));
+        Assert.DoesNotContain(buffer, g3.Player.Field);
+        Assert.DoesNotContain(boosted, g3.Player.Field);
+        Assert.Contains(b3, g3.Player.Field);
+        Assert.Equal(h2 + 2, g3.Player.Hand.Count);
+    }
+
+    [Fact]
+    public void CombatOnlyDebuffAttachmentsApplyOnlyInCombatAndRespectBlock()
+    {
+        var g = Game(playerFirst: false);
+        var small5 = Unit(g.Computer, "WCG-319", 1); // 5 PP
+        var small6 = Unit(g.Computer, "WCG-132", 2); // 6 PP
+        var blocker = Unit(g.Computer, "WCG-063", 0); // -> Block onto slot 1
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch) Assert.True(g.SelectChoice(ch.Options.Last()));
+        Assert.True(small5.HasShield);
+
+        var sup5 = Hand(g, "WCG-168"); // Next combat -5 PP
+        var tend7 = Hand(g, "WCG-284"); // Next combat -7 PP
+        Assert.True(g.CastSpellAt(g.Player, sup5, small5));
+        Assert.True(g.CastSpellAt(g.Player, tend7, small6));
+
+        // Out of combat: neither dies from 0 PP and PP reads unchanged
+        Assert.Contains(small5, g.Computer.Field);
+        Assert.Equal(5, small5.CurrentPP);
+        Assert.Contains(small6, g.Computer.Field);
+        Assert.Equal(6, small6.CurrentPP);
+
+        // Combat against upright Blocked 5-PP monster with WCG-168 (-5): combat PP is 0 < 5, but Block saves it!
+        var atk5 = Unit(g.Player, "WCG-319", 3);
+        Assert.True(g.Attack(g.Player, atk5, small5));
+        Assert.Contains(small5, g.Computer.Field);
+        Assert.True(small5.IsTapped);
+        Assert.Equal(5, small5.CurrentPP);
+        Assert.Contains(sup5, g.Player.Graveyard);
+
+        // Combat against 19-PP upright monster with Block + WCG-284 (-7 -> 12 PP vs 13 PP attacker) also saves via Block
+        var tall = Unit(g.Computer, "WCG-114", 4); // 19 PP
+        var shieldGrant = Hand(g, "WCG-297");
+        Assert.True(g.CastSpellAt(g.Player, shieldGrant, tall)); // +3 PP => 22 PP + Block
+        var tend2 = Hand(g, "WCG-284");
+        Assert.True(g.CastSpellAt(g.Player, tend2, tall));
+        Assert.Equal(22, tall.CurrentPP);
+        var atk16 = Unit(g.Player, "WCG-155", 4); // 16 PP vs (22 - 7 = 15 PP)
+        Assert.True(g.Attack(g.Player, atk16, tall));
+        Assert.Contains(tall, g.Computer.Field);
+        Assert.True(tall.IsTapped);
+        Assert.Equal(22, tall.CurrentPP);
+        Assert.Contains(tend2, g.Player.Graveyard);
+    }
+
+    [Fact]
+    public void DebuffReworkSingleTargetAoeAndKeepersWorkAsSpecified()
+    {
+        var g = Game(playerFirst: false);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch) Assert.True(g.SelectChoice(ch.Options.Last()));
+
+        var giant = Unit(g.Computer, "WCG-119", 4); // 26 PP (in lane 4 -> opposite ally slot 0)
+        var footman = Unit(g.Computer, "WCG-101", 2); // 10 PP
+
+        // WCG-082 (-10 PP this turn) drops 26 -> 16 PP, then recovers to 26 on EndTurn
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-082"), giant));
+        Assert.Equal(16, giant.CurrentPP);
+        Assert.Contains(giant, g.Computer.Field);
+
+        // WCG-032 on upright giant gives -10 (16 -> 6 PP); on tapped giant destroys outright
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-032"), giant));
+        Assert.Equal(6, giant.CurrentPP);
+
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch2) Assert.True(g.SelectChoice(ch2.Options.Last()));
+        Assert.Equal(26, giant.CurrentPP);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } ch3) Assert.True(g.SelectChoice(ch3.Options.Last()));
+
+        giant.IsTapped = true;
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-032"), giant));
+        Assert.DoesNotContain(giant, g.Computer.Field);
+
+        // WCG-326 Trailblazer Vanguard gives opposite monster -12 PP this turn
+        var giant2 = Unit(g.Computer, "WCG-119", 4); // lane 4 == opposite ally slot 0
+        var van = Hand(g, "WCG-326");
+        Assert.True(g.SummonMonster(g.Player, van));
+        Assert.True(g.SelectChoice(g.CurrentPendingChoice!.Options.First(o => o.Id == "SLOT:0")));
+        if (g.CurrentPendingTarget != null) Assert.True(g.SelectTarget(giant2));
+        Assert.Equal(14, giant2.CurrentPP);
+
+        // WCG-008 AOE: -10 PP to all monsters on both sides
+        var ally10 = Unit(g.Player, "WCG-101", 1);
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-008")));
+        Assert.DoesNotContain(footman, g.Computer.Field);
+        Assert.DoesNotContain(ally10, g.Player.Field);
+        Assert.Equal(4, giant2.CurrentPP); // 14 - 10 = 4 PP
+
+        // WCG-386 passive ↑ -3 PP + WCG-390 (-6 PP)
+        var g390 = Game(playerFirst: false);
+        Assert.True(g390.EndTurn());
+        while (g390.CurrentPendingChoice is { } ch4) Assert.True(g390.SelectChoice(ch4.Options.Last()));
+        var bog = new MonsterInstance(cards.GetCard("WCG-386")!) { Slot = 2, IsTapped = false };
+        g390.Player.Structures.Add(bog);
+        var target9 = Unit(g390.Computer, "WCG-101", 2); // 10 - 3 = 7 PP from ↑ -3
+        Assert.True(g390.SummonMonster(g390.Player, Hand(g390, "WCG-390")));
+        Assert.True(g390.SelectChoice(g390.CurrentPendingChoice!.Options.First(o => o.Id == "SLOT:3"))); // 7 - 6 = 1 PP left
+        Assert.Equal(1, target9.CurrentPP);
+    }
+
+    [Fact]
     public void V2CatalogPresetsRunToCompletionWithAiWithoutStalling()
     {
         var g = new GameEngine(cards, new Random(41));

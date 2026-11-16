@@ -173,7 +173,10 @@ public partial class GameEngine
             var ready = p.Field.Where(m => CanAttack(m) && m.CurrentDP > 0).ToArray();
             if (taunts.Length == 1 && ready.Sum(m => m.CurrentDP) >= e.Hp)
                 foreach (var c in p.Hand.Where(c => c.Card.IsSpell && !c.Card.IsCounter && CanPlayCard(p, c) && c.Card.Id is not ("WCG-024" or "WCG-137" or "WCG-168")))
+                {
+                    if (ZeroPpDeathRules && (c.Card.Id is "WCG-004" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246" && taunts[0].CurrentPP > 10 || c.Card.Id == "WCG-032" && !taunts[0].IsTapped && taunts[0].CurrentPP > 10)) continue;
                     if (GetDirectPlayTargets(p, c).Contains(taunts[0]) && c.Card.Id is not ("WCG-141" or "WCG-165" or "WCG-143")) return CastSpellAt(p, c, taunts[0]);
+                }
         }
         return false;
     }
@@ -182,11 +185,19 @@ public partial class GameEngine
     {
         "WCG-126" => !V2Rules || p.EnergyZone.Count(x => x.IsTapped) >= 2 || p.Hand.Any(c => ActualCost(p, c.Card) == p.AvailableEnergy + 1),
         "WCG-128" => p.Field.Any(m => BodyValue(m) < 5 || m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016") && p.Deck.Count > 3,
-        "WCG-151" => e.Field.Any(m => m.CurrentPP <= ScalePP(800)),
+        "WCG-149" => p.Deck.Count > 2,
+        "WCG-151" => e.Field.Any(m => m.CurrentPP <= ScalePP(800)) || ZeroPpDeathRules && e.Field.Any(m => m.CurrentPP - 10 <= p.Field.Where(CanAttack).Select(a => a.CurrentPP).DefaultIfEmpty(0).Max()),
         _ => true,
     };
 
-    private static readonly HashSet<string> FriendlySpells = ["WCG-135", "WCG-141", "WCG-165", "WCG-143", "WCG-167", "WCG-062", "WCG-074", "WCG-036", "WCG-164", "WCG-169"];
+    private double DebuffEnemyScore(PlayerState p, MonsterInstance m, int delta, bool instantKill = false)
+    {
+        if (instantKill || m.CurrentPP <= delta) return BodyValue(m) + (m.IsTaunt ? 3 : 0);
+        var bestAttacker = p.Field.Where(CanAttack).Select(a => a.CurrentPP).DefaultIfEmpty(0).Max();
+        return bestAttacker >= m.CurrentPP - delta ? (BodyValue(m) + (m.IsTaunt ? 3 : 0)) * .65 : .25;
+    }
+
+    private static readonly HashSet<string> FriendlySpells = ["WCG-135", "WCG-141", "WCG-165", "WCG-143", "WCG-167", "WCG-062", "WCG-074", "WCG-036", "WCG-164", "WCG-169", "WCG-297"];
     private MonsterInstance? BestSpellTarget(PlayerState p, PlayerState e, string id, IReadOnlyList<MonsterInstance> targets)
     {
         var own = targets.Where(p.Field.Contains).ToArray(); var enemy = targets.Where(e.Field.Contains).ToArray();
@@ -199,8 +210,10 @@ public partial class GameEngine
                 "WCG-221" => (m.Card.Id == "WCG-222" ? 5 : 0) + (CanAttack(m) ? 3 : 0) + BodyValue(m),
                 _ => m.CurrentPP / (V2Rules ? 5d : 500d),
             }).FirstOrDefault();
-        if (FriendlySpells.Contains(id) || id is "WCG-076" or "WCG-082" or "WCG-084" && V2Rules)
+        if (FriendlySpells.Contains(id) || id is "WCG-076" or "WCG-082" or "WCG-084" && V2Rules && !ZeroPpDeathRules)
             return own.OrderByDescending(m => (CanAttack(m) || m.IsTapped && id is "WCG-143" or "WCG-167" ? 5 : 0) + BodyValue(m)).FirstOrDefault();
+        if (ZeroPpDeathRules && id is "WCG-004" or "WCG-032" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246")
+            return enemy.OrderByDescending(m => DebuffEnemyScore(p, m, 10, id == "WCG-032" && m.IsTapped)).FirstOrDefault();
         if (id is "WCG-024" or "WCG-137" or "WCG-184") return enemy.OrderByDescending(m => (m.IsTapped ? 0 : m.CurrentDP * 3) + BodyValue(m)).FirstOrDefault();
         return enemy.OrderByDescending(m => BodyValue(m) + (m.IsTaunt ? 3 : 0)).FirstOrDefault() ?? (id == "WCG-072" ? null : own.FirstOrDefault());
     }
@@ -233,12 +246,19 @@ public partial class GameEngine
         if (AiLevel == 0) return SelectChoice(Pick(choice.Options.Where(o => o.Id != "SKIP" || choice.Options.Count == 1).ToList(), 21));
         if (!prof.SmartTargets) return ExecuteV06Ai();
         var discard = choice.Title.Contains("棄") || choice.Title.Contains("牌庫底") || choice.Title.Contains("置底");
+        var debuffChoice = ZeroPpDeathRules && choice.Title.Contains("PP -10");
         double Score(ChoiceOption o)
         {
             if (o.Id == "KEEP") return 100;
+            if (debuffChoice)
+            {
+                if (o.Id == "SKIP") return e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? -50 : 50;
+                if (e.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } foe) return 20 + DebuffEnemyScore(p, foe, 10);
+                if (p.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } ownM) return -50 - BodyValue(ownM);
+            }
             if (o.Id == "SKIP") return -50;
             if (o.Id is "HEAL") return p.Hp <= 3 ? 12 : p.Hp <= 5 ? 5 : -10;
-            if (o.Id is "KILL") return 10;
+            if (o.Id is "KILL") return ZeroPpDeathRules ? (e.Field.Select(m => DebuffEnemyScore(p, m, 10)).DefaultIfEmpty(0).Max() > 1.5 ? 10 : -1) : 10;
             if (o.Id is "SUMMON") return p.Occupied < 5 ? 9 : -10;
             if (o.Id is "LOOT" or "DRAW") return p.Deck.Count > 3 ? 4 : -90;
             if (o.Id is "YES") return p.Deck.Count > 4 ? 6 : -10;
@@ -267,6 +287,7 @@ public partial class GameEngine
         MonsterInstance target;
         if (NewTarget(p, pending, legal) is { } chosen) return SelectTarget(chosen);
         if (cost) target = legal.Where(p.Board.Contains).OrderBy(m => (m.Turned ? -100 : 0) + BodyValue(m) - (m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016" ? 3 : 0)).FirstOrDefault() ?? legal[0];
+        else if (ZeroPpDeathRules && pending.Title.Contains("PP -10")) target = legal.OrderByDescending(m => (e.Board.Contains(m) ? 20 : 0) + DebuffEnemyScore(p, m, 10)).First();
         else if (friendly) target = legal.OrderByDescending(m => (p.Board.Contains(m) ? 20 : 0) + BodyValue(m)).First();
         else target = legal.OrderByDescending(m => (e.Board.Contains(m) ? 20 : 0) + BodyValue(m) + (m.IsTaunt ? 3 : 0)).First();
         return SelectTarget(target);
@@ -297,14 +318,15 @@ public partial class GameEngine
                 "WCG-013" => e.Hp == 1 ? 1000 : 0,
                 "WCG-035" => e.Field.Count(m => !m.IsTapped) * 2 + (c.Card.Text.Contains("已橫置", StringComparison.Ordinal) ? 0 : e.Field.Select(BodyValue).DefaultIfEmpty(0).Max()),
                 "WCG-029" when c.Card.Text.StartsWith("進場", StringComparison.Ordinal) => (e.Field.Any(m => !m.IsTapped) ? 2 : 0) + (p.Deck.Count > 3 ? 3 : -5),
-                "WCG-020" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(1300))),
-                "WCG-091" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
-                "WCG-105" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))),
+                "WCG-020" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(1300))),
+                "WCG-091" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
+                "WCG-105" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
                 "WCG-095" => -4,
                 "WCG-047" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
                 "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? 4 : 0,
-                "WCG-001" or "WCG-007" or "WCG-102" => e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
+                "WCG-001" or "WCG-102" => ZeroPpDeathRules ? (e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? 3 : p.Deck.Count > 3 ? 1 : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
+                "WCG-007" => ZeroPpDeathRules ? e.Field.OrderBy(m => m.CurrentPP).Take(1).Sum(m => DebuffEnemyScore(p, m, 10) > 1.5 ? 3 : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= ScalePP(V2Rules ? 1800 : 2300)) ? 6 : 0,
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= ScalePP(2000)) ? 6 : 0,
                 "WCG-117" => e.Field.Any(m => m.CurrentPP <= ScalePP(1000)) ? 3 : 0,
@@ -323,15 +345,21 @@ public partial class GameEngine
                 "WCG-062" or "WCG-074" => (p.AvailableEnergy - c.Card.TotalCost >= 1 ? 4 : 1) + (id == "WCG-074" ? 2 : 0),
                 "WCG-135" => 3 + (own.Any(CanAttack) ? 2 : 0),
                 "WCG-141" => own.Any(m => m.IsTapped && m.CurrentDP >= 1) && e.Hp <= 3 ? 6 : -2,
-                "WCG-165" or "WCG-143" or "WCG-167" => own.Any(m => CanAttack(m) || m.IsTapped) && e.Field.Count > 0 ? 2 : -2,
-                "WCG-164" or "WCG-169" or "WCG-036" => p.Hand.Count < 3 && own.Any(m => BodyValue(m) < 4) ? 2 : -3,
+                "WCG-165" => own.Any(CanAttack) && e.Field.Count > 0 ? 4 : -2,
+                "WCG-143" or "WCG-167" => own.Any(m => CanAttack(m) || m.IsTapped) && e.Field.Count > 0 ? 2 : -2,
+                "WCG-164" or "WCG-169" => p.Hand.Count < 3 && own.Any(m => BodyValue(m) < 4) ? 2 : -3,
+                "WCG-036" => own.Any(m => BodyValue(m) < 4) ? (p.Hand.Count < 4 ? 3 : 1) : -3,
                 _ => 1,
             };
         }
         var removal = targets.Where(e.Field.Contains).ToArray();
         if (removal.Length > 0)
         {
-            var score = removal.Max(m => BodyValue(m) + (m.IsTaunt ? 3 : 0));
+            var isDebuff10 = ZeroPpDeathRules && id is "WCG-004" or "WCG-032" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246";
+            var score = isDebuff10
+                ? removal.Max(m => DebuffEnemyScore(p, m, 10, id == "WCG-032" && m.IsTapped))
+                : removal.Max(m => BodyValue(m) + (m.IsTaunt ? 3 : 0));
+            if (isDebuff10 && score < 1) return id == "WCG-046" && p.Deck.Count > 3 && p.Hand.Count >= 2 ? 1 : -3;
             if (id is "WCG-024" or "WCG-168") score *= .5;
             if (id is "WCG-026" or "WCG-139" or "WCG-137" or "WCG-184") score *= .75;
             if (id == "WCG-140") score -= 2;
@@ -347,9 +375,10 @@ public partial class GameEngine
             "WCG-006" => e.Hp <= 2 ? 1000 : 6 - p.Field.Select(BodyValue).DefaultIfEmpty(20).Min(),
             "WCG-050" or "WCG-066" or "WCG-070" => p.Hp == 7 ? -10 : (7 - p.Hp) * 2 + (id == "WCG-066" ? 2 : 0),
             "WCG-098" => Sum(e.Field) - Sum(p.Field) - 2,
-            "WCG-068" or "WCG-078" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700))) + (id == "WCG-078" && p.Hp < 7 ? 2 : 0) - 2,
-            "WCG-092" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(800))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(800))) - 2,
-            "WCG-008" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))) - 2,
+            "WCG-068" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700))) - 2,
+            "WCG-078" => (ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700)))) + (p.Hp < 7 ? 2 : 0) - 2,
+            "WCG-092" => (ZeroPpDeathRules ? Sum(e.Field.Where(m => m.CurrentPP <= 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(800))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(800)))) - 2,
+            "WCG-008" => (ZeroPpDeathRules ? Sum(e.Field.Where(m => m.CurrentPP <= 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500)))) - 2,
             "WCG-038" => Sum(e.Field.Where(m => m.Card.TotalCost <= 2)) - Sum(p.Field.Where(m => m.Card.TotalCost <= 2)) - 2,
             "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => ThresholdPP(m) <= SkyfireLimit())) - 2,
             "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= ScalePP(1500))) - Sum(p.Field.Where(m => m.CurrentPP >= ScalePP(1500))) + (p.Hp < 7 ? 2 : 0) - 2,

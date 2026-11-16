@@ -439,15 +439,15 @@ public static class TutorialLessons
         new()
         {
             Id = "advanced", Icon = "compass", Title = "進階：PP 門檻、格擋與雙色卡",
-            Summary = "PP 門檻以目前 PP 判定；直立具格擋的怪物首戰改為橫置存活；雙色卡屬於兩個意志。",
-            Topics = ["PP 10 以下／PP 18 以上", "直立格擋橫置存活", "連續攻擊擊破", "雙色卡"],
+            Summary = "PP 歸零的怪物會直接被消滅；直立具格擋的怪物首戰改為橫置存活；雙色卡屬於兩個意志。",
+            Topics = ["PP 歸零直接消滅", "本回合降 PP 與 PP 18 以上", "直立格擋橫置存活", "連續攻擊擊破", "雙色卡"],
             Scene = new(
                 new() { Hand = ["WCG-246"], Deck = Deck(), Energy = 4, Board = [new("WCG-154", 1), new("WCG-155", 2)] },
                 new() { Deck = Deck(), Energy = 1, Board = [new("WCG-119", 0), new("WCG-063", 1), new("WCG-031", 2), new("WCG-101", 4)] }),
             Steps =
             [
-                new() { Title = "門檻判定", Spot = ["enemy-card:WCG-119", "enemy-card:WCG-101"],
-                    Text = "卡牌上的 PP 門檻主要為 PP 10 以下或 PP 18 以上，全部以怪物目前的 PP 判定；另一類則看印刷費用（如費用 2 以下）。" },
+                new() { Title = "降 PP 與門檻", Spot = ["enemy-card:WCG-119", "enemy-card:WCG-101"],
+                    Text = "怪物當前 PP 降到 0 時會直接被消滅並觸發陣亡（且不被格擋阻擋）；另一類則看 PP 18 以上或印刷費用（如費用 2 以下）。" },
                 new() { Title = "第一次攻擊", Spot = ["own-card:WCG-154", "enemy-card:WCG-031"], Allow = [Attack("WCG-154", "WCG-031")],
                     Done = e => Unit(e.Player, "WCG-154")?.IsTapped == true && Unit(e.Computer, "WCG-031") is { IsTapped: true } && OnField(e.Computer, "WCG-031") && Settled(e),
                     Text = "「{0}」有嘲諷，左邊的「{1}」用箭頭給它格擋。用「{2}」（{3} PP）攻擊它時，直立的「{0}」會靠格擋改為橫置並存活。", TextValues = [CardName("WCG-031"), CardName("WCG-063"), CardName("WCG-154"), OwnPP("WCG-154")],
@@ -456,9 +456,9 @@ public static class TutorialLessons
                     Done = e => !OnField(e.Computer, "WCG-031") && Settled(e),
                     Text = "「{0}」現在已經橫置，這回合無法再格擋。再用「{1}」攻擊，這次就能消滅它。", TextValues = [CardName("WCG-031"), CardName("WCG-155")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
-                new() { Title = "看門檻選目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
+                new() { Title = "用降 PP 消滅目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
-                    Text = "「{0}」的效果：{1} 「{2}」PP 太高不能選，請選「{3}」。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-119"), CardName("WCG-101")],
+                    Text = "「{0}」的效果：{1} 「{2}」的 PP 超過 10 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-119"), CardName("WCG-101")],
                     Hint = "請打出「{0}」並選擇「{1}」。", HintValues = [CardName("WCG-246"), CardName("WCG-101")] },
                 new() { Title = "本課重點",
                     Text = "雙色卡同時屬於兩個意志，只能放進主色與副色剛好是這兩個意志的牌組，也同時滿足兩個意志的條件。天梯對手牌組會用到這些新機制，牌位越高越常見。" }
