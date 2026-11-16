@@ -139,11 +139,11 @@ public class SimplifiedRulesTests
 
     [Fact] public void CounterDamageCannotBeCountered()
     {
-        var g=Game();var trap=Hand(g,195);var yeti=Unit(g.Computer,114,2);
+        var g=Game();var blood=Hand(g,366);var yeti=Unit(g.Computer,114,2);var enemyHp=g.Computer.Hp;
         for(int i=0;i<6;i++)g.Computer.EnergyZone.Add(new(cards.GetCard("WCG-101")!));g.Computer.Hand.Add(new(cards.GetCard("WCG-196")!));
         ComputerTurn(g);Assert.True(g.Attack(g.Computer,yeti));
-        Choose(g,o=>o.Id==trap.InstanceId.ToString());
-        Assert.DoesNotContain(yeti,g.Computer.Field);Assert.False(g.IsWaiting); // 2200 PP ≥ 1800: 1 damage, and the enemy can't counter it.
+        Choose(g,o=>o.Id==blood.InstanceId.ToString());
+        Assert.Equal(enemyHp-1,g.Computer.Hp);Assert.False(g.IsWaiting); // Counter damage cannot be countered.
         Assert.Contains(g.Computer.Hand,c=>c.Card.Id=="WCG-196");
     }
 }

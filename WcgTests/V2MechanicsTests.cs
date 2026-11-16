@@ -690,6 +690,25 @@ public class V2MechanicsTests
         var enemy = Unit(g4.Computer, "WCG-101", 0);
         Assert.True(g4.Attack(g4.Player, u1, enemy));
         Assert.DoesNotContain(enemy, g4.Computer.Field);
+
+        // 5. DamageCounters 版本旗標對 v2.1、v1.x 與舊蓋牌反擊時代維持正確判定，且 v2.1 WCG-195 不再造成追加傷害
+        var v21Engine = new GameEngine(cards, new Random(1));
+        Assert.True(v21Engine.DamageCounters);
+        var beforeV2 = CardBalanceHistory.BeforeV2(cards);
+        Assert.True(new GameEngine(beforeV2, new Random(1)).DamageCounters);
+        var beforeDc = CardBalanceHistory.BeforeDamageCounters(beforeV2);
+        Assert.False(new GameEngine(beforeDc, new Random(1)).DamageCounters);
+
+        var g195 = Game();
+        var trap = Hand(g195, "WCG-195");
+        var bigFoe = Unit(g195.Computer, "WCG-114", 0); // 19 PP >= 18
+        var foeHpBefore = g195.Computer.Hp;
+        Assert.True(g195.EndTurn());
+        while (g195.CurrentPendingChoice is { } ch195) Assert.True(g195.SelectChoice(ch195.Options.Last()));
+        Assert.True(g195.Attack(g195.Computer, bigFoe));
+        Choose(g195, o => o.Id == trap.InstanceId.ToString());
+        Assert.DoesNotContain(bigFoe, g195.Computer.Field);
+        Assert.Equal(foeHpBefore, g195.Computer.Hp);
     }
 
     [Fact]

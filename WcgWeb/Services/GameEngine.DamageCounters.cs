@@ -4,8 +4,8 @@ namespace WcgWeb.Services;
 
 public partial class GameEngine
 {
-    // Catalog wording also selects the rules for old ranked journals. No existing save is rewritten.
-    public bool DamageCounters => _cardDb.GetCard("WCG-195")?.Text is { } t && (t.Contains("受到", StringComparison.Ordinal) || t.Contains("受怪物傷害", StringComparison.Ordinal));
+    // Catalog version flag selects the rules for old ranked journals. No existing save is rewritten.
+    public bool DamageCounters => CardBalanceHistory.DamageCountersCatalog(_cardDb);
     private sealed record DamageSource(PlayerState Owner, CardDefinition Card, MonsterInstance? Unit, string Kind);
     private sealed class DamageContext(PlayerState recipient, int lostHp, DamageSource? source)
     {
@@ -102,7 +102,7 @@ public partial class GameEngine
             // If the monster already left the board, the counter only cancels the damage.
             var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? ThresholdPP(source!) : 0;
             Resolve(() => ReverseDamage(damage), () => { if (killable) KillBatch([source!], card.Card.Name); },
-                () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= (V2Rules ? 18 : 1800)) SpellDamage(p, enemy, 1, card.Card); } else if (!V2Rules && CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
+                () => { if (card.Card.Id == "WCG-195") { if (!V21Rules && killable && pp >= (V2Rules ? 18 : 1800)) SpellDamage(p, enemy, 1, card.Card); } else if (!V2Rules && CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
             return;
         }
         switch (card.Card.Id)

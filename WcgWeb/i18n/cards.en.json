@@ -1445,8 +1445,8 @@
   "WCG-195": {
     "zh": "熔火爆炸陷阱",
     "name": "Molten Blast Trap",
-    "text": "[Counter] On monster damage: Cancel it and destroy the attacker; if it has 18 PP or more, deal 1 damage to the enemy player.",
-    "zh_text": "【反擊】受怪物傷害：抵銷並消滅；若 PP 18 以上，對敵方玩家造成 1 傷害。",
+    "text": "[Counter] On monster damage: Cancel the damage and destroy that monster.",
+    "zh_text": "【反擊】受怪物傷害時：抵銷傷害並消滅該怪物。",
     "prev": {
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它印刷 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 printed PP or more, deal 1 damage to the enemy player."
