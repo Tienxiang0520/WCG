@@ -353,12 +353,12 @@
   "WCG-048": {
     "zh": "巨熊咆哮",
     "name": "Ursine Roar",
-    "text": "Destroy 1 enemy monster with PP ≤ (your monster count × 5), then draw 1 card.",
+    "text": "If you control a monster, destroy 1 enemy monster with PP 10 or less, then draw 1 card.",
     "prev": {
       "消滅 1 隻 PP 不高於（己方場上怪物數 × 500）的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with PP at or below (the number of monsters you have × 500), then draw 1 card.",
       "消滅 1 隻印刷 PP 不高於（己方場上怪物數 × 500）的敵方怪物，然後抽 1 張牌。": "Destroy 1 enemy monster with printed PP at or below (the number of monsters you have × 500), then draw 1 card."
     },
-    "zh_text": "消滅 1 隻 PP ≤（己怪數 × 5）的敵怪，抽 1 張牌。"
+    "zh_text": "己場有怪物時，消滅 1 隻 PP 10 以下的敵怪，抽 1 張牌。"
   },
   "WCG-049": {
     "zh": "鐵木樹人",
@@ -540,8 +540,8 @@
   "WCG-072": {
     "zh": "淨化聖光",
     "name": "Purifying Light",
-    "text": "Silence 1 monster, then draw 1 card.",
-    "zh_text": "沉默 1 隻怪物，抽 1 張牌。"
+    "text": "Dispel 1 monster or 1 enchantment, then draw 1 card.",
+    "zh_text": "驅散 1 隻怪物或 1 個結界，抽 1 張牌。"
   },
   "WCG-073": {
     "zh": "榮耀護衛官",
@@ -1082,8 +1082,8 @@
   "WCG-143": {
     "zh": "甦生甘霖",
     "name": "Reviving Downpour",
-    "text": "Attach: Untap a tapped monster (it cannot attack players this turn); +5 PP on its next combat, then put this card into the graveyard.",
-    "zh_text": "附著：橫置怪轉直立且本回合不能攻擊玩家，下一次交戰 PP +5，戰後送墓。",
+    "text": "Prep 1 tapped monster; Attach: +5 PP, graveyard after combat.",
+    "zh_text": "令 1 隻橫置怪物備戰；附著：此怪 PP +5，戰後送墓。",
     "prev": {
       "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard."
     }
@@ -1097,8 +1097,8 @@
   "WCG-145": {
     "zh": "逆流法師",
     "name": "Countertide Mage",
-    "text": "Deploy: Choose One: Dispel 1 monster; or untap 1 monster (it cannot attack players this turn).",
-    "zh_text": "進場：抉擇：驅散 1 隻怪物；或令 1 隻怪物轉直立且本回合不能攻擊玩家。"
+    "text": "Deploy: Choose One: Dispel 1 monster; or prep 1 monster.",
+    "zh_text": "進場：抉擇：驅散 1 隻怪物；或令 1 隻怪物備戰。"
   },
   "WCG-146": {
     "zh": "荊棘巨龜",
@@ -1109,8 +1109,8 @@
   "WCG-147": {
     "zh": "聖堂仲裁護衛",
     "name": "Temple Arbiter Guard",
-    "text": "[Arrow: ←] Allied monster gains Block. [Arrow: ↑] Enemy monster loses Block and can't gain Block.",
-    "zh_text": "← 友軍獲得格擋；↑ 敵怪失去且不能獲得格擋。",
+    "text": "[Arrow: ←] Allied monster gains Block. [Arrow: ↑] Enemy monster gets -3 PP.",
+    "zh_text": "← 友軍獲得格擋；↑ 敵怪 PP -3。",
     "prev": {
       "【箭頭：← ↑】左側相鄰的己方怪物具有聖盾；正對面的敵方怪物失去聖盾。": "[Arrow: ← ↑] Your adjacent monster on the left has Holy Shield. The enemy monster directly opposite loses Holy Shield.",
       "【箭頭：← ↑】← 指向的怪物獲得 1 個聖盾指示物（開始指向時）；↑ 指向的怪物移除所有聖盾指示物，且不能獲得新的。": "[Arrows: ← ↑] The monster ← points at gets 1 Holy Shield counter (when the arrow starts pointing at it); the monster ↑ points at loses all Holy Shield counters and can't get new ones.",
@@ -1228,8 +1228,8 @@
   "WCG-165": {
     "zh": "血祭狂暴",
     "name": "Blood Sacrifice Frenzy",
-    "text": "Cost: Lose 1 life. Attach: +6 PP and Trample on next combat, then put this card into the graveyard.",
-    "zh_text": "代價：失去 1 生命。附著：下一次交戰 PP +6 且獲得貫穿，戰後送墓。",
+    "text": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
+    "zh_text": "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。",
     "prev": {
       "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard."
     }
@@ -1243,14 +1243,14 @@
   "WCG-167": {
     "zh": "萌芽喚醒",
     "name": "Sprouting Awakening",
-    "text": "Untap 1 tapped monster; it cannot attack players this turn.",
-    "zh_text": "令 1 隻橫置的怪物轉直立，它本回合不能攻擊玩家。"
+    "text": "Prep 1 tapped monster.",
+    "zh_text": "令 1 隻橫置的怪物備戰。"
   },
   "WCG-168": {
     "zh": "正義壓制",
     "name": "Righteous Suppression",
-    "text": "Attach: -5 PP on next combat, then put this card into the graveyard.",
-    "zh_text": "附著：下一次交戰 PP -5，戰後送墓。",
+    "text": "Attach: -5 PP, graveyard after combat.",
+    "zh_text": "附著：此怪 PP -5，戰後送墓。",
     "prev": {
       "附著：怪物 PP -500。它交戰後，此卡送入墓地。": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard."
     }
@@ -1402,7 +1402,7 @@
     "zh": "聖堂集結號角",
     "name": "Temple Rally Horn",
     "text": "Look at the top 3 cards of your deck, add 1 [Order] monster to hand; if you control an [Order] monster, attach: Block.",
-    "zh_text": "看牌庫頂 3 張，選 1 張秩序怪入手；己場有秩序怪時，附著於 1 隻怪：獲得格擋。",
+    "zh_text": "看牌庫頂 3 張，選 1 張秩序怪入手；己場有秩序怪時，附著 1 怪：獲得格擋。",
     "prev": {
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
@@ -1446,7 +1446,7 @@
     "zh": "熔火爆炸陷阱",
     "name": "Molten Blast Trap",
     "text": "[Counter] On monster damage: Cancel it and destroy the attacker; if it has 18 PP or more, deal 1 damage to the enemy player.",
-    "zh_text": "【反擊】受到怪物傷害時：抵銷並消滅它；若它 PP 18 以上，對敵方玩家造成 1 傷害。",
+    "zh_text": "【反擊】受怪物傷害時：抵銷並消滅它；若它 PP 18 以上，對敵造成 1 傷害。",
     "prev": {
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它印刷 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 printed PP or more, deal 1 damage to the enemy player."
@@ -1539,8 +1539,8 @@
   "WCG-206": {
     "zh": "纏根束縛",
     "name": "Rootbind",
-    "text": "Silence 1 Taunt monster.",
-    "zh_text": "沉默 1 隻嘲諷怪物。"
+    "text": "Tap 1 Taunt monster; it gets -5 PP this turn.",
+    "zh_text": "橫置 1 隻嘲諷怪物，本回合 PP -5。"
   },
   "WCG-207": {
     "zh": "蝕骨詛咒",
@@ -1554,8 +1554,8 @@
   "WCG-208": {
     "zh": "寂靜禁咒",
     "name": "Hush Hex",
-    "text": "Silence 1 monster.",
-    "zh_text": "沉默 1 隻怪物。",
+    "text": "Dispel 1 monster; it gets -5 PP this turn.",
+    "zh_text": "驅散 1 隻怪物，使它本回合 PP -5。",
     "prev": {
       "沉默 1 隻尚未被沉默的敵方怪物（將此卡附著其上）。": "Silence 1 enemy monster that is not already silenced (attach this card to it)."
     }
@@ -1816,12 +1816,12 @@
   "WCG-248": {
     "zh": "蠻荒踐踏",
     "name": "Primal Trample",
-    "text": "Choose 1 ally [Life] monster, destroy 1 enemy monster with less PP than it.",
+    "text": "Have 1 ally [Life] monster duel 1 enemy monster.",
     "prev": {
       "選 1 隻己方生機怪物，消滅 1 隻 PP 比它低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less PP than it.",
       "選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP."
     },
-    "zh_text": "選 1 隻己方生機怪，消滅 1 隻 PP 比它低的敵怪。"
+    "zh_text": "令 1 隻己方生機怪與 1 隻敵怪決鬥。"
   },
   "WCG-249": {
     "zh": "墓穴守門人",
@@ -1973,8 +1973,8 @@
   "WCG-271": {
     "zh": "決鬥之劍",
     "name": "Dueling Blade",
-    "text": "Attach: +4 PP on next combat, then put this card into the graveyard.",
-    "zh_text": "附著：下一次交戰 PP +4，戰後送墓。"
+    "text": "Attach: +4 PP, graveyard after combat.",
+    "zh_text": "附著：此怪 PP +4，戰後送墓。"
   },
   "WCG-272": {
     "zh": "終局騎士團長",
@@ -2046,8 +2046,8 @@
   "WCG-284": {
     "zh": "凋萎觸鬚",
     "name": "Withering Tendril",
-    "text": "Attach: -7 PP on next combat, then put this card into the graveyard.",
-    "zh_text": "附著：下一次交戰 PP -7，戰後送墓。"
+    "text": "Attach: -7 PP, graveyard after combat.",
+    "zh_text": "附著：此怪 PP -7，戰後送墓。"
   },
   "WCG-285": {
     "zh": "腐蝕號角手",
@@ -2105,8 +2105,8 @@
   "WCG-294": {
     "zh": "堅守號角",
     "name": "Horn of Holding",
-    "text": "Untap all ally monsters and give them +3 PP this turn; they cannot attack players this turn.",
-    "zh_text": "令所有己方橫置怪物轉直立並在本回合獲得 PP +3；它們本回合不能攻擊玩家。",
+    "text": "Prep all tapped ally monsters and give them +3 PP this turn.",
+    "zh_text": "所有己方橫置怪物備戰，本回合 PP +3。",
     "prev": {
       "將你所有橫置的怪物轉為直立；它們本回合不能攻擊。": "Untap all your tapped monsters. They can't attack this turn."
     }
@@ -2351,8 +2351,8 @@
   "WCG-331": {
     "zh": "借刀之術",
     "name": "Borrowed Blade",
-    "text": "Take control of 1 enemy monster with 18 PP or less until end of turn and untap it.",
-    "zh_text": "奪取 1 隻 PP 18 以下敵怪直到回合結束，轉直立。",
+    "text": "Take control of 1 enemy monster with cost 4 or less until end of turn and untap it.",
+    "zh_text": "奪取 1 隻費用 4 以下敵怪直到回合結束，轉直立。",
     "prev": {
       "取得 1 隻印刷 PP 1800 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。": "Gain control of 1 enemy monster with printed PP 1800 or less until end of turn; ready it, and it can attack this turn."
     }
@@ -2842,8 +2842,8 @@
   "WCG-392": {
     "zh": "再起戰吼",
     "name": "Rallying Warcry",
-    "text": "Untap 1 monster; this turn it gets +3 PP and cannot attack players.",
-    "zh_text": "令 1 隻怪物轉直立，本回合 PP +3 且不能攻擊玩家。",
+    "text": "Prep 1 monster and give it +3 PP this turn.",
+    "zh_text": "令 1 隻怪物備戰，本回合 PP +3。",
     "prev": {
       "將 1 隻己方怪物轉為直立，它 PP +300 直到回合結束。": "Ready 1 of your monsters. It gets +300 PP until end of turn."
     }
