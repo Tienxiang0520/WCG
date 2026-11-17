@@ -83,8 +83,8 @@
   "WCG-009": {
     "zh": "阿曼尼狂戰士",
     "name": "Amani Berserker",
-    "text": "Gets +2 PP for each enemy monster.",
-    "zh_text": "敵方場上每有 1 隻怪物，此怪 PP +2。"
+    "text": "While the enemy has 3+ monsters, this monster gets +6 PP.",
+    "zh_text": "敵方有 3 隻以上怪物時，此怪 PP +6。"
   },
   "WCG-010": {
     "zh": "戰鬥狂怒",
@@ -180,14 +180,14 @@
   "WCG-022": {
     "zh": "伺機待發",
     "name": "Lie in Wait",
-    "text": "Look at the top 3 cards of your deck, add 1 spell to hand, put the rest on the bottom.",
-    "zh_text": "看牌庫頂 3 張，選 1 張法術牌入手，其餘置底。"
+    "text": "Tutor a spell.",
+    "zh_text": "檢索法術。"
   },
   "WCG-023": {
     "zh": "靈光學徒",
     "name": "Lumen Apprentice",
-    "text": "Whenever you cast a spell, look at the top card of your deck; you may put it on the bottom.",
-    "zh_text": "每當你施放法術，看牌庫頂 1 張，可將它置底。"
+    "text": "Whenever you cast a spell, this monster gets +3 PP this turn.",
+    "zh_text": "每當你施放法術，此怪本回合 PP +3。"
   },
   "WCG-024": {
     "zh": "寒霜禁錮",
@@ -396,8 +396,8 @@
   "WCG-054": {
     "zh": "原始印記",
     "name": "Primal Mark",
-    "text": "Look at the top 5 cards of your deck, add up to 2 monsters to hand, put the rest on the bottom.",
-    "zh_text": "看牌庫頂 5 張，選至多 2 張怪物牌入手，其餘置底。"
+    "text": "Tutor a monster, then draw 1 card.",
+    "zh_text": "檢索怪物，抽 1 張牌。"
   },
   "WCG-055": {
     "zh": "沼澤巨鱷",
@@ -407,8 +407,8 @@
   "WCG-056": {
     "zh": "生態同調",
     "name": "Ecological Attunement",
-    "text": "Look at the top 3 cards of your deck, add 1 monster with cost 2 or less to hand, put the rest on the bottom.",
-    "zh_text": "看牌庫頂 3 張，選 1 張費用 2 以下怪物牌入手，其餘置底。"
+    "text": "Tutor a [Life] monster.",
+    "zh_text": "檢索生機怪物。"
   },
   "WCG-057": {
     "zh": "遠古守護者",
@@ -424,8 +424,8 @@
   "WCG-059": {
     "zh": "蓋亞暴龍",
     "name": "Gaia Tyrant",
-    "text": "Bypass (enemy Taunt monsters with 18 PP or more can still block it).",
-    "zh_text": "越陣（PP 18 以上的敵方嘲諷仍可阻擋）。",
+    "text": "Bypass.",
+    "zh_text": "越陣。",
     "prev": {
       "PP 1100 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。": "Enemy Taunt monsters with 1100 PP or less can't block this monster (it may attack past them, including the player).",
       "PP 1800 以下的敵方嘲諷怪物擋不住此怪物（可以越過它們攻擊其他怪物或玩家）。": "Enemy Taunt monsters with 1800 PP or less can't block this monster (it may attack past them, including the player).",
@@ -719,8 +719,8 @@
   "WCG-091": {
     "zh": "哀慟女妖",
     "name": "Wailing Banshee",
-    "text": "Deploy: All enemy monsters get -10 PP this turn.",
-    "zh_text": "進場：所有敵怪本回合 PP -10。",
+    "text": "Deploy: All enemy monsters get -5 PP this turn.",
+    "zh_text": "進場：所有敵怪本回合 PP -5。",
     "prev": {
       "進場：消滅所有 PP 600 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 600 PP or less.",
       "進場：消滅所有 PP 900 以下的敵方怪物。": "Deploy: Destroy all enemy monsters with 900 PP or less.",
@@ -949,8 +949,8 @@
   "WCG-122": {
     "zh": "傭兵號召",
     "name": "Call to Arms",
-    "text": "Look at the top 5 cards of your deck, add 1 monster to hand, put the rest on the bottom.",
-    "zh_text": "看牌庫頂 5 張，選 1 張怪物牌入手，其餘置底。"
+    "text": "Tutor a monster.",
+    "zh_text": "檢索怪物。"
   },
   "WCG-123": {
     "zh": "終焉彗星",
@@ -967,8 +967,8 @@
   "WCG-125": {
     "zh": "思維星軌",
     "name": "Starpath of Thought",
-    "text": "Tap: Look at the top 2 cards of your deck, keep 1 on top and put 1 on the bottom.",
-    "zh_text": "橫置：看牌庫頂 2 張，1 張放牌庫頂、1 張置底。"
+    "text": "Tap: Draw 1, discard 1.",
+    "zh_text": "橫置：抽 1 棄 1。"
   },
   "WCG-126": {
     "zh": "遠古母樹根鬚",
@@ -997,8 +997,8 @@
   "WCG-130": {
     "zh": "觀星學徒",
     "name": "Stargazer Apprentice",
-    "text": "Deploy: Draw 1 card, then put 1 card from hand on the bottom of your deck.",
-    "zh_text": "進場：抽 1 張牌，將 1 張手牌置底。"
+    "text": "Deploy: Draw 1, discard 1.",
+    "zh_text": "進場：抽 1 棄 1。"
   },
   "WCG-131": {
     "zh": "棘刺巨蛋",
@@ -1055,8 +1055,8 @@
   "WCG-138": {
     "zh": "暗影伏擊者",
     "name": "Shadow Ambusher",
-    "text": "Charge. Deploy: If you control another [Abyss] monster, deal 1 damage to the enemy player.",
-    "zh_text": "衝鋒；進場：橫置對手 1 點直立能量。"
+    "text": "Charge. Deploy: Mill 2.",
+    "zh_text": "衝鋒；進場：送墓 2。"
   },
   "WCG-139": {
     "zh": "次元回溯",
@@ -1120,14 +1120,14 @@
   "WCG-148": {
     "zh": "墓園守夜人",
     "name": "Graveyard Nightwatch",
-    "text": "Whenever another ally monster is destroyed, tap 1 untapped enemy energy.",
-    "zh_text": "每當另一隻己怪被消滅，橫置對手 1 點直立能量。"
+    "text": "Whenever another ally monster is destroyed, heal 1 life.",
+    "zh_text": "每當另一隻己怪被消滅，回復 1 生命。"
   },
   "WCG-149": {
     "zh": "靈魂集市",
     "name": "Soul Bazaar",
-    "text": "Tap: Put 1 card from hand on the bottom of your deck, draw 1 card, and recover 1 life.",
-    "zh_text": "橫置：將 1 張手牌置底，抽 1 張牌並回復 1 生命。"
+    "text": "Tap: Draw 1, discard 1, heal 1 life.",
+    "zh_text": "橫置：抽 1 棄 1，回復 1 生命。"
   },
   "WCG-150": {
     "zh": "自爆發條偶",
@@ -1237,8 +1237,8 @@
   "WCG-166": {
     "zh": "思維置換",
     "name": "Mind Swap",
-    "text": "Put 1 card from hand on the bottom of your deck, then draw 1 card.",
-    "zh_text": "將 1 張手牌置於牌庫底，抽 1 張牌。"
+    "text": "Draw 1, discard 1.",
+    "zh_text": "抽 1 棄 1。"
   },
   "WCG-167": {
     "zh": "萌芽喚醒",
@@ -1335,8 +1335,8 @@
   "WCG-180": {
     "zh": "戰歌號令",
     "name": "Warsong Command",
-    "text": "Look at the top 3 cards of your deck, add 1 [Fury] monster and 1 [Fury] spell to hand, put the rest on the bottom.",
-    "zh_text": "看牌庫頂 3 張，選狂怒怪物與狂怒法術各 1 張入手，其餘置底。"
+    "text": "Tutor a [Fury] card, then draw 1 card.",
+    "zh_text": "檢索狂怒牌，抽 1 張牌。"
   },
   "WCG-181": {
     "zh": "赤誓戰鼓手",
@@ -1350,8 +1350,8 @@
   "WCG-182": {
     "zh": "血怒百夫長",
     "name": "Bloodrage Centurion",
-    "text": "Charge. Gets +2 PP for each other ally [Fury] monster.",
-    "zh_text": "衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +2。",
+    "text": "Charge. While you control another [Fury] monster, this monster gets +4 PP.",
+    "zh_text": "衝鋒；己場有其他狂怒怪物時，此怪 PP +4。",
     "prev": {
       "衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +3。": "Charge. Gets +3 PP for each other ally [Fury] monster."
     }
@@ -1359,8 +1359,8 @@
   "WCG-183": {
     "zh": "觀星占卜師",
     "name": "Stargazing Diviner",
-    "text": "Deploy: Look at the top 3 cards of your deck, add 1 spell to hand, put the rest on the bottom.",
-    "zh_text": "進場：看牌庫頂 3 張，選 1 張法術牌入手，其餘置底。"
+    "text": "Deploy: Tutor a spell.",
+    "zh_text": "進場：檢索法術。"
   },
   "WCG-184": {
     "zh": "奧術共鳴波",
@@ -1383,8 +1383,8 @@
   "WCG-186": {
     "zh": "母樹共鳴",
     "name": "Mother Tree Resonance",
-    "text": "Look at the top 3 cards of your deck, add 1 [Life] monster to hand; if you control a [Life] Ward, draw 1 more.",
-    "zh_text": "看牌庫頂 3 張，選 1 張生機怪物入手；己場有生機結界時再抽 1。"
+    "text": "Tutor a [Life] monster.",
+    "zh_text": "檢索生機怪物。"
   },
   "WCG-187": {
     "zh": "翠綠喚獸師",
@@ -1401,8 +1401,8 @@
   "WCG-189": {
     "zh": "聖堂集結號角",
     "name": "Temple Rally Horn",
-    "text": "Look at the top 3 cards of your deck, add 1 [Order] monster to hand; if you control an [Order] monster, attach: Block.",
-    "zh_text": "看牌庫頂 3 張，選 1 秩序怪入手；己場有秩序怪時，附著於 1 隻怪：獲得格擋。",
+    "text": "Tutor an [Order] monster, then heal 1 life.",
+    "zh_text": "檢索秩序怪物，回復 1 生命。",
     "prev": {
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
@@ -1427,8 +1427,8 @@
   "WCG-192": {
     "zh": "冥河引魂術",
     "name": "Styx Soulguide Rite",
-    "text": "Look at the top 3 cards of your deck, add 1 [Abyss] monster to hand, put the rest into your graveyard.",
-    "zh_text": "看牌庫頂 3 張，選 1 張深淵怪物入手，其餘送墓。"
+    "text": "Tutor an [Abyss] monster, mill 2.",
+    "zh_text": "檢索深淵怪物，送墓 2。"
   },
   "WCG-193": {
     "zh": "噬魂死靈術士",
@@ -1578,20 +1578,20 @@
   "WCG-211": {
     "zh": "思緒潰散",
     "name": "Shattered Thoughts",
-    "text": "Put the top 3 cards of your opponent's deck into their graveyard.",
-    "zh_text": "將對手牌庫頂 3 張牌送入墓地。"
+    "text": "Mill 3, then draw 1 card.",
+    "zh_text": "送墓 3，抽 1 張牌。"
   },
   "WCG-212": {
     "zh": "墓語竊賊",
     "name": "Gravewhisper Thief",
-    "text": "Deploy: Put the top 2 cards of your opponent's deck into their graveyard.",
-    "zh_text": "進場：將對手牌庫頂 2 張牌送入墓地。"
+    "text": "Deploy: Mill 2.",
+    "zh_text": "進場：送墓 2。"
   },
   "WCG-213": {
     "zh": "記憶吞噬者",
     "name": "Memory Devourer",
-    "text": "Taunt. End of turn: If untapped, put the top card of your opponent's deck into their graveyard.",
-    "zh_text": "嘲諷；回合結束：若此怪直立，將對手牌庫頂 1 張送墓。"
+    "text": "Taunt. End of turn: If upright, mill 1.",
+    "zh_text": "嘲諷；回合結束：若此怪直立，送墓 1。"
   },
   "WCG-214": {
     "zh": "終焉之潮",
@@ -1654,8 +1654,8 @@
   "WCG-222": {
     "zh": "共生巨蜥",
     "name": "Symbiotic Monitor",
-    "text": "Gets +3 PP for each card attached to it.",
-    "zh_text": "此怪每附著 1 張卡，PP +3。",
+    "text": "While this monster has an attachment, it gets +5 PP.",
+    "zh_text": "此怪有附著卡時，PP +5。",
     "prev": {
       "此怪每附著 1 張卡，PP +5。": "Gets +5 PP for each card attached to it."
     }
@@ -1691,8 +1691,8 @@
   "WCG-228": {
     "zh": "孤狼劍聖",
     "name": "Lone Wolf Swordmaster",
-    "text": "Gets +3 PP for each empty ally monster slot.",
-    "zh_text": "己場每有 1 個空格，此怪 PP +3。"
+    "text": "While you control no other monsters, this monster gets +9 PP.",
+    "zh_text": "己場沒有其他怪物時，此怪 PP +9。"
   },
   "WCG-229": {
     "zh": "虛空隱士",
@@ -1727,8 +1727,8 @@
   "WCG-234": {
     "zh": "腐木巨像",
     "name": "Rotwood Colossus",
-    "text": "Taunt. Costs 1 less for every 3 monsters in your graveyard (minimum 2).",
-    "zh_text": "嘲諷；墓地每有 3 隻怪物，此卡費用 -1（最低 2 費）。"
+    "text": "Taunt.",
+    "zh_text": "嘲諷。"
   },
   "WCG-235": {
     "zh": "屍花",
@@ -1988,8 +1988,8 @@
   "WCG-273": {
     "zh": "林語抄寫員",
     "name": "Sylvan Scribe",
-    "text": "Gets +1 PP for each card in your hand (up to +5).",
-    "zh_text": "你每有 1 張手牌，此怪 PP +1（最多 +5）。"
+    "text": "While you have 4+ cards in hand, this monster gets +4 PP.",
+    "zh_text": "手牌 4 張以上時，此怪 PP +4。"
   },
   "WCG-274": {
     "zh": "年輪守望者",
@@ -2351,8 +2351,8 @@
   "WCG-331": {
     "zh": "借刀之術",
     "name": "Borrowed Blade",
-    "text": "Take control of 1 enemy monster with cost 4 or less until end of turn and untap it.",
-    "zh_text": "奪取 1 隻費用 4 以下敵怪直到回合結束，轉直立。",
+    "text": "Have 2 enemy monsters duel.",
+    "zh_text": "令 2 隻敵怪決鬥。",
     "prev": {
       "取得 1 隻印刷 PP 1800 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。": "Gain control of 1 enemy monster with printed PP 1800 or less until end of turn; ready it, and it can attack this turn."
     }
@@ -2366,8 +2366,8 @@
   "WCG-333": {
     "zh": "奪心術士",
     "name": "Mindthief Adept",
-    "text": "Deploy: Take control of 1 enemy monster with 10 PP or less until end of turn and untap it.",
-    "zh_text": "進場：奪取 1 隻 PP 10 以下敵怪直到回合結束，轉直立。",
+    "text": "Deploy: You may have 2 enemy monsters duel.",
+    "zh_text": "進場：可令 2 隻敵怪決鬥。",
     "prev": {
       "進場：取得 1 隻印刷 PP 1200 以下的敵方怪物的控制權直到回合結束；它轉為直立，本回合可以攻擊。若敵方沒有怪物，改為抽 1 張牌。": "On deploy: gain control of 1 enemy monster with printed PP 1200 or less until end of turn; ready it, and it can attack this turn. If the enemy has no monsters, draw 1 card instead."
     }
@@ -2471,8 +2471,8 @@
   "WCG-347": {
     "zh": "列隊亡兵",
     "name": "Ranked Dead Soldier",
-    "text": "Gets +3 PP for every 5 cards in your graveyard. [Arrows: ← →] Allied monsters get +2 PP.",
-    "zh_text": "墓地每有 5 張牌，此怪 PP +3。←→ 友軍 PP +2。",
+    "text": "[Arrows: ← →] Allied monsters get +2 PP.",
+    "zh_text": "←→ 友軍 PP +2。",
     "prev": {
       "你的墓地每有 5 張牌，此怪物 PP +300；【箭頭：← →】箭頭指向的怪物 PP +200。": "This monster gets +300 PP for every 5 cards in your graveyard. [Arrow: ← →] The monsters the arrows point at get +200 PP."
     }
@@ -2580,8 +2580,8 @@
   "WCG-362": {
     "zh": "擠枝新芽",
     "name": "Squeezing Sprout",
-    "text": "Can only be placed in an empty slot between two ally monsters. [Arrows: ← →] Allied monsters get +3 PP.",
-    "zh_text": "只能放進兩隻己怪之間的空格。←→ 友軍 PP +3。",
+    "text": "[Arrows: ← →] Allied monsters get +2 PP.",
+    "zh_text": "←→ 友軍 PP +2。",
     "prev": {
       "從手牌召喚時，只能放在兩隻己方怪物之間的空格。【箭頭：← →】箭頭指向的怪物 PP +300。": "When summoned from hand, it can only be put into an empty slot between two of your monsters. [Arrow: ← →] The monsters the arrows point at get +300 PP."
     }
@@ -2661,8 +2661,8 @@
   "WCG-371": {
     "zh": "誓血軍旗手",
     "name": "Bloodoath Standard-Bearer",
-    "text": "[Arrows: ← →] Allied monsters get +2 PP, plus +2 PP for each life you are behind your opponent.",
-    "zh_text": "←→ 友軍 PP +2；你的生命每比對手少 1 點，再 +2。",
+    "text": "[Arrows: ← →] Allied monsters get +2 PP (+4 while your life is 3 or less).",
+    "zh_text": "←→ 友軍 PP +2；你的生命 3 以下時改為 +4。",
     "prev": {
       "【箭頭：← →】箭頭指向的怪物 PP +200；你的生命每比對手少 1 點，再 +200。": "[Arrow: ← →] The monsters the arrows point at get +200 PP, plus another +200 for each life you have less than your opponent."
     }
