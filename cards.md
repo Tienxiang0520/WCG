@@ -43,9 +43,9 @@ source: WcgWeb/Data/cards.json
 | WCG-151 | 熔火鍛爐 | 結界 | 2 | — | — | — | 橫置：使 1 隻怪物本回合 PP -10。 | **Molten Forge** — Tap: Give 1 monster -10 PP this turn. |
 | WCG-156 | 荒原巨槌食人魔 | 怪物 | 3 | 16 | 2 | — | 無。 | **Wasteland Maul Ogre** — None. |
 | WCG-165 | 血祭狂暴 | 法術 | 0 | — | — | — | 代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。 | **Blood Sacrifice Frenzy** — Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat. |
-| WCG-180 | 戰歌號令 | 法術 | 2 | — | — | — | 檢索狂怒牌，抽 1 張牌。 | **Warsong Command** — Tutor a [Fury] card, then draw 1 card. |
+| WCG-180 | 戰歌號令 | 法術 | 3 | — | — | — | 檢索狂怒牌，抽 1 張牌。 | **Warsong Command** — Tutor a [Fury] card, then draw 1 card. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
-| WCG-182 | 血怒百夫長 | 怪物 | 5 | 17 | 2 | — | 衝鋒；己場有其他狂怒怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Fury] monster, this monster gets +4 PP. |
+| WCG-182 | 血怒百夫長 | 怪物 | 5 | 15 | 2 | — | 衝鋒；己場有其他狂怒怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Fury] monster, this monster gets +4 PP. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受怪物傷害時：抵銷傷害並消滅該怪物。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel the damage and destroy that monster. |
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2，攻擊玩家時 DP +1。 | **Flame War-Rune** — Attach: Monster gets +2 PP, and +1 DP when attacking a player. |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 11 | 1 | — | 陣亡：將附著在此怪上的 1 張己方卡移回手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards attached to this monster to hand. |
@@ -217,9 +217,9 @@ source: WcgWeb/Data/cards.json
 | WCG-128 | 萬魂之井 | 結界 | 1 | — | — | — | 橫置此卡並犧牲 1 隻己怪：抽 1 張牌，對手失去 1 生命。 | **Well of Myriad Souls** — Tap this card and sacrifice 1 ally monster: Draw 1 card and your opponent loses 1 life. |
 | WCG-132 | 腐肉食腐蛛 | 怪物 | 1 | 6 | 0 | — | 劇毒。 | **Carrion Spider** — Poison. |
 | WCG-138 | 暗影伏擊者 | 怪物 | 3 | 12 | 1 | — | 衝鋒；進場：送墓 2。 | **Shadow Ambusher** — Charge. Deploy: Mill 2. |
-| WCG-148 | 墓園守夜人 | 怪物 | 2 | 11 | 0 | — | 每當另一隻己怪被消滅，回復 1 生命。 | **Graveyard Nightwatch** — Whenever another ally monster is destroyed, heal 1 life. |
+| WCG-148 | 墓園守夜人 | 怪物 | 3 | 9 | 0 | — | 每當另一隻己怪被消滅，回復 1 生命。 | **Graveyard Nightwatch** — Whenever another ally monster is destroyed, heal 1 life. |
 | WCG-169 | 暗影獻祭 | 法術 | 0 | — | — | — | 額外代價：犧牲 1 隻己怪。抽 1 張牌。 | **Shadow Offering** — Additional cost: sacrifice 1 ally monster. Draw 1 card. |
-| WCG-192 | 冥河引魂術 | 法術 | 2 | — | — | — | 檢索深淵怪物，送墓 2。 | **Styx Soulguide Rite** — Tutor an [Abyss] monster, mill 2. |
+| WCG-192 | 冥河引魂術 | 法術 | 4 | — | — | — | 檢索深淵怪物，送墓 2。 | **Styx Soulguide Rite** — Tutor an [Abyss] monster, mill 2. |
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 11 | 1 | — | 進場：可犧牲另 1 隻己方深淵怪，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another ally [Abyss] monster to draw 2 cards. |
 | WCG-194 | 冥府復甦領主 | 怪物 | 5 | 21 | 2 | — | 進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。 | **Netherworld Revival Lord** — Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped. |
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它。 | **Vengeful Spirit Trap** — [Counter] On monster damage: Cancel it and destroy the attacker. |
