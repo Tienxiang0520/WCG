@@ -26,7 +26,7 @@ public partial class GameEngine
                 // 寂靜禁咒: worth casting only on an enemy whose ability matters (taunt, shield, poison or any text).
                 var hush = e.Field.Where(m => !m.IsSilenced && !m.Card.IsVanilla).Select(m => (m.IsTaunt ? 3 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + 1 + BodyValue(m) * .3).DefaultIfEmpty(-5).Max();
                 return hush - 1;
-            case "WCG-211": return Mill(3) - 1;
+            case "WCG-211": return V22Rules ? Draw(1) - 1 : Mill(3) - 1;
             case "WCG-214": return Mill(Math.Min(8, p.Graveyard.Count(x => x.Card.IsMonster))) - 2;
             case "WCG-217": return Draw(Math.Min(3, p.Field.Count(HasArrows))) - 1.5;
             case "WCG-220": return p.Field.Any(m => !m.HasTrample && m.CurrentPP >= ScalePP(1300)) ? 3 : -3;
@@ -54,8 +54,8 @@ public partial class GameEngine
             "WCG-205" or "WCG-209" => e.Field.Any(m => m.HasShield && ShieldReady(m)) ? 3 : 0,
             "WCG-208" => e.Field.Where(m => !m.IsSilenced).Select(m => (m.IsTaunt ? 2 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + (m.Card.IsVanilla ? 0 : 1)).DefaultIfEmpty(0).Max(),
             "WCG-210" or "WCG-261" => e.Field.Any(m => m.IsTaunt) ? 2 : 0,
-            "WCG-212" => Mill(2) * .7,
-            "WCG-213" => e.Deck.Count <= 12 ? 2 : 0,
+            "WCG-212" => V22Rules ? (p.Deck.Count > 10 ? 0.5 : -2) : Mill(2) * .7,
+            "WCG-213" => V22Rules ? 0 : (e.Deck.Count <= 12 ? 2 : 0),
             "WCG-219" => p.Occupied >= 4 ? 2 : -1,
             "WCG-222" => -1,
             "WCG-227" => p.Hand.Count - 1 > e.Hand.Count ? 2 : 0,

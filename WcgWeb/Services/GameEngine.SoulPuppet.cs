@@ -90,7 +90,18 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-333":
-                if (V2Rules) PickMonster(p, "選擇 PP 10 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && ThresholdPP(x) <= 10), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
+                if (V22Rules)
+                {
+                    if (e.Field.Count < 2) break;
+                    Ask(p, "奪心術士：要令 2 隻敵怪決鬥嗎？", [new() { Id = "DUEL", Title = "令 2 隻敵怪決鬥" }, new() { Id = "SKIP", Title = "不決鬥" }], o =>
+                    {
+                        if (o.Id != "DUEL") return;
+                        PickMonster(p, "選擇第 1 隻決鬥的敵方怪物", SpellResolvePickable(p, e.Field), first =>
+                            PickMonster(p, "選擇第 2 隻決鬥的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => x != first)), second =>
+                            { if (Alive(first) && Alive(second)) Duel(p, first, second); }));
+                    });
+                }
+                else if (V2Rules) PickMonster(p, "選擇 PP 10 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && ThresholdPP(x) <= 10), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
                 else if (!e.Field.Any(x => x.IsUnit)) DrawMany(p, 1);
                 else PickMonster(p, "選擇印刷 PP 1200 以下的敵方怪物取得控制權", e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200), x => TakeControl(p, x, TurnNumber, m.Card, ready: true));
                 break;
@@ -116,7 +127,7 @@ public partial class GameEngine
         return c.Id switch
         {
             "WCG-330" => e.Field.Where(x => x.IsUnit && (x.Card.PP ?? 0) <= 1200).ToList(),
-            "WCG-331" => e.Field.Where(x => x.IsUnit && (V21Rules ? x.Card.TotalCost <= 4 : V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList(),
+            "WCG-331" => V22Rules ? [] : e.Field.Where(x => x.IsUnit && (V21Rules ? x.Card.TotalCost <= 4 : V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList(),
             "WCG-335" => e.Field.Where(x => x.IsUnit).ToList(),
             _ => GraveSpellTargets(p, c)
         };
@@ -138,7 +149,13 @@ public partial class GameEngine
                 else TakeControl(p, t, TurnNumber, source.Card, noAttack: true);
                 break;
             case "WCG-331":
-                if (t != null && Alive(t) && e.Field.Contains(t)) TakeControl(p, t, TurnNumber, source.Card, ready: true);
+                if (V22Rules)
+                {
+                    PickMonster(p, "選擇第 1 隻決鬥的敵方怪物", SpellResolvePickable(p, e.Field), first =>
+                        PickMonster(p, "選擇第 2 隻決鬥的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => x != first)), second =>
+                        { if (Alive(first) && Alive(second)) Duel(p, first, second); }));
+                }
+                else if (t != null && Alive(t) && e.Field.Contains(t)) TakeControl(p, t, TurnNumber, source.Card, ready: true);
                 break;
             case "WCG-335":
                 if (t == null || !Alive(t) || !e.Field.Contains(t) || p.Occupied >= 5) break;
@@ -196,6 +213,7 @@ public partial class GameEngine
                 if (t330.Count == 0) return -5;
                 return t330.Any(x => x.IsTapped) && SacrificeOutlet(p) ? 3 : 1.2;
             case "WCG-331":
+                if (V22Rules) return e.Field.Count < 2 ? -5 : 4.5;
                 var t331 = e.Field.Where(x => x.IsUnit && (V2Rules ? ThresholdPP(x) <= 18 : (x.Card.PP ?? 0) <= 1800)).ToList();
                 return t331.Count == 0 ? -5 : t331.Max(Steal) + 0.5;
             case "WCG-335":

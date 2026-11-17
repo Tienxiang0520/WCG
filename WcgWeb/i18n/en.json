@@ -2478,5 +2478,19 @@
   "削弱嘲諷": "Weaken Taunt",
   "狀態法術可橫置敵怪或降低其 PP。「{0}」的效果：{1} 把它拖到「{2}」上。": "Status spells can tap enemy monsters or lower their PP. {0}: {1} Drag it onto {2}.",
   "現在用 {0} PP 的「{1}」攻擊被削弱的「{2}」。": "Now attack the weakened {2} with your {0} PP {1}.",
-  "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。": "Dispel removes attached cards from a monster, or destroys an enchantment. Other status effects include graveyard-after-combat PP attachments, this-turn PP boosts, Prep, tapping monsters, and tapping the opponent's energy."
+  "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。": "Dispel removes attached cards from a monster, or destroys an enchantment. Other status effects include graveyard-after-combat PP attachments, this-turn PP boosts, Prep, tapping monsters, and tapping the opponent's energy.",
+  "進場、陣亡與免費召喚": "Deploy, On Death & Free Summons",
+  "免費召喚也觸發進場": "Free summons also trigger Deploy",
+  "「進場」在怪物進入場上時觸發（含免費召喚）；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。": "Deploy triggers whenever a monster enters play (including free summons). On Death triggers when a monster is destroyed or sacrificed to the graveyard. Whenever triggers when its condition is met. Effects resolve one by one, pausing whenever you need to choose.",
+  "「{0}」雖然是被免費召喚的，依然會觸發它的進場效果！請完成它的進場選擇。": "{0} was summoned for free, and its Deploy effect still triggers! Finish its Deploy choice.",
+  "請選擇「{0}」的進場效果選項。": "Choose an option for {0}'s Deploy effect.",
+  "關鍵字包括：嘲諷、衝鋒、格擋、貫穿、劇毒、越陣、魔免、備戰、檢索、送墓。觸發時機包括：進場（不論付費或免費召喚進場皆觸發）、陣亡（被消滅或犧牲進墓地，移回手牌不算）、回合開始時、回合結束時。": "Keywords include: Taunt, Charge, Block, Trample, Poison, Bypass, Spellproof, Prep, Tutor, and Mill. Trigger timings include: Deploy (triggers on both paid and free summons), On Death (destroyed or sacrificed to the graveyard, not bounced), Start of Turn, and End of Turn.",
+  "送墓：累積墓地資源": "Mill: Build Graveyard Resources",
+  "把自己的牌庫頂直接送入墓地，為深淵墓地連動累積資源。": "Send cards from the top of your own deck to the graveyard to fuel Abyss graveyard synergies.",
+  "送墓 N": "Mill N",
+  "「送墓 N」會把你牌庫最上面的 N 張牌直接放進墓地，不算抽牌，也不會觸發陣亡。": "\"Mill N\" puts the top N cards of your deck directly into your graveyard. It does not count as drawing and does not trigger On Death.",
+  "進場送墓": "Deploy Mill",
+  "法術送墓": "Spell Mill",
+  "送墓適合替深淵墓地牌累積資源，搭配墓地召喚或減費效果展開反攻。": "Milling fuels Abyss graveyard cards, setting up graveyard summons and cost-reduction payoffs.",
+  "墓地資源": "Graveyard Resources"
 }

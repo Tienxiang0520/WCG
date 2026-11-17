@@ -319,7 +319,7 @@ public partial class GameEngine
                 "WCG-035" => e.Field.Count(m => !m.IsTapped) * 2 + (c.Card.Text.Contains("已橫置", StringComparison.Ordinal) ? 0 : e.Field.Select(BodyValue).DefaultIfEmpty(0).Max()),
                 "WCG-029" when c.Card.Text.StartsWith("進場", StringComparison.Ordinal) => (e.Field.Any(m => !m.IsTapped) ? 2 : 0) + (p.Deck.Count > 3 ? 3 : -5),
                 "WCG-020" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(1300))),
-                "WCG-091" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
+                "WCG-091" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, V22Rules ? 5 : 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-105" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
                 "WCG-095" => -4,
@@ -400,7 +400,7 @@ public partial class GameEngine
         int budget = prof.PlanBudget;
         var fresh = NewAi && SimplifiedRules; var attackedSpends = fresh && V10 && ShieldSourceRules;
         PlanUnit Unit(MonsterInstance m) => new(m.InstanceId, m.CurrentPP, m.CurrentDP, m.IsTaunt, m.HasPoison, m.HasShield && (V2Rules || !fresh || !m.ShieldSpent), m.HasTrample, CanAttack(m), !m.IsTapped,
-            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), m.HasBypass, !m.IsSilenced && m.Card.Id == "WCG-059", !m.SurgeNoFace, !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
+            !m.IsSilenced && m.Card.Id == "WCG-059" || fresh && !m.IsSilenced && (m.Card.Id is "WCG-210" or "WCG-178" || m.Card.Id == "WCG-201" && CardBalanceHistory.CardFixesCatalog(_cardDb)), m.HasBypass, !m.IsSilenced && !V22Rules && m.Card.Id == "WCG-059", !m.SurgeNoFace, !m.AttackLocked && (m.IsSilenced || !m.Card.CannotAttack), BodyValue(m));
         double Evaluate(List<PlanUnit> own, List<PlanUnit> opp, int hp)
         {
             if (hp <= 0) return 10000;

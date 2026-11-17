@@ -7,6 +7,7 @@ public partial class GameEngine
 {
     public bool V2Rules => CardBalanceHistory.V2Catalog(_cardDb);
     public bool V21Rules => CardBalanceHistory.V21Catalog(_cardDb);
+    public bool V22Rules => CardBalanceHistory.V22Catalog(_cardDb);
     public bool ZeroPpDeathRules => V2Rules;
     public bool SimplifiedRules => V2Rules || CardBalanceHistory.SimplifiedCatalog(_cardDb);
     private int ScalePP(int pp) => V2Rules ? pp / 100 : pp;
@@ -42,6 +43,10 @@ public partial class GameEngine
         m.SurgeNoFace = true;
         if (source != null) Present("status", Owner(m), m.InstanceId, card: source, label: "備戰");
     }
+    /// <summary>檢索 X：看牌庫頂 3 張，選 1 張符合條件的牌入手，其餘置底。</summary>
+    private void Tutor(PlayerState p, Func<CardInstance, bool> qualifies) => Search(p, 3, qualifies);
+    /// <summary>送墓 N：將你的牌庫頂 N 張牌送入墓地。</summary>
+    private void SelfMill(PlayerState p, int count) => Mill(p, count);
     private void DebuffTurn(MonsterInstance target, int delta, CardDefinition source)
     {
         if (!Alive(target)) return;

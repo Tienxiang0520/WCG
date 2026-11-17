@@ -50,8 +50,8 @@ public partial class GameEngine
         {
             var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338")+RootAndBloodDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
-                (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? GetOpponent(p).Field.Count*ScalePP(200) : 0)+
-                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*ScalePP(V2Rules ? 200 : 300) : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
+                (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? (V22Rules ? (GetOpponent(p).Field.Count >= 3 ? 6 : 0) : GetOpponent(p).Field.Count*ScalePP(200)) : 0)+
+                (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? (V22Rules ? (p.Field.Any(x=>x!=unit && x.Card.HasWill("狂怒")) ? 4 : 0) : p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*ScalePP(V2Rules ? 200 : 300)) : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));
             unit.ShieldQualified = !unit.IsSilenced && (unit.Card.HasBlock || unit.Card.Id=="WCG-133" && p.Hp<=3 || V2Rules && unit.Card.Id=="WCG-215" && unit.ExtraTaunt)
                 || unit.Attachments.Any(a=>a.Card.Card.Id is "WCG-062" or "WCG-074" or "WCG-189" or "WCG-198" || a.Card.Card.Id=="WCG-297" && a.Card.Card.Text.Contains("格擋", StringComparison.Ordinal))
                 || Player.Field.Concat(Computer.Field).Any(source => !source.IsSilenced && ShieldArrows(source.Card.Id) && source.Card.Arrows.Length>0 && PointsAt(Owner(source),source,p,unit)
@@ -70,7 +70,7 @@ public partial class GameEngine
     private bool Across(MonsterInstance source, MonsterInstance target) => !ReferenceEquals(RowOf(source), RowOf(target));
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     private (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (ScalePP(V2Rules ? 100 : 200), 0), "WCG-049" => (ScalePP(200), 0), "WCG-085" => (0, ScalePP(-300)), "WCG-147" => V21Rules ? (0, ScalePP(-300)) : (0, 0), "WCG-283" => (0, ScalePP(-300)), "WCG-287" => (0, ScalePP(-500)), "WCG-347" => (ScalePP(200), 0), "WCG-355" => (ScalePP(200), 0), "WCG-361" => (ScalePP(300), ScalePP(300)), "WCG-362" => (ScalePP(300), 0), "WCG-363" => (ScalePP(600), 0), "WCG-367" => (0, ScalePP(-300)), "WCG-371" => (ScalePP(200), 0), "WCG-376" => (ScalePP(200), 0), "WCG-380" => (0, ScalePP(-300)), "WCG-383" => (0, ScalePP(-300)), "WCG-386" => (0, ScalePP(-300)), "WCG-387" => (ScalePP(200), 0), "WCG-422" => (0, ScalePP(-200)), "WCG-398" => (0, ScalePP(-300)), _ => (0, 0) };
+    { "WCG-005" => (ScalePP(V2Rules ? 100 : 200), 0), "WCG-049" => (ScalePP(200), 0), "WCG-085" => (0, ScalePP(-300)), "WCG-147" => V21Rules ? (0, ScalePP(-300)) : (0, 0), "WCG-283" => (0, ScalePP(-300)), "WCG-287" => (0, ScalePP(-500)), "WCG-347" => (ScalePP(200), 0), "WCG-355" => (ScalePP(200), 0), "WCG-361" => (ScalePP(300), ScalePP(300)), "WCG-362" => (ScalePP(V22Rules ? 200 : 300), 0), "WCG-363" => (ScalePP(600), 0), "WCG-367" => (0, ScalePP(-300)), "WCG-371" => (ScalePP(200), 0), "WCG-376" => (ScalePP(200), 0), "WCG-380" => (0, ScalePP(-300)), "WCG-383" => (0, ScalePP(-300)), "WCG-386" => (0, ScalePP(-300)), "WCG-387" => (ScalePP(200), 0), "WCG-422" => (0, ScalePP(-200)), "WCG-398" => (0, ScalePP(-300)), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Board.Concat(Computer.Board).Where(source => source != unit && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
@@ -121,7 +121,7 @@ public partial class GameEngine
     public bool SetCard(PlayerState p, CardInstance c) => AiTracked(AiNote("set",p,c),()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
-    { "WCG-125"=>p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>p.Hand.Count>0,"WCG-151"=>V2Rules?p.Field.Concat(GetOpponent(p).Field).Any():p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
+    { "WCG-125"=>V22Rules||p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>V22Rules||p.Hand.Count>0,"WCG-151"=>V2Rules?p.Field.Concat(GetOpponent(p).Field).Any():p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
     public bool Activate(PlayerState p, MonsterInstance m)=>AiTracked(AiNote("activate",p,unit:m),()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
@@ -129,10 +129,10 @@ public partial class GameEngine
         void Pay(Action effect){m.IsTapped=true;effect();}
         switch(m.Card.Id)
         {
-            case "WCG-125": CardChoice(p,"選擇置底卡，其餘留在牌庫頂",p.Deck.Take(2),c=>Pay(()=>{p.Deck.Remove(c);p.Deck.Add(c);}));break;
+            case "WCG-125": if (V22Rules) Pay(()=>Loot(p)); else CardChoice(p,"選擇置底卡，其餘留在牌庫頂",p.Deck.Take(2),c=>Pay(()=>{p.Deck.Remove(c);p.Deck.Add(c);}));break;
             case "WCG-126":Pay(()=>{if(V2Rules)UntapEnergy(p,m.Card,2);else p.NextCreatureDiscount++;});break;
             case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("失去 1 生命",StringComparison.Ordinal))PayLife(GetOpponent(p),1);});KillBatch([x],"犧牲",!LegacyCardRules);}));break;
-            case "WCG-149":CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("回復 1 生命",StringComparison.Ordinal))Heal(p,1);});}));break;
+            case "WCG-149":if (V22Rules) Pay(()=>Resolve(()=>Loot(p),()=>Heal(p,1))); else CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("回復 1 生命",StringComparison.Ordinal))Heal(p,1);});}));break;
             case "WCG-151":
                 if (V2Rules) PickMonster(p, "選擇本回合 PP -10 的怪物", p.Field.Concat(GetOpponent(p).Field), x => Pay(() => DebuffTurn(x, -10, m.Card)));
                 else PickMonster(p, $"選擇 PP {Low(800)} 以下怪物", p.Field.Concat(GetOpponent(p).Field).Where(x => ThresholdPP(x) <= Low(800)), x => Pay(() => KillBatch([x], m.Card.Name)));
@@ -205,7 +205,7 @@ public partial class GameEngine
             case "WCG-175":FreeFaction(p,5,"",true);break;
             case "WCG-179":Heal(p,7);break;
             case "WCG-181":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("狂怒")))foreach(var x in p.Field.Where(x=>x.Card.HasWill("狂怒")))AddTurnBonus(x,ScalePP(V2Rules ? 200 : 300),m.Card);break;
-            case "WCG-183":Search(p,3,c=>c.Card.IsSpell);break;
+            case "WCG-183":if (V22Rules) Tutor(p, c => c.Card.IsSpell); else Search(p,3,c=>c.Card.IsSpell);break;
             case "WCG-187":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("生機")))FreeFaction(p,2,"生機");break;
             case "WCG-188":Heal(p,p.Field.Count(x=>x!=m&&x.Card.HasWill("生機")));break;
             case "WCG-191":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("秩序")))Resolve(()=>PickMonster(p,$"選擇 PP {High(2000)} 以上敵怪",e.Field.Where(x=>ThresholdPP(x)>=High(2000)),x=>KillBatch([x],m.Card.Name)),()=>Heal(p,1));break;
@@ -232,16 +232,16 @@ public partial class GameEngine
             case "WCG-143":if(t!=null){if(SimplifiedRules){Attach(p,c,t);if(V2Rules)PrepUnit(t,c.Card);else ReadyMonster(t);}else{ReadyMonster(t);AddNextCombatBonus(t,500,c.Card);}}break;
             case "WCG-164":case "WCG-169":DrawMany(p,1);break;
             case "WCG-165":if(t!=null&&Alive(t)){if(SimplifiedRules)Attach(p,c,t);else AddNextCombatBonus(t,500,c.Card);}break;
-            case "WCG-166":CardChoice(p,"選擇另一張手牌置底",p.Hand,x=>{p.Hand.Remove(x);p.Deck.Add(x);DrawMany(p,1);});break;
+            case "WCG-166":if (V22Rules) Loot(p); else CardChoice(p,"選擇另一張手牌置底",p.Hand,x=>{p.Hand.Remove(x);p.Deck.Add(x);DrawMany(p,1);});break;
             case "WCG-167":if(t!=null){if(V2Rules)PrepUnit(t,c.Card);else ReadyMonster(t);}break;
             case "WCG-168":if(t!=null){if(SimplifiedRules)Attach(p,c,t);else AddNextCombatBonus(t,-500,c.Card);}break;
             case "WCG-170":Resolve(()=>KillBatch(e.Field.Where(x=>ThresholdPP(x)<=SkyfireLimit()).ToArray(),c.Card.Name),()=>{if(e.Field.Count==0)SpellDamage(p,e,2,c.Card);});break;
             case "WCG-173":Resolve(()=>{foreach(var x in p.Field.Concat(e.Field).ToArray())Bounce(x);},()=>DrawMany(p,2));break;
             case "WCG-176":Resolve(()=>KillBatch(p.Field.Concat(e.Field).Where(x=>ThresholdPP(x)>=High(1500)).ToArray(),c.Card.Name),()=>Heal(p,2));break;
-            case "WCG-180":SearchTwoKinds(p);break;
-            case "WCG-186":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("生機")),()=>{if(p.Structures.Any(x=>!x.IsSet&&x.Card.HasWill("生機")))DrawMany(p,1);});break;
-            case "WCG-189":Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("秩序")),()=>{if(p.Field.Any(x=>x.Card.HasWill("秩序")))PickMonster(p,V2Rules?"選擇附著格擋怪物":SimplifiedRules?"選擇附著聖盾怪物":"選擇附著能量護盾怪物",SpellResolvePickable(p,V2Rules?p.Field.Concat(e.Field):p.Field),x=>Attach(p,c,x));});break;
-            case "WCG-192":MillSearch(p);break;
+            case "WCG-180":if (V22Rules) Resolve(()=>Tutor(p,x=>x.Card.HasWill("狂怒")),()=>DrawMany(p,1)); else SearchTwoKinds(p);break;
+            case "WCG-186":if (V22Rules) Tutor(p,x=>x.Card.IsMonster&&x.Card.HasWill("生機")); else Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("生機")),()=>{if(p.Structures.Any(x=>!x.IsSet&&x.Card.HasWill("生機")))DrawMany(p,1);});break;
+            case "WCG-189":if (V22Rules) Resolve(()=>Tutor(p,x=>x.Card.IsMonster&&x.Card.HasWill("秩序")),()=>Heal(p,1)); else Resolve(()=>Search(p,3,x=>x.Card.IsMonster&&x.Card.HasWill("秩序")),()=>{if(p.Field.Any(x=>x.Card.HasWill("秩序")))PickMonster(p,V2Rules?"選擇附著格擋怪物":SimplifiedRules?"選擇附著聖盾怪物":"選擇附著能量護盾怪物",SpellResolvePickable(p,V2Rules?p.Field.Concat(e.Field):p.Field),x=>Attach(p,c,x));});break;
+            case "WCG-192":if (V22Rules) Resolve(()=>Tutor(p,x=>x.Card.IsMonster&&x.Card.HasWill("深淵")),()=>SelfMill(p,2)); else MillSearch(p);break;
             default:if(NewSpell(p,c,t))break;throw new InvalidOperationException($"未實作卡牌 {c.Card.Id}");
         }
     }

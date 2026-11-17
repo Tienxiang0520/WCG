@@ -73,7 +73,7 @@ public partial class GameEngine
             case "WCG-085": Damage(p, 1, new(p,m.Card,m,"deploy")); break;
             case "WCG-087": if (p.Graveyard.Count >= 5) Heal(p, 1); break;
             case "WCG-091":
-                if (V2Rules) DebuffBatchTurn(enemy.Field, -10, m.Card);
+                if (V2Rules) DebuffBatchTurn(enemy.Field, V22Rules ? -5 : -10, m.Card);
                 else KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name);
                 break;
             case "WCG-100": Resolve(() => Heal(p, V2Rules ? 1 : 2), () => Recover(p, int.MaxValue, 1)); break;
@@ -159,7 +159,7 @@ public partial class GameEngine
             case "WCG-006": SpellDamage(p,enemy, 2,c); break;
             case "WCG-014": SpellDamage(p,enemy, 1,c); break;
             case "WCG-046": if (mode == "KILL") { if (V2Rules) DebuffTarget(); else KillTarget(); } else Loot(p); break;
-            case "WCG-054": Search(p, 5, x => x.Card.IsMonster, 2); break;
+            case "WCG-054": if (V22Rules) Resolve(() => Tutor(p, x => x.Card.IsMonster), () => DrawMany(p, 1)); else Search(p, 5, x => x.Card.IsMonster, 2); break;
             case "WCG-062": case "WCG-074":
                 Resolve(() => { if (target != null && CanShield(target)) Attach(p, source, target); },
                     () => { if (c.Id == "WCG-062") Heal(p, 1); else DrawMany(p, 1); }); break;
@@ -181,7 +181,7 @@ public partial class GameEngine
             case "WCG-064": case "WCG-012": case "WCG-076": case "WCG-088": KillTarget(); break;
             case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
             case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 4 : 2)); break;
-            case "WCG-022": Search(p, 3, x => x.Card.IsSpell, optional: true); break;
+            case "WCG-022": if (V22Rules) Tutor(p, x => x.Card.IsSpell); else Search(p, 3, x => x.Card.IsSpell, optional: true); break;
             case "WCG-024": if(target!=null&&Alive(target)){if(target.IsTapped)Loot(p);else{target.IsTapped=true;Present("status",Owner(target),target.InstanceId,card:target.Card,label:"橫置");}} break;
             case "WCG-026": if (target != null && SpellTargets(p, c).Contains(target)) Bounce(target); break;
             case "WCG-028": DrawMany(p, 2); break;
@@ -198,7 +198,7 @@ public partial class GameEngine
                 if (p.Deck.Count > 0) { var energy = p.Deck[0]; p.Deck.RemoveAt(0); energy.IsTapped = true; energy.TemporaryEnergy = false; p.EnergyZone.Add(energy); Present("energy", p, energy.InstanceId, label: "額外背面能量"); Log("滋養萌發：額外能量背面橫置進場。"); } break;
             case "WCG-050": Heal(playerTarget ?? p, 2); break;
             case "WCG-052": FreeHand(p, 2, 2); break;
-            case "WCG-056": Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
+            case "WCG-056": if (V22Rules) Tutor(p, x => x.Card.IsMonster && x.Card.HasWill("生機")); else Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;
             case "WCG-068": KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(700)).ToArray(), c.Name); break;
             case "WCG-078":
@@ -222,7 +222,7 @@ public partial class GameEngine
                 // Legacy: Face up and untapped in the energy zone: 1 extra energy this turn only (EndTurn puts it into the graveyard).
                 if (p.Graveyard.Remove(source)) { source.IsTapped = false; source.TemporaryEnergy = true; p.EnergyZone.Add(source); Present("energy", p, source.InstanceId, card: c, label: "臨時能量"); Log($"【{p.Name}】獲得 1 點臨時能量（本回合）。", "action"); }
                 break;
-            case "WCG-122": Search(p, 5, x => x.Card.IsMonster); break;
+            case "WCG-122": if (V22Rules) Tutor(p, x => x.Card.IsMonster); else Search(p, 5, x => x.Card.IsMonster); break;
             default: ExtraSpell(p,source,target); break;
         }
     }
@@ -246,7 +246,7 @@ public partial class GameEngine
             {
                 if (listener == m || !destroyed) continue;
                 if (listener.Card.Id == "WCG-011" && ReferenceEquals(listenerOwner, owner)) triggers.Add(() => { Present("trigger", listenerOwner, listener.InstanceId, card: listener.Card, label: "死亡觸發"); DrawMany(listenerOwner, 1); });
-                if (listener.Card.Id == "WCG-148" && ReferenceEquals(listenerOwner,owner)) triggers.Add(()=>TapEnemyEnergy(GetOpponent(owner)));
+                if (listener.Card.Id == "WCG-148" && ReferenceEquals(listenerOwner,owner)) triggers.Add(() => { if (V22Rules) Heal(listenerOwner, 1); else TapEnemyEnergy(GetOpponent(owner)); });
                 if (listener.Card.Id == "WCG-099") triggers.Add(() => { Present("trigger", listenerOwner, listener.InstanceId, card: listener.Card, label: "死亡觸發"); Heal(listenerOwner, 1); });
             }
         }

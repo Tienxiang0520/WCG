@@ -223,22 +223,24 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "triggers", Icon = "bolt", Title = "進場、陣亡與非付費召喚",
+            Id = "triggers", Icon = "bolt", Title = "進場、陣亡與免費召喚",
             Summary = "認識進場與陣亡效果、免費召喚，以及效果依序結算的方式。",
-            Topics = ["進場效果", "陣亡效果", "非付費召喚不觸發進場", "效果依序結算"],
+            Topics = ["進場效果", "陣亡效果", "免費召喚也觸發進場", "效果依序結算"],
             Scene = new(
                 new() { Hand = ["WCG-047", "WCG-102", "WCG-007"], Deck = Deck(), Energy = 4, Board = [new("WCG-083", 4)] },
                 new() { Deck = Deck(), Energy = 1, Graveyard = ["WCG-101"], Board = [new("WCG-158", 0), new("WCG-132", 1), new("WCG-043", 3)] }),
             Steps =
             [
                 new() { Title = "觸發效果", Spot = ["hand"],
-                    Text = "「進場」在付費召喚後觸發；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。" },
+                    Text = "「進場」在怪物進入場上時觸發（含免費召喚）；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。" },
                 new() { Title = "進場：免費召喚", Spot = ["hand:WCG-047", "dialog"], Allow = [Play("WCG-047"), Slot(), ChooseCard("WCG-102")],
-                    Done = e => OnField(e.Player, "WCG-047") && OnField(e.Player, "WCG-102") && Settled(e),
+                    Done = e => OnField(e.Player, "WCG-047") && OnField(e.Player, "WCG-102"),
                     Text = "召喚「{0}」，效果：{1} 選「{2}」，再為兩隻怪物各選一個空格。", TextValues = [CardName("WCG-047"), CardEffect("WCG-047"), CardName("WCG-102")],
                     Hint = "請召喚「{0}」，並用進場效果免費召喚「{1}」。", HintValues = [CardName("WCG-047"), CardName("WCG-102")] },
-                new() { Title = "非付費召喚", Spot = ["own-card:WCG-102"],
-                    Text = "「{0}」是被效果免費召喚的，所以不會觸發它的進場效果；陣亡效果則照常有效。", TextValues = [CardName("WCG-102")] },
+                new() { Title = "免費召喚也觸發進場", Spot = ["own-card:WCG-102", "dialog"], Allow = [Choose("LOOT"), Choose("KILL"), ChooseCard("WCG-101"), ChooseCard("WCG-007"), Pick("WCG-132"), Pick("WCG-043"), Pick("WCG-158")],
+                    Done = e => Settled(e),
+                    Text = "「{0}」雖然是被免費召喚的，依然會觸發它的進場效果！請完成它的進場選擇。", TextValues = [CardName("WCG-102")],
+                    Hint = "請選擇「{0}」的進場效果選項。", HintValues = [CardName("WCG-102")] },
                 new() { Title = "陣亡效果", Spot = ["own-card:WCG-083", "enemy-card:WCG-158"], Allow = [Attack("WCG-083", "WCG-158"), ChooseCard("WCG-132")],
                     Done = e => !OnField(e.Computer, "WCG-132") && !OnField(e.Player, "WCG-083") && Settled(e),
                     Text = "讓「{0}」（{1} PP）攻擊「{2}」（{3} PP）。它會被消滅，陣亡效果：{4} 選擇「{5}」。", TextValues = [CardName("WCG-083"), OwnPP("WCG-083"), CardName("WCG-158"), EnemyPP("WCG-158"), CardEffect("WCG-083"), CardName("WCG-132")],
@@ -410,30 +412,26 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "mill", Icon = "spark", Title = "送入墓地：磨光牌庫",
-            Summary = "把對手牌庫頂的牌直接送入墓地，讓電腦在空牌庫中抽牌而落敗。",
-            Topics = ["送入墓地（磨牌）", "牌庫張數", "牌庫耗盡落敗", "新流派機制"],
+            Id = "mill", Icon = "spark", Title = "送墓：累積墓地資源",
+            Summary = "把自己的牌庫頂直接送入墓地，為深淵墓地連動累積資源。",
+            Topics = ["送墓 N", "牌庫張數", "墓地資源", "新流派機制"],
             Scene = new(
                 new() { Hand = ["WCG-212", "WCG-211"], Deck = Deck(), Energy = 5 },
-                new() { Hand = ["WCG-101"], Deck = ["WCG-101", "WCG-154", "WCG-101", "WCG-154", "WCG-101"], Energy = 1 }),
+                new() { Hand = ["WCG-101"], Deck = Deck(), Energy = 1 }),
             Steps =
             [
-                new() { Title = "送入墓地", Spot = ["face"],
-                    Text = "「送入墓地」會把牌庫最上面的牌直接放進墓地，不算抽牌，也不會觸發陣亡。電腦的牌庫只剩 5 張。" },
-                new() { Title = "進場磨牌", Spot = ["hand:WCG-212"], Allow = [Play("WCG-212"), Slot()],
-                    Done = e => e.Computer.Deck.Count == 3 && Settled(e),
+                new() { Title = "送墓 N", Spot = ["hand:WCG-212"],
+                    Text = "「送墓 N」會把你牌庫最上面的 N 張牌直接放進墓地，不算抽牌，也不會觸發陣亡。" },
+                new() { Title = "進場送墓", Spot = ["hand:WCG-212"], Allow = [Play("WCG-212"), Slot()],
+                    Done = e => e.Player.Graveyard.Count >= 2 && Settled(e),
                     Text = "召喚「{0}」，效果：{1}", TextValues = [CardName("WCG-212"), CardEffect("WCG-212")],
                     Hint = "請召喚「{0}」。", HintValues = [CardName("WCG-212")] },
-                new() { Title = "法術磨牌", Spot = ["hand:WCG-211", "face"], Allow = [Play("WCG-211")],
-                    Done = e => e.Computer.Deck.Count == 0 && Settled(e),
+                new() { Title = "法術送墓", Spot = ["hand:WCG-211"], Allow = [Play("WCG-211")],
+                    Done = e => e.Player.Graveyard.Count >= 6 && Settled(e),
                     Text = "打出「{0}」，效果：{1}", TextValues = [CardName("WCG-211"), CardEffect("WCG-211")],
                     Hint = "請打出「{0}」。", HintValues = [CardName("WCG-211")] },
-                new() { Title = "結束回合", Spot = ["end"], Allow = [End()],
-                    Done = e => e.Computer.HasLost,
-                    Text = "電腦的牌庫空了。按「結束回合」，它回合開始需要抽牌時就會落敗。",
-                    Hint = "請按「結束回合」。" },
                 new() { Title = "本課重點",
-                    Text = "磨牌適合對手牌庫快見底時收尾。其他進階機制也會在對局中遇到：箭頭連動左右隊友或正對面敵怪，附著卡疊在同一隻怪物上，手牌反擊在受到傷害時發動，有些卡看空格數與墓地張數，中立傭兵會互相加成。" }
+                    Text = "送墓適合替深淵墓地牌累積資源，搭配墓地召喚或減費效果展開反攻。" }
             ]
         },
         new()

@@ -32,8 +32,8 @@ public partial class GameEngine
         Tracked(m.NextCombatSources, m.NextCombatBonus, "下次戰鬥加成");
         Tracked(m.TurnBonusSources, m.TurnBonus, "本回合加成");
         Add(null, "戰鬥加成", m.CombatPowerBonus);
-        if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, GetOpponent(owner).Field.Count * ScalePP(200));
-        if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * ScalePP(V2Rules ? 200 : 300));
+        if (!m.IsSilenced && m.Card.Id == "WCG-009") Add(m.Card, m.Card.Name, V22Rules ? (GetOpponent(owner).Field.Count >= 3 ? 6 : 0) : GetOpponent(owner).Field.Count * ScalePP(200));
+        if (!m.IsSilenced && m.Card.Id == "WCG-182") Add(m.Card, m.Card.Name, V22Rules ? (owner.Field.Any(x => x != m && x.Card.HasWill("狂怒")) ? 4 : 0) : owner.Field.Count(x => x != m && x.Card.HasWill("狂怒")) * ScalePP(V2Rules ? 200 : 300));
         foreach (var source in Player.Board.Concat(Computer.Board).Where(source => source != m && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0)))
         {
             var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, m)) continue;

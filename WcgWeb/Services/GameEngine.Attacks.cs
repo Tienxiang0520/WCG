@@ -10,7 +10,7 @@ public partial class GameEngine
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!a.SurgeNoFace&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 18+ in v2 (>1800 / 1100/1300 in older eras), 261/越陣 past every taunt.
     private int GaiaTauntLimit()=>V2Rules?18:CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||(!a.Card.HasBypass||a.Card.Id=="WCG-059")&&a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||(V2Rules?ThresholdPP(m)>=18:ThresholdPP(m)>GaiaTauntLimit()))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||(!a.Card.HasBypass||(a.Card.Id=="WCG-059"&&!V22Rules))&&a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||V22Rules||(V2Rules?ThresholdPP(m)>=18:ThresholdPP(m)>GaiaTauntLimit()))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int AttackerPP=0,int DefenderPP=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)

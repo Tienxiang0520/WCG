@@ -180,12 +180,11 @@ public class V2MechanicsTests
         Assert.True(g.CanAttackPlayer(scout));
         Assert.True(g.CanAttackPlayer(tyrant));
 
-        // 加入 PP 18 的森金持盾衛（WCG-113）後，WCG-261 仍可直接打玩家，蓋亞暴龍則被擋住。
+        // 加入 PP 18 的森金持盾衛（WCG-113）後，v2.2 蓋亞暴龍也為純越陣，兩者皆可直接打玩家。
         var heavyTaunt = Unit(g.Computer, "WCG-113", 1);
         Refresh(g);
         Assert.True(g.CanAttackPlayer(scout));
-        Assert.False(g.CanAttackPlayer(tyrant));
-        Assert.Equal([heavyTaunt], g.GetAttackTargets(tyrant));
+        Assert.True(g.CanAttackPlayer(tyrant));
     }
 
     [Fact]
@@ -414,16 +413,16 @@ public class V2MechanicsTests
         Assert.Single(g2.Player.Hand);
         Assert.Equal(compHpBefore - 1, g2.Computer.Hp);
 
-        // WCG-149: tap, bottom 1 card from hand, draw 1 and recover 1 life
+        // WCG-149: tap, draw 1, discard 1, and recover 1 life
         var bazaar = new MonsterInstance(cards.GetCard("WCG-149")!) { Slot = 2, IsTapped = false };
         g2.Player.Structures.Add(bazaar);
         g2.Player.Hp = 5;
-        var bottomCard = Hand(g2, "WCG-101");
+        var discardCard = Hand(g2, "WCG-101");
         Assert.True(g2.Activate(g2.Player, bazaar));
         if (g2.CurrentPendingChoice is { } bazaarChoice)
-            Assert.True(g2.SelectChoice(bazaarChoice.Options.First(o => o.Id == bottomCard.InstanceId.ToString())));
+            Assert.True(g2.SelectChoice(bazaarChoice.Options.First(o => o.Id == discardCard.InstanceId.ToString())));
         Assert.True(bazaar.IsTapped);
-        Assert.Equal(bottomCard, g2.Player.Deck[^1]);
+        Assert.Contains(discardCard, g2.Player.Graveyard);
         Assert.Equal(2, g2.Player.Hand.Count);
         Assert.Equal(6, g2.Player.Hp);
 
@@ -505,13 +504,13 @@ public class V2MechanicsTests
         var g3 = Game(playerFirst: false);
         var b3 = Unit(g3.Player, "WCG-011", 0);
         var boosted = Unit(g3.Player, "WCG-101", 1); // 10 PP
-        var buffer = Unit(g3.Player, "WCG-362", 2); // 4 PP, <- -> allies +3 PP => boosted = 13 PP
+        var buffer = Unit(g3.Player, "WCG-362", 2); // 4 PP, <- -> allies +2 PP => boosted = 12 PP
         Assert.True(g3.EndTurn());
         while (g3.CurrentPendingChoice is { } ch2) Assert.True(g3.SelectChoice(ch2.Options.Last()));
-        Assert.Equal(13, boosted.CurrentPP);
-        Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-082"), boosted)); // 13 - 10 = 3 PP (survives while buffer is on board)
+        Assert.Equal(12, boosted.CurrentPP);
+        Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-082"), boosted)); // 12 - 10 = 2 PP (survives while buffer is on board)
         Assert.Contains(boosted, g3.Player.Field);
-        Assert.Equal(3, boosted.CurrentPP);
+        Assert.Equal(2, boosted.CurrentPP);
         var h2 = g3.Player.Hand.Count;
         // Now remove buffer via WCG-082 (-10 on 4 PP) -> buffer dies (draws 1), then boosted drops 3 -> 0 PP and dies (draws 1 more)
         Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-082"), buffer));
@@ -709,6 +708,92 @@ public class V2MechanicsTests
         Choose(g195, o => o.Id == trap.InstanceId.ToString());
         Assert.DoesNotContain(bigFoe, g195.Computer.Field);
         Assert.Equal(foeHpBefore, g195.Computer.Hp);
+    }
+
+    [Fact]
+    public void V22RulesBehaviorTests()
+    {
+        // 1. 免費召喚觸發進場（手牌、墓地、反擊 197、連鎖不無限迴圈）
+        var g1 = Game();
+        var s102 = Hand(g1, "WCG-102"); // 1 費進場抉擇
+        var summon47 = Hand(g1, "WCG-047"); // 進場免費召喚 1 費怪
+        Assert.True(g1.SummonMonster(g1.Player, summon47));
+        Choose(g1, o => o.Id == "SLOT:0");
+        Choose(g1, o => o.Id == s102.InstanceId.ToString());
+        Choose(g1, o => o.Id == "SLOT:1");
+        Assert.True(g1.IsWaiting); // WCG-102 免費進場依然觸發 Deploy 抉擇
+        Choose(g1, o => o.Id == "LOOT");
+        Choose(g1, o => o.Id == g1.Player.Hand[0].InstanceId.ToString());
+        Assert.False(g1.IsWaiting);
+
+        // 墓地召喚觸發進場 (WCG-194 喚醒 WCG-212 送墓 2)
+        var gGrave = Game();
+        var thief = new CardInstance(cards.GetCard("WCG-212")!);
+        gGrave.Player.Graveyard.Add(thief);
+        var deckBefore = gGrave.Player.Deck.Count;
+        Assert.True(gGrave.SummonMonster(gGrave.Player, Hand(gGrave, "WCG-194")));
+        Choose(gGrave, o => o.Id == "SLOT:0");
+        Choose(gGrave, o => o.Id == thief.InstanceId.ToString());
+        Choose(gGrave, o => o.Id == "SLOT:1");
+        Assert.Equal(deckBefore - 2, gGrave.Player.Deck.Count);
+
+        // 反擊 WCG-197 免費召喚生機怪也觸發進場（並連鎖免費召喚 WCG-101）
+        var g197 = Game();
+        var f197 = Hand(g197, "WCG-197");
+        var nature47 = Hand(g197, "WCG-047"); // 生機 2 費：進場免費召喚 1 費怪
+        var goblin = Hand(g197, "WCG-101"); // 1 費
+        var eAtk = Unit(g197.Computer, "WCG-101", 0);
+        Assert.True(g197.EndTurn());
+        while (g197.CurrentPendingChoice is { } ch) Assert.True(g197.SelectChoice(ch.Options.Last()));
+        Assert.True(g197.Attack(g197.Computer, eAtk));
+        Choose(g197, o => o.Id == f197.InstanceId.ToString());
+        Choose(g197, o => o.Id == nature47.InstanceId.ToString());
+        Choose(g197, o => o.Id == "SLOT:0");
+        Assert.True(g197.IsWaiting); // WCG-047 進場觸發免費召喚
+        Choose(g197, o => o.Id == goblin.InstanceId.ToString());
+        Choose(g197, o => o.Id == "SLOT:1");
+        Assert.False(g197.IsWaiting);
+        Assert.Equal(2, g197.Player.Field.Count);
+
+        // 2. 檢索共用實作（022 檢索法術、192 檢索深淵怪＋送墓 2）
+        var gTut = Game();
+        gTut.Player.Deck.Clear();
+        var spellTop = new CardInstance(cards.GetCard("WCG-004")!);
+        gTut.Player.Deck.Add(new(cards.GetCard("WCG-101")!));
+        gTut.Player.Deck.Add(spellTop);
+        gTut.Player.Deck.Add(new(cards.GetCard("WCG-154")!));
+        gTut.Player.Deck.Add(new(cards.GetCard("WCG-101")!));
+        Assert.True(gTut.CastSpell(gTut.Player, Hand(gTut, "WCG-022")));
+        Choose(gTut, o => o.Id == spellTop.InstanceId.ToString());
+        while (gTut.CurrentPendingChoice is { } chB) Assert.True(gTut.SelectChoice(chB.Options[0]));
+        Assert.Contains(spellTop, gTut.Player.Hand);
+        Assert.Equal(3, gTut.Player.Deck.Count);
+
+        // 3. 331 借刀之術：令 2 隻敵怪決鬥
+        var g331 = Game();
+        var e1 = Unit(g331.Computer, "WCG-101", 0); // 10 PP
+        var e2 = Unit(g331.Computer, "WCG-114", 1); // 19 PP
+        Assert.True(g331.CastSpell(g331.Player, Hand(g331, "WCG-331")));
+        Assert.True(g331.SelectTarget(e1));
+        Assert.True(g331.SelectTarget(e2));
+        Assert.DoesNotContain(e1, g331.Computer.Field);
+        Assert.Contains(e2, g331.Computer.Field);
+
+        // 4. 一次判斷縮放 + 273 手牌變動即時更新 PP + 362 可自由放進空格
+        var gScale = Game();
+        var u228 = Unit(gScale.Player, "WCG-228", 0); // 18 + 9 = 27 PP
+        Refresh(gScale);
+        Assert.Equal(27, u228.CurrentPP);
+        var u273 = Unit(gScale.Player, "WCG-273", 1); // 場上已有其他怪 => 228 失去 +9 => 18 PP
+        Refresh(gScale);
+        Assert.Equal(18, u228.CurrentPP);
+        Assert.Equal(13, u273.CurrentPP); // 手牌 0 張
+        for (int i = 0; i < 4; i++) Hand(gScale, "WCG-101");
+        Assert.Equal(17, u273.CurrentPP); // 手牌 4 張 => 13 + 4 = 17 PP
+        var sprout = Hand(gScale, "WCG-362");
+        Assert.True(gScale.SummonMonster(gScale.Player, sprout));
+        Choose(gScale, o => o.Id == "SLOT:4"); // 不在兩怪之間也可放
+        Assert.Contains(gScale.Player.Field, m => m.Card.Id == "WCG-362" && m.Slot == 4);
     }
 
     [Fact]

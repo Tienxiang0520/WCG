@@ -27,7 +27,7 @@ public partial class GameEngine
     private IEnumerable<CardInstance> GraveSmall(PlayerState p, int pp) => p.Graveyard.Where(c => c.Card.IsMonster && (c.Card.PP ?? 0) <= pp);
 
     // 347 列隊亡兵: +300 (+3 in v2) PP per 5 cards in your graveyard.
-    private int GravePower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-347" ? ScalePP(300) * (Grave(p) / 5) : RootPower(p, m);
+    private int GravePower(PlayerState p, MonsterInstance m) => m.Card.Id == "WCG-347" ? (V22Rules ? 0 : ScalePP(300) * (Grave(p) / 5)) : RootPower(p, m);
     // 350 冥誓審判官: the monster its ↑ arrow points at gets -200 PP per 5 cards in its controller's graveyard.
     // Arrow effects with a value that changes during play, one entry per source (also listed in the PP breakdown).
     private IEnumerable<(CardDefinition Source, int Amount)> ArchArrowSources(PlayerState owner, MonsterInstance unit) =>
