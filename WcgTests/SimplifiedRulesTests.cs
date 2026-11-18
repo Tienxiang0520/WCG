@@ -51,11 +51,16 @@ public class SimplifiedRulesTests
     [InlineData(4,10,true)] [InlineData(4,11,false)]
     [InlineData(32,10,true)] [InlineData(32,11,false)]
     [InlineData(76,18,true)] [InlineData(76,17,false)]
-    public void PrintedThresholdsUseThreeLevels(int spell,int pp,bool legal)
+    public void PrintedThresholdsUseThreeLevels(int spell,int pp,bool dies)
     {
         var g=Game();var foe=Unit(g.Computer,155,2,pp);
-        Assert.Equal(legal,g.CastSpellAt(g.Player,Hand(g,spell),foe));
-        if(legal){while(g.CurrentPendingChoice is {} c)Assert.True(g.SelectChoice(c.Options[0]));Assert.DoesNotContain(foe,g.Computer.Field);}
+        if (spell==76) { Assert.Equal(dies,g.CastSpellAt(g.Player,Hand(g,spell),foe)); }
+        else
+        {
+            Assert.True(g.CastSpellAt(g.Player,Hand(g,spell),foe));
+            Assert.Equal(!dies,g.Computer.Field.Contains(foe));
+            if (!dies) Assert.Equal(pp-10,foe.CurrentPP);
+        }
     }
 
     [Fact] public void AreaThresholdsUseThreeLevels()
@@ -108,11 +113,13 @@ public class SimplifiedRulesTests
         Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.True(croc.SurgeNoFace);Assert.Equal(18,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
         Assert.False(g.Attack(g.Player,croc)); // WCG-143 explicitly states it cannot attack players this turn.
         var pumper=Unit(g.Player,154,1);Assert.True(g.CastSpellAt(g.Player,Hand(g,165),pumper));
-        Assert.True(g.Attack(g.Player,pumper));Assert.Equal(18,pumper.CurrentPP); // Attacking the player is not a battle.
+        Assert.True(g.Attack(g.Player,pumper));Assert.Equal(19,pumper.CurrentPP); // Attacking the player is not a battle.
         var foe=Unit(g.Computer,155,2);
         Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(13,croc.CurrentPP);
         Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
         var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(14,weak.CurrentPP);
+        var knight=Unit(g.Player,155,3);
+        Assert.True(g.Attack(g.Player,knight,weak));Assert.Contains(knight,g.Player.Field);Assert.DoesNotContain(weak,g.Computer.Field);
     }
 
     [Fact] public void OnlyOneCounterPerDamageAndDeadSourceStillCancels()
@@ -125,18 +132,18 @@ public class SimplifiedRulesTests
 
         var h=Game();var goblin=Unit(h.Computer,3,1);var trap=new CardInstance(cards.GetCard("WCG-195")!);h.Player.Hand.Add(trap);var life=h.Player.Hp;var enemyLife=h.Computer.Hp;
         Assert.True(h.CastSpellAt(h.Player,new CardInstance(cards.GetCard("WCG-002")!).Also(h.Player.Hand.Add),goblin)); // 熔岩地精 is 1000 PP since the 2026-10-17 cost-up
-        Assert.Contains(h.CurrentPendingChoice!.Options,o=>o.Id==trap.InstanceId.ToString()); // Source already in the graveyard: the counter only cancels.
+        Assert.Contains(h.CurrentPendingChoice!.Options,o=>o.Id==trap.InstanceId.ToString()); // Source already in the graveyard: damage is still cancelled and v2.2 WCG-195 deals 1 damage.
         Choose(h,o=>o.Id==trap.InstanceId.ToString());
-        Assert.Equal(life,h.Player.Hp);Assert.Equal(enemyLife,h.Computer.Hp);
+        Assert.Equal(life,h.Player.Hp);Assert.Equal(enemyLife-1,h.Computer.Hp);
     }
 
     [Fact] public void CounterDamageCannotBeCountered()
     {
-        var g=Game();var trap=Hand(g,195);var yeti=Unit(g.Computer,114,2);
+        var g=Game();var blood=Hand(g,366);var yeti=Unit(g.Computer,114,2);var enemyHp=g.Computer.Hp;
         for(int i=0;i<6;i++)g.Computer.EnergyZone.Add(new(cards.GetCard("WCG-101")!));g.Computer.Hand.Add(new(cards.GetCard("WCG-196")!));
         ComputerTurn(g);Assert.True(g.Attack(g.Computer,yeti));
-        Choose(g,o=>o.Id==trap.InstanceId.ToString());
-        Assert.DoesNotContain(yeti,g.Computer.Field);Assert.False(g.IsWaiting); // 2200 PP ≥ 1800: 1 damage, and the enemy can't counter it.
+        Choose(g,o=>o.Id==blood.InstanceId.ToString());
+        Assert.Equal(enemyHp-1,g.Computer.Hp);Assert.False(g.IsWaiting); // Counter damage cannot be countered.
         Assert.Contains(g.Computer.Hand,c=>c.Card.Id=="WCG-196");
     }
 }

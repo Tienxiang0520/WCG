@@ -4,8 +4,8 @@ namespace WcgWeb.Services;
 
 public partial class GameEngine
 {
-    // Catalog wording also selects the rules for old ranked journals. No existing save is rewritten.
-    public bool DamageCounters => _cardDb.GetCard("WCG-195")?.Text.Contains("受到", StringComparison.Ordinal) == true;
+    // Catalog version flag selects the rules for old ranked journals. No existing save is rewritten.
+    public bool DamageCounters => CardBalanceHistory.DamageCountersCatalog(_cardDb);
     private sealed record DamageSource(PlayerState Owner, CardDefinition Card, MonsterInstance? Unit, string Kind);
     private sealed class DamageContext(PlayerState recipient, int lostHp, DamageSource? source)
     {
@@ -32,7 +32,7 @@ public partial class GameEngine
             return card.Card.Id switch
             {
                 "WCG-195" or "WCG-199" => monster,
-                "WCG-196" => damage.Source is { } s && s.Owner != p,
+                "WCG-196" => V22Rules || damage.Source is { } s && s.Owner != p,
                 "WCG-197" or "WCG-198" => true,
                 "WCG-225" => monster,
                 "WCG-226" => damage.Source?.Card.IsSpell == true,
@@ -99,10 +99,10 @@ public partial class GameEngine
         if (card.Card.Id == "WCG-226") { Resolve(() => ReverseDamage(damage), () => DrawMany(p, 1)); return; }
         if (SimplifiedRules && card.Card.Id is "WCG-195" or "WCG-199")
         {
-            // If the monster already left the board, the counter only cancels the damage.
+            // If the monster already left the board, the counter cancels the damage (and in v2.2 WCG-195 still deals 1 damage).
             var killable = source != null && CanDestroyDamageSource(damage); var pp = killable ? ThresholdPP(source!) : 0;
             Resolve(() => ReverseDamage(damage), () => { if (killable) KillBatch([source!], card.Card.Name); },
-                () => { if (card.Card.Id == "WCG-195") { if (killable && pp >= (V2Rules ? 18 : 1800)) SpellDamage(p, enemy, 1, card.Card); } else if (!V2Rules && CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
+                () => { if (card.Card.Id == "WCG-195") { if (V22Rules || !V21Rules && killable && pp >= (V2Rules ? 18 : 1800)) SpellDamage(p, enemy, 1, card.Card); } else if (!V2Rules && CanRecoverCounter(p)) Recover(p, 2, 1, optional: true); });
             return;
         }
         switch (card.Card.Id)

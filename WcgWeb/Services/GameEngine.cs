@@ -57,7 +57,7 @@ public partial class GameEngine
     public string DecisionPlayerId => CurrentPendingChoice?.OwnerId ?? CurrentPendingTarget?.OwnerId ?? CurrentTurnPlayerId;
     public event Action? OnStateChanged;
     public GameEngine(CardDatabase cardDb) : this(cardDb, new Random()) { }
-    public GameEngine(CardDatabase cardDb, Random random) { _cardDb = cardDb; _random = random; }
+    public GameEngine(CardDatabase cardDb, Random random) { _cardDb = cardDb; _random = random; EqualStartingLife = CardBalanceHistory.V21Catalog(cardDb); }
 
     private bool Fail(string reason) { LastError = reason; return false; }
     private bool Change(Func<bool> action)
@@ -164,7 +164,7 @@ public partial class GameEngine
     {
         if (IsOver) return false;
         if (p.Deck.Count == 0) { Lose(p, "需要抽牌時牌庫已空"); return false; }
-        var c = p.Deck[0]; p.Deck.RemoveAt(0); p.Hand.Add(c); Present("draw", p, instance: p == Player ? c.InstanceId : null, card: p == Player ? c.Card : null, label: "抽牌"); return true;
+        var c = p.Deck[0]; p.Deck.RemoveAt(0); p.Hand.Add(c); RefreshPowerAndFlags(); Present("draw", p, instance: p == Player ? c.InstanceId : null, card: p == Player ? c.Card : null, label: "抽牌"); return true;
     }
     private void DrawMany(PlayerState p, int count) { for (int i = 0; i < count && !IsOver; i++) Draw(p); Log($"【{p.Name}】抽牌，目前手牌 {p.Hand.Count} 張。"); }
     public bool DrawCard(PlayerState p, bool log = true) => Change(() => IsCurrent(p) && Draw(p));
@@ -182,9 +182,9 @@ public partial class GameEngine
             if (!EqualStartingLife) ActivePlayer.Hp = PlayerState.FirstPlayerStartHp;
             Present("turn", ActivePlayer, label: "對局開始");
             for (int i = 0; i < 7; i++) { Draw(Player); Draw(Computer); }
-            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action");
+            Log(EqualStartingLife ? "對局開始：50 張牌組、起手 7 張；雙方 7 點生命，先攻第一回合不抽牌。" : "對局開始：50 張牌組、起手 7 張；先攻 6 點生命、後攻 7 點生命，先攻第一回合不抽牌。", "action");
             OpeningCoins = 0;
-            if (SecondPlayerCoin && !EqualStartingLife && _cardDb.GetCard(LuckyCoinId) is { } coin)
+            if (SecondPlayerCoin && (V21Rules || !EqualStartingLife) && _cardDb.GetCard(LuckyCoinId) is { } coin)
             {
                 var second = GetOpponent(ActivePlayer); second.Hand.Add(new(coin)); OpeningCoins = 1;
                 Log($"【{second.Name}】後攻，開局手牌多 1 張【{coin.Name}】。", "action");
@@ -298,14 +298,14 @@ public partial class GameEngine
             "WCG-002" when V2Rules => both.Where(m => m.Card.TotalCost <= 3),
             "WCG-002" or "WCG-086" => enemy.Where(m => ThresholdPP(m) <= Low(1000)),
             "WCG-012" or "WCG-064" => both.Where(m => m.Card.TotalCost <= 2),
-            "WCG-004" or "WCG-046" => both.Where(m => ThresholdPP(m) <= Low(500)),
-            "WCG-048" => enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
+            "WCG-004" or "WCG-046" => V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(500)),
+            "WCG-048" => V21Rules ? (p.Field.Count > 0 ? enemy.Where(m => ThresholdPP(m) <= 10) : []) : enemy.Where(m => ThresholdPP(m) <= p.Field.Count * ScalePP(500)),
             "WCG-024" or "WCG-137" or "WCG-184" => both,
             "WCG-062" or "WCG-074" => (V2Rules ? both : p.Field).Where(CanShield),
-            "WCG-032" when V2Rules => both.Where(m => ThresholdPP(m) <= 10 || m.IsTapped),
+            "WCG-032" when V2Rules => both,
             "WCG-032" when ReasonBuff => enemy.Where(m => ThresholdPP(m) <= (m.IsTapped ? 2300 : 1600)),
             "WCG-017" or "WCG-032" => enemy.Where(m => ThresholdPP(m) <= Low(1700)),
-            "WCG-082" or "WCG-084" => both.Where(m => ThresholdPP(m) <= Low(1300)),
+            "WCG-082" or "WCG-084" => V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(1300)),
             "WCG-076" => both.Where(m => ThresholdPP(m) >= High(1700)),
             "WCG-026" or "WCG-088" or "WCG-094" or "WCG-123" => both,
             "WCG-036" => p.Field,
@@ -322,7 +322,7 @@ public partial class GameEngine
         return Targetable(p, candidates).Where(m => (m.IsSilenced || (V2Rules ? !m.Card.HasSpellward : m.Card.Id != "WCG-152")) && (V2Rules || !Hermit(p, m))).ToList();
     }
     // 寂靜禁咒 (WCG-208) needs a target only as a spell; in old-era catalogs it is the monster 寂靜學者.
-    private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) || card.Id == "WCG-208" && card.IsSpell;
+    private static bool NeedsSpellTarget(CardDefinition card) => NeedsSpellTarget(card.Id) && !(card.Id == "WCG-072" && card.Text.Contains("驅散", StringComparison.Ordinal)) && !(card.Id == "WCG-331" && card.Text.Contains("決鬥", StringComparison.Ordinal)) || card.Id == "WCG-208" && card.IsSpell;
     private static bool NeedsSpellTarget(string id) => NewNeedsTarget(id) || id is "WCG-135" or "WCG-137" or "WCG-139" or "WCG-140" or "WCG-141" or "WCG-142" or "WCG-143" or "WCG-164" or "WCG-165" or "WCG-167" or "WCG-168" or "WCG-169" or "WCG-184" or "WCG-004" or "WCG-048" or "WCG-062" or "WCG-064" or "WCG-074" or "WCG-002" or "WCG-012" or "WCG-017" or "WCG-024" or "WCG-026" or "WCG-032" or "WCG-036" or "WCG-072" or "WCG-076" or "WCG-082" or "WCG-084" or "WCG-086" or "WCG-088" or "WCG-094" or "WCG-123";
     public string GetPlayProblem(PlayerState p, CardInstance c)
     {
@@ -333,7 +333,7 @@ public partial class GameEngine
         if ((c.Card.IsMonster || c.Card.IsEnchantment) && p.Occupied >= 5) return "場上已滿（最多 5 隻）。";
         if (!CanPayCost(p, c.Card, out _)) return $"可用能量不足，需要 {ActualCost(p,c.Card)}。";
         if (c.Card.IsCounter) return DamageCounters ? "反擊法術留在手牌；受到傷害且符合卡文條件時，可選擇支付費用發動。" : "反擊法術須先蓋牌，於玩家被攻擊時發動。";
-        if(c.Card.Id=="WCG-166" && p.Hand.Count<2)return "需有另一張手牌可置底。";
+        if(c.Card.Id=="WCG-166" && !V22Rules && p.Hand.Count<2)return "需有另一張手牌可置底。";
         var discard = c.Card.Id == "WCG-095" ? 2 : c.Card.Id == "WCG-084" ? 1 : 0;
         if (p.Hand.Count - 1 < discard) return $"需要另外 {discard} 張手牌支付棄牌代價。";
         if (c.Card.Id is "WCG-006" or "WCG-088" or "WCG-096" && p.Field.Count == 0) return "需要犧牲 1 隻己方怪物。";
@@ -381,7 +381,7 @@ public partial class GameEngine
         if (c.Card.Id == "WCG-046" && mode == "")
         {
             var modes = new List<ChoiceOption> { new() { Id = "LOOT", Title = "抽 1 張牌，然後棄 1 張手牌" } };
-            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? "消滅 1 隻 PP 10 以下怪物" : $"消滅 PP {Low(500)} 以下敵怪" });
+            if (SpellTargets(p, c.Card).Count > 0) modes.Insert(0, new() { Id = "KILL", Title = V2Rules ? "使 1 隻怪物本回合 PP -10" : $"消滅 PP {Low(500)} 以下敵怪" });
             Ask(p, "自然之怒抉擇（尚未扣費）", modes, o => BeginPlay(p, c, o.Id), true, c.InstanceId); return true;
         }
         void PlaceAndCommit(MonsterInstance? sacrifice, List<CardInstance>? discards)
@@ -467,11 +467,12 @@ public partial class GameEngine
     {
         if (IsOver || p.Occupied >= 5) return;
         var slot = plannedSlots.Remove(c.InstanceId, out var chosen) ? chosen : FirstSlot(p);
-        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshBoard(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid ? "" : "（非付費，不觸發進場）")}。", "action");
+        var m = new MonsterInstance(c.Card) { InstanceId = c.InstanceId, Slot = slot }; p.Field.Add(m); RefreshPowerAndFlags(); Present("summon", p, c.InstanceId, card: c.Card, label: paid ? "召喚" : "免費召喚"); Log($"【{p.Name}】召喚【{c.Card.Name}】{(paid || V22Rules ? "" : "（非付費，不觸發進場）")}。", "action");
+        CheckZeroPpDeaths();
         Summoned(p, m);
-        if (!paid) return;
-        OfferEbbTide(p, m);
-        _effects.AddLast(() => Deploy(p, m));
+        if (!paid && !V22Rules) return;
+        if (paid) OfferEbbTide(p, m);
+        _effects.AddLast(() => { if (Alive(m)) Deploy(p, m); });
         _effects.AddLast(() =>
         {
             foreach (var juggler in p.Field.Where(x => x != m && !x.IsSilenced && x.Card.Id == "WCG-107").ToArray())
@@ -483,7 +484,7 @@ public partial class GameEngine
         NewSpellTriggers(p, spell);
         foreach (var m in p.Field.Where(m => !m.IsSilenced).ToArray())
         {
-            if (m.Card.Id == "WCG-023") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); if (ReasonBuff) ScryOne(p); else Loot(p); } });
+            if (m.Card.Id == "WCG-023") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); if (V22Rules) { AddTurnBonus(m, 3, m.Card); RefreshBoard(); } else if (ReasonBuff) ScryOne(p); else Loot(p); } });
             if (m.Card.Id == "WCG-037") _effects.AddLast(() => { if (Alive(m) && !m.IsSilenced && (ReasonBuff ? p.Hand.Count <= 3 : GetOpponent(p).Hand.Count > p.Hand.Count)) { Present("trigger", p, m.InstanceId, card: m.Card, label: "施法觸發"); DrawMany(p, 1); } });
         }
     }

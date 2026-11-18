@@ -10,7 +10,7 @@ public partial class GameEngine
     public bool CanAttackPlayer(MonsterInstance a)=>CanAttack(a)&&!a.SurgeNoFace&&!OpponentPlayer.Field.Any(m=>Blocks(a,m));
     // A taunt monster forces attacks onto taunts unless the attacker ignores it: 059 past PP 18+ in v2 (>1800 / 1100/1300 in older eras), 261/越陣 past every taunt.
     private int GaiaTauntLimit()=>V2Rules?18:CardBalanceHistory.CardFixesCatalog(_cardDb)?1800:Low(1300);
-    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||(!a.Card.HasBypass||a.Card.Id=="WCG-059")&&a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||(V2Rules?ThresholdPP(m)>=18:ThresholdPP(m)>GaiaTauntLimit()))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
+    private bool Blocks(MonsterInstance a,MonsterInstance m)=>m.IsTaunt&&!PiercesTaunt(a,m)&&!a.TurnUnblockable&&!LaneSlips(a)&&(a.IsSilenced||(!a.Card.HasBypass||(a.Card.Id=="WCG-059"&&!V22Rules))&&a.Card.Id is not ("WCG-210" or "WCG-261")&&(a.Card.Id!="WCG-201"||!CardBalanceHistory.CardFixesCatalog(_cardDb)))&&(a.IsSilenced||(a.Card.Id!="WCG-059"||V22Rules||(V2Rules?ThresholdPP(m)>=18:ThresholdPP(m)>GaiaTauntLimit()))&&(a.Card.Id!="WCG-178"||LegacyCardRules));
     public record AttackPreview(bool AttackerDies,bool DefenderDies,bool AttackerShieldBreaks,bool DefenderShieldBreaks,int PlayerDamage,int PlayerDamagePreventable=0,int AttackerPP=0,int DefenderPP=0);
     // Fixed 201／203 bonuses only exist during the attack, so previews add them temporarily.
     private AttackPreview CompareAttack(MonsterInstance a,MonsterInstance? d)
@@ -33,12 +33,13 @@ public partial class GameEngine
     public bool Attack(PlayerState p,MonsterInstance a,MonsterInstance? d=null)=>AiTracked(AiNote("attack",p,unit:a,target:d),()=>
     {
         if(!Main(p)||!CanAttack(a)||(d==null?!CanAttackPlayer(a):!GetAttackTargets(a).Contains(d)))return Fail("攻擊目標或直立狀態不合法。");
+        if(V21Rules){a.IsTapped=true;a.HasAttacked=true;}
         LastAttack=new(a.InstanceId,d?.InstanceId,Revision+1);Present("attack",p,a.InstanceId,d?.InstanceId,card:a.Card,label:"攻擊");
         var ctx=new AttackContext();var e=GetOpponent(p);
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){if(V2Rules&&!a.IsSilenced&&a.Card.Id=="WCG-385"&&ThresholdPP(d)<=10){AddTurnBonus(a,5,a.Card);RefreshBoard();Present("trigger",p,a.InstanceId,card:a.Card,label:"PP +5（本回合）");}else if(!V2Rules){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}}},
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){if(V2Rules&&!a.IsSilenced&&a.Card.Id=="WCG-385"&&ThresholdPP(d)<=10){AddTurnBonus(a,5,a.Card);RefreshBoard();Present("trigger",p,a.InstanceId,card:a.Card,label:"PP +5（本回合）");}if(!V2Rules||ZeroPpDeathRules){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}}},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a,d);});return true;
     });
     // Display only: a combat-only PP bonus lasts for one resolution step, so the board never renders it; this event lets the
@@ -53,7 +54,7 @@ public partial class GameEngine
     {if(!Alive(a))return;var changed=!a.IsTapped;a.IsTapped=true;a.HasAttacked=true;SurgeAfterAttack(p,a,d);
         // "Until its next attack or combat ends": any attack, including one on the player or one a counter negated, uses up the bonus.
         if(!LegacyCardRules)a.NextCombatBonus=0;
-        if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136"){var small=Low(500);if(V2Rules)OptionalTarget(p,$"攻擊後：可消滅 1 隻 PP {small} 以下怪物",p.Field.Concat(GetOpponent(p).Field).Where(x=>ThresholdPP(x)<=small),x=>KillBatch([x],a.Card.Name));else PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>ThresholdPP(x)<=small),x=>KillBatch([x],a.Card.Name));}}
+        if((changed||!LegacyCardRules)&&!a.IsSilenced&&a.Card.Id=="WCG-136"){var small=Low(500);if(V2Rules)OptionalTarget(p,"攻擊後：可使 1 隻怪物本回合 PP -10",GetOpponent(p).Field.Concat(p.Field),x=>DebuffTurn(x,-10,a.Card));else PickMonster(p,"攻擊後消滅小怪",GetOpponent(p).Field.Where(x=>ThresholdPP(x)<=small),x=>KillBatch([x],a.Card.Name));}}
     // effect: a combat started by an effect (duel); both monsters count as attacked, so both can block / spend a 聖盾 source.
     // CombatProtected (269／272 "此次交戰此怪物不會被消滅") survives without spending one.
     private void ResolveAttack(PlayerState p,MonsterInstance a,MonsterInstance? d,bool effect=false)
@@ -73,7 +74,7 @@ public partial class GameEngine
                     foreach(var x in e.Structures.Where(x=>!x.IsSet&&x.Card.Id=="WCG-124").ToArray())if(kills.Contains(a))triggers.Add(()=>Damage(p,1,new(e,x.Card,x,"passive")));
                     if(DamageCounters) Resolve(triggers.ToArray()); else foreach(var trigger in triggers)trigger();
                 },
-                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{OathCombatWon(p,a,d);OathCombatWon(e,d,a);HoofCombatWon(p,a,d);HoofCombatWon(e,d,a);},()=>{if(mirror&&Alive(a))Bounce(a);},()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;});
+                ()=>Survived(p,a,d,false),()=>Survived(e,d,a,true),()=>{OathCombatWon(p,a,d);OathCombatWon(e,d,a);HoofCombatWon(p,a,d);HoofCombatWon(e,d,a);},()=>{if(mirror&&Alive(a))Bounce(a);},()=>{a.NextCombatBonus=0;d.NextCombatBonus=0;a.CombatPowerBonus=0;d.CombatPowerBonus=0;},()=>{SpendCombatAttachments(a);SpendCombatAttachments(d);});
             KillBatch(dead,"交戰");
         });
     }

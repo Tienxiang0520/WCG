@@ -29,6 +29,7 @@ public partial class GameEngine
     // Presentation only: the rules still go straight to ResolveAttack (no tap, no attack triggers, LastAttack unchanged).
     private void EffectCombat(PlayerState p, MonsterInstance a, MonsterInstance d)
     {
+        if (ZeroPpDeathRules && Alive(a) && Alive(d)) { ApplyCombatPower(a, d); PresentCombatPower(a, d); PresentCombatPower(d, a); }
         Present("attack", p, a.InstanceId, d.InstanceId, card: a.Card, label: "交戰");
         ResolveAttack(p, a, d, effect: true);
     }

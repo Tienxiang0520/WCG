@@ -55,8 +55,8 @@ public partial class GameEngine
         bonus += LanePower(p, m) + GravePower(p, m);
         switch (m.Card.Id)
         {
-            case "WCG-222": bonus += ScalePP(V2Rules ? 300 : 500) * m.Attachments.Count; break;
-            case "WCG-228": bonus += ScalePP(300) * Math.Max(0, 5 - p.Occupied); break;
+            case "WCG-222": bonus += V22Rules ? (m.Attachments.Count > 0 ? 5 : 0) : ScalePP(V2Rules ? 300 : 500) * m.Attachments.Count; break;
+            case "WCG-228": bonus += V22Rules ? (p.Field.Count == 1 ? 9 : 0) : ScalePP(300) * Math.Max(0, 5 - p.Occupied); break;
             case "WCG-238": bonus += ScalePP(200) * p.Field.Count(x => x != m && x.Card.IsNeutral); break;
             case "WCG-262": bonus += ScalePP(100) * Math.Min(7, p.Hand.Count); break;
             case "WCG-241": if (p.Field.All(x => x.Card.HasWill("狂怒"))) bonus += ScalePP(400); break;
@@ -75,7 +75,7 @@ public partial class GameEngine
         };
     }
     private bool NewTrample(PlayerState p, MonsterInstance m) =>
-        m.Attachments.Any(a => a.Card.Card.Id == "WCG-220")
+        m.Attachments.Any(a => a.Card.Card.Id == "WCG-220" || a.Card.Card.Id == "WCG-165" && a.Card.Card.Text.Contains("貫穿", StringComparison.Ordinal))
         || Player.Field.Concat(Computer.Field).Any(x => x != m && Active(x, "WCG-218") && HasArrows(x) && PointsAt(Owner(x), x, p, m));
     // 前鋒盾衛: the enemy monster straight ahead of its up arrow can't attack.
     private bool Pinned(MonsterInstance m)
@@ -88,7 +88,7 @@ public partial class GameEngine
     private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && (Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1) || StarWarded(m));
     private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221") + HoofAttackDp(a) + LaneAttackDp(a);
     private int NewAttachmentPower(string id) => id switch { "WCG-221" => ScalePP(V2Rules ? 200 : 300), "WCG-338" => ScalePP(200), "WCG-382" or "WCG-387" => ScalePP(-300), "WCG-388" => ScalePP(-600), _ => 0 };
-    private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3) : GraveCostReduction(p, card);
+    private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? (V22Rules ? 0 : Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3)) : GraveCostReduction(p, card);
 
     private List<MonsterInstance>? NewSpellTargets(PlayerState p, CardDefinition c)
     {
@@ -96,13 +96,13 @@ public partial class GameEngine
         var both = V2Rules ? p.Field.Concat(enemy) : enemy;
         return c.Id switch
         {
-            "WCG-206" => both.Where(m => m.IsTaunt && !m.IsSilenced).ToList(),
-            "WCG-208" when c.IsSpell => both.Where(m => !m.IsSilenced).ToList(),
+            "WCG-206" => both.Where(m => m.IsTaunt && (V21Rules || !m.IsSilenced)).ToList(),
+            "WCG-208" when c.IsSpell => (V21Rules ? both : both.Where(m => !m.IsSilenced)).ToList(),
             "WCG-207" => enemy.Where(m => m.IsTaunt && ThresholdPP(m) >= (V2Rules ? 18 : 1800)).ToList(),
             "WCG-220" or "WCG-221" => (V2Rules ? p.Field.Concat(enemy) : p.Field).ToList(),
             "WCG-230" => enemy.Count > 0 ? p.Field.Where(m => !m.IsTapped).ToList() : [],
-            "WCG-246" => both.Where(m => ThresholdPP(m) <= Low(1100)).ToList(),
-            "WCG-248" => p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
+            "WCG-246" => (V2Rules ? both : both.Where(m => ThresholdPP(m) <= Low(1100))).ToList(),
+            "WCG-248" => V21Rules ? (enemy.Count > 0 ? p.Field.Where(m => m.Card.HasWill("生機")).ToList() : []) : p.Field.Where(m => m.Card.HasWill("生機") && enemy.Any(x => ThresholdPP(x) < ThresholdPP(m))).ToList(),
             _ => OathSpellTargets(p, c)
         };
     }
@@ -111,6 +111,7 @@ public partial class GameEngine
     {
         "WCG-233" when p.Field.Count == 0 => "需要犧牲 1 隻己方怪物。",
         "WCG-207" when p.Hp < 1 => "生命不足以支付。",
+        "WCG-331" when V22Rules && GetOpponent(p).Field.Count < 2 => "敵方場上需要至少 2 隻怪物。",
         _ => VaultPlayProblem(p, c)
     };
     private MonsterInstance? lastSacrifice;
@@ -123,7 +124,7 @@ public partial class GameEngine
             case "WCG-205": BreakShield(p); break; case "WCG-209": BreakShield(p, !ShieldSourceRules); break;
             // Before the silence-spell change (2026-10-16) 寂靜學者 was a monster; old-era matches keep its entry effect.
             case "WCG-208": PickMonster(p, "選擇要沉默的敵方怪物", e.Field.Where(x => !x.IsSilenced), x => { x.IsSilenced = true; RefreshBoard(); Present("status", e, x.InstanceId, card: x.Card, label: "沉默"); SilenceStrip(x); }); break;
-            case "WCG-212": Mill(e, 2); break;
+            case "WCG-212": if (V22Rules) SelfMill(p, 2); else Mill(e, 2); break;
             case "WCG-227": if (p.Hand.Count > e.Hand.Count) DrawMany(p, 1); break;
             case "WCG-236": if (OthersAre(p, m, c => c.IsNeutral)) DrawMany(p, 1); break;
             case "WCG-245": if (OthersAre(p, m, c => c.HasWill("生機"))) DrawMany(p, 1); break;
@@ -139,9 +140,19 @@ public partial class GameEngine
         bool Valid() => t != null && Alive(t) && SpellTargets(p, c).Contains(t);
         switch (c.Id)
         {
-            case "WCG-206": case "WCG-208": if (Valid()) Silence(p, source, t!); break;
-            case "WCG-207": case "WCG-246": if (Valid()) KillBatch([t!], c.Name); break;
-            case "WCG-211": Mill(e, 3); break;
+            case "WCG-206":
+                if (!Valid()) break;
+                if (V21Rules) { if (!t!.IsTapped) { t.IsTapped = true; Present("status", Owner(t), t.InstanceId, card: t.Card, label: "橫置"); } DebuffTurn(t, -5, c); }
+                else Silence(p, source, t!);
+                break;
+            case "WCG-208":
+                if (!Valid()) break;
+                if (V21Rules) { DispelMonster(t!); if (Alive(t!)) DebuffTurn(t!, -5, c); }
+                else Silence(p, source, t!);
+                break;
+            case "WCG-207": if (Valid()) KillBatch([t!], c.Name); break;
+            case "WCG-246": if (Valid()) { if (V2Rules) DebuffTurn(t!, -10, c); else KillBatch([t!], c.Name); } break;
+            case "WCG-211": if (V22Rules) Resolve(() => SelfMill(p, 3), () => DrawMany(p, 1)); else Mill(e, 3); break;
             case "WCG-214": Mill(e, Math.Min(8, GraveMonsters(p))); break;
             case "WCG-217": DrawMany(p, Math.Min(3, p.Field.Count(HasArrows))); break;
             case "WCG-220": case "WCG-221": if (t != null && Alive(t)) Attach(p, source, t); break;
@@ -157,7 +168,8 @@ public partial class GameEngine
             case "WCG-242": Resolve(() => DrawMany(p, 2), () => PayLife(p, 1)); break;
             case "WCG-248":
                 if (t == null || !Alive(t)) break;
-                PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
+                if (V21Rules) PickMonster(p, $"選擇與【{t.Card.Name}】決鬥的敵方怪物", SpellResolvePickable(p, e.Field), d => { if (Alive(t) && Alive(d)) Duel(p, t, d); });
+                else PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
                 break;
             case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
             default: return OathSpell(p, source, t);
@@ -184,7 +196,7 @@ public partial class GameEngine
     private void NewEndTurn(PlayerState p, List<Action> effects)
     {
         foreach (var m in p.Field.Where(x => Active(x, "WCG-213")).ToArray())
-            effects.Add(() => { if (Alive(m) && !m.IsSilenced && !m.IsTapped) Mill(GetOpponent(p), 1); });
+            effects.Add(() => { if (Alive(m) && !m.IsSilenced && !m.IsTapped) { if (V22Rules) SelfMill(p, 1); else Mill(GetOpponent(p), 1); } });
         foreach (var s in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-244").ToArray())
             effects.Add(() => { if (p.Structures.Contains(s) && p.Field.Count > 0 && p.Field.All(x => x.Card.HasWill("狂怒"))) Damage(GetOpponent(p), 1, new(p, s.Card, s, "passive")); });
     }

@@ -38,7 +38,7 @@ public sealed class LuckyCoinTests
     {
         var g=new GameEngine(cards,new Random(3)){SecondPlayerCoin=false};g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
         Assert.Equal(7,g.Computer.Hand.Count);Assert.Equal(0,g.OpeningCoins);
-        g=new GameEngine(cards,new Random(3)){EqualStartingLife=true};g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
+        g=new GameEngine(cards,new Random(3)){EqualStartingLife=true,SecondPlayerCoin=false};g.StartGame(cards.PresetDecks[0],cards.PresetDecks[1]);
         Assert.Equal(7,g.Computer.Hand.Count);
         var preV2=CardBalanceHistory.BeforeV2(cards);
         var old=CardBalanceHistory.BeforeLuckyCoin(preV2);Assert.Null(old.GetCard("WCG-263"));Assert.Equal(preV2.AllCards.Count(c=>int.Parse(c.Id[4..])<=263)-1,old.AllCards.Count);

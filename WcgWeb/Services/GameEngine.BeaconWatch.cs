@@ -32,11 +32,10 @@ public partial class GameEngine
     {
         if (!m.IsUnit) yield break;
         foreach (var x in VaultPowerSources(p, m)) yield return x;
+        foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-297" && (Upright(m) || a.Card.Card.Text.Contains("PP +3", StringComparison.Ordinal))))
+            yield return (a.Card.Card, ScalePP(a.Card.Card.Text.Contains("PP +3", StringComparison.Ordinal) ? 300 : 400));
         if (Upright(m))
-        {
             foreach (var tree in p.Field.Where(x => x != m && Active(x, "WCG-296") && Upright(x))) yield return (tree.Card, ScalePP(200));
-            foreach (var a in m.Attachments.Where(a => a.Card.Card.Id == "WCG-297")) yield return (a.Card.Card, ScalePP(400));
-        }
     }
     private int BeaconPower(PlayerState p, MonsterInstance m) => BeaconPowerSources(p, m).Sum(x => x.Amount);
 
@@ -59,11 +58,15 @@ public partial class GameEngine
         switch (source.Card.Id)
         {
             case "WCG-294":
+                var hornBuff = source.Card.Text.Contains("PP +3", StringComparison.Ordinal);
                 foreach (var m in p.Field.Where(x => x.IsUnit && x.IsTapped && !x.AttackLocked))
-                { m.IsTapped = false; m.AttackBanned = true; Present("status", p, m.InstanceId, card: m.Card, label: "轉為直立"); }
-                RefreshBoard(); Log($"【{p.Name}】的橫置怪物轉為直立（本回合不能攻擊）。", "action");
+                {
+                    if (hornBuff) { PrepUnit(m, source.Card); AddTurnBonus(m, ScalePP(300), source.Card); }
+                    else { m.IsTapped = false; m.AttackBanned = true; Present("status", p, m.InstanceId, card: m.Card, label: "轉為直立"); }
+                }
+                RefreshBoard(); Log($"【{p.Name}】的橫置怪物轉為直立（{(hornBuff ? "本回合 PP +3、不能攻擊玩家" : "本回合不能攻擊")}）。", "action");
                 break;
-            case "WCG-297": if (t != null && Alive(t) && p.Field.Contains(t)) Attach(p, source, t); break;
+            case "WCG-297": if (t != null && Alive(t) && (V2Rules || p.Field.Contains(t))) Attach(p, source, t); break;
             case "WCG-299":
                 var n = Math.Min(3, p.Field.Count(Upright));
                 if (n > 0) Heal(p, n);
@@ -86,8 +89,8 @@ public partial class GameEngine
         var e = GetOpponent(p);
         switch (c.Card.Id)
         {
-            case "WCG-294": return p.Field.Where(m => m.IsUnit && m.IsTapped && !m.AttackLocked).Sum(m => 1 + BeaconBodyValueIfUpright(m)) - 2;
-            case "WCG-297": return p.Field.Any(m => m.IsUnit) ? 2 : -5;
+            case "WCG-294": return p.Field.Where(m => m.IsUnit && m.IsTapped && !m.AttackLocked).Sum(m => 2 + BeaconBodyValueIfUpright(m) + (e.Field.Count > 0 ? 1 : 0)) - 2;
+            case "WCG-297": return p.Field.Any(m => m.IsUnit) ? 3 : -5;
             case "WCG-299": return Math.Min(3, p.Field.Count(Upright)) * (p.Hp <= 4 ? 3 : 1.2) - (p.Hp >= 7 ? 5 : 1.5);
             case "WCG-300": return Math.Min(3, p.Field.Count(Upright)) * (e.Hp <= 3 ? 6 : 4);
         }
@@ -97,7 +100,7 @@ public partial class GameEngine
     private MonsterInstance? BeaconTarget(PlayerState p, PendingTarget pending, List<MonsterInstance> legal) => HoofTarget(p, pending, legal);
     private MonsterInstance? ArchSpellTarget(PlayerState p, string id, IReadOnlyList<MonsterInstance> own) => id switch
     {
-        "WCG-297" => own.OrderByDescending(m => (Upright(m) ? 3 : 0) + (m.Card.CannotAttack ? 2 : 0) + BodyValue(m)).FirstOrDefault(),
+        "WCG-297" => own.OrderByDescending(m => (!m.HasShield ? 3 : 0) + (Upright(m) ? 2 : 0) + (m.IsTaunt ? 2 : 0) + BodyValue(m)).FirstOrDefault(),
         _ => HoofSpellTarget(p, id, own)
     };
 }

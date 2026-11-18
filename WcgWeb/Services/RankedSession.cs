@@ -225,7 +225,7 @@ public sealed partial class RankedSession
             Engine.UseMatchCatalog(era.Cards, era.LimitFactionTriggers, era.LegacyCardRules);
             BalanceNotice = "本局沿用原卡牌效果與費用，下一局套用新版。";
         }
-        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules < 1; Engine.SecondPlayerCoin = match.StartRules >= 2;
+        Engine.SetReplaySeed(match.Seed); Engine.AiLevel = match.Tier; Engine.EqualStartingLife = match.StartRules is < 1 or >= 3; Engine.SecondPlayerCoin = match.StartRules >= 2;
         Engine.StartGame(match.PlayerDeck, match.ComputerDeck, match.PlayerFirst);
         return match;
     }

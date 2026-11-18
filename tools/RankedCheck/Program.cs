@@ -78,6 +78,38 @@ if(args.Contains("--explain"))
  return(e.Computer.HasLost,ms);
 }
 // --v8-vs-v7：同牌位 v8（目前版本）對 v7，五副預組全部配對、雙方先後手。
+if(args.Contains("--first-rate"))
+{
+ int[] rateTiers=args.Contains("--tiers")?args[Array.IndexOf(args,"--tiers")+1].Split(',').Select(int.Parse).ToArray():[0,1,2,3,4,5];
+ var decks=pool.All.Where(e=>rateTiers.Contains(e.Tier)).ToList();
+ int perDeck=Math.Max(1,(400+decks.Count*2-1)/(decks.Count*2));
+ var jobs=decks.SelectMany((d,di)=>Enumerable.Range(0,perDeck).SelectMany(s=>new[]{true,false}.Select(f=>(di,d,s,f)))).ToList();
+ var res=new bool[jobs.Count];var clock=System.Diagnostics.Stopwatch.StartNew();
+ var threads=int.TryParse(Environment.GetEnvironmentVariable("RANKEDCHECK_THREADS"),out var n4)&&n4>0?n4:Environment.ProcessorCount;
+ Parallel.For(0,jobs.Count,new ParallelOptions{MaxDegreeOfParallelism=threads},k=>
+ {
+  var (di,d,s,f)=jobs[k];
+  var opp=decks[(di+1+s)%decks.Count];
+  var e=new GameEngine(db,new Random(2700+di*100+s));e.SeedRankedAi(2700+di*100+s);
+  e.StartGame(d.Deck,opp.Deck,f);e.Player.IsAi=true;
+  for(int step=0;step<3000&&!e.IsOver;step++)
+  {
+   e.AiLevel=e.DecisionPlayerId=="player"?d.Tier:opp.Tier;
+   if(!e.ExecuteAiStep())throw new Exception(d.Deck.Name+" stalled: "+e.LastError);
+  }
+  if(!e.IsOver)throw new Exception("Timeout: "+d.Deck.Name);
+  bool playerWon=e.Computer.HasLost;
+  res[k]=f?playerWon:!playerWon; // true if the first player won
+ });
+ int firstWins=res.Count(x=>x);
+ var byDeck=decks.Select((d,di)=>{
+  var idx=Enumerable.Range(0,jobs.Count).Where(k=>jobs[k].di==di).ToList();
+  int fw=idx.Count(k=>res[k]);
+  return new{tier=d.Tier,deck=d.Deck.Name,games=idx.Count,firstWins=fw,firstWinRate=Math.Round((double)fw/idx.Count,4)};
+ }).OrderByDescending(x=>x.firstWinRate).ToList();
+ Console.WriteLine(JsonSerializer.Serialize(new{totalGames=jobs.Count,firstPlayerWins=firstWins,overallFirstWinRate=Math.Round((double)firstWins/jobs.Count,4),highest=byDeck[0],lowest=byDeck[^1],byDeck},new JsonSerializerOptions{WriteIndented=true,Encoder=System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping}));
+ return;
+}
 if(args.Contains("--v8-vs-v7"))
 {
  int[] tierList=args.Contains("--tiers")?args[Array.IndexOf(args,"--tiers")+1].Split(',').Select(int.Parse).ToArray():[3,4,5];

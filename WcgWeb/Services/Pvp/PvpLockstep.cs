@@ -66,7 +66,7 @@ public sealed class PvpLockstep
         Handshake = handshake; this.sink = sink;
         Engine = new GameEngine(catalog, new Random(handshake.Seed));
         Engine.SetReplaySeed(handshake.Seed);
-        Engine.EqualStartingLife = handshake.StartRules < 1; Engine.SecondPlayerCoin = handshake.StartRules >= 2;
+        Engine.EqualStartingLife = handshake.StartRules is < 1 or >= 3; Engine.SecondPlayerCoin = handshake.StartRules >= 2;
         Engine.StartGame(hostDeck, guestDeck, handshake.HostFirst);
         Engine.Player.IsAi = false; Engine.Computer.IsAi = false;
         View = new SeatView(Engine, local);

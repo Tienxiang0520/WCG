@@ -34,7 +34,7 @@ public partial class GameEngine
     // 371 誓血軍旗手: its ← → arrows give another +200 (+2 in v2) for each life its controller has less than the opponent.
     private IEnumerable<(CardDefinition Source, int Amount)> BloodArrowSources(PlayerState owner, MonsterInstance unit) =>
         Player.Field.Concat(Computer.Field).Where(s => s != unit && Active(s, "WCG-371") && PointsAt(Owner(s), s, owner, unit) && !Across(s, unit))
-            .Select(s => (s.Card, ScalePP(200) * Math.Max(0, GetOpponent(Owner(s)).Hp - Owner(s).Hp))).Where(x => x.Item2 != 0);
+            .Select(s => (s.Card, V22Rules ? (LowLife(Owner(s)) ? 2 : 0) : ScalePP(200) * Math.Max(0, GetOpponent(Owner(s)).Hp - Owner(s).Hp))).Where(x => x.Item2 != 0);
 
     private bool BloodDeploy(PlayerState p, MonsterInstance m)
     {

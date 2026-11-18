@@ -214,6 +214,10 @@ internal static class CardBalanceHistory
 
     // 2026-11-13 v2.0 redesign: 236-card pool, PP÷100, 格擋 replacing 聖盾, 7-life DP, unified single-target wording.
     internal static bool V2Catalog(CardDatabase cards) => cards.GetCard("WCG-001")?.PP is > 0 and < 100 && cards.AllCards.Count < 300;
+    internal static bool V21Catalog(CardDatabase cards) => V2Catalog(cards) && cards.GetCard("WCG-168")?.Text.Contains("下一次交戰", StringComparison.Ordinal) != true;
+    internal static bool V22Catalog(CardDatabase cards) => V21Catalog(cards) && cards.GetCard("WCG-022")?.Text.StartsWith("檢索", StringComparison.Ordinal) == true;
+    internal static bool DamageCountersCatalog(CardDatabase cards) =>
+        V21Catalog(cards) || cards.GetCard("WCG-195")?.Text.StartsWith("【反擊】受", StringComparison.Ordinal) == true;
     private static CardDatabase V2Step(CardDatabase c) => V2Catalog(c) ? LoadSnapshot("WcgWeb.Balance.BeforeV2", "WcgWeb.Balance.BeforeV2Presets") : c;
 
     // 2026-11-12 指示物改為牌組裡的卡: 聖盾 sources are cards under the monster or arrows; 倒數／DP／血誓／聖泉 are face-down cards

@@ -60,7 +60,7 @@ public class BattleBridgeTests
     }
     [Fact] public void DirectSpellTargetsRejectFriendlyAndStealthWithoutSpendingThenResolveEnemy()
     {
-        Energy();var card=Hand("WCG-331");var own=Field(engine.Player,"WCG-101");
+        Energy();var card=Hand("WCG-048");var own=Field(engine.Player,"WCG-101");
         var hidden=Field(engine.Computer,"WCG-195"); engine.Computer.Field.Remove(hidden); engine.Computer.Structures.Add(new(hidden.Card){InstanceId=hidden.InstanceId,IsSet=true});var enemy=Field(engine.Computer,"WCG-101");
         var hand=bridge.Snapshot().Hand.Single(h=>h.Card.InstanceId==card.InstanceId);
         Assert.Equal(new[]{enemy.InstanceId.ToString()},hand.PlayTargets);

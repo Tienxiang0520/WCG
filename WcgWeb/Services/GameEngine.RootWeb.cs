@@ -21,7 +21,7 @@ public partial class GameEngine
     // 356 連枝守衛: pointed at by 2 or more arrows, it has 聖盾 (each creature pointing at it is a source).
     private bool RootShield(PlayerState p, MonsterInstance unit) => Active(unit, "WCG-356") && ArrowsAt(p, unit) >= 2;
     // 362 擠枝新芽: played from hand, it only goes into an empty slot between two of your monsters.
-    private bool RootSlotAllowed(PlayerState p, CardDefinition card, int slot) => card.Id != "WCG-362" ||
+    private bool RootSlotAllowed(PlayerState p, CardDefinition card, int slot) => V22Rules || card.Id != "WCG-362" ||
         p.Field.Any(x => x.IsUnit && !x.Turned && x.Slot == slot - 1) && p.Field.Any(x => x.IsUnit && !x.Turned && x.Slot == slot + 1);
     private bool RootSqueezeSlot(PlayerState p) => Enumerable.Range(0, 5).Any(i => !RowTaken(p, i) && RootSlotAllowed(p, cards362, i));
     private static readonly CardDefinition cards362 = new() { Id = "WCG-362" };
@@ -92,7 +92,7 @@ public partial class GameEngine
     }
     private string RootPlayProblem(PlayerState p, CardDefinition c) => c.Id switch
     {
-        "WCG-362" when !RootSqueezeSlot(p) => "只能放在兩隻己方怪物之間的空格。",
+        "WCG-362" when !V22Rules && !RootSqueezeSlot(p) => "只能放在兩隻己方怪物之間的空格。",
         _ => BloodPlayProblem(p, c)
     };
     private static bool RootCanActivate(PlayerState p, MonsterInstance s) => SurgeCanActivate(p, s);

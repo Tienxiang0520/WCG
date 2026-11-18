@@ -21,10 +21,12 @@ public partial class GameEngine
         switch (id)
         {
             case "WCG-208" when c.Card.IsSpell:
+                if (V21Rules)
+                    return e.Field.Select(m => DebuffEnemyScore(p, m, 5) + (m.Attachments.Count > 0 ? 2 : 0)).DefaultIfEmpty(-5).Max() - 1;
                 // 寂靜禁咒: worth casting only on an enemy whose ability matters (taunt, shield, poison or any text).
                 var hush = e.Field.Where(m => !m.IsSilenced && !m.Card.IsVanilla).Select(m => (m.IsTaunt ? 3 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + 1 + BodyValue(m) * .3).DefaultIfEmpty(-5).Max();
                 return hush - 1;
-            case "WCG-211": return Mill(3) - 1;
+            case "WCG-211": return V22Rules ? Draw(1) - 1 : Mill(3) - 1;
             case "WCG-214": return Mill(Math.Min(8, p.Graveyard.Count(x => x.Card.IsMonster))) - 2;
             case "WCG-217": return Draw(Math.Min(3, p.Field.Count(HasArrows))) - 1.5;
             case "WCG-220": return p.Field.Any(m => !m.HasTrample && m.CurrentPP >= ScalePP(1300)) ? 3 : -3;
@@ -39,6 +41,8 @@ public partial class GameEngine
             case "WCG-237": return p.Deck.Count > 3 ? 3 : -5;
             case "WCG-242": return p.Hp <= 2 ? -20 : Draw(2) - 1.5;
             case "WCG-248":
+                if (V21Rules)
+                    return p.Field.Where(a => a.Card.HasWill("生機")).SelectMany(a => e.Field.Where(d => a.CurrentPP > d.CurrentPP && !(d.HasShield && ShieldReady(d)) && !d.HasPoison).Select(d => BodyValue(d))).DefaultIfEmpty(-6).Max() - 1;
                 var strongest = p.Field.Where(m => m.Card.HasWill("生機")).Select(ThresholdPP).DefaultIfEmpty(0).Max();
                 return Best(e.Field.Where(m => ThresholdPP(m) < strongest)) + 1 - 1.5;
             case "WCG-250": return Draw(p.Graveyard.Count(x => x.Card.IsMonster) >= 5 ? 2 : 1);
@@ -50,8 +54,8 @@ public partial class GameEngine
             "WCG-205" or "WCG-209" => e.Field.Any(m => m.HasShield && ShieldReady(m)) ? 3 : 0,
             "WCG-208" => e.Field.Where(m => !m.IsSilenced).Select(m => (m.IsTaunt ? 2 : 0) + (m.HasShield ? 2 : 0) + (m.HasPoison ? 2 : 0) + (m.Card.IsVanilla ? 0 : 1)).DefaultIfEmpty(0).Max(),
             "WCG-210" or "WCG-261" => e.Field.Any(m => m.IsTaunt) ? 2 : 0,
-            "WCG-212" => Mill(2) * .7,
-            "WCG-213" => e.Deck.Count <= 12 ? 2 : 0,
+            "WCG-212" => V22Rules ? (p.Deck.Count > 10 ? 0.5 : -2) : Mill(2) * .7,
+            "WCG-213" => V22Rules ? 0 : (e.Deck.Count <= 12 ? 2 : 0),
             "WCG-219" => p.Occupied >= 4 ? 2 : -1,
             "WCG-222" => -1,
             "WCG-227" => p.Hand.Count - 1 > e.Hand.Count ? 2 : 0,

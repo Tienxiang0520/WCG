@@ -46,8 +46,8 @@ public partial class GameEngine
         {
             case "WCG-392":
                 if (t == null || !Alive(t) || (!V2Rules && !p.Field.Contains(t))) break;
-                if (t.IsTapped) SurgeReady(Owner(t), t, source.Card);
-                if (V2Rules) t.SurgeNoFace = true;
+                if (V2Rules) PrepUnit(t, source.Card);
+                else if (t.IsTapped) SurgeReady(Owner(t), t, source.Card);
                 AddTurnBonus(t, ScalePP(300), source.Card);
                 break;
             case "WCG-396":

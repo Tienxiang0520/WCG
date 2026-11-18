@@ -39,9 +39,13 @@ public partial class GameEngine
                 if (n > 0) Damage(e, n, new(p, m.Card, m, "deploy"));
                 break;
             case "WCG-390":
-                foreach (var x in e.Field.Where(x => x.IsUnit).ToArray()) AddTurnBonus(x, ScalePP(-600), m.Card);
-                RefreshBoard();
-                KillBatch(e.Field.Where(x => x.IsUnit && x.CurrentPP <= 0).ToArray(), m.Card.Name);
+                if (ZeroPpDeathRules) DebuffBatchTurn(e.Field.Where(x => x.IsUnit), ScalePP(-600), m.Card);
+                else
+                {
+                    foreach (var x in e.Field.Where(x => x.IsUnit).ToArray()) AddTurnBonus(x, ScalePP(-600), m.Card);
+                    RefreshBoard();
+                    KillBatch(e.Field.Where(x => x.IsUnit && x.CurrentPP <= 0).ToArray(), m.Card.Name);
+                }
                 break;
             default: return SpringDeploy(p, m);
         }
@@ -76,6 +80,7 @@ public partial class GameEngine
     // 386 沼母孵巢: at the start of your turn, destroy the monster its ↑ arrow points at if its PP is 0.
     private void MireStartTurn(PlayerState p)
     {
+        if (ZeroPpDeathRules) return;
         foreach (var s in p.Structures.Where(x => !x.IsSet && x.Card.Id == "WCG-386").ToArray())
             _effects.AddLast(() =>
             {
