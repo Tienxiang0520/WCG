@@ -174,7 +174,7 @@ public partial class GameEngine
             if (taunts.Length == 1 && ready.Sum(m => m.CurrentDP) >= e.Hp)
                 foreach (var c in p.Hand.Where(c => c.Card.IsSpell && !c.Card.IsCounter && CanPlayCard(p, c) && c.Card.Id is not ("WCG-024" or "WCG-137") && (c.Card.Id != "WCG-168" || V21Rules && taunts[0].CurrentPP <= 5)))
                 {
-                    if (ZeroPpDeathRules && (c.Card.Id is "WCG-004" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246" && taunts[0].CurrentPP > 10 || c.Card.Id == "WCG-032" && !taunts[0].IsTapped && taunts[0].CurrentPP > 10)) continue;
+                    if (ZeroPpDeathRules && (c.Card.Id is "WCG-004" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246" && taunts[0].CurrentPP > DebuffAmount(c.Card.Id) || c.Card.Id == "WCG-032" && !taunts[0].IsTapped && taunts[0].CurrentPP > 10)) continue;
                     if (GetDirectPlayTargets(p, c).Contains(taunts[0]) && c.Card.Id is not ("WCG-141" or "WCG-165" or "WCG-143")) return CastSpellAt(p, c, taunts[0]);
                 }
         }
@@ -183,12 +183,15 @@ public partial class GameEngine
 
     private bool StructureWorthIt(PlayerState p, PlayerState e, MonsterInstance s) => s.Card.Id switch
     {
+        "WCG-125" => p.Deck.Count > 2,
         "WCG-126" => !V2Rules || p.EnergyZone.Count(x => x.IsTapped) >= 2 || p.Hand.Any(c => ActualCost(p, c.Card) == p.AvailableEnergy + 1),
         "WCG-128" => p.Field.Any(m => BodyValue(m) < 5 || m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016") && p.Deck.Count > 3,
         "WCG-149" => p.Deck.Count > 2,
         "WCG-151" => e.Field.Any(m => m.CurrentPP <= ScalePP(800)) || ZeroPpDeathRules && e.Field.Any(m => m.CurrentPP - 10 <= p.Field.Where(CanAttack).Select(a => a.CurrentPP).DefaultIfEmpty(0).Max()),
         _ => true,
     };
+
+    private int DebuffAmount(string id) => id == "WCG-246" && _cardDb.GetCard(id)?.Text?.Contains("-15", StringComparison.Ordinal) == true ? 15 : 10;
 
     private double DebuffEnemyScore(PlayerState p, MonsterInstance m, int delta, bool instantKill = false)
     {
@@ -213,7 +216,7 @@ public partial class GameEngine
         if (FriendlySpells.Contains(id) || id is "WCG-076" or "WCG-082" or "WCG-084" && V2Rules && !ZeroPpDeathRules)
             return own.OrderByDescending(m => (CanAttack(m) || m.IsTapped && id is "WCG-143" or "WCG-167" ? 5 : 0) + BodyValue(m)).FirstOrDefault();
         if (ZeroPpDeathRules && id is "WCG-004" or "WCG-032" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246")
-            return enemy.OrderByDescending(m => DebuffEnemyScore(p, m, 10, id == "WCG-032" && m.IsTapped)).FirstOrDefault();
+            return enemy.OrderByDescending(m => DebuffEnemyScore(p, m, DebuffAmount(id), id == "WCG-032" && m.IsTapped)).FirstOrDefault();
         if (id is "WCG-024" or "WCG-137" or "WCG-184") return enemy.OrderByDescending(m => (m.IsTapped ? 0 : m.CurrentDP * 3) + BodyValue(m)).FirstOrDefault();
         return enemy.OrderByDescending(m => BodyValue(m) + (m.IsTaunt ? 3 : 0)).FirstOrDefault() ?? (id == "WCG-072" ? null : own.FirstOrDefault());
     }
@@ -262,6 +265,7 @@ public partial class GameEngine
         if (!prof.SmartTargets) return ExecuteV06Ai();
         var discard = choice.Title.Contains("棄") || choice.Title.Contains("牌庫底") || choice.Title.Contains("置底");
         var debuffChoice = ZeroPpDeathRules && choice.Title.Contains("PP -10");
+        var arcaneSecond = choice.Title == ArcaneSecondTitle;
         double Score(ChoiceOption o)
         {
             if (o.Id == "KEEP") return 100;
@@ -269,6 +273,12 @@ public partial class GameEngine
             {
                 if (o.Id == "SKIP") return e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? -50 : 50;
                 if (e.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } foe) return 20 + DebuffEnemyScore(p, foe, 10);
+                if (p.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } ownM) return -50 - BodyValue(ownM);
+            }
+            if (arcaneSecond)
+            {
+                if (o.Id == "SKIP") return 0;
+                if (e.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } foe) return 20 + (foe.IsTapped ? 0 : foe.CurrentDP * 3) + BodyValue(foe);
                 if (p.Field.FirstOrDefault(m => m.InstanceId.ToString() == o.Id) is { } ownM) return -50 - BodyValue(ownM);
             }
             if (o.Id == "SKIP") return -50;
@@ -346,6 +356,7 @@ public partial class GameEngine
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= ScalePP(2000)) ? 6 : 0,
                 "WCG-117" => e.Field.Any(m => m.CurrentPP <= ScalePP(1000)) ? 3 : 0,
                 "WCG-104" when c.Card.Text.Contains("驅散", StringComparison.Ordinal) => DispelWorth(p) ? 3 : 0,
+                "WCG-385" when c.Card.Text.Contains("進場", StringComparison.Ordinal) => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 3)) : 0,
                 _ => NewPlayValue(p, c) ?? 0,
             };
             return score;
@@ -373,11 +384,12 @@ public partial class GameEngine
         {
             var isDebuff10 = ZeroPpDeathRules && id is "WCG-004" or "WCG-032" or "WCG-046" or "WCG-082" or "WCG-084" or "WCG-246";
             var score = isDebuff10
-                ? removal.Max(m => DebuffEnemyScore(p, m, 10, id == "WCG-032" && m.IsTapped))
+                ? removal.Max(m => DebuffEnemyScore(p, m, DebuffAmount(id), id == "WCG-032" && m.IsTapped))
                 : removal.Max(m => BodyValue(m) + (m.IsTaunt ? 3 : 0));
             if (isDebuff10 && score < 1) return id == "WCG-046" && p.Deck.Count > 3 && p.Hand.Count >= 2 ? 1 : -3;
             if (id is "WCG-024" or "WCG-168") score *= .5;
             if (id is "WCG-026" or "WCG-139" or "WCG-137" or "WCG-184") score *= .75;
+            if (id == "WCG-184" && c.Card.Text.Contains("2 隻", StringComparison.Ordinal) && removal.Length >= 2) score += 2.5;
             if (id == "WCG-140") score -= 2;
             if (id is "WCG-017" or "WCG-123") score += e.Hp == 1 ? 1000 : 4;
             if (id is "WCG-048" or "WCG-086" or "WCG-004" or "WCG-072") score += 2;
@@ -385,23 +397,26 @@ public partial class GameEngine
             return score - c.Card.TotalCost * .5;
         }
         if (NeedsSpellTarget(id)) return -5;
+        double BoardDebuffScore(int threshold, int legacyScale) =>
+            (ZeroPpDeathRules ? Sum(e.Field.Where(m => m.CurrentPP <= threshold)) - Sum(p.Field.Where(m => m.CurrentPP <= threshold))
+            : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(legacyScale))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(legacyScale)))) - 2;
         return id switch
         {
             "WCG-014" => e.Hp == 1 ? 1000 : 3,
             "WCG-006" => e.Hp <= 2 ? 1000 : 6 - p.Field.Select(BodyValue).DefaultIfEmpty(20).Min(),
             "WCG-050" or "WCG-066" or "WCG-070" => p.Hp == 7 ? -10 : (7 - p.Hp) * 2 + (id == "WCG-066" ? 2 : 0),
             "WCG-098" => Sum(e.Field) - Sum(p.Field) - 2,
-            "WCG-068" => Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700))) - 2,
+            "WCG-068" => (ZeroPpDeathRules && c.Card.Text.Contains("本回合 PP", StringComparison.Ordinal) ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700)))) - 2,
             "WCG-078" => (ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(700)))) + (p.Hp < 7 ? 2 : 0) - 2,
-            "WCG-092" => (ZeroPpDeathRules ? Sum(e.Field.Where(m => m.CurrentPP <= 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(800))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(800)))) - 2,
-            "WCG-008" => (ZeroPpDeathRules ? Sum(e.Field.Where(m => m.CurrentPP <= 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500)))) - 2,
+            "WCG-092" => BoardDebuffScore(c.Card.Text.Contains("-15", StringComparison.Ordinal) ? 15 : 10, 800),
+            "WCG-008" => BoardDebuffScore(c.Card.Text.Contains("-5", StringComparison.Ordinal) ? 5 : 10, 500),
             "WCG-038" => Sum(e.Field.Where(m => m.Card.TotalCost <= 2)) - Sum(p.Field.Where(m => m.Card.TotalCost <= 2)) - 2,
             "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => ThresholdPP(m) <= SkyfireLimit())) - 2,
             "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= ScalePP(1500))) - Sum(p.Field.Where(m => m.CurrentPP >= ScalePP(1500))) + (p.Hp < 7 ? 2 : 0) - 2,
             "WCG-173" => Sum(e.Field) - Sum(p.Field) + 2,
             "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? 5 : -1,
             "WCG-052" => Math.Min(2, p.Hand.Count(x => x.Card.IsMonster && x.Card.TotalCost <= 2)) * 5 - 3,
-            "WCG-010" => p.Field.Count == 0 ? -5 : p.Hand.Count < 4 ? 6 : 2,
+            "WCG-010" => p.Field.Count == 0 ? -5 : p.Hand.Count < 4 ? (p.Field.Count >= 3 && c.Card.Text.Contains("最多 3", StringComparison.Ordinal) ? 7 : 6) : 2,
             "WCG-058" or "WCG-090" => p.Graveyard.Any(x => x.Card.IsMonster) ? 4 : -2,
             "WCG-019" or "WCG-096" => p.Hand.Count < 3 ? 4 : -1,
             _ => p.Deck.Count <= 3 ? -10 : p.Hand.Count < 4 ? 5 : 1,

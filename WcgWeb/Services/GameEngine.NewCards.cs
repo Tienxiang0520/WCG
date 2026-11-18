@@ -151,7 +151,7 @@ public partial class GameEngine
                 else Silence(p, source, t!);
                 break;
             case "WCG-207": if (Valid()) KillBatch([t!], c.Name); break;
-            case "WCG-246": if (Valid()) { if (V2Rules) DebuffTurn(t!, -10, c); else KillBatch([t!], c.Name); } break;
+            case "WCG-246": if (Valid()) { if (V2Rules) DebuffTurn(t!, c.Text.Contains("-15", StringComparison.Ordinal) ? -15 : -10, c); else KillBatch([t!], c.Name); } break;
             case "WCG-211": if (V22Rules) Resolve(() => SelfMill(p, 3), () => DrawMany(p, 1)); else Mill(e, 3); break;
             case "WCG-214": Mill(e, Math.Min(8, GraveMonsters(p))); break;
             case "WCG-217": DrawMany(p, Math.Min(3, p.Field.Count(HasArrows))); break;

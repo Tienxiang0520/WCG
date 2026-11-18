@@ -149,6 +149,7 @@ public class PlayerTargetTests
     public void HistoricEnglishTextDoesNotPromiseNewPlayerTargeting(string id, string oldEnglish)
     {
         Assert.Equal(oldEnglish, LocalizationCatalog.CardText(id, Cards(true).GetCard(id)!.Text));
-        Assert.Contains("to 1 player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
+        Assert.Contains("to 1 player", LocalizationCatalog.CardText(id, Cards(true).GetCard(id)!.Text == "回復 1 點生命。" ? "1 位玩家回復 1 生命。" : "1 位玩家回復 2 生命，你抽 1 張牌。"));
+        Assert.DoesNotContain("to 1 player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
     }
 }

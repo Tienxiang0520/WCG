@@ -71,13 +71,14 @@
   "WCG-008": {
     "zh": "烈焰旋風",
     "name": "Flame Whirlwind",
-    "text": "All monsters get -10 PP this turn.",
-    "zh_text": "雙方所有怪物本回合 PP -10。",
+    "text": "All monsters get -5 PP this turn.",
+    "zh_text": "雙方所有怪物本回合 PP -5。",
     "prev": {
       "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
       "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less.",
       "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less.",
-      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less."
+      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less.",
+      "雙方所有怪物本回合 PP -10。": "All monsters get -10 PP this turn."
     }
   },
   "WCG-009": {
@@ -89,8 +90,11 @@
   "WCG-010": {
     "zh": "戰鬥狂怒",
     "name": "Battle Fury",
-    "text": "Draw 1 card for each ally monster (up to 2).",
-    "zh_text": "己場每有 1 隻怪物，抽 1 張牌（最多 2 張）。"
+    "text": "Draw 1 card for each ally monster (up to 3).",
+    "zh_text": "己場每有 1 隻怪物，抽 1 張牌（最多 3 張）。",
+    "prev": {
+      "己場每有 1 隻怪物，抽 1 張牌（最多 2 張）。": "Draw 1 card for each ally monster (up to 2)."
+    }
   },
   "WCG-011": {
     "zh": "嗜血戰狂",
@@ -485,10 +489,11 @@
   "WCG-066": {
     "zh": "王者賜福",
     "name": "Blessing of Kings",
-    "text": "Restore 2 life to 1 player, then you draw 1 card.",
-    "zh_text": "1 位玩家回復 2 生命，你抽 1 張牌。",
+    "text": "Restore 2 life, draw 1 card.",
+    "zh_text": "回復 2 生命，抽 1 張牌。",
     "prev": {
-      "選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。": "Choose either player and restore 2 life to them, then you draw 1 card."
+      "選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。": "Choose either player and restore 2 life to them, then you draw 1 card.",
+      "1 位玩家回復 2 生命，你抽 1 張牌。": "Restore 2 life to 1 player, then you draw 1 card."
     }
   },
   "WCG-067": {
@@ -503,12 +508,13 @@
   "WCG-068": {
     "zh": "神聖審判",
     "name": "Divine Judgment",
-    "text": "Destroy all enemy monsters with 10 PP or less.",
-    "zh_text": "消滅所有 PP 10 以下的敵怪。",
+    "text": "Give all enemy monsters -10 PP this turn.",
+    "zh_text": "所有敵怪本回合 PP -10。",
     "prev": {
       "消滅所有 PP 600 以下的敵方怪物。": "Destroy all enemy monsters with 600 PP or less.",
       "消滅所有 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 PP or less.",
-      "消滅所有印刷 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 printed PP or less."
+      "消滅所有印刷 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 printed PP or less.",
+      "消滅所有 PP 10 以下的敵怪。": "Destroy all enemy monsters with 10 PP or less."
     }
   },
   "WCG-069": {
@@ -525,10 +531,11 @@
   "WCG-070": {
     "zh": "崇高奉獻",
     "name": "Noble Devotion",
-    "text": "Restore 1 life to 1 player.",
-    "zh_text": "1 位玩家回復 1 生命。",
+    "text": "Restore 1 life.",
+    "zh_text": "回復 1 生命。",
     "prev": {
-      "選擇任一玩家，回復其 1 點生命。": "Choose either player and restore 1 life to them."
+      "選擇任一玩家，回復其 1 點生命。": "Choose either player and restore 1 life to them.",
+      "1 位玩家回復 1 生命。": "Restore 1 life to 1 player."
     }
   },
   "WCG-071": {
@@ -640,13 +647,14 @@
   "WCG-082": {
     "zh": "暗影裂箭",
     "name": "Shadow Rift Arrow",
-    "text": "Give 1 monster -10 PP this turn.",
-    "zh_text": "使 1 隻怪物本回合 PP -10。",
+    "text": "Give 1 monster -10 PP this turn, mill 2.",
+    "zh_text": "使 1 隻怪物本回合 PP -10，送墓 2。",
     "prev": {
       "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
       "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less.",
       "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less.",
-      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less."
+      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less.",
+      "使 1 隻怪物本回合 PP -10。": "Give 1 monster -10 PP this turn."
     }
   },
   "WCG-083": {
@@ -731,13 +739,14 @@
   "WCG-092": {
     "zh": "絕望疫病",
     "name": "Plague of Despair",
-    "text": "All monsters get -10 PP this turn.",
-    "zh_text": "雙方所有怪物本回合 PP -10。",
+    "text": "All monsters get -15 PP this turn.",
+    "zh_text": "雙方所有怪物本回合 PP -15。",
     "prev": {
       "消滅雙方所有 PP 600 以下的怪物。": "Destroy all monsters on both sides with 600 PP or less.",
       "消滅雙方所有 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 PP or less.",
       "消滅雙方所有印刷 PP 900 以下的怪物。": "Destroy all monsters on both sides with 900 printed PP or less.",
-      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less."
+      "消滅雙方所有 PP 10 以下的怪物。": "Destroy all monsters with 10 PP or less.",
+      "雙方所有怪物本回合 PP -10。": "All monsters get -10 PP this turn."
     }
   },
   "WCG-093": {
@@ -970,8 +979,11 @@
   "WCG-125": {
     "zh": "思維星軌",
     "name": "Starpath of Thought",
-    "text": "Tap: Draw 1, discard 1.",
-    "zh_text": "橫置：抽 1 棄 1。"
+    "text": "Tap: Draw 1 card.",
+    "zh_text": "橫置：抽 1 張牌。",
+    "prev": {
+      "橫置：抽 1 棄 1。": "Tap: Draw 1, discard 1."
+    }
   },
   "WCG-126": {
     "zh": "遠古母樹根鬚",
@@ -1368,8 +1380,11 @@
   "WCG-184": {
     "zh": "奧術共鳴波",
     "name": "Arcane Resonance Wave",
-    "text": "Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card.",
-    "zh_text": "橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。"
+    "text": "Tap up to 2 monsters (return to hand if tapped); if you control a [Reason] card, draw 1 card.",
+    "zh_text": "橫置至多 2 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張牌。",
+    "prev": {
+      "橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。": "Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card."
+    }
   },
   "WCG-185": {
     "zh": "魔導樞紐守衛",
@@ -1803,14 +1818,15 @@
   "WCG-246": {
     "zh": "藤鞭絞殺",
     "name": "Vine Strangle",
-    "text": "Give 1 monster -10 PP this turn.",
+    "text": "Give 1 monster -15 PP this turn.",
     "prev": {
       "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
       "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less.",
       "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less.",
-      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less."
+      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less.",
+      "使 1 隻怪物本回合 PP -10。": "Give 1 monster -10 PP this turn."
     },
-    "zh_text": "使 1 隻怪物本回合 PP -10。"
+    "zh_text": "使 1 隻怪物本回合 PP -15。"
   },
   "WCG-247": {
     "zh": "大地之心",
@@ -2782,11 +2798,12 @@
   "WCG-385": {
     "zh": "腐根獵手",
     "name": "Rotroot Stalker",
-    "text": "Poison. When attacking a monster with 10 PP or less, gets +5 PP this turn.",
-    "zh_text": "劇毒；攻擊 PP 10 以下的怪物時，此怪本回合 PP +5。",
+    "text": "Poison. Deploy: Give all enemy monsters -3 PP this turn.",
+    "zh_text": "劇毒；進場：所有敵怪本回合 PP -3。",
     "prev": {
       "劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn.",
-      "劇毒；攻擊 PP 被你減少的怪物時（被你的箭頭指向，或底下有你的卡），此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster whose PP you lowered (your arrow points at it, or your card is under it), this monster gets +500 PP until end of turn."
+      "劇毒；攻擊 PP 被你減少的怪物時（被你的箭頭指向，或底下有你的卡），此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster whose PP you lowered (your arrow points at it, or your card is under it), this monster gets +500 PP until end of turn.",
+      "劇毒；攻擊 PP 10 以下的怪物時，此怪本回合 PP +5。": "Poison. When attacking a monster with 10 PP or less, gets +5 PP this turn."
     }
   },
   "WCG-386": {

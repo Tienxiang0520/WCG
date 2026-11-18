@@ -2465,7 +2465,7 @@
   "降 PP 與門檻": "PP debuffs & thresholds",
   "怪物當前 PP 降到 0 時會直接被消滅並觸發陣亡（且不被格擋阻擋）；另一類則看 PP 18 以上或印刷費用（如費用 2 以下）。": "When a monster's current PP drops to 0, it is immediately destroyed and triggers On Death (and is not stopped by Block); other conditions check PP 18+ or printed cost (such as cost 2 or less).",
   "用降 PP 消滅目標": "Destroy target via PP reduction",
-  "「{0}」的效果：{1} 「{2}」的 PP 超過 10 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。": "{0}'s effect: {1} {2} has more than 10 PP and won't die this turn, so cast it on {3} to drop its PP to 0 and destroy it.",
+  "「{0}」的效果：{1} 「{2}」的 PP 超過 15 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。": "{0}'s effect: {1} {2} has more than 15 PP and won't die this turn, so cast it on {3} to drop its PP to 0 and destroy it.",
   "雙方開局 7 點 · 回復上限 7": "Both start at 7 · heal up to 7",
   "50 張牌組、同卡最多 4 張，最多兩個意志，中立不計。生命上限 7 點：雙方皆從 7 點開始；起手 7 張，先攻首回合不抽牌，後手玩家另外多拿 1 張幸運幣（不計入 50 張牌組）；致命傷害先結算反擊，再判定敗北；需要抽牌時牌庫已空則立即敗北。": "50-card deck, up to 4 copies each, up to two wills (Neutral doesn't count). Max life is 7: both players start at 7 life. Starting hand is 7 cards; the first player skips drawing on turn 1, and the second player gets an extra Coin (not part of the 50-card deck). On lethal damage, Counters resolve before checking defeat; needing to draw from an empty deck loses immediately.",
   "雙方 7 點生命，回復上限 7 點；後手開局多 1 張幸運幣。": "Both players start at 7 life, heal up to 7; the second player starts with 1 The Coin.",

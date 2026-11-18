@@ -456,7 +456,7 @@ public static class TutorialLessons
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-155"), CardName("WCG-031")] },
                 new() { Title = "用降 PP 消滅目標", Spot = ["hand:WCG-246", "enemy-card:WCG-101"], Allow = [Play("WCG-246"), Pick("WCG-101")],
                     Done = e => !OnField(e.Computer, "WCG-101") && Settled(e),
-                    Text = "「{0}」的效果：{1} 「{2}」的 PP 超過 10 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-119"), CardName("WCG-101")],
+                    Text = "「{0}」的效果：{1} 「{2}」的 PP 超過 15 這回合殺不死，請對「{3}」施放讓它 PP 歸零直接被消滅。", TextValues = [CardName("WCG-246"), CardEffect("WCG-246"), CardName("WCG-119"), CardName("WCG-101")],
                     Hint = "請打出「{0}」並選擇「{1}」。", HintValues = [CardName("WCG-246"), CardName("WCG-101")] },
                 new() { Title = "本課重點",
                     Text = "雙色卡同時屬於兩個意志，只能放進主色與副色剛好是這兩個意志的牌組，也同時滿足兩個意志的條件。天梯對手牌組會用到這些新機制，牌位越高越常見。" }

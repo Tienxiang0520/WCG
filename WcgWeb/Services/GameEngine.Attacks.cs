@@ -39,7 +39,7 @@ public partial class GameEngine
         Resolve(()=>{if(!a.IsSilenced&&a.Card.Id=="WCG-178")KillBatch(e.Field.Where(x=>x.IsTaunt).ToArray(),a.Card.Name);
             if(d?.IsTaunt==true)foreach(var priest in e.Field.Where(x=>!x.IsSilenced&&x.Card.Id=="WCG-071"))Heal(e,1);},
             ()=>{if(!DamageCounters&&d==null&&Alive(a))Counter(e,a,ctx);},()=>{if(!ctx.Cancelled && Alive(a)) Resolve(
-                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){if(V2Rules&&!a.IsSilenced&&a.Card.Id=="WCG-385"&&ThresholdPP(d)<=10){AddTurnBonus(a,5,a.Card);RefreshBoard();Present("trigger",p,a.InstanceId,card:a.Card,label:"PP +5（本回合）");}if(!V2Rules||ZeroPpDeathRules){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}}},
+                ()=>{if(SimplifiedRules){if(d==null){a.AttackDamageBonus=AttackDpBonus(a);PresentAttackDp(a);}else if(Alive(d)){if(V2Rules&&!a.IsSilenced&&a.Card.Id=="WCG-385"&&!a.Card.Text.Contains("進場",StringComparison.Ordinal)&&ThresholdPP(d)<=10){AddTurnBonus(a,5,a.Card);RefreshBoard();Present("trigger",p,a.InstanceId,card:a.Card,label:"PP +5（本回合）");}if(!V2Rules||ZeroPpDeathRules){ApplyCombatPower(a,d);PresentCombatPower(a,d);PresentCombatPower(d,a);}}}},
                 ()=>ResolveAttack(p,a,d));},()=>{a.AttackDamageBonus=0;a.CombatPowerBonus=0;if(d!=null)d.CombatPowerBonus=0;FinishAttack(p,a,d);});return true;
     });
     // Display only: a combat-only PP bonus lasts for one resolution step, so the board never renders it; this event lets the

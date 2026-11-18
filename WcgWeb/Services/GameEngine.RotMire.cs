@@ -33,6 +33,9 @@ public partial class GameEngine
         switch (m.Card.Id)
         {
             case "WCG-383": break;
+            case "WCG-385":
+                if (V2Rules && m.Card.Text.Contains("進場", StringComparison.Ordinal)) DebuffBatchTurn(e.Field.Where(x => x.IsUnit), -3, m.Card);
+                break;
             case "WCG-387": foreach (var x in PointedUnits(m)) AddDpCards(p, x, m.Card); break;
             case "WCG-389":
                 var n = Math.Min(3, Corrosion(p));
@@ -91,9 +94,10 @@ public partial class GameEngine
                 KillBatch(dead, s.Card.Name);
             });
     }
-    // 385 腐根獵手: (v2.0) +5 PP this turn attacking PP 10 以下; (legacy) +500 PP attacking corroded monster.
+    // 385 腐根獵手: (current) deploy -3 PP to all enemies; (prior v2.0+) +5 PP attacking PP 10 以下; (legacy) +500 PP attacking corroded monster.
     private int MireCombatPower(MonsterInstance m, MonsterInstance other, bool attacking) =>
-        !attacking || m.IsSilenced || m.Card.Id != "WCG-385" || !other.IsUnit || !Alive(m) ? 0
+        !attacking || m.IsSilenced || m.Card.Id != "WCG-385" || !other.IsUnit || !Alive(m)
+        || m.Card.Text.Contains("進場", StringComparison.Ordinal) ? 0
         : V2Rules ? (ThresholdPP(other) <= 10 ? 5 : 0) : (Corroded(Owner(m), other) ? 500 : 0);
 
     private bool MireSpell(PlayerState p, CardInstance source, MonsterInstance? t)

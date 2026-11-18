@@ -347,9 +347,10 @@ public partial class GameEngine
     // Describe the first step before payment using the same predicates as BeginPlay.
     internal const string DiscardCostTitle = "選擇要棄掉的手牌（代價，尚未扣費）";
     private static bool NeedsSacrifice(string id) => id is "WCG-006" or "WCG-088" or "WCG-096" or "WCG-233" or "WCG-329" or "WCG-348";
-    // The catalog wording marks this rules era. Old saved catalogs retain automatic self-healing.
+    // The catalog wording marks this rules era: pre-player-targets v1 wording used 「點生命」 without naming any player.
     private static bool NeedsPlayerSpellTarget(CardDefinition card) =>
-        card.Id is "WCG-050" or "WCG-066" or "WCG-070" && (card.Text.Contains("任一玩家", StringComparison.Ordinal) || card.Text.Contains("1 位玩家", StringComparison.Ordinal));
+        card.Id is "WCG-050" or "WCG-066" or "WCG-070"
+        && (!card.Text.Contains("點生命", StringComparison.Ordinal) || card.Text.Contains("任一玩家", StringComparison.Ordinal));
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
         : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : card.Id == "WCG-095" && card.Text.Contains("額外代價：棄", StringComparison.Ordinal) ? "choice" : "none";
     public bool SummonMonster(PlayerState p, CardInstance c) => AiTracked(AiNote("summon", p, c), () => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
