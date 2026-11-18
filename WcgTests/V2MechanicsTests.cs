@@ -875,6 +875,62 @@ public class V2MechanicsTests
     }
 
     [Fact]
+    public void OozeDispelsMonsterOrEnchantmentAndKeepsOldBounceCompatibility()
+    {
+        // 1. 驅散敵方怪物附著
+        var g1 = Game();
+        var foe = Unit(g1.Computer, "WCG-101", 0);
+        Assert.True(g1.CastSpellAt(g1.Player, Hand(g1, "WCG-062"), foe));
+        Assert.True(foe.HasShield);
+        Assert.True(g1.SummonMonster(g1.Player, Hand(g1, "WCG-104")));
+        Choose(g1, o => o.Id == "SLOT:0");
+        Choose(g1, o => o.Id == "DISPEL_OPT");
+        Assert.True(g1.SelectTarget(foe));
+        Assert.False(foe.HasShield);
+        Assert.Empty(foe.Attachments);
+
+        // 2. 驅散敵方結界（摧毀結界）
+        var g2 = Game();
+        var shrine = new MonsterInstance(cards.GetCard("WCG-127")!) { Slot = 2, IsTapped = false };
+        g2.Computer.Structures.Add(shrine);
+        Assert.True(g2.SummonMonster(g2.Player, Hand(g2, "WCG-104")));
+        Choose(g2, o => o.Id == "SLOT:0");
+        Choose(g2, o => o.Id == "DISPEL_OPT");
+        Assert.True(g2.SelectTarget(shrine));
+        Assert.Empty(g2.Computer.Structures);
+        Assert.Contains(g2.Computer.Graveyard, c => c.Card.Id == "WCG-127");
+
+        // 3. 可選發動（SKIP 保留己方附著）
+        var g3 = Game();
+        var ally = Unit(g3.Player, "WCG-101", 0);
+        Assert.True(g3.CastSpellAt(g3.Player, Hand(g3, "WCG-062"), ally));
+        Assert.True(g3.SummonMonster(g3.Player, Hand(g3, "WCG-104")));
+        Choose(g3, o => o.Id == "SLOT:1");
+        Choose(g3, o => o.Id == "SKIP");
+        Assert.False(g3.IsWaiting);
+        Assert.True(ally.HasShield);
+
+        // 4. 舊版卡表（WCG-104 仍為費用 2 以下回手）維持原本回手行為
+        var oldDb = new CardDatabase(
+            System.Text.Json.JsonSerializer.Serialize(cards.AllCards.Select(c => c.Id == "WCG-104"
+                ? new CardDefinition { Id = c.Id, Name = c.Name, Type = c.Type, Wills = c.Wills, CostSpec = c.CostSpec, CostGen = c.CostGen, TotalCost = c.TotalCost, PP = c.PP, DP = c.DP, Text = "進場：可將 1 隻費用 2 以下的怪物移回手牌。", DesignNote = c.DesignNote, HsRef = c.HsRef, Keywords = c.Keywords, Arrows = c.Arrows }
+                : c)),
+            System.Text.Json.JsonSerializer.Serialize(cards.PresetDecks));
+        var gOld = new GameEngine(oldDb, new Random(23));
+        gOld.StartGame(oldDb.PresetDecks[0], oldDb.PresetDecks[1], true);
+        foreach (var p in new[] { gOld.Player, gOld.Computer }) { p.Hand.Clear(); p.Field.Clear(); p.Structures.Clear(); p.Graveyard.Clear(); p.EnergyZone.Clear(); for (int i = 0; i < 12; i++) p.EnergyZone.Add(new(oldDb.GetCard("WCG-101")!)); }
+        var smallFoe = new MonsterInstance(oldDb.GetCard("WCG-101")!) { Slot = 0, IsTapped = false, HasSummoningSickness = false };
+        gOld.Computer.Field.Add(smallFoe);
+        var oldOoze = new CardInstance(oldDb.GetCard("WCG-104")!);
+        gOld.Player.Hand.Add(oldOoze);
+        Assert.True(gOld.SummonMonster(gOld.Player, oldOoze));
+        Choose(gOld, o => o.Id == "SLOT:0");
+        Choose(gOld, o => o.Id == smallFoe.InstanceId.ToString());
+        Assert.DoesNotContain(smallFoe, gOld.Computer.Field);
+        Assert.Contains(gOld.Computer.Hand, c => c.InstanceId == smallFoe.InstanceId);
+    }
+
+    [Fact]
     public void V2CatalogPresetsRunToCompletionWithAiWithoutStalling()
     {
         var g = new GameEngine(cards, new Random(41));

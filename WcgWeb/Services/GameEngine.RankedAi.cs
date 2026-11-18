@@ -345,6 +345,7 @@ public partial class GameEngine
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= ScalePP(V2Rules ? 1800 : 2300)) ? 6 : 0,
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= ScalePP(2000)) ? 6 : 0,
                 "WCG-117" => e.Field.Any(m => m.CurrentPP <= ScalePP(1000)) ? 3 : 0,
+                "WCG-104" when c.Card.Text.Contains("驅散", StringComparison.Ordinal) => DispelWorth(p) ? 3 : 0,
                 _ => NewPlayValue(p, c) ?? 0,
             };
             return score;

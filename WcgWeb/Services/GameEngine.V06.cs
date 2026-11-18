@@ -145,7 +145,7 @@ public partial class GameEngine
     });
     private void DestroyStructure(MonsterInstance m)
     { if(!Alive(m))return;var p=Owner(m);ReturnAllUnder(m);p.Structures.Remove(m);p.Graveyard.Add(new(m.Card){InstanceId=m.InstanceId});Present("death",p,m.InstanceId,card:m.IsSet?null:m.Card,label:DamageCounters?"摧毀結界":"摧毀結界／蓋牌"); }
-    // 112／134: the deploy is optional ("你可以"), so the player can decline instead of being forced to strip their own cards.
+    // 104／112／134: the deploy is optional ("可"／"你可以"), so the player can decline instead of being forced to strip their own cards.
     private void OptionalDispel(PlayerState p,MonsterInstance source)
     {
         var all=p.Field.Concat(GetOpponent(p).Field).Where(Dispellable)

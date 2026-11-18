@@ -824,8 +824,11 @@
   "WCG-104": {
     "zh": "腐蝕軟泥怪",
     "name": "Corrosive Ooze",
-    "text": "Deploy: You may return 1 monster with cost 2 or less to its owner's hand.",
-    "zh_text": "進場：可將 1 隻費用 2 以下的怪物移回手牌。"
+    "text": "Deploy: You may dispel 1 monster or 1 enchantment.",
+    "zh_text": "進場：可驅散 1 隻怪物或 1 個結界。",
+    "prev": {
+      "進場：可將 1 隻費用 2 以下的怪物移回手牌。": "Deploy: You may return 1 monster with cost 2 or less to its owner's hand."
+    }
   },
   "WCG-105": {
     "zh": "狂暴投彈手",
