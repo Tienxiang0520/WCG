@@ -32,7 +32,7 @@ public partial class GameEngine
         bool lateGame = e.Hand.Count + e.Deck.Count <= 8;
         if (role.HasFlag(AiRole.Removal)) value = Math.Max(value, (4.2 + card.TotalCost * .3) * (lateGame ? .6 : 1));
         if (role.HasFlag(AiRole.Wipe) && card.IsSpell) value = Math.Max(value, 4.5 + card.TotalCost * .3);
-        if (role.HasFlag(AiRole.Counter)) value = Math.Max(value, 3.5 + (e.Field.Any(m => m.CurrentDP > 0) ? 1.5 : 0));
+        if (role.HasFlag(AiRole.Counter)) value = Math.Max(value, (V22Rules && card.Id == "WCG-196" ? 4.2 : 3.5) + (e.Field.Any(m => m.CurrentDP > 0) ? (V22Rules && card.Id == "WCG-195" ? 2.0 : 1.5) : 0));
         if (role.HasFlag(AiRole.Burn)) { var reach = CardReach(card); value = Math.Max(value, reach * (e.Hp <= reach + 2 ? 4 : 1.5) + 1); }
         if (card.IsMonster && card.HasCharge) value += 1;
         if (ActualCost(p, card) > p.TotalEnergy + 2) value -= 1;

@@ -36,7 +36,7 @@ public class TrainingTests
         var(current,bridge)=Game();Assert.True(Edit(bridge,"training-restore",new(Scene:scene)).Success);
         Assert.True(current.DamageCounters);Assert.Empty(current.Player.Structures);
         var returned=current.Player.Hand.Single(c=>c.InstanceId==id);Assert.Same(cards.GetCard("WCG-195"),returned.Card);
-        Assert.Contains("受怪物傷害",returned.Card.Text);Assert.DoesNotContain("IsSet\":true",current.ExportTrainingScene());
+        Assert.Contains("受到怪物傷害",returned.Card.Text);Assert.DoesNotContain("IsSet\":true",current.ExportTrainingScene());
     }
     [Fact]public void SceneRestoresAttachmentsBasePowerResourcesAndCanonicalCardsRepeatedly()
     {

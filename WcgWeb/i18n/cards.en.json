@@ -1445,9 +1445,10 @@
   "WCG-195": {
     "zh": "熔火爆炸陷阱",
     "name": "Molten Blast Trap",
-    "text": "[Counter] On monster damage: Cancel the damage and destroy that monster.",
-    "zh_text": "【反擊】受怪物傷害時：抵銷傷害並消滅該怪物。",
+    "text": "[Counter] On monster damage: Cancel it and destroy the attacker, deal 1 damage to the enemy player.",
+    "zh_text": "【反擊】受到怪物傷害時：抵銷並消滅它，對敵方玩家造成 1 傷害。",
     "prev": {
+      "【反擊】受怪物傷害時：抵銷傷害並消滅該怪物。": "[Counter] On monster damage: Cancel the damage and destroy that monster.",
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 PP or more, deal 1 damage to the enemy player.",
       "【反擊】受到怪物傷害時：抵銷傷害，消滅該怪物；若它印刷 PP 1800 以上，對敵方玩家造成 1 點傷害。": "[Counter] When you take damage from a monster: Cancel the damage and destroy that monster. If it has 1800 printed PP or more, deal 1 damage to the enemy player."
     }
@@ -1455,9 +1456,10 @@
   "WCG-196": {
     "zh": "維度時空屏障",
     "name": "Dimensional Time Barrier",
-    "text": "[Counter] On enemy damage: Cancel it and draw 1 card.",
-    "zh_text": "【反擊】受到敵方傷害時：抵銷傷害，抽 1 張牌。",
+    "text": "[Counter] On damage: Cancel it and draw 1 card.",
+    "zh_text": "【反擊】受到傷害時：抵銷傷害，抽 1 張牌。",
     "prev": {
+      "【反擊】受到敵方傷害時：抵銷傷害，抽 1 張牌。": "[Counter] On enemy damage: Cancel it and draw 1 card.",
       "【反擊】受到敵方傷害時：抵銷傷害，抽 1 張。": "[Counter] When you take damage from the enemy: Cancel the damage and draw 1 card."
     }
   },

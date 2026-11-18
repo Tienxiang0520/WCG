@@ -46,7 +46,7 @@ source: WcgWeb/Data/cards.json
 | WCG-180 | 戰歌號令 | 法術 | 3 | — | — | — | 檢索狂怒牌，抽 1 張牌。 | **Warsong Command** — Tutor a [Fury] card, then draw 1 card. |
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 5 | 15 | 2 | — | 衝鋒；己場有其他狂怒怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Fury] monster, this monster gets +4 PP. |
-| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受怪物傷害時：抵銷傷害並消滅該怪物。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel the damage and destroy that monster. |
+| WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它，對敵方玩家造成 1 傷害。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel it and destroy the attacker, deal 1 damage to the enemy player. |
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2，攻擊玩家時 DP +1。 | **Flame War-Rune** — Attach: Monster gets +2 PP, and +1 DP when attacking a player. |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 11 | 1 | — | 陣亡：將附著在此怪上的 1 張己方卡移回手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards attached to this monster to hand. |
 | WCG-230 | 決鬥宣言 | 法術 | 2 | — | — | — | 橫置 1 隻直立己怪，令它與 1 隻敵怪決鬥。 | **Declaration of Duel** — Tap 1 untapped ally monster and have it duel 1 enemy monster. |
@@ -86,7 +86,7 @@ source: WcgWeb/Data/cards.json
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 8 | 0 | — | 進場：檢索法術。 | **Stargazing Diviner** — Deploy: Tutor a spell. |
 | WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。 | **Arcane Resonance Wave** — Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放理智法術，可使 1 隻怪物本回合 PP -10。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn. |
-| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到敵方傷害時：抵銷傷害，抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] On enemy damage: Cancel it and draw 1 card. |
+| WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害時：抵銷傷害，抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] On damage: Cancel it and draw 1 card. |
 | WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 驅散 1 隻怪物，使它本回合 PP -5。 | **Hush Hex** — Dispel 1 monster; it gets -5 PP this turn. |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] On spell damage: Cancel it and draw 1 card. |
 | WCG-229 | 虛空隱士 | 怪物 | 3 | 14 | 1 | — | 魔免。 | **Void Hermit** — Spellward. |

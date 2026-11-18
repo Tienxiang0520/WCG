@@ -690,17 +690,28 @@ public class V2MechanicsTests
         Assert.True(g4.Attack(g4.Player, u1, enemy));
         Assert.DoesNotContain(enemy, g4.Computer.Field);
 
-        // 5. DamageCounters 版本旗標對 v2.1、v1.x 與舊蓋牌反擊時代維持正確判定，且 v2.1 WCG-195 不再造成追加傷害
-        var v21Engine = new GameEngine(cards, new Random(1));
-        Assert.True(v21Engine.DamageCounters);
+        // 5. DamageCounters 版本旗標對 v2.2、v2.1、v1.x 與舊蓋牌反擊時代維持正確判定；非 V22 卡表（v2.1）維持舊 WCG-195 / WCG-196 判定
+        var v22Engine = new GameEngine(cards, new Random(1));
+        Assert.True(v22Engine.DamageCounters);
+        Assert.True(v22Engine.V22Rules);
         var beforeV2 = CardBalanceHistory.BeforeV2(cards);
         Assert.True(new GameEngine(beforeV2, new Random(1)).DamageCounters);
+        Assert.False(new GameEngine(beforeV2, new Random(1)).V22Rules);
         var beforeDc = CardBalanceHistory.BeforeDamageCounters(beforeV2);
         Assert.False(new GameEngine(beforeDc, new Random(1)).DamageCounters);
 
-        var g195 = Game();
-        var trap = Hand(g195, "WCG-195");
-        var bigFoe = Unit(g195.Computer, "WCG-114", 0); // 19 PP >= 18
+        var v21Db = new CardDatabase(
+            System.Text.Json.JsonSerializer.Serialize(cards.AllCards.Select(c => c.Id == "WCG-022"
+                ? new CardDefinition { Id = c.Id, Name = c.Name, Type = c.Type, Wills = c.Wills, CostSpec = c.CostSpec, CostGen = c.CostGen, TotalCost = c.TotalCost, PP = c.PP, DP = c.DP, Text = "看牌庫頂 3 張，選 1 張法術牌入手，其餘置底。", DesignNote = c.DesignNote, HsRef = c.HsRef, Keywords = c.Keywords, Arrows = c.Arrows }
+                : c)),
+            System.Text.Json.JsonSerializer.Serialize(cards.PresetDecks));
+        var g195 = new GameEngine(v21Db, new Random(23));
+        g195.StartGame(v21Db.PresetDecks[0], v21Db.PresetDecks[1], true);
+        foreach (var p in new[] { g195.Player, g195.Computer }) { p.Hand.Clear(); p.Field.Clear(); p.Structures.Clear(); p.Graveyard.Clear(); p.EnergyZone.Clear(); for (int i = 0; i < 12; i++) p.EnergyZone.Add(new(v21Db.GetCard("WCG-101")!)); }
+        Assert.True(g195.V21Rules);
+        Assert.False(g195.V22Rules);
+        var trap = new CardInstance(v21Db.GetCard("WCG-195")!); g195.Player.Hand.Add(trap);
+        var bigFoe = new MonsterInstance(v21Db.GetCard("WCG-114")!) { Slot = 0, IsTapped = false, HasSummoningSickness = false }; g195.Computer.Field.Add(bigFoe);
         var foeHpBefore = g195.Computer.Hp;
         Assert.True(g195.EndTurn());
         while (g195.CurrentPendingChoice is { } ch195) Assert.True(g195.SelectChoice(ch195.Options.Last()));
@@ -708,6 +719,18 @@ public class V2MechanicsTests
         Choose(g195, o => o.Id == trap.InstanceId.ToString());
         Assert.DoesNotContain(bigFoe, g195.Computer.Field);
         Assert.Equal(foeHpBefore, g195.Computer.Hp);
+
+        // 非 V22 卡表（v2.1）：WCG-196 不觸發於己方傷害（WCG-369 進場自傷）
+        var g196Old = new GameEngine(v21Db, new Random(23));
+        g196Old.StartGame(v21Db.PresetDecks[0], v21Db.PresetDecks[1], true);
+        foreach (var p in new[] { g196Old.Player, g196Old.Computer }) { p.Hand.Clear(); p.Field.Clear(); p.Structures.Clear(); p.Graveyard.Clear(); p.EnergyZone.Clear(); for (int i = 0; i < 12; i++) p.EnergyZone.Add(new(v21Db.GetCard("WCG-101")!)); }
+        var b196Old = new CardInstance(v21Db.GetCard("WCG-196")!); g196Old.Player.Hand.Add(b196Old);
+        var z369Old = new CardInstance(v21Db.GetCard("WCG-369")!); g196Old.Player.Hand.Add(z369Old);
+        Assert.True(g196Old.SummonMonster(g196Old.Player, z369Old));
+        Choose(g196Old, o => o.Id == "SLOT:0");
+        Assert.False(g196Old.IsWaiting);
+        Assert.Equal(PlayerState.MaxHp - 1, g196Old.Player.Hp);
+        Assert.Contains(b196Old, g196Old.Player.Hand);
     }
 
     [Fact]
@@ -794,6 +817,61 @@ public class V2MechanicsTests
         Assert.True(gScale.SummonMonster(gScale.Player, sprout));
         Choose(gScale, o => o.Id == "SLOT:4"); // 不在兩怪之間也可放
         Assert.Contains(gScale.Player.Field, m => m.Card.Id == "WCG-362" && m.Slot == 4);
+
+        // 5. v2.2 WCG-195：抵銷傷害、消滅攻擊怪物、對敵方玩家造成 1 傷害，且該 1 傷害不能再被對方反擊
+        var g195v22 = Game();
+        var hpBefore = g195v22.Player.Hp;
+        var foeHp = g195v22.Computer.Hp;
+        var trap195 = Hand(g195v22, "WCG-195");
+        var enemyBarrier = Hand(g195v22, "WCG-196", g195v22.Computer);
+        var attacker = Unit(g195v22.Computer, "WCG-101", 0); // 10 PP，不依賴 PP 門檻
+        Assert.True(g195v22.EndTurn());
+        while (g195v22.CurrentPendingChoice is { } ch195) Assert.True(g195v22.SelectChoice(ch195.Options.Last()));
+        Assert.True(g195v22.Attack(g195v22.Computer, attacker));
+        Choose(g195v22, o => o.Id == trap195.InstanceId.ToString());
+        Assert.Equal(hpBefore, g195v22.Player.Hp);
+        Assert.DoesNotContain(attacker, g195v22.Computer.Field);
+        Assert.Equal(foeHp - 1, g195v22.Computer.Hp);
+        Assert.False(g195v22.IsWaiting);
+        Assert.Contains(enemyBarrier, g195v22.Computer.Hand);
+
+        // 6. v2.2 WCG-196：改為「受到傷害時」，自己造成的傷害（WCG-369 殉誓狂徒進場效果）也能抵銷並抽 1 張牌
+        var g196v22 = Game();
+        var barrier196 = Hand(g196v22, "WCG-196");
+        var zealot369 = Hand(g196v22, "WCG-369");
+        var playerHpBefore = g196v22.Player.Hp;
+        Assert.True(g196v22.SummonMonster(g196v22.Player, zealot369));
+        Choose(g196v22, o => o.Id == "SLOT:0");
+        Assert.True(g196v22.IsWaiting);
+        Choose(g196v22, o => o.Id == barrier196.InstanceId.ToString());
+        Assert.False(g196v22.IsWaiting);
+        Assert.Equal(playerHpBefore, g196v22.Player.Hp);
+        Assert.Equal(2, g196v22.Player.Hand.Count); // WCG-369 抽 1 + WCG-196 抽 1
+
+        // 7. v2.2 AI：召喚己方 WCG-369 自傷時不用 WCG-195 炸死自己怪物；敵方 1 血時優先用 WCG-195 斬殺
+        var gAiSelf = Game();
+        gAiSelf.Player.IsAi = true;
+        gAiSelf.AiLevel = 5;
+        Hand(gAiSelf, "WCG-195");
+        var own369 = Hand(gAiSelf, "WCG-369");
+        Assert.True(gAiSelf.SummonMonster(gAiSelf.Player, own369));
+        while (gAiSelf.CurrentPendingChoice != null && gAiSelf.DecisionPlayerId == "player")
+            Assert.True(gAiSelf.ExecuteAiStep());
+        Assert.Contains(gAiSelf.Player.Field, m => m.Card.Id == "WCG-369");
+
+        var gAiLethal = Game();
+        gAiLethal.Player.IsAi = true;
+        gAiLethal.AiLevel = 5;
+        gAiLethal.Computer.Hp = 1;
+        Hand(gAiLethal, "WCG-198");
+        Hand(gAiLethal, "WCG-195");
+        var foeAtk = Unit(gAiLethal.Computer, "WCG-101", 0);
+        Assert.True(gAiLethal.EndTurn());
+        while (gAiLethal.CurrentPendingChoice is { } chL) Assert.True(gAiLethal.SelectChoice(chL.Options.Last()));
+        Assert.True(gAiLethal.Attack(gAiLethal.Computer, foeAtk));
+        Assert.True(gAiLethal.ExecuteAiStep());
+        Assert.True(gAiLethal.IsOver);
+        Assert.True(gAiLethal.Computer.HasLost);
     }
 
     [Fact]

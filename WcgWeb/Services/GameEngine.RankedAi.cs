@@ -43,7 +43,7 @@ public partial class GameEngine
         + (m.HasBypass ? 1.5 : 0) + (m.HasSpellward ? 1.5 : 0)
         + (m.Card.Id is "WCG-120" or "WCG-060" or "WCG-177" or "WCG-099" or "WCG-185" or "WCG-190" ? 3 : 0) + BeaconBodyValue(m);
     private double CardValue(CardDefinition c) => c.IsMonster ? (c.PP ?? 0) / (V2Rules ? 4.5d : 450d) + (c.DP ?? 1) * 2 + (c.HasTaunt ? 1.5 : 0) + (c.HasCharge ? 2 : 0) + (c.HasEnergyShield || c.HasBlock ? 2 : 0) + (c.HasBypass ? 1.5 : 0) + (c.HasSpellward ? 1.5 : 0)
-        : 3 + c.TotalCost * .6;
+        : 3 + c.TotalCost * .6 + (V22Rules && c.Id == "WCG-195" ? .5 : V22Rules && c.Id == "WCG-196" ? .4 : 0);
 
     private bool ExecuteTieredAi()
     {
@@ -235,7 +235,22 @@ public partial class GameEngine
         var shield = choice.Options.FirstOrDefault(o => o.Id == "SHIELD");
         if (shield != null) return SelectChoice(AiLevel == 0 && Noise(20) < .3 ? choice.Options.First(o => o.Id != "SHIELD") : shield);
         if (choice.Title == "受到傷害，可從手牌發動反擊")
-            return SelectChoice(!prof.UseCounters ? choice.Options.First(o=>o.Id=="SKIP") : choice.Options.Where(o=>o.Id!="SKIP").OrderByDescending(o=>o.PreviewCard?.Id=="WCG-198"?3:o.PreviewCard?.Id=="WCG-195"?2:1).First());
+        {
+            if (!prof.UseCounters) return SelectChoice(choice.Options.First(o => o.Id == "SKIP"));
+            if (!V22Rules) return SelectChoice(choice.Options.Where(o => o.Id != "SKIP").OrderByDescending(o => o.PreviewCard?.Id == "WCG-198" ? 3 : o.PreviewCard?.Id == "WCG-195" ? 2 : 1).First());
+            var selfMonster = choice.SourceInstanceId is { } sid && p.Field.Any(m => m.InstanceId == sid);
+            double CounterScore(ChoiceOption o) => o.Id == "SKIP" ? (p.Hp <= 0 ? -50 : 0) : o.PreviewCard?.Id switch
+            {
+                "WCG-195" => e.Hp <= 1 ? 100 : selfMonster ? -10 : 3.5,
+                "WCG-366" => e.Hp <= (p.Hp <= 3 ? 2 : 1) ? 100 : 1,
+                "WCG-198" => 3,
+                "WCG-199" => selfMonster ? -10 : 2.5,
+                "WCG-196" => p.Deck.Count == 0 ? -100 : 2,
+                "WCG-226" => p.Deck.Count == 0 ? -100 : 1.5,
+                _ => 1,
+            };
+            return SelectChoice(choice.Options.OrderByDescending(CounterScore).First());
+        }
         if (ReasonChoice(p, e, choice, prof) is { } reason) return SelectChoice(reason);
         if (NewAi && OathChoice(p, choice) is { } oath) return SelectChoice(oath);
         if (NewAi && VaultChoice(p, choice) is { } vault) return SelectChoice(vault);
