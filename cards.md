@@ -242,7 +242,7 @@ source: WcgWeb/Data/cards.json
 | WCG-101 | 巡邏輕步兵 | 怪物 | 1 | 10 | 1 | — | 無。 | **Patrol Footman** — None. |
 | WCG-102 | 精靈遊俠 | 怪物 | 1 | 7 | 0 | — | 進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。 | **Elven Ranger** — Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1. |
 | WCG-103 | 淘金鼠人 | 怪物 | 2 | 10 | 0 | — | 陣亡：抽 1 張牌。 | **Gold-Panning Ratfolk** — On Death: Draw 1 card. |
-| WCG-104 | 腐蝕軟泥怪 | 怪物 | 2 | 10 | 0 | — | 進場：可將 1 隻費用 2 以下的怪物移回手牌。 | **Corrosive Ooze** — Deploy: You may return 1 monster with cost 2 or less to its owner's hand. |
+| WCG-104 | 腐蝕軟泥怪 | 怪物 | 2 | 10 | 0 | — | 進場：可驅散 1 隻怪物或 1 個結界。 | **Corrosive Ooze** — Deploy: You may dispel 1 monster or 1 enchantment. |
 | WCG-105 | 狂暴投彈手 | 怪物 | 2 | 11 | 1 | — | 進場：雙方所有其他怪物本回合 PP -10。 | **Mad Bomber** — Deploy: All other monsters get -10 PP this turn. |
 | WCG-109 | 苦痛信徒 | 怪物 | 3 | 13 | 0 | — | 每當此怪交戰後仍在場，抽 1 張牌。 | **Acolyte of Agony** — Whenever this monster survives combat, draw 1 card. |
 | WCG-110 | 狼騎兵先遣隊 | 怪物 | 3 | 12 | 1 | — | 衝鋒。 | **Wolf Rider Vanguard** — Charge. |

@@ -38,7 +38,7 @@ public partial class GameEngine
             case "WCG-021": case "WCG-116": DrawMany(p, 1); break;
             case "WCG-047": FreeHand(p, 1, 1); break;
             case "WCG-027": case "WCG-115": FreeHand(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 2 : 1, 1); break;
-            case "WCG-104": if (V2Rules) OptionalTarget(p, "可選擇費用 2 以下怪物回手", p.Field.Concat(enemy.Field).Where(x => x.Card.TotalCost <= 2), Bounce); else PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
+            case "WCG-104": if (m.Card.Text.Contains("驅散", StringComparison.Ordinal)) OptionalDispel(p, m); else if (V2Rules) OptionalTarget(p, "可選擇費用 2 以下怪物回手", p.Field.Concat(enemy.Field).Where(x => x.Card.TotalCost <= 2), Bounce); else PickMonster(p, "選擇費用 2 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= 2), Bounce); break;
             case "WCG-067": var maxBounce = V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 3 : 2; PickMonster(p, $"選擇費用 {maxBounce} 以下敵怪回手", enemy.Field.Where(x => x.Card.TotalCost <= maxBounce), Bounce); break;
             case "WCG-033" when m.Card.Arrows.Length > 0:
                 if (ArrowTargets(p, m).FirstOrDefault(x => Across(m, x) && !x.IsTapped) is { } facing) { facing.IsTapped = true; Present("status", enemy, facing.InstanceId, card: facing.Card, label: "橫置"); }
