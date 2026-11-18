@@ -77,7 +77,7 @@ source: WcgWeb/Data/cards.json
 | WCG-037 | 符文構裝巨像 | 怪物 | 4 | 17 | 1 | — | 每當你施放法術，若你的手牌 3 張以下，抽 1 張牌。 | **Runebound Colossus** — Whenever you cast a spell, if you have 3 or fewer cards in hand, draw 1 card. |
 | WCG-038 | 逆流風暴 | 法術 | 4 | — | — | — | 將雙方所有費用 2 以下的怪物移回手牌。 | **Reverse Tide** — Return all monsters with cost 2 or less to their owners' hands. |
 | WCG-040 | 星穹領主·奧瑞斯 | 怪物 | 6 | 24 | 2 | — | 進場：檢視對手手牌，棄掉其中 1 張法術牌。 | **Starvault Lord, Oris** — Deploy: Look at your opponent's hand and discard 1 spell card from it. |
-| WCG-125 | 思維星軌 | 結界 | 2 | — | — | — | 橫置：抽 1 棄 1。 | **Starpath of Thought** — Tap: Draw 1, discard 1. |
+| WCG-125 | 思維星軌 | 結界 | 3 | — | — | — | 橫置：抽 1 張牌。 | **Starpath of Thought** — Tap: Draw 1 card. |
 | WCG-130 | 觀星學徒 | 怪物 | 1 | 8 | 0 | — | 進場：抽 1 棄 1。 | **Stargazer Apprentice** — Deploy: Draw 1, discard 1. |
 | WCG-137 | 思維凍結 | 法術 | 2 | — | — | — | 橫置 1 隻怪物；若目標已橫置，改為移回手牌。抽 1 張牌。 | **Mind Freeze** — Tap 1 monster; if already tapped, return it to hand instead. Draw 1 card. |
 | WCG-145 | 逆流法師 | 怪物 | 3 | 14 | 1 | — | 進場：抉擇：驅散 1 隻怪物；或令 1 隻怪物備戰。 | **Countertide Mage** — Deploy: Choose One: Dispel 1 monster; or prep 1 monster. |
@@ -138,13 +138,13 @@ source: WcgWeb/Data/cards.json
 | WCG-215 | 根鬚哨兵 | 怪物 | 2 | 12 | 0 | ←→ | 兩個箭頭皆指向怪物時，具有嘲諷與格擋。 | **Rootwatch Sentry** — While both arrows point at monsters, this monster has Taunt and Block. |
 | WCG-220 | 荊棘甲殼 | 法術 | 1 | — | — | — | 附著：此怪具有貫穿。 | **Thorn Carapace** — Attach: Monster gains Trample. |
 | WCG-232 | 腐土苗床 | 怪物 | 2 | 11 | 0 | — | 陣亡：將牌庫頂 1 張牌橫置放入你的能量區。 | **Rotsoil Seedbed** — On Death: Put the top card of your deck tapped into your energy zone. |
-| WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -10。 | **Vine Strangle** — Give 1 monster -10 PP this turn. |
+| WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -15。 | **Vine Strangle** — Give 1 monster -15 PP this turn. |
 | WCG-247 | 大地之心 | 結界 | 3 | — | — | — | 回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — Start of turn: If you control 3 or more [Life] monsters, draw 1 card. |
 | WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 令 1 隻己方生機怪與 1 隻敵怪決鬥。 | **Primal Trample** — Have 1 ally [Life] monster duel 1 enemy monster. |
 | WCG-276 | 碧根巨鹿 | 怪物 | 4 | 16 | 1 | — | 貫穿；手牌 4 張以上時，此怪 PP +4。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, gets +4 PP. |
 | WCG-355 | 嫩根幼苗 | 怪物 | 1 | 6 | 0 | ←→ | ←→ 友軍 PP +2。 | **Tender Rootling** — [Arrows: ← →] Allied monsters get +2 PP. |
 | WCG-362 | 擠枝新芽 | 怪物 | 0 | 4 | 0 | ←→ | ←→ 友軍 PP +2。 | **Squeezing Sprout** — [Arrows: ← →] Allied monsters get +2 PP. |
-| WCG-373 | 潮間採集者 | 怪物 | 1 | 6 | 0 | — | 進場：回復 1 生命，抽 1 張牌。 | **Tidepool Gatherer** — Deploy: Restore 1 life and draw 1 card. |
+| WCG-373 | 潮間採集者 | 怪物 | 2 | 8 | 0 | — | 進場：回復 1 生命，抽 1 張牌。 | **Tidepool Gatherer** — Deploy: Restore 1 life and draw 1 card. |
 | WCG-382 | 孢沼爬蟲 | 怪物 | 1 | 5 | 0 | — | 劇毒；陣亡：可附著於 1 隻怪物：此怪 PP -3。 | **Sporebog Crawler** — Poison. On Death: May attach to 1 monster: monster gets -3 PP. |
 
 ## 秩序（Order，40 張）
@@ -156,7 +156,7 @@ source: WcgWeb/Data/cards.json
 | WCG-064 | 謙遜戒律 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的怪物。 | **Edict of Humility** — Destroy 1 monster with cost 2 or less. |
 | WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 12 | 0 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
 | WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 1 位玩家回復 2 生命，你抽 1 張牌。 | **Blessing of Kings** — Restore 2 life to 1 player, then you draw 1 card. |
-| WCG-068 | 神聖審判 | 法術 | 4 | — | — | — | 消滅所有 PP 10 以下的敵怪。 | **Divine Judgment** — Destroy all enemy monsters with 10 PP or less. |
+| WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 所有敵怪本回合 PP -10。 | **Divine Judgment** — Give all enemy monsters -10 PP this turn. |
 | WCG-069 | 鐵壁騎士 | 怪物 | 3 | 14 | 0 | ← | 嘲諷。← 友軍獲得格擋。 | **Bulwark Knight** — Taunt. [Arrow: ←] Allied monster gains Block. |
 | WCG-070 | 崇高奉獻 | 法術 | 1 | — | — | — | 1 位玩家回復 1 生命。 | **Noble Devotion** — Restore 1 life to 1 player. |
 | WCG-071 | 祈光神官 | 怪物 | 2 | 10 | 0 | — | 每當敵怪攻擊你的嘲諷怪物，回復 1 生命。 | **Lightcaller Priest** — Whenever an enemy monster attacks your Taunt monster, restore 1 life. |
@@ -233,7 +233,7 @@ source: WcgWeb/Data/cards.json
 | WCG-347 | 列隊亡兵 | 怪物 | 2 | 10 | 1 | ←→ | ←→ 友軍 PP +2。 | **Ranked Dead Soldier** — [Arrows: ← →] Allied monsters get +2 PP. |
 | WCG-352 | 亡魂點名 | 法術 | 1 | — | — | — | 你的墓地每有 4 張牌，對敵方玩家造成 1 傷害（最多 2 點）。 | **Roll Call of the Dead** — Deal 1 damage to the enemy player for every 4 cards in your graveyard (up to 2). |
 | WCG-383 | 腐霧散布者 | 怪物 | 2 | 9 | 0 | ↑ | ↑ 敵怪 PP -3。 | **Rotmist Spreader** — [Arrow: ↑] Enemy monster gets -3 PP. |
-| WCG-385 | 腐根獵手 | 怪物 | 3 | 13 | 1 | — | 劇毒；攻擊 PP 10 以下的怪物時，此怪本回合 PP +5。 | **Rotroot Stalker** — Poison. When attacking a monster with 10 PP or less, gets +5 PP this turn. |
+| WCG-385 | 腐根獵手 | 怪物 | 3 | 9 | 1 | — | 劇毒；進場：所有敵怪本回合 PP -3。 | **Rotroot Stalker** — Poison. Deploy: Give all enemy monsters -3 PP this turn. |
 
 ## 中立（Neutral，24 張）
 

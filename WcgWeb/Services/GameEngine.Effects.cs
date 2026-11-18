@@ -200,7 +200,10 @@ public partial class GameEngine
             case "WCG-052": FreeHand(p, 2, 2); break;
             case "WCG-056": if (V22Rules) Tutor(p, x => x.Card.IsMonster && x.Card.HasWill("生機")); else Search(p, 3, x => x.Card.IsMonster && x.Card.TotalCost <= 2); break;
             case "WCG-058": Recover(p, 2, 2, optional: true); break;
-            case "WCG-068": KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(700)).ToArray(), c.Name); break;
+            case "WCG-068":
+                if (V2Rules && c.Text.Contains("本回合 PP", StringComparison.Ordinal)) DebuffBatchTurn(enemy.Field, -10, c);
+                else KillBatch(enemy.Field.Where(m => ThresholdPP(m) <= Low(700)).ToArray(), c.Name);
+                break;
             case "WCG-078":
                 Resolve(() =>
                 {

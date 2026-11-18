@@ -268,29 +268,29 @@ public class V2MechanicsTests
     }
 
     [Fact]
-    public void Wcg385ChecksCurrentPpNotPrintedPpForBonus()
+    public void Wcg385IsNinePpPoisonAndDebuffsAllEnemiesByThreeOnDeploy()
     {
         var g = Game();
-        var hunter = Unit(g.Player, "WCG-385", 0); // PP 13；攻擊 PP 10 以下怪物時本回合 PP +5
-        var buffedLow = Unit(g.Computer, "WCG-101", 0); // 印刷 PP 10，加 +5 變 15
-        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-135"), buffedLow));
-        Assert.Equal(15, buffedLow.CurrentPP);
+        var small = Unit(g.Computer, "WCG-101", 0); // 10 PP
+        small.Attachments.Add(new(new(cards.GetCard("WCG-284")!), g.Player.Id)); // -7 變 3 PP，進場 -3 會歸零消滅
+        Refresh(g);
+        var big = Unit(g.Computer, "WCG-154", 1);   // 13 PP
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-385")));
+        Choose(g, o => o.Id == "SLOT:0");
+        var hunter = g.Player.Field.Single(m => m.Card.Id == "WCG-385");
+        Assert.Equal(9, hunter.Card.PP);
+        Assert.Equal(1, hunter.Card.DP);
+        Assert.True(hunter.HasPoison);
+        Assert.DoesNotContain(small, g.Computer.Field);
+        Assert.Contains(big, g.Computer.Field);
+        Assert.Equal(10, big.CurrentPP);
 
-        // 面對目前 PP 15 的 WCG-101，不觸發 +5；因雙方都沒格擋、獵手具劇毒且 13 < 15 兩敗俱傷。
-        Assert.True(g.Attack(g.Player, hunter, buffedLow));
-        Assert.DoesNotContain(hunter, g.Player.Field);
-
-        // 相反地，淡水狂鱷（印刷 13）被孢沼爬蟲降到目前 PP 10 時，會觸發 +5 變成 18 PP 並擊敗對手存活！
-        var g2 = Game();
-        var h2 = Unit(g2.Player, "WCG-385", 0);
-        var shrunk = Unit(g2.Computer, "WCG-154", 0); // 13 PP
-        shrunk.Attachments.Add(new(new(cards.GetCard("WCG-382")!), g2.Player.Id));
-        Refresh(g2);
-        Assert.Equal(10, shrunk.CurrentPP);
-        Assert.True(g2.Attack(g2.Player, h2, shrunk));
-        Assert.Equal(18, h2.CurrentPP);
-        Assert.Contains(h2, g2.Player.Field);
-        Assert.DoesNotContain(shrunk, g2.Computer.Field);
+        // 不再在攻擊 PP 10 以下怪物時觸發本回合 PP +5
+        var foe = Unit(g.Computer, "WCG-101", 2); // 10 PP
+        hunter.IsTapped = false; hunter.HasSummoningSickness = false;
+        Assert.True(g.Attack(g.Player, hunter, foe));
+        Assert.DoesNotContain(foe, g.Computer.Field); // 劇毒換掉
+        Assert.DoesNotContain(hunter, g.Player.Field); // 9 < 10 兩敗俱傷，沒有變 14
     }
 
     [Fact]
@@ -928,6 +928,55 @@ public class V2MechanicsTests
         Choose(gOld, o => o.Id == smallFoe.InstanceId.ToString());
         Assert.DoesNotContain(smallFoe, gOld.Computer.Field);
         Assert.Contains(gOld.Computer.Hand, c => c.InstanceId == smallFoe.InstanceId);
+    }
+
+    [Fact]
+    public void DominanceFixCardsUpdateCostsAndEffectsCorrectly()
+    {
+        // WCG-068 神聖審判: 3 費，所有敵怪本回合 PP -10
+        var g1 = Game();
+        var e10 = Unit(g1.Computer, "WCG-101", 0); // 10 PP
+        var e13 = Unit(g1.Computer, "WCG-154", 1); // 13 PP
+        var judgment = Hand(g1, "WCG-068");
+        Assert.Equal(3, judgment.Card.TotalCost);
+        Assert.True(g1.CastSpell(g1.Player, judgment));
+        Assert.DoesNotContain(e10, g1.Computer.Field);
+        Assert.Equal(3, e13.CurrentPP);
+
+        // WCG-246 藤鞭絞殺: 2 費，使 1 隻怪物本回合 PP -15
+        var g2 = Game();
+        var e13b = Unit(g2.Computer, "WCG-154", 0); // 13 PP
+        var e18 = Unit(g2.Computer, "WCG-113", 1);  // 18 PP
+        Assert.True(g2.CastSpellAt(g2.Player, Hand(g2, "WCG-246"), e13b));
+        Assert.DoesNotContain(e13b, g2.Computer.Field);
+        Assert.True(g2.CastSpellAt(g2.Player, Hand(g2, "WCG-246"), e18));
+        Assert.Equal(3, e18.CurrentPP);
+
+        // WCG-125 思維星軌: 3 費，橫置抽 1 張牌（不棄牌）
+        var g3 = Game();
+        var orbCard = Hand(g3, "WCG-125");
+        Assert.Equal(3, orbCard.Card.TotalCost);
+        Assert.True(g3.PlayEnchantment(g3.Player, orbCard));
+        Choose(g3, o => o.Id == "SLOT:0");
+        var orb = g3.Player.Structures.Single(s => s.Card.Id == "WCG-125");
+        var beforeHand = g3.Player.Hand.Count;
+        Assert.True(g3.Activate(g3.Player, orb));
+        Assert.False(g3.IsWaiting);
+        Assert.Equal(beforeHand + 1, g3.Player.Hand.Count);
+        Assert.True(orb.IsTapped);
+
+        // WCG-373 潮間採集者: 2 費 / 8 PP / 0 DP，進場回 1 血抽 1 張
+        var g4 = Game();
+        g4.Player.Hp = 5;
+        var gatherer = Hand(g4, "WCG-373");
+        Assert.Equal(2, gatherer.Card.TotalCost);
+        Assert.Equal(8, gatherer.Card.PP);
+        Assert.Equal(0, gatherer.Card.DP);
+        var beforeGathererHand = g4.Player.Hand.Count;
+        Assert.True(g4.SummonMonster(g4.Player, gatherer));
+        Choose(g4, o => o.Id == "SLOT:0");
+        Assert.Equal(6, g4.Player.Hp);
+        Assert.Equal(beforeGathererHand, g4.Player.Hand.Count); // -1 played +1 drawn
     }
 
     [Fact]

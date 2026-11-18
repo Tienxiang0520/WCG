@@ -129,7 +129,7 @@ public partial class GameEngine
         void Pay(Action effect){m.IsTapped=true;effect();}
         switch(m.Card.Id)
         {
-            case "WCG-125": if (V22Rules) Pay(()=>Loot(p)); else CardChoice(p,"選擇置底卡，其餘留在牌庫頂",p.Deck.Take(2),c=>Pay(()=>{p.Deck.Remove(c);p.Deck.Add(c);}));break;
+            case "WCG-125": if (V22Rules) Pay(() => { if (m.Card.Text.Contains("棄", StringComparison.Ordinal)) Loot(p); else DrawMany(p, 1); }); else CardChoice(p, "選擇置底卡，其餘留在牌庫頂", p.Deck.Take(2), c => Pay(() => { p.Deck.Remove(c); p.Deck.Add(c); })); break;
             case "WCG-126":Pay(()=>{if(V2Rules)UntapEnergy(p,m.Card,2);else p.NextCreatureDiscount++;});break;
             case "WCG-128":PickMonster(p,"選擇犧牲怪物",p.Field,x=>Pay(()=>{Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("失去 1 生命",StringComparison.Ordinal))PayLife(GetOpponent(p),1);});KillBatch([x],"犧牲",!LegacyCardRules);}));break;
             case "WCG-149":if (V22Rules) Pay(()=>Resolve(()=>Loot(p),()=>Heal(p,1))); else CardChoice(p,"選擇置底手牌",p.Hand,c=>Pay(()=>{p.Hand.Remove(c);p.Deck.Add(c);Resolve(()=>DrawMany(p,1),()=>{if(m.Card.Text.Contains("回復 1 生命",StringComparison.Ordinal))Heal(p,1);});}));break;

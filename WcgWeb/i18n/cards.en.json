@@ -503,12 +503,13 @@
   "WCG-068": {
     "zh": "神聖審判",
     "name": "Divine Judgment",
-    "text": "Destroy all enemy monsters with 10 PP or less.",
-    "zh_text": "消滅所有 PP 10 以下的敵怪。",
+    "text": "Give all enemy monsters -10 PP this turn.",
+    "zh_text": "所有敵怪本回合 PP -10。",
     "prev": {
       "消滅所有 PP 600 以下的敵方怪物。": "Destroy all enemy monsters with 600 PP or less.",
       "消滅所有 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 PP or less.",
-      "消滅所有印刷 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 printed PP or less."
+      "消滅所有印刷 PP 900 以下的敵方怪物。": "Destroy all enemy monsters with 900 printed PP or less.",
+      "消滅所有 PP 10 以下的敵怪。": "Destroy all enemy monsters with 10 PP or less."
     }
   },
   "WCG-069": {
@@ -970,8 +971,11 @@
   "WCG-125": {
     "zh": "思維星軌",
     "name": "Starpath of Thought",
-    "text": "Tap: Draw 1, discard 1.",
-    "zh_text": "橫置：抽 1 棄 1。"
+    "text": "Tap: Draw 1 card.",
+    "zh_text": "橫置：抽 1 張牌。",
+    "prev": {
+      "橫置：抽 1 棄 1。": "Tap: Draw 1, discard 1."
+    }
   },
   "WCG-126": {
     "zh": "遠古母樹根鬚",
@@ -1803,14 +1807,15 @@
   "WCG-246": {
     "zh": "藤鞭絞殺",
     "name": "Vine Strangle",
-    "text": "Give 1 monster -10 PP this turn.",
+    "text": "Give 1 monster -15 PP this turn.",
     "prev": {
       "消滅 1 隻 PP 1100 以下的敵方怪物。": "Destroy 1 enemy monster with 1100 PP or less.",
       "消滅 1 隻 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 PP or less.",
       "消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Destroy 1 enemy monster with 1200 printed PP or less.",
-      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less."
+      "消滅 1 隻 PP 10 以下的怪物。": "Destroy 1 monster with 10 PP or less.",
+      "使 1 隻怪物本回合 PP -10。": "Give 1 monster -10 PP this turn."
     },
-    "zh_text": "使 1 隻怪物本回合 PP -10。"
+    "zh_text": "使 1 隻怪物本回合 PP -15。"
   },
   "WCG-247": {
     "zh": "大地之心",
@@ -2782,11 +2787,12 @@
   "WCG-385": {
     "zh": "腐根獵手",
     "name": "Rotroot Stalker",
-    "text": "Poison. When attacking a monster with 10 PP or less, gets +5 PP this turn.",
-    "zh_text": "劇毒；攻擊 PP 10 以下的怪物時，此怪本回合 PP +5。",
+    "text": "Poison. Deploy: Give all enemy monsters -3 PP this turn.",
+    "zh_text": "劇毒；進場：所有敵怪本回合 PP -3。",
     "prev": {
       "劇毒；攻擊有腐蝕指示物的怪物時，此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster with a Corrosion counter, this monster gets +500 PP until end of turn.",
-      "劇毒；攻擊 PP 被你減少的怪物時（被你的箭頭指向，或底下有你的卡），此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster whose PP you lowered (your arrow points at it, or your card is under it), this monster gets +500 PP until end of turn."
+      "劇毒；攻擊 PP 被你減少的怪物時（被你的箭頭指向，或底下有你的卡），此怪物 PP +500 直到回合結束。": "Poison. When it attacks a monster whose PP you lowered (your arrow points at it, or your card is under it), this monster gets +500 PP until end of turn.",
+      "劇毒；攻擊 PP 10 以下的怪物時，此怪本回合 PP +5。": "Poison. When attacking a monster with 10 PP or less, gets +5 PP this turn."
     }
   },
   "WCG-386": {
