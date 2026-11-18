@@ -368,20 +368,15 @@ public class V2MechanicsTests
         Assert.True(g.CastSpellAt(g.Player, bounce, m)); // 省略「敵方」-> 也可指自己場上的怪物
         Assert.Contains(bounce.Card, g.Player.Graveyard.Select(x => x.Card));
 
-        // 1 位玩家目標可選己方或敵方（WCG-066 王者賜福）；WCG-070 崇高奉獻則為 0 費直接回復自己 1 生命。
-        var heal = Hand(g, "WCG-066");
-        for (int i = 0; i < 3; i++) g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));
+        // 省略對象通則：未寫明己方或敵方的回復牌（如 0 費 WCG-070「回復 1 生命。」）仍可選己方或敵方。
+        var heal = Hand(g, "WCG-070");
+        Assert.Equal(0, heal.Card.TotalCost);
         var pTargets = g.GetDirectPlayerTargets(g.Player, heal);
         Assert.Contains(g.Player, pTargets);
         Assert.Contains(g.Computer, pTargets);
-
-        var dev = Hand(g, "WCG-070");
-        Assert.Equal(0, dev.Card.TotalCost);
-        Assert.Empty(g.GetDirectPlayerTargets(g.Player, dev));
-        g.Player.Hp = 5;
-        Assert.True(g.CastSpell(g.Player, dev));
-        Assert.False(g.IsWaiting);
-        Assert.Equal(6, g.Player.Hp);
+        g.Computer.Hp = 5;
+        Assert.True(g.CastSpellAtPlayer(g.Player, heal, g.Computer));
+        Assert.Equal(6, g.Computer.Hp);
     }
 
     [Fact]

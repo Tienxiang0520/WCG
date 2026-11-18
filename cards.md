@@ -155,7 +155,7 @@ source: WcgWeb/Data/cards.json
 | WCG-063 | 聖印侍從 | 怪物 | 1 | 8 | 0 | → | → 友軍獲得格擋。 | **Sigil Squire** — [Arrow: →] Allied monster gains Block. |
 | WCG-064 | 謙遜戒律 | 法術 | 2 | — | — | — | 消滅 1 隻費用 2 以下的怪物。 | **Edict of Humility** — Destroy 1 monster with cost 2 or less. |
 | WCG-065 | 白銀巡邏衛 | 怪物 | 2 | 12 | 0 | — | 嘲諷。 | **Silver Patroller** — Taunt. |
-| WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 1 位玩家回復 2 生命，你抽 1 張牌。 | **Blessing of Kings** — Restore 2 life to 1 player, then you draw 1 card. |
+| WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 回復 2 生命，抽 1 張牌。 | **Blessing of Kings** — Restore 2 life, draw 1 card. |
 | WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 所有敵怪本回合 PP -10。 | **Divine Judgment** — Give all enemy monsters -10 PP this turn. |
 | WCG-069 | 鐵壁騎士 | 怪物 | 3 | 14 | 0 | ← | 嘲諷。← 友軍獲得格擋。 | **Bulwark Knight** — Taunt. [Arrow: ←] Allied monster gains Block. |
 | WCG-070 | 崇高奉獻 | 法術 | 0 | — | — | — | 回復 1 生命。 | **Noble Devotion** — Restore 1 life. |

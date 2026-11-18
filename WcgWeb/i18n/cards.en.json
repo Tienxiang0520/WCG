@@ -489,10 +489,11 @@
   "WCG-066": {
     "zh": "王者賜福",
     "name": "Blessing of Kings",
-    "text": "Restore 2 life to 1 player, then you draw 1 card.",
-    "zh_text": "1 位玩家回復 2 生命，你抽 1 張牌。",
+    "text": "Restore 2 life, draw 1 card.",
+    "zh_text": "回復 2 生命，抽 1 張牌。",
     "prev": {
-      "選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。": "Choose either player and restore 2 life to them, then you draw 1 card."
+      "選擇任一玩家，回復其 2 點生命，然後你抽 1 張牌。": "Choose either player and restore 2 life to them, then you draw 1 card.",
+      "1 位玩家回復 2 生命，你抽 1 張牌。": "Restore 2 life to 1 player, then you draw 1 card."
     }
   },
   "WCG-067": {

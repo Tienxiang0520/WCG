@@ -73,6 +73,7 @@ public class PlayerTargetTests
         new(Guid.NewGuid(), g.MatchId, g.Revision, type, source, target);
     [Theory]
     [InlineData("WCG-066", false, 2)] [InlineData("WCG-066", true, 2)]
+    [InlineData("WCG-070", false, 1)] [InlineData("WCG-070", true, 1)]
     public void DirectHealingUsesChosenPlayerAndOnlyCasterDraws(string id, bool enemy, int amount)
     {
         var (g, bridge, card) = Scene(id); var target = enemy ? g.Computer : g.Player;
@@ -144,11 +145,11 @@ public class PlayerTargetTests
     }
     [Theory]
     [InlineData("WCG-066", "Restore 2 life, then draw 1 card.")]
+    [InlineData("WCG-070", "Restore 1 life.")]
     public void HistoricEnglishTextDoesNotPromiseNewPlayerTargeting(string id, string oldEnglish)
     {
         Assert.Equal(oldEnglish, LocalizationCatalog.CardText(id, Cards(true).GetCard(id)!.Text));
-        Assert.Contains("to 1 player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
-        Assert.Equal("Restore 1 life.", LocalizationCatalog.CardText("WCG-070", Cards().GetCard("WCG-070")!.Text));
-        Assert.Equal("Restore 1 life to 1 player.", LocalizationCatalog.CardText("WCG-070", "1 位玩家回復 1 生命。"));
+        Assert.Contains("to 1 player", LocalizationCatalog.CardText(id, Cards(true).GetCard(id)!.Text == "回復 1 點生命。" ? "1 位玩家回復 1 生命。" : "1 位玩家回復 2 生命，你抽 1 張牌。"));
+        Assert.DoesNotContain("to 1 player", LocalizationCatalog.CardText(id, Cards().GetCard(id)!.Text));
     }
 }

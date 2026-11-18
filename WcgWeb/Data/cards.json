@@ -913,7 +913,7 @@
     "total_cost": 3,
     "pp": null,
     "dp": null,
-    "text": "1 位玩家回復 2 生命，你抽 1 張牌。",
+    "text": "回復 2 生命，抽 1 張牌。",
     "design_note": "v2.0 重製：PP÷100、格擋取代聖盾、7 血 DP 與精簡敘述。",
     "hs_ref": "王者祝福",
     "keywords": [],
