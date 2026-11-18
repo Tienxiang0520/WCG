@@ -1,34 +1,36 @@
-// Central sound manager for the whole site. Kenney CC0 samples are bundled locally (see audio/CREDITS.md);
+// Central sound manager for the whole site. Local CC0 samples (Kenney tactile card/impact samples and
+// SoulOath custom-synthesized dark-fantasy effects; see audio/CREDITS.md) are bundled offline;
 // audio never blocks navigation, a game command or a presentation, and every failure is silent.
 // Cue: [file, gain, category]. Categories mix into master; master/UI/battle volumes and the mute switch persist.
 export const CUES = {
     // Interface
-    hover: ['rollover2.ogg', .22, 'ui'], click: ['click_001.ogg', .45, 'ui'], nav: ['bookFlip2.ogg', .5, 'ui'],
-    tab: ['select_001.ogg', .5, 'ui'], toggleOn: ['toggle_001.ogg', .5, 'ui'], toggleOff: ['toggle_002.ogg', .5, 'ui'],
-    back: ['back_001.ogg', .4, 'ui'], deckAdd: ['card-place-2.ogg', .6, 'ui'], deckRemove: ['card-slide-2.ogg', .55, 'ui'],
-    save: ['confirmation_002.ogg', .5, 'ui'], toastSuccess: ['confirmation_001.ogg', .4, 'ui'], toastError: ['error_002.ogg', .4, 'ui'],
-    modalOpen: ['open_002.ogg', .35, 'ui'], modalClose: ['close_002.ogg', .3, 'ui'], avatar: ['pluck_002.ogg', .55, 'ui'],
-    matchFound: ['jingles_PIZZI10.ogg', .5, 'ui'], matchStart: ['drawKnife1.ogg', .55, 'ui'],
-    win: ['jingles_PIZZI02.ogg', .55, 'ui'], lose: ['jingles_PIZZI01.ogg', .5, 'ui'],
-    rankUp: ['jingles_PIZZI04.ogg', .6, 'ui'], rankDown: ['jingles_PIZZI05.ogg', .5, 'ui'],
-    starGain: ['glass_002.ogg', .55, 'ui'], starLoss: ['minimize_005.ogg', .45, 'ui'],
+    hover: ['ui-hover.ogg', .24, 'ui'], click: ['ui-click.ogg', .48, 'ui'], nav: ['ui-nav.ogg', .42, 'ui'],
+    tab: ['ui-tab.ogg', .45, 'ui'], toggleOn: ['ui-toggle-on.ogg', .48, 'ui'], toggleOff: ['ui-toggle-off.ogg', .45, 'ui'],
+    back: ['ui-back.ogg', .42, 'ui'], deckAdd: ['card-place-2.ogg', .6, 'ui'], deckRemove: ['card-slide-2.ogg', .55, 'ui'],
+    save: ['ui-save.ogg', .52, 'ui'], toastSuccess: ['ui-toast-ok.ogg', .48, 'ui'], toastError: ['ui-error.ogg', .48, 'ui'],
+    modalOpen: ['ui-modal-open.ogg', .38, 'ui'], modalClose: ['ui-modal-close.ogg', .34, 'ui'], avatar: ['ui-avatar.ogg', .5, 'ui'],
+    matchFound: ['ui-match-found.ogg', .58, 'ui'], matchStart: ['ui-match-start.ogg', .55, 'ui'],
+    win: ['stinger-victory.ogg', .62, 'ui'], lose: ['stinger-defeat.ogg', .56, 'ui'],
+    rankUp: ['ui-rank-up.ogg', .6, 'ui'], rankDown: ['ui-rank-down.ogg', .52, 'ui'],
+    starGain: ['ui-star-gain.ogg', .55, 'ui'], starLoss: ['ui-star-loss.ogg', .48, 'ui'],
     // Battle
-    select: ['card-slide-1.ogg', .65, 'battle'], flip: ['card-fan-1.ogg', .6, 'battle'],
-    place: ['card-place-1.ogg', .8, 'battle'], set: ['card-shove-2.ogg', .6, 'battle'], field: ['impactPlate_light_000.ogg', .55, 'battle'],
-    spell: ['glass_001.ogg', .6, 'battle'], summon: ['impactWood_medium_000.ogg', .6, 'battle'],
-    energy: ['card-shove-1.ogg', .65, 'battle'], energyFill: ['chips-stack-1.ogg', .5, 'battle'], draw: ['card-slide-4.ogg', .55, 'battle'],
-    swing: ['knifeSlice.ogg', .35, 'battle'], attack: ['impactSoft_heavy_000.ogg', .75, 'battle'],
-    damage: ['impactPunch_medium_000.ogg', .7, 'battle'], faceHit: ['impactPunch_heavy_001.ogg', .7, 'battle'],
-    death: ['impactGlass_medium_001.ogg', .55, 'battle'], heal: ['maximize_004.ogg', .45, 'battle'],
-    shieldBreak: ['impactGlass_heavy_002.ogg', .6, 'battle'], taunt: ['impactMetal_heavy_001.ogg', .45, 'battle'],
-    trigger: ['pluck_001.ogg', .45, 'battle'], turn: ['impactWood_heavy_000.ogg', .65, 'battle'], timer: ['tick_001.ogg', .5, 'battle'],
-    victory: ['jingles_PIZZI02.ogg', .6, 'battle'], defeat: ['jingles_PIZZI01.ogg', .55, 'battle'],
-    cancel: ['back_001.ogg', .4, 'battle'], error: ['error_002.ogg', .4, 'battle'], button: ['click_001.ogg', .45, 'battle'],
-    gameover: ['confirmation_004.ogg', .55, 'battle'], glass: ['impactGlass_light_003.ogg', .55, 'battle'],
-    // PP / DP changes: soft clicks, so a buff never sounds like a heal or a hit on life.
-    statUp: ['toggle_001.ogg', .4, 'battle'], statDown: ['toggle_002.ogg', .4, 'battle']
+    select: ['card-slide-1.ogg', .65, 'battle'], flip: ['battle-flip.ogg', .58, 'battle'],
+    place: ['card-place-1.ogg', .78, 'battle'], set: ['card-shove-2.ogg', .6, 'battle'], field: ['battle-field.ogg', .62, 'battle'],
+    spell: ['battle-spell.ogg', .62, 'battle'], summon: ['battle-summon.ogg', .72, 'battle'],
+    energy: ['card-shove-1.ogg', .65, 'battle'], energyFill: ['battle-energy-fill.ogg', .54, 'battle'], draw: ['card-slide-4.ogg', .55, 'battle'],
+    swing: ['battle-swing.ogg', .5, 'battle'], attack: ['battle-attack.ogg', .78, 'battle'],
+    damage: ['battle-damage.ogg', .72, 'battle'], faceHit: ['battle-face-hit.ogg', .78, 'battle'],
+    death: ['battle-death.ogg', .64, 'battle'], heal: ['battle-heal.ogg', .56, 'battle'],
+    shieldBreak: ['battle-shield-break.ogg', .64, 'battle'], taunt: ['impactMetal_heavy_001.ogg', .45, 'battle'],
+    trigger: ['battle-trigger.ogg', .46, 'battle'], turn: ['impactWood_heavy_000.ogg', .65, 'battle'], timer: ['tick_001.ogg', .5, 'battle'],
+    victory: ['stinger-victory.ogg', .64, 'battle'], defeat: ['stinger-defeat.ogg', .58, 'battle'],
+    cancel: ['ui-back.ogg', .42, 'battle'], error: ['ui-error.ogg', .48, 'battle'], button: ['ui-click.ogg', .48, 'battle'],
+    gameover: ['battle-gameover.ogg', .58, 'battle'], glass: ['battle-shield-up.ogg', .56, 'battle'],
+    // PP / DP changes: subtle plucked intervals so buffs/debuffs stay clearly distinct from heal and damage.
+    statUp: ['battle-stat-up.ogg', .46, 'battle'], statDown: ['battle-stat-down.ogg', .46, 'battle']
 };
-export const ALIASES = { play: 'place', recover: 'draw', take: 'draw', bounce: 'draw', status: 'trigger', reveal: 'flip' };
+export const ALIASES = { play: 'place', recover: 'draw', take: 'draw', bounce: 'draw', status: 'trigger', reveal: 'flip', toggle: 'toggleOn' };
+const DETUNE = { hover: .04, click: .03, back: .03, select: .03, flip: .04, place: .03, draw: .04, swing: .05, attack: .04, damage: .04, trigger: .03, statUp: .02, statDown: .02 };
 export const CATEGORIES = ['ui', 'battle'];
 const ENABLED_KEY = 'wcg.soundEnabled', VOLUME_KEY = 'wcg.audio';
 export const DEFAULT_VOLUMES = Object.freeze({ master: .8, ui: .6, battle: .9 });
@@ -94,7 +96,8 @@ export function createAudioManager(env = {}) {
     function settings() { return { enabled, master: volumes.master, ui: volumes.ui, battle: volumes.battle }; }
     async function play(key, delay = 0, options = {}) {
         if (closed || !enabled || hidden()) return;
-        const cue = CUES[key] ?? CUES[ALIASES[key]];
+        const resolved = CUES[key] ? key : ALIASES[key];
+        const cue = CUES[resolved];
         if (!cue) return;
         const [file, gainValue, category] = cue;
         if ((volumes[category] ?? 1) <= 0 || volumes.master <= 0) return;
@@ -107,7 +110,8 @@ export function createAudioManager(env = {}) {
         if (set.size >= (VOICES[category] ?? 4)) { const oldest = set.values().next().value; try { oldest.stop(); } catch { } set.delete(oldest); }
         const source = context.createBufferSource(), gain = context.createGain();
         source.buffer = buffer; gain.gain.value = gainValue * (options.volume ?? 1);
-        if (options.detune && source.playbackRate) source.playbackRate.value = 1 + (Math.random() * 2 - 1) * options.detune;
+        const detune = options.detune ?? DETUNE[resolved] ?? 0;
+        if (detune && source.playbackRate) source.playbackRate.value = 1 + (Math.random() * 2 - 1) * detune;
         source.connect(gain); gain.connect(buses.get(category) ?? master); set.add(source);
         source.onended = () => { set.delete(source); source.disconnect(); gain.disconnect(); };
         source.start(context.currentTime + Math.max(0, Math.min(2, delay)));

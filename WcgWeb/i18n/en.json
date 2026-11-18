@@ -2355,7 +2355,7 @@
   "非付費召喚使用真實手牌或墓地卡，不觸發「進場」效果，仍須空格。費用門檻看印刷費用，付款減費不降低檢索或復甦門檻。「陣亡」在怪物被消滅或犧牲、送入墓地時觸發，移回手牌不算；犧牲也算被消滅。": "Free summons use real cards from hand or graveyard, don't trigger Deploy effects and still need an empty slot. Cost limits use the printed cost; payment discounts don't lower search or revive limits. On Death triggers when a monster is destroyed or sacrificed and goes to the graveyard, not when it returns to hand; a sacrifice also counts as being destroyed.",
   "非付費召喚使用真實手牌或墓地怪物、仍須空格，不觸發限付費召喚的「進場」或額外代價。「送入墓地」（磨牌）不算抽牌、也不觸發陣亡；抽牌時牌庫已空才會立即敗北。": "Unpaid summons use actual cards from hand or graveyard, still need an empty slot, and don't trigger paid-summon \"Deploy\" or extra costs. Putting cards into the graveyard (milling) is neither drawing nor On Death; losing happens only when drawing from an empty deck.",
   "音效": "Sound",
-  "音效素材為 Kenney 的 CC0 授權素材，已隨網站打包，不會從外部載入。瀏覽器需要先點擊或按鍵一次才會出聲。": "Sound effects are CC0 assets by Kenney, bundled with the site and never loaded from elsewhere. Browsers play sound only after your first click or key press.",
+  "音效為 CC0 授權素材，已隨網站打包，不會從外部載入。瀏覽器需要先點擊或按鍵一次才會出聲。": "Sound effects are CC0 assets, bundled with the site and never loaded from elsewhere. Browsers play sound only after your first click or key press.",
   "音效與音量": "Sound and volume",
   "預組 {0} 不合法：{1}": "Preset deck {0} is illegal: {1}",
   "預組必須包含 5 副不同牌組。": "Presets must contain 5 different decks.",

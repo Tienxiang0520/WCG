@@ -1,0 +1,7 @@
+SoulOath Custom Sound Effects (souloath-sfx)
+
+License: Creative Commons Zero (CC0 1.0 Universal)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Synthesized locally for WCG / SoulOath using physical-modeling, modal synthesis,
+and filtered noise DSP, and dedicated to the public domain under CC0 1.0.

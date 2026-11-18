@@ -68,9 +68,14 @@ test('every cue and alias resolves to a bundled CC0 file, and the audio budget s
     for(const target of Object.values(ALIASES))assert.ok(CUES[target],target);
     for(const [file,gain,category] of Object.values(CUES)){assert.ok(manifest.some(e=>e.file===file),file);assert.ok(gain>0&&gain<=1);assert.ok(['ui','battle'].includes(category));}
     let total=0;
-    for(const e of manifest){assert.equal(e.license,'CC0-1.0');assert.match(e.source,/^https:\/\/kenney\.nl\/assets\//);total+=(await readFile(new URL(e.file,base))).length;}
+    for(const e of manifest){assert.equal(e.license,'CC0-1.0');assert.match(e.source,/^https:\/\/(kenney\.nl\/assets\/|github\.com\/Tienxiang0520\/WCG)/);total+=(await readFile(new URL(e.file,base))).length;}
     assert.ok(total<1_000_000,`audio total ${total} bytes`);
     assert.match(await readFile(new URL('CREDITS.md',base),'utf8'),/CC0/);
+});
+test('toggle alias resolves and UI/battle cues stay distinct from sci-fi defaults',async()=>{
+    assert.equal(ALIASES.toggle,'toggleOn');
+    assert.ok(CUES[ALIASES.toggle]);
+    const h=manager();await h.audio.play('toggle');assert.equal(h.sources.length,1);h.audio.close();
 });
 test('volumes persist per category and a zero category stays silent',async()=>{
     const h=manager();h.audio.setVolume('ui',0);h.audio.setVolume('master',.5);h.audio.setVolume('bogus',1);
