@@ -368,12 +368,20 @@ public class V2MechanicsTests
         Assert.True(g.CastSpellAt(g.Player, bounce, m)); // 省略「敵方」-> 也可指自己場上的怪物
         Assert.Contains(bounce.Card, g.Player.Graveyard.Select(x => x.Card));
 
-        // 1 位玩家目標可選己方或敵方。
-        var heal = Hand(g, "WCG-070");
-        g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));
+        // 1 位玩家目標可選己方或敵方（WCG-066 王者賜福）；WCG-070 崇高奉獻則為 0 費直接回復自己 1 生命。
+        var heal = Hand(g, "WCG-066");
+        for (int i = 0; i < 3; i++) g.Player.EnergyZone.Add(new(cards.GetCard("WCG-101")!));
         var pTargets = g.GetDirectPlayerTargets(g.Player, heal);
         Assert.Contains(g.Player, pTargets);
         Assert.Contains(g.Computer, pTargets);
+
+        var dev = Hand(g, "WCG-070");
+        Assert.Equal(0, dev.Card.TotalCost);
+        Assert.Empty(g.GetDirectPlayerTargets(g.Player, dev));
+        g.Player.Hp = 5;
+        Assert.True(g.CastSpell(g.Player, dev));
+        Assert.False(g.IsWaiting);
+        Assert.Equal(6, g.Player.Hp);
     }
 
     [Fact]
@@ -594,12 +602,49 @@ public class V2MechanicsTests
         if (g.CurrentPendingTarget != null) Assert.True(g.SelectTarget(giant2));
         Assert.Equal(14, giant2.CurrentPP);
 
-        // WCG-008 AOE: -10 PP to all monsters on both sides
+        // WCG-008 AOE: -5 PP to all monsters on both sides
         var ally10 = Unit(g.Player, "WCG-101", 1);
         Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-008")));
+        Assert.Equal(5, footman.CurrentPP);
+        Assert.Equal(5, ally10.CurrentPP);
+        Assert.Equal(9, giant2.CurrentPP); // 14 - 5 = 9 PP
+
+        // WCG-092 AOE: -15 PP to all monsters on both sides
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-092")));
         Assert.DoesNotContain(footman, g.Computer.Field);
         Assert.DoesNotContain(ally10, g.Player.Field);
-        Assert.Equal(4, giant2.CurrentPP); // 14 - 10 = 4 PP
+        Assert.DoesNotContain(giant2, g.Computer.Field);
+
+        // WCG-082: -10 PP + mill 2; WCG-010: draw up to 3; WCG-184: tap/bounce up to 2 + draw 1 if Reason card on board
+        foreach (var ez in g.Player.EnergyZone) ez.IsTapped = false;
+        var dBefore = g.Player.Deck.Count;
+        var gBefore = g.Player.Graveyard.Count;
+        var giant3 = Unit(g.Computer, "WCG-119", 4); // 26 PP
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-082"), giant3));
+        Assert.Equal(16, giant3.CurrentPP);
+        Assert.Equal(dBefore - 2, g.Player.Deck.Count);
+        Assert.Equal(gBefore + 3, g.Player.Graveyard.Count); // spell + 2 milled
+
+        Unit(g.Player, "WCG-101", 2);
+        Unit(g.Player, "WCG-101", 3);
+        Unit(g.Player, "WCG-101", 4);
+        var hFury = g.Player.Hand.Count;
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-010")));
+        Assert.Equal(hFury + 3, g.Player.Hand.Count);
+
+        var reasonUnit = Unit(g.Player, "WCG-023", 1);
+        var foeUpright = Unit(g.Computer, "WCG-101", 0);
+        var foeTapped = Unit(g.Computer, "WCG-154", 1, tapped: true);
+        var hArcane = g.Player.Hand.Count;
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-184"), foeUpright));
+        Assert.True(g.IsWaiting);
+        Choose(g, o => o.Id == foeTapped.InstanceId.ToString());
+        Assert.False(g.IsWaiting);
+        Assert.True(foeUpright.IsTapped);
+        Assert.DoesNotContain(foeTapped, g.Computer.Field);
+        Assert.Contains(g.Computer.Hand, c => c.InstanceId == foeTapped.InstanceId);
+        Assert.Equal(hArcane + 1, g.Player.Hand.Count);
+        Assert.Contains(reasonUnit, g.Player.Field);
 
         // WCG-386 passive ↑ -3 PP + WCG-390 (-6 PP)
         var g390 = Game(playerFirst: false);

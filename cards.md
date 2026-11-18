@@ -27,9 +27,9 @@ source: WcgWeb/Data/cards.json
 | WCG-005 | 突擊狼騎兵 | 怪物 | 3 | 10 | 1 | ←→ | 衝鋒。←→ 友軍 PP +1。 | **Raiding Wolf Rider** — Charge. [Arrows: ← →] Allied monsters get +1 PP. |
 | WCG-006 | 怒意沸騰 | 法術 | 5 | — | — | — | 額外代價：犧牲 1 隻己怪。對敵方玩家造成 2 傷害。 | **Boiling Rage** — Additional cost: sacrifice 1 ally monster. Deal 2 damage to the enemy player. |
 | WCG-007 | 狂血投擲者 | 怪物 | 2 | 10 | 1 | — | 進場：使 PP 最低的 1 隻敵怪本回合 PP -10。 | **Bloodfrenzy Hurler** — Deploy: Give the enemy monster with the lowest PP -10 PP this turn. |
-| WCG-008 | 烈焰旋風 | 法術 | 1 | — | — | — | 雙方所有怪物本回合 PP -10。 | **Flame Whirlwind** — All monsters get -10 PP this turn. |
+| WCG-008 | 烈焰旋風 | 法術 | 1 | — | — | — | 雙方所有怪物本回合 PP -5。 | **Flame Whirlwind** — All monsters get -5 PP this turn. |
 | WCG-009 | 阿曼尼狂戰士 | 怪物 | 2 | 9 | 1 | — | 敵方有 3 隻以上怪物時，此怪 PP +6。 | **Amani Berserker** — While the enemy has 3+ monsters, this monster gets +6 PP. |
-| WCG-010 | 戰鬥狂怒 | 法術 | 3 | — | — | — | 己場每有 1 隻怪物，抽 1 張牌（最多 2 張）。 | **Battle Fury** — Draw 1 card for each ally monster (up to 2). |
+| WCG-010 | 戰鬥狂怒 | 法術 | 3 | — | — | — | 己場每有 1 隻怪物，抽 1 張牌（最多 3 張）。 | **Battle Fury** — Draw 1 card for each ally monster (up to 3). |
 | WCG-011 | 嗜血戰狂 | 怪物 | 3 | 13 | 0 | — | 每當另一隻己怪被消滅，抽 1 張牌。 | **Bloodthirsty Warmonger** — Whenever another ally monster is destroyed, draw 1 card. |
 | WCG-013 | 焦土縱火犯 | 怪物 | 4 | 17 | 1 | — | 進場：對敵方玩家造成 1 傷害，你失去 1 生命。 | **Scorched-Earth Arsonist** — Deploy: Deal 1 damage to the enemy player; you lose 1 life. |
 | WCG-014 | 熾紅戰斧 | 法術 | 3 | — | — | — | 對敵方玩家造成 1 傷害。 | **Crimson War Axe** — Deal 1 damage to the enemy player. |
@@ -84,7 +84,7 @@ source: WcgWeb/Data/cards.json
 | WCG-163 | 時空之主·克羅諾斯 | 怪物 | 9 | 29 | 2 | — | 進場：重置你的所有能量；可將 1 隻怪物移回手牌。 | **Lord of Time, Kronos** — Deploy: Untap all your energy; you may return 1 monster to its owner's hand. |
 | WCG-166 | 思維置換 | 法術 | 0 | — | — | — | 抽 1 棄 1。 | **Mind Swap** — Draw 1, discard 1. |
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 8 | 0 | — | 進場：檢索法術。 | **Stargazing Diviner** — Deploy: Tutor a spell. |
-| WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。 | **Arcane Resonance Wave** — Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card. |
+| WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置至多 2 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap up to 2 monsters (return to hand if tapped); if you control a [Reason] card, draw 1 card. |
 | WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放理智法術，可使 1 隻怪物本回合 PP -10。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害時：抵銷傷害，抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] On damage: Cancel it and draw 1 card. |
 | WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 驅散 1 隻怪物，使它本回合 PP -5。 | **Hush Hex** — Dispel 1 monster; it gets -5 PP this turn. |
@@ -158,7 +158,7 @@ source: WcgWeb/Data/cards.json
 | WCG-066 | 王者賜福 | 法術 | 3 | — | — | — | 1 位玩家回復 2 生命，你抽 1 張牌。 | **Blessing of Kings** — Restore 2 life to 1 player, then you draw 1 card. |
 | WCG-068 | 神聖審判 | 法術 | 3 | — | — | — | 所有敵怪本回合 PP -10。 | **Divine Judgment** — Give all enemy monsters -10 PP this turn. |
 | WCG-069 | 鐵壁騎士 | 怪物 | 3 | 14 | 0 | ← | 嘲諷。← 友軍獲得格擋。 | **Bulwark Knight** — Taunt. [Arrow: ←] Allied monster gains Block. |
-| WCG-070 | 崇高奉獻 | 法術 | 1 | — | — | — | 1 位玩家回復 1 生命。 | **Noble Devotion** — Restore 1 life to 1 player. |
+| WCG-070 | 崇高奉獻 | 法術 | 0 | — | — | — | 回復 1 生命。 | **Noble Devotion** — Restore 1 life. |
 | WCG-071 | 祈光神官 | 怪物 | 2 | 10 | 0 | — | 每當敵怪攻擊你的嘲諷怪物，回復 1 生命。 | **Lightcaller Priest** — Whenever an enemy monster attacks your Taunt monster, restore 1 life. |
 | WCG-072 | 淨化聖光 | 法術 | 3 | — | — | — | 驅散 1 隻怪物或 1 個結界，抽 1 張牌。 | **Purifying Light** — Dispel 1 monster or 1 enchantment, then draw 1 card. |
 | WCG-073 | 榮耀護衛官 | 怪物 | 4 | 16 | 1 | ←→ | 嘲諷。←→ 友軍獲得格擋。 | **Glory Warden** — Taunt. [Arrows: ← →] Allied monsters gain Block. |
@@ -197,7 +197,7 @@ source: WcgWeb/Data/cards.json
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
 | WCG-081 | 虛空夜行魔 | 怪物 | 1 | 9 | 0 | — | 嘲諷。 | **Void Nightstalker** — Taunt. |
-| WCG-082 | 暗影裂箭 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -10。 | **Shadow Rift Arrow** — Give 1 monster -10 PP this turn. |
+| WCG-082 | 暗影裂箭 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -10，送墓 2。 | **Shadow Rift Arrow** — Give 1 monster -10 PP this turn, mill 2. |
 | WCG-083 | 腐爛食屍鬼 | 怪物 | 1 | 7 | 1 | — | 陣亡：可使 1 隻怪物本回合 PP -10。 | **Rotting Ghoul** — On Death: You may give 1 monster -10 PP this turn. |
 | WCG-084 | 靈魂撕裂 | 法術 | 1 | — | — | — | 額外代價：棄 1 張手牌。使 1 隻怪物本回合 PP -10。 | **Soul Rend** — Additional cost: discard 1 card. Give 1 monster -10 PP this turn. |
 | WCG-085 | 苦痛契約者 | 怪物 | 1 | 8 | 0 | ↑ | 進場：失去 1 生命。↑ 敵怪 PP -3。 | **Pain Pactbearer** — Deploy: Lose 1 life. [Arrow: ↑] Enemy monster gets -3 PP. |
@@ -206,7 +206,7 @@ source: WcgWeb/Data/cards.json
 | WCG-089 | 骨鐮刺客 | 怪物 | 3 | 11 | 1 | — | 劇毒。 | **Bonescythe Assassin** — Poison. |
 | WCG-090 | 冥界引渡 | 法術 | 2 | — | — | — | 將墓地 1 張怪物牌移回手牌。 | **Underworld Passage** — Return 1 monster from your graveyard to hand. |
 | WCG-091 | 哀慟女妖 | 怪物 | 4 | 12 | 1 | — | 進場：所有敵怪本回合 PP -5。 | **Wailing Banshee** — Deploy: All enemy monsters get -5 PP this turn. |
-| WCG-092 | 絕望疫病 | 法術 | 3 | — | — | — | 雙方所有怪物本回合 PP -10。 | **Plague of Despair** — All monsters get -10 PP this turn. |
+| WCG-092 | 絕望疫病 | 法術 | 3 | — | — | — | 雙方所有怪物本回合 PP -15。 | **Plague of Despair** — All monsters get -15 PP this turn. |
 | WCG-093 | 深淵伏擊魔 | 怪物 | 3 | 14 | 1 | — | 陣亡：可從墓地免費召喚 1 隻費用 2 以下的怪物。 | **Abyssal Ambusher** — On Death: You may summon 1 monster with cost 2 or less from your graveyard for free. |
 | WCG-094 | 靈魂汲取 | 法術 | 6 | — | — | — | 消滅 1 隻怪物，回復 1 生命。 | **Soul Drain** — Destroy 1 monster, then restore 1 life. |
 | WCG-095 | 縛魂巨怪 | 怪物 | 4 | 17 | 2 | — | 額外代價：棄 2 張手牌。衝鋒。 | **Soulbound Brute** — Additional cost: discard 2 cards. Charge. |

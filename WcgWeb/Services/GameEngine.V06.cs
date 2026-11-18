@@ -219,12 +219,30 @@ public partial class GameEngine
         Ask(p,title,list.Select(m=>new ChoiceOption{Id=m.InstanceId.ToString(),Title=m.Card.Name,PreviewCard=m.Card}).Append(new(){Id="SKIP",Title="不使用此可選效果"}),o=>{if(o.Id!="SKIP")action(list.First(m=>m.InstanceId.ToString()==o.Id));});}
     private void TapEnemyEnergy(PlayerState e){var c=e.EnergyZone.FirstOrDefault(c=>!c.IsTapped);if(c!=null)c.IsTapped=true;}
     private void TopEnergy(PlayerState p){if(p.Deck.Count==0)return;var c=p.Deck[0];p.Deck.RemoveAt(0);c.IsTapped=false;c.TemporaryEnergy=false;p.EnergyZone.Add(c);Present("energy",p,c.InstanceId,label:"牌庫頂放入能量區");}
+    internal const string ArcaneSecondTitle = "選擇第 2 隻橫置或移回手牌的怪物";
+    private void TapOrBounce(MonsterInstance m)
+    {
+        if (!Alive(m)) return;
+        if (m.IsTapped) Bounce(m);
+        else { m.IsTapped = true; Present("status", Owner(m), m.InstanceId, card: m.Card, label: "橫置"); }
+    }
     private void ExtraSpell(PlayerState p,CardInstance c,MonsterInstance? t)
     {
         var e=GetOpponent(p);switch(c.Card.Id)
         {
             case "WCG-135": if(t!=null)Attach(p,c,t);break;
-            case "WCG-137":case "WCG-184":Resolve(()=>{if(t!=null&&Alive(t)){if(t.IsTapped)Bounce(t);else t.IsTapped=true;}},()=>{if(c.Card.Id=="WCG-137"||p.Board.Any(x=>!x.IsSet&&x.Card.HasWill("理智")))DrawMany(p,1);});break;
+            case "WCG-137":Resolve(()=>{if(t!=null)TapOrBounce(t);},()=>DrawMany(p,1));break;
+            case "WCG-184":
+                Resolve(() =>
+                {
+                    if (t != null) TapOrBounce(t);
+                    if (c.Card.Text.Contains("2 隻", StringComparison.Ordinal))
+                    {
+                        var secondPool = SpellResolvePickable(p, (V2Rules ? p.Field.Concat(e.Field) : e.Field).Where(x => x != t));
+                        OptionalTarget(p, ArcaneSecondTitle, secondPool, TapOrBounce);
+                    }
+                }, () => { if (p.Board.Any(x => !x.IsSet && x.Card.HasWill("理智"))) DrawMany(p, 1); });
+                break;
             case "WCG-139":var friendly=t!=null&&p.Field.Contains(t);Resolve(()=>{if(t!=null)Bounce(t);},()=>{if(friendly)DrawMany(p,1);});break;
             case "WCG-140":var owner=t==null?p:Owner(t);Resolve(()=>{if(t!=null)KillBatch([t],c.Card.Name);},()=>DrawMany(owner,1));break;
             case "WCG-141":if(t!=null){Attach(p,c,t,TurnNumber+(Owner(t)==ActivePlayer?2:1));ReadyMonster(t);}break;

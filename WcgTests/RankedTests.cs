@@ -202,7 +202,7 @@ public sealed class RankedTests : IDisposable
     private static Deck HealingDeck()
     {
         var deck = DeckService.CreateStarterDeck();
-        deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-070" : id).ToList();
+        deck.CardIds = deck.CardIds.Select(id => id == "WCG-003" ? "WCG-066" : id).ToList();
         return deck;
     }
     [Fact, Trait("Category", "Slow")] public void PlayerHealingJournalResumesAndReplaysBothHeroTargets()
@@ -212,24 +212,28 @@ public sealed class RankedTests : IDisposable
             store.Save(new() { Season = "2026-10", Stars = 22, BestStars = 22, SeasonBest = 22 });
             var session = Session(); Assert.True(session.Start(HealingDeck()).Success);
             var profile = session.Read(); profile.Match!.PlayerFirst = true;
-            // Find a deterministic opening containing the existing four-copy healing spell.
+            // Find a deterministic opening containing the four-copy player-targeted healing spell (WCG-066, cost 3).
             for (var seed = 0; seed < 50; seed++)
             {
                 profile.Match.Seed = seed; store.Save(profile); session = Session();
-                if (session.Engine.Player.Hand.Any(c => c.Card.Id == "WCG-070")) break;
+                if (session.Engine.Player.Hand.Any(c => c.Card.Id == "WCG-066")) break;
             }
-            var healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-070");
             var lease = session.Coordinator.Attach(); session.Coordinator.AiPaused = true;
-            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c != healing).InstanceId).Success);
-            Assert.True(Send(session, "end").Success);
-            for (var i = 0; session.Engine.DecisionPlayerId == "computer" && i < 100; i++)
+            void FillAndPassTurn()
             {
-                var step = session.Coordinator.StepAi(lease); Assert.True(step.Success);
-                session.Coordinator.Acknowledge(lease, step.State.MatchId, step.State.Revision, step.BatchId);
+                Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-066").InstanceId).Success);
+                Assert.True(Send(session, "end").Success);
+                for (var i = 0; session.Engine.DecisionPlayerId == "computer" && i < 100; i++)
+                {
+                    var step = session.Coordinator.StepAi(lease); Assert.True(step.Success);
+                    session.Coordinator.Acknowledge(lease, step.State.MatchId, step.State.Revision, step.BatchId);
+                }
+                Assert.Equal("player", session.Engine.DecisionPlayerId);
             }
-            Assert.Equal("player", session.Engine.DecisionPlayerId);
-            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-070").InstanceId).Success);
-            healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-070");
+            FillAndPassTurn();
+            FillAndPassTurn();
+            Assert.True(Send(session, "energy", session.Engine.Player.Hand.First(c => c.Card.Id != "WCG-066").InstanceId).Success);
+            var healing = session.Engine.Player.Hand.First(c => c.Card.Id == "WCG-066");
             Assert.True(Send(session, "play", healing.InstanceId).Success);
             var pending = Session(); Assert.Empty(pending.Error); Assert.NotNull(pending.Engine.CurrentPendingTarget?.PlayerValidator);
             Assert.True(Send(pending, "target", target: target).Success);

@@ -168,16 +168,21 @@ public partial class GameEngine
             case "WCG-072": if (V21Rules) Resolve(() => Dispel(p), () => DrawMany(p, 1)); else Resolve(() => { if (target != null && SpellTargets(p, c).Contains(target)) Silence(p, source, target); }, () => DrawMany(p, 1)); break;
             case "WCG-002": Resolve(KillTarget, () => { if (p.Hp <= 3) SpellDamage(p,enemy, 1,c); }); break;
             case "WCG-008":
-                if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field), -10, c);
+                if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field), c.Text.Contains("-5", StringComparison.Ordinal) ? -5 : -10, c);
                 else KillBatch(p.Field.Concat(enemy.Field).Where(m => ThresholdPP(m) <= Low(500)).ToArray(), c.Name);
                 break;
-            case "WCG-010": DrawMany(p, Math.Min(2, p.Field.Count)); break;
+            case "WCG-010": DrawMany(p, Math.Min(c.Text.Contains("最多 3", StringComparison.Ordinal) ? 3 : 2, p.Field.Count)); break;
             case "WCG-032":
                 if (V2Rules && target != null && SpellTargets(p, c).Contains(target))
                 { if (target.IsTapped) KillTarget(); else DebuffTarget(); }
                 else KillTarget();
                 break;
-            case "WCG-082": case "WCG-084": if (V2Rules) DebuffTarget(); else KillTarget(); break;
+            case "WCG-082":
+                if (V2Rules && c.Text.Contains("送墓 2", StringComparison.Ordinal)) Resolve(DebuffTarget, () => SelfMill(p, 2));
+                else if (V2Rules) DebuffTarget();
+                else KillTarget();
+                break;
+            case "WCG-084": if (V2Rules) DebuffTarget(); else KillTarget(); break;
             case "WCG-064": case "WCG-012": case "WCG-076": case "WCG-088": KillTarget(); break;
             case "WCG-017": case "WCG-123": Resolve(KillTarget, () => SpellDamage(p,enemy, 1,c)); break;
             case "WCG-019": Resolve(() => Damage(p, 2, new(p,c,null,"spell")), () => DrawMany(p, V2Rules || CardBalanceHistory.CardFixesCatalog(_cardDb) ? 4 : 2)); break;
@@ -214,7 +219,7 @@ public partial class GameEngine
             case "WCG-086": Resolve(KillTarget, () => DrawMany(p, 1)); break;
             case "WCG-090": Recover(p, int.MaxValue, 1); break;
             case "WCG-092":
-                if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field), -10, c);
+                if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field), c.Text.Contains("-15", StringComparison.Ordinal) ? -15 : -10, c);
                 else KillBatch(p.Field.Concat(enemy.Field).Where(m => ThresholdPP(m) <= Low(800)).ToArray(), c.Name);
                 break;
             case "WCG-094": Resolve(KillTarget, () => Heal(p, 1)); break;
