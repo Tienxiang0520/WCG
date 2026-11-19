@@ -252,19 +252,33 @@ public class V2MechanicsTests
         Assert.Contains(fodder1, g.Player.Graveyard);
         Assert.DoesNotContain(target, g.Computer.Field);
 
-        // WCG-095 縛魂巨怪：自選棄 2 張牌（保留 keep 需再補 1 張）。
+        // WCG-095 縛魂巨怪：進場自選棄 2 張牌（保留 keep 需再補 1 張），且空手也可直接召喚。
         var fodder3 = Hand(g, "WCG-101");
         var fiend = Hand(g, "WCG-095");
         Assert.True(g.SummonMonster(g.Player, fiend));
-        Assert.StartsWith(GameEngine.DiscardCostTitle, g.CurrentPendingChoice!.Title);
-        Choose(g, o => o.Id == fodder2.InstanceId.ToString());
-        Assert.StartsWith(GameEngine.DiscardCostTitle, g.CurrentPendingChoice!.Title);
-        Choose(g, o => o.Id == fodder3.InstanceId.ToString());
         Choose(g, o => o.Id == "SLOT:0");
+        Assert.Equal("選擇要棄掉的手牌", g.CurrentPendingChoice!.Title);
+        Choose(g, o => o.Id == fodder2.InstanceId.ToString());
+        Assert.Equal("選擇要棄掉的手牌", g.CurrentPendingChoice!.Title);
+        Choose(g, o => o.Id == fodder3.InstanceId.ToString());
+        Assert.False(g.IsWaiting);
         Assert.Contains(keep, g.Player.Hand);
         Assert.Contains(fodder2, g.Player.Graveyard);
         Assert.Contains(fodder3, g.Player.Graveyard);
         Assert.Single(g.Player.Field, m => m.Card.Id == "WCG-095");
+
+        // WCG-250 亡者低語：計算墓地 5 張以上任何牌（不限怪物）即抽 2 張；WCG-172 為 8 費 31 PP / 2 DP 貫穿無陣亡效果。
+        var g250 = Game();
+        for (int i = 0; i < 5; i++) g250.Player.Graveyard.Add(new(cards.GetCard("WCG-008")!)); // 5 張法術
+        var h250 = g250.Player.Hand.Count;
+        Assert.True(g250.CastSpell(g250.Player, Hand(g250, "WCG-250")));
+        Assert.Equal(h250 + 2, g250.Player.Hand.Count);
+
+        var behemoth = cards.GetCard("WCG-172")!;
+        Assert.Equal(8, behemoth.TotalCost);
+        Assert.Equal(31, behemoth.PP);
+        Assert.Equal(2, behemoth.DP);
+        Assert.Equal("貫穿。", behemoth.Text);
     }
 
     [Fact]

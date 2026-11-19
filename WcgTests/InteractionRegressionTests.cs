@@ -41,8 +41,12 @@ public class InteractionRegressionTests
 
     [Fact] public void ExtraDiscardRejectsBeforePaymentAndExcludesSource()
     {
-        var c=Hand(e.Player,"WCG-095");Hand(e.Player,"WCG-101");Assert.False(e.SummonMonster(e.Player,c));Assert.Equal(12,e.Player.AvailableEnergy);
-        Hand(e.Player,"WCG-101");Assert.True(e.SummonMonster(e.Player,c));Choices();Assert.Empty(e.Player.Hand);Assert.Equal(2,e.Player.Graveyard.Count);Assert.Single(e.Player.Field);Assert.Equal(c.Card.Id,e.Player.Field[0].Card.Id);
+        var foe=Field(e.Computer,"WCG-101");
+        var rip=Hand(e.Player,"WCG-084");Assert.False(e.CastSpellAt(e.Player,rip,foe));Assert.Equal(12,e.Player.AvailableEnergy);
+        var fodder=Hand(e.Player,"WCG-101");Assert.True(e.CastSpellAt(e.Player,rip,foe));Choices();Assert.Empty(e.Player.Hand);Assert.Contains(fodder,e.Player.Graveyard);Assert.DoesNotContain(foe,e.Computer.Field);
+
+        // WCG-095 縛魂巨怪：空手也能拍出 17/2 衝鋒（進場才棄最多 2 張）。
+        var fiend=Hand(e.Player,"WCG-095");Assert.True(e.SummonMonster(e.Player,fiend));Choices();Assert.Empty(e.Player.Hand);Assert.Single(e.Player.Field,m=>m.Card.Id=="WCG-095");
     }
     [Fact] public void LifeCostAtOneLosesBeforeDrawing()
     {

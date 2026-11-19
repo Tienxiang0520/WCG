@@ -32,7 +32,7 @@
             </div>
 
             <!-- Type Filters & Keyword Filters -->
-            <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
+            <div class="d-flex flex-wrap gap-1 align-items-center mb-2 filter-row">
                 <span class="filter-label">@L["類型"]</span>
                 <button class="filter-chip @(SelectedType == "" ? "on" : "")" aria-pressed="@(SelectedType == "" ? "true" : "false")" @onclick='() => SelectedType = ""'>@L["全部"]</button>
                 <button class="filter-chip @(SelectedType == "怪物" ? "on" : "")" aria-pressed="@(SelectedType == "怪物" ? "true" : "false")" @onclick='() => SelectedType = "怪物"'>@L["怪物"] <small>@CardDb.AllCards.Count(c => c.Type == "怪物")</small></button>
@@ -46,6 +46,17 @@
                     string k = kw;
                     <button class="filter-chip @(SelectedKeyword == k ? "on" : "")" aria-pressed="@(SelectedKeyword == k ? "true" : "false")"
                             @onclick="() => ToggleKeyword(k)">@L[k]</button>
+                }
+            </div>
+
+            <!-- Cost Filters -->
+            <div class="d-flex flex-wrap gap-1 align-items-center filter-row">
+                <span class="filter-label">@L["費用"]</span>
+                <button class="filter-chip cost-chip @(SelectedCost == -1 ? "on" : "")" aria-pressed="@(SelectedCost == -1 ? "true" : "false")" @onclick='() => SelectedCost = -1'>@L["全部"]</button>
+                @for (int c = 0; c <= 9; c++)
+                {
+                    int costVal = c;
+                    <button class="filter-chip cost-chip @(SelectedCost == costVal ? "on" : "")" aria-pressed="@(SelectedCost == costVal ? "true" : "false")" @onclick='() => SelectedCost = costVal'>@costVal</button>
                 }
             </div>
         </div>
@@ -90,6 +101,7 @@
     private string SelectedWill { get; set; } = "";
     private string SelectedType { get; set; } = "";
     private string SelectedKeyword { get; set; } = "";
+    private int SelectedCost { get; set; } = -1;
 
     private void ToggleKeyword(string kw)
     {
@@ -107,6 +119,9 @@
 
             if (!string.IsNullOrEmpty(SelectedType))
                 list = list.Where(c => (SelectedType=="法術"?c.IsSpell:c.Type == SelectedType));
+
+            if (SelectedCost >= 0)
+                list = list.Where(c => c.TotalCost == SelectedCost);
 
             if (!string.IsNullOrEmpty(SelectedKeyword))
             {
