@@ -382,16 +382,16 @@ public static class TutorialLessons
         },
         new()
         {
-            Id = "costs", Icon = "heart", Title = "額外代價與勝利條件",
+            Id = "costs", Icon = "heart", Title = "犧牲代價與勝利條件",
             Summary = "犧牲怪物、支付生命換取效果，最後讓電腦牌庫抽空而落敗。",
-            Topics = ["額外代價：犧牲", "以生命換取資源", "牌庫抽空落敗", "勝利條件總結"],
+            Topics = ["犧牲：先付代價", "以生命換取資源", "牌庫抽空落敗", "勝利條件總結"],
             Scene = new(
                 new() { Hand = ["WCG-006", "WCG-019"], Deck = Deck(), Energy = 8, Board = [new("WCG-101", 0)] },
                 new() { Hp = 4, Hand = ["WCG-101"], Deck = [], Energy = 1 }),
             Steps =
             [
-                new() { Title = "額外代價", Spot = ["hand:WCG-006"],
-                    Text = "有些卡除了能量，還要付「額外代價」：犧牲己方怪物、棄 1 張手牌或失去生命。代價在效果之前支付；犧牲也算被消滅，會觸發陣亡與「每當…被消滅」的效果。" },
+                new() { Title = "犧牲與手牌要求", Spot = ["hand:WCG-006"],
+                    Text = "有些卡會要求犧牲己方怪物、棄掉手牌或失去生命。犧牲與法術的棄牌條件須先滿足才能打出，並會在效果之前結算；犧牲也算被消滅，會觸發陣亡與「每當…被消滅」的效果。" },
                 new() { Title = "犧牲", Spot = ["hand:WCG-006", "own-card:WCG-101"], Allow = [Play("WCG-006"), Pick("WCG-101")],
                     Done = e => e.Computer.Hp == 2 && Settled(e),
                     Text = "「{0}」的效果：{1} 打出它，選擇犧牲「{2}」。", TextValues = [CardName("WCG-006"), CardEffect("WCG-006"), CardName("WCG-101")],

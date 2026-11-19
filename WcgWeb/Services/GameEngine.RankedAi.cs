@@ -347,7 +347,7 @@ public partial class GameEngine
                 "WCG-091" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, V22Rules ? 5 : 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-105" => ZeroPpDeathRules ? e.Field.Sum(m => DebuffEnemyScore(p, m, 10)) - Sum(p.Field.Where(m => m.CurrentPP <= 10)) : Sum(e.Field.Where(m => m.CurrentPP <= ScalePP(500))) - Sum(p.Field.Where(m => m.CurrentPP <= ScalePP(500))),
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
-                "WCG-095" => -4,
+                "WCG-095" => c.Card.Text.Contains("進場", StringComparison.Ordinal) ? (p.Hand.Count <= 2 ? 2 : -1) : -4,
                 "WCG-047" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
                 "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? 4 : 0,
                 "WCG-001" or "WCG-102" => ZeroPpDeathRules ? (e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? 3 : p.Deck.Count > 3 ? 1 : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,

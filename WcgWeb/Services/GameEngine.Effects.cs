@@ -76,6 +76,7 @@ public partial class GameEngine
                 if (V2Rules) DebuffBatchTurn(enemy.Field, V22Rules ? -5 : -10, m.Card);
                 else KillBatch(enemy.Field.Where(x => ThresholdPP(x) <= Low(500)).ToArray(), m.Card.Name);
                 break;
+            case "WCG-095": if (V2Rules && m.Card.Text.Contains("進場", StringComparison.Ordinal)) DiscardMany(p, 2); break;
             case "WCG-100": Resolve(() => Heal(p, V2Rules ? 1 : 2), () => Recover(p, int.MaxValue, 1)); break;
             case "WCG-105":
                 if (V2Rules) DebuffBatchTurn(p.Field.Concat(enemy.Field).Where(x => x != m), -10, m.Card);
@@ -283,7 +284,7 @@ public partial class GameEngine
             case "WCG-093": Revive(p, 2, grave, optional: true); break;
             case "WCG-131":FreeHand(p,2,1);break;
             case "WCG-150":KillBatch(p.Field.Concat(enemy.Field).Where(x=>ThresholdPP(x)<=Low(700)).ToArray(),m.Card.Name);break;
-            case "WCG-172":TopEnergy(p);break;
+            case "WCG-172": if (m.Card.Text.Contains("陣亡", StringComparison.Ordinal)) TopEnergy(p); break;
             case "WCG-204" when SimplifiedRules: Present("trigger", p, m.InstanceId, card: m.Card, label: "陣亡能力"); Recover(p, 2, 1, grave); break;
             default: NewDeath(p, m, grave); break;
             case "WCG-097": Resolve(() => PickHighest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name)), () => Revive(p, V2Rules ? 2 : 3, grave, optional: !LegacyCardRules)); break;

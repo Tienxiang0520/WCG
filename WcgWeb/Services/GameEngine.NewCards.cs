@@ -171,7 +171,7 @@ public partial class GameEngine
                 if (V21Rules) PickMonster(p, $"選擇與【{t.Card.Name}】決鬥的敵方怪物", SpellResolvePickable(p, e.Field), d => { if (Alive(t) && Alive(d)) Duel(p, t, d); });
                 else PickMonster(p, $"選擇 PP 比【{t.Card.Name}】低的敵方怪物", SpellResolvePickable(p, e.Field.Where(x => ThresholdPP(x) < ThresholdPP(t))), x => KillBatch([x], c.Name));
                 break;
-            case "WCG-250": DrawMany(p, GraveMonsters(p) >= 5 ? 2 : 1); break;
+            case "WCG-250": DrawMany(p, (c.Text.Contains("張以上牌", StringComparison.Ordinal) ? p.Graveyard.Count : GraveMonsters(p)) >= 5 ? 2 : 1); break;
             default: return OathSpell(p, source, t);
         }
         return true;

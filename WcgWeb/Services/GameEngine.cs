@@ -284,6 +284,13 @@ public partial class GameEngine
     private void Loot(PlayerState p) { Resolve(() => DrawMany(p, 1), () => Discard(p)); }
     private void Discard(PlayerState p)
     { CardChoice(p, "選擇要棄掉的手牌", p.Hand, c => { p.Hand.Remove(c); p.Graveyard.Add(c); Present("discard", p, c.InstanceId, card: c.Card, label: "棄牌"); }); }
+    private void DiscardMany(PlayerState p, int count)
+    {
+        if (count <= 0 || p.Hand.Count == 0 || IsOver) return;
+        CardChoice(p, "選擇要棄掉的手牌", p.Hand, c => { p.Hand.Remove(c); p.Graveyard.Add(c); Present("discard", p, c.InstanceId, card: c.Card, label: "棄牌"); DiscardMany(p, count - 1); });
+    }
+    private static int PreDiscardCount(CardDefinition card) =>
+        card.Id == "WCG-084" ? 1 : card.Id == "WCG-095" && !card.Text.Contains("進場", StringComparison.Ordinal) ? 2 : 0;
     private void RandomDiscard(PlayerState p, CardInstance source, int count)
     {
         for (int i = 0; i < count; i++)
@@ -334,7 +341,7 @@ public partial class GameEngine
         if (!CanPayCost(p, c.Card, out _)) return $"可用能量不足，需要 {ActualCost(p,c.Card)}。";
         if (c.Card.IsCounter) return DamageCounters ? "反擊法術留在手牌；受到傷害且符合卡文條件時，可選擇支付費用發動。" : "反擊法術須先蓋牌，於玩家被攻擊時發動。";
         if(c.Card.Id=="WCG-166" && !V22Rules && p.Hand.Count<2)return "需有另一張手牌可置底。";
-        var discard = c.Card.Id == "WCG-095" ? 2 : c.Card.Id == "WCG-084" ? 1 : 0;
+        var discard = PreDiscardCount(c.Card);
         if (p.Hand.Count - 1 < discard) return $"需要另外 {discard} 張手牌支付棄牌代價。";
         if (c.Card.Id is "WCG-006" or "WCG-088" or "WCG-096" && p.Field.Count == 0) return "需要犧牲 1 隻己方怪物。";
         if (c.Card.Id == "WCG-090" && !p.Graveyard.Any(x => x.Card.IsMonster)) return "墓地沒有可回收的怪物。";
@@ -352,7 +359,7 @@ public partial class GameEngine
         card.Id is "WCG-050" or "WCG-066" or "WCG-070"
         && (!card.Text.Contains("點生命", StringComparison.Ordinal) || card.Text.Contains("任一玩家", StringComparison.Ordinal));
     public static string GetPlayPreparation(CardDefinition card) => card.Id == "WCG-046" ? "choice"
-        : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : card.Id == "WCG-095" && card.Text.Contains("額外代價：棄", StringComparison.Ordinal) ? "choice" : "none";
+        : NeedsSpellTarget(card) || NeedsPlayerSpellTarget(card) ? "target" : NeedsSacrifice(card.Id) ? "sacrifice" : PreDiscardCount(card) > 0 && card.Id == "WCG-095" ? "choice" : "none";
     public bool SummonMonster(PlayerState p, CardInstance c) => AiTracked(AiNote("summon", p, c), () => c.Card.IsMonster ? BeginPlay(p, c) : Fail("不是怪物牌。"));
     public bool CastSpell(PlayerState p, CardInstance c) => AiTracked(AiNote("spell", p, c), () => c.Card.IsSpell ? BeginPlay(p, c) : Fail("不是法術牌。"));
     public IReadOnlyList<MonsterInstance> GetDirectPlayTargets(PlayerState p, CardInstance c) =>
@@ -410,7 +417,7 @@ public partial class GameEngine
         {
             pickedTarget = target;
             if (NeedsSacrifice(c.Card.Id)) PickMonster(p, "選擇要犧牲的己方怪物（尚未扣費）", p.Field, sacrifice => PlaceAndCommit(sacrifice, null), true, c.InstanceId);
-            else if (V2Rules && c.Card.Id is "WCG-084" or "WCG-095") PickCostDiscard(c.Card.Id == "WCG-095" ? 2 : 1, [], discards => PlaceAndCommit(null, discards));
+            else if (V2Rules && PreDiscardCount(c.Card) is > 0 and var preDiscard) PickCostDiscard(preDiscard, [], discards => PlaceAndCommit(null, discards));
             else PlaceAndCommit(null, null);
         }
         if (initialTarget != null) WithTarget(initialTarget);
@@ -424,7 +431,7 @@ public partial class GameEngine
     private void CommitPlay(PlayerState p, CardInstance c, MonsterInstance? target, MonsterInstance? sacrifice, string mode, PlayerState? playerTarget = null, List<CardInstance>? discards = null)
     {
         var id = c.Card.Id;
-        var discardNeed = V2Rules && id is "WCG-084" or "WCG-095" ? (id == "WCG-095" ? 2 : 1) : 0;
+        var discardNeed = V2Rules ? PreDiscardCount(c.Card) : 0;
         if (GetPlayProblem(p, c) != "" || (target != null && !SpellTargets(p, c.Card).Contains(target)) || (sacrifice != null && !p.Field.Contains(sacrifice))
             || (NeedsPlayerSpellTarget(c.Card) && (playerTarget == null || !GetDirectPlayerTargetsForSelection(p, c).Contains(playerTarget)))
             || (discardNeed > 0 && (discards == null || discards.Count != discardNeed || discards.Any(x => x == c || !p.Hand.Contains(x)) || discards.Distinct().Count() != discardNeed)))
@@ -432,11 +439,11 @@ public partial class GameEngine
         CanPayCost(p, c.Card, out var payment); foreach (var e in payment) e.IsTapped = true;
         Present("pay", p, amount: payment.Count, label: "支付能量");
         Present("play", p, c.InstanceId, playerTarget != null ? TargetId(playerTarget) : target?.InstanceId, card: c.Card, label: c.Card.IsMonster ? "打出怪物" : "施放法術");
-        if (id is "WCG-084" or "WCG-095")
+        if (PreDiscardCount(c.Card) is > 0 and var rawDiscard)
         {
             if (V2Rules && discards != null)
                 foreach (var d in discards) { p.Hand.Remove(d); p.Graveyard.Add(d); Present("discard", p, d.InstanceId, card: d.Card, label: "棄牌代價"); Log($"【{p.Name}】棄掉【{d.Card.Name}】作為代價。", "action"); }
-            else RandomDiscard(p, c, id == "WCG-095" ? 2 : 1);
+            else RandomDiscard(p, c, rawDiscard);
         }
         p.Hand.Remove(c);
         if (c.Card.IsMonster && p.NextCreatureDiscount > 0) p.NextCreatureDiscount = 0;

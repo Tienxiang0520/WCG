@@ -53,8 +53,11 @@
   "WCG-006": {
     "zh": "怒意沸騰",
     "name": "Boiling Rage",
-    "text": "Additional cost: sacrifice 1 ally monster. Deal 2 damage to the enemy player.",
-    "zh_text": "額外代價：犧牲 1 隻己怪。對敵方玩家造成 2 傷害。"
+    "text": "Sacrifice 1 ally monster, deal 2 damage to the enemy player.",
+    "zh_text": "犧牲 1 隻己怪，對敵方玩家造成 2 傷害。",
+    "prev": {
+      "額外代價：犧牲 1 隻己怪。對敵方玩家造成 2 傷害。": "Additional cost: sacrifice 1 ally monster. Deal 2 damage to the enemy player."
+    }
   },
   "WCG-007": {
     "zh": "狂血投擲者",
@@ -672,13 +675,14 @@
   "WCG-084": {
     "zh": "靈魂撕裂",
     "name": "Soul Rend",
-    "text": "Additional cost: discard 1 card. Give 1 monster -10 PP this turn.",
-    "zh_text": "額外代價：棄 1 張手牌。使 1 隻怪物本回合 PP -10。",
+    "text": "Discard 1 card, give 1 monster -10 PP this turn.",
+    "zh_text": "棄 1 張手牌，使 1 隻怪物本回合 PP -10。",
     "prev": {
       "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1100 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1100 PP or less.",
       "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 PP or less.",
       "額外代價：隨機棄掉你 1 張手牌。消滅 1 隻印刷 PP 1200 以下的敵方怪物。": "Additional cost: discard 1 random card from your hand. Destroy 1 enemy monster with 1200 printed PP or less.",
-      "額外代價：棄 1 張手牌。消滅 1 隻 PP 10 以下怪物。": "Additional cost: discard 1 card. Destroy 1 monster with 10 PP or less."
+      "額外代價：棄 1 張手牌。消滅 1 隻 PP 10 以下怪物。": "Additional cost: discard 1 card. Destroy 1 monster with 10 PP or less.",
+      "額外代價：棄 1 張手牌。使 1 隻怪物本回合 PP -10。": "Additional cost: discard 1 card. Give 1 monster -10 PP this turn."
     }
   },
   "WCG-085": {
@@ -709,8 +713,11 @@
   "WCG-088": {
     "zh": "恐懼吞噬",
     "name": "Devouring Dread",
-    "text": "Additional cost: sacrifice 1 ally monster. Destroy 1 monster.",
-    "zh_text": "額外代價：犧牲 1 隻己怪。消滅 1 隻怪物。"
+    "text": "Sacrifice 1 ally monster, destroy 1 monster.",
+    "zh_text": "犧牲 1 隻己怪，消滅 1 隻怪物。",
+    "prev": {
+      "額外代價：犧牲 1 隻己怪。消滅 1 隻怪物。": "Additional cost: sacrifice 1 ally monster. Destroy 1 monster."
+    }
   },
   "WCG-089": {
     "zh": "骨鐮刺客",
@@ -764,18 +771,22 @@
   "WCG-095": {
     "zh": "縛魂巨怪",
     "name": "Soulbound Brute",
-    "text": "Additional cost: discard 2 cards. Charge.",
-    "zh_text": "額外代價：棄 2 張手牌。衝鋒。"
+    "text": "Charge. Deploy: Discard 2 cards.",
+    "zh_text": "衝鋒；進場：棄 2 張手牌。",
+    "prev": {
+      "額外代價：棄 2 張手牌。衝鋒。": "Additional cost: discard 2 cards. Charge."
+    }
   },
   "WCG-096": {
     "zh": "黑暗交易",
     "name": "Dark Bargain",
-    "text": "Additional cost: sacrifice 1 ally monster and lose 1 life. Draw 3 cards.",
+    "text": "Sacrifice 1 ally monster and lose 1 life, draw 3 cards.",
     "prev": {
       "額外代價：犧牲 1 隻己方怪物，並失去 1 點生命。抽 2 張牌。": "Additional cost: sacrifice 1 of your monsters and lose 1 life. Draw 2 cards.",
-      "額外代價：犧牲 1 隻己方怪物，並失去 1 點生命。抽 3 張牌。": "Additional cost: sacrifice 1 of your monsters and lose 1 life. Draw 3 cards."
+      "額外代價：犧牲 1 隻己方怪物，並失去 1 點生命。抽 3 張牌。": "Additional cost: sacrifice 1 of your monsters and lose 1 life. Draw 3 cards.",
+      "額外代價：犧牲 1 隻己怪並失去 1 生命。抽 3 張牌。": "Additional cost: sacrifice 1 ally monster and lose 1 life. Draw 3 cards."
     },
-    "zh_text": "額外代價：犧牲 1 隻己怪並失去 1 生命。抽 3 張牌。"
+    "zh_text": "犧牲 1 隻己怪並失去 1 生命，抽 3 張牌。"
   },
   "WCG-097": {
     "zh": "亡靈女王·希爾瓦",
@@ -1237,16 +1248,20 @@
   "WCG-164": {
     "zh": "緊急調度",
     "name": "Emergency Redeploy",
-    "text": "Additional cost: tap 1 untapped ally monster. Draw 1 card.",
-    "zh_text": "額外代價：橫置 1 隻直立己怪。抽 1 張牌。"
+    "text": "Tap 1 untapped ally monster, draw 1 card.",
+    "zh_text": "橫置 1 隻直立己怪，抽 1 張牌。",
+    "prev": {
+      "額外代價：橫置 1 隻直立己怪。抽 1 張牌。": "Additional cost: tap 1 untapped ally monster. Draw 1 card."
+    }
   },
   "WCG-165": {
     "zh": "血祭狂暴",
     "name": "Blood Sacrifice Frenzy",
-    "text": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
-    "zh_text": "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。",
+    "text": "Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
+    "zh_text": "失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。",
     "prev": {
-      "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard."
+      "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard.",
+      "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat."
     }
   },
   "WCG-166": {
@@ -1273,8 +1288,11 @@
   "WCG-169": {
     "zh": "暗影獻祭",
     "name": "Shadow Offering",
-    "text": "Additional cost: sacrifice 1 ally monster. Draw 1 card.",
-    "zh_text": "額外代價：犧牲 1 隻己怪。抽 1 張牌。"
+    "text": "Sacrifice 1 ally monster, draw 1 card.",
+    "zh_text": "犧牲 1 隻己怪，抽 1 張牌。",
+    "prev": {
+      "額外代價：犧牲 1 隻己怪。抽 1 張牌。": "Additional cost: sacrifice 1 ally monster. Draw 1 card."
+    }
   },
   "WCG-170": {
     "zh": "天火浩劫",
@@ -1299,8 +1317,11 @@
   "WCG-172": {
     "zh": "遠古蠻荒巨獸",
     "name": "Ancient Primal Behemoth",
-    "text": "Trample. On Death: Put the top card of your deck untapped into your energy zone.",
-    "zh_text": "貫穿；陣亡：將牌庫頂 1 張牌直立放入你的能量區。"
+    "text": "Trample.",
+    "zh_text": "貫穿。",
+    "prev": {
+      "貫穿；陣亡：將牌庫頂 1 張牌直立放入你的能量區。": "Trample. On Death: Put the top card of your deck untapped into your energy zone."
+    }
   },
   "WCG-173": {
     "zh": "維度扭曲",
@@ -1457,8 +1478,11 @@
   "WCG-194": {
     "zh": "冥府復甦領主",
     "name": "Netherworld Revival Lord",
-    "text": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped.",
-    "zh_text": "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。"
+    "text": "Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free.",
+    "zh_text": "進場：從墓地免費召喚 1 隻 4 費以下深淵怪。",
+    "prev": {
+      "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped."
+    }
   },
   "WCG-195": {
     "zh": "熔火爆炸陷阱",
@@ -1741,8 +1765,11 @@
   "WCG-233": {
     "zh": "獻祭苗床",
     "name": "Sacrificial Seedbed",
-    "text": "Additional cost: sacrifice 1 ally monster. Draw 1 card; if it was [Life], restore 1 life.",
-    "zh_text": "額外代價：犧牲 1 隻己怪。抽 1 張；犧牲生機怪時回復 1 生命。"
+    "text": "Sacrifice 1 ally monster, draw 1 card; if it was [Life], restore 1 life.",
+    "zh_text": "犧牲 1 隻己怪，抽 1 張；犧牲生機怪時回復 1 生命。",
+    "prev": {
+      "額外代價：犧牲 1 隻己怪。抽 1 張；犧牲生機怪時回復 1 生命。": "Additional cost: sacrifice 1 ally monster. Draw 1 card; if it was [Life], restore 1 life."
+    }
   },
   "WCG-234": {
     "zh": "腐木巨像",
@@ -1856,8 +1883,11 @@
   "WCG-250": {
     "zh": "亡者低語",
     "name": "Whispers of the Dead",
-    "text": "Draw 1 card; if your graveyard has 5 or more monsters, draw 2 instead.",
-    "zh_text": "抽 1 張牌；若你墓地有 5 隻以上怪物，改為抽 2 張。"
+    "text": "Draw 1 card; if your graveyard has 5 or more cards, draw 2 instead.",
+    "zh_text": "抽 1 張牌；若你墓地有 5 張以上牌，改為抽 2 張。",
+    "prev": {
+      "抽 1 張牌；若你墓地有 5 隻以上怪物，改為抽 2 張。": "Draw 1 card; if your graveyard has 5 or more monsters, draw 2 instead."
+    }
   },
   "WCG-251": {
     "zh": "秘法護衛",
