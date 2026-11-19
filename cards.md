@@ -221,7 +221,7 @@ source: WcgWeb/Data/cards.json
 | WCG-169 | 暗影獻祭 | 法術 | 0 | — | — | — | 犧牲 1 隻己怪，抽 1 張牌。 | **Shadow Offering** — Sacrifice 1 ally monster, draw 1 card. |
 | WCG-192 | 冥河引魂術 | 法術 | 4 | — | — | — | 檢索深淵怪物，送墓 2。 | **Styx Soulguide Rite** — Tutor an [Abyss] monster, mill 2. |
 | WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 11 | 1 | — | 進場：可犧牲另 1 隻己方深淵怪，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another ally [Abyss] monster to draw 2 cards. |
-| WCG-194 | 冥府復甦領主 | 怪物 | 5 | 21 | 2 | — | 進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。 | **Netherworld Revival Lord** — Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped. |
+| WCG-194 | 冥府復甦領主 | 怪物 | 5 | 21 | 2 | — | 進場：從墓地免費召喚 1 隻 4 費以下深淵怪。 | **Netherworld Revival Lord** — Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free. |
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它。 | **Vengeful Spirit Trap** — [Counter] On monster damage: Cancel it and destroy the attacker. |
 | WCG-212 | 墓語竊賊 | 怪物 | 3 | 14 | 1 | — | 進場：送墓 2。 | **Gravewhisper Thief** — Deploy: Mill 2. |
 | WCG-249 | 墓穴守門人 | 怪物 | 4 | 14 | 1 | — | 嘲諷；陣亡：將墓地另 1 隻費用 3 以下深淵怪移回手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster costing 3 or less from your graveyard to hand. |

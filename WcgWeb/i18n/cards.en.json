@@ -1478,8 +1478,11 @@
   "WCG-194": {
     "zh": "冥府復甦領主",
     "name": "Netherworld Revival Lord",
-    "text": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped.",
-    "zh_text": "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。"
+    "text": "Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free.",
+    "zh_text": "進場：從墓地免費召喚 1 隻 4 費以下深淵怪。",
+    "prev": {
+      "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped."
+    }
   },
   "WCG-195": {
     "zh": "熔火爆炸陷阱",

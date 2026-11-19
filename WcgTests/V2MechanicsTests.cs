@@ -803,7 +803,7 @@ public class V2MechanicsTests
         Choose(g1, o => o.Id == g1.Player.Hand[0].InstanceId.ToString());
         Assert.False(g1.IsWaiting);
 
-        // 墓地召喚觸發進場 (WCG-194 喚醒 WCG-212 送墓 2)
+        // 墓地召喚觸發進場 (WCG-194 喚醒 3 費 WCG-212 送墓 2，且可喚醒 4 費深淵怪、不再因場上有其他深淵怪而直立)
         var gGrave = Game();
         var thief = new CardInstance(cards.GetCard("WCG-212")!);
         gGrave.Player.Graveyard.Add(thief);
@@ -813,6 +813,15 @@ public class V2MechanicsTests
         Choose(gGrave, o => o.Id == thief.InstanceId.ToString());
         Choose(gGrave, o => o.Id == "SLOT:1");
         Assert.Equal(deckBefore - 2, gGrave.Player.Deck.Count);
+
+        var gatekeeper = new CardInstance(cards.GetCard("WCG-249")!); // 4 費深淵怪
+        gGrave.Player.Graveyard.Add(gatekeeper);
+        Assert.True(gGrave.SummonMonster(gGrave.Player, Hand(gGrave, "WCG-194")));
+        Choose(gGrave, o => o.Id == "SLOT:2");
+        Choose(gGrave, o => o.Id == gatekeeper.InstanceId.ToString());
+        Choose(gGrave, o => o.Id == "SLOT:3");
+        var revivedGatekeeper = gGrave.Player.Field.Single(m => m.InstanceId == gatekeeper.InstanceId);
+        Assert.True(revivedGatekeeper.IsTapped);
 
         // 反擊 WCG-197 免費召喚生機怪也觸發進場（並連鎖免費召喚 WCG-101）
         var g197 = Game();
