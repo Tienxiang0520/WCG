@@ -1138,10 +1138,11 @@
   "WCG-143": {
     "zh": "甦生甘霖",
     "name": "Reviving Downpour",
-    "text": "Prep 1 tapped monster; Attach: +5 PP, graveyard after combat.",
-    "zh_text": "令 1 隻橫置怪物備戰；附著：此怪 PP +5，戰後送墓。",
+    "text": "Prep 1 tapped monster; Attach: +5 PP.",
+    "zh_text": "令 1 隻橫置怪物備戰；附著：此怪 PP +5。",
     "prev": {
-      "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard."
+      "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard.",
+      "令 1 隻橫置怪物備戰；附著：此怪 PP +5，戰後送墓。": "Prep 1 tapped monster; Attach: +5 PP, graveyard after combat."
     }
   },
   "WCG-144": {
@@ -1287,11 +1288,12 @@
   "WCG-165": {
     "zh": "血祭狂暴",
     "name": "Blood Sacrifice Frenzy",
-    "text": "Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
-    "zh_text": "失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。",
+    "text": "Lose 1 life. Attach: +6 PP and Trample.",
+    "zh_text": "失去 1 生命。附著：此怪 PP +6 且獲得貫穿。",
     "prev": {
       "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard.",
-      "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat."
+      "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
+      "失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Lose 1 life. Attach: +6 PP and Trample, graveyard after combat."
     }
   },
   "WCG-166": {
@@ -1309,10 +1311,11 @@
   "WCG-168": {
     "zh": "正義壓制",
     "name": "Righteous Suppression",
-    "text": "Attach: -5 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP -5，戰後送墓。",
+    "text": "Attach: -5 PP.",
+    "zh_text": "附著：此怪 PP -5。",
     "prev": {
-      "附著：怪物 PP -500。它交戰後，此卡送入墓地。": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard."
+      "附著：怪物 PP -500。它交戰後，此卡送入墓地。": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard.",
+      "附著：此怪 PP -5，戰後送墓。": "Attach: -5 PP, graveyard after combat."
     }
   },
   "WCG-169": {
@@ -2061,8 +2064,11 @@
   "WCG-271": {
     "zh": "決鬥之劍",
     "name": "Dueling Blade",
-    "text": "Attach: +4 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP +4，戰後送墓。"
+    "text": "Attach: +4 PP.",
+    "zh_text": "附著：此怪 PP +4。",
+    "prev": {
+      "附著：此怪 PP +4，戰後送墓。": "Attach: +4 PP, graveyard after combat."
+    }
   },
   "WCG-272": {
     "zh": "終局騎士團長",
@@ -2134,8 +2140,11 @@
   "WCG-284": {
     "zh": "凋萎觸鬚",
     "name": "Withering Tendril",
-    "text": "Attach: -7 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP -7，戰後送墓。"
+    "text": "Attach: -7 PP.",
+    "zh_text": "附著：此怪 PP -7。",
+    "prev": {
+      "附著：此怪 PP -7，戰後送墓。": "Attach: -7 PP, graveyard after combat."
+    }
   },
   "WCG-285": {
     "zh": "腐蝕號角手",

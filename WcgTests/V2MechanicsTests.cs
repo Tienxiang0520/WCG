@@ -443,7 +443,7 @@ public class V2MechanicsTests
         Assert.Equal(2, g2.Player.Hand.Count);
         Assert.Equal(6, g2.Player.Hp);
 
-        // WCG-165: lose 1 life, +6 PP and Trample on next combat, then to graveyard
+        // WCG-165: lose 1 life, +6 PP and Trample (stays attached after combat)
         var g3 = Game(playerFirst: false);
         Assert.True(g3.EndTurn());
         while (g3.CurrentPendingChoice is { } ch3) Assert.True(g3.SelectChoice(ch3.Options.Last()));
@@ -459,9 +459,9 @@ public class V2MechanicsTests
         Assert.True(g3.Attack(g3.Player, attacker, enemyTapped));
         Assert.DoesNotContain(enemyTapped, g3.Computer.Field);
         Assert.Equal(cHpBefore - 1, g3.Computer.Hp);
-        Assert.Contains(frenzy, g3.Player.Graveyard);
-        Assert.Equal(10, attacker.CurrentPP);
-        Assert.False(attacker.HasTrample);
+        Assert.Contains(frenzy, attacker.Attachments.Select(a => a.Card));
+        Assert.Equal(16, attacker.CurrentPP);
+        Assert.True(attacker.HasTrample);
 
         // WCG-294: untap all tapped allies, +3 PP this turn, can attack monsters but not players
         var g4 = Game(playerFirst: false);
@@ -570,8 +570,8 @@ public class V2MechanicsTests
         Assert.True(g.Attack(g.Player, atk16, tall));
         Assert.Contains(tall, g.Computer.Field);
         Assert.True(tall.IsTapped);
-        Assert.Equal(22, tall.CurrentPP);
-        Assert.Contains(tend2, g.Player.Graveyard);
+        Assert.Equal(15, tall.CurrentPP);
+        Assert.Contains(tend2, tall.Attachments.Select(a => a.Card));
     }
 
     [Fact]
@@ -1188,6 +1188,28 @@ public class V2MechanicsTests
         Assert.True(g.Activate(g.Player, heart));
         Assert.Single(g.Player.Hand);
         Assert.True(heart.IsTapped);
+
+        // 143/165/168/271/284: 移除戰後送墓後，交戰後仍留在場上怪物身上
+        g = Game(playerFirst: false);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } chEnd) Assert.True(g.SelectChoice(chEnd.Options.Last()));
+        var bladeBearer = Unit(g.Player, "WCG-154", 0); // 13 PP
+        var blade = Hand(g, "WCG-271"); // +4 PP -> 17 PP
+        Assert.True(g.CastSpellAt(g.Player, blade, bladeBearer));
+        var debuffTarget = Unit(g.Computer, "WCG-114", 1); // 19 PP
+        var tendril = Hand(g, "WCG-284"); // -7 PP -> 12 PP
+        Assert.True(g.CastSpellAt(g.Player, tendril, debuffTarget));
+        var weakener = Unit(g.Player, "WCG-101", 2); // 10 PP
+        var foe2 = Unit(g.Computer, "WCG-114", 0); // 19 PP
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-168"), foe2)); // -5 PP -> 14 PP
+        Assert.True(g.Attack(g.Player, bladeBearer, foe2)); // 17 vs 14, foe2 dies
+        Assert.Contains(blade, bladeBearer.Attachments.Select(a => a.Card));
+        Assert.Equal(17, bladeBearer.CurrentPP);
+        Assert.True(g.EndTurn());
+        while (g.CurrentPendingChoice is { } chEnd2) Assert.True(g.SelectChoice(chEnd2.Options.Last()));
+        Assert.True(g.Attack(g.Computer, debuffTarget, weakener)); // debuffTarget 12 vs 10 survives combat and keeps WCG-284
+        Assert.Contains(tendril, debuffTarget.Attachments.Select(a => a.Card));
+        Assert.Equal(12, debuffTarget.CurrentPP);
     }
 
     [Fact]

@@ -31,8 +31,9 @@ public partial class GameEngine
     private int CombatPower(MonsterInstance m, MonsterInstance other, bool attacking) => !SimplifiedRules || !m.IsUnit ? 0 : (m.IsSilenced || V2Rules ? 0 : m.Card.Id switch { "WCG-203" => 500, "WCG-274" => 300, _ => 0 }) + ArchetypeCombatPower(m, other, attacking) + (ZeroPpDeathRules && !V21Rules ? CombatAttachmentDebuff(m) : 0);
     private void ApplyCombatPower(MonsterInstance a, MonsterInstance d)
     { var x = CombatPower(a, d, true); var y = CombatPower(d, a, false); if (x != 0) a.CombatPowerBonus = x; if (y != 0) d.CombatPowerBonus = y; }
-    // 143／165／168 are attached; the attachment is the visible reminder and goes to the graveyard after the monster's next combat.
+    // Legacy combat attachments (143/165/168/271/277/284 in historical catalogs) go to the graveyard after the monster's next combat; current cards stay attached.
     internal static bool CombatAttachment(string id) => id is "WCG-143" or "WCG-165" or "WCG-168" or "WCG-271" or "WCG-277" or "WCG-284";
+    private static bool ExpiresAfterCombat(CardDefinition c) => CombatAttachment(c.Id) && (c.Text.Contains("戰後送墓", StringComparison.Ordinal) || c.Text.Contains("交戰後，此卡送入墓地", StringComparison.Ordinal));
     private int AttachmentPower(string id) => id switch { "WCG-135" => ScalePP(_cardDb.GetCard("WCG-135")?.Text.Contains("PP +6", StringComparison.Ordinal) == true ? 600 : 500), "WCG-143" => ScalePP(500), "WCG-165" => ScalePP(_cardDb.GetCard("WCG-165")?.Text.Contains("PP +6", StringComparison.Ordinal) == true ? 600 : 500), "WCG-141" => ScalePP(700), "WCG-168" => V21Rules || !ZeroPpDeathRules ? ScalePP(-500) : 0, "WCG-271" => ScalePP(400), "WCG-277" => ScalePP(500), "WCG-284" => V21Rules || !ZeroPpDeathRules ? ScalePP(-700) : 0, "WCG-288" => ScalePP(-500), _ => 0 };
     private static int CombatAttachmentDebuff(MonsterInstance m) => m.Attachments.Sum(a => a.Card.Card.Id switch { "WCG-168" => -5, "WCG-284" => -7, _ => 0 });
     /// <summary>備戰：令目標轉為直立，但本回合不能直接攻擊玩家。</summary>
@@ -68,7 +69,7 @@ public partial class GameEngine
     private void SpendCombatAttachments(MonsterInstance m)
     {
         if (!Alive(m)) return;
-        var spent = m.Attachments.Where(a => CombatAttachment(a.Card.Card.Id)).ToArray();
+        var spent = m.Attachments.Where(a => ExpiresAfterCombat(a.Card.Card)).ToArray();
         if (spent.Length == 0) return;
         foreach (var a in spent) { m.Attachments.Remove(a); PlayerById(a.OwnerId).Graveyard.Add(a.Card); }
         RefreshBoard();
