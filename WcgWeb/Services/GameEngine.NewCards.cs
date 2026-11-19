@@ -57,6 +57,7 @@ public partial class GameEngine
         {
             case "WCG-222": bonus += V22Rules ? (m.Attachments.Count > 0 ? 5 : 0) : ScalePP(V2Rules ? 300 : 500) * m.Attachments.Count; break;
             case "WCG-228": bonus += V22Rules ? (p.Field.Count == 1 ? 9 : 0) : ScalePP(300) * Math.Max(0, 5 - p.Occupied); break;
+            case "WCG-234": if (m.Card.Text.Contains("PP +6", StringComparison.Ordinal) && p.Graveyard.Count >= 5) bonus += 6; break;
             case "WCG-238": bonus += ScalePP(200) * p.Field.Count(x => x != m && x.Card.IsNeutral); break;
             case "WCG-262": bonus += ScalePP(100) * Math.Min(7, p.Hand.Count); break;
             case "WCG-241": if (p.Field.All(x => x.Card.HasWill("狂怒"))) bonus += ScalePP(400); break;

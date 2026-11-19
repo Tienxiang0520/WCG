@@ -1237,6 +1237,17 @@ public class V2MechanicsTests
         Assert.Empty(attacker.Attachments);
         Assert.False(attacker.AttackLocked);
         Assert.Contains(echo, g.Player.Graveyard);
+
+        // 234 腐木巨像：基礎 20/2 嘲諷；墓地有 5 張以上牌時 PP +6（26 PP）
+        g = Game();
+        var colossus = Unit(g.Player, "WCG-234", 0);
+        Refresh(g);
+        Assert.Equal(5, colossus.Card.TotalCost);
+        Assert.True(colossus.IsTaunt);
+        for (int i = 0; i < 4; i++) g.Player.Graveyard.Add(new(cards.GetCard("WCG-101")!));
+        Assert.Equal(20, colossus.CurrentPP);
+        g.Player.Graveyard.Add(new(cards.GetCard("WCG-101")!));
+        Assert.Equal(26, colossus.CurrentPP);
     }
 
     [Fact]

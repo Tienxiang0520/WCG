@@ -278,7 +278,7 @@ source: WcgWeb/Data/cards.json
 | WCG-222 | 共生巨蜥 | 怪物（狂怒／生機） | 3 | 11 | 1 | — | 此怪有附著卡時，PP +5。 | **Symbiotic Monitor** — While this monster has an attachment, it gets +5 PP. |
 | WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 18 | 1 | — | 己場沒有其他怪物時，此怪 PP +9。 | **Lone Wolf Swordmaster** — While you control no other monsters, this monster gets +9 PP. |
 | WCG-233 | 獻祭苗床 | 法術（生機／深淵） | 1 | — | — | — | 犧牲 1 隻己怪，抽 1 張；犧牲生機怪時回復 1 生命。 | **Sacrificial Seedbed** — Sacrifice 1 ally monster, draw 1 card; if it was [Life], restore 1 life. |
-| WCG-234 | 腐木巨像 | 怪物（生機／深淵） | 5 | 22 | 2 | — | 嘲諷。 | **Rotwood Colossus** — Taunt. |
+| WCG-234 | 腐木巨像 | 怪物（生機／深淵） | 5 | 20 | 2 | — | 嘲諷；若你墓地有 5 張以上牌，此怪 PP +6。 | **Rotwood Colossus** — Taunt. If there are 5 or more cards in your graveyard, this monster gets +6 PP. |
 | WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 15 | 1 | — | 陣亡：可從墓地免費召喚 1 隻 1 費生機怪物。 | **Corpse Bloom** — On Death: You may summon 1 1-cost [Life] monster from your graveyard for free. |
 | WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 3 | 15 | 1 | — | 陣亡：對敵方玩家造成 1 傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
 | WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 13 | 1 | → | 衝鋒。→ 友軍獲得格擋。 | **Holy Flame Knight** — Charge. [Arrow: →] Allied monster gains Block. |

@@ -3032,9 +3032,9 @@
     "cost_spec": "",
     "cost_gen": 5,
     "total_cost": 5,
-    "pp": 22,
+    "pp": 20,
     "dp": 2,
-    "text": "嘲諷。",
+    "text": "嘲諷；若你墓地有 5 張以上牌，此怪 PP +6。",
     "design_note": "v2.0 重製：PP÷100、格擋取代聖盾、7 血 DP 與精簡敘述。",
     "hs_ref": "",
     "keywords": [

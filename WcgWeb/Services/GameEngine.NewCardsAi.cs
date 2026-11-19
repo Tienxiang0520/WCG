@@ -61,6 +61,7 @@ public partial class GameEngine
             "WCG-222" => -1,
             "WCG-227" => p.Hand.Count - 1 > e.Hand.Count ? 2 : 0,
             "WCG-228" => Math.Max(0, 4 - p.Occupied) * 3 / 4.5d,
+            "WCG-234" => p.Graveyard.Count >= 5 && c.Card.Text.Contains("PP +6", StringComparison.Ordinal) ? 6 / 4.5d : 0,
             "WCG-236" => others.All(m => m.Card.IsNeutral) ? 2 : 0,
             "WCG-238" => others.Count(m => m.Card.IsNeutral) * 2 / 4.5d,
             "WCG-241" => others.All(m => m.Card.HasWill("狂怒")) ? 4 / 4.5d : 0,
