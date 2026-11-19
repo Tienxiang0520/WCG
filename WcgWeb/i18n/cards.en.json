@@ -2,13 +2,14 @@
   "WCG-001": {
     "zh": "赤誓殘酷監工",
     "name": "Crimson Oath Taskmaster",
-    "text": "Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1.",
-    "zh_text": "進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。",
+    "text": "Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1 card.",
+    "zh_text": "進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 張牌。",
     "prev": {
       "進場：抉擇：消滅 1 隻 PP 600 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 600 PP or less; or draw 1 card, then discard 1 card.",
       "進場：抉擇：消滅 1 隻 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 PP or less; or draw 1 card, then discard 1 card.",
       "進場：抉擇：消滅 1 隻印刷 PP 900 以下的敵方怪物；或抽 1 張牌，然後棄 1 張手牌。": "Deploy: Choose One: Destroy 1 enemy monster with 900 printed PP or less; or draw 1 card, then discard 1 card.",
-      "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1."
+      "進場：抉擇：消滅 1 隻 PP 10 以下怪物；或抽 1 棄 1。": "Deploy: Choose One: Destroy 1 monster with 10 PP or less; or draw 1, discard 1.",
+      "進場：抉擇：使 1 隻怪物本回合 PP -10；或抽 1 棄 1。": "Deploy: Choose One: Give 1 monster -10 PP this turn; or draw 1, discard 1."
     }
   },
   "WCG-002": {
@@ -199,8 +200,11 @@
   "WCG-024": {
     "zh": "寒霜禁錮",
     "name": "Frost Shackles",
-    "text": "Tap 1 monster; if it is already tapped, draw 1 and discard 1 instead.",
-    "zh_text": "橫置 1 隻怪物；若目標已橫置，改為抽 1 棄 1。"
+    "text": "Tap 1 monster; if it is already tapped, draw 1 card instead.",
+    "zh_text": "橫置 1 隻怪物；若目標已橫置，改為抽 1 張牌。",
+    "prev": {
+      "橫置 1 隻怪物；若目標已橫置，改為抽 1 棄 1。": "Tap 1 monster; if it is already tapped, draw 1 and discard 1 instead."
+    }
   },
   "WCG-025": {
     "zh": "智謀策士",
@@ -217,12 +221,13 @@
   "WCG-027": {
     "zh": "幻術編織者",
     "name": "Illusion Weaver",
-    "text": "Deploy: You may summon 1 monster with cost 2 or less from hand for free.",
+    "text": "Deploy: You may summon 1 monster with cost 2 or less from hand for free; if you do, draw 1 card.",
     "prev": {
       "進場：你可以從手牌免費召喚 1 隻費用 1 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 1 or less from your hand for free (its Deploy does not trigger).",
-      "進場：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger)."
+      "進場：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger).",
+      "進場：可從手牌免費召喚 1 隻費用 2 以下的怪物。": "Deploy: You may summon 1 monster with cost 2 or less from hand for free."
     },
-    "zh_text": "進場：可從手牌免費召喚 1 隻費用 2 以下的怪物。"
+    "zh_text": "進場：可從手牌免費召喚 1 隻費用 2 以下怪物，若因此召喚則抽 1 張。"
   },
   "WCG-028": {
     "zh": "奧術靈感",
@@ -312,14 +317,20 @@
   "WCG-041": {
     "zh": "利爪巨鹿",
     "name": "Clawed Stag",
-    "text": "Deploy: Choose One: Restore 1 life; or draw 1, discard 1.",
-    "zh_text": "進場：抉擇：回復 1 生命；或抽 1 棄 1。"
+    "text": "Deploy: Choose One: Restore 1 life; or draw 1 card.",
+    "zh_text": "進場：抉擇：回復 1 生命；或抽 1 張牌。",
+    "prev": {
+      "進場：抉擇：回復 1 生命；或抽 1 棄 1。": "Deploy: Choose One: Restore 1 life; or draw 1, discard 1."
+    }
   },
   "WCG-042": {
     "zh": "野性之力",
     "name": "Wild Strength",
-    "text": "Choose One: Draw 1 card; or summon 1 monster with cost 1 or less from hand for free.",
-    "zh_text": "抉擇：抽 1 張牌；或從手牌免費召喚 1 隻費用 1 以下怪物。"
+    "text": "You may summon 1 monster with cost 2 or less from hand for free, and draw 1 card.",
+    "zh_text": "可從手牌免費召喚 1 隻費用 2 以下怪物，抽 1 張牌。",
+    "prev": {
+      "抉擇：抽 1 張牌；或從手牌免費召喚 1 隻費用 1 以下怪物。": "Choose One: Draw 1 card; or summon 1 monster with cost 1 or less from hand for free."
+    }
   },
   "WCG-043": {
     "zh": "孢子幼芽",
@@ -330,14 +341,20 @@
   "WCG-044": {
     "zh": "滋養萌發",
     "name": "Nourishing Bloom",
-    "text": "Put the top card of your deck tapped into your energy zone.",
-    "zh_text": "將牌庫頂 1 張牌橫置放入你的能量區。"
+    "text": "Put the top card of your deck untapped into your energy zone.",
+    "zh_text": "將牌庫頂 1 張牌直立放入你的能量區。",
+    "prev": {
+      "將牌庫頂 1 張牌橫置放入你的能量區。": "Put the top card of your deck tapped into your energy zone."
+    }
   },
   "WCG-045": {
     "zh": "叢林行者",
     "name": "Jungle Strider",
-    "text": "Deploy: If you control another monster, draw 1 and discard 1.",
-    "zh_text": "進場：若己場另有怪物，抽 1 棄 1。"
+    "text": "Deploy: If you control another monster, draw 1 card.",
+    "zh_text": "進場：若己場另有怪物，抽 1 張牌。",
+    "prev": {
+      "進場：若己場另有怪物，抽 1 棄 1。": "Deploy: If you control another monster, draw 1 and discard 1."
+    }
   },
   "WCG-046": {
     "zh": "自然之怒",
@@ -391,8 +408,11 @@
   "WCG-052": {
     "zh": "森林呼喚",
     "name": "Call of the Forest",
-    "text": "Summon up to 2 monsters with cost 2 or less from hand for free.",
-    "zh_text": "從手牌免費召喚至多 2 隻費用 2 以下的怪物。"
+    "text": "Draw 1 card, then summon up to 2 monsters with cost 2 or less from hand for free.",
+    "zh_text": "抽 1 張牌，從手牌免費召喚至多 2 隻費用 2 以下的怪物。",
+    "prev": {
+      "從手牌免費召喚至多 2 隻費用 2 以下的怪物。": "Summon up to 2 monsters with cost 2 or less from hand for free."
+    }
   },
   "WCG-053": {
     "zh": "奔竄巨犀",
@@ -442,8 +462,11 @@
   "WCG-060": {
     "zh": "始祖母樹·伊瓦",
     "name": "Progenitor Mother Tree, Iva",
-    "text": "Taunt. End of turn: You may summon 1 monster with cost 2 or less from hand for free.",
-    "zh_text": "嘲諷；回合結束：可從手牌免費召喚 1 隻費用 2 以下怪物。"
+    "text": "Taunt. End of turn: Draw 1 card, and you may summon 1 monster with cost 2 or less from hand for free.",
+    "zh_text": "嘲諷；回合結束：抽 1 張牌，可從手牌免費召喚 1 隻費用 2 以下怪物。",
+    "prev": {
+      "嘲諷；回合結束：可從手牌免費召喚 1 隻費用 2 以下怪物。": "Taunt. End of turn: You may summon 1 monster with cost 2 or less from hand for free."
+    }
   },
   "WCG-061": {
     "zh": "銀色誓言衛",
@@ -920,12 +943,13 @@
   "WCG-115": {
     "zh": "阿古斯防衛者",
     "name": "Argus Defender",
-    "text": "Deploy: You may summon 1 monster with cost 2 or less from hand for free.",
+    "text": "[Arrows: ← →] Allied monsters get +2 PP and gain Taunt.",
     "prev": {
       "進場：你可以從手牌免費召喚 1 隻費用 1 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 1 or less from your hand for free (its Deploy does not trigger).",
-      "進場：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger)."
+      "進場：你可以從手牌免費召喚 1 隻費用 2 以下的怪物（不觸發進場）。": "Deploy: You may summon a monster that costs 2 or less from your hand for free (its Deploy does not trigger).",
+      "進場：可從手牌免費召喚 1 隻費用 2 以下的怪物。": "Deploy: You may summon 1 monster with cost 2 or less from hand for free."
     },
-    "zh_text": "進場：可從手牌免費召喚 1 隻費用 2 以下的怪物。"
+    "zh_text": "←→ 友軍 PP +2、獲得嘲諷。"
   },
   "WCG-116": {
     "zh": "碧藍魔龍",
@@ -1029,8 +1053,11 @@
   "WCG-131": {
     "zh": "棘刺巨蛋",
     "name": "Thorned Giant Egg",
-    "text": "On Death: You may summon 1 monster with cost 2 or less from hand for free.",
-    "zh_text": "陣亡：可從手牌免費召喚 1 隻費用 2 以下的怪物。"
+    "text": "On Death: You may summon 1 monster with cost 2 or less from hand for free, and draw 1 card.",
+    "zh_text": "陣亡：可從手牌免費召喚 1 隻費用 2 以下怪物，抽 1 張牌。",
+    "prev": {
+      "陣亡：可從手牌免費召喚 1 隻費用 2 以下的怪物。": "On Death: You may summon 1 monster with cost 2 or less from hand for free."
+    }
   },
   "WCG-132": {
     "zh": "腐肉食腐蛛",
@@ -1057,8 +1084,11 @@
   "WCG-135": {
     "zh": "野性萌發",
     "name": "Wild Sprouting",
-    "text": "Attach: Monster gets +5 PP.",
-    "zh_text": "附著：此怪 PP +5。"
+    "text": "Attach: Monster gets +6 PP, and draw 1 card.",
+    "zh_text": "附著：此怪 PP +6，抽 1 張牌。",
+    "prev": {
+      "附著：此怪 PP +5。": "Attach: Monster gets +5 PP."
+    }
   },
   "WCG-136": {
     "zh": "狂戰士斥候",
@@ -1108,10 +1138,11 @@
   "WCG-143": {
     "zh": "甦生甘霖",
     "name": "Reviving Downpour",
-    "text": "Prep 1 tapped monster; Attach: +5 PP, graveyard after combat.",
-    "zh_text": "令 1 隻橫置怪物備戰；附著：此怪 PP +5，戰後送墓。",
+    "text": "Prep 1 tapped monster; Attach: +5 PP.",
+    "zh_text": "令 1 隻橫置怪物備戰；附著：此怪 PP +5。",
     "prev": {
-      "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard."
+      "附著：將 1 隻橫置怪物轉為直立，PP +500。它交戰後，此卡送入墓地。": "Attach: Untap 1 tapped monster; it gets +500 PP. After it battles, put this card into the graveyard.",
+      "令 1 隻橫置怪物備戰；附著：此怪 PP +5，戰後送墓。": "Prep 1 tapped monster; Attach: +5 PP, graveyard after combat."
     }
   },
   "WCG-144": {
@@ -1257,11 +1288,12 @@
   "WCG-165": {
     "zh": "血祭狂暴",
     "name": "Blood Sacrifice Frenzy",
-    "text": "Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
-    "zh_text": "失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。",
+    "text": "Lose 1 life. Attach: +6 PP and Trample.",
+    "zh_text": "失去 1 生命。附著：此怪 PP +6 且獲得貫穿。",
     "prev": {
       "代價：失去 1 點生命。附著：怪物 PP +500。它交戰後，此卡送入墓地。": "Cost: lose 1 life. Attach: The monster gets +500 PP. After it battles, put this card into the graveyard.",
-      "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat."
+      "代價：失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Cost: Lose 1 life. Attach: +6 PP and Trample, graveyard after combat.",
+      "失去 1 生命。附著：此怪 PP +6 且獲得貫穿，戰後送墓。": "Lose 1 life. Attach: +6 PP and Trample, graveyard after combat."
     }
   },
   "WCG-166": {
@@ -1279,10 +1311,11 @@
   "WCG-168": {
     "zh": "正義壓制",
     "name": "Righteous Suppression",
-    "text": "Attach: -5 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP -5，戰後送墓。",
+    "text": "Attach: -5 PP.",
+    "zh_text": "附著：此怪 PP -5。",
     "prev": {
-      "附著：怪物 PP -500。它交戰後，此卡送入墓地。": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard."
+      "附著：怪物 PP -500。它交戰後，此卡送入墓地。": "Attach: The monster gets -500 PP. After it battles, put this card into the graveyard.",
+      "附著：此怪 PP -5，戰後送墓。": "Attach: -5 PP, graveyard after combat."
     }
   },
   "WCG-169": {
@@ -1428,8 +1461,11 @@
   "WCG-187": {
     "zh": "翠綠喚獸師",
     "name": "Verdant Beastcaller",
-    "text": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free.",
-    "zh_text": "進場：若己場另有生機怪，可從手牌免費召喚 1 隻費用 2 以下生機怪。"
+    "text": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free and draw 1.",
+    "zh_text": "進場：若己場另有生機怪，可從手牌免費召喚 1 隻 2 費以下生機怪並抽 1 張。",
+    "prev": {
+      "進場：若己場另有生機怪，可從手牌免費召喚 1 隻費用 2 以下生機怪。": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free."
+    }
   },
   "WCG-188": {
     "zh": "萬靈樹精長老",
@@ -1689,10 +1725,11 @@
   "WCG-221": {
     "zh": "烈焰戰紋",
     "name": "Flame War-Rune",
-    "text": "Attach: Monster gets +2 PP, and +1 DP when attacking a player.",
-    "zh_text": "附著：此怪 PP +2，攻擊玩家時 DP +1。",
+    "text": "Attach: Monster gets +2 PP, +1 DP when attacking a player, and draw 1 card.",
+    "zh_text": "附著：此怪 PP +2，攻擊玩家時 DP +1，抽 1 張牌。",
     "prev": {
-      "附著：此怪 PP +3，攻擊玩家時 DP +1。": "Attach: Monster gets +3 PP, and +1 DP when attacking a player."
+      "附著：此怪 PP +3，攻擊玩家時 DP +1。": "Attach: Monster gets +3 PP, and +1 DP when attacking a player.",
+      "附著：此怪 PP +2，攻擊玩家時 DP +1。": "Attach: Monster gets +2 PP, and +1 DP when attacking a player."
     }
   },
   "WCG-222": {
@@ -1718,8 +1755,11 @@
   "WCG-225": {
     "zh": "審判回響",
     "name": "Echo of Judgment",
-    "text": "[Counter] On monster damage: Cancel it and tap that monster.",
-    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。"
+    "text": "[Counter] On monster damage: Cancel it, Attach: That monster cannot attack.",
+    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，附著：該怪物無法攻擊。",
+    "prev": {
+      "【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。": "[Counter] On monster damage: Cancel it and tap that monster."
+    }
   },
   "WCG-226": {
     "zh": "預知閃避",
@@ -1774,8 +1814,11 @@
   "WCG-234": {
     "zh": "腐木巨像",
     "name": "Rotwood Colossus",
-    "text": "Taunt.",
-    "zh_text": "嘲諷。"
+    "text": "Taunt. If there are 5 or more cards in your graveyard, this monster gets +6 PP.",
+    "zh_text": "嘲諷；若你墓地有 5 張以上牌，此怪 PP +6。",
+    "prev": {
+      "嘲諷。": "Taunt."
+    }
   },
   "WCG-235": {
     "zh": "屍花",
@@ -1858,8 +1901,11 @@
   "WCG-247": {
     "zh": "大地之心",
     "name": "Heart of the Earth",
-    "text": "Start of turn: If you control 3 or more [Life] monsters, draw 1 card.",
-    "zh_text": "回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。"
+    "text": "Tap: If you control 2 or more [Life] monsters, draw 1 card.",
+    "zh_text": "橫置：若己場有 2 隻以上生機怪物，抽 1 張牌。",
+    "prev": {
+      "回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。": "Start of turn: If you control 3 or more [Life] monsters, draw 1 card."
+    }
   },
   "WCG-248": {
     "zh": "蠻荒踐踏",
@@ -2024,8 +2070,11 @@
   "WCG-271": {
     "zh": "決鬥之劍",
     "name": "Dueling Blade",
-    "text": "Attach: +4 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP +4，戰後送墓。"
+    "text": "Attach: +4 PP.",
+    "zh_text": "附著：此怪 PP +4。",
+    "prev": {
+      "附著：此怪 PP +4，戰後送墓。": "Attach: +4 PP, graveyard after combat."
+    }
   },
   "WCG-272": {
     "zh": "終局騎士團長",
@@ -2097,8 +2146,11 @@
   "WCG-284": {
     "zh": "凋萎觸鬚",
     "name": "Withering Tendril",
-    "text": "Attach: -7 PP, graveyard after combat.",
-    "zh_text": "附著：此怪 PP -7，戰後送墓。"
+    "text": "Attach: -7 PP.",
+    "zh_text": "附著：此怪 PP -7。",
+    "prev": {
+      "附著：此怪 PP -7，戰後送墓。": "Attach: -7 PP, graveyard after combat."
+    }
   },
   "WCG-285": {
     "zh": "腐蝕號角手",

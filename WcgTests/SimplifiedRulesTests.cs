@@ -107,19 +107,25 @@ public class SimplifiedRulesTests
         Assert.Contains(cheap,g.Player.Hand);Assert.Contains(g.Player.Graveyard,c=>c.Card.Id=="WCG-204");
     }
 
-    [Fact] public void CombatBuffsAreAttachmentsThatLeaveAfterTheMonsterBattles()
+    [Fact] public void AttachmentsStayAfterCombatWhileLegacyCatalogsExpireAfterCombat()
     {
         var g=Game();var croc=Unit(g.Player,154,0);croc.IsTapped=true;var buff=Hand(g,143);
         Assert.True(g.CastSpellAt(g.Player,buff,croc));Assert.False(croc.IsTapped);Assert.True(croc.SurgeNoFace);Assert.Equal(18,croc.CurrentPP);Assert.Contains(croc.Attachments,a=>a.Card.Card.Id=="WCG-143");
         Assert.False(g.Attack(g.Player,croc)); // WCG-143 explicitly states it cannot attack players this turn.
         var pumper=Unit(g.Player,154,1);Assert.True(g.CastSpellAt(g.Player,Hand(g,165),pumper));
-        Assert.True(g.Attack(g.Player,pumper));Assert.Equal(19,pumper.CurrentPP); // Attacking the player is not a battle.
+        Assert.True(g.Attack(g.Player,pumper));Assert.Equal(19,pumper.CurrentPP);
         var foe=Unit(g.Computer,155,2);
-        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Empty(croc.Attachments);Assert.Equal(13,croc.CurrentPP);
-        Assert.Contains(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
+        Assert.True(g.Attack(g.Player,croc,foe));Assert.Contains(croc,g.Player.Field);Assert.Single(croc.Attachments);Assert.Equal(18,croc.CurrentPP);
+        Assert.DoesNotContain(g.Player.Graveyard,c=>c.InstanceId==buff.InstanceId);
         var weak=Unit(g.Computer,114,3);Assert.True(g.CastSpellAt(g.Player,Hand(g,168),weak));Assert.Equal(14,weak.CurrentPP);
         var knight=Unit(g.Player,155,3);
         Assert.True(g.Attack(g.Player,knight,weak));Assert.Contains(knight,g.Player.Field);Assert.DoesNotContain(weak,g.Computer.Field);
+
+        var old=CardBalanceHistory.BeforeV2(cards);
+        var gOld=Game(old);var cOld=Unit(gOld.Player,154,0,db:old);cOld.IsTapped=true;var bOld=Hand(gOld,143,old);
+        Assert.True(gOld.CastSpellAt(gOld.Player,bOld,cOld));
+        Assert.True(gOld.Attack(gOld.Player,cOld,Unit(gOld.Computer,155,2,db:old)));
+        Assert.Empty(cOld.Attachments);Assert.Equal(1300,cOld.CurrentPP);Assert.Contains(gOld.Player.Graveyard,c=>c.InstanceId==bOld.InstanceId);
     }
 
     [Fact] public void OnlyOneCounterPerDamageAndDeadSourceStillCancels()

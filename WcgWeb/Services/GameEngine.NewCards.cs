@@ -57,6 +57,7 @@ public partial class GameEngine
         {
             case "WCG-222": bonus += V22Rules ? (m.Attachments.Count > 0 ? 5 : 0) : ScalePP(V2Rules ? 300 : 500) * m.Attachments.Count; break;
             case "WCG-228": bonus += V22Rules ? (p.Field.Count == 1 ? 9 : 0) : ScalePP(300) * Math.Max(0, 5 - p.Occupied); break;
+            case "WCG-234": if (m.Card.Text.Contains("PP +6", StringComparison.Ordinal) && p.Graveyard.Count >= 5) bonus += 6; break;
             case "WCG-238": bonus += ScalePP(200) * p.Field.Count(x => x != m && x.Card.IsNeutral); break;
             case "WCG-262": bonus += ScalePP(100) * Math.Min(7, p.Hand.Count); break;
             case "WCG-241": if (p.Field.All(x => x.Card.HasWill("狂怒"))) bonus += ScalePP(400); break;
@@ -67,12 +68,13 @@ public partial class GameEngine
     private bool NewTaunt(PlayerState p, MonsterInstance m)
     {
         if (m.IsSilenced) return false;
-        return m.Card.Id switch
+        var own = m.Card.Id switch
         {
             "WCG-215" => RowUnits(RowOf(m)).Any(x => x.Slot == m.Slot - 1) && RowUnits(RowOf(m)).Any(x => x.Slot == m.Slot + 1),
             "WCG-224" => p.Hand.Count >= 5,
             _ => false
         };
+        return own || Player.Field.Concat(Computer.Field).Any(x => x != m && Active(x, "WCG-115") && HasArrows(x) && PointsAt(Owner(x), x, p, m));
     }
     private bool NewTrample(PlayerState p, MonsterInstance m) =>
         m.Attachments.Any(a => a.Card.Card.Id == "WCG-220" || a.Card.Card.Id == "WCG-165" && a.Card.Card.Text.Contains("貫穿", StringComparison.Ordinal))
@@ -155,7 +157,8 @@ public partial class GameEngine
             case "WCG-211": if (V22Rules) Resolve(() => SelfMill(p, 3), () => DrawMany(p, 1)); else Mill(e, 3); break;
             case "WCG-214": Mill(e, Math.Min(8, GraveMonsters(p))); break;
             case "WCG-217": DrawMany(p, Math.Min(3, p.Field.Count(HasArrows))); break;
-            case "WCG-220": case "WCG-221": if (t != null && Alive(t)) Attach(p, source, t); break;
+            case "WCG-220": if (t != null && Alive(t)) Attach(p, source, t); break;
+            case "WCG-221": if (t != null && Alive(t)) { if (c.Text.Contains("抽 1 張", StringComparison.Ordinal)) Resolve(() => Attach(p, source, t), () => DrawMany(p, 1)); else Attach(p, source, t); } break;
             case "WCG-230":
                 if (t == null || !Alive(t) || t.IsTapped) break;
                 t.IsTapped = true; Present("status", p, t.InstanceId, card: t.Card, label: "橫置");
@@ -210,7 +213,7 @@ public partial class GameEngine
         foreach (var s in p.Structures.Where(x => !x.IsSet).ToArray())
         {
             if (s.Card.Id == "WCG-231" && AltarReady(p)) _effects.AddLast(() => { if (p.Structures.Contains(s) && AltarReady(p)) DrawMany(p, 1); });
-            if (s.Card.Id == "WCG-247" && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) _effects.AddLast(() => { if (p.Structures.Contains(s) && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) DrawMany(p, 1); });
+            if (s.Card.Id == "WCG-247" && !s.Card.Text.Contains("橫置：", StringComparison.Ordinal) && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) _effects.AddLast(() => { if (p.Structures.Contains(s) && p.Field.Count(x => x.Card.HasWill("生機")) >= 3) DrawMany(p, 1); });
         }
     }
     private void NewSpellCast(PlayerState p)

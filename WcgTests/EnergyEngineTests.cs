@@ -111,7 +111,7 @@ public class EnergyEngineTests
         Assert.Equal(deckSize - 1, engine.Player.Deck.Count);
         Assert.Equal(handSize - 1, engine.Player.Hand.Count);
         Assert.Contains(top, engine.Player.EnergyZone);
-        Assert.True(top.IsTapped);
+        Assert.False(top.IsTapped);
         Assert.False(engine.Player.HasFilledEnergyThisTurn);
         Assert.True(engine.PlayEnergy(engine.Player, engine.Player.Hand[0]));
         Assert.False(engine.SummonMonster(engine.Player, top));

@@ -2485,6 +2485,7 @@
   "狀態法術可橫置敵怪或降低其 PP。「{0}」的效果：{1} 把它拖到「{2}」上。": "Status spells can tap enemy monsters or lower their PP. {0}: {1} Drag it onto {2}.",
   "現在用 {0} PP 的「{1}」攻擊被削弱的「{2}」。": "Now attack the weakened {2} with your {0} PP {1}.",
   "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。": "Dispel removes attached cards from a monster, or destroys an enchantment. Other status effects include graveyard-after-combat PP attachments, this-turn PP boosts, Prep, tapping monsters, and tapping the opponent's energy.",
+  "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。": "Dispel removes attached cards from a monster, or destroys an enchantment. Other status effects include PP attachment modifiers, this-turn PP boosts, Prep, tapping monsters, and tapping the opponent's energy.",
   "進場、陣亡與免費召喚": "Deploy, On Death & Free Summons",
   "免費召喚也觸發進場": "Free summons also trigger Deploy",
   "「進場」在怪物進入場上時觸發（含免費召喚）；「陣亡」在怪物被消滅或犧牲、送入墓地時觸發；「每當」則在條件達成時觸發。效果會一個接一個結算，需要選擇時畫面會停下來等你。": "Deploy triggers whenever a monster enters play (including free summons). On Death triggers when a monster is destroyed or sacrificed to the graveyard. Whenever triggers when its condition is met. Effects resolve one by one, pausing whenever you need to choose.",

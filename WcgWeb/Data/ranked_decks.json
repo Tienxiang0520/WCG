@@ -6421,7 +6421,7 @@
     "Deck": {
       "Id": "RANKED-2-VITAL-ROTCYCLE",
       "Name": "生機＋深淵・腐生循環（犧牲）",
-      "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
+      "Description": "犧牲小怪抽牌填墓地，腐木巨像隨墓地強化，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-043",
@@ -9586,7 +9586,7 @@
     "Deck": {
       "Id": "RANKED-3-VITAL-ROTCYCLE",
       "Name": "生機＋深淵・腐生循環（犧牲）",
-      "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
+      "Description": "犧牲小怪抽牌填墓地，腐木巨像隨墓地強化，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-043",
@@ -13183,7 +13183,7 @@
     "Deck": {
       "Id": "RANKED-4-VITAL-ROTCYCLE",
       "Name": "生機＋深淵・腐生循環（犧牲）",
-      "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
+      "Description": "犧牲小怪抽牌填墓地，腐木巨像隨墓地強化，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-043",
@@ -15496,7 +15496,7 @@
     "Deck": {
       "Id": "RANKED-5-VITAL-ROTCYCLE",
       "Name": "生機＋深淵・腐生循環（犧牲）",
-      "Description": "犧牲小怪抽牌填墓地，腐木巨像降費登場，屍花讓循環延續。",
+      "Description": "犧牲小怪抽牌填墓地，腐木巨像隨墓地強化，屍花讓循環延續。",
       "MainWill": "生機",
       "CardIds": [
         "WCG-043",

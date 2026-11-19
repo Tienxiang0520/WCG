@@ -349,7 +349,7 @@ public static class TutorialLessons
                     Text = "現在用 {0} PP 的「{1}」攻擊被削弱的「{2}」。", TextValues = [OwnPP("WCG-154"), CardName("WCG-154"), CardName("WCG-069")],
                     Hint = "請用「{0}」攻擊「{1}」。", HintValues = [CardName("WCG-154"), CardName("WCG-069")] },
                 new() { Title = "本課重點",
-                    Text = "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：戰後送墓的附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。" }
+                    Text = "驅散能移除怪物身上的附著卡，或摧毀結界。其他狀態效果包括：附著 PP 增減、本回合 PP 加成、備戰、橫置怪物，以及橫置對手的能量。" }
             ]
         },
         new()
