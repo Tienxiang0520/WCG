@@ -62,7 +62,8 @@ public class MonsterInstance
     public List<StatSource> NextCombatSources { get; } = [];
     public int TriggersThisTurn { get; set; }
     public List<AttachedSpell> Attachments { get; set; } = [];
-    public bool AttackLocked => Attachments.Any(a => a.Card.Card.Id == "WCG-142");
+    public bool AttackLocked => Attachments.Any(a => a.Card.Card.Id is "WCG-142" or "WCG-225");
+    public bool StayTapped => Attachments.Any(a => a.Card.Card.Id == "WCG-142");
     public int CombatPowerBonus { get; set; }
     public int AttackDamageBonus { get; set; }
     private int baseDP;
@@ -138,7 +139,7 @@ public class MonsterInstance
 
     public void ResetTurnState()
     {
-        if (!AttackLocked) IsTapped = false;
+        if (!StayTapped) IsTapped = false;
         TriggersThisTurn = 0;
         HasAttacked = false;
         HasSummoningSickness = false;

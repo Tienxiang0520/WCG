@@ -1210,6 +1210,33 @@ public class V2MechanicsTests
         Assert.True(g.Attack(g.Computer, debuffTarget, weakener)); // debuffTarget 12 vs 10 survives combat and keeps WCG-284
         Assert.Contains(tendril, debuffTarget.Attachments.Select(a => a.Card));
         Assert.Equal(12, debuffTarget.CurrentPP);
+
+        // 225 審判回響：抵銷怪物傷害並附著（該怪物無法攻擊；回合開始仍正常直立但仍不能攻擊，驅散後才恢復且回擁有者墓地）
+        g = Game(playerFirst: false);
+        var echo = Hand(g, "WCG-225");
+        var attacker = Unit(g.Computer, "WCG-154", 0);
+        var hp225 = g.Player.Hp;
+        Assert.True(g.Attack(g.Computer, attacker));
+        Choose(g, o => o.PreviewCard?.Id == "WCG-225");
+        Assert.Equal(hp225, g.Player.Hp);
+        Assert.Contains(echo, attacker.Attachments.Select(a => a.Card));
+        Assert.DoesNotContain(echo, g.Player.Graveyard);
+        Assert.True(attacker.AttackLocked);
+
+        Assert.True(g.EndTurn()); // -> Player turn
+        while (g.CurrentPendingChoice is { } c225a) Assert.True(g.SelectChoice(c225a.Options.Last()));
+        Assert.True(g.EndTurn()); // -> Computer turn (attacker untaps normally, but still AttackLocked)
+        while (g.CurrentPendingChoice is { } c225b) Assert.True(g.SelectChoice(c225b.Options.Last()));
+        Assert.False(attacker.IsTapped);
+        Assert.False(g.CanAttack(attacker));
+        Assert.False(g.Attack(g.Computer, attacker));
+
+        Assert.True(g.EndTurn()); // -> Player turn, Dispel restores attacker and sends WCG-225 to Player graveyard
+        while (g.CurrentPendingChoice is { } c225c) Assert.True(g.SelectChoice(c225c.Options.Last()));
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-208"), attacker));
+        Assert.Empty(attacker.Attachments);
+        Assert.False(attacker.AttackLocked);
+        Assert.Contains(echo, g.Player.Graveyard);
     }
 
     [Fact]

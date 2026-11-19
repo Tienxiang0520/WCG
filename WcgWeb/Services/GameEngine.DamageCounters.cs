@@ -92,7 +92,12 @@ public partial class GameEngine
         var enemy = GetOpponent(p); var source = damage.Source?.Unit;
         if (card.Card.Id == "WCG-225")
         {
-            Resolve(() => ReverseDamage(damage), () => { if (source != null && Alive(source) && source.IsUnit && !source.IsTapped) { source.IsTapped = true; Present("status", Owner(source), source.InstanceId, card: source.Card, label: "橫置"); } });
+            Resolve(() => ReverseDamage(damage), () =>
+            {
+                if (source == null || !Alive(source) || !source.IsUnit) return;
+                if (card.Card.Text.Contains("附著", StringComparison.Ordinal)) Attach(p, card, source);
+                else if (!source.IsTapped) { source.IsTapped = true; Present("status", Owner(source), source.InstanceId, card: source.Card, label: "橫置"); }
+            });
             return;
         }
         if (BloodCounterCard(card.Card.Id)) { BloodResolveCounter(p, card, damage); return; }

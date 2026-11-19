@@ -1755,8 +1755,11 @@
   "WCG-225": {
     "zh": "審判回響",
     "name": "Echo of Judgment",
-    "text": "[Counter] On monster damage: Cancel it and tap that monster.",
-    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。"
+    "text": "[Counter] On monster damage: Cancel it, Attach: That monster cannot attack.",
+    "zh_text": "【反擊】受到怪物傷害時：抵銷傷害，附著：該怪物無法攻擊。",
+    "prev": {
+      "【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。": "[Counter] On monster damage: Cancel it and tap that monster."
+    }
   },
   "WCG-226": {
     "zh": "預知閃避",

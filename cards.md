@@ -180,7 +180,7 @@ source: WcgWeb/Data/cards.json
 | WCG-198 | 神聖救贖誓約 | 法術（反擊） | 3 | — | — | — | 【反擊】受到傷害時：抵銷並回復 2 生命；可附著於 1 隻怪物：獲得格擋。 | **Oath of Holy Redemption** — [Counter] On damage: Cancel it and restore 2 life; you may attach to 1 monster: Block. |
 | WCG-200 | 護誓守衛 | 怪物 | 4 | 16 | 1 | — | 你將受傷害時，可橫置此怪使傷害 -1。 | **Oathguard** — When you would take damage, you may tap this monster to reduce it by 1. |
 | WCG-216 | 前鋒盾衛 | 怪物 | 3 | 13 | 0 | ↑ | ↑ 敵怪不能攻擊。 | **Vanguard Shieldguard** — [Arrow: ↑] Enemy monster can't attack. |
-| WCG-225 | 審判回響 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，橫置該怪物。 | **Echo of Judgment** — [Counter] On monster damage: Cancel it and tap that monster. |
+| WCG-225 | 審判回響 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷傷害，附著：該怪物無法攻擊。 | **Echo of Judgment** — [Counter] On monster damage: Cancel it, Attach: That monster cannot attack. |
 | WCG-265 | 誓劍侍從 | 怪物 | 1 | 7 | 0 | — | 每當此怪交戰後仍在場，抽 1 張牌。 | **Oathblade Squire** — Whenever this monster survives combat, draw 1 card. |
 | WCG-266 | 挑戰騎士 | 怪物 | 3 | 13 | 1 | — | 進場：可立刻與 1 隻敵怪決鬥。 | **Challenger Knight** — Deploy: May duel 1 enemy monster immediately. |
 | WCG-268 | 決鬥競技場 | 結界 | 3 | — | — | — | 橫置此卡並橫置 1 隻直立己怪：令它與 1 隻敵怪決鬥。 | **Dueling Arena** — Tap this card and 1 untapped ally monster: Have it duel 1 enemy monster. |
