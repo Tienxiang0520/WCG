@@ -48,7 +48,7 @@ public partial class GameEngine
         var sources=ShieldSourceRules;
         foreach(var p in new[]{Player,Computer}) foreach(var m in p.Field)
         {
-            var unit=m;unit.DpBonus=unit.Attachments.Count(a=>a.Card.Card.Id=="WCG-338")+RootAndBloodDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
+            var unit=m;unit.DpBonus=unit.Attachments.Count(a=>PermanentDpAttachment(a.Card.Card))+RootAndBloodDp(p,unit);unit.ExtraTaunt=NewTaunt(p,unit);unit.ExtraTrample=NewTrample(p,unit);
             unit.Power = () => Math.Max(0,unit.BasePP+unit.Attachments.Sum(a => AttachmentPower(a.Card.Card.Id)+NewAttachmentPower(a.Card.Card.Id))+unit.NextCombatBonus+unit.TurnBonus+unit.CombatPowerBonus+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-009" ? (V22Rules ? (GetOpponent(p).Field.Count >= 3 ? 6 : 0) : GetOpponent(p).Field.Count*ScalePP(200)) : 0)+
                 (!unit.IsSilenced && unit.Card.Id == "WCG-182" ? (V22Rules ? (p.Field.Any(x=>x!=unit && x.Card.HasWill("狂怒")) ? 4 : 0) : p.Field.Count(x=>x!=unit && x.Card.HasWill("狂怒"))*ScalePP(V2Rules ? 200 : 300)) : 0)+ArrowPower(p,unit)+BogPower(p,unit)+NewPower(p,unit));

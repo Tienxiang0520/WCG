@@ -88,7 +88,8 @@ public partial class GameEngine
     // 虛空隱士: while it is your only monster, spells can't target it.
     // After the 理智 buff: enemy spells can never target it.
     private bool Hermit(PlayerState caster, MonsterInstance m) => Alive(m) && (Active(m, "WCG-229") && (ReasonBuff ? Owner(m) != caster : Owner(m).Field.Count == 1) || StarWarded(m));
-    private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221") + HoofAttackDp(a) + LaneAttackDp(a);
+    private static bool PermanentDpAttachment(CardDefinition c) => c.Id == "WCG-338" || c.Id == "WCG-221" && !c.Text.Contains("攻擊玩家時", StringComparison.Ordinal);
+    private int AttackDpBonus(MonsterInstance a) => !SimplifiedRules || !a.IsUnit ? 0 : (FixedAttackBonus(a) ? 1 : 0) + a.Attachments.Count(x => x.Card.Card.Id == "WCG-221" && x.Card.Card.Text.Contains("攻擊玩家時", StringComparison.Ordinal)) + HoofAttackDp(a) + LaneAttackDp(a);
     private int NewAttachmentPower(string id) => id switch { "WCG-221" => ScalePP(V2Rules ? 200 : 300), "WCG-338" => ScalePP(200), "WCG-382" or "WCG-387" => ScalePP(-300), "WCG-388" => ScalePP(-600), _ => 0 };
     private int NewCostReduction(PlayerState p, CardDefinition card) => card.Id == "WCG-234" ? (V22Rules ? 0 : Math.Min(card.TotalCost - 2, GraveMonsters(p) / 3)) : GraveCostReduction(p, card);
 

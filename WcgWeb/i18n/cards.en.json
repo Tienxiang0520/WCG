@@ -1725,11 +1725,12 @@
   "WCG-221": {
     "zh": "烈焰戰紋",
     "name": "Flame War-Rune",
-    "text": "Attach: Monster gets +2 PP, +1 DP when attacking a player, and draw 1 card.",
-    "zh_text": "附著：此怪 PP +2，攻擊玩家時 DP +1，抽 1 張牌。",
+    "text": "Attach: Monster gets +2 PP and +1 DP, and draw 1 card.",
+    "zh_text": "附著：此怪 PP +2、DP +1，抽 1 張牌。",
     "prev": {
       "附著：此怪 PP +3，攻擊玩家時 DP +1。": "Attach: Monster gets +3 PP, and +1 DP when attacking a player.",
-      "附著：此怪 PP +2，攻擊玩家時 DP +1。": "Attach: Monster gets +2 PP, and +1 DP when attacking a player."
+      "附著：此怪 PP +2，攻擊玩家時 DP +1。": "Attach: Monster gets +2 PP, and +1 DP when attacking a player.",
+      "附著：此怪 PP +2，攻擊玩家時 DP +1，抽 1 張牌。": "Attach: Monster gets +2 PP, +1 DP when attacking a player, and draw 1 card."
     }
   },
   "WCG-222": {

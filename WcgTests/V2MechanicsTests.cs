@@ -1171,6 +1171,8 @@ public class V2MechanicsTests
         Assert.Single(g.Player.Hand);
         Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-221"), body));
         Assert.Equal(18, body.CurrentPP);
+        Assert.Equal(2, body.CurrentDP);
+        Assert.Contains(g.DamageModifiers(body), x => x.Source?.Id == "WCG-221" && x.Amount == 1);
         Assert.Equal(2, g.Player.Hand.Count);
 
         Assert.Equal(3, cards.GetCard("WCG-192")!.TotalCost);
