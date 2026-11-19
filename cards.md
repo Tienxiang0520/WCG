@@ -47,7 +47,7 @@ source: WcgWeb/Data/cards.json
 | WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
 | WCG-182 | 血怒百夫長 | 怪物 | 5 | 15 | 2 | — | 衝鋒；己場有其他狂怒怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Fury] monster, this monster gets +4 PP. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它，對敵方玩家造成 1 傷害。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel it and destroy the attacker, deal 1 damage to the enemy player. |
-| WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2，攻擊玩家時 DP +1，抽 1 張牌。 | **Flame War-Rune** — Attach: Monster gets +2 PP, +1 DP when attacking a player, and draw 1 card. |
+| WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2、DP +1，抽 1 張牌。 | **Flame War-Rune** — Attach: Monster gets +2 PP and +1 DP, and draw 1 card. |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 11 | 1 | — | 陣亡：將附著在此怪上的 1 張己方卡移回手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards attached to this monster to hand. |
 | WCG-230 | 決鬥宣言 | 法術 | 2 | — | — | — | 橫置 1 隻直立己怪，令它與 1 隻敵怪決鬥。 | **Declaration of Duel** — Tap 1 untapped ally monster and have it duel 1 enemy monster. |
 | WCG-242 | 戰火補給 | 法術 | 2 | — | — | — | 抽 2 張牌，失去 1 生命。 | **War Supplies** — Draw 2 cards, lose 1 life. |

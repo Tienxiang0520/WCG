@@ -2844,7 +2844,7 @@
     "total_cost": 2,
     "pp": null,
     "dp": null,
-    "text": "附著：此怪 PP +2，攻擊玩家時 DP +1，抽 1 張牌。",
+    "text": "附著：此怪 PP +2、DP +1，抽 1 張牌。",
     "design_note": "v2.0 重製：PP÷100、格擋取代聖盾、7 血 DP 與精簡敘述。",
     "hs_ref": "",
     "keywords": [],
