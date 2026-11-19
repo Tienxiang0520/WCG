@@ -19,7 +19,7 @@ public static class DeckCode
 
     public static string Encode(Deck deck)
     {
-        var bytes = new List<byte> { 1, (byte)(Deck.Wills.ToList().IndexOf(deck.MainWill) + 1) };
+        var bytes = new List<byte> { 1, (byte)(ThemeCatalog.IndexOf(deck.MainWill) + 1) };
         var name = (deck.Name ?? "").Trim();
         if (name.Length > MaxNameChars) name = name[..MaxNameChars];
         var nameBytes = Encoding.UTF8.GetBytes(name);

@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import {readEnergyConfirmation,saveEnergyConfirmation} from './preferences';
 import type {Card,Command,Event,Hand,Monster,Receiver,Response,State,Target} from './contracts';
 
-const colors:Record<string,number>={'狂怒':0xee7955,'理智':0x67baff,'生機':0x8fd2a5,'秩序':0xe3ca83,'深淵':0xc49cec,'中立':0xa9b5c5};
+const colors:Record<string,number>={'狂怒':0xee7955,'理智':0x67baff,'生機':0x8fd2a5,'秩序':0xe3ca83,'深淵':0xc49cec,'熾焰':0xee7955,'星穹':0x67baff,'森靈':0x8fd2a5,'聖堂':0xe3ca83,'冥府':0xc49cec,'中立':0xa9b5c5};
 const font='"Noto Sans CJK TC", "Microsoft JhengHei", sans-serif';
 const playerTargetId='00000000-0000-0000-0000-000000000001',computerTargetId='00000000-0000-0000-0000-000000000002';
 function el<K extends keyof HTMLElementTagNameMap>(tag:K,text='',cls=''):HTMLElementTagNameMap[K]{const n=document.createElement(tag);n.textContent=text;if(cls)n.className=cls;return n;}

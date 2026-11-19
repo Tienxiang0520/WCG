@@ -1,9 +1,9 @@
 [
   {
     "Id": "PRESET-WRATH",
-    "Name": "v2.0 狂怒試玩",
+    "Name": "v2.0 熾焰試玩",
     "Description": "v2.0 固定站位、格擋、PP÷100 與統一簡潔效果試玩預組。",
-    "MainWill": "狂怒",
+    "MainWill": "熾焰",
     "CardIds": [
       "WCG-003",
       "WCG-003",
@@ -59,9 +59,9 @@
   },
   {
     "Id": "PRESET-REASON",
-    "Name": "v2.0 理智＋狂怒試玩",
+    "Name": "v2.0 星穹＋熾焰試玩",
     "Description": "v2.0 固定站位、格擋、PP÷100 與統一簡潔效果試玩預組。",
-    "MainWill": "理智",
+    "MainWill": "星穹",
     "CardIds": [
       "WCG-019",
       "WCG-019",
@@ -117,9 +117,9 @@
   },
   {
     "Id": "PRESET-VITALITY",
-    "Name": "v2.0 生機試玩",
+    "Name": "v2.0 森靈試玩",
     "Description": "v2.0 固定站位、格擋、PP÷100 與統一簡潔效果試玩預組。",
-    "MainWill": "生機",
+    "MainWill": "森靈",
     "CardIds": [
       "WCG-041",
       "WCG-041",
@@ -175,9 +175,9 @@
   },
   {
     "Id": "PRESET-ORDER",
-    "Name": "v2.0 秩序＋生機試玩",
+    "Name": "v2.0 聖堂＋森靈試玩",
     "Description": "v2.0 固定站位、格擋、PP÷100 與統一簡潔效果試玩預組。",
-    "MainWill": "秩序",
+    "MainWill": "聖堂",
     "CardIds": [
       "WCG-060",
       "WCG-060",
@@ -233,9 +233,9 @@
   },
   {
     "Id": "PRESET-ABYSS",
-    "Name": "v2.0 深淵試玩",
+    "Name": "v2.0 冥府試玩",
     "Description": "v2.0 固定站位、格擋、PP÷100 與統一簡潔效果試玩預組。",
-    "MainWill": "深淵",
+    "MainWill": "冥府",
     "CardIds": [
       "WCG-081",
       "WCG-081",

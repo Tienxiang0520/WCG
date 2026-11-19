@@ -35,11 +35,11 @@ public partial class DeckBuilder
     // 「從官方預組複製」 filters: will chip, single/dual chip and a name search over the 60 official decks.
     private string SourceWill = "", SourceColor = "", SourceSearch = "";
     private string[] DeckWillsOf(Deck d) => d.CardIds.Select(CardDb.GetCard).Where(c => c != null && !c.IsNeutral)
-        .SelectMany(c => c!.Wills).Where(Deck.Wills.Contains).Distinct().ToArray();
+        .SelectMany(c => c!.Wills.Select(ThemeCatalog.Normalize)).Where(ThemeCatalog.IsTheme).Distinct().ToArray();
     private bool SourceMatches(Deck d)
     {
         var wills = DeckWillsOf(d);
-        if (SourceWill != "" && !wills.Contains(SourceWill) && d.MainWill != SourceWill) return false;
+        if (SourceWill != "" && !wills.Contains(SourceWill) && ThemeCatalog.Normalize(d.MainWill) != SourceWill) return false;
         if (SourceColor == "single" && wills.Length > 1) return false;
         if (SourceColor == "dual" && wills.Length < 2) return false;
         var q = SourceSearch.Trim();
@@ -179,8 +179,8 @@ public partial class DeckBuilder
     }
     private bool LockedOut(string will) => AllowedWills is { } a && !a.Contains(will);
     private string WillChipState(string will) => AllowedWills == null ? "" : LockedOut(will) ? "locked" : will == CurrentDeck.MainWill ? "main-will" : will == "中立" ? "" : "second-will";
-    private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的組色內" : will == CurrentDeck.MainWill ? "主色" : will == SecondWill ? "副色" : "";
-    private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一副色" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
+    private string WillChipTitle(string will) => LockedOut(will) ? "不在這副牌組的主題內" : will == CurrentDeck.MainWill ? "主要主題" : will == SecondWill ? "第二主題" : "";
+    private string LockSummary => string.Join(L.IsEnglish ? " + " : "＋", new[] { CurrentDeck.MainWill, DualColor ? (SecondWill == "" ? "任一第二主題" : SecondWill) : null, "中立" }.Where(x => x != null).Select(x => L[x!]));
     private int OutsideColorCount => AllowedWills is { } a ? CurrentDeck.CardIds.Count(id => CardDb.GetCard(id) is { } c && !c.Wills.All(a.Contains)) : 0;
     private void DropLockedFilter() { if (SelectedWill != "" && (SelectedWill == DualFilter ? DualChipLocked : LockedOut(SelectedWill))) SelectedWill = ""; }
     // A single-colour deck can't hold dual-will cards, so the 雙色卡 chip would always show 0: disable it with a hint.
@@ -220,7 +220,7 @@ public partial class DeckBuilder
     // 雙色卡 (MTG style): only when the deck's main + secondary wills are exactly the card's two wills.
     private bool DualAllowed(CardDefinition card)=>Deck.DualFits(card, CurrentDeck.MainWill, DualColor ? SecondWill : "-")
         && (!card.IsDual || UsedFactions.All(card.HasWill));
-    public const string DualFilter = "雙色";
+    public const string DualFilter = "雙主題";
     private bool CanAddCard(CardDefinition card)
     {
         if (CurrentDeck.CardIds.Count >= 50 || !Deck.Wills.Contains(CurrentDeck.MainWill)) return false;
@@ -273,7 +273,7 @@ public partial class DeckBuilder
             Id = Guid.NewGuid().ToString(),
             Name = L.F("{0}（副本）", L.DeckName(preset)),
             Description = L.DeckDescription(preset),
-            MainWill = preset.MainWill,
+            MainWill = ThemeCatalog.Normalize(preset.MainWill),
             CardIds = new List<string>(preset.CardIds)
         };
         SyncColorMode(); ValidateDeck();
@@ -288,7 +288,7 @@ public partial class DeckBuilder
             Id = Guid.NewGuid().ToString(),
             Name = L.F("{0}（副本）", own.Name),
             Description = own.Description,
-            MainWill = own.MainWill,
+            MainWill = ThemeCatalog.Normalize(own.MainWill),
             CardIds = new List<string>(own.CardIds)
         };
         SyncColorMode(); ValidateDeck();
@@ -303,7 +303,7 @@ public partial class DeckBuilder
             Version = custom.Version,
             Name = custom.Name,
             Description = custom.Description,
-            MainWill = custom.MainWill,
+            MainWill = ThemeCatalog.Normalize(custom.MainWill),
             CardIds = new List<string>(custom.CardIds)
         };
         SyncColorMode(); ValidateDeck();

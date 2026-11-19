@@ -1,0 +1,37 @@
+[
+  {
+    "id": "熾焰",
+    "frame": "wrath",
+    "legacy": "狂怒",
+    "minCards": 30,
+    "maxCards": 50
+  },
+  {
+    "id": "星穹",
+    "frame": "reason",
+    "legacy": "理智",
+    "minCards": 30,
+    "maxCards": 50
+  },
+  {
+    "id": "森靈",
+    "frame": "vitality",
+    "legacy": "生機",
+    "minCards": 30,
+    "maxCards": 50
+  },
+  {
+    "id": "聖堂",
+    "frame": "order",
+    "legacy": "秩序",
+    "minCards": 30,
+    "maxCards": 50
+  },
+  {
+    "id": "冥府",
+    "frame": "abyss",
+    "legacy": "深淵",
+    "minCards": 30,
+    "maxCards": 50
+  }
+]

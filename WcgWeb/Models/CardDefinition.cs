@@ -26,11 +26,14 @@ public class CardDefinition
     public string Will { get => Wills.Length > 0 ? Wills[0] : ""; set => Wills = [value ?? ""]; } // 狂怒, 理智, 生機, 秩序, 深淵, 中立
 
     [JsonIgnore] public bool IsDual => Wills.Length == 2;
-    [JsonIgnore] public bool IsNeutral => Wills.All(w => w is "中立" or "");
-    // Effects that check a will count both wills of a dual card.
-    public bool HasWill(string will) => Wills.Contains(will);
-    // Non-neutral wills this card requires the deck to have chosen.
-    [JsonIgnore] public IEnumerable<string> FactionWills => Wills.Where(w => w is not ("中立" or ""));
+    [JsonIgnore] public bool IsNeutral => Wills.All(w => w is ThemeCatalog.Neutral or "");
+    // Effects that check a theme/will match both legacy and current names (including dual cards).
+    public bool HasWill(string will) => ThemeCatalog.Normalize(will) is var target && Wills.Any(w => ThemeCatalog.Normalize(w) == target);
+    // Non-neutral themes this card requires the deck to have chosen.
+    [JsonIgnore] public IEnumerable<string> FactionWills => Wills.Where(w => w is not (ThemeCatalog.Neutral or ""));
+    [JsonIgnore] public string Theme => Will;
+    [JsonIgnore] public string[] Themes => Wills;
+    public bool HasTheme(string theme) => HasWill(theme);
 
     [JsonPropertyName("cost_spec")]
     public string CostSpec { get; set; } = ""; // 保留舊欄位相容性；新版資料一律空白
@@ -136,13 +139,13 @@ public class FlexibleIntConverter : JsonConverter<int?>
 
 public class WillListConverter : JsonConverter<string[]>
 {
-    public static readonly string[] Order = ["狂怒", "理智", "生機", "秩序", "深淵"];
+    public static IReadOnlyList<string> Order => ThemeCatalog.Names;
     public static string[] Normalize(IEnumerable<string> wills)
     {
         var list = wills.Select(w => (w ?? "").Trim()).Where(w => w != "").Distinct().ToList();
-        if (list.Count > 1) list.RemoveAll(w => w == "中立");
+        if (list.Count > 1) list.RemoveAll(w => w == ThemeCatalog.Neutral);
         if (list.Count == 0) return [""];
-        return list.OrderBy(w => Array.IndexOf(Order, w) is var i && i < 0 ? 99 : i).ToArray();
+        return list.OrderBy(w => ThemeCatalog.IndexOf(w) is var i && i < 0 ? 99 : i).ToArray();
     }
     public override string[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -153,7 +156,7 @@ public class WillListConverter : JsonConverter<string[]>
         while (reader.Read() && reader.TokenType != JsonTokenType.EndArray)
             list.Add(reader.TokenType == JsonTokenType.String ? reader.GetString() ?? "" : throw new JsonException("will 陣列只能包含字串"));
         var result = Normalize(list);
-        if (result.Length > 2) throw new JsonException("一張卡最多屬於兩個意志");
+        if (result.Length > 2) throw new JsonException("一張卡最多屬於兩個主題");
         return result;
     }
     public override void Write(Utf8JsonWriter writer, string[] value, JsonSerializerOptions options)

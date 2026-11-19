@@ -98,7 +98,7 @@ public partial class DeckService
     {
         Name = "我的入門牌組",
         Description = "以普通怪物、抽牌與簡單法術練習出牌和交戰，可自由修改。",
-        MainWill = "狂怒",
+        MainWill = "熾焰",
         CardIds = new[] { "101", "103", "155", "110", "003", "114", "116", "001", "007", "109", "121", "004", "014" }
             .SelectMany((id, index) => Enumerable.Repeat($"WCG-{id}", index < 11 ? 4 : 3)).ToList()
     };

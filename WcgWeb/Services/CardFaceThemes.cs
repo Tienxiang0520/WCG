@@ -27,6 +27,6 @@ public static class CardFaceThemes
         ["neutral"] = new("M10 3A7 7 0 1 1 9.99 3ZM10 6A4 4 0 1 0 10.01 6Z", "M10 3A7 7 0 1 1 9.99 3Z", "M10 4A6 6 0 1 1 9.99 4Z",
             "<circle cx=\"50\" cy=\"50\" r=\"44\"/><circle cx=\"50\" cy=\"50\" r=\"30\"/><path d=\"M50 22 78 50 50 78 22 50Z\"/><circle cx=\"50\" cy=\"8\" r=\"3\"/><circle cx=\"50\" cy=\"92\" r=\"3\"/><circle cx=\"8\" cy=\"50\" r=\"3\"/><circle cx=\"92\" cy=\"50\" r=\"3\"/>"),
     };
-    public static string Key(string? will) => will switch { "狂怒" => "wrath", "理智" => "reason", "生機" => "vitality", "秩序" => "order", "深淵" => "abyss", _ => "neutral" };
+    public static string Key(string? will) => WcgWeb.Models.ThemeCatalog.FrameKey(will);
     public static Theme For(string key) => All.TryGetValue(key, out var t) ? t : All["neutral"];
 }

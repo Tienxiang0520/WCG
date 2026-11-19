@@ -5,22 +5,24 @@ public class Deck
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public string Name { get; set; } = "新牌組";
     public string Description { get; set; } = "";
-    public static IReadOnlyList<string> Wills { get; } = Array.AsReadOnly(new[] { "狂怒", "理智", "生機", "秩序", "深淵" });
-    // There is no limit on secondary-will (副色) card count; only "at most two wills plus neutral" applies.
+    public static IReadOnlyList<string> Wills => ThemeCatalog.Names;
+    public static IReadOnlyList<string> Themes => ThemeCatalog.Names;
+    // Decks pick up to two themes plus neutral; card counts per theme are governed at the catalog level.
     public string MainWill { get; set; } = "";
     public bool IsOffColor(CardDefinition card) => !card.IsNeutral && !card.HasWill(MainWill);
-    // A dual-will card fits only a deck whose main + secondary wills are exactly its two wills (either order).
+    // A dual-theme card fits only a deck whose two themes match its pair (either order).
     public static bool DualFits(CardDefinition card, string mainWill, string? secondWill) =>
         !card.IsDual || (card.HasWill(mainWill) && (string.IsNullOrEmpty(secondWill) || card.HasWill(secondWill)));
     public (int Main, int OffColor, int Neutral) GetColorCounts(Func<string, CardDefinition?> getCard)
     {
         int main = 0, off = 0, neutral = 0;
+        var primary = ThemeCatalog.Normalize(MainWill);
         foreach (var id in CardIds)
         {
             var card = getCard(id);
             if (card == null) continue;
             if (card.IsNeutral) neutral++;
-            else if (card.HasWill(MainWill)) main++;
+            else if (card.HasWill(primary)) main++;
             else off++;
         }
         return (main, off, neutral);
@@ -42,17 +44,18 @@ public class Deck
             errors.Add($"牌組張數必須恰好為 50 張（目前：{CardIds.Count} 張）");
         }
 
-        if (!Wills.Contains(MainWill)) errors.Add("請選擇五種意志之一作為主色（中立不能作為主色）。");
+        var main = ThemeCatalog.Normalize(MainWill);
+        if (!ThemeCatalog.IsTheme(main)) errors.Add("請選擇一個主題作為主要主題（中立不能作為主要主題）。");
         else
         {
             var cards = CardIds.Select(getCard).Where(c => c != null).Select(c => c!).ToArray();
-            var factions = cards.SelectMany(c => c.FactionWills).Distinct().ToArray();
-            if (factions.Length > 2) errors.Add("牌組最多包含兩個派系，中立不計。");
+            var factions = cards.SelectMany(c => c.FactionWills).Select(ThemeCatalog.Normalize).Distinct().ToArray();
+            if (factions.Length > 2) errors.Add("牌組最多包含兩個主題，中立不計。");
             foreach (var dual in cards.Where(c => c.IsDual).DistinctBy(c => c.Id))
             {
-                var other = factions.FirstOrDefault(w => w != MainWill);
-                if (!DualFits(dual, MainWill, other))
-                    errors.Add($"雙色卡【{dual.Name}】只能放進主色與副色剛好是{string.Join("＋", dual.Wills)}的牌組。");
+                var other = factions.FirstOrDefault(w => w != main);
+                if (!DualFits(dual, main, other))
+                    errors.Add($"雙主題卡【{dual.Name}】只能放進同時包含{string.Join("＋", dual.Wills.Select(ThemeCatalog.Normalize))}的牌組。");
             }
         }
 

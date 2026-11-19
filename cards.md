@@ -16,7 +16,7 @@ source: WcgWeb/Data/cards.json
 類型：怪物 136 張、法術 79 張、法術（反擊） 8 張、結界 13 張。
 白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。
 
-## 狂怒（Fury，38 張）
+## 熾焰（Blaze，38 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -43,9 +43,9 @@ source: WcgWeb/Data/cards.json
 | WCG-151 | 熔火鍛爐 | 結界 | 2 | — | — | — | 橫置：使 1 隻怪物本回合 PP -10。 | **Molten Forge** — Tap: Give 1 monster -10 PP this turn. |
 | WCG-156 | 荒原巨槌食人魔 | 怪物 | 3 | 16 | 2 | — | 無。 | **Wasteland Maul Ogre** — None. |
 | WCG-165 | 血祭狂暴 | 法術 | 0 | — | — | — | 失去 1 生命。附著：此怪 PP +6 且獲得貫穿。 | **Blood Sacrifice Frenzy** — Lose 1 life. Attach: +6 PP and Trample. |
-| WCG-180 | 戰歌號令 | 法術 | 3 | — | — | — | 檢索狂怒牌，抽 1 張牌。 | **Warsong Command** — Tutor a [Fury] card, then draw 1 card. |
-| WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn. |
-| WCG-182 | 血怒百夫長 | 怪物 | 5 | 15 | 2 | — | 衝鋒；己場有其他狂怒怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Fury] monster, this monster gets +4 PP. |
+| WCG-180 | 戰歌號令 | 法術 | 3 | — | — | — | 檢索熾焰牌，抽 1 張牌。 | **Warsong Command** — Tutor a [Blaze] card, then draw 1 card. |
+| WCG-181 | 赤誓戰鼓手 | 怪物 | 2 | 9 | 1 | — | 進場：若己場另有熾焰怪物，己方全部熾焰怪物本回合 PP +2。 | **Crimson Oath Drummer** — Deploy: If you control another [Blaze] monster, all your [Blaze] monsters get +2 PP this turn. |
+| WCG-182 | 血怒百夫長 | 怪物 | 5 | 15 | 2 | — | 衝鋒；己場有其他熾焰怪物時，此怪 PP +4。 | **Bloodrage Centurion** — Charge. While you control another [Blaze] monster, this monster gets +4 PP. |
 | WCG-195 | 熔火爆炸陷阱 | 法術（反擊） | 3 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它，對敵方玩家造成 1 傷害。 | **Molten Blast Trap** — [Counter] On monster damage: Cancel it and destroy the attacker, deal 1 damage to the enemy player. |
 | WCG-221 | 烈焰戰紋 | 法術 | 2 | — | — | — | 附著：此怪 PP +2、DP +1，抽 1 張牌。 | **Flame War-Rune** — Attach: Monster gets +2 PP and +1 DP, and draw 1 card. |
 | WCG-223 | 戰紋傳承者 | 怪物 | 2 | 11 | 1 | — | 陣亡：將附著在此怪上的 1 張己方卡移回手牌。 | **Rune Inheritor** — On Death: Return 1 of your cards attached to this monster to hand. |
@@ -59,7 +59,7 @@ source: WcgWeb/Data/cards.json
 | WCG-369 | 殉誓狂徒 | 怪物 | 1 | 9 | 0 | — | 進場：對你造成 1 傷害，抽 1 張牌。 | **Oathbound Zealot** — Deploy: Deal 1 damage to yourself, then draw 1 card. |
 | WCG-392 | 再起戰吼 | 法術 | 1 | — | — | — | 令 1 隻怪物備戰，本回合 PP +3。 | **Rallying Warcry** — Prep 1 monster and give it +3 PP this turn. |
 
-## 理智（Reason，38 張）
+## 星穹（Astral，38 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -84,8 +84,8 @@ source: WcgWeb/Data/cards.json
 | WCG-163 | 時空之主·克羅諾斯 | 怪物 | 9 | 29 | 2 | — | 進場：重置你的所有能量；可將 1 隻怪物移回手牌。 | **Lord of Time, Kronos** — Deploy: Untap all your energy; you may return 1 monster to its owner's hand. |
 | WCG-166 | 思維置換 | 法術 | 0 | — | — | — | 抽 1 棄 1。 | **Mind Swap** — Draw 1, discard 1. |
 | WCG-183 | 觀星占卜師 | 怪物 | 1 | 8 | 0 | — | 進場：檢索法術。 | **Stargazing Diviner** — Deploy: Tutor a spell. |
-| WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置至多 2 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap up to 2 monsters (return to hand if tapped); if you control a [Reason] card, draw 1 card. |
-| WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放理智法術，可使 1 隻怪物本回合 PP -10。 | **Arcane Nexus Warden** — Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn. |
+| WCG-184 | 奧術共鳴波 | 法術 | 3 | — | — | — | 橫置至多 2 隻怪物（已橫置則回手）；若己場有星穹卡，抽 1 張牌。 | **Arcane Resonance Wave** — Tap up to 2 monsters (return to hand if tapped); if you control an [Astral] card, draw 1 card. |
+| WCG-185 | 魔導樞紐守衛 | 怪物 | 4 | 17 | 1 | — | 每當你施放星穹法術，可使 1 隻怪物本回合 PP -10。 | **Arcane Nexus Warden** — Whenever you cast an [Astral] spell, you may give 1 monster -10 PP this turn. |
 | WCG-196 | 維度時空屏障 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害時：抵銷傷害，抽 1 張牌。 | **Dimensional Time Barrier** — [Counter] On damage: Cancel it and draw 1 card. |
 | WCG-208 | 寂靜禁咒 | 法術 | 2 | — | — | — | 驅散 1 隻怪物，使它本回合 PP -5。 | **Hush Hex** — Dispel 1 monster; it gets -5 PP this turn. |
 | WCG-226 | 預知閃避 | 法術（反擊） | 1 | — | — | — | 【反擊】受到法術傷害時：抵銷傷害，抽 1 張牌。 | **Foreseen Dodge** — [Counter] On spell damage: Cancel it and draw 1 card. |
@@ -102,7 +102,7 @@ source: WcgWeb/Data/cards.json
 | WCG-374 | 回潮術士 | 怪物 | 2 | 9 | 0 | — | 進場：可將另 1 隻己怪移回手牌，並重置 1 點能量。 | **Ebbcall Sorcerer** — Deploy: You may return another ally monster to hand; if you do, untap 1 energy. |
 | WCG-375 | 退浪 | 法術 | 0 | — | — | — | 將 1 隻己怪移回手牌；若其費用 3 以上，抽 1 張牌。 | **Receding Wave** — Return 1 ally monster to hand; if its cost is 3 or more, draw 1 card. |
 
-## 生機（Life，40 張）
+## 森靈（Sylvan，40 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -119,7 +119,7 @@ source: WcgWeb/Data/cards.json
 | WCG-052 | 森林呼喚 | 法術 | 3 | — | — | — | 抽 1 張牌，從手牌免費召喚至多 2 隻費用 2 以下的怪物。 | **Call of the Forest** — Draw 1 card, then summon up to 2 monsters with cost 2 or less from hand for free. |
 | WCG-053 | 奔竄巨犀 | 怪物 | 4 | 17 | 1 | — | 貫穿。 | **Stampeding Rhino** — Trample. |
 | WCG-054 | 原始印記 | 法術 | 3 | — | — | — | 檢索怪物，抽 1 張牌。 | **Primal Mark** — Tutor a monster, then draw 1 card. |
-| WCG-056 | 生態同調 | 法術 | 1 | — | — | — | 檢索生機怪物。 | **Ecological Attunement** — Tutor a [Life] monster. |
+| WCG-056 | 生態同調 | 法術 | 1 | — | — | — | 檢索森靈怪物。 | **Ecological Attunement** — Tutor a [Sylvan] monster. |
 | WCG-059 | 蓋亞暴龍 | 怪物 | 7 | 27 | 2 | — | 越陣。 | **Gaia Tyrant** — Bypass. |
 | WCG-060 | 始祖母樹·伊瓦 | 怪物 | 6 | 24 | 2 | — | 嘲諷；回合結束：抽 1 張牌，可從手牌免費召喚 1 隻費用 2 以下怪物。 | **Progenitor Mother Tree, Iva** — Taunt. End of turn: Draw 1 card, and you may summon 1 monster with cost 2 or less from hand for free. |
 | WCG-126 | 遠古母樹根鬚 | 結界 | 3 | — | — | — | 橫置：重置 2 點能量。 | **Roots of the Ancient Mother** — Tap: Untap 2 energy. |
@@ -130,24 +130,24 @@ source: WcgWeb/Data/cards.json
 | WCG-162 | 遠古泰坦·世界樹之靈 | 怪物 | 9 | 31 | 3 | — | 嘲諷；進場：回復 3 生命，抽 2 張牌。 | **Ancient Titan, Spirit of the World Tree** — Taunt. Deploy: Restore 3 life and draw 2 cards. |
 | WCG-167 | 萌芽喚醒 | 法術 | 0 | — | — | — | 令 1 隻橫置的怪物備戰。 | **Sprouting Awakening** — Prep 1 tapped monster. |
 | WCG-172 | 遠古蠻荒巨獸 | 怪物 | 8 | 31 | 2 | — | 貫穿。 | **Ancient Primal Behemoth** — Trample. |
-| WCG-186 | 母樹共鳴 | 法術 | 1 | — | — | — | 檢索生機怪物。 | **Mother Tree Resonance** — Tutor a [Life] monster. |
-| WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 14 | 1 | — | 進場：若己場另有生機怪，可從手牌免費召喚 1 隻 2 費以下生機怪並抽 1 張。 | **Verdant Beastcaller** — Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free and draw 1. |
-| WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 22 | 1 | — | 嘲諷；進場：己場每有 1 隻其他生機怪，回復 1 生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life for each other ally [Life] monster. |
-| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害時：抵銷傷害，從手牌免費召喚 1 隻費用 3 以下生機怪。 | **Jungle Guardian Ambush** — [Counter] On damage: Cancel it and summon 1 [Life] monster costing 3 or less from hand for free. |
+| WCG-186 | 母樹共鳴 | 法術 | 1 | — | — | — | 檢索森靈怪物。 | **Mother Tree Resonance** — Tutor a [Sylvan] monster. |
+| WCG-187 | 翠綠喚獸師 | 怪物 | 3 | 14 | 1 | — | 進場：若己場另有森靈怪，可從手牌免費召喚 1 隻 2 費以下森靈怪並抽 1 張。 | **Verdant Beastcaller** — Deploy: If you control another [Sylvan] monster, you may summon 1 [Sylvan] monster costing 2 or less from hand for free and draw 1. |
+| WCG-188 | 萬靈樹精長老 | 怪物 | 6 | 22 | 1 | — | 嘲諷；進場：己場每有 1 隻其他森靈怪，回復 1 生命。 | **Elder of the Myriad Dryads** — Taunt. Deploy: Restore 1 life for each other ally [Sylvan] monster. |
+| WCG-197 | 叢林守護伏擊 | 法術（反擊） | 2 | — | — | — | 【反擊】受到傷害時：抵銷傷害，從手牌免費召喚 1 隻費用 3 以下森靈怪。 | **Jungle Guardian Ambush** — [Counter] On damage: Cancel it and summon 1 [Sylvan] monster costing 3 or less from hand for free. |
 | WCG-206 | 纏根束縛 | 法術 | 2 | — | — | — | 橫置 1 隻嘲諷怪物，本回合 PP -5。 | **Rootbind** — Tap 1 Taunt monster; it gets -5 PP this turn. |
 | WCG-215 | 根鬚哨兵 | 怪物 | 2 | 12 | 0 | ←→ | 兩個箭頭皆指向怪物時，具有嘲諷與格擋。 | **Rootwatch Sentry** — While both arrows point at monsters, this monster has Taunt and Block. |
 | WCG-220 | 荊棘甲殼 | 法術 | 1 | — | — | — | 附著：此怪具有貫穿。 | **Thorn Carapace** — Attach: Monster gains Trample. |
 | WCG-232 | 腐土苗床 | 怪物 | 2 | 11 | 0 | — | 陣亡：將牌庫頂 1 張牌橫置放入你的能量區。 | **Rotsoil Seedbed** — On Death: Put the top card of your deck tapped into your energy zone. |
 | WCG-246 | 藤鞭絞殺 | 法術 | 2 | — | — | — | 使 1 隻怪物本回合 PP -15。 | **Vine Strangle** — Give 1 monster -15 PP this turn. |
-| WCG-247 | 大地之心 | 結界 | 2 | — | — | — | 橫置：若己場有 2 隻以上生機怪物，抽 1 張牌。 | **Heart of the Earth** — Tap: If you control 2 or more [Life] monsters, draw 1 card. |
-| WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 令 1 隻己方生機怪與 1 隻敵怪決鬥。 | **Primal Trample** — Have 1 ally [Life] monster duel 1 enemy monster. |
+| WCG-247 | 大地之心 | 結界 | 2 | — | — | — | 橫置：若己場有 2 隻以上森靈怪物，抽 1 張牌。 | **Heart of the Earth** — Tap: If you control 2 or more [Sylvan] monsters, draw 1 card. |
+| WCG-248 | 蠻荒踐踏 | 法術 | 3 | — | — | — | 令 1 隻己方森靈怪與 1 隻敵怪決鬥。 | **Primal Trample** — Have 1 ally [Sylvan] monster duel 1 enemy monster. |
 | WCG-276 | 碧根巨鹿 | 怪物 | 4 | 16 | 1 | — | 貫穿；手牌 4 張以上時，此怪 PP +4。 | **Bluroot Stag** — Trample. While you have 4 or more cards in hand, gets +4 PP. |
 | WCG-355 | 嫩根幼苗 | 怪物 | 1 | 6 | 0 | ←→ | ←→ 友軍 PP +2。 | **Tender Rootling** — [Arrows: ← →] Allied monsters get +2 PP. |
 | WCG-362 | 擠枝新芽 | 怪物 | 0 | 4 | 0 | ←→ | ←→ 友軍 PP +2。 | **Squeezing Sprout** — [Arrows: ← →] Allied monsters get +2 PP. |
 | WCG-373 | 潮間採集者 | 怪物 | 2 | 8 | 0 | — | 進場：回復 1 生命，抽 1 張牌。 | **Tidepool Gatherer** — Deploy: Restore 1 life and draw 1 card. |
 | WCG-382 | 孢沼爬蟲 | 怪物 | 1 | 5 | 0 | — | 劇毒；陣亡：可附著於 1 隻怪物：此怪 PP -3。 | **Sporebog Crawler** — Poison. On Death: May attach to 1 monster: monster gets -3 PP. |
 
-## 秩序（Order，40 張）
+## 聖堂（Sanctum，40 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -175,8 +175,8 @@ source: WcgWeb/Data/cards.json
 | WCG-158 | 白銀持戟禁衛 | 怪物 | 2 | 14 | 0 | — | 無。 | **Silver Halberd Guard** — None. |
 | WCG-168 | 正義壓制 | 法術 | 0 | — | — | — | 附著：此怪 PP -5。 | **Righteous Suppression** — Attach: -5 PP. |
 | WCG-179 | 光輝至高大天使·阿曼蘇爾 | 怪物 | 9 | 27 | 2 | ←→ | 嘲諷；進場：將你的生命回滿。←→ 友軍獲得格擋。 | **Radiant Supreme Archangel, Amansul** — Taunt. Deploy: Restore your life to full. [Arrows: ← →] Allied monsters gain Block. |
-| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢索秩序怪物，回復 1 生命。 | **Temple Rally Horn** — Tutor an [Order] monster, then heal 1 life. |
-| WCG-190 | 白銀軍團旗手 | 怪物 | 3 | 13 | 0 | — | 嘲諷；每當秩序怪物進入己場，回復 1 生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever an [Order] monster enters your field, restore 1 life. |
+| WCG-189 | 聖堂集結號角 | 法術 | 2 | — | — | — | 檢索聖堂怪物，回復 1 生命。 | **Temple Rally Horn** — Tutor a [Sanctum] monster, then heal 1 life. |
+| WCG-190 | 白銀軍團旗手 | 怪物 | 3 | 13 | 0 | — | 嘲諷；每當聖堂怪物進入己場，回復 1 生命。 | **Silver Legion Standard-Bearer** — Taunt. Whenever a [Sanctum] monster enters your field, restore 1 life. |
 | WCG-198 | 神聖救贖誓約 | 法術（反擊） | 3 | — | — | — | 【反擊】受到傷害時：抵銷並回復 2 生命；可附著於 1 隻怪物：獲得格擋。 | **Oath of Holy Redemption** — [Counter] On damage: Cancel it and restore 2 life; you may attach to 1 monster: Block. |
 | WCG-200 | 護誓守衛 | 怪物 | 4 | 16 | 1 | — | 你將受傷害時，可橫置此怪使傷害 -1。 | **Oathguard** — When you would take damage, you may tap this monster to reduce it by 1. |
 | WCG-216 | 前鋒盾衛 | 怪物 | 3 | 13 | 0 | ↑ | ↑ 敵怪不能攻擊。 | **Vanguard Shieldguard** — [Arrow: ↑] Enemy monster can't attack. |
@@ -192,7 +192,7 @@ source: WcgWeb/Data/cards.json
 | WCG-401 | 泉光侍祭 | 怪物 | 2 | 9 | 0 | ←→ | ←→ 每當你回復生命，友軍本回合 PP +3。 | **Springlight Acolyte** — [Arrows: ← →] Whenever you restore life, allied monsters get +3 PP this turn. |
 | WCG-402 | 滿溢之禱 | 法術 | 1 | — | — | — | 回復 2 生命；若回復前生命已為 7，抽 1 張牌。 | **Overflowing Prayer** — Restore 2 life; if your life was already 7, draw 1 card. |
 
-## 深淵（Abyss，38 張）
+## 冥府（Nether，38 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
@@ -219,12 +219,12 @@ source: WcgWeb/Data/cards.json
 | WCG-138 | 暗影伏擊者 | 怪物 | 3 | 12 | 1 | — | 衝鋒；進場：送墓 2。 | **Shadow Ambusher** — Charge. Deploy: Mill 2. |
 | WCG-148 | 墓園守夜人 | 怪物 | 3 | 9 | 0 | — | 每當另一隻己怪被消滅，回復 1 生命。 | **Graveyard Nightwatch** — Whenever another ally monster is destroyed, heal 1 life. |
 | WCG-169 | 暗影獻祭 | 法術 | 0 | — | — | — | 犧牲 1 隻己怪，抽 1 張牌。 | **Shadow Offering** — Sacrifice 1 ally monster, draw 1 card. |
-| WCG-192 | 冥河引魂術 | 法術 | 3 | — | — | — | 檢索深淵怪物，送墓 2。 | **Styx Soulguide Rite** — Tutor an [Abyss] monster, mill 2. |
-| WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 11 | 1 | — | 進場：可犧牲另 1 隻己方深淵怪，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another ally [Abyss] monster to draw 2 cards. |
-| WCG-194 | 冥府復甦領主 | 怪物 | 5 | 21 | 2 | — | 進場：從墓地免費召喚 1 隻 4 費以下深淵怪。 | **Netherworld Revival Lord** — Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free. |
+| WCG-192 | 冥河引魂術 | 法術 | 3 | — | — | — | 檢索冥府怪物，送墓 2。 | **Styx Soulguide Rite** — Tutor a [Nether] monster, mill 2. |
+| WCG-193 | 噬魂死靈術士 | 怪物 | 2 | 11 | 1 | — | 進場：可犧牲另 1 隻己方冥府怪，抽 2 張牌。 | **Soul-Eating Necromancer** — Deploy: You may sacrifice another ally [Nether] monster to draw 2 cards. |
+| WCG-194 | 冥府復甦領主 | 怪物 | 5 | 21 | 2 | — | 進場：從墓地免費召喚 1 隻 4 費以下冥府怪。 | **Netherworld Revival Lord** — Deploy: Summon 1 [Nether] monster costing 4 or less from your graveyard for free. |
 | WCG-199 | 亡魂索命陷阱 | 法術（反擊） | 2 | — | — | — | 【反擊】受到怪物傷害時：抵銷並消滅它。 | **Vengeful Spirit Trap** — [Counter] On monster damage: Cancel it and destroy the attacker. |
 | WCG-212 | 墓語竊賊 | 怪物 | 3 | 14 | 1 | — | 進場：送墓 2。 | **Gravewhisper Thief** — Deploy: Mill 2. |
-| WCG-249 | 墓穴守門人 | 怪物 | 4 | 14 | 1 | — | 嘲諷；陣亡：將墓地另 1 隻費用 3 以下深淵怪移回手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Abyss] monster costing 3 or less from your graveyard to hand. |
+| WCG-249 | 墓穴守門人 | 怪物 | 4 | 14 | 1 | — | 嘲諷；陣亡：將墓地另 1 隻費用 3 以下冥府怪移回手牌。 | **Crypt Gatekeeper** — Taunt. On Death: Return another [Nether] monster costing 3 or less from your graveyard to hand. |
 | WCG-250 | 亡者低語 | 法術 | 2 | — | — | — | 抽 1 張牌；若你墓地有 5 張以上牌，改為抽 2 張。 | **Whispers of the Dead** — Draw 1 card; if your graveyard has 5 or more cards, draw 2 instead. |
 | WCG-284 | 凋萎觸鬚 | 法術 | 1 | — | — | — | 附著：此怪 PP -7。 | **Withering Tendril** — Attach: -7 PP. |
 | WCG-288 | 啃噬詛咒 | 法術 | 2 | — | — | — | 附著：此怪 PP -5；若它是嘲諷怪，抽 1 張牌。 | **Gnawing Curse** — Attach: Monster gets -5 PP; if it has Taunt, draw 1 card. |
@@ -264,25 +264,25 @@ source: WcgWeb/Data/cards.json
 | WCG-255 | 天穹泰坦 | 怪物 | 9 | 35 | 3 | — | 無。 | **Skyvault Titan** — None. |
 | WCG-263 | 幸運幣 | 法術 | 0 | — | — | — | 本回合你打出的下 1 張牌費用 -1。 | **The Coin** — Your next card played this turn costs 1 less. |
 
-## 雙色（Dual，18 張）
+## 雙主題（Dual Theme，18 張）
 
 | 編號 | 名稱 | 類型 | 費用 | PP | DP | 箭頭 | 效果 | English |
 | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- |
-| WCG-027 | 幻術編織者 | 怪物（理智／生機） | 3 | 14 | 1 | — | 進場：可從手牌免費召喚 1 隻費用 2 以下怪物，若因此召喚則抽 1 張。 | **Illusion Weaver** — Deploy: You may summon 1 monster with cost 2 or less from hand for free; if you do, draw 1 card. |
-| WCG-031 | 鏡像護衛 | 怪物（理智／秩序） | 2 | 11 | 0 | → | 嘲諷。→ 友軍獲得格擋。 | **Mirror Guard** — Taunt. [Arrow: →] Allied monster gains Block. |
-| WCG-058 | 萬物復甦 | 法術（生機／深淵） | 3 | — | — | — | 將墓地至多 2 張費用 2 以下的怪物移回手牌。 | **Revival of All** — Return up to 2 monsters with cost 2 or less from your graveyard to hand. |
-| WCG-211 | 思緒潰散 | 法術（理智／深淵） | 2 | — | — | — | 送墓 3，抽 1 張牌。 | **Shattered Thoughts** — Mill 3, then draw 1 card. |
-| WCG-213 | 記憶吞噬者 | 怪物（理智／深淵） | 4 | 17 | 1 | — | 嘲諷；回合結束：若此怪直立，送墓 1。 | **Memory Devourer** — Taunt. End of turn: If upright, mill 1. |
-| WCG-217 | 列陣號令 | 法術（生機／秩序） | 2 | — | — | — | 己場每有 1 隻帶箭頭的怪物，抽 1 張牌（最多 3 張）。 | **Call to Formation** — Draw 1 card for each ally monster with arrows (up to 3). |
-| WCG-218 | 連根古木 | 怪物（生機／秩序） | 5 | 22 | 1 | ←→ | 嘲諷。←→ 友軍具有貫穿。 | **Rootbound Elder** — Taunt. [Arrows: ← →] Allied monsters gain Trample. |
-| WCG-222 | 共生巨蜥 | 怪物（狂怒／生機） | 3 | 11 | 1 | — | 此怪有附著卡時，PP +5。 | **Symbiotic Monitor** — While this monster has an attachment, it gets +5 PP. |
-| WCG-228 | 孤狼劍聖 | 怪物（狂怒／理智） | 4 | 18 | 1 | — | 己場沒有其他怪物時，此怪 PP +9。 | **Lone Wolf Swordmaster** — While you control no other monsters, this monster gets +9 PP. |
-| WCG-233 | 獻祭苗床 | 法術（生機／深淵） | 1 | — | — | — | 犧牲 1 隻己怪，抽 1 張；犧牲生機怪時回復 1 生命。 | **Sacrificial Seedbed** — Sacrifice 1 ally monster, draw 1 card; if it was [Life], restore 1 life. |
-| WCG-234 | 腐木巨像 | 怪物（生機／深淵） | 5 | 20 | 2 | — | 嘲諷；若你墓地有 5 張以上牌，此怪 PP +6。 | **Rotwood Colossus** — Taunt. If there are 5 or more cards in your graveyard, this monster gets +6 PP. |
-| WCG-235 | 屍花 | 怪物（生機／深淵） | 3 | 15 | 1 | — | 陣亡：可從墓地免費召喚 1 隻 1 費生機怪物。 | **Corpse Bloom** — On Death: You may summon 1 1-cost [Life] monster from your graveyard for free. |
-| WCG-239 | 灰燼獻祭者 | 怪物（狂怒／深淵） | 3 | 15 | 1 | — | 陣亡：對敵方玩家造成 1 傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
-| WCG-240 | 聖焰騎士 | 怪物（狂怒／秩序） | 3 | 13 | 1 | → | 衝鋒。→ 友軍獲得格擋。 | **Holy Flame Knight** — Charge. [Arrow: →] Allied monster gains Block. |
-| WCG-371 | 誓血軍旗手 | 怪物（秩序／狂怒） | 4 | 14 | 1 | ←→ | ←→ 友軍 PP +2；你的生命 3 以下時改為 +4。 | **Bloodoath Standard-Bearer** — [Arrows: ← →] Allied monsters get +2 PP (+4 while your life is 3 or less). |
-| WCG-378 | 輪迴之環 | 結界（理智／生機） | 3 | — | — | — | 每當你將己怪移回手牌，抽 1 張牌。 | **Ring of Recurrence** — Whenever you return an ally monster to hand, draw 1 card. |
-| WCG-386 | 沼母孵巢 | 結界（生機／深淵） | 3 | — | — | ↑ | ↑ 敵怪 PP -3。 | **Bogmother's Brood** — [Arrow: ↑] Enemy monster gets -3 PP. |
-| WCG-390 | 萬腐之母 | 怪物（生機／深淵） | 7 | 23 | 2 | — | 劇毒；進場：全體敵怪本回合 PP -6。 | **Mother of All Rot** — Poison. Deploy: All enemy monsters get -6 PP this turn. |
+| WCG-027 | 幻術編織者 | 怪物（星穹／森靈） | 3 | 14 | 1 | — | 進場：可從手牌免費召喚 1 隻費用 2 以下怪物，若因此召喚則抽 1 張。 | **Illusion Weaver** — Deploy: You may summon 1 monster with cost 2 or less from hand for free; if you do, draw 1 card. |
+| WCG-031 | 鏡像護衛 | 怪物（星穹／聖堂） | 2 | 11 | 0 | → | 嘲諷。→ 友軍獲得格擋。 | **Mirror Guard** — Taunt. [Arrow: →] Allied monster gains Block. |
+| WCG-058 | 萬物復甦 | 法術（森靈／冥府） | 3 | — | — | — | 將墓地至多 2 張費用 2 以下的怪物移回手牌。 | **Revival of All** — Return up to 2 monsters with cost 2 or less from your graveyard to hand. |
+| WCG-211 | 思緒潰散 | 法術（星穹／冥府） | 2 | — | — | — | 送墓 3，抽 1 張牌。 | **Shattered Thoughts** — Mill 3, then draw 1 card. |
+| WCG-213 | 記憶吞噬者 | 怪物（星穹／冥府） | 4 | 17 | 1 | — | 嘲諷；回合結束：若此怪直立，送墓 1。 | **Memory Devourer** — Taunt. End of turn: If upright, mill 1. |
+| WCG-217 | 列陣號令 | 法術（森靈／聖堂） | 2 | — | — | — | 己場每有 1 隻帶箭頭的怪物，抽 1 張牌（最多 3 張）。 | **Call to Formation** — Draw 1 card for each ally monster with arrows (up to 3). |
+| WCG-218 | 連根古木 | 怪物（森靈／聖堂） | 5 | 22 | 1 | ←→ | 嘲諷。←→ 友軍具有貫穿。 | **Rootbound Elder** — Taunt. [Arrows: ← →] Allied monsters gain Trample. |
+| WCG-222 | 共生巨蜥 | 怪物（熾焰／森靈） | 3 | 11 | 1 | — | 此怪有附著卡時，PP +5。 | **Symbiotic Monitor** — While this monster has an attachment, it gets +5 PP. |
+| WCG-228 | 孤狼劍聖 | 怪物（熾焰／星穹） | 4 | 18 | 1 | — | 己場沒有其他怪物時，此怪 PP +9。 | **Lone Wolf Swordmaster** — While you control no other monsters, this monster gets +9 PP. |
+| WCG-233 | 獻祭苗床 | 法術（森靈／冥府） | 1 | — | — | — | 犧牲 1 隻己怪，抽 1 張；犧牲森靈怪時回復 1 生命。 | **Sacrificial Seedbed** — Sacrifice 1 ally monster, draw 1 card; if it was [Sylvan], restore 1 life. |
+| WCG-234 | 腐木巨像 | 怪物（森靈／冥府） | 5 | 20 | 2 | — | 嘲諷；若你墓地有 5 張以上牌，此怪 PP +6。 | **Rotwood Colossus** — Taunt. If there are 5 or more cards in your graveyard, this monster gets +6 PP. |
+| WCG-235 | 屍花 | 怪物（森靈／冥府） | 3 | 15 | 1 | — | 陣亡：可從墓地免費召喚 1 隻 1 費森靈怪物。 | **Corpse Bloom** — On Death: You may summon 1 1-cost [Sylvan] monster from your graveyard for free. |
+| WCG-239 | 灰燼獻祭者 | 怪物（熾焰／冥府） | 3 | 15 | 1 | — | 陣亡：對敵方玩家造成 1 傷害。 | **Ash Offerer** — On Death: Deal 1 damage to the enemy player. |
+| WCG-240 | 聖焰騎士 | 怪物（熾焰／聖堂） | 3 | 13 | 1 | → | 衝鋒。→ 友軍獲得格擋。 | **Holy Flame Knight** — Charge. [Arrow: →] Allied monster gains Block. |
+| WCG-371 | 誓血軍旗手 | 怪物（聖堂／熾焰） | 4 | 14 | 1 | ←→ | ←→ 友軍 PP +2；你的生命 3 以下時改為 +4。 | **Bloodoath Standard-Bearer** — [Arrows: ← →] Allied monsters get +2 PP (+4 while your life is 3 or less). |
+| WCG-378 | 輪迴之環 | 結界（星穹／森靈） | 3 | — | — | — | 每當你將己怪移回手牌，抽 1 張牌。 | **Ring of Recurrence** — Whenever you return an ally monster to hand, draw 1 card. |
+| WCG-386 | 沼母孵巢 | 結界（森靈／冥府） | 3 | — | — | ↑ | ↑ 敵怪 PP -3。 | **Bogmother's Brood** — [Arrow: ↑] Enemy monster gets -3 PP. |
+| WCG-390 | 萬腐之母 | 怪物（森靈／冥府） | 7 | 23 | 2 | — | 劇毒；進場：全體敵怪本回合 PP -6。 | **Mother of All Rot** — Poison. Deploy: All enemy monsters get -6 PP this turn. |

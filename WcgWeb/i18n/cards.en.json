@@ -434,8 +434,11 @@
   "WCG-056": {
     "zh": "生態同調",
     "name": "Ecological Attunement",
-    "text": "Tutor a [Life] monster.",
-    "zh_text": "檢索生機怪物。"
+    "text": "Tutor a [Sylvan] monster.",
+    "zh_text": "檢索森靈怪物。",
+    "prev": {
+      "檢索生機怪物。": "Tutor a [Life] monster."
+    }
   },
   "WCG-057": {
     "zh": "遠古守護者",
@@ -1404,25 +1407,30 @@
   "WCG-180": {
     "zh": "戰歌號令",
     "name": "Warsong Command",
-    "text": "Tutor a [Fury] card, then draw 1 card.",
-    "zh_text": "檢索狂怒牌，抽 1 張牌。"
+    "text": "Tutor a [Blaze] card, then draw 1 card.",
+    "zh_text": "檢索熾焰牌，抽 1 張牌。",
+    "prev": {
+      "檢索狂怒牌，抽 1 張牌。": "Tutor a [Fury] card, then draw 1 card."
+    }
   },
   "WCG-181": {
     "zh": "赤誓戰鼓手",
     "name": "Crimson Oath Drummer",
-    "text": "Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn.",
-    "zh_text": "進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。",
+    "text": "Deploy: If you control another [Blaze] monster, all your [Blaze] monsters get +2 PP this turn.",
+    "zh_text": "進場：若己場另有熾焰怪物，己方全部熾焰怪物本回合 PP +2。",
     "prev": {
-      "進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +3。": "Deploy: If you control another [Fury] monster, all your [Fury] monsters get +3 PP this turn."
+      "進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +3。": "Deploy: If you control another [Fury] monster, all your [Fury] monsters get +3 PP this turn.",
+      "進場：若己場另有狂怒怪物，己方全部狂怒怪物本回合 PP +2。": "Deploy: If you control another [Fury] monster, all your [Fury] monsters get +2 PP this turn."
     }
   },
   "WCG-182": {
     "zh": "血怒百夫長",
     "name": "Bloodrage Centurion",
-    "text": "Charge. While you control another [Fury] monster, this monster gets +4 PP.",
-    "zh_text": "衝鋒；己場有其他狂怒怪物時，此怪 PP +4。",
+    "text": "Charge. While you control another [Blaze] monster, this monster gets +4 PP.",
+    "zh_text": "衝鋒；己場有其他熾焰怪物時，此怪 PP +4。",
     "prev": {
-      "衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +3。": "Charge. Gets +3 PP for each other ally [Fury] monster."
+      "衝鋒；己場每有 1 隻其他狂怒怪物，此怪 PP +3。": "Charge. Gets +3 PP for each other ally [Fury] monster.",
+      "衝鋒；己場有其他狂怒怪物時，此怪 PP +4。": "Charge. While you control another [Fury] monster, this monster gets +4 PP."
     }
   },
   "WCG-183": {
@@ -1434,61 +1442,74 @@
   "WCG-184": {
     "zh": "奧術共鳴波",
     "name": "Arcane Resonance Wave",
-    "text": "Tap up to 2 monsters (return to hand if tapped); if you control a [Reason] card, draw 1 card.",
-    "zh_text": "橫置至多 2 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張牌。",
+    "text": "Tap up to 2 monsters (return to hand if tapped); if you control an [Astral] card, draw 1 card.",
+    "zh_text": "橫置至多 2 隻怪物（已橫置則回手）；若己場有星穹卡，抽 1 張牌。",
     "prev": {
-      "橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。": "Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card."
+      "橫置 1 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張。": "Tap 1 monster (return to hand if tapped); if you control a [Reason] card, draw 1 card.",
+      "橫置至多 2 隻怪物（已橫置則回手）；若己場有理智卡，抽 1 張牌。": "Tap up to 2 monsters (return to hand if tapped); if you control a [Reason] card, draw 1 card."
     }
   },
   "WCG-185": {
     "zh": "魔導樞紐守衛",
     "name": "Arcane Nexus Warden",
-    "text": "Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn.",
-    "zh_text": "每當你施放理智法術，可使 1 隻怪物本回合 PP -10。",
+    "text": "Whenever you cast an [Astral] spell, you may give 1 monster -10 PP this turn.",
+    "zh_text": "每當你施放星穹法術，可使 1 隻怪物本回合 PP -10。",
     "prev": {
       "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 600 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 600 PP or less.",
       "每當你施放 1 張【理智】法術牌，消滅 1 隻 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 PP or less.",
       "每當你施放 1 張【理智】法術牌，消滅 1 隻印刷 PP 900 以下的敵方怪物。": "Whenever you cast a [Reason] spell, destroy 1 enemy monster with 900 printed PP or less.",
-      "每當你施放理智法術，可消滅 1 隻 PP 10 以下的怪物。": "Whenever you cast a [Reason] spell, you may destroy 1 monster with 10 PP or less."
+      "每當你施放理智法術，可消滅 1 隻 PP 10 以下的怪物。": "Whenever you cast a [Reason] spell, you may destroy 1 monster with 10 PP or less.",
+      "每當你施放理智法術，可使 1 隻怪物本回合 PP -10。": "Whenever you cast a [Reason] spell, you may give 1 monster -10 PP this turn."
     }
   },
   "WCG-186": {
     "zh": "母樹共鳴",
     "name": "Mother Tree Resonance",
-    "text": "Tutor a [Life] monster.",
-    "zh_text": "檢索生機怪物。"
+    "text": "Tutor a [Sylvan] monster.",
+    "zh_text": "檢索森靈怪物。",
+    "prev": {
+      "檢索生機怪物。": "Tutor a [Life] monster."
+    }
   },
   "WCG-187": {
     "zh": "翠綠喚獸師",
     "name": "Verdant Beastcaller",
-    "text": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free and draw 1.",
-    "zh_text": "進場：若己場另有生機怪，可從手牌免費召喚 1 隻 2 費以下生機怪並抽 1 張。",
+    "text": "Deploy: If you control another [Sylvan] monster, you may summon 1 [Sylvan] monster costing 2 or less from hand for free and draw 1.",
+    "zh_text": "進場：若己場另有森靈怪，可從手牌免費召喚 1 隻 2 費以下森靈怪並抽 1 張。",
     "prev": {
-      "進場：若己場另有生機怪，可從手牌免費召喚 1 隻費用 2 以下生機怪。": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free."
+      "進場：若己場另有生機怪，可從手牌免費召喚 1 隻費用 2 以下生機怪。": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free.",
+      "進場：若己場另有生機怪，可從手牌免費召喚 1 隻 2 費以下生機怪並抽 1 張。": "Deploy: If you control another [Life] monster, you may summon 1 [Life] monster costing 2 or less from hand for free and draw 1."
     }
   },
   "WCG-188": {
     "zh": "萬靈樹精長老",
     "name": "Elder of the Myriad Dryads",
-    "text": "Taunt. Deploy: Restore 1 life for each other ally [Life] monster.",
-    "zh_text": "嘲諷；進場：己場每有 1 隻其他生機怪，回復 1 生命。"
+    "text": "Taunt. Deploy: Restore 1 life for each other ally [Sylvan] monster.",
+    "zh_text": "嘲諷；進場：己場每有 1 隻其他森靈怪，回復 1 生命。",
+    "prev": {
+      "嘲諷；進場：己場每有 1 隻其他生機怪，回復 1 生命。": "Taunt. Deploy: Restore 1 life for each other ally [Life] monster."
+    }
   },
   "WCG-189": {
     "zh": "聖堂集結號角",
     "name": "Temple Rally Horn",
-    "text": "Tutor an [Order] monster, then heal 1 life.",
-    "zh_text": "檢索秩序怪物，回復 1 生命。",
+    "text": "Tutor a [Sanctum] monster, then heal 1 life.",
+    "zh_text": "檢索聖堂怪物，回復 1 生命。",
     "prev": {
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得聖盾（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters Holy Shield (attach this card to it).",
       "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，使 1 隻己方怪物獲得 1 個聖盾指示物（將此卡附著其上）。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, give 1 of your monsters 1 Holy Shield counter (attach this card to it).",
-      "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, attach this card under 1 of your monsters: it gains Holy Shield."
+      "檢視牌庫頂 3 張，選 1 張【秩序】怪物牌加入手牌，其餘放到牌庫底。然後若你場上有【秩序】怪物，將此卡附著於 1 隻己方怪物底下：該怪物獲得聖盾。": "Look at the top 3 cards of your deck. Put an [Order] monster card among them into your hand and the rest on the bottom. Then, if you have an [Order] monster, attach this card under 1 of your monsters: it gains Holy Shield.",
+      "檢索秩序怪物，回復 1 生命。": "Tutor an [Order] monster, then heal 1 life."
     }
   },
   "WCG-190": {
     "zh": "白銀軍團旗手",
     "name": "Silver Legion Standard-Bearer",
-    "text": "Taunt. Whenever an [Order] monster enters your field, restore 1 life.",
-    "zh_text": "嘲諷；每當秩序怪物進入己場，回復 1 生命。"
+    "text": "Taunt. Whenever a [Sanctum] monster enters your field, restore 1 life.",
+    "zh_text": "嘲諷；每當聖堂怪物進入己場，回復 1 生命。",
+    "prev": {
+      "嘲諷；每當秩序怪物進入己場，回復 1 生命。": "Taunt. Whenever an [Order] monster enters your field, restore 1 life."
+    }
   },
   "WCG-191": {
     "zh": "聖光大審判官",
@@ -1502,22 +1523,29 @@
   "WCG-192": {
     "zh": "冥河引魂術",
     "name": "Styx Soulguide Rite",
-    "text": "Tutor an [Abyss] monster, mill 2.",
-    "zh_text": "檢索深淵怪物，送墓 2。"
+    "text": "Tutor a [Nether] monster, mill 2.",
+    "zh_text": "檢索冥府怪物，送墓 2。",
+    "prev": {
+      "檢索深淵怪物，送墓 2。": "Tutor an [Abyss] monster, mill 2."
+    }
   },
   "WCG-193": {
     "zh": "噬魂死靈術士",
     "name": "Soul-Eating Necromancer",
-    "text": "Deploy: You may sacrifice another ally [Abyss] monster to draw 2 cards.",
-    "zh_text": "進場：可犧牲另 1 隻己方深淵怪，抽 2 張牌。"
+    "text": "Deploy: You may sacrifice another ally [Nether] monster to draw 2 cards.",
+    "zh_text": "進場：可犧牲另 1 隻己方冥府怪，抽 2 張牌。",
+    "prev": {
+      "進場：可犧牲另 1 隻己方深淵怪，抽 2 張牌。": "Deploy: You may sacrifice another ally [Abyss] monster to draw 2 cards."
+    }
   },
   "WCG-194": {
     "zh": "冥府復甦領主",
     "name": "Netherworld Revival Lord",
-    "text": "Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free.",
-    "zh_text": "進場：從墓地免費召喚 1 隻 4 費以下深淵怪。",
+    "text": "Deploy: Summon 1 [Nether] monster costing 4 or less from your graveyard for free.",
+    "zh_text": "進場：從墓地免費召喚 1 隻 4 費以下冥府怪。",
     "prev": {
-      "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped."
+      "進場：從墓地免費召喚 1 隻 3 費以下深淵怪；己場另有深淵怪時它直立進場。": "Deploy: Summon 1 [Abyss] monster costing 3 or less from your graveyard for free; if you control another [Abyss] monster, it enters untapped.",
+      "進場：從墓地免費召喚 1 隻 4 費以下深淵怪。": "Deploy: Summon 1 [Abyss] monster costing 4 or less from your graveyard for free."
     }
   },
   "WCG-195": {
@@ -1544,10 +1572,11 @@
   "WCG-197": {
     "zh": "叢林守護伏擊",
     "name": "Jungle Guardian Ambush",
-    "text": "[Counter] On damage: Cancel it and summon 1 [Life] monster costing 3 or less from hand for free.",
-    "zh_text": "【反擊】受到傷害時：抵銷傷害，從手牌免費召喚 1 隻費用 3 以下生機怪。",
+    "text": "[Counter] On damage: Cancel it and summon 1 [Sylvan] monster costing 3 or less from hand for free.",
+    "zh_text": "【反擊】受到傷害時：抵銷傷害，從手牌免費召喚 1 隻費用 3 以下森靈怪。",
     "prev": {
-      "【反擊】受到傷害時：抵銷傷害，可從手牌免費召喚 1 隻 3 費以下生機怪物。": "[Counter] When you take damage: Cancel the damage. You may summon a [Life] monster costing 3 or less from your hand for free."
+      "【反擊】受到傷害時：抵銷傷害，可從手牌免費召喚 1 隻 3 費以下生機怪物。": "[Counter] When you take damage: Cancel the damage. You may summon a [Life] monster costing 3 or less from your hand for free.",
+      "【反擊】受到傷害時：抵銷傷害，從手牌免費召喚 1 隻費用 3 以下生機怪。": "[Counter] On damage: Cancel it and summon 1 [Life] monster costing 3 or less from hand for free."
     }
   },
   "WCG-198": {
@@ -1806,10 +1835,11 @@
   "WCG-233": {
     "zh": "獻祭苗床",
     "name": "Sacrificial Seedbed",
-    "text": "Sacrifice 1 ally monster, draw 1 card; if it was [Life], restore 1 life.",
-    "zh_text": "犧牲 1 隻己怪，抽 1 張；犧牲生機怪時回復 1 生命。",
+    "text": "Sacrifice 1 ally monster, draw 1 card; if it was [Sylvan], restore 1 life.",
+    "zh_text": "犧牲 1 隻己怪，抽 1 張；犧牲森靈怪時回復 1 生命。",
     "prev": {
-      "額外代價：犧牲 1 隻己怪。抽 1 張；犧牲生機怪時回復 1 生命。": "Additional cost: sacrifice 1 ally monster. Draw 1 card; if it was [Life], restore 1 life."
+      "額外代價：犧牲 1 隻己怪。抽 1 張；犧牲生機怪時回復 1 生命。": "Additional cost: sacrifice 1 ally monster. Draw 1 card; if it was [Life], restore 1 life.",
+      "犧牲 1 隻己怪，抽 1 張；犧牲生機怪時回復 1 生命。": "Sacrifice 1 ally monster, draw 1 card; if it was [Life], restore 1 life."
     }
   },
   "WCG-234": {
@@ -1824,8 +1854,11 @@
   "WCG-235": {
     "zh": "屍花",
     "name": "Corpse Bloom",
-    "text": "On Death: You may summon 1 1-cost [Life] monster from your graveyard for free.",
-    "zh_text": "陣亡：可從墓地免費召喚 1 隻 1 費生機怪物。"
+    "text": "On Death: You may summon 1 1-cost [Sylvan] monster from your graveyard for free.",
+    "zh_text": "陣亡：可從墓地免費召喚 1 隻 1 費森靈怪物。",
+    "prev": {
+      "陣亡：可從墓地免費召喚 1 隻 1 費生機怪物。": "On Death: You may summon 1 1-cost [Life] monster from your graveyard for free."
+    }
   },
   "WCG-236": {
     "zh": "傭兵隊長",
@@ -1902,29 +1935,32 @@
   "WCG-247": {
     "zh": "大地之心",
     "name": "Heart of the Earth",
-    "text": "Tap: If you control 2 or more [Life] monsters, draw 1 card.",
-    "zh_text": "橫置：若己場有 2 隻以上生機怪物，抽 1 張牌。",
+    "text": "Tap: If you control 2 or more [Sylvan] monsters, draw 1 card.",
+    "zh_text": "橫置：若己場有 2 隻以上森靈怪物，抽 1 張牌。",
     "prev": {
-      "回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。": "Start of turn: If you control 3 or more [Life] monsters, draw 1 card."
+      "回合開始：若己場有 3 隻以上生機怪物，抽 1 張牌。": "Start of turn: If you control 3 or more [Life] monsters, draw 1 card.",
+      "橫置：若己場有 2 隻以上生機怪物，抽 1 張牌。": "Tap: If you control 2 or more [Life] monsters, draw 1 card."
     }
   },
   "WCG-248": {
     "zh": "蠻荒踐踏",
     "name": "Primal Trample",
-    "text": "Have 1 ally [Life] monster duel 1 enemy monster.",
+    "text": "Have 1 ally [Sylvan] monster duel 1 enemy monster.",
     "prev": {
       "選 1 隻己方生機怪物，消滅 1 隻 PP 比它低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less PP than it.",
-      "選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP."
+      "選 1 隻己方生機怪物，消滅 1 隻印刷 PP 比它的印刷 PP 低的敵方怪物。": "Choose 1 of your [Life] monsters. Destroy 1 enemy monster with less printed PP than its printed PP.",
+      "令 1 隻己方生機怪與 1 隻敵怪決鬥。": "Have 1 ally [Life] monster duel 1 enemy monster."
     },
-    "zh_text": "令 1 隻己方生機怪與 1 隻敵怪決鬥。"
+    "zh_text": "令 1 隻己方森靈怪與 1 隻敵怪決鬥。"
   },
   "WCG-249": {
     "zh": "墓穴守門人",
     "name": "Crypt Gatekeeper",
-    "text": "Taunt. On Death: Return another [Abyss] monster costing 3 or less from your graveyard to hand.",
-    "zh_text": "嘲諷；陣亡：將墓地另 1 隻費用 3 以下深淵怪移回手牌。",
+    "text": "Taunt. On Death: Return another [Nether] monster costing 3 or less from your graveyard to hand.",
+    "zh_text": "嘲諷；陣亡：將墓地另 1 隻費用 3 以下冥府怪移回手牌。",
     "prev": {
-      "嘲諷；陣亡：將墓地另 1 隻深淵怪移回手牌。": "Taunt. On Death: Return another [Abyss] monster from your graveyard to hand."
+      "嘲諷；陣亡：將墓地另 1 隻深淵怪移回手牌。": "Taunt. On Death: Return another [Abyss] monster from your graveyard to hand.",
+      "嘲諷；陣亡：將墓地另 1 隻費用 3 以下深淵怪移回手牌。": "Taunt. On Death: Return another [Abyss] monster costing 3 or less from your graveyard to hand."
     }
   },
   "WCG-250": {

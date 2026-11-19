@@ -32,14 +32,14 @@ public class UiAuditBatch3Tests
         Assert.Contains("data-esc-close", Src("WcgWeb/Components/Pages/DeckBuilder.razor"));
         Assert.Contains("data-esc-close", Src("WcgWeb/Components/Common/AvatarBadge.razor"));
         Assert.Contains("__wcgEscClose", Src("WcgWeb/wwwroot/sidebar.js"));
-        Assert.Contains("切換雙色牌組後可用", Src("WcgWeb/Components/Pages/DeckBuilder.razor"));
+        Assert.Contains("切換雙主題牌組後可用", Src("WcgWeb/Components/Pages/DeckBuilder.razor"));
     }
 
     [Fact]
     public void New_strings_are_translated()
     {
         var en = Src("WcgWeb/i18n/en.json");
-        foreach (var k in new[] { "確認投降", "繼續對戰", "切換雙色牌組後可用", "對局結束" })
+        foreach (var k in new[] { "確認投降", "繼續對戰", "切換雙主題牌組後可用", "對局結束" })
             Assert.Contains($"\"{k}\"", en);
         Assert.Contains("拖到戰場中央", Src("WcgWeb/Services/Tutorial/TutorialLessons.cs"));
     }

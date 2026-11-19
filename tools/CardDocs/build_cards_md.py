@@ -12,9 +12,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CARDS = ROOT / "WcgWeb" / "Data" / "cards.json"
+THEMES = ROOT / "WcgWeb" / "Data" / "themes.json"
 EN = ROOT / "WcgWeb" / "i18n" / "cards.en.json"
 OUT = ROOT / "cards.md"
-WILLS = [("狂怒", "Fury"), ("理智", "Reason"), ("生機", "Life"), ("秩序", "Order"), ("深淵", "Abyss"), ("中立", "Neutral")]
+THEME_EN = {"熾焰": "Blaze", "星穹": "Astral", "森靈": "Sylvan", "聖堂": "Sanctum", "冥府": "Nether", "中立": "Neutral"}
 TYPE_ORDER = {"怪物": 0, "法術": 1, "法術（反擊）": 2, "結界": 3}
 ARROWS = {"up": "↑", "down": "↓", "left": "←", "right": "→"}
 
@@ -38,9 +39,10 @@ def build():
         "類型：" + "、".join(f"{t} {types[t]} 張" for t in sorted(types, key=lambda t: TYPE_ORDER.get(t, 9))) + "。",
         "白板卡（無效果）在卡面上效果欄留白，此表以「無。」表示。", "",
     ]
-    sections = list(WILLS) + [("雙色", "Dual")]
+    themes = json.loads(THEMES.read_text(encoding="utf-8"))
+    sections = [(t["id"], THEME_EN.get(t["id"], t["id"])) for t in themes] + [("中立", "Neutral"), ("雙主題", "Dual Theme")]
     for will, will_en in sections:
-        if will == "雙色":
+        if will == "雙主題":
             group = sorted((c for c in cards if isinstance(c["will"], list)), key=lambda c: c["id"])
         else:
             group = sorted((c for c in cards if c["will"] == will), key=lambda c: c["id"])

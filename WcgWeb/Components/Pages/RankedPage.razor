@@ -120,7 +120,8 @@ else
                         <li class="ranked-record @(r.Won ? "won" : "lost")">
                             <div class="record-result"><span class="record-badge">@L[r.Won ? "勝" : "敗"]</span><span class="record-stars">@L[StarChange(r)]</span></div>
                             <div class="record-main">
-                                <p class="record-matchup"><span class="will-chip @WillClass(r.ComputerDeck.MainWill)"><i class="will-dot"></i>@L[r.ComputerDeck.MainWill == "" ? "混合" : r.ComputerDeck.MainWill]</span><b>@(r.Archetype != "" ? L.Text(r.Archetype) : L.DeckName(r.ComputerDeck))</b><small>@L.F("使用 {0}", L.DeckName(r.PlayerDeck))</small></p>
+                                @{ var enemyTheme = ThemeCatalog.Normalize(r.ComputerDeck.MainWill); }
+                                <p class="record-matchup"><span class="will-chip @WillClass(enemyTheme)"><i class="will-dot"></i>@L[enemyTheme == "" ? "混合" : enemyTheme]</span><b>@(r.Archetype != "" ? L.Text(r.Archetype) : L.DeckName(r.ComputerDeck))</b><small>@L.F("使用 {0}", L.DeckName(r.PlayerDeck))</small></p>
                                 <p class="record-meta"><span>@When(r)</span><span>@L.Text(RankedRules.Label(r.Before)) → @L.Text(RankedRules.Label(r.After))</span><span class="wcg-num">@L.F("{0} 回合", r.Turns)</span><span class="wcg-num">@Duration(r)</span>@if (AllSeasons) { <span>@L.F("{0} 賽季", r.Season)</span> }</p>
                             </div>
                             <div class="record-actions">
@@ -207,8 +208,7 @@ else
         var end = name.IndexOf(" (", StringComparison.Ordinal); return end > 0 ? name[..end] : name;
     }
     private static string StarChange(RankedRecord r) => r.After > r.Before ? "★＋1" : r.After < r.Before ? "★－1" : "保護";
-    private static string WillClass(string will) => will switch
-    { "狂怒" => "will-wrath", "理智" => "will-reason", "生機" => "will-vitality", "秩序" => "will-order", "深淵" => "will-abyss", _ => "will-neutral" };
+    private static string WillClass(string will) => $"will-{ThemeCatalog.FrameKey(will)}";
     private async Task OpenReplay(RankedRecord r)
     {
         ReplayRecord = r; Replay = null; StateHasChanged();
