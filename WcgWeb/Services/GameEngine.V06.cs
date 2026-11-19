@@ -210,7 +210,7 @@ public partial class GameEngine
             case "WCG-187": if (p.Field.Any(x => x != m && x.Card.HasWill("生機"))) FreeFaction(p, 2, "生機", after: m.Card.Text.Contains("抽 1 張", StringComparison.Ordinal) ? _ => DrawMany(p, 1) : null); break;
             case "WCG-188":Heal(p,p.Field.Count(x=>x!=m&&x.Card.HasWill("生機")));break;
             case "WCG-191":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("秩序")))Resolve(()=>PickMonster(p,$"選擇 PP {High(2000)} 以上敵怪",e.Field.Where(x=>ThresholdPP(x)>=High(2000)),x=>KillBatch([x],m.Card.Name)),()=>Heal(p,1));break;
-            case "WCG-193":Ask(p,"可犧牲其他深淵怪物抽2張",[new(){Id="YES",Title="犧牲並抽牌"},new(){Id="SKIP",Title="不犧牲"}],o=>{if(o.Id=="YES")PickMonster(p,"選擇深淵祭品",p.Field.Where(x=>x!=m&&x.Card.HasWill("深淵")),x=>{Resolve(()=>DrawMany(p,2));KillBatch([x],"犧牲",!LegacyCardRules);});});break;
+            case "WCG-193":Ask(p,"可犧牲其他冥府怪物抽2張",[new(){Id="YES",Title="犧牲並抽牌"},new(){Id="SKIP",Title="不犧牲"}],o=>{if(o.Id=="YES")PickMonster(p,"選擇冥府祭品",p.Field.Where(x=>x!=m&&x.Card.HasWill("深淵")),x=>{Resolve(()=>DrawMany(p,2));KillBatch([x],"犧牲",!LegacyCardRules);});});break;
             default: NewDeploy(p,m); break;
             case "WCG-194":
                 if (m.Card.Text.Contains("4 費", StringComparison.Ordinal)) FreeFaction(p, 4, "深淵", true);

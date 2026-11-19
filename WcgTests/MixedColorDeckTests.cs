@@ -13,7 +13,7 @@ public class MixedColorDeckTests
         env.Setup(x=>x.ContentRootPath).Returns(Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../WcgWeb")));
         db=new(env.Object);
     }
-    List<string> Cards(string will,int count)=>db.AllCards.Where(c=>c.Will==will).SelectMany(c=>Enumerable.Repeat(c.Id,4)).Take(count).ToList();
+    List<string> Cards(string will,int count)=>db.AllCards.Where(c=>!c.IsDual&&c.Will==ThemeCatalog.Normalize(will)).SelectMany(c=>Enumerable.Repeat(c.Id,4)).Take(count).ToList();
     Deck Make(int main,int neutral,params (string Will,int Count)[] other)
     {
         var d=new Deck{MainWill="狂怒",CardIds=Cards("狂怒",main)};
@@ -27,7 +27,7 @@ public class MixedColorDeckTests
     [Fact] public void ThirteenOffColorCardsFailEvenAtFifty()
     {
         var d=Make(17,20,("理智",4),("生機",4),("秩序",3),("深淵",2));
-        Assert.False(d.IsValid(db.GetCard,out var error));Assert.Contains("兩個派系",error);
+        Assert.False(d.IsValid(db.GetCard,out var error));Assert.Contains("兩個主題",error);
     }
     [Theory][InlineData(50,0)][InlineData(0,50)][InlineData(10,40)]
     public void MainAndNeutralHaveNoMinimumOrAdditionalMaximum(int main,int neutral)
@@ -37,7 +37,7 @@ public class MixedColorDeckTests
     [Theory][InlineData("")][InlineData("中立")][InlineData("不存在")]
     public void MainWillMustBeOneOfFiveWills(string will)
     {
-        var d=Make(0,50);d.MainWill=will;Assert.False(d.IsValid(db.GetCard,out var error));Assert.Contains("主色",error);
+        var d=Make(0,50);d.MainWill=will;Assert.False(d.IsValid(db.GetCard,out var error));Assert.Contains("主要主題",error);
     }
     [Fact] public void ChangingMainWillRecalculatesQuotaWithoutChangingCards()
     {

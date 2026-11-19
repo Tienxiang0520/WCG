@@ -194,7 +194,7 @@ public partial class GameEngine
             case "WCG-235": Badge(); FreeFaction(p, 1, "生機", true); break;
             case "WCG-239": case "WCG-243": Badge(); Damage(e, 1, new(p, m.Card, m, "death")); break;
             default: VaultDeath(p, m, grave); break;
-            case "WCG-249": Badge(); CardChoice(p, "選擇墓地的另 1 隻深淵怪物加入手牌", p.Graveyard.Where(c => c != grave && c.Card.IsMonster && c.Card.HasWill("深淵") && (!V2Rules || c.Card.TotalCost <= 3)), c => { if (p.Graveyard.Remove(c)) { p.Hand.Add(c); Present("recover", p, c.InstanceId, card: c.Card, label: "墓地回收"); } }); break;
+            case "WCG-249": Badge(); CardChoice(p, "選擇墓地的另 1 隻冥府怪物加入手牌", p.Graveyard.Where(c => c != grave && c.Card.IsMonster && c.Card.HasWill("深淵") && (!V2Rules || c.Card.TotalCost <= 3)), c => { if (p.Graveyard.Remove(c)) { p.Hand.Add(c); Present("recover", p, c.InstanceId, card: c.Card, label: "墓地回收"); } }); break;
         }
     }
     private void NewEndTurn(PlayerState p, List<Action> effects)

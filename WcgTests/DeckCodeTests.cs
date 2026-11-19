@@ -16,11 +16,11 @@ public class DeckCodeTests
 
     [Fact] public void RoundTripKeepsCardsWillAndName()
     {
-        var deck = DeckService.Copy(Db.PresetDecks[0]); deck.Name = "我的狂怒牌組";
+        var deck = DeckService.Copy(Db.PresetDecks[0]); deck.Name = "我的熾焰牌組";
         var code = DeckCode.Encode(deck);
         Assert.StartsWith("WCGD1-", code);
         var r = DeckCode.Decode(code, out var err)!;
-        Assert.Equal("", err); Assert.Equal(deck.MainWill, r.MainWill); Assert.Equal("我的狂怒牌組", r.Name);
+        Assert.Equal("", err); Assert.Equal(deck.MainWill, r.MainWill); Assert.Equal("我的熾焰牌組", r.Name);
         Assert.Equal(Sorted(deck.CardIds), Sorted(r.CardIds));
     }
     [Fact] public void AllOfficialDecksRoundTrip()
@@ -58,6 +58,7 @@ public class DeckCodeTests
     {
         var deck = new Deck { MainWill = "狂怒", CardIds = new() { "WCG-999", "LCG-001", "WCG-001", "CUSTOM-X" } };
         var r = DeckCode.Decode(DeckCode.Encode(deck), out _)!;
+        Assert.Equal("熾焰", r.MainWill);
         Assert.Equal(new[] { "CUSTOM-X", "WCG-001", "WCG-001", "WCG-999" }, Sorted(r.CardIds));
         Assert.Null(Db.GetCard("WCG-999")); Assert.Null(Db.GetCard("CUSTOM-X"));
         var d = new Deck { MainWill = r.MainWill, CardIds = r.CardIds };

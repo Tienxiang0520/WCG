@@ -32,6 +32,6 @@ public class DualWillCardTests
     [Fact]
     public void EveryWillKeepsAVanillaMonster()
     {
-        foreach(var w in Deck.Wills)Assert.Contains(cards.AllCards,c=>c.IsMonster&&!c.IsDual&&c.Will==w&&c.Text=="無。");
+        foreach(var w in Deck.Wills)Assert.Contains(cards.AllCards,c=>c.IsMonster&&!c.IsDual&&c.HasWill(w)&&c.Text=="無。");
     }
 }

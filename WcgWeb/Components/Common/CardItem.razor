@@ -1,6 +1,6 @@
 @namespace WcgWeb.Components.Common
 
-<div class="wcg-card face-tile will-@Card.Will @(IsPlayable ? "is-playable" : "") @(IsSelected ? "is-selected" : "") card-hoverable @(Compact ? "compact-card" : "")"
+<div class="wcg-card face-tile will-@ThemeCatalog.FrameKey(Card.Will) @(IsPlayable ? "is-playable" : "") @(IsSelected ? "is-selected" : "") card-hoverable @(Compact ? "compact-card" : "")"
      @onclick="HandleCardClick">
     <CardFace Card="Card">
         @if (QuantityInDeck >= 0)
@@ -45,35 +45,35 @@
         }
     }
 
-    public static string GetWillIcon(string will) => will switch
+    public static string GetWillIcon(string will) => ThemeCatalog.FrameKey(will) switch
     {
-        "狂怒" => "🔴",
-        "理智" => "🔵",
-        "生機" => "🟢",
-        "秩序" => "🟡",
-        "深淵" => "🟣",
+        "wrath" => "🔴",
+        "reason" => "🔵",
+        "vitality" => "🟢",
+        "order" => "🟡",
+        "abyss" => "🟣",
         _ => "⚪"
     };
 
     public static string GetCardArtIcon(CardDefinition card)
     {
-        if (card.IsEnergy) return card.Will switch
+        if (card.IsEnergy) return ThemeCatalog.FrameKey(card.Will) switch
         {
-            "狂怒" => "🔥",
-            "理智" => "💧",
-            "生機" => "🌿",
-            "秩序" => "☀️",
-            "深淵" => "🌌",
+            "wrath" => "🔥",
+            "reason" => "💧",
+            "vitality" => "🌿",
+            "order" => "☀️",
+            "abyss" => "🌌",
             _ => "💎"
         };
 
-        if (card.IsSpell) return card.Will switch
+        if (card.IsSpell) return ThemeCatalog.FrameKey(card.Will) switch
         {
-            "狂怒" => "💥",
-            "理智" => "🔮",
-            "生機" => "🍃",
-            "秩序" => "✨",
-            "深淵" => "🕳️",
+            "wrath" => "💥",
+            "reason" => "🔮",
+            "vitality" => "🍃",
+            "order" => "✨",
+            "abyss" => "🕳️",
             _ => "📜"
         };
 
@@ -90,19 +90,19 @@
         if (card.Name.Contains("龍")) return "🐉";
         if (card.Name.Contains("熊") || card.Name.Contains("狼") || card.Name.Contains("豹")) return "🐾";
         if (card.Name.Contains("樹") || card.Name.Contains("林")) return "🌲";
-        if (card.Name.Contains("惡魔") || card.Name.Contains("深淵") || card.Name.Contains("魔")) return "👿";
+        if (card.Name.Contains("惡魔") || card.Name.Contains("深淵") || card.Name.Contains("冥府") || card.Name.Contains("魔")) return "👿";
         if (card.Name.Contains("聖") || card.Name.Contains("騎士") || card.Name.Contains("衛")) return "🛡️";
         if (card.Name.Contains("法師") || card.Name.Contains("賢者") || card.Name.Contains("學者")) return "🧙";
         if (card.Name.Contains("狂") || card.Name.Contains("戰士") || card.Name.Contains("斧")) return "🪓";
         if (card.Name.Contains("弓") || card.Name.Contains("獵")) return "🏹";
 
-        return card.Will switch
+        return ThemeCatalog.FrameKey(card.Will) switch
         {
-            "狂怒" => "⚔️",
-            "理智" => "🧊",
-            "生機" => "🌱",
-            "秩序" => "⚖️",
-            "深淵" => "💀",
+            "wrath" => "⚔️",
+            "reason" => "🧊",
+            "vitality" => "🌱",
+            "order" => "⚖️",
+            "abyss" => "💀",
             _ => "🗿"
         };
     }

@@ -18,7 +18,7 @@ public class DeckStorageTests : IDisposable
     Deck NewDeck(string id) { var d=DeckService.Copy(db.PresetDecks[0]);d.Id=id;return d; }
     [Fact] public void TwoScopesPreserveIndependentSavesAndRejectStaleOverwrite()
     {
-        var x=NewDeck("x");var y=NewDeck("y");a.GetCustomDecks();b.GetCustomDecks();a.SaveDeck(x);b.SaveDeck(y);Assert.Equal(2,a.GetCustomDecks().Count);Assert.Equal("狂怒",b.GetDeck("x")!.MainWill);
+        var x=NewDeck("x");var y=NewDeck("y");a.GetCustomDecks();b.GetCustomDecks();a.SaveDeck(x);b.SaveDeck(y);Assert.Equal(2,a.GetCustomDecks().Count);Assert.Equal("熾焰",b.GetDeck("x")!.MainWill);
         var old=b.GetDeck("x")!;x.Name="updated";a.SaveDeck(x);Assert.Throws<InvalidOperationException>(()=>b.SaveDeck(old));Assert.Throws<InvalidOperationException>(()=>b.DeleteDeck(old.Id,old.Version));Assert.Equal("updated",b.GetDeck("x")!.Name);
         b.DeleteDeck(x.Id,x.Version);Assert.Single(a.GetCustomDecks());
     }

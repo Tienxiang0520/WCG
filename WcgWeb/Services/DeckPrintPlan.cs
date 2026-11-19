@@ -16,10 +16,10 @@ public sealed record PrintedCard(string Id, string Name, string Type, string Wil
     public string PrintArt => $"print-art/{Id}.jpg";
     public string WillColor => ColorOf(Will);
     public string WillColor2 => IsDual ? ColorOf(Wills![1]) : WillColor;
-    private static string ColorOf(string will) => will switch
+    private static string ColorOf(string will) => ThemeCatalog.FrameKey(will) switch
     {
-        "狂怒" => "#b42828", "理智" => "#1761a7", "生機" => "#27743d",
-        "秩序" => "#8d6500", "深淵" => "#754292", _ => "#555555"
+        "wrath" => "#b42828", "reason" => "#1761a7", "vitality" => "#27743d",
+        "order" => "#8d6500", "abyss" => "#754292", _ => "#555555"
     };
 }
 

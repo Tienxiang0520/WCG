@@ -34,9 +34,8 @@ public sealed partial class RankedDecks
             .Select(t => (IReadOnlyList<Entry>)Array.AsReadOnly(entries.Where(e => e.Tier == t).ToArray()))
             .ToArray();
         if (pools.Any(pool => pool.Count < 5)) throw new InvalidDataException("各牌位須至少五套對手牌組。");
-        // Archetypes are gated to specific tiers by the generator; every tier must still face all five wills.
-        if (pools.Any(pool => pool.Select(e => e.Deck.MainWill).Distinct().Count() < 5))
-            throw new InvalidDataException("各牌位對手須涵蓋五種意志。");
+        if (pools.Any(pool => pool.Select(e => ThemeCatalog.Normalize(e.Deck.MainWill)).Distinct().Count() < Math.Min(5, ThemeCatalog.All.Count)))
+            throw new InvalidDataException("各牌位對手須涵蓋主要主題。");
     }
     // Deck.Validate covers size, copies, factions and dual-will cards. The old 12-card off-color cap no longer exists.
     public bool IsLegal(Deck deck, out string? error) => deck.IsValid(getCard, out error);

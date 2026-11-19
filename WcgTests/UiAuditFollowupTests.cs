@@ -56,7 +56,7 @@ public class UiAuditFollowupTests
         Assert.Contains("aria-label=\"@L[\"關閉\"]\" @onclick=\"CloseDeckModal\"", page);
         Assert.Contains("L.F(\"{0}（副本）\"", Src("WcgWeb/Components/Pages/DeckBuilder.razor.cs"));
         var en = Src("WcgWeb/i18n/en.json");
-        foreach (var key in new[] { "未儲存", "全部意志", "單雙色皆可", "顯示 {0} / {1} 套", "搜尋牌組名稱或說明", "{0}（副本）" })
+        foreach (var key in new[] { "未儲存", "全部主題", "單雙主題皆可", "顯示 {0} / {1} 套", "搜尋牌組名稱或說明", "{0}（副本）" })
             Assert.Contains($"\"{key}\":", en);
     }
 }

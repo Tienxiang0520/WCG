@@ -37,7 +37,7 @@
         }
         @if (WhiteColor)
         {
-            <p class="print-screen-note">@L["白底彩色保留小卡圖與意志色，文字使用黑色並加大。先用一般紙、一般品質試印一頁，再依實際效果調整印表機設定。"]</p>
+            <p class="print-screen-note">@L["白底彩色保留小卡圖與主題色，文字使用黑色並加大。先用一般紙、一般品質試印一頁，再依實際效果調整印表機設定。"]</p>
         }
         <div class="print-control-actions"><button class="btn btn-info" @onclick="Print" disabled="@(Printing || Module == null)">@L[Printing ? "正在準備列印…" : "列印／存成 PDF"]</button><span role="status">@L.Text(Status)</span></div>
         <p class="print-screen-note">@L["預覽可左右捲動。先試印第一頁，量卡牌寬 63 mm；生命計數卡也有 50 mm 校準線。卡牌共 6 頁；附錄頁數依語言與不同卡名數量增加。若卡牌部分超過 6 頁，請檢查紙張、縮放與頁首頁尾。"]</p>
@@ -120,7 +120,7 @@
             <section class="print-sheet reference-sheet @Layout.SheetClass" aria-label="@L["規則速查表與牌組清單"]">
                 <h2 class="print-reference-title">@L["魂誓 · 規則速查表"]</h2>
                 <div class="print-rules"><GameRulesContent /></div>
-                <h3 class="print-list-title">@L.Text(Plan.Name) · @L.F("主色 {0}", Plan.MainWill) · @L["50 張"]</h3>
+                <h3 class="print-list-title">@L.Text(Plan.Name) · @L.F("主要主題 {0}", L[ThemeCatalog.Normalize(Plan.MainWill)]) · @L["50 張"]</h3>
                 <div class="print-deck-list">
                     @foreach (var group in Plan.Cards.GroupBy(c => c.Id))
                     {

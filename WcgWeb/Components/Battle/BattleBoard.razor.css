@@ -331,7 +331,7 @@
 
 /* ==== Hero portraits (2026-10-09): framed avatar, HP gem, will tint, face-attack target. Presentation only. ==== */
 .hero{--portrait:60px;--tint:#8fb3ad;gap:10px;padding:5px 18px 5px 5px;border-radius:999px;border-color:color-mix(in srgb,var(--tint) 55%,#829189);background:linear-gradient(90deg,color-mix(in srgb,var(--tint) 24%,#1c3039),#1c3039 72%)}
-.hero.will-狂怒{--tint:#e63946}.hero.will-理智{--tint:#3a86ff}.hero.will-生機{--tint:#2ec4b6}.hero.will-秩序{--tint:#ffb703}.hero.will-深淵{--tint:#9d4edd}
+.hero.will-狂怒,.hero.will-熾焰,.hero.will-wrath{--tint:#e63946}.hero.will-理智,.hero.will-星穹,.hero.will-reason{--tint:#3a86ff}.hero.will-生機,.hero.will-森靈,.hero.will-vitality{--tint:#2ec4b6}.hero.will-秩序,.hero.will-聖堂,.hero.will-order{--tint:#ffb703}.hero.will-深淵,.hero.will-冥府,.hero.will-abyss{--tint:#9d4edd}
 .hero-face{position:relative;flex:none;width:var(--portrait);height:var(--portrait);transition:transform calc(.2s * var(--wcg-motion-scale, 1))}
 .hero-portrait{position:absolute;inset:0;border-radius:50%;overflow:hidden;border:3px solid var(--tint);background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--tint) 45%,transparent),#0c1a22 75%);box-shadow:0 0 0 2px #000a,0 4px 12px #000a,inset 0 0 12px #000a;transition:box-shadow calc(.25s * var(--wcg-motion-scale, 1)),filter calc(.4s * var(--wcg-motion-scale, 1)),border-color calc(.3s * var(--wcg-motion-scale, 1))}
 .hero-portrait img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.14);pointer-events:none}

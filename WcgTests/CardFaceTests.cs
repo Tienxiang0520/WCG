@@ -47,7 +47,7 @@ public class CardFaceTests
         Assert.Contains("data-will=\"order\"", html);
         Assert.Matches(new Regex("face-name.*聖印侍從", RegexOptions.Singleline), html);
         Assert.Matches(new Regex("face-cost\"[^>]*><b>1</b><small>費</small>"), html);
-        Assert.Matches(new Regex("face-band\"><span>秩序</span><i>・</i><span>怪物</span>"), html);
+        Assert.Matches(new Regex("face-band\"><span>聖堂</span><i>・</i><span>怪物</span>"), html);
         Assert.Single(Regex.Matches(html, "face-arrow right"));
         Assert.Contains("友軍獲得格擋。</p>", html); // arrow prefix becomes a gold triangle instead of text
         Assert.Matches(new Regex("<span class=\"pp\"><b>8</b><small>PP</small></span>"), html);

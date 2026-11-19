@@ -172,7 +172,14 @@ public static partial class LocalizationCatalog
         : data.Value.Cards.TryGetValue(id, out c) && c.Text != ""
         && (c.ZhText == null || c.ZhText == zhText) ? c.Text : Translate(zhText);
     // Official deck texts now say 格擋; saved matches may still carry the older 能量護盾 or 聖盾 wording.
-    private static string CurrentDeckText(string text) => text.Replace("能量護盾", "格擋", StringComparison.Ordinal).Replace("聖盾", "格擋", StringComparison.Ordinal).Replace("冰凍、回手", "橫置、回手", StringComparison.Ordinal).Replace("理智冰凍配", "理智橫置配", StringComparison.Ordinal);
+    private static string CurrentDeckText(string text)
+    {
+        var updated = text.Replace("能量護盾", "格擋", StringComparison.Ordinal).Replace("聖盾", "格擋", StringComparison.Ordinal).Replace("冰凍、回手", "橫置、回手", StringComparison.Ordinal).Replace("理智冰凍配", "理智橫置配", StringComparison.Ordinal);
+        var dot = updated.IndexOf('・');
+        if (dot <= 0) return updated;
+        var prefix = updated[..dot].Replace("狂怒", "熾焰", StringComparison.Ordinal).Replace("理智", "星穹", StringComparison.Ordinal).Replace("生機", "森靈", StringComparison.Ordinal).Replace("秩序", "聖堂", StringComparison.Ordinal).Replace("深淵", "冥府", StringComparison.Ordinal);
+        return prefix + updated[dot..];
+    }
     public static string ChineseDeckName(string id, string name) => data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(name) == d.ZhName || name == d.Name) ? d.ZhName : name;
     public static string ChineseDeckDescription(string id, string text) => data.Value.Decks.TryGetValue(id, out var d) && (CurrentDeckText(text) == d.ZhDescription || text == d.Description) ? d.ZhDescription : text;
     public static string DeckName(string id, string name) =>
