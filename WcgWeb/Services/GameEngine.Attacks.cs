@@ -126,7 +126,7 @@ public partial class GameEngine
                 if (!Alive(m) || m.IsSilenced) return; var enemy = GetOpponent(p);
                 if (enemy.Field.Count == 0) Damage(enemy, 1, new(p,m.Card,m,"passive")); else PickLowest(p, enemy.Field, x => KillBatch(new[] { x }, m.Card.Name));
             });
-            if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) FreeHand(p, 2, 1); });
+            if (m.Card.Id is "WCG-060" or "WCG-177") effects.Add(() => { if (Alive(m) && !m.IsSilenced) { if (m.Card.Id == "WCG-060" && m.Card.Text.Contains("抽 1 張牌", StringComparison.Ordinal)) Resolve(() => DrawMany(p, 1), () => FreeHand(p, 2, 1)); else FreeHand(p, 2, 1); } });
         }
         NewEndTurn(p, effects);
         BeaconEndTurn(p, effects);

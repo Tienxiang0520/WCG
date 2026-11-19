@@ -30,7 +30,8 @@ public partial class GameEngine
             case "WCG-214": return Mill(Math.Min(8, p.Graveyard.Count(x => x.Card.IsMonster))) - 2;
             case "WCG-217": return Draw(Math.Min(3, p.Field.Count(HasArrows))) - 1.5;
             case "WCG-220": return p.Field.Any(m => !m.HasTrample && m.CurrentPP >= ScalePP(1300)) ? 3 : -3;
-            case "WCG-221": return p.Field.Count == 0 ? -5 : 3 + (p.Field.Any(CanAttack) ? 2 : 0) + (p.Field.Any(m => m.Card.Id == "WCG-222") ? 2 : 0);
+            case "WCG-221": return p.Field.Count == 0 ? -5 : 3 + (p.Field.Any(CanAttack) ? 2 : 0) + (p.Field.Any(m => m.Card.Id == "WCG-222") ? 2 : 0) + (c.Card.Text.Contains("抽 1 張", StringComparison.Ordinal) ? 1.5 : 0);
+            case "WCG-247" when c.Card.Text.Contains("橫置：", StringComparison.Ordinal): return p.Deck.Count <= 3 ? -10 : p.Field.Count(x => x.Card.HasWill("生機")) >= 2 ? 5 : 2;
             case "WCG-230":
                 var duel = p.Field.Where(a => !a.IsTapped).SelectMany(a => e.Field.Where(d => a.CurrentPP > d.CurrentPP && !(d.HasShield && ShieldReady(d)) && !d.HasPoison).Select(d => BodyValue(d))).DefaultIfEmpty(-6).Max();
                 return duel - 1;
@@ -74,7 +75,7 @@ public partial class GameEngine
     private ChoiceOption? NewSlot(PlayerState p, PendingChoice choice)
     {
         if (NewAi && LaneSlot(p, choice) is { } lane) return lane;
-        if (!NewAi || choice.SourceCard is not { } card || card.Id is not ("WCG-215" or "WCG-216" or "WCG-218")) return null;
+        if (!NewAi || choice.SourceCard is not { } card || card.Id is not ("WCG-215" or "WCG-216" or "WCG-218" or "WCG-115")) return null;
         var e = GetOpponent(p);
         double Score(ChoiceOption o)
         {

@@ -188,6 +188,7 @@ public partial class GameEngine
         "WCG-128" => p.Field.Any(m => BodyValue(m) < 5 || m.Card.Id is "WCG-003" or "WCG-083" or "WCG-043" or "WCG-093" or "WCG-097" or "WCG-016") && p.Deck.Count > 3,
         "WCG-149" => p.Deck.Count > 2,
         "WCG-151" => e.Field.Any(m => m.CurrentPP <= ScalePP(800)) || ZeroPpDeathRules && e.Field.Any(m => m.CurrentPP - 10 <= p.Field.Where(CanAttack).Select(a => a.CurrentPP).DefaultIfEmpty(0).Max()),
+        "WCG-247" => p.Deck.Count > 2 && p.Field.Count(x => x.Card.HasWill("生機")) >= 2,
         _ => true,
     };
 
@@ -349,8 +350,9 @@ public partial class GameEngine
                 "WCG-161" => Sum(e.Field) - Sum(p.Field) - p.Hand.Count * 2,
                 "WCG-095" => c.Card.Text.Contains("進場", StringComparison.Ordinal) ? (p.Hand.Count <= 2 ? 2 : -1) : -4,
                 "WCG-047" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= 1) ? 4 : 0,
-                "WCG-027" or "WCG-115" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? 4 : 0,
-                "WCG-001" or "WCG-102" => ZeroPpDeathRules ? (e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? 3 : p.Deck.Count > 3 ? 1 : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
+                "WCG-027" => p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? (c.Card.Text.Contains("若因此召喚", StringComparison.Ordinal) ? 5 : 4) : 0,
+                "WCG-115" => c.Card.Arrows.Length > 0 ? (p.Field.Count >= 2 ? 4 : p.Field.Count == 1 ? 2 : -1) : p.Hand.Any(x => x != c && x.Card.IsMonster && x.Card.TotalCost <= (CardBalanceHistory.CardFixesCatalog(_cardDb) || V2Rules ? 2 : 1)) ? 4 : 0,
+                "WCG-001" or "WCG-102" => ZeroPpDeathRules ? (e.Field.Any(m => DebuffEnemyScore(p, m, 10) > 1.5) ? 3 : p.Deck.Count > 3 ? (c.Card.Text.Contains("棄", StringComparison.Ordinal) ? 1 : 2) : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
                 "WCG-007" => ZeroPpDeathRules ? e.Field.OrderBy(m => m.CurrentPP).Take(1).Sum(m => DebuffEnemyScore(p, m, 10) > 1.5 ? 3 : 0) : e.Field.Any(m => m.CurrentPP <= ScalePP(500)) ? 3 : 0,
                 "WCG-077" => e.Field.Any(m => m.CurrentPP >= ScalePP(V2Rules ? 1800 : 2300)) ? 6 : 0,
                 "WCG-191" => p.Field.Any(m => m.Card.HasWill("秩序")) && e.Field.Any(m => m.CurrentPP >= ScalePP(2000)) ? 6 : 0,
@@ -370,7 +372,7 @@ public partial class GameEngine
             return id switch
             {
                 "WCG-062" or "WCG-074" => (p.AvailableEnergy - c.Card.TotalCost >= 1 ? 4 : 1) + (id == "WCG-074" ? 2 : 0),
-                "WCG-135" => 3 + (own.Any(CanAttack) ? 2 : 0),
+                "WCG-135" => 3 + (own.Any(CanAttack) ? 2 : 0) + (c.Card.Text.Contains("抽 1 張", StringComparison.Ordinal) ? 1.5 : 0),
                 "WCG-141" => own.Any(m => m.IsTapped && m.CurrentDP >= 1) && e.Hp <= 3 ? 6 : -2,
                 "WCG-165" => own.Any(CanAttack) && e.Field.Count > 0 ? 4 : -2,
                 "WCG-143" or "WCG-167" => own.Any(m => CanAttack(m) || m.IsTapped) && e.Field.Count > 0 ? 2 : -2,
@@ -414,8 +416,9 @@ public partial class GameEngine
             "WCG-170" => e.Field.Count == 0 ? 6 : Sum(e.Field.Where(m => ThresholdPP(m) <= SkyfireLimit())) - 2,
             "WCG-176" => Sum(e.Field.Where(m => m.CurrentPP >= ScalePP(1500))) - Sum(p.Field.Where(m => m.CurrentPP >= ScalePP(1500))) + (p.Hp < 7 ? 2 : 0) - 2,
             "WCG-173" => Sum(e.Field) - Sum(p.Field) + 2,
-            "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? 5 : -1,
-            "WCG-052" => Math.Min(2, p.Hand.Count(x => x.Card.IsMonster && x.Card.TotalCost <= 2)) * 5 - 3,
+            "WCG-042" when !c.Card.Text.Contains("抉擇", StringComparison.Ordinal) => p.Deck.Count <= 3 ? -10 : (p.Occupied < 5 && p.Hand.Any(x => x.Card.IsMonster && x.Card.TotalCost <= 2) ? 6 : 2),
+            "WCG-044" => p.TotalEnergy < 6 && p.Deck.Count > 3 ? (c.Card.Text.Contains("直立", StringComparison.Ordinal) ? 6.5 : 5) : -1,
+            "WCG-052" => (p.Occupied < 5 ? Math.Min(2, p.Hand.Count(x => x.Card.IsMonster && x.Card.TotalCost <= 2)) * 5 : 0) - (c.Card.Text.Contains("抽 1 張牌", StringComparison.Ordinal) ? 1 : 3),
             "WCG-010" => p.Field.Count == 0 ? -5 : p.Hand.Count < 4 ? (p.Field.Count >= 3 && c.Card.Text.Contains("最多 3", StringComparison.Ordinal) ? 7 : 6) : 2,
             "WCG-058" or "WCG-090" => p.Graveyard.Any(x => x.Card.IsMonster) ? 4 : -2,
             "WCG-019" or "WCG-096" => p.Hand.Count < 3 ? 4 : -1,

@@ -72,7 +72,7 @@ public class InteractionRegressionTests
     [Fact] public void FreeSummonConsumesHandWithoutDeployDraw()
     {
         var child=Hand(e.Player,"WCG-001");var c=Hand(e.Player,"WCG-052");int deck=e.Player.Deck.Count;
-        Assert.True(e.CastSpell(e.Player,c));Choices();Assert.DoesNotContain(child,e.Player.Hand);Assert.Single(e.Player.Field);Assert.Equal(child.InstanceId,e.Player.Field[0].InstanceId);Assert.Equal(deck,e.Player.Deck.Count);
+        Assert.True(e.CastSpell(e.Player,c));Choices();Assert.DoesNotContain(child,e.Player.Hand);Assert.Single(e.Player.Field);Assert.Equal(child.InstanceId,e.Player.Field[0].InstanceId);Assert.Equal(deck-1,e.Player.Deck.Count);
     }
     [Fact] public void SearchUsesActualTopCardsAndChosenBottomOrder()
     {

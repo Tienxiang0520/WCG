@@ -70,7 +70,7 @@ public partial class GameEngine
     private bool Across(MonsterInstance source, MonsterInstance target) => !ReferenceEquals(RowOf(source), RowOf(target));
     // Arrow auras that change PP: allies the arrows point at gain, the enemy straight ahead loses. Same links as the energy-shield arrows.
     private (int Ally, int Enemy) ArrowAura(string id) => id switch
-    { "WCG-005" => (ScalePP(V2Rules ? 100 : 200), 0), "WCG-049" => (ScalePP(200), 0), "WCG-085" => (0, ScalePP(-300)), "WCG-147" => V21Rules ? (0, ScalePP(-300)) : (0, 0), "WCG-283" => (0, ScalePP(-300)), "WCG-287" => (0, ScalePP(-500)), "WCG-347" => (ScalePP(200), 0), "WCG-355" => (ScalePP(200), 0), "WCG-361" => (ScalePP(300), ScalePP(300)), "WCG-362" => (ScalePP(V22Rules ? 200 : 300), 0), "WCG-363" => (ScalePP(600), 0), "WCG-367" => (0, ScalePP(-300)), "WCG-371" => (ScalePP(200), 0), "WCG-376" => (ScalePP(200), 0), "WCG-380" => (0, ScalePP(-300)), "WCG-383" => (0, ScalePP(-300)), "WCG-386" => (0, ScalePP(-300)), "WCG-387" => (ScalePP(200), 0), "WCG-422" => (0, ScalePP(-200)), "WCG-398" => (0, ScalePP(-300)), _ => (0, 0) };
+    { "WCG-005" => (ScalePP(V2Rules ? 100 : 200), 0), "WCG-049" => (ScalePP(200), 0), "WCG-085" => (0, ScalePP(-300)), "WCG-115" => (ScalePP(200), 0), "WCG-147" => V21Rules ? (0, ScalePP(-300)) : (0, 0), "WCG-283" => (0, ScalePP(-300)), "WCG-287" => (0, ScalePP(-500)), "WCG-347" => (ScalePP(200), 0), "WCG-355" => (ScalePP(200), 0), "WCG-361" => (ScalePP(300), ScalePP(300)), "WCG-362" => (ScalePP(V22Rules ? 200 : 300), 0), "WCG-363" => (ScalePP(600), 0), "WCG-367" => (0, ScalePP(-300)), "WCG-371" => (ScalePP(200), 0), "WCG-376" => (ScalePP(200), 0), "WCG-380" => (0, ScalePP(-300)), "WCG-383" => (0, ScalePP(-300)), "WCG-386" => (0, ScalePP(-300)), "WCG-387" => (ScalePP(200), 0), "WCG-422" => (0, ScalePP(-200)), "WCG-398" => (0, ScalePP(-300)), _ => (0, 0) };
     private int ArrowPower(PlayerState owner, MonsterInstance unit) =>
         Player.Board.Concat(Computer.Board).Where(source => source != unit && !source.IsSet && !source.IsSilenced && source.Card.Arrows.Length > 0 && ArrowAura(source.Card.Id) != (0, 0))
             .Sum(source => { var sourceOwner = Owner(source); if (!PointsAt(sourceOwner, source, owner, unit)) return 0; var aura = ArrowAura(source.Card.Id); return Across(source, unit) ? aura.Enemy : aura.Ally; }) + GraveArrowPower(owner, unit);
@@ -121,7 +121,7 @@ public partial class GameEngine
     public bool SetCard(PlayerState p, CardInstance c) => AiTracked(AiNote("set",p,c),()=>
     { if(DamageCounters)return Fail("請從手牌出牌或填能量。"); if(!Main(p)||!p.Hand.Contains(c)||p.Occupied>=5)return Fail("目前不能蓋牌。");ChooseSlot(p,c.Card,slot=>{p.Hand.Remove(c);p.Structures.Add(new(c.Card){InstanceId=c.InstanceId,Slot=slot,IsSet=true,IsTapped=false});Present("set",p,c.InstanceId,label:"背面蓋牌");},true,c.InstanceId);return true; });
     public bool CanActivate(PlayerState p, MonsterInstance m) => Main(p)&&p.Structures.Contains(m)&&!m.IsSet&&!m.IsTapped && (m.Card.Id switch
-    { "WCG-125"=>V22Rules||p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>V22Rules||p.Hand.Count>0,"WCG-151"=>V2Rules?p.Field.Concat(GetOpponent(p).Field).Any():p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
+    { "WCG-125"=>V22Rules||p.Deck.Count>0,"WCG-126"=>!V2Rules||p.EnergyZone.Any(e=>e.IsTapped),"WCG-128"=>p.Field.Count>0,"WCG-149"=>V22Rules||p.Hand.Count>0,"WCG-151"=>V2Rules?p.Field.Concat(GetOpponent(p).Field).Any():p.Field.Concat(GetOpponent(p).Field).Any(x=>ThresholdPP(x)<=Low(800)),"WCG-247"=>m.Card.Text.Contains("橫置：",StringComparison.Ordinal)&&p.Field.Count(x=>x.Card.HasWill("生機"))>=2,_=>CanActivateOath(p,m)||GraveCanActivate(p,m) });
     public bool Activate(PlayerState p, MonsterInstance m)=>AiTracked(AiNote("activate",p,unit:m),()=>
     {
         if(!CanActivate(p,m))return Fail("此結界目前不能發動。");
@@ -137,6 +137,7 @@ public partial class GameEngine
                 if (V2Rules) PickMonster(p, "選擇本回合 PP -10 的怪物", p.Field.Concat(GetOpponent(p).Field), x => Pay(() => DebuffTurn(x, -10, m.Card)));
                 else PickMonster(p, $"選擇 PP {Low(800)} 以下怪物", p.Field.Concat(GetOpponent(p).Field).Where(x => ThresholdPP(x) <= Low(800)), x => Pay(() => KillBatch([x], m.Card.Name)));
                 break;
+            case "WCG-247": Pay(() => DrawMany(p, 1)); break;
             case "WCG-268":ActivateOath(p,m);break;
             case "WCG-349":GraveActivate(p,m);break;
             default:SurgeActivate(p,m);break;
@@ -206,7 +207,7 @@ public partial class GameEngine
             case "WCG-179":Heal(p,7);break;
             case "WCG-181":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("狂怒")))foreach(var x in p.Field.Where(x=>x.Card.HasWill("狂怒")))AddTurnBonus(x,ScalePP(V2Rules ? 200 : 300),m.Card);break;
             case "WCG-183":if (V22Rules) Tutor(p, c => c.Card.IsSpell); else Search(p,3,c=>c.Card.IsSpell);break;
-            case "WCG-187":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("生機")))FreeFaction(p,2,"生機");break;
+            case "WCG-187": if (p.Field.Any(x => x != m && x.Card.HasWill("生機"))) FreeFaction(p, 2, "生機", after: m.Card.Text.Contains("抽 1 張", StringComparison.Ordinal) ? _ => DrawMany(p, 1) : null); break;
             case "WCG-188":Heal(p,p.Field.Count(x=>x!=m&&x.Card.HasWill("生機")));break;
             case "WCG-191":if(p.Field.Any(x=>x!=m&&x.Card.HasWill("秩序")))Resolve(()=>PickMonster(p,$"選擇 PP {High(2000)} 以上敵怪",e.Field.Where(x=>ThresholdPP(x)>=High(2000)),x=>KillBatch([x],m.Card.Name)),()=>Heal(p,1));break;
             case "WCG-193":Ask(p,"可犧牲其他深淵怪物抽2張",[new(){Id="YES",Title="犧牲並抽牌"},new(){Id="SKIP",Title="不犧牲"}],o=>{if(o.Id=="YES")PickMonster(p,"選擇深淵祭品",p.Field.Where(x=>x!=m&&x.Card.HasWill("深淵")),x=>{Resolve(()=>DrawMany(p,2));KillBatch([x],"犧牲",!LegacyCardRules);});});break;
@@ -233,7 +234,7 @@ public partial class GameEngine
     {
         var e=GetOpponent(p);switch(c.Card.Id)
         {
-            case "WCG-135": if(t!=null)Attach(p,c,t);break;
+            case "WCG-135": if (t != null) { if (c.Card.Text.Contains("抽 1 張", StringComparison.Ordinal)) Resolve(() => Attach(p, c, t), () => DrawMany(p, 1)); else Attach(p, c, t); } break;
             case "WCG-137":Resolve(()=>{if(t!=null)TapOrBounce(t);},()=>DrawMany(p,1));break;
             case "WCG-184":
                 Resolve(() =>

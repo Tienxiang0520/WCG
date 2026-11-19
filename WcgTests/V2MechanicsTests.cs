@@ -1043,6 +1043,154 @@ public class V2MechanicsTests
     }
 
     [Fact]
+    public void HandEconomyReworkUpdatesAllSixteenCards()
+    {
+        // WCG-052: 抽 1 張牌，從手牌免費召喚至多 2 隻費用 2 以下的怪物
+        var g = Game();
+        var cheap1 = Hand(g, "WCG-043");
+        var cheap2 = Hand(g, "WCG-101");
+        var callDeck = g.Player.Deck.Count;
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-052")));
+        Choose(g, o => o.Id == cheap1.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:0");
+        Choose(g, o => o.Id == cheap2.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:1");
+        Assert.Equal(callDeck - 1, g.Player.Deck.Count);
+        Assert.Equal(2, g.Player.Field.Count);
+
+        // WCG-060: 回合結束抽 1 張，可免費召喚 1 隻 2 費以下
+        g = Game();
+        Unit(g.Player, "WCG-060", 0);
+        var ivaSummon = Hand(g, "WCG-101");
+        var handBeforeIva = g.Player.Hand.Count;
+        Assert.True(g.EndTurn());
+        Choose(g, o => o.Id == ivaSummon.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:1");
+        Assert.Equal(2, g.Player.Field.Count);
+        Assert.Equal(handBeforeIva, g.Player.Hand.Count); // +1 drawn, -1 summoned
+
+        // WCG-042: 可免費召喚 1 隻 2 費以下怪物，抽 1 張（即使無怪可召也能抽 1）
+        g = Game();
+        var g42Hand = g.Player.Hand.Count;
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-042")));
+        Assert.False(g.IsWaiting);
+        Assert.Equal(g42Hand + 1, g.Player.Hand.Count);
+        var c2 = Hand(g, "WCG-045"); // 2 費
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-042")));
+        Choose(g, o => o.Id == c2.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:0");
+        Assert.Single(g.Player.Field);
+        Assert.Equal(g42Hand + 2, g.Player.Hand.Count);
+
+        // WCG-187 & WCG-027: 成功免費召喚才抽 1，跳過或不召不抽
+        g = Game();
+        Unit(g.Player, "WCG-045", 0); // another 生機 monster
+        var vHand = g.Player.Hand.Count;
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-187")));
+        Choose(g, o => o.Id == "SLOT:1");
+        Assert.Equal(vHand, g.Player.Hand.Count); // no valid target => no draw
+        var vTarget = Hand(g, "WCG-043");
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-187")));
+        Choose(g, o => o.Id == "SLOT:2");
+        Choose(g, o => o.Id == vTarget.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:3");
+        Assert.Equal(vHand + 1, g.Player.Hand.Count);
+
+        g = Game();
+        var wTarget = Hand(g, "WCG-101");
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-027")));
+        Choose(g, o => o.Id == "SLOT:0");
+        Choose(g, o => o.Id == "SKIP");
+        Assert.Single(g.Player.Hand); // skipped => no draw
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-027")));
+        Choose(g, o => o.Id == "SLOT:1");
+        Choose(g, o => o.Id == wTarget.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:2");
+        Assert.Single(g.Player.Hand); // summoned => drew 1
+
+        // WCG-115: 雙箭頭，←→ 友軍 PP +2、獲得嘲諷（不具自身嘲諷）
+        g = Game();
+        var left = Unit(g.Player, "WCG-101", 0);
+        var argus = Unit(g.Player, "WCG-115", 1);
+        var right = Unit(g.Player, "WCG-154", 2);
+        var far = Unit(g.Player, "WCG-101", 4);
+        Refresh(g);
+        Assert.Equal(14, argus.Card.PP);
+        Assert.False(argus.IsTaunt);
+        Assert.True(left.IsTaunt && right.IsTaunt);
+        Assert.False(far.IsTaunt);
+        Assert.Equal(12, left.CurrentPP);
+        Assert.Equal(15, right.CurrentPP);
+
+        // WCG-131: 9 PP 0 DP，陣亡可免費召 2 費並抽 1
+        g = Game();
+        var egg = Unit(g.Player, "WCG-131", 0);
+        Assert.Equal(9, egg.Card.PP);
+        var hatch = Hand(g, "WCG-101");
+        var killer = Unit(g.Computer, "WCG-114", 0);
+        Assert.True(g.Attack(g.Player, egg, killer));
+        Choose(g, o => o.Id == hatch.InstanceId.ToString());
+        Choose(g, o => o.Id == "SLOT:0");
+        Assert.Single(g.Player.Field);
+        Assert.Single(g.Player.Hand);
+
+        // WCG-041 / WCG-045 / WCG-001 / WCG-024: 抽 1 不棄（WCG-102 仍抽 1 棄 1）
+        g = Game();
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-041")));
+        Choose(g, o => o.Id == "SLOT:0");
+        Choose(g, o => o.Id == "LOOT");
+        Assert.Single(g.Player.Hand); // drew 1 without discarding
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-045")));
+        Choose(g, o => o.Id == "SLOT:1");
+        Assert.Equal(2, g.Player.Hand.Count); // another monster exists => drew 1 without discarding
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-001")));
+        Choose(g, o => o.Id == "SLOT:2");
+        Choose(g, o => o.Id == "LOOT");
+        Assert.Equal(3, g.Player.Hand.Count); // drew 1 without discarding
+        var tappedFoe = Unit(g.Computer, "WCG-101", 0);
+        tappedFoe.IsTapped = true;
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-024"), tappedFoe));
+        Assert.Equal(4, g.Player.Hand.Count); // already tapped => drew 1 without discarding
+        Assert.True(g.SummonMonster(g.Player, Hand(g, "WCG-102")));
+        Choose(g, o => o.Id == "SLOT:3");
+        Choose(g, o => o.Id == "LOOT");
+        Assert.NotNull(g.CurrentPendingChoice); // WCG-102 still asks which card to discard
+        Choose(g, _ => true);
+        Assert.Equal(4, g.Player.Hand.Count);
+
+        // WCG-044 / WCG-135 / WCG-192 / WCG-221 / WCG-247
+        g = Game();
+        var topBefore = g.Player.Deck[0];
+        Assert.True(g.CastSpell(g.Player, Hand(g, "WCG-044")));
+        Assert.Contains(topBefore, g.Player.EnergyZone);
+        Assert.False(topBefore.IsTapped);
+
+        var body = Unit(g.Player, "WCG-101", 0);
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-135"), body));
+        Assert.Equal(16, body.CurrentPP);
+        Assert.Single(g.Player.Hand);
+        Assert.True(g.CastSpellAt(g.Player, Hand(g, "WCG-221"), body));
+        Assert.Equal(18, body.CurrentPP);
+        Assert.Equal(2, g.Player.Hand.Count);
+
+        Assert.Equal(3, cards.GetCard("WCG-192")!.TotalCost);
+
+        g = Game();
+        var heartCard = Hand(g, "WCG-247");
+        Assert.Equal(2, heartCard.Card.TotalCost);
+        Assert.True(g.PlayEnchantment(g.Player, heartCard));
+        Choose(g, o => o.Id == "SLOT:4");
+        var heart = g.Player.Structures.Single();
+        Unit(g.Player, "WCG-045", 0);
+        Assert.False(g.CanActivate(g.Player, heart));
+        Unit(g.Player, "WCG-043", 1);
+        Assert.True(g.CanActivate(g.Player, heart));
+        Assert.True(g.Activate(g.Player, heart));
+        Assert.Single(g.Player.Hand);
+        Assert.True(heart.IsTapped);
+    }
+
+    [Fact]
     public void V2CatalogPresetsRunToCompletionWithAiWithoutStalling()
     {
         var g = new GameEngine(cards, new Random(41));
